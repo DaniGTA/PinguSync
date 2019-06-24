@@ -1,16 +1,16 @@
-import electron = require("electron");
-import path = require("path");
-import fs = require("fs");
-import request = require("request");
+import electron from 'electron';
+import * as fs from "fs";
+import * as path from "path";
+import request from 'request';
 import { Viewer } from "./graphql/viewer";
 import getViewerGql from "./graphql/getViewer.gql";
 import GetUserSeriesListGql from "./graphql/getUserSeriesList.gql";
 import { MediaType } from "./graphql/basics/mediaType";
 import { MediaListCollection } from "./graphql/seriesList";
-import { ListProvider } from "../listProvider";
-import { ipcMain, shell } from "electron";
-import { Anime, ProviderInfo } from "../../controller/objects/anime";
+import ListProvider from "../listProvider";
 import { UserData } from "../userData";
+import { ProviderInfo } from '../../controller/objects/providerInfo';
+import Anime, { WatchStatus } from '../../controller/objects/anime';
 
 export class AniListProvider implements ListProvider {
     providerName: string = "AniList";
@@ -58,7 +58,7 @@ export class AniListProvider implements ListProvider {
             }
         };
         return new Promise<boolean>((resolve, reject) => {
-            request(options, function (error, response, body) {
+            request(options, (error: any, response: any, body: any) => {
                 console.log('error:', error); // Print the error if one occurred
                 console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
                 console.log('body:', body); // Print the HTML for the Google homepage.
@@ -80,7 +80,7 @@ export class AniListProvider implements ListProvider {
         var query = getViewerGql;
         var options = this.getGraphQLOptions(query);
 
-        request(options, function (error, response, body) {
+        request(options, (error: any, response: any, body: any) => {
             console.log('error:', error); // Print the error if one occurred
             console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
             console.log('body:', body);
@@ -91,7 +91,9 @@ export class AniListProvider implements ListProvider {
     }
 
     async getAllSeries(): Promise<Anime[]> {
-        if (this.userData.list != null && this.userData.list.length != 0) {
+        console.log('[Request] -> AniList -> AllSeries');
+        if (this.userData.list != null && this.userData.list.length == 0) {
+            console.log('[LoadCache] -> AniList -> AllSeries');
             return this.userData.list;
         } else {
             var seriesList: Anime[] = [];
@@ -99,18 +101,20 @@ export class AniListProvider implements ListProvider {
             for (const list of data.lists) {
                 for (const entry of list.entries) {
                     var series: Anime = new Anime();
-                    series.names;
                     series.names.engName = entry.media.title.english;
                     series.names.mainName = entry.media.title.native;
                     series.names.romajiName = entry.media.title.romaji;
-                    series.episodes = entry.media.episodes;
+                    if (typeof entry.media.episodes != 'undefined') {
+                        series.episodes = entry.media.episodes;
+                    }
                     series.releaseYear = entry.media.startDate.year;
-
+                    series.seasonNumber = await series.names.getSeasonNumber();
                     var providerInfo: ProviderInfo = new ProviderInfo(AniListProvider.getInstance());
 
                     providerInfo.id = entry.media.id;
                     providerInfo.score = entry.score;
                     providerInfo.rawEntry = entry;
+                    providerInfo.watchProgress = entry.progress;
 
                     series.providerInfos.push(providerInfo);
                     seriesList.push(series);
@@ -124,31 +128,34 @@ export class AniListProvider implements ListProvider {
 
 
     async getUserSeriesList(): Promise<MediaListCollection> {
-        const _this = this;
-        // Here we define our query as a multi-line string
-        // Storing it in a separate .graphql/.gql file is also possible
-        var query = GetUserSeriesListGql;
-        var variables = {
-            id: this.userData.viewer.id,
-            listType: MediaType.ANIME
+        if (typeof this.userData.viewer != 'undefined') {
+            const _this = this;
+            // Here we define our query as a multi-line string
+            // Storing it in a separate .graphql/.gql file is also possible
+            var query = GetUserSeriesListGql;
+            var variables = {
+                id: this.userData.viewer.id,
+                listType: MediaType.ANIME
+            }
+            var options = this.getGraphQLOptions(query, variables);
+
+            return new Promise<MediaListCollection>((resolve, rejects) => {
+                request(options, function (error: any, response: any, body: any) {
+                    console.log('error:', error); // Print the error if one occurred
+                    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                    console.log('body:', body);
+                    if (response.statusCode == 200) {
+                        var rawdata = JSON.parse(body);
+                        resolve(rawdata.data.MediaListCollection as MediaListCollection);
+                    } else {
+                        rejects();
+                    }
+
+                });
+            })
+        } else {
+            throw 'NoUser';
         }
-        var options = this.getGraphQLOptions(query, variables);
-
-        return new Promise<MediaListCollection>((resolve, rejects) => {
-            request(options, function (error, response, body) {
-                console.log('error:', error); // Print the error if one occurred
-                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                console.log('body:', body);
-                if (response.statusCode == 200) {
-                    var rawdata = JSON.parse(body);
-                    resolve(rawdata.data.MediaListCollection as MediaListCollection);
-                } else {
-                    rejects();
-                }
-
-            });
-        })
-
 
     }
 
@@ -170,14 +177,13 @@ export class AniListProvider implements ListProvider {
     }
 }
 class AniListUserData implements UserData {
-    username: string;
-
+    username: string = '';
     access_token: string = "";
     refresh_token: string = "";
-    expires_in: number;
-    viewer: Viewer;
-    list: Anime[];
-    lastListUpdate: Date;
+    expires_in: number = 0;
+    viewer: Viewer | undefined;
+    list: Anime[] | undefined;
+    lastListUpdate: Date | undefined;
 
     constructor() {
         this.loadData();
@@ -205,6 +211,7 @@ class AniListUserData implements UserData {
 
 
     private saveData() {
+        console.log('[Save] -> AniList -> UserData');
         fs.writeFileSync(this.getPath(), JSON.stringify(this));
     }
 

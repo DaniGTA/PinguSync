@@ -1,21 +1,19 @@
 import { ProviderInfo } from './providerInfo';
+import stringHelper from '@/backend/helpFunctions/stringHelper';
+import listHelper from '@/backend/helpFunctions/listHelper';
 
 export default class Anime {
     public id: string = '';
-    public names: Names;
+    public names: Names = new Names();
     public providerInfos: ProviderInfo[] = [];
     public episodes: number = 0;
     public coverImage: string = '';
     public releaseYear?: number;
     public seasonNumber?: number;
     constructor() {
-        this.names = {
-            mainName: '',
-            romajiName: '',
-            engName: '',
-            shortName: '',
-            otherNames: [],
-        };
+        //Generates randome string.
+        const c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        this.id = Array.from({ length: 20 }, _ => c[Math.floor(Math.random() * c.length)]).join('');
     }
 
     public merge(anime: Anime): Anime {
@@ -35,19 +33,21 @@ export default class Anime {
         return newAnime;
     }
 
-    private mergeNumber(a: number, b: number, name?: string, target?: string): number {
-        if (b === a) {
+    private mergeNumber(a: number | undefined, b: number | undefined, name?: string, target?: string): number {
+        if (this.isDefined(b) && b === a) {
             return b;
-        } else if ((b == null || b === 0) && (a != null || a !== 0)) {
-            return a;
-        } else if ((a == null || a === 0) && (b != null || b !== 0)) {
-            return b;
+        } else if ((b === 0 || !this.isDefined(b)) && (this.isDefined(a) || a !== 0)) {
+            return a as number;
+        } else if ((!this.isDefined(a) || a === 0) && (this.isDefined(b) || b !== 0)) {
+            return b as number;
         } else {
             console.log('(' + target + ') Cant find a valid number: ' + a + ' vs ' + b + ' | ' + name);
-            return a;
+            return a as number;
         }
     }
-
+    private isDefined<T>(value: T | undefined | null): value is T {
+        return <T>value !== undefined && <T>value !== null;
+    }
     private mergeString(a: string, b: string, topic?: string): string {
 
         if (a === '' || a == null) {
@@ -65,12 +65,76 @@ export default class Anime {
     }
 }
 
-interface Names {
-    mainName: string;
-    romajiName: string;
-    engName: string;
-    shortName: string;
-    otherNames: string[];
+export class Names {
+    mainName: string = '';
+    romajiName: string = '';
+    engName: string = '';
+    shortName: string = '';
+    otherNames: string[] = [];
+
+    getRomajiName(names: Names): string {
+        if (names.mainName == null || names.mainName === '' || this.hasKanji(names.mainName)) {
+            if (names.engName != null && names.engName !== '') {
+                return names.engName;
+            } else if (names.romajiName != null && names.romajiName !== '') {
+                return names.romajiName;
+            } else if (names.shortName != null && names.shortName !== '') {
+                return names.shortName;
+            }
+            for (const otherName of names.otherNames) {
+                if (otherName != null && otherName !== '') {
+                    if (!otherName.match('[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}')) {
+                        return otherName;
+                    }
+                }
+            }
+        } else {
+            if (names.mainName != null && names.mainName !== '') {
+                return names.mainName;
+            }
+        }
+        console.log('[search] -> Names -> getRomaji -> ' + names.mainName + ' -> noResults');
+        throw names.mainName + 'HasNoRomajiName';
+    }
+    public async getSeasonNumber(): Promise<number> {
+        var highestSeasonDetected = 0;
+        for (const name of await this.getAllNames()) {
+            try {
+                var nr = await this.getSeasonNumberFromTitle(name);
+                if (nr < highestSeasonDetected) {
+                    highestSeasonDetected = nr;
+                }
+            } catch (err) { }
+        }
+        return highestSeasonDetected;
+    }
+
+    public async getAllNames(): Promise<string[]> {
+        return await listHelper.cleanArray([this.engName, this.mainName, this.romajiName, this.shortName, ...this.otherNames]);
+    }
+
+    private async getSeasonNumberFromTitle(title: string): Promise<number> {
+        var reversedTitle = await stringHelper.reverseString(title);
+        var lastChar = reversedTitle.charAt(0);
+        var countLastChar = 0;
+        if ('0123456789'.includes(reversedTitle)) {
+            return parseInt(lastChar, 10);
+        } else {
+            while (lastChar === reversedTitle.charAt(countLastChar)) {
+                countLastChar++;
+                reversedTitle = reversedTitle.substr(1);
+            }
+        }
+        if (countLastChar != 1) {
+            return countLastChar;
+        } else {
+            throw 'That name dont have a Season';
+        }
+    }
+
+    private hasKanji(s: string): boolean {
+        return s.match('[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}') != null;
+    }
 }
 
 

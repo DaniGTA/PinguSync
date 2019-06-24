@@ -1,4 +1,4 @@
-import { ListProvider } from '../api/ListProvider';
+import ListProvider from '../api/ListProvider';
 import aniListProvider from '../api/anilist/aniListProvider';
 import traktProvider from '../api/trakt/traktProvider';
 import { ipcMain, shell } from 'electron';
@@ -16,7 +16,7 @@ class ProviderController {
     constructor(webcontent: Electron.WebContents) {
         const that = this;
         ProviderController.instance = that;
-        that.webcontent = webcontent;
+        this.webcontent = webcontent;
         for (const provider of that.list) {
             that.initProvider(provider);
         }

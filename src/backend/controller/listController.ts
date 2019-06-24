@@ -1,29 +1,40 @@
 import ProviderController from './providerController';
-import electron = require('electron');
-import path = require('path');
-import fs = require('fs');
-import Anime from './objects/anime';
-
+import electron from 'electron';
+import Anime, { Names } from './objects/anime';
+import * as fs from "fs";
+import * as path from "path";
+import StringHelper from '../helpFunctions/stringHelper';
+import listHelper from '../helpFunctions/listHelper';
 export class ListController {
     public async getSeriesList(): Promise<Anime[]> {
+        console.log('[start] -> SeriesList');
         // var loadedData = this.loadData();
-        const loadedData: Anime[] | null = null;
-        if (loadedData == null || loadedData.length === 0) {
+        let loadedData: Anime[] | null = null;
+        if (loadedData == null || (loadedData as Anime[]).length === 0) {
 
-
+            console.log('[calc] -> SeriesList');
             let allSeries: Anime[] = [];
             for (const provider of ProviderController.getInstance().list) {
                 allSeries.push(...await provider.getAllSeries());
             }
             allSeries = await this.combineDoubleEntrys(allSeries);
             this.saveData(allSeries);
+
+            allSeries = allSeries.sort((a, b) => {
+                const aName = Object.assign(new Names(), a.names).getRomajiName(a.names).toLocaleLowerCase();
+                const bName = Object.assign(new Names(), b.names).getRomajiName(b.names).toLocaleLowerCase();
+                return aName.localeCompare(bName);
+            })
+
             return allSeries;
         } else {
+            console.log('[loaded] -> SeriesList');
             return loadedData;
         }
     }
 
     private async combineDoubleEntrys(entrys: Anime[]): Promise<Anime[]> {
+        console.log('[calc] -> CombineEntrys');
         const dynamicEntrys = entrys;
         const newList: Anime[] = [];
         for (const a of entrys) {
@@ -86,11 +97,26 @@ export class ListController {
         let bNameList: string[] = [];
         aNameList.push(a.names.engName, a.names.mainName, a.names.romajiName, a.names.shortName, ...a.names.otherNames);
         bNameList.push(b.names.engName, b.names.mainName, b.names.romajiName, b.names.shortName, ...b.names.otherNames);
-        aNameList = this.cleanArray(aNameList);
-        bNameList = this.cleanArray(bNameList);
-        for (const aName of aNameList) {
+        aNameList = await listHelper.cleanArray(aNameList);
+        bNameList = await listHelper.cleanArray(bNameList);
+        for (const name of aNameList) {
+            aNameList.push(await this.removeSeasonMarkesFromTitle(name));
+        }
+        for (const name of bNameList) {
+            bNameList.push(await this.removeSeasonMarkesFromTitle(name));
+        }
+        if (await this.checkAnimeNamesInArray(aNameList, bNameList)) {
+            return true;
+        }
+
+
+        return false;
+    }
+
+    private async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
+        for (const aName of a) {
             if (aName != null && aName !== '') {
-                for (const bName of bNameList) {
+                for (const bName of b) {
                     if (bName != null && aName !== '') {
                         if (aName.toLocaleLowerCase() === bName.toLocaleLowerCase()) {
                             return true;
@@ -102,16 +128,18 @@ export class ListController {
         return false;
     }
 
-    private cleanArray(actual: string[]): string[] {
-        const newArray: string[] = [];
-        // tslint:disable-next-line: prefer-for-of
-        for (let i = 0; i < actual.length; i++) {
-            if (actual[i]) {
-                newArray.push(actual[i]);
-            }
+    private async removeSeasonMarkesFromTitle(title: string): Promise<string> {
+
+        var reversedTitle = await StringHelper.reverseString(title);
+        var lastChar = reversedTitle.charAt(0);
+        var countLastChar = 0;
+        while (lastChar === reversedTitle.charAt(countLastChar)) {
+            countLastChar++;
+            reversedTitle = reversedTitle.substr(1);
         }
-        return newArray;
+        return (await StringHelper.reverseString(reversedTitle)).trim();
     }
+
     private saveData(list: Anime[]) {
         fs.writeFileSync(this.getPath(), JSON.stringify(list));
     }
@@ -127,6 +155,7 @@ export class ListController {
             console.log(err);
             return [];
         }
+        return [];
     }
 
     private getPath(): string {

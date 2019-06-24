@@ -1,7 +1,8 @@
-import { Anime } from "../controller/objects/anime";
-import { UserData } from "./userData";
 
-export interface ListProvider {
+import { UserData } from "./userData";
+import Anime from '../controller/objects/anime';
+
+export default interface ListProvider {
     providerName: string;
     hasOAuthCode: boolean;
 

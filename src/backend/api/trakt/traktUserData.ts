@@ -1,19 +1,19 @@
 import { TraktUserInfo } from "./objects/userInfo";
-import path = require('path');
-import fs = require('fs');
+import electron from 'electron';
+import * as fs from "fs";
+import * as path from "path";
 import { UserData } from "../userData";
-import electron = require("electron");
 import Anime from "../../controller/objects/anime";
 
 export class TraktUserData implements UserData {
 
     public accessToken: string = '';
     public refreshToken: string = '';
-    public expiresIn: number;
-    public username: string;
-    public userInfo: TraktUserInfo;
-    public list: Anime[];
-    public lastListUpdate: Date;
+    public expiresIn: number = 0;
+    public username: string = '';
+    public userInfo: TraktUserInfo | null = null;
+    public list: Anime[] | undefined;
+    public lastListUpdate: Date | undefined;
     constructor() {
         this.loadData();
     }
@@ -42,6 +42,7 @@ export class TraktUserData implements UserData {
 
 
     private saveData() {
+        console.log('[Save] -> Trakt -> UserData');
         fs.writeFileSync(this.getPath(), JSON.stringify(this));
     }
 

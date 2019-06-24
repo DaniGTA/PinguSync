@@ -1,11 +1,11 @@
-import { ListProvider } from '../listProvider';
-import request = require('request');
+import ListProvider from '../listProvider';
 import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
 import { ProviderInfo } from '../../controller/objects/providerInfo';
-import { TraktUserData } from './traktUserData';
 import Anime, { WatchStatus } from '../../controller/objects/anime';
+import { TraktUserData } from './traktUserData';
 
+import request from 'request';
 export class TraktProvider implements ListProvider {
 
     public static getInstance() {
@@ -40,9 +40,10 @@ export class TraktProvider implements ListProvider {
         return this.userData.accessToken !== '';
     }
     public async getAllSeries(): Promise<Anime[]> {
+        console.log('[Request] -> Trakt -> AllSeries');
         if (this.userData.list != null && this.userData.list.length !== 0) {
             return this.userData.list;
-        } else {
+        } else if (this.userData.userInfo != null) {
             const seriesList: Anime[] = [];
             const response = await this.traktRequest('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             const data = JSON.parse(response) as WatchedInfo[];
@@ -71,6 +72,7 @@ export class TraktProvider implements ListProvider {
             this.userData.updateList(seriesList);
             return seriesList;
         }
+        return [];
     }
 
     public async getUserInfo() {
@@ -97,7 +99,7 @@ export class TraktProvider implements ListProvider {
             },
         };
         return new Promise<boolean>((resolve, reject) => {
-            request(options, (error, response, body) => {
+            request(options, (error: any, response: any, body: any) => {
                 console.log('error:', error); // Print the error if one occurred
                 console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
                 console.log('body:', body); // Print the HTML for the Google homepage.
@@ -124,7 +126,7 @@ export class TraktProvider implements ListProvider {
                     'trakt-api-version': '2',
                     'trakt-api-key': that.clientId,
                 },
-            }, (error, response, body) => {
+            }, (error: any, response: any, body: any) => {
                 console.log('Status:', response.statusCode);
                 console.log('Headers:', JSON.stringify(response.headers));
                 console.log('Response:', body);
