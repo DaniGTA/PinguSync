@@ -90,9 +90,9 @@ export class AniListProvider implements ListProvider {
 
     }
 
-    async getAllSeries(): Promise<Anime[]> {
+    async getAllSeries(disableCache: boolean = false): Promise<Anime[]> {
         console.log('[Request] -> AniList -> AllSeries');
-        if (this.userData.list != null && this.userData.list.length == 0) {
+        if (this.userData.list != null && this.userData.list.length != 0 && !disableCache) {
             console.log('[LoadCache] -> AniList -> AllSeries');
             return this.userData.list;
         } else {
@@ -104,6 +104,7 @@ export class AniListProvider implements ListProvider {
                     series.names.engName = entry.media.title.english;
                     series.names.mainName = entry.media.title.native;
                     series.names.romajiName = entry.media.title.romaji;
+                    series.names.fillNames();
                     if (typeof entry.media.episodes != 'undefined') {
                         series.episodes = entry.media.episodes;
                     }

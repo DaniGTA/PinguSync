@@ -8,7 +8,7 @@ export default interface ListProvider {
 
     userData: UserData;
 
-    getAllSeries(): Promise<Anime[]>;
+    getAllSeries(disableCache?: boolean): Promise<Anime[]>;
     logInUser(pass: string, username?: string): Promise<boolean>;
     isUserLoggedIn(): Promise<boolean>;
     getTokenAuthUrl(): string;

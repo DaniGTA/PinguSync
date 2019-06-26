@@ -42,8 +42,10 @@ export class TraktUserData implements UserData {
 
 
     private saveData() {
-        console.log('[Save] -> Trakt -> UserData');
-        fs.writeFileSync(this.getPath(), JSON.stringify(this));
+        try {
+            console.log('[Save] -> Trakt -> UserData');
+            fs.writeFileSync(this.getPath(), JSON.stringify(this));
+        } catch (err) { }
     }
 
     private loadData() {
@@ -54,13 +56,17 @@ export class TraktUserData implements UserData {
                 Object.assign(this, loadedData);
             }
         } catch (err) {
-            console.log(err);
+
         }
     }
 
     private getPath(): string {
-        const userDataPath = (electron.app || electron.remote.app).getPath('userData');
-        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-        return path.join(userDataPath, 'trakt_config.json');
+        try {
+            const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+            return path.join(userDataPath, 'trakt_config.json');
+        } catch (err) {
+            throw err;
+        }
     }
 }

@@ -6,6 +6,7 @@ import Anime, { WatchStatus } from '../../controller/objects/anime';
 import { TraktUserData } from './traktUserData';
 
 import request from 'request';
+import Name from '../../../backend/controller/objects/name';
 export class TraktProvider implements ListProvider {
 
     public static getInstance() {
@@ -28,9 +29,6 @@ export class TraktProvider implements ListProvider {
     constructor() {
         const that = this;
         this.userData = new TraktUserData();
-        if (this.userData.userInfo == null) {
-            this.getUserInfo();
-        }
     }
 
     public getTokenAuthUrl(): string {
@@ -39,24 +37,23 @@ export class TraktProvider implements ListProvider {
     public async isUserLoggedIn(): Promise<boolean> {
         return this.userData.accessToken !== '';
     }
-    public async getAllSeries(): Promise<Anime[]> {
+    public async getAllSeries(disableCache: boolean = false): Promise<Anime[]> {
         console.log('[Request] -> Trakt -> AllSeries');
-        if (this.userData.list != null && this.userData.list.length !== 0) {
+        if (this.userData.list != null && this.userData.list.length != 0 && !disableCache) {
             return this.userData.list;
         } else if (this.userData.userInfo != null) {
             const seriesList: Anime[] = [];
             const response = await this.traktRequest('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             const data = JSON.parse(response) as WatchedInfo[];
             for (const entry of data) {
-                let first = true;
                 for (const season of entry.seasons) {
                     const series: Anime = new Anime();
-                    if (first) {
+                    if (season.number == 1) {
                         series.releaseYear = entry.show.year;
-                        first = false;
                     }
                     series.names.engName = entry.show.title;
-                    series.names.otherNames.push(entry.show.ids.slug);
+                    series.names.otherNames.push(new Name(entry.show.ids.slug, 'id'));
+                    series.names.fillNames();
                     series.seasonNumber = season.number;
 
                     const providerInfo: ProviderInfo = new ProviderInfo(TraktProvider.getInstance());

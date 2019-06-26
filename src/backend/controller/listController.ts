@@ -1,11 +1,13 @@
 import ProviderController from './providerController';
 import electron from 'electron';
-import Anime, { Names } from './objects/anime';
+import Anime from './objects/anime';
 import * as fs from "fs";
 import * as path from "path";
-import StringHelper from '../helpFunctions/stringHelper';
+import animeHelper from '../helpFunctions/animeHelper';
+import Names from './objects/names';
 import listHelper from '../helpFunctions/listHelper';
-export class ListController {
+import titleCheckHelper from '../helpFunctions/titleCheckHelper';
+export default class ListController {
     public async getSeriesList(): Promise<Anime[]> {
         console.log('[start] -> SeriesList');
         // var loadedData = this.loadData();
@@ -33,52 +35,85 @@ export class ListController {
         }
     }
 
+    public InternalTesting() {
+        return {
+            combineDoubleEntrys: this.combineDoubleEntrys,
+            sameProvider: this.sameProvider,
+            matchCalc: this.matchCalc,
+        }
+    }
+
+
     private async combineDoubleEntrys(entrys: Anime[]): Promise<Anime[]> {
+        var that = this;
         console.log('[calc] -> CombineEntrys');
-        const dynamicEntrys = entrys;
+        let dynamicEntrys = [...entrys];
+        dynamicEntrys = dynamicEntrys.reverse();
         const newList: Anime[] = [];
         for (const a of entrys) {
             let bMatch: Anime | null = null;
-            let matches: number = 0;
             for (const b of dynamicEntrys) {
-                if (a !== b && !await this.sameProvider(a, b)) {
-                    matches = 0;
-                    if (a.releaseYear === b.releaseYear) {
-                        matches++;
-                    }
+                console.log('[progress2] -> CombineEntrys = ' + dynamicEntrys.indexOf(b) + '/' + dynamicEntrys.length);
+                if (a !== b && !await that.sameProvider(a, b)) {
+                    const matches = await that.matchCalc(a, b);
 
-                    if (a.episodes === b.episodes) {
-                        matches++;
-                    }
-
-                    if (await this.checkAnimeNames(a, b)) {
-                        matches++;
-                    }
-
-                    if (matches >= 2) {
+                    if (matches >= 3) {
                         bMatch = b;
                         break;
                     }
                 }
             }
-            const index = dynamicEntrys.indexOf(a);
-            if (index > -1) {
-                dynamicEntrys.splice(index, 1);
-            }
+            //
+            //AddToFinalList
+            //
+            dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, a);
             if (bMatch != null) {
-                const i = dynamicEntrys.indexOf(bMatch);
-                if (i > -1) {
-                    dynamicEntrys.splice(i, 1);
+                if (bMatch.names.engName === '91 Days') {
+                    console.log('Test');
                 }
+                dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, bMatch);
+                entrys = await listHelper.removeEntrys(entrys, bMatch, a);
+
                 const aInit = Object.assign(new Anime(), a);
                 const mergedAnime = aInit.merge(bMatch);
-                newList.push(mergedAnime);
 
+                newList.push(mergedAnime);
             } else {
+                if (a.names.engName === '91 Days') {
+                    console.log('Test');
+                }
                 newList.push(a);
             }
+            console.log('[progress] -> CombineEntrys = ' + entrys.indexOf(a) + '/' + entrys.length);
         }
         return newList;
+    }
+
+
+    private async matchCalc(a: Anime, b: Anime): Promise<number> {
+        let matches: number = 0;
+        if (a.releaseYear === b.releaseYear && typeof a.releaseYear != 'undefined') {
+            matches++;
+        }
+        if (a.seasonNumber === 0 || b.seasonNumber === 0 && a.seasonNumber != b.seasonNumber) {
+            matches--;
+        }
+
+        if (a.episodes === b.episodes) {
+            matches++;
+        }
+        if (matches == 0) {
+            if (!await animeHelper.isSameSeason(a, b)) {
+                return 0;
+            }
+        }
+        if (await titleCheckHelper.checkAnimeNames(a, b)) {
+            matches = matches + 2;
+            if (await animeHelper.isSameSeason(a, b)) {
+                matches++;
+            }
+        }
+        return matches;
     }
 
     private async sameProvider(a: Anime, b: Anime): Promise<boolean> {
@@ -90,54 +125,6 @@ export class ListController {
             }
         }
         return false;
-    }
-
-    private async checkAnimeNames(a: Anime, b: Anime): Promise<boolean> {
-        let aNameList: string[] = [];
-        let bNameList: string[] = [];
-        aNameList.push(a.names.engName, a.names.mainName, a.names.romajiName, a.names.shortName, ...a.names.otherNames);
-        bNameList.push(b.names.engName, b.names.mainName, b.names.romajiName, b.names.shortName, ...b.names.otherNames);
-        aNameList = await listHelper.cleanArray(aNameList);
-        bNameList = await listHelper.cleanArray(bNameList);
-        for (const name of aNameList) {
-            aNameList.push(await this.removeSeasonMarkesFromTitle(name));
-        }
-        for (const name of bNameList) {
-            bNameList.push(await this.removeSeasonMarkesFromTitle(name));
-        }
-        if (await this.checkAnimeNamesInArray(aNameList, bNameList)) {
-            return true;
-        }
-
-
-        return false;
-    }
-
-    private async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
-        for (const aName of a) {
-            if (aName != null && aName !== '') {
-                for (const bName of b) {
-                    if (bName != null && aName !== '') {
-                        if (aName.toLocaleLowerCase() === bName.toLocaleLowerCase()) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private async removeSeasonMarkesFromTitle(title: string): Promise<string> {
-
-        var reversedTitle = await StringHelper.reverseString(title);
-        var lastChar = reversedTitle.charAt(0);
-        var countLastChar = 0;
-        while (lastChar === reversedTitle.charAt(countLastChar)) {
-            countLastChar++;
-            reversedTitle = reversedTitle.substr(1);
-        }
-        return (await StringHelper.reverseString(reversedTitle)).trim();
     }
 
     private saveData(list: Anime[]) {

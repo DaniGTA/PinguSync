@@ -2,7 +2,7 @@ import ListProvider from '../api/ListProvider';
 import aniListProvider from '../api/anilist/aniListProvider';
 import traktProvider from '../api/trakt/traktProvider';
 import { ipcMain, shell } from 'electron';
-import { ListController } from './listController';
+import ListController from './listController';
 
 class ProviderController {
     public static getInstance(): ProviderController {
@@ -17,6 +17,10 @@ class ProviderController {
         const that = this;
         ProviderController.instance = that;
         this.webcontent = webcontent;
+    }
+
+    public initController() {
+        const that = this;
         for (const provider of that.list) {
             that.initProvider(provider);
         }
@@ -32,12 +36,14 @@ class ProviderController {
 
         ipcMain.on('get-series-list', async (event: any) => {
             console.log('Send all Series');
-            that.webcontent.send('series-list', await new ListController().getSeriesList());
+            that.sendSeriesList();
         });
-
-
     }
 
+    private async sendSeriesList() {
+        var list = await new ListController().getSeriesList();
+        this.webcontent.send('series-list', list);
+    }
 
 
     private async initProvider(provider: ListProvider) {

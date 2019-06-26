@@ -22,7 +22,7 @@ function createWindow() {
       nodeIntegration: true
     }
   })
-  new ProviderController(win.webContents);
+  new ProviderController(win.webContents).initController();
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)

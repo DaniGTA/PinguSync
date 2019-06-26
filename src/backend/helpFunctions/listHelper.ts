@@ -9,6 +9,16 @@ class ListHelper {
         }
         return newArray;
     }
+
+    public async removeEntrys<T>(array: T[], ...entrys: T[]): Promise<T[]> {
+        for (const entry of entrys) {
+            const i = array.indexOf(entry);
+            if (i > -1) {
+                array.splice(i, 1);
+            }
+        }
+        return array;
+    }
 }
 
 export default new ListHelper();
