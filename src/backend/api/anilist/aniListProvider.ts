@@ -11,8 +11,16 @@ import ListProvider from "../listProvider";
 import { UserData } from "../userData";
 import { ProviderInfo } from '../../controller/objects/providerInfo';
 import Anime, { WatchStatus } from '../../controller/objects/anime';
+import searchSeriesGql from './graphql/searchSeries.gql';
+import getSeriesByIDGql from './graphql/getSeriesByID.gql';
+import Names from '../../../backend/controller/objects/names';
+import { SearchSeries } from './graphql/searchSeries';
+import titleCheckHelper from '../../../backend/helpFunctions/titleCheckHelper';
+import aniListConverter from './aniListConverter';
+import { GetSeriesByID } from './graphql/getSeriesByID';
+import timeHelper from '../../../backend/helpFunctions/timeHelper';
 
-export class AniListProvider implements ListProvider {
+export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";
     hasOAuthCode = true;
     private static instance: AniListProvider;
@@ -22,7 +30,7 @@ export class AniListProvider implements ListProvider {
     private redirectUri = 'https://anilist.co/api/v2/oauth/pin';
     constructor() {
         this.userData = new AniListUserData();
-        const _this = this;
+        AniListProvider.instance = this;
     }
 
     static getInstance() {
@@ -31,6 +39,36 @@ export class AniListProvider implements ListProvider {
             // ... any one time initialization goes here ...
         }
         return AniListProvider.instance;
+    }
+
+    public async getMoreSeriesInfo(anime: Anime): Promise<Anime> {
+
+        var providerInfos = anime.providerInfos.find(x => x.provider === this.providerName);
+        var id = null;
+        if (typeof providerInfos != 'undefined') {
+            id = providerInfos.id;
+        } else {
+            var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: Object.assign(new Names(), anime.names).getRomajiName(), type: 'ANIME' })) as SearchSeries;
+            for (const result of searchResults.Page.media) {
+                try {
+                    var b = aniListConverter.convertMediaToAnime(result);
+                    if (await titleCheckHelper.checkAnimeNames(anime, b)) {
+                        var providerInfos = b.providerInfos.find(x => x.provider === this.providerName);
+                        if (typeof providerInfos != 'undefined') {
+                            id = providerInfos.id;
+                        }
+                    }
+                } catch (err) { }
+            }
+        }
+        if (id != null) {
+            await timeHelper.delay(2500);
+            var fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: id, type: 'ANIME' })) as GetSeriesByID;
+
+            return aniListConverter.convertExtendedInfoToAnime(fullInfo).merge(anime);
+        } else {
+            throw 'NoSeriesInfoFound - AniList';
+        }
     }
 
     getTokenAuthUrl(): string {
@@ -79,15 +117,10 @@ export class AniListProvider implements ListProvider {
         // Storing it in a separate .graphql/.gql file is also possible
         var query = getViewerGql;
         var options = this.getGraphQLOptions(query);
-
-        request(options, (error: any, response: any, body: any) => {
-            console.log('error:', error); // Print the error if one occurred
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-            console.log('body:', body);
-            var data = JSON.parse(body).data.Viewer as Viewer;
+        this.webRequest<any>(options).then((value) => {
+            var data = value.Viewer as Viewer;
             _this.userData.setViewer(data);
-        });
-
+        })
     }
 
     async getAllSeries(disableCache: boolean = false): Promise<Anime[]> {
@@ -140,24 +173,33 @@ export class AniListProvider implements ListProvider {
             }
             var options = this.getGraphQLOptions(query, variables);
 
-            return new Promise<MediaListCollection>((resolve, rejects) => {
+            return (await this.webRequest<any>(options)).MediaListCollection as MediaListCollection;
+        } else {
+            throw 'NoUser';
+        }
+
+    }
+
+    private async webRequest<T>(options: (request.UriOptions & request.CoreOptions)): Promise<T> {
+        return new Promise<T>((resolve, rejects) => {
+            try {
                 request(options, function (error: any, response: any, body: any) {
                     console.log('error:', error); // Print the error if one occurred
                     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
                     console.log('body:', body);
                     if (response.statusCode == 200) {
                         var rawdata = JSON.parse(body);
-                        resolve(rawdata.data.MediaListCollection as MediaListCollection);
+                        resolve(rawdata.data as T);
                     } else {
                         rejects();
                     }
-
-                });
-            })
-        } else {
-            throw 'NoUser';
-        }
-
+                }).on('error', (err) => {
+                    console.log(err);
+                })
+            } catch (err) {
+                console.log(err);
+            }
+        })
     }
 
     private getGraphQLOptions(query: string, variables?: any): (request.UriOptions & request.CoreOptions) {
@@ -240,6 +282,3 @@ class AniListUserData implements UserData {
         return path.join(userDataPath, 'anilist_config.json');
     }
 }
-
-
-export default AniListProvider.getInstance();

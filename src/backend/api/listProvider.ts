@@ -7,7 +7,7 @@ export default interface ListProvider {
     hasOAuthCode: boolean;
 
     userData: UserData;
-
+    getMoreSeriesInfo(a: Anime): Promise<Anime>;
     getAllSeries(disableCache?: boolean): Promise<Anime[]>;
     logInUser(pass: string, username?: string): Promise<boolean>;
     isUserLoggedIn(): Promise<boolean>;

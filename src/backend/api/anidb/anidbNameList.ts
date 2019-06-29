@@ -7,7 +7,7 @@ export default class AniDBNameList implements NameProvider {
     anidbNameManager: AniDBNameManager = new AniDBNameManager();
     constructor(download: boolean = true) {
         if (this.needDownload() && download) {
-            this.downloadFile();
+            //this.downloadFile();
         }
     }
 
@@ -44,6 +44,8 @@ export default class AniDBNameList implements NameProvider {
         const that = this;
         this.getGzipped("http://anidb.net/api/anime-titles.xml.gz").then(value => {
             that.anidbNameManager.updateData(new Date(Date.now()), value);
+        }).catch((err) => {
+            console.log(err);
         });
     }
 

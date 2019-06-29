@@ -1,13 +1,17 @@
 import ListProvider from '../listProvider';
 import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
+import { TraktSearch } from './objects/search';
 import { ProviderInfo } from '../../controller/objects/providerInfo';
 import Anime, { WatchStatus } from '../../controller/objects/anime';
 import { TraktUserData } from './traktUserData';
 
 import request from 'request';
 import Name from '../../../backend/controller/objects/name';
-export class TraktProvider implements ListProvider {
+import traktConverter from './traktConverter';
+import titleCheckHelper from '../../../backend/helpFunctions/titleCheckHelper';
+import { FullShowInfo } from './objects/fullShowInfo';
+export default class TraktProvider implements ListProvider {
 
     public static getInstance() {
         if (!TraktProvider.instance) {
@@ -27,8 +31,36 @@ export class TraktProvider implements ListProvider {
     private clientId = '94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd';
     private redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
     constructor() {
-        const that = this;
+        TraktProvider.instance = this;
         this.userData = new TraktUserData();
+    }
+
+    public async getMoreSeriesInfo(_anime: Anime): Promise<Anime> {
+        var anime = Object.assign(new Anime(), _anime);
+        anime.readdFunctions();
+        var providerInfos = anime.providerInfos.find(x => x.provider === this.providerName);
+        var id = null;
+        if (typeof providerInfos != 'undefined') {
+            id = providerInfos.id;
+        } else {
+            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + anime.names.getRomajiName());
+            for (const result of searchResults) {
+                try {
+                    var b = traktConverter.convertShowToAnime(result.show);
+                    if (await titleCheckHelper.checkAnimeNames(anime, b)) {
+                        var providerInfos = b.providerInfos.find(x => x.provider === this.providerName);
+                        if (typeof providerInfos != 'undefined') {
+                            id = providerInfos.id;
+                        }
+                    }
+                } catch (err) { }
+            }
+        }
+        if (id != null) {
+            return traktConverter.convertFullShowInfoToAnime(await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + id)).merge(anime);
+        } else {
+            throw 'NoMatch in TraktSearch';
+        }
     }
 
     public getTokenAuthUrl(): string {
@@ -43,8 +75,7 @@ export class TraktProvider implements ListProvider {
             return this.userData.list;
         } else if (this.userData.userInfo != null) {
             const seriesList: Anime[] = [];
-            const response = await this.traktRequest('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
-            const data = JSON.parse(response) as WatchedInfo[];
+            const data = await this.traktRequest<WatchedInfo[]>('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             for (const entry of data) {
                 for (const season of entry.seasons) {
                     const series: Anime = new Anime();
@@ -73,8 +104,7 @@ export class TraktProvider implements ListProvider {
     }
 
     public async getUserInfo() {
-        const response = await this.traktRequest('https://api.trakt.tv/users/settings');
-        const data = JSON.parse(response) as TraktUserInfo;
+        const data = await this.traktRequest<TraktUserInfo>('https://api.trakt.tv/users/settings');
         this.userData.setUserData(data);
     }
 
@@ -111,7 +141,7 @@ export class TraktProvider implements ListProvider {
         });
     }
 
-    private traktRequest(url: string): Promise<any> {
+    private traktRequest<T>(url: string): Promise<T> {
         const that = this;
         return new Promise<any>((resolve, reject) => {
             request({
@@ -124,15 +154,19 @@ export class TraktProvider implements ListProvider {
                     'trakt-api-key': that.clientId,
                 },
             }, (error: any, response: any, body: any) => {
-                console.log('Status:', response.statusCode);
-                console.log('Headers:', JSON.stringify(response.headers));
-                console.log('Response:', body);
-                resolve(body);
-            });
+                try {
+                    console.log('Status:', response.statusCode);
+                    console.log('Headers:', JSON.stringify(response.headers));
+                    console.log('Response:', body);
+                    var data: T = JSON.parse(body) as T;
+                    resolve(data);
+                } catch (err) {
+                    console.log(err);
+                    reject();
+                }
+            }).on('error', (err) => {
+                console.log(err);
+            })
         });
     }
 }
-
-
-
-export default TraktProvider.getInstance();

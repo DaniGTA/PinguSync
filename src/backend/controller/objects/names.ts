@@ -10,7 +10,7 @@ export default class Names {
     shortName: string = '';
     otherNames: Name[] = [];
 
-    getRomajiName(names: Names): string {
+    getRomajiName(names: Names = this): string {
         if (names.mainName == null || names.mainName === '' || this.hasKanji(names.mainName)) {
             if (names.engName != null && names.engName !== '') {
                 return names.engName;
@@ -68,6 +68,9 @@ export default class Names {
         var reversedTitle = await stringHelper.reverseString(title);
         var lastChar = reversedTitle.charAt(0);
         var countLastChar = 0;
+        if (title.toLocaleLowerCase().includes('episode')) {
+            throw 'That name dont have a Season';
+        }
         if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd/gmi)) {
             var match = /Season\s{1,}(\d{1,})|(\d{1,})nd/gmi.exec(title);
             if (match != null) {

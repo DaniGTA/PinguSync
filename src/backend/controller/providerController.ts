@@ -1,8 +1,11 @@
 import ListProvider from '../api/ListProvider';
 import aniListProvider from '../api/anilist/aniListProvider';
-import traktProvider from '../api/trakt/traktProvider';
 import { ipcMain, shell } from 'electron';
 import ListController from './listController';
+import KitsuProvider from '../api/kitsu/kitsuProvider';
+import TraktProvider from '../api/trakt/traktProvider';
+import Anime from './objects/anime';
+import IUpdateList from './objects/iupdateList';
 
 class ProviderController {
     public static getInstance(): ProviderController {
@@ -10,7 +13,14 @@ class ProviderController {
     }
 
     private static instance: ProviderController;
-    public list: ListProvider[] = [aniListProvider, traktProvider];
+    /**
+     * List all Providers that are avaible
+     */
+    public list: ListProvider[] = [
+        new aniListProvider(),
+        new TraktProvider(),
+        new KitsuProvider()];
+
     private webcontent: Electron.WebContents;
 
     constructor(webcontent: Electron.WebContents) {
@@ -38,11 +48,19 @@ class ProviderController {
             console.log('Send all Series');
             that.sendSeriesList();
         });
+        ipcMain.on('request-info-refresh', async (event: any, anime: Anime) => {
+            console.log('updateAnime: ' + anime.id);
+            new ListController().forceRefreshProviderInfo(anime);
+        });
     }
 
     private async sendSeriesList() {
-        var list = await new ListController().getSeriesList();
+        var list = new ListController().getMainList();
         this.webcontent.send('series-list', list);
+    }
+
+    public async updateClientList(targetIndex: number, updatedEntry: Anime) {
+        this.webcontent.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }
 
 

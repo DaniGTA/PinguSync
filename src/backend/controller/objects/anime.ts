@@ -1,18 +1,45 @@
 import { ProviderInfo } from './providerInfo';
 import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import Names from './names';
+import Overview from './overview';
+import { Provider } from 'electron';
+import listHelper from '../../../backend/helpFunctions/listHelper';
 
 export default class Anime {
     public id: string = '';
     public names: Names = new Names();
     public providerInfos: ProviderInfo[] = [];
-    public episodes: number = 0;
+    public episodes?: number = 0;
     public coverImage: string = '';
+    public overviews: Overview[] = [];
     public releaseYear?: number;
     public seasonNumber?: number;
+    public runTime?: number;
     constructor() {
         //Generates randome string.
         this.id = stringHelper.randomString(20);
+    }
+
+    public async getSeason(): Promise<number | undefined> {
+        if (typeof this.seasonNumber != 'undefined') {
+            return this.seasonNumber;
+        } else {
+            return await this.names.getSeasonNumber();
+        }
+    }
+
+    public readdFunctions() {
+        var overviewsCache: Overview[] = [];
+        for (const overview of this.overviews) {
+            overviewsCache.push(new Overview(overview.content, overview.lang));
+        }
+        var providersCache: ProviderInfo[] = [];
+        for (const provider of this.providerInfos) {
+            providersCache.push(Object.assign(new ProviderInfo(), provider));
+        }
+        this.providerInfos = providersCache;
+        this.overviews = overviewsCache;
+        this.names = Object.assign(new Names(), this.names);
     }
 
     public merge(anime: Anime): Anime {
@@ -26,10 +53,34 @@ export default class Anime {
         newAnime.episodes = this.mergeNumber(this.episodes, anime.episodes, newAnime.names.mainName, 'Episodes');
         newAnime.releaseYear = this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
         newAnime.seasonNumber = this.mergeNumber(this.seasonNumber, anime.seasonNumber, newAnime.names.mainName, 'SeasonNumber');
+        newAnime.runTime = this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
         newAnime.coverImage = this.mergeString(anime.coverImage, this.coverImage);
-        newAnime.providerInfos.push(...anime.providerInfos, ...this.providerInfos);
+        newAnime.providerInfos = this.mergeProviders(...[...this.providerInfos, ...anime.providerInfos]);
+        newAnime.coverImage = this.mergeString(this.names.shortName, anime.names.shortName, 'CoverImage');
+        newAnime.overviews.push(...[...this.overviews, ...anime.overviews]);
 
         return newAnime;
+    }
+
+    private mergeProviders(...providers: ProviderInfo[]): ProviderInfo[] {
+        const mergedProviderInfos: ProviderInfo[] = []
+        for (const provider of providers) {
+            var collected: ProviderInfo[] = [];
+            for (const provider2 of providers) {
+                if (provider2.provider == provider.provider) {
+                    collected.push(provider2);
+                }
+            }
+            if (collected.length > 2) {
+                var check = mergedProviderInfos.find(x => collected[0].provider === x.provider);
+                if (typeof check === 'undefined') {
+                    mergedProviderInfos.push(ProviderInfo.mergeProviderInfos(...collected));
+                }
+            } else {
+                mergedProviderInfos.push(provider);
+            }
+        }
+        return mergedProviderInfos;
     }
 
     private mergeNumber(a: number | undefined, b: number | undefined, name?: string, target?: string): number {

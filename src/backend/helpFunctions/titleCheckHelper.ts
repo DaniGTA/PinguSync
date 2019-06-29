@@ -28,14 +28,24 @@ export default new class TitleCheckHelper {
     }
 
     public async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
-        for (const aName of a) {
+        for (let aName of [...a]) {
             if (aName != null && aName !== '') {
-                for (const bName of b) {
+                for (let bName of [...b]) {
+
                     if (bName != null && aName !== '') {
-                        if (aName.toLocaleLowerCase() === bName.toLocaleLowerCase()) {
+                        aName = aName.toLocaleLowerCase().trim();
+                        bName = bName.toLocaleLowerCase().trim();
+                        if (aName === bName) {
                             return true;
                         }
-                        if (aName.replace(/Season\s{1,}(\d{1,})/gmi, '').trim() === bName.replace(/Season\s{1,}(\d{1,})/gmi, '').trim()) {
+                        aName = stringHelper.cleanString(aName)
+                        bName = stringHelper.cleanString(bName)
+                        if (aName === bName) {
+                            return true;
+                        }
+                        aName = aName.replace(/Season\s{1,}(\d{1,})/gmi, '').trim()
+                        bName = bName.replace(/Season\s{1,}(\d{1,})/gmi, '').trim()
+                        if (aName === bName) {
                             return true;
                         }
                     }
@@ -46,30 +56,35 @@ export default new class TitleCheckHelper {
     }
 
     public async fastMatch(aList: string[], bList: string[]): Promise<boolean> {
-        var al = [...aList];
-        var bl = [...bList];
-        for (let a of al) {
-            for (let b of bl) {
+        try {
+            var al = [...aList];
+            var bl = [...bList];
+            for (let a of al) {
+                for (let b of bl) {
 
-                var shortestTextLength = 0;
-                if (a.length < b.length) {
-                    shortestTextLength = a.length;
-                } else {
-                    shortestTextLength = b.length;
-                }
-                var shortScan = Math.ceil(shortestTextLength / 4);
-                if (shortScan < 3) {
-                    shortScan = Math.ceil(shortestTextLength / 1.5)
-                }
-                var aResult = a.substring(0, shortScan).toLocaleLowerCase();
-                var bResult = b.substring(0, shortScan).toLocaleLowerCase();
+                    var shortestTextLength = 0;
+                    if (a.length < b.length) {
+                        shortestTextLength = a.length;
+                    } else {
+                        shortestTextLength = b.length;
+                    }
+                    var shortScan = Math.ceil(shortestTextLength / 4);
+                    if (shortScan < 3) {
+                        shortScan = Math.ceil(shortestTextLength / 1.5)
+                    }
+                    var aResult = a.substring(0, shortScan).toLocaleLowerCase();
+                    var bResult = b.substring(0, shortScan).toLocaleLowerCase();
 
-                if (aResult === bResult) {
-                    return true;
+                    if (aResult === bResult) {
+                        return true;
+                    }
                 }
             }
+            return false;
+        } catch (err) {
+            console.log(err);
+            return false;
         }
-        return false;
     }
 
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
@@ -77,6 +92,9 @@ export default new class TitleCheckHelper {
             var reversedTitle = await stringHelper.reverseString(title);
             var lastChar = reversedTitle.charAt(0);
             var countLastChar = 0;
+            if (title.toLocaleLowerCase().includes('episode')) {
+                return title;
+            }
             if ('0123456789'.includes(lastChar)) {
                 return (await stringHelper.reverseString(reversedTitle.substr(1))).trim();
             } else {
