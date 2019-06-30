@@ -7,7 +7,7 @@ import Name from '../../../backend/controller/objects/name';
 import aniListProvider from './aniListProvider';
 
 export default new class AniListConverter {
-    public convertMediaToAnime(medium: Medium): Anime {
+    public async convertMediaToAnime(medium: Medium): Promise<Anime> {
         const anime = new Anime();
         anime.episodes = medium.episodes;
         anime.names.engName = medium.title.english;
@@ -20,11 +20,12 @@ export default new class AniListConverter {
         const provider = new ProviderInfo(aniListProvider.getInstance());
         provider.id = medium.id;
         provider.score = medium.averageScore;
+        provider.episodes = medium.episodes;
         anime.providerInfos.push(provider);
         return anime;
     }
 
-    public convertExtendedInfoToAnime(info: GetSeriesByID): Anime {
+    public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<Anime> {
         const anime = new Anime();
         anime.coverImage = info.Media.coverImage.large;
         anime.overviews.push(new Overview(info.Media.description, 'eng'));
@@ -38,6 +39,7 @@ export default new class AniListConverter {
         const provider = new ProviderInfo(aniListProvider.getInstance());
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
+        provider.episodes = info.Media.episodes;
         anime.providerInfos.push(provider);
         return anime;
 

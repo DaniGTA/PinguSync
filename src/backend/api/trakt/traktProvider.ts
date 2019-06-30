@@ -43,10 +43,10 @@ export default class TraktProvider implements ListProvider {
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + anime.names.getRomajiName());
+            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + await anime.names.getRomajiName());
             for (const result of searchResults) {
                 try {
-                    var b = traktConverter.convertShowToAnime(result.show);
+                    var b = await traktConverter.convertShowToAnime(result.show);
                     if (await titleCheckHelper.checkAnimeNames(anime, b)) {
                         var providerInfos = b.providerInfos.find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
@@ -57,7 +57,8 @@ export default class TraktProvider implements ListProvider {
             }
         }
         if (id != null) {
-            return traktConverter.convertFullShowInfoToAnime(await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + id)).merge(anime);
+            const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + id);
+            return await (await traktConverter.convertFullShowInfoToAnime(res)).merge(anime);
         } else {
             throw 'NoMatch in TraktSearch';
         }
@@ -84,7 +85,7 @@ export default class TraktProvider implements ListProvider {
                     }
                     series.names.engName = entry.show.title;
                     series.names.otherNames.push(new Name(entry.show.ids.slug, 'id'));
-                    series.names.fillNames();
+                    await series.names.fillNames();
                     series.seasonNumber = season.number;
 
                     const providerInfo: ProviderInfo = new ProviderInfo(TraktProvider.getInstance());
@@ -93,6 +94,7 @@ export default class TraktProvider implements ListProvider {
                     providerInfo.rawEntry = entry;
                     providerInfo.watchProgress = season.episodes.length;
                     providerInfo.watchStatus = WatchStatus.COMPLETED;
+                    providerInfo.lastExternalChange = entry.last_watched_at;
                     series.providerInfos.push(providerInfo);
                     seriesList.push(series);
                 }

@@ -15,6 +15,7 @@ export default class Anime {
     public releaseYear?: number;
     public seasonNumber?: number;
     public runTime?: number;
+    public canSync: boolean = false;
     constructor() {
         //Generates randome string.
         this.id = stringHelper.randomString(20);
@@ -26,6 +27,48 @@ export default class Anime {
         } else {
             return await this.names.getSeasonNumber();
         }
+    }
+
+    /**
+     * Checks if providers can be synced.
+     */
+    public async getCanSyncStatus(): Promise<boolean> {
+        let latestUpdatedProvider: ProviderInfo | null = null;
+        for (const provider of this.providerInfos) {
+            if (typeof provider.watchProgress != 'undefined') {
+                if (latestUpdatedProvider === null) {
+
+                    latestUpdatedProvider = provider;
+
+                } else if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
+
+                    latestUpdatedProvider = provider;
+                }
+            }
+        }
+        if (latestUpdatedProvider === null) {
+            throw 'no provider with valid sync status'
+        }
+        for (const provider of this.providerInfos) {
+            if (latestUpdatedProvider.provider != provider.provider && provider.getProviderInstance().userData.username != '') {
+                if (latestUpdatedProvider.watchProgress != provider.watchProgress) {
+                    if (typeof provider.watchProgress === 'undefined') {
+                        this.canSync = true;
+                        return true;
+                    } else if (typeof this.episodes != 'undefined' && this.episodes <= provider.watchProgress) {
+                        this.canSync = false;
+                        return false;
+                    } else {
+
+                        provider.canUpdateWatchProgress = true;
+                        this.canSync = true;
+                        return true;
+                    }
+                }
+            }
+        }
+        this.canSync = false;
+        return false;
     }
 
     public readdFunctions() {
@@ -42,48 +85,63 @@ export default class Anime {
         this.names = Object.assign(new Names(), this.names);
     }
 
-    public merge(anime: Anime): Anime {
+    public async merge(anime: Anime): Promise<Anime> {
         const newAnime: Anime = new Anime();
-        newAnime.names.engName = this.mergeString(this.names.engName, anime.names.engName, 'EngName');
-        newAnime.names.romajiName = this.mergeString(this.names.romajiName, anime.names.romajiName, 'RomajiName');
-        newAnime.names.mainName = this.mergeString(this.names.mainName, anime.names.mainName, 'MainName');
-        newAnime.names.shortName = this.mergeString(this.names.shortName, anime.names.shortName, 'ShortNmae');
+        newAnime.names.engName = await this.mergeString(this.names.engName, anime.names.engName, 'EngName');
+        newAnime.names.romajiName = await this.mergeString(this.names.romajiName, anime.names.romajiName, 'RomajiName');
+        newAnime.names.mainName = await this.mergeString(this.names.mainName, anime.names.mainName, 'MainName');
+        newAnime.names.shortName = await this.mergeString(this.names.shortName, anime.names.shortName, 'ShortNmae');
         newAnime.names.otherNames.push(...this.names.otherNames, ...anime.names.otherNames);
 
-        newAnime.episodes = this.mergeNumber(this.episodes, anime.episodes, newAnime.names.mainName, 'Episodes');
-        newAnime.releaseYear = this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
-        newAnime.seasonNumber = this.mergeNumber(this.seasonNumber, anime.seasonNumber, newAnime.names.mainName, 'SeasonNumber');
-        newAnime.runTime = this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
-        newAnime.coverImage = this.mergeString(anime.coverImage, this.coverImage);
-        newAnime.providerInfos = this.mergeProviders(...[...this.providerInfos, ...anime.providerInfos]);
-        newAnime.coverImage = this.mergeString(this.names.shortName, anime.names.shortName, 'CoverImage');
-        newAnime.overviews.push(...[...this.overviews, ...anime.overviews]);
+        newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.providerInfos.flatMap(x => x.episodes)));
 
+        newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
+        newAnime.seasonNumber = await this.mergeNumber(this.seasonNumber, anime.seasonNumber, newAnime.names.mainName, 'SeasonNumber');
+        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
+        newAnime.coverImage = await this.mergeString(anime.coverImage, this.coverImage);
+        newAnime.providerInfos = await this.mergeProviders(...[...this.providerInfos, ...anime.providerInfos]);
+        newAnime.coverImage = await this.mergeString(this.names.shortName, anime.names.shortName, 'CoverImage');
+        try {
+            if (this.overviews != null && typeof this.overviews != 'undefined') {
+                newAnime.overviews.push(...this.overviews);
+            }
+            if (anime.overviews != null && typeof anime.overviews != 'undefined') {
+                newAnime.overviews.push(...anime.overviews);
+            }
+            newAnime.overviews = await listHelper.cleanArray(newAnime.overviews);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            newAnime.canSync = await this.getCanSyncStatus();
+        } catch (err) {
+            console.log(err);
+        }
         return newAnime;
     }
 
-    private mergeProviders(...providers: ProviderInfo[]): ProviderInfo[] {
+    private async mergeProviders(...providers: ProviderInfo[]): Promise<ProviderInfo[]> {
         const mergedProviderInfos: ProviderInfo[] = []
         for (const provider of providers) {
-            var collected: ProviderInfo[] = [];
-            for (const provider2 of providers) {
-                if (provider2.provider == provider.provider) {
-                    collected.push(provider2);
+            var check = mergedProviderInfos.find(x => provider.provider === x.provider);
+            if (typeof check === 'undefined') {
+                var collected: ProviderInfo[] = [];
+                for (const provider2 of providers) {
+                    if (provider2.provider == provider.provider) {
+                        collected.push(provider2);
+                    }
                 }
-            }
-            if (collected.length > 2) {
-                var check = mergedProviderInfos.find(x => collected[0].provider === x.provider);
-                if (typeof check === 'undefined') {
-                    mergedProviderInfos.push(ProviderInfo.mergeProviderInfos(...collected));
+                if (collected.length >= 2) {
+                    mergedProviderInfos.push(await ProviderInfo.mergeProviderInfos(...collected));
+                } else {
+                    mergedProviderInfos.push(provider);
                 }
-            } else {
-                mergedProviderInfos.push(provider);
             }
         }
         return mergedProviderInfos;
     }
 
-    private mergeNumber(a: number | undefined, b: number | undefined, name?: string, target?: string): number {
+    private async mergeNumber(a: number | undefined, b: number | undefined, name?: string, target?: string): Promise<number> {
         if (this.isDefined(b) && b === a) {
             return b;
         } else if ((b === 0 || !this.isDefined(b)) && (this.isDefined(a) || a !== 0)) {
@@ -98,7 +156,7 @@ export default class Anime {
     private isDefined<T>(value: T | undefined | null): value is T {
         return <T>value !== undefined && <T>value !== null;
     }
-    private mergeString(a: string, b: string, topic?: string): string {
+    private async mergeString(a: string, b: string, topic?: string): Promise<string> {
 
         if (a === '' || a == null) {
             return b;

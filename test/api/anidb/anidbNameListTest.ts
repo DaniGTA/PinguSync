@@ -10,7 +10,7 @@ describe('AniDB Tests', () => {
     it('should allow download', async () => {
         var a = new AniDBNameList(false);
         var twoDaysInMs = 172800000;
-        a.anidbNameManager.lastDownloadTime = new Date(Date.now() - twoDaysInMs);
+        a.anidbNameManager.lastDownloadTime = new Date(Date.now() - twoDaysInMs * 2);
         assert.equal(a.InternalTesting().needDownload(), true);
         return;
     })

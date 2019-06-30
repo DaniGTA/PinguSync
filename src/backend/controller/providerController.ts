@@ -60,6 +60,7 @@ class ProviderController {
     }
 
     public async updateClientList(targetIndex: number, updatedEntry: Anime) {
+        console.log('[Send] -> update -> anime');
         this.webcontent.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }
 

@@ -10,15 +10,19 @@ export default new class TitleCheckHelper {
         if (await this.fastMatch(aNameList, bNameList)) {
             for (let name of aNameList) {
                 try {
-                    name = stringHelper.cleanString(name);
+                    name = await stringHelper.cleanString(name);
                     aNameList.push(await this.removeSeasonMarkesFromTitle(name));
-                } catch (err) { }
+                } catch (err) {
+                    continue;
+                }
             }
             for (let name of bNameList) {
                 try {
-                    name = stringHelper.cleanString(name);
+                    name = await stringHelper.cleanString(name);
                     bNameList.push(await this.removeSeasonMarkesFromTitle(name));
-                } catch (err) { }
+                } catch (err) {
+                    continue;
+                }
             }
             if (await this.checkAnimeNamesInArray(aNameList, bNameList)) {
                 return true;
@@ -38,8 +42,8 @@ export default new class TitleCheckHelper {
                         if (aName === bName) {
                             return true;
                         }
-                        aName = stringHelper.cleanString(aName)
-                        bName = stringHelper.cleanString(bName)
+                        aName = await stringHelper.cleanString(aName)
+                        bName = await stringHelper.cleanString(bName)
                         if (aName === bName) {
                             return true;
                         }
@@ -92,7 +96,12 @@ export default new class TitleCheckHelper {
             var reversedTitle = await stringHelper.reverseString(title);
             var lastChar = reversedTitle.charAt(0);
             var countLastChar = 0;
-            if (title.toLocaleLowerCase().includes('episode')) {
+            if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd/gmi)) {
+                var match = /Season\s{1,}(\d{1,})|(\d{1,})nd/gmi.exec(title);
+                if (match != null) {
+                    return title.replace(match[0], "").replace('  ', ' ').trim();
+                }
+            } else if (title.toLocaleLowerCase().includes('episode')) {
                 return title;
             }
             if ('0123456789'.includes(lastChar)) {
@@ -104,7 +113,7 @@ export default new class TitleCheckHelper {
                 }
 
                 if (countLastChar != 1) {
-                    return (await stringHelper.reverseString(reversedTitle)).trim();
+                    return (await stringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
                 }
             }
         }

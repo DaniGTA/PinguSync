@@ -6,7 +6,7 @@ import { ProviderInfo } from '../../../backend/controller/objects/providerInfo';
 import KitsuProvider from './kitsuProvider';
 
 export default new class KitsuConverter {
-    convertMediaToAnime(media: Media): Anime {
+    async convertMediaToAnime(media: Media): Promise<Anime> {
         const anime = new Anime();
         if (media.coverImage != null) {
             anime.coverImage = media.coverImage.large;
@@ -14,7 +14,6 @@ export default new class KitsuConverter {
             anime.coverImage = media.posterImage.large;
         }
 
-        anime.episodes = media.episodeCount;
         anime.runTime = media.episodeLength;
         anime.names.engName = media.titles.en;
         anime.names.mainName = media.titles.ja_jp;
@@ -32,7 +31,9 @@ export default new class KitsuConverter {
         providerInfos.id = media.id;
         providerInfos.publicScore = media.ratingRank;
         providerInfos.rawEntry = media;
+        providerInfos.episodes = media.episodeCount;
         anime.providerInfos.push(providerInfos);
+
         return anime;
     }
 }

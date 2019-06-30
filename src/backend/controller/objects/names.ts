@@ -10,8 +10,8 @@ export default class Names {
     shortName: string = '';
     otherNames: Name[] = [];
 
-    getRomajiName(names: Names = this): string {
-        if (names.mainName == null || names.mainName === '' || this.hasKanji(names.mainName)) {
+    public async getRomajiName(names: Names = this): Promise<string> {
+        if (names.mainName == null || names.mainName === '' || await this.hasKanji(names.mainName)) {
             if (names.engName != null && names.engName !== '') {
                 return names.engName;
             } else if (names.romajiName != null && names.romajiName !== '') {
@@ -21,7 +21,7 @@ export default class Names {
             }
             for (const otherName of names.otherNames) {
                 if (otherName != null && otherName.name !== '') {
-                    if (!otherName.name.match('[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}')) {
+                    if (!await this.hasKanji(otherName.name)) {
                         return otherName.name;
                     }
                 }
@@ -74,7 +74,11 @@ export default class Names {
         if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd/gmi)) {
             var match = /Season\s{1,}(\d{1,})|(\d{1,})nd/gmi.exec(title);
             if (match != null) {
-                return parseInt(match[1]);
+                if (typeof match[1] !== 'undefined') {
+                    return parseInt(match[1]);
+                } else if (typeof match[2] !== 'undefined') {
+                    return parseInt(match[2]);
+                }
             }
         } else if ('0123456789'.includes(lastChar)) {
             return parseInt(lastChar, 10);
@@ -91,7 +95,15 @@ export default class Names {
         }
     }
 
-    private hasKanji(s: string): boolean {
+    private async hasKanji(s: string): Promise<boolean> {
         return s.match('[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}') != null;
     }
+
+    public InternalTesting() {
+        return {
+            hasKanji: this.hasKanji,
+            getSeasonNumberFromTitle: this.getSeasonNumberFromTitle,
+        }
+    }
+
 }

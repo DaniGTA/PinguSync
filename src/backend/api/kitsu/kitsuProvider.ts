@@ -30,15 +30,16 @@ export default class KitsuProvider implements ListProvider {
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
+            var text = await anime.names.getRomajiName();
             const searchResults: SearchResult = ((await this.api.get('anime', {
                 filter: {
-                    text: anime.names.getRomajiName()
+                    text: text
                 }
             })) as unknown) as SearchResult;
 
             for (const result of searchResults.data) {
                 try {
-                    var b = kitsuConverter.convertMediaToAnime(result);
+                    var b = await kitsuConverter.convertMediaToAnime(result);
                     var validSeason = (await anime.getSeason() === await b.getSeason() || (await anime.getSeason() === 1 && typeof await b.getSeason() === 'undefined'));
                     if (await titleCheckHelper.checkAnimeNames(anime, b) && validSeason) {
                         var providerInfos = b.providerInfos.find(x => x.provider === this.providerName);
@@ -53,7 +54,7 @@ export default class KitsuProvider implements ListProvider {
         if (id != null) {
             await timeHelper.delay(1500);
             const getResult = ((await this.api.get('anime/' + id)) as unknown) as GetMediaResult;
-            return kitsuConverter.convertMediaToAnime(getResult.data).merge(anime);
+            return await (await kitsuConverter.convertMediaToAnime(getResult.data)).merge(anime);
         } else {
             throw 'NoMatch in Kitsu';
         }

@@ -15,6 +15,8 @@
       <td>{{item.names.mainName}}</td>
       <td>{{item.names.romajiName}}</td>
       <td>{{item.seasonNumber}}</td>
+      <td>{{item.canSync}}</td>
+
       <td>
         <button @click="updateAnime(item.id)">RefreshInfo</button>
       </td>
@@ -47,6 +49,7 @@ export default class Providers extends Vue {
       that.$set(that.mainList, update.targetIndex, update.updatedEntry);
     });
   }
+
   clog(a: any) {
     console.log(a);
   }

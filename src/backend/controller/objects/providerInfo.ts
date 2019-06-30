@@ -5,12 +5,18 @@ import ProviderController from '../providerController';
 export class ProviderInfo {
     public id: number | string = -1;
     public readonly provider: string;
-    public score?: number;
-    public publicScore?: number;
-    public watchStatus: WatchStatus | undefined;
-    public watchProgress: number | undefined;
+
     public rawEntry: any;
     public lastUpdate: Date;
+    public canUpdateWatchProgress = false;
+    public lastExternalChange: Date = new Date(0);
+
+    public watchStatus?: WatchStatus;
+    public watchProgress?: number;
+    public score?: number;
+    public episodes?: number;
+    public publicScore?: number;
+
     constructor(lp?: ListProvider) {
         this.lastUpdate = new Date(Date.now());
         if (typeof lp != 'undefined') {
@@ -30,7 +36,7 @@ export class ProviderInfo {
         throw 'NoProviderFound';
     }
 
-    static mergeProviderInfos(...providers: ProviderInfo[]): ProviderInfo {
+    static async mergeProviderInfos(...providers: ProviderInfo[]): Promise<ProviderInfo> {
         const mergedProvider = new ProviderInfo(providers[0].getProviderInstance());
         var newestProvider: ProviderInfo = providers[0];
         for (const provider of providers) {
@@ -40,7 +46,7 @@ export class ProviderInfo {
                 }
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
-                if (provider.lastUpdate.getMilliseconds() < newestProvider.lastUpdate.getMilliseconds()) {
+                if (new Date(provider.lastUpdate).getMilliseconds() > new Date(newestProvider.lastUpdate).getMilliseconds()) {
                     newestProvider = provider;
                 }
                 if (typeof provider.publicScore != 'undefined') {
@@ -69,14 +75,9 @@ export class ProviderInfo {
                     }
                 }
 
-                if (typeof provider.watchStatus != 'undefined') {
-                    if (typeof mergedProvider.watchStatus != 'undefined' && mergedProvider.watchStatus != provider.watchStatus) {
-                        if (provider.watchStatus == WatchStatus.COMPLETED) {
-                            mergedProvider.watchStatus = provider.watchStatus;
-                        }
-                    } else {
-                        mergedProvider.score = provider.score;
-                    }
+                if (await ProviderInfo.isValidWatchStatus(provider.watchStatus, mergedProvider.watchStatus)) {
+                    mergedProvider.watchStatus = provider.watchStatus;
+
                 }
             }
         }
@@ -92,7 +93,28 @@ export class ProviderInfo {
         if (typeof newestProvider.score != 'undefined') {
             mergedProvider.publicScore = newestProvider.publicScore;
         }
+        if (typeof newestProvider.episodes != 'undefined') {
+            mergedProvider.episodes = newestProvider.episodes;
+        }
 
         return mergedProvider;
+    }
+
+    /**
+     * Check if [a] can be safly importet in [b]
+     * @param a 
+     * @param b 
+     */
+    private static async isValidWatchStatus(a?: WatchStatus, b?: WatchStatus): Promise<boolean> {
+        if (typeof a != 'undefined') {
+            if (typeof a != 'undefined' && b != a) {
+                if (a == WatchStatus.COMPLETED) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 }

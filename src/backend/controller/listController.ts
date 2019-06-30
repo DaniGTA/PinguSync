@@ -3,11 +3,13 @@ import electron from 'electron';
 import Anime from './objects/anime';
 import * as fs from "fs";
 import * as path from "path";
+import resolve from 'resolve';
 import animeHelper from '../helpFunctions/animeHelper';
 import Names from './objects/names';
 import listHelper from '../helpFunctions/listHelper';
 import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
+import sortHelper from '../helpFunctions/sortHelper';
 export default class ListController {
     private static mainList: Anime[] = [];
     static listLoaded = false;
@@ -27,10 +29,10 @@ export default class ListController {
                             if (providerInfos.id === providerInfos2.id && providerInfos.provider === providerInfos.provider) {
                                 if ((typeof entry.seasonNumber != 'undefined' && typeof anime.seasonNumber != 'undefined') || (typeof entry.seasonNumber === 'undefined' && typeof anime.seasonNumber === 'undefined')) {
                                     if (entry.seasonNumber === anime.seasonNumber) {
-                                        const index = await this.getIndexFromAnime(anime);
+                                        const index = await this.getIndexFromAnime(entry);
                                         entry = Object.assign(new Anime(), entry);
                                         entry.readdFunctions();
-                                        entry = entry.merge(anime);
+                                        entry = await entry.merge(anime);
                                         this.updateEntryInMainList(index, entry);
                                         this.saveData(ListController.mainList);
                                         return;
@@ -47,7 +49,7 @@ export default class ListController {
                 }
 
                 ListController.mainList.push(anime);
-                ProviderController.getInstance().updateClientList(await this.getIndexFromAnime(anime), anime);
+                await ProviderController.getInstance().updateClientList(await this.getIndexFromAnime(anime), anime);
 
                 await this.cleanBadDataFromMainList();
 
@@ -79,7 +81,8 @@ export default class ListController {
     public async forceRefreshProviderInfo(anime: Anime) {
         const index = await this.getIndexFromAnime(anime);
         if (index != -1) {
-            this.updateEntryInMainList(index, await this.fillMissingProvider(ListController.mainList[index], true));
+            var result = await this.fillMissingProvider(ListController.mainList[index], true);
+            this.addSeriesToMainList(result);
         }
     }
     public async getIndexFromAnime(anime: Anime): Promise<number> {
@@ -88,11 +91,26 @@ export default class ListController {
 
     public async cleanBadDataFromMainList() {
         ListController.mainList = await this.combineDoubleEntrys(ListController.mainList);
-        ListController.mainList = ListController.mainList.sort((a, b) => {
-            const aName = Object.assign(new Names(), a.names).getRomajiName(a.names).toLocaleLowerCase();
-            const bName = Object.assign(new Names(), b.names).getRomajiName(b.names).toLocaleLowerCase();
+        ListController.mainList = await this.sortList();
+    }
+
+    /**
+     * Sorts a list.
+     * 
+     * Default list is the main list.
+     * @param list 
+     */
+    private async sortList(list: Anime[] = ListController.mainList) {
+        list = await sortHelper.quickSort(list, async (a: Anime, b: Anime) => {
+            let aName: string = await Object.assign(new Names(), a.names).getRomajiName();
+            let bName = await Object.assign(new Names(), b.names).getRomajiName();
+
+            aName = aName.toLocaleLowerCase();
+            bName = bName.toLocaleLowerCase();
+
             return aName.localeCompare(bName);
-        })
+        });
+        return list;
     }
 
     public async getSeriesList(): Promise<Anime[]> {
@@ -127,6 +145,7 @@ export default class ListController {
             combineDoubleEntrys: this.combineDoubleEntrys,
             sameProvider: this.sameProvider,
             matchCalc: this.matchCalc,
+            sortList: this.sortList
         }
     }
 
@@ -135,7 +154,7 @@ export default class ListController {
             try {
                 entry = await this.fillMissingProvider(entry);
             } catch (err) {
-
+                continue;
             }
         }
         return entrys;
@@ -175,7 +194,6 @@ export default class ListController {
         for (const a of entrys) {
             let bMatch: Anime | null = null;
             for (const b of dynamicEntrys) {
-                console.log('[progress2] -> CombineEntrys = ' + dynamicEntrys.indexOf(b) + '/' + dynamicEntrys.length);
                 if (a !== b && !await that.sameProvider(a, b)) {
                     const matches = await that.matchCalc(a, b);
 
@@ -197,7 +215,7 @@ export default class ListController {
                 entrys = await listHelper.removeEntrys(entrys, bMatch, a);
 
                 const aInit = Object.assign(new Anime(), a);
-                const mergedAnime = aInit.merge(bMatch);
+                const mergedAnime = await aInit.merge(bMatch);
 
                 newList.push(mergedAnime);
             } else {
@@ -206,7 +224,6 @@ export default class ListController {
                 }
                 newList.push(a);
             }
-            console.log('[progress] -> CombineEntrys = ' + entrys.indexOf(a) + '/' + entrys.length);
         }
         return newList;
     }
@@ -250,6 +267,8 @@ export default class ListController {
     }
 
     private saveData(list: Anime[]) {
+        console.log('Save list');
+        console.log(this.getPath());
         fs.writeFileSync(this.getPath(), JSON.stringify(list));
     }
 

@@ -43,29 +43,32 @@ export default class AniListProvider implements ListProvider {
 
     public async getMoreSeriesInfo(anime: Anime): Promise<Anime> {
 
-        var providerInfos = anime.providerInfos.find(x => x.provider === this.providerName);
+        var ProviderInfos = anime.providerInfos.find(x => x.provider === this.providerName);
         var id = null;
-        if (typeof providerInfos != 'undefined') {
-            id = providerInfos.id;
+        if (typeof ProviderInfos != 'undefined') {
+            id = ProviderInfos.id;
         } else {
-            var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: Object.assign(new Names(), anime.names).getRomajiName(), type: 'ANIME' })) as SearchSeries;
+            var name = await Object.assign(new Names(), anime.names).getRomajiName();
+            var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: name, type: 'ANIME' })) as SearchSeries;
             for (const result of searchResults.Page.media) {
                 try {
-                    var b = aniListConverter.convertMediaToAnime(result);
+                    var b = await aniListConverter.convertMediaToAnime(result);
                     if (await titleCheckHelper.checkAnimeNames(anime, b)) {
-                        var providerInfos = b.providerInfos.find(x => x.provider === this.providerName);
-                        if (typeof providerInfos != 'undefined') {
-                            id = providerInfos.id;
+                        var bProviderInfos = b.providerInfos.find(x => x.provider === this.providerName);
+                        if (typeof bProviderInfos != 'undefined') {
+                            id = bProviderInfos.id;
                         }
                     }
-                } catch (err) { }
+                } catch (err) {
+                    continue;
+                }
             }
         }
         if (id != null) {
             await timeHelper.delay(2500);
             var fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: id, type: 'ANIME' })) as GetSeriesByID;
 
-            return aniListConverter.convertExtendedInfoToAnime(fullInfo).merge(anime);
+            return await (await aniListConverter.convertExtendedInfoToAnime(fullInfo)).merge(anime);
         } else {
             throw 'NoSeriesInfoFound - AniList';
         }
@@ -137,7 +140,7 @@ export default class AniListProvider implements ListProvider {
                     series.names.engName = entry.media.title.english;
                     series.names.mainName = entry.media.title.native;
                     series.names.romajiName = entry.media.title.romaji;
-                    series.names.fillNames();
+                    await series.names.fillNames();
                     if (typeof entry.media.episodes != 'undefined') {
                         series.episodes = entry.media.episodes;
                     }
@@ -149,6 +152,7 @@ export default class AniListProvider implements ListProvider {
                     providerInfo.score = entry.score;
                     providerInfo.rawEntry = entry;
                     providerInfo.watchProgress = entry.progress;
+                    providerInfo.lastExternalChange = new Date(entry.updatedAt);
 
                     series.providerInfos.push(providerInfo);
                     seriesList.push(series);

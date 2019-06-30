@@ -6,24 +6,24 @@ import zlib from 'zlib';
 export default class AniDBNameList implements NameProvider {
     anidbNameManager: AniDBNameManager = new AniDBNameManager();
     constructor(download: boolean = true) {
-        if (this.needDownload() && download) {
+        if (this.allowDownload() && download) {
             //this.downloadFile();
         }
     }
 
     public InternalTesting() {
         return {
-            needDownload: this.needDownload,
+            needDownload: this.allowDownload,
             dateDiffInDays: this.dateDiffInDays,
             downloadFile: this.downloadFile,
             anidbNameManager: this.anidbNameManager
         }
     }
 
-    private needDownload(): boolean {
+    private allowDownload(): boolean {
         if (typeof this.anidbNameManager.lastDownloadTime === 'undefined') {
             return true;
-        } else if (this.dateDiffInDays(this.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 1) {
+        } else if (this.dateDiffInDays(this.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 2) {
             return true;
         }
         return false;
@@ -45,6 +45,7 @@ export default class AniDBNameList implements NameProvider {
         this.getGzipped("http://anidb.net/api/anime-titles.xml.gz").then(value => {
             that.anidbNameManager.updateData(new Date(Date.now()), value);
         }).catch((err) => {
+            that.anidbNameManager.updateData(new Date(Date.now()), "");
             console.log(err);
         });
     }
