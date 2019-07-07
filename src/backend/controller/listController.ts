@@ -3,13 +3,14 @@ import electron from 'electron';
 import Anime from './objects/anime';
 import * as fs from "fs";
 import * as path from "path";
-import resolve from 'resolve';
 import animeHelper from '../helpFunctions/animeHelper';
 import Names from './objects/names';
 import listHelper from '../helpFunctions/listHelper';
 import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import sortHelper from '../helpFunctions/sortHelper';
+import ProviderList from './providerList';
+
 export default class ListController {
     private static mainList: Anime[] = [];
     static listLoaded = false;
@@ -17,47 +18,81 @@ export default class ListController {
         if (!ListController.listLoaded) {
             ListController.mainList = this.loadData();
             ListController.listLoaded = true;
+            this.getSeriesList();
+        }
+    }
+
+    private async syncWatcher() {
+        var needToSync: Anime[] = [];
+        for (const item of ListController.mainList) {
+            if (item.canSync) {
+                needToSync.push(item);
+            }
+        }
+        if (typeof needToSync != 'undefined') {
+            for (const item of needToSync) {
+                await this.syncProvider(item);
+            }
+        }
+    }
+
+    public async syncProvider(anime: Anime) {
+        for (const provider of anime.providerInfos) {
+            try {
+                const watchProgress = await anime.getLastWatchProgress();
+                const newProvider = await provider.getProviderInstance().updateEntry(anime, watchProgress)
+
+                var index = anime.providerInfos.findIndex(x => x.provider === provider.provider);
+                anime.providerInfos[index] = newProvider;
+                this.addSeriesToMainList(anime);
+
+            } catch (err) {
+
+            }
         }
     }
 
     public async addSeriesToMainList(...animes: Anime[]) {
-        for (let anime of animes) {
-            try {
-                for (let entry of ListController.mainList) {
-                    for (const providerInfos of entry.providerInfos) {
-                        for (const providerInfos2 of anime.providerInfos) {
-                            if (providerInfos.id === providerInfos2.id && providerInfos.provider === providerInfos.provider) {
-                                if ((typeof entry.seasonNumber != 'undefined' && typeof anime.seasonNumber != 'undefined') || (typeof entry.seasonNumber === 'undefined' && typeof anime.seasonNumber === 'undefined')) {
-                                    if (entry.seasonNumber === anime.seasonNumber) {
-                                        const index = await this.getIndexFromAnime(entry);
-                                        entry = Object.assign(new Anime(), entry);
-                                        entry.readdFunctions();
-                                        entry = await entry.merge(anime);
-                                        this.updateEntryInMainList(index, entry);
-                                        this.saveData(ListController.mainList);
-                                        return;
-                                    }
-                                }
+        for (const anime of animes) {
+            this.addSerieToMainList(anime, (animes.length < 2))
+        }
+        if (animes.length > 2) {
+            await this.cleanBadDataFromMainList();
+            ProviderController.getInstance().sendSeriesList();
+        }
+        this.saveData(ListController.mainList);
+    }
+
+    public async addSerieToMainList(anime: Anime, notfiyRenderer = false): Promise<boolean> {
+        try {
+            for (let entry of ListController.mainList) {
+                for (const providerInfos of entry.providerInfos) {
+                    for (const providerInfos2 of anime.providerInfos) {
+                        if (providerInfos.id === providerInfos2.id && providerInfos.provider === providerInfos.provider) {
+                            if (entry.seasonNumber === anime.seasonNumber) {
+                                const index = await this.getIndexFromAnime(entry);
+                                entry = Object.assign(new Anime(), entry);
+                                entry.readdFunctions();
+                                entry = await entry.merge(anime);
+                                this.updateEntryInMainList(index, entry, notfiyRenderer);
+                                return true;
                             }
                         }
                     }
                 }
-                try {
-                    anime = await this.fillMissingProvider(anime);
-                } catch (err) {
-
-                }
-
-                ListController.mainList.push(anime);
-                await ProviderController.getInstance().updateClientList(await this.getIndexFromAnime(anime), anime);
-
-                await this.cleanBadDataFromMainList();
-
-                this.saveData(ListController.mainList);
-            } catch (err) {
-                console.log(err);
             }
+
+            ListController.mainList.push(anime);
+
+            if (notfiyRenderer) {
+                await ProviderController.getInstance().updateClientList(await this.getIndexFromAnime(anime), anime);
+            }
+
+        } catch (err) {
+            console.log(err);
+            return false;
         }
+        return true;
     }
 
     public getMainList(): Anime[] {
@@ -69,9 +104,11 @@ export default class ListController {
      * @param index 
      * @param anime 
      */
-    private updateEntryInMainList(index: number, anime: Anime) {
+    private updateEntryInMainList(index: number, anime: Anime, sendToRenderer: boolean = true) {
         ListController.mainList[index] = anime;
-        ProviderController.getInstance().updateClientList(index, anime);
+        if (sendToRenderer) {
+            ProviderController.getInstance().updateClientList(index, anime);
+        }
     }
 
     /**
@@ -90,8 +127,13 @@ export default class ListController {
     }
 
     public async cleanBadDataFromMainList() {
-        ListController.mainList = await this.combineDoubleEntrys(ListController.mainList);
-        ListController.mainList = await this.sortList();
+        var tempList = await this.combineDoubleEntrys(ListController.mainList);
+        tempList = await this.sortList(tempList);
+        ListController.mainList = [];
+        for (const entry of tempList) {
+            this.addSerieToMainList(entry, false);
+        }
+        await ProviderController.getInstance().sendSeriesList();
     }
 
     /**
@@ -115,24 +157,22 @@ export default class ListController {
 
     public async getSeriesList(): Promise<Anime[]> {
         console.log('[calc] -> SeriesList');
-        let allSeries: Anime[] = await this.getAllEntrysFromProviders();
+        let allSeries: Anime[] = await this.getAllEntrysFromProviders(true);
 
         await this.addSeriesToMainList(...allSeries);
 
-        allSeries.push(...await this.fillMissingProviders(allSeries));
-
-        await this.addSeriesToMainList(...allSeries);
+        await this.fillMissingProviders(this.getMainList());
 
         return ListController.mainList;
     }
 
 
-    public async getAllEntrysFromProviders(): Promise<Anime[]> {
+    public async getAllEntrysFromProviders(forceDownload: boolean = false): Promise<Anime[]> {
         const anime: Anime[] = [];
-        for (const provider of ProviderController.getInstance().list) {
+        for (const provider of ProviderList.list) {
             try {
                 console.log('[Request] -> ' + provider.providerName + ' -> AllSeries');
-                anime.push(...await provider.getAllSeries());
+                anime.push(...await provider.getAllSeries(forceDownload));
             } catch (err) {
                 console.log('[Error] -> ' + provider.providerName + ' -> AllSeries');
             }
@@ -150,30 +190,62 @@ export default class ListController {
     }
 
     private async fillMissingProviders(entrys: Anime[]): Promise<Anime[]> {
+        const filledEntry = [];
         for (let entry of entrys) {
             try {
                 entry = await this.fillMissingProvider(entry);
+                filledEntry.push(entry);
             } catch (err) {
                 continue;
             }
         }
+        await this.addSeriesToMainList(...filledEntry);
         return entrys;
     }
 
     private async fillMissingProvider(entry: Anime, forceUpdate = false): Promise<Anime> {
         let updatedInfo = false;
-        if (entry.providerInfos.length != ProviderController.getInstance().list.length) {
-            for (const provider of ProviderController.getInstance().list) {
+        let days = - 1000 * 60 * 60 * 24 * (Math.floor(Math.random() * 6) + 2);
+        if (typeof entry.lastUpdate != 'undefined' && entry.lastUpdate + days < Date.now() && !forceUpdate) {
+            return entry;
+        }
+        if (entry.providerInfos.length != ProviderList.list.length || forceUpdate) {
+            for (const provider of ProviderList.list) {
                 var result = entry.providerInfos.find(x => x.provider === provider.providerName);
                 if (typeof result === 'undefined' || forceUpdate) {
-                    try {
+                    if (!forceUpdate) {
+                        // Check if anime exist in main list and have already all providers in.
+                        var validProvider = entry.providerInfos.find(x => (typeof x.id != 'undefined' && x.id != null));
+                        if (typeof validProvider != 'undefined') {
+                            for (const anime of this.getMainList()) {
+                                for (const oldprovider of anime.providerInfos) {
+                                    if (oldprovider.provider == validProvider.provider && oldprovider.id == validProvider.id) {
+                                        if (oldprovider.lastUpdate < validProvider.lastUpdate || typeof oldprovider.lastUpdate == 'undefined') {
+                                            var providerInfos = await listHelper.removeEntrys(entry.providerInfos, oldprovider);
+                                            providerInfos.push(validProvider);
+                                            entry.providerInfos = providerInfos;
+                                        }
+                                        var findSearchedProvider = anime.providerInfos.find(x => x.provider === provider.providerName);
+                                        if (typeof findSearchedProvider != 'undefined') {
+                                            if (new Date(findSearchedProvider.lastUpdate).getMilliseconds() < new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).getMilliseconds()) {
+                                                break;
+                                            }
+                                        } else {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
+                    }
+                    try {
                         entry = await provider.getMoreSeriesInfo(entry);
                         updatedInfo = true;
                     } catch (err) {
                         console.log(err);
                     }
-                    await timeHelper.delay(750);
+                    await timeHelper.delay(700);
                 }
             }
         }
@@ -192,39 +264,39 @@ export default class ListController {
         dynamicEntrys = dynamicEntrys.reverse();
         const newList: Anime[] = [];
         for (const a of entrys) {
-            let bMatch: Anime | null = null;
-            for (const b of dynamicEntrys) {
-                if (a !== b && !await that.sameProvider(a, b)) {
-                    const matches = await that.matchCalc(a, b);
 
-                    if (matches >= 3) {
-                        bMatch = b;
-                        break;
+            try {
+                let bMatch: Anime | null = null;
+                for (const b of dynamicEntrys) {
+                    if (a !== b && !await that.sameProvider(a, b)) {
+                        const matches = await that.matchCalc(a, b);
+
+                        if (matches >= 3) {
+                            bMatch = b;
+                            break;
+                        }
                     }
                 }
-            }
-            //
-            //AddToFinalList
-            //
-            dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, a);
-            if (bMatch != null) {
-                if (bMatch.names.engName === '91 Days') {
-                    console.log('Test');
-                }
-                dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, bMatch);
-                entrys = await listHelper.removeEntrys(entrys, bMatch, a);
+                //
+                // AddToFinalList
+                //
+                dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, a);
+                if (bMatch != null) {
+                    dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, bMatch);
+                    entrys = await listHelper.removeEntrys(entrys, bMatch, a);
 
-                const aInit = Object.assign(new Anime(), a);
-                const mergedAnime = await aInit.merge(bMatch);
+                    const aInit = Object.assign(new Anime(), a);
+                    const mergedAnime = await aInit.merge(bMatch);
 
-                newList.push(mergedAnime);
-            } else {
-                if (a.names.engName === '91 Days') {
-                    console.log('Test');
+                    newList.push(mergedAnime);
+                } else {
+                    newList.push(a);
                 }
-                newList.push(a);
+            } catch (e) {
+
             }
         }
+
         return newList;
     }
 
@@ -234,8 +306,9 @@ export default class ListController {
         if (a.releaseYear === b.releaseYear && typeof a.releaseYear != 'undefined') {
             matches++;
         }
-        if (a.seasonNumber === 0 || b.seasonNumber === 0 && a.seasonNumber != b.seasonNumber) {
-            matches--;
+
+        if (a.seasonNumber != b.seasonNumber) {
+            matches -= 2;
         }
 
         if (a.episodes === b.episodes) {

@@ -43,13 +43,14 @@ export class TraktUserData implements UserData {
 
     private saveData() {
         try {
-            console.log('[Save] -> Trakt -> UserData');
+            console.warn('[IO] Write trakt user file.')
             fs.writeFileSync(this.getPath(), JSON.stringify(this));
         } catch (err) { }
     }
 
     private loadData() {
         try {
+            console.warn('[IO] Read trakt user file.')
             if (fs.existsSync(this.getPath())) {
                 const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;

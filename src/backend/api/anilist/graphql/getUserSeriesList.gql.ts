@@ -57,6 +57,14 @@ fragment mediaListEntry on MediaList {
     type
     status
     episodes
+    relations {
+      edges {
+        relationType
+      }
+      nodes{
+        id
+      }
+    }
     startDate {
       year
       month

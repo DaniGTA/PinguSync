@@ -6,7 +6,7 @@ import { Viewer } from "./graphql/viewer";
 import getViewerGql from "./graphql/getViewer.gql";
 import GetUserSeriesListGql from "./graphql/getUserSeriesList.gql";
 import { MediaType } from "./graphql/basics/mediaType";
-import { MediaListCollection } from "./graphql/seriesList";
+import { MediaListCollection, MediaRelation, Relation } from "./graphql/seriesList";
 import ListProvider from "../listProvider";
 import { UserData } from "../userData";
 import { ProviderInfo } from '../../controller/objects/providerInfo';
@@ -19,6 +19,7 @@ import titleCheckHelper from '../../../backend/helpFunctions/titleCheckHelper';
 import aniListConverter from './aniListConverter';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
+import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 
 export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";
@@ -135,24 +136,51 @@ export default class AniListProvider implements ListProvider {
             var seriesList: Anime[] = [];
             var data = await this.getUserSeriesList();
             for (const list of data.lists) {
+                let watchStatus = await this.convertListNameToWatchStatus(list.name);
                 for (const entry of list.entries) {
                     var series: Anime = new Anime();
                     series.names.engName = entry.media.title.english;
                     series.names.mainName = entry.media.title.native;
                     series.names.romajiName = entry.media.title.romaji;
                     await series.names.fillNames();
-                    if (typeof entry.media.episodes != 'undefined') {
-                        series.episodes = entry.media.episodes;
-                    }
+
                     series.releaseYear = entry.media.startDate.year;
                     series.seasonNumber = await series.names.getSeasonNumber();
+
                     var providerInfo: ProviderInfo = new ProviderInfo(AniListProvider.getInstance());
+                    try {
+                        if (typeof series.seasonNumber === 'undefined') {
+                            if (entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL) === -1) {
+                                series.seasonNumber = 1;
+                            } else {
+
+                            }
+                        }
+                        let prequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL);
+                        if (prequel != -1) {
+                            providerInfo.prequelId = entry.media.relations.nodes[prequel].id
+                        }
+                        let sequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.SEQUEL);
+                        if (sequel != -1) {
+                            providerInfo.sequelId = entry.media.relations.nodes[sequel].id
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
+
 
                     providerInfo.id = entry.media.id;
                     providerInfo.score = entry.score;
                     providerInfo.rawEntry = entry;
                     providerInfo.watchProgress = entry.progress;
+                    providerInfo.watchStatus = watchStatus;
                     providerInfo.lastExternalChange = new Date(entry.updatedAt);
+
+
+
+                    if (typeof entry.media.episodes != 'undefined') {
+                        providerInfo.episodes = entry.media.episodes;
+                    }
 
                     series.providerInfos.push(providerInfo);
                     seriesList.push(series);
@@ -164,6 +192,46 @@ export default class AniListProvider implements ListProvider {
         }
     }
 
+    async convertListNameToWatchStatus(name: string): Promise<WatchStatus> {
+        let watchStatus = WatchStatus.CURRENT;
+        switch (name) {
+            case 'Planning':
+                watchStatus = WatchStatus.PLANNING;
+                break;
+            case 'Completed':
+                watchStatus = WatchStatus.COMPLETED;
+                break;
+            case 'Paused':
+                watchStatus = WatchStatus.PAUSED;
+                break;
+        }
+        return watchStatus;
+    }
+
+    async updateEntry(anime: Anime, watchProgress: number): Promise<ProviderInfo> {
+        var aniListProvider = anime.providerInfos.find(x => x.provider == this.providerName);
+        if (typeof aniListProvider != 'undefined') {
+            var watchStatus = "";
+            if (watchProgress == 0) {
+                aniListProvider.watchStatus = WatchStatus.PLANNING;
+                watchStatus = "PLANNING"
+            } else if (watchProgress == aniListProvider.episodes) {
+                aniListProvider.watchStatus = WatchStatus.COMPLETED;
+                watchStatus = "COMPLETED"
+            } else {
+                aniListProvider.watchStatus = WatchStatus.CURRENT;
+                watchStatus = "CURRENT"
+            }
+
+            aniListProvider.watchProgress = watchProgress;
+
+            await this.webRequest(this.getGraphQLOptions(saveMediaListEntryGql, { mediaId: aniListProvider.id, status: watchStatus, progress: watchProgress }))
+
+            return aniListProvider;
+        } else {
+            throw 'err - anilist update entry';
+        }
+    }
 
     async getUserSeriesList(): Promise<MediaListCollection> {
         if (typeof this.userData.viewer != 'undefined') {
@@ -190,7 +258,6 @@ export default class AniListProvider implements ListProvider {
                 request(options, function (error: any, response: any, body: any) {
                     console.log('error:', error); // Print the error if one occurred
                     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                    console.log('body:', body);
                     if (response.statusCode == 200) {
                         var rawdata = JSON.parse(body);
                         resolve(rawdata.data as T);
@@ -258,21 +325,22 @@ class AniListUserData implements UserData {
 
 
     private saveData() {
-        console.log('[Save] -> AniList -> UserData');
+        console.warn('[IO] Write anilist user file.')
         fs.writeFileSync(this.getPath(), JSON.stringify(this));
     }
 
     private loadData() {
         try {
+            console.warn('[IO] Read anilist user file.')
             if (fs.existsSync(this.getPath())) {
                 var loadedString = fs.readFileSync(this.getPath(), "UTF-8");
-                var loadedData = JSON.parse(loadedString) as this;
-                this.viewer = loadedData.viewer;
-                this.access_token = loadedData.access_token;
-                this.expires_in = loadedData.expires_in;
-                this.refresh_token = loadedData.refresh_token;
-                this.username = loadedData.username;
-                this.list = loadedData.list;
+                const loadedData = JSON.parse(loadedString) as this;
+                Object.assign(this, loadedData);
+                if (typeof this.list != 'undefined') {
+                    for (let index = 0; index < this.list.length; index++) {
+                        this.list[index] = Object.assign(new Anime(), this.list[index]);
+                    }
+                }
                 this.lastListUpdate = loadedData.lastListUpdate;
             }
         } catch (err) {

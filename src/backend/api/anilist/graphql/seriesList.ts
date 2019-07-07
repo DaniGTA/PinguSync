@@ -44,6 +44,18 @@ export interface Media {
     startDate: StartDate;
     endDate: EndDate;
     coverImage: CoverImage;
+    relations: Relation;
+}
+
+export interface Relation {
+    edges: Edges[];
+    nodes: Nodes[];
+}
+export interface Edges {
+    relationType: MediaRelation;
+}
+export interface Nodes {
+    id: number;
 }
 
 export interface Entry {
@@ -62,6 +74,7 @@ export interface Entry {
     updatedAt: number;
     createdAt: number;
     media: Media;
+
 }
 
 export interface List {
@@ -92,3 +105,25 @@ export interface MediaListCollection {
     user: User;
 }
 
+export enum MediaRelation {
+    // An adaption of the media into a different format
+    ADAPTATION,
+    // Released before the relation
+    PREQUEL,
+    // Released after the relation
+    SEQUEL,
+    // The media a side story is from
+    PARENT,
+    // A side story of the parent media
+    SIDE_STORY,
+    // Shares at least 1 character
+    CHARACTER,
+    // A shortened and summarized version
+    SUMMARY,
+    // An alternative version of the same media
+    ALTERNATIVE,
+    // An alternative version of the media with a different primary focus
+    SPIN_OFF,
+    // Other
+    OTHER
+}

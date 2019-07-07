@@ -4,7 +4,7 @@ import AniDBNameManager from './anidbNameManager';
 import NameProvider from '../nameProvider';
 import zlib from 'zlib';
 export default class AniDBNameList implements NameProvider {
-    anidbNameManager: AniDBNameManager = new AniDBNameManager();
+    static anidbNameManager: AniDBNameManager = new AniDBNameManager();
     constructor(download: boolean = true) {
         if (this.allowDownload() && download) {
             //this.downloadFile();
@@ -16,14 +16,14 @@ export default class AniDBNameList implements NameProvider {
             needDownload: this.allowDownload,
             dateDiffInDays: this.dateDiffInDays,
             downloadFile: this.downloadFile,
-            anidbNameManager: this.anidbNameManager
+            anidbNameManager: AniDBNameList.anidbNameManager
         }
     }
 
     private allowDownload(): boolean {
-        if (typeof this.anidbNameManager.lastDownloadTime === 'undefined') {
+        if (typeof AniDBNameList.anidbNameManager.lastDownloadTime === 'undefined') {
             return true;
-        } else if (this.dateDiffInDays(this.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 2) {
+        } else if (this.dateDiffInDays(AniDBNameList.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 2) {
             return true;
         }
         return false;
@@ -42,10 +42,11 @@ export default class AniDBNameList implements NameProvider {
 
     private downloadFile() {
         const that = this;
+        console.warn('[ANIDB] Download anime names.')
         this.getGzipped("http://anidb.net/api/anime-titles.xml.gz").then(value => {
-            that.anidbNameManager.updateData(new Date(Date.now()), value);
+            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), value);
         }).catch((err) => {
-            that.anidbNameManager.updateData(new Date(Date.now()), "");
+            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), "");
             console.log(err);
         });
     }

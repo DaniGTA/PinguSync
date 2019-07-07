@@ -12,6 +12,9 @@ import kitsuConverter from './kitsuConverter';
 import { GetMediaResult } from './objects/getResult';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
 export default class KitsuProvider implements ListProvider {
+    updateEntry(anime: Anime, watchProgress: number): Promise<ProviderInfo> {
+        throw new Error("Method not implemented.");
+    }
 
     providerName: string = 'Kitsu';
     hasOAuthCode: boolean = true;

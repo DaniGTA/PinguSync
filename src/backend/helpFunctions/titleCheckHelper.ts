@@ -11,7 +11,11 @@ export default new class TitleCheckHelper {
             for (let name of aNameList) {
                 try {
                     name = await stringHelper.cleanString(name);
-                    aNameList.push(await this.removeSeasonMarkesFromTitle(name));
+                    var name2 = await this.removeSeasonMarkesFromTitle(name);
+                    if (name2 != name) {
+                        bNameList.push(name2);
+                    }
+                    aNameList.push();
                 } catch (err) {
                     continue;
                 }
@@ -19,7 +23,10 @@ export default new class TitleCheckHelper {
             for (let name of bNameList) {
                 try {
                     name = await stringHelper.cleanString(name);
-                    bNameList.push(await this.removeSeasonMarkesFromTitle(name));
+                    var name2 = await this.removeSeasonMarkesFromTitle(name);
+                    if (name2 != name) {
+                        bNameList.push(name2);
+                    }
                 } catch (err) {
                     continue;
                 }

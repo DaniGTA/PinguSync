@@ -5,7 +5,8 @@
       <th>MainName</th>
       <th>RomanjiName</th>
       <th>Season</th>
-      <th>Sync</th>
+      <th>CanSync?</th>
+      <th>RefreshInfo</th>
       <th>Provider1</th>
       <th>Provider2</th>
       <th>Provider3</th>
@@ -15,7 +16,10 @@
       <td>{{item.names.mainName}}</td>
       <td>{{item.names.romajiName}}</td>
       <td>{{item.seasonNumber}}</td>
-      <td>{{item.canSync}}</td>
+      <td v-if="item.canSync">
+        <button @click="syncAnime(item.id)">Sync</button>
+      </td>
+      <td v-else>✔</td>
 
       <td>
         <button @click="updateAnime(item.id)">RefreshInfo</button>
@@ -60,6 +64,10 @@ export default class Providers extends Vue {
     console.log("updateAnime: " + id);
     var a = this.mainList.findIndex(x => x.id === id);
     ipcRenderer.send("request-info-refresh", this.mainList[a]);
+  }
+
+  syncAnime(id: string | number) {
+    ipcRenderer.send("sync-series",id);
   }
 }
 </script>

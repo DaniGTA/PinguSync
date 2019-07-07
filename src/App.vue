@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-    <Providers/>
-    <MainList/>
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <Providers />
+    <MainList />
   </div>
 </template>
 
@@ -16,7 +16,7 @@ import MainList from "./components/MainList.vue";
   components: {
     HelloWorld,
     Providers,
-    MainList,
+    MainList
   }
 })
 export default class App extends Vue {}

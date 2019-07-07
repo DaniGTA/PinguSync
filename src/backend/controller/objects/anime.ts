@@ -2,11 +2,11 @@ import { ProviderInfo } from './providerInfo';
 import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import Names from './names';
 import Overview from './overview';
-import { Provider } from 'electron';
 import listHelper from '../../../backend/helpFunctions/listHelper';
 
 export default class Anime {
     public id: string = '';
+    public lastUpdate: number = Date.now();
     public names: Names = new Names();
     public providerInfos: ProviderInfo[] = [];
     public episodes?: number = 0;
@@ -33,19 +33,8 @@ export default class Anime {
      * Checks if providers can be synced.
      */
     public async getCanSyncStatus(): Promise<boolean> {
-        let latestUpdatedProvider: ProviderInfo | null = null;
-        for (const provider of this.providerInfos) {
-            if (typeof provider.watchProgress != 'undefined') {
-                if (latestUpdatedProvider === null) {
+        let latestUpdatedProvider: ProviderInfo | null = await this.getLastUpdatedProvider();
 
-                    latestUpdatedProvider = provider;
-
-                } else if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
-
-                    latestUpdatedProvider = provider;
-                }
-            }
-        }
         if (latestUpdatedProvider === null) {
             throw 'no provider with valid sync status'
         }
@@ -55,11 +44,10 @@ export default class Anime {
                     if (typeof provider.watchProgress === 'undefined') {
                         this.canSync = true;
                         return true;
-                    } else if (typeof this.episodes != 'undefined' && this.episodes <= provider.watchProgress) {
+                    } else if (typeof this.episodes != 'undefined' && this.episodes < provider.watchProgress) {
                         this.canSync = false;
                         return false;
                     } else {
-
                         provider.canUpdateWatchProgress = true;
                         this.canSync = true;
                         return true;
@@ -69,6 +57,22 @@ export default class Anime {
         }
         this.canSync = false;
         return false;
+    }
+    /**
+     * @return the last updated provider with watchProgress !
+     */
+    private async getLastUpdatedProvider(): Promise<ProviderInfo | null> {
+        let latestUpdatedProvider: ProviderInfo | null = null;
+        for (const provider of this.providerInfos) {
+            if (typeof provider.watchProgress != 'undefined') {
+                if (latestUpdatedProvider === null) {
+                    latestUpdatedProvider = provider;
+                } else if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
+                    latestUpdatedProvider = provider;
+                }
+            }
+        }
+        return latestUpdatedProvider;
     }
 
     public readdFunctions() {
@@ -87,16 +91,22 @@ export default class Anime {
 
     public async merge(anime: Anime): Promise<Anime> {
         const newAnime: Anime = new Anime();
+
         newAnime.names.engName = await this.mergeString(this.names.engName, anime.names.engName, 'EngName');
         newAnime.names.romajiName = await this.mergeString(this.names.romajiName, anime.names.romajiName, 'RomajiName');
         newAnime.names.mainName = await this.mergeString(this.names.mainName, anime.names.mainName, 'MainName');
         newAnime.names.shortName = await this.mergeString(this.names.shortName, anime.names.shortName, 'ShortNmae');
         newAnime.names.otherNames.push(...this.names.otherNames, ...anime.names.otherNames);
+        newAnime.names.otherNames = await listHelper.getUniqueList(newAnime.names.otherNames);
 
         newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.providerInfos.flatMap(x => x.episodes)));
+        let seasonarr = await listHelper.cleanArray([this.seasonNumber, anime.seasonNumber]);
+        if(typeof seasonarr !== 'undefined') {
+            newAnime.seasonNumber = await listHelper.findMostFrequent(seasonarr);
+        }
 
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
-        newAnime.seasonNumber = await this.mergeNumber(this.seasonNumber, anime.seasonNumber, newAnime.names.mainName, 'SeasonNumber');
+        
         newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
         newAnime.coverImage = await this.mergeString(anime.coverImage, this.coverImage);
         newAnime.providerInfos = await this.mergeProviders(...[...this.providerInfos, ...anime.providerInfos]);
@@ -108,7 +118,7 @@ export default class Anime {
             if (anime.overviews != null && typeof anime.overviews != 'undefined') {
                 newAnime.overviews.push(...anime.overviews);
             }
-            newAnime.overviews = await listHelper.cleanArray(newAnime.overviews);
+            newAnime.overviews = await listHelper.getUniqueOverviewList(await listHelper.cleanArray(newAnime.overviews));
         } catch (err) {
             console.log(err);
         }
@@ -169,6 +179,18 @@ export default class Anime {
                 console.log(a + ' != ' + b + ' | How to handle that? (' + topic + ')');
                 return a;
             }
+        }
+    }
+
+    public async getLastWatchProgress(): Promise<number> {
+        let latestUpdatedProvider = await this.getLastUpdatedProvider()
+        if (latestUpdatedProvider === null) {
+            throw 'no provider with valid sync status'
+        }
+        if (typeof latestUpdatedProvider.watchProgress != 'undefined') {
+            return latestUpdatedProvider.watchProgress;
+        } else {
+            throw 'no watch progress';
         }
     }
 }

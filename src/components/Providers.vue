@@ -65,7 +65,7 @@ export default class Providers extends Vue {
   checkLogin(button: any, providerName: string) {
     ipcRenderer.on(
       providerName.toLocaleLowerCase() + "-auth-status",
-      (status: boolean) => {
+      (event:any,status: boolean) => {
         if (status) {
           button.classList.remove("logged-out");
           button.classList.add("logged-in");

@@ -1,3 +1,5 @@
+import Overview from '../controller/objects/overview';
+
 class ListHelper {
     public async cleanArray<T>(actual: T[]): Promise<T[]> {
         const newArray: T[] = [];
@@ -60,6 +62,15 @@ class ListHelper {
         }
         return mostCommonNumber;
     }
+
+    async getUniqueOverviewList(arr: Overview[]): Promise<Overview[]> {
+        return arr.filter((v, i, a) => a.findIndex((t) => (t.content === v.content)) === i)
+    }
+
+    async getUniqueList<T>(arr: T[]): Promise<T[]> {
+        return arr.filter((v, i, a) => a.findIndex((t) => (t === v)) === i)
+    }
+
 }
 
 export default new ListHelper();

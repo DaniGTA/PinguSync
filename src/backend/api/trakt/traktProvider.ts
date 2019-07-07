@@ -78,6 +78,7 @@ export default class TraktProvider implements ListProvider {
             const seriesList: Anime[] = [];
             const data = await this.traktRequest<WatchedInfo[]>('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             for (const entry of data) {
+                try{
                 for (const season of entry.seasons) {
                     const series: Anime = new Anime();
                     if (season.number == 1) {
@@ -98,6 +99,9 @@ export default class TraktProvider implements ListProvider {
                     series.providerInfos.push(providerInfo);
                     seriesList.push(series);
                 }
+            }catch(e){
+                console.error(e);
+            }
             }
             this.userData.updateList(seriesList);
             return seriesList;
@@ -108,6 +112,17 @@ export default class TraktProvider implements ListProvider {
     public async getUserInfo() {
         const data = await this.traktRequest<TraktUserInfo>('https://api.trakt.tv/users/settings');
         this.userData.setUserData(data);
+    }
+
+    public async updateEntry(anime: Anime, watchProgress: number): Promise<ProviderInfo> {
+        var providerInfo = anime.providerInfos.find(x => x.provider === this.providerName);
+        if (typeof providerInfo != 'undefined') {
+            providerInfo.watchProgress = watchProgress;
+            const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress);
+            await this.traktRequest('https://api.trakt.tv/sync/collection', JSON.stringify(updatedEntry));
+            return providerInfo;
+        }
+        throw 'err';
     }
 
     public logInUser(code: string) {
@@ -143,7 +158,7 @@ export default class TraktProvider implements ListProvider {
         });
     }
 
-    private traktRequest<T>(url: string): Promise<T> {
+    private traktRequest<T>(url: string, body?: string): Promise<T> {
         const that = this;
         return new Promise<any>((resolve, reject) => {
             request({
@@ -155,6 +170,7 @@ export default class TraktProvider implements ListProvider {
                     'trakt-api-version': '2',
                     'trakt-api-key': that.clientId,
                 },
+                body: body,
             }, (error: any, response: any, body: any) => {
                 try {
                     console.log('Status:', response.statusCode);

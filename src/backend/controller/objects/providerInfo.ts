@@ -1,6 +1,7 @@
 import ListProvider from '../../api/ListProvider';
 import { WatchStatus } from './anime';
 import ProviderController from '../providerController';
+import ProviderList from '../providerList';
 
 export class ProviderInfo {
     public id: number | string = -1;
@@ -17,6 +18,9 @@ export class ProviderInfo {
     public episodes?: number;
     public publicScore?: number;
 
+    public sequelId?: number;
+    public prequelId?: number;
+
     constructor(lp?: ListProvider) {
         this.lastUpdate = new Date(Date.now());
         if (typeof lp != 'undefined') {
@@ -28,7 +32,7 @@ export class ProviderInfo {
 
 
     public getProviderInstance(): ListProvider {
-        for (const provider of ProviderController.getInstance().list) {
+        for (const provider of ProviderList.list) {
             if (provider.providerName === this.provider) {
                 return provider;
             }
@@ -37,8 +41,8 @@ export class ProviderInfo {
     }
 
     static async mergeProviderInfos(...providers: ProviderInfo[]): Promise<ProviderInfo> {
-        const mergedProvider = new ProviderInfo(providers[0].getProviderInstance());
-        var newestProvider: ProviderInfo = providers[0];
+        const mergedProvider = Object.assign(new ProviderInfo(), providers[0]);
+        var newestProvider: ProviderInfo = Object.assign(new ProviderInfo(), providers[0]);
         for (const provider of providers) {
             if (provider.id != -1) {
                 if (mergedProvider.id != -1 && mergedProvider.id != provider.id) {
@@ -95,6 +99,12 @@ export class ProviderInfo {
         }
         if (typeof newestProvider.episodes != 'undefined') {
             mergedProvider.episodes = newestProvider.episodes;
+        }
+        if (typeof newestProvider.sequelId != 'undefined') {
+            mergedProvider.sequelId = newestProvider.sequelId;
+        }
+        if (typeof newestProvider.prequelId != 'undefined') {
+            mergedProvider.prequelId = newestProvider.prequelId;
         }
 
         return mergedProvider;
