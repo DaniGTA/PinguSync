@@ -3,7 +3,7 @@
     <ul class="provider-list">
       <li v-for="item in providerList" v-bind:key="item.length">
         <div>{{item}}</div>
-        <img :src="require('@/assets/'+item.toLowerCase() + '-logo.png')">
+        <img :src="require('@/assets/'+item.toLowerCase() + '-logo.png')" />
         <button v-on:click="openAuth(item)" v-bind:key="item+'-button'" v-bind:ref="item+'-button'"></button>
       </li>
     </ul>
@@ -13,7 +13,7 @@
         <span v-on:click="closeModal()" class="close">&times;</span>
         <h2>Enter the {{currentSelectedProvider}} Code</h2>
         <form action="#">
-          <input v-model="code" placeholder="code">
+          <input v-model="code" placeholder="code" />
           <button v-on:click="sendCode(currentSelectedProvider,code)" type="submit">Confirm</button>
         </form>
       </div>
@@ -24,6 +24,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { ipcRenderer } from "electron";
+import MainList from "./MainList.vue";
+import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 @Component
 export default class Providers extends Vue {
   @Prop() providerList: string[] = [];
@@ -35,14 +37,13 @@ export default class Providers extends Vue {
   constructor() {
     super();
     const that = this;
-
     ipcRenderer.send("get-all-providers");
     console.log("Request Providers");
     ipcRenderer.on("all-providers", (event: any, list: string[]) => {
       console.log(list);
 
       that.providerList.push(...list);
-      ipcRenderer.send("get-series-list");
+      MainList.instance.worker.send("get-series-list");
     });
   }
 
@@ -52,30 +53,41 @@ export default class Providers extends Vue {
   }
 
   sendCode(provider: string, code: string) {
-    ipcRenderer.send(provider.toLocaleLowerCase() + "-auth-code", code);
+    MainList.instance.worker.send(
+      provider.toLocaleLowerCase() + "-auth-code",
+      code
+    );
     this.$refs.authModal.style.display = "none";
   }
 
   openAuth(provider: string) {
-    ipcRenderer.send(provider.toLocaleLowerCase() + "-open-code");
+    MainList.instance.worker.send(provider.toLocaleLowerCase() + "-open-code");
     this.currentSelectedProvider = provider;
     this.$refs.authModal.style.display = "block";
   }
 
   checkLogin(button: any, providerName: string) {
-    ipcRenderer.on(
-      providerName.toLocaleLowerCase() + "-auth-status",
-      (event:any,status: boolean) => {
-        if (status) {
-          button.classList.remove("logged-out");
-          button.classList.add("logged-in");
-        } else {
-          button.classList.remove("logged-in");
-          button.classList.add("logged-out");
+    MainList.instance.worker.worker.addEventListener(
+      "message",
+      (ev: MessageEvent) => {
+        const value = ev.data as WorkerTransfer;
+        if (
+          value.channel ==
+          providerName.toLocaleLowerCase() + "-auth-status"
+        ) {
+          if (value.data) {
+            button.classList.remove("logged-out");
+            button.classList.add("logged-in");
+          } else {
+            button.classList.remove("logged-in");
+            button.classList.add("logged-out");
+          }
         }
       }
     );
-    ipcRenderer.send(providerName.toLocaleLowerCase() + "-is-logged-in");
+    MainList.instance.worker.send(
+      providerName.toLocaleLowerCase() + "-is-logged-in"
+    );
   }
 }
 </script>

@@ -7,5 +7,5 @@ module.exports = {
             .test(/\.worker\.ts$/i)
             .use('worker-loader')
             .loader('worker-loader');
-    },
+    }
 };

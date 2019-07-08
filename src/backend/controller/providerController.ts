@@ -3,6 +3,7 @@ import ListController from './listController';
 import Anime from './objects/anime';
 import IUpdateList from './objects/iupdateList';
 import ProviderList from './providerList';
+import { WorkerTransfer } from './objects/workerTransfer';
 
 const ctx: Worker = self as any;
 
@@ -19,13 +20,26 @@ class ProviderController {
             this.initController()
         }
         ProviderController.instance = that;
+        for (const pl of ProviderList.list) {
+            if (pl.hasOAuthCode) {
+                ctx.addEventListener('message', async (ev: MessageEvent) => {
+                    const value = ev.data as WorkerTransfer;
+                    if (value.channel == value.data.provider.providerName.toLocaleLowerCase() + '-auth-status') {
+                        const provider = await this.getProviderInstance(value.data.provider);
+                        await provider.logInUser(value.data.code);
+                        this.send(provider.providerName.toLocaleLowerCase() + '-auth-status', await provider.isUserLoggedIn());
+                    }
+                });
+            }
 
+        }
     }
 
     public initController() {
         const that = this;
 
-        ctx.postMessage = (async (value: WorkerTransfer) => {
+        ctx.addEventListener('message', async (ev: MessageEvent) => {
+            const value = ev.data as WorkerTransfer;
             switch (value.channel) {
                 case 'get-series-list':
                     that.sendSeriesList();
@@ -47,7 +61,7 @@ class ProviderController {
                     this.send(channel, data);
                     break;
             }
-        })
+        });
 
     }
 

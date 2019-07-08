@@ -1,13 +1,14 @@
-import { ipcMain, shell } from "electron";
+import { shell, IpcRenderer } from "electron";
 import ListProvider from '../api/ListProvider';
 import ProviderList from './providerList';
 import Anime from './objects/anime';
 import Worker from "worker-loader!./providerController";
+import { WorkerTransfer } from './objects/workerTransfer';
 
 export default class WorkerController {
     worker: Worker;
-    webcontent: Electron.WebContents;
-    constructor(webcontent: Electron.WebContents) {
+    webcontent: IpcRenderer;
+    constructor(webcontent: IpcRenderer) {
         const that = this;
         this.webcontent = webcontent;
         this.worker = new Worker();
@@ -25,27 +26,31 @@ export default class WorkerController {
         this.webcontent.send(data.channel, data.data);
     }
 
+    public send(channel: string, data?: any) {
+        this.worker.postMessage(new WorkerTransfer(channel, data));
+    }
+
     private async initProvider(provider: ListProvider) {
         if (provider.hasOAuthCode) {
-            ipcMain.on(provider.providerName.toLocaleLowerCase() + '-open-code', (event: any, code: string) => {
+            this.webcontent.on(provider.providerName.toLocaleLowerCase() + '-open-code', (event: any, code: string) => {
                 shell.openExternal(provider.getTokenAuthUrl());
             });
-            ipcMain.on(provider.providerName.toLocaleLowerCase() + '-auth-code', async (event: any, code: string) => {
+            this.webcontent.on(provider.providerName.toLocaleLowerCase() + '-auth-code', async (event: any, code: string) => {
                 this.worker.postMessage(new WorkerTransfer('auth-status', { provider: provider.providerName, code }));
             });
         }
-        ipcMain.on(provider.providerName.toLocaleLowerCase() + '-is-logged-in', async () => {
+        this.webcontent.on(provider.providerName.toLocaleLowerCase() + '-is-logged-in', async () => {
             this.worker.postMessage(new WorkerTransfer('is-logged-in', provider.providerName));
         });
     }
 
-    public initController() {
+    private initController() {
         const that = this;
         for (const provider of ProviderList.list) {
             that.initProvider(provider);
         }
 
-        ipcMain.on('get-all-providers', (event: any) => {
+        this.webcontent.on('get-all-providers', (event: any) => {
             const names: string[] = [];
             for (const provider of ProviderList.list) {
                 names.push(provider.providerName);
@@ -54,15 +59,15 @@ export default class WorkerController {
             that.webcontent.send('all-providers', names);
         });
 
-        ipcMain.on('get-series-list', async (event: any) => {
+        this.webcontent.on('get-series-list', async (event: any) => {
             this.worker.postMessage(new WorkerTransfer('get-series-list'));
         });
 
-        ipcMain.on('request-info-refresh', async (event: any, anime: Anime) => {
+        this.webcontent.on('request-info-refresh', async (event: any, anime: Anime) => {
             this.worker.postMessage(new WorkerTransfer('request-info-refresh', anime));
         });
 
-        ipcMain.on('sync-series', async (event: any, id: string | number) => {
+        this.webcontent.on('sync-series', async (event: any, id: string | number) => {
             this.worker.postMessage(new WorkerTransfer('sync-series', id));
         });
     }

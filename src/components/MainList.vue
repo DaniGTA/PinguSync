@@ -37,20 +37,38 @@ import { ipcRenderer, ipcMain } from "electron";
 import Anime from "../backend/controller/objects/anime";
 import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import WorkerController from "../backend/controller/workerController";
+import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 @Component
-export default class Providers extends Vue {
+export default class MainList extends Vue {
+  static instance: MainList;
   @Prop() mainList: Anime[] = [];
+  worker: WorkerController;
   constructor() {
     super();
     const that = this;
-    ipcRenderer.on("series-list", (event: any, list: Anime[]) => {
-      console.log(list);
-      that.mainList.push(...list);
+    MainList.instance = this;
+    this.worker = new WorkerController(ipcRenderer);
+    this.worker.worker.addEventListener("message", (ev: MessageEvent) => {
+      const data = ev.data as WorkerTransfer;
+      console.log(data);
+      if (ev.data == "series-list") {
+        that.mainList.push(...data.data);
+      }
     });
 
-    ipcRenderer.on("update-series-list", (event: any, update: IUpdateList) => {
-      console.log(update);
-      that.$set(that.mainList, update.targetIndex, update.updatedEntry);
+    this.worker.worker.addEventListener("message", (ev: MessageEvent) => {
+      const data = ev.data as WorkerTransfer;
+      console.log(data.data);
+      if (ev.data === "update-series-list") {
+        console.log(data.data);
+        that.$set(that.mainList, data.data.targetIndex, data.data.updatedEntry);
+      }
+    });
+
+    this.worker.worker.addEventListener("message", (ev: MessageEvent) => {
+      const data = ev.data as WorkerTransfer;
+      console.log(ev);
     });
   }
 
@@ -63,11 +81,11 @@ export default class Providers extends Vue {
   updateAnime(id: string | number) {
     console.log("updateAnime: " + id);
     var a = this.mainList.findIndex(x => x.id === id);
-    ipcRenderer.send("request-info-refresh", this.mainList[a]);
+    this.worker.send("request-info-refresh", this.mainList[a]);
   }
 
   syncAnime(id: string | number) {
-    ipcRenderer.send("sync-series",id);
+    this.worker.send("sync-series", id);
   }
 }
 </script>

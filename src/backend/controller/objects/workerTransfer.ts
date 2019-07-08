@@ -1,4 +1,4 @@
-class WorkerTransfer {
+export class WorkerTransfer {
     channel: string;
     data?: any;
     constructor(channel: string, data?: any) {

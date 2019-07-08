@@ -1,4 +1,3 @@
-import electron from 'electron';
 import * as fs from "fs";
 import * as path from "path";
 import { UserData } from "../userData";
@@ -52,7 +51,7 @@ export class KitsuUserData implements UserData {
 
     private getPath(): string {
         try {
-            const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+            const userDataPath = './';
             // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
             return path.join(userDataPath, 'kitsu_config.json');
         } catch (err) {

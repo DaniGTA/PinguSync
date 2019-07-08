@@ -1,5 +1,4 @@
 import ProviderController from './providerController';
-import electron from 'electron';
 import Anime from './objects/anime';
 import * as fs from "fs";
 import * as path from "path";
@@ -364,7 +363,7 @@ export default class ListController {
     }
 
     private getPath(): string {
-        const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+        const userDataPath = './';
         // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
         return path.join(userDataPath, 'list.json');
     }
