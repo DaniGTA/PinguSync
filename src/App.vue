@@ -12,6 +12,9 @@ import { Component, Vue } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import Providers from "./components/Providers.vue";
 import MainList from "./components/MainList.vue";
+import WorkerController from "./backend/controller/workerController";
+import { ipcRenderer } from "electron";
+import { WorkerTransfer } from "./backend/controller/objects/workerTransfer";
 @Component({
   components: {
     HelloWorld,
@@ -19,7 +22,9 @@ import MainList from "./components/MainList.vue";
     MainList
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  static workerController: WorkerController = new WorkerController(ipcRenderer);
+}
 </script>
 
 <style>

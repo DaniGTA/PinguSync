@@ -1,17 +1,15 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, shell } from 'electron'
 import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib';
-import WorkerController from './backend/controller/workerController';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
-let back: BrowserWindow | null;
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }, { scheme: 'background', privileges: { secure: true, standard: true } }])
 
@@ -24,11 +22,8 @@ function createWindow() {
     }
   })
 
-  back = new BrowserWindow({
-    width: 800, height: 600, webPreferences: {
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true
-    }
+  ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
+    shell.openExternal(data);
   })
 
   //new WorkerController(win.webContents);
@@ -36,13 +31,11 @@ function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    back.loadURL(process.env.WEBPACK_DEV_SERVER_URL + 'worker.html');
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
-    back.loadURL('app://./worker.html');
   }
 
   win.on('closed', () => {

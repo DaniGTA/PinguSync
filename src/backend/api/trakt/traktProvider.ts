@@ -78,30 +78,30 @@ export default class TraktProvider implements ListProvider {
             const seriesList: Anime[] = [];
             const data = await this.traktRequest<WatchedInfo[]>('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             for (const entry of data) {
-                try{
-                for (const season of entry.seasons) {
-                    const series: Anime = new Anime();
-                    if (season.number == 1) {
-                        series.releaseYear = entry.show.year;
+                try {
+                    for (const season of entry.seasons) {
+                        const series: Anime = new Anime();
+                        if (season.number == 1) {
+                            series.releaseYear = entry.show.year;
+                        }
+                        series.names.engName = entry.show.title;
+                        series.names.otherNames.push(new Name(entry.show.ids.slug, 'id'));
+                        await series.names.fillNames();
+                        series.seasonNumber = season.number;
+
+                        const providerInfo: ProviderInfo = new ProviderInfo(TraktProvider.getInstance());
+
+                        providerInfo.id = entry.show.ids.trakt;
+                        providerInfo.rawEntry = entry;
+                        providerInfo.watchProgress = season.episodes.length;
+                        providerInfo.watchStatus = WatchStatus.COMPLETED;
+                        providerInfo.lastExternalChange = entry.last_watched_at;
+                        series.providerInfos.push(providerInfo);
+                        seriesList.push(series);
                     }
-                    series.names.engName = entry.show.title;
-                    series.names.otherNames.push(new Name(entry.show.ids.slug, 'id'));
-                    await series.names.fillNames();
-                    series.seasonNumber = season.number;
-
-                    const providerInfo: ProviderInfo = new ProviderInfo(TraktProvider.getInstance());
-
-                    providerInfo.id = entry.show.ids.trakt;
-                    providerInfo.rawEntry = entry;
-                    providerInfo.watchProgress = season.episodes.length;
-                    providerInfo.watchStatus = WatchStatus.COMPLETED;
-                    providerInfo.lastExternalChange = entry.last_watched_at;
-                    series.providerInfos.push(providerInfo);
-                    seriesList.push(series);
+                } catch (e) {
+                    console.error(e);
                 }
-            }catch(e){
-                console.error(e);
-            }
             }
             this.userData.updateList(seriesList);
             return seriesList;

@@ -39,37 +39,32 @@ import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import WorkerController from "../backend/controller/workerController";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
+import App from "../App.vue";
 @Component
 export default class MainList extends Vue {
   static instance: MainList;
   @Prop() mainList: Anime[] = [];
-  worker: WorkerController;
   constructor() {
     super();
     const that = this;
     MainList.instance = this;
-    this.worker = new WorkerController(ipcRenderer);
-    this.worker.worker.addEventListener("message", (ev: MessageEvent) => {
-      const data = ev.data as WorkerTransfer;
-      console.log(data);
-      if (ev.data == "series-list") {
-        that.mainList.push(...data.data);
-      }
+
+    App.workerController.on("series-list", (data: Anime[]) => {
+      that.mainList.push(...data);
     });
 
-    this.worker.worker.addEventListener("message", (ev: MessageEvent) => {
-      const data = ev.data as WorkerTransfer;
+    App.workerController.on("update-series-list", (data: any) => {
       console.log(data.data);
-      if (ev.data === "update-series-list") {
-        console.log(data.data);
-        that.$set(that.mainList, data.data.targetIndex, data.data.updatedEntry);
-      }
+      that.$set(that.mainList, data.targetIndex, data.updatedEntry);
     });
 
-    this.worker.worker.addEventListener("message", (ev: MessageEvent) => {
-      const data = ev.data as WorkerTransfer;
-      console.log(ev);
-    });
+    App.workerController.worker.addEventListener(
+      "message",
+      (ev: MessageEvent) => {
+        const data = ev.data as WorkerTransfer;
+        console.log(ev);
+      }
+    );
   }
 
   clog(a: any) {
@@ -81,11 +76,11 @@ export default class MainList extends Vue {
   updateAnime(id: string | number) {
     console.log("updateAnime: " + id);
     var a = this.mainList.findIndex(x => x.id === id);
-    this.worker.send("request-info-refresh", this.mainList[a]);
+    App.workerController.send("request-info-refresh", this.mainList[a]);
   }
 
   syncAnime(id: string | number) {
-    this.worker.send("sync-series", id);
+    App.workerController.send("sync-series", id);
   }
 }
 </script>

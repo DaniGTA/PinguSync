@@ -26,6 +26,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { ipcRenderer } from "electron";
 import MainList from "./MainList.vue";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
+import App from "../App.vue";
 @Component
 export default class Providers extends Vue {
   @Prop() providerList: string[] = [];
@@ -37,14 +38,14 @@ export default class Providers extends Vue {
   constructor() {
     super();
     const that = this;
-    ipcRenderer.send("get-all-providers");
-    console.log("Request Providers");
-    ipcRenderer.on("all-providers", (event: any, list: string[]) => {
-      console.log(list);
-
-      that.providerList.push(...list);
-      MainList.instance.worker.send("get-series-list");
+    App.workerController.on("all-providers", (data: string[]) => {
+      that.providerList = [];
+      that.providerList.push(...data);
+      console.log("ProviderList loaded.");
+      App.workerController.send("get-series-list");
     });
+    App.workerController.send("get-all-providers");
+    console.log("Request Providers");
   }
 
   closeModal() {
@@ -53,7 +54,7 @@ export default class Providers extends Vue {
   }
 
   sendCode(provider: string, code: string) {
-    MainList.instance.worker.send(
+    App.workerController.send(
       provider.toLocaleLowerCase() + "-auth-code",
       code
     );
@@ -61,19 +62,22 @@ export default class Providers extends Vue {
   }
 
   openAuth(provider: string) {
-    MainList.instance.worker.send(provider.toLocaleLowerCase() + "-open-code");
+    App.workerController.on("open-url", (url: string) => {
+      ipcRenderer.send("open-url", url);
+    });
+    App.workerController.send(provider.toLocaleLowerCase() + "-open-code-url");
     this.currentSelectedProvider = provider;
     this.$refs.authModal.style.display = "block";
   }
 
   checkLogin(button: any, providerName: string) {
-    MainList.instance.worker.worker.addEventListener(
+    App.workerController.worker.addEventListener(
       "message",
       (ev: MessageEvent) => {
         const value = ev.data as WorkerTransfer;
         if (
-          value.channel ==
-          providerName.toLocaleLowerCase() + "-auth-status"
+          value.channel == providerName.toLocaleLowerCase() + "-auth-status" &&
+          typeof value.data != "undefined"
         ) {
           if (value.data) {
             button.classList.remove("logged-out");
@@ -85,7 +89,7 @@ export default class Providers extends Vue {
         }
       }
     );
-    MainList.instance.worker.send(
+    App.workerController.send(
       providerName.toLocaleLowerCase() + "-is-logged-in"
     );
   }

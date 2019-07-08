@@ -22,17 +22,17 @@ class ProviderController {
         ProviderController.instance = that;
         for (const pl of ProviderList.list) {
             if (pl.hasOAuthCode) {
-                ctx.addEventListener('message', async (ev: MessageEvent) => {
-                    const value = ev.data as WorkerTransfer;
-                    if (value.channel == value.data.provider.providerName.toLocaleLowerCase() + '-auth-status') {
-                        const provider = await this.getProviderInstance(value.data.provider);
-                        await provider.logInUser(value.data.code);
-                        this.send(provider.providerName.toLocaleLowerCase() + '-auth-status', await provider.isUserLoggedIn());
-                    }
+                this.on(pl.providerName.toLocaleLowerCase() + '-auth-status', async (code: string) => {
+                    await pl.logInUser(code);
+                    this.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
+                });
+                this.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
+                    this.send('open-url', pl.getTokenAuthUrl());
                 });
             }
 
         }
+        this.send('status');
     }
 
     public initController() {
@@ -50,7 +50,7 @@ class ProviderController {
                 case 'sync-series':
                     this.syncSeries(value.data);
                     break;
-                case 'auth-status':
+                /*case 'auth-status':
                     const provider = await this.getProviderInstance(value.data.provider);
                     await provider.logInUser(value.data.code);
                     this.send(provider.providerName.toLocaleLowerCase() + '-auth-status', await provider.isUserLoggedIn());
@@ -59,15 +59,25 @@ class ProviderController {
                     const channel = (value.data + '' + '-is-logged-in').toLowerCase();
                     const data = await this.getProviderInstance(value.data).isUserLoggedIn();
                     this.send(channel, data);
+                    break;*/
+                case 'get-all-providers':
+                    this.send('all-providers', ProviderList.list.flatMap(x => x.providerName));
                     break;
             }
         });
 
     }
 
-    private send(channel: string, data: any) {
-
-        ctx.postMessage(new WorkerTransfer(channel, data));
+    private send(channel: string, data?: any) {
+        let success = false;
+        while (!success) {
+            try {
+                ctx.postMessage(new WorkerTransfer(channel, JSON.stringify(data)));
+                success = true;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
     }
 
@@ -99,6 +109,19 @@ class ProviderController {
     public async updateClientList(targetIndex: number, updatedEntry: Anime) {
         console.log('[Send] -> update -> anime');
         this.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
+    }
+    public async on(channel: string, f: (data: any) => void) {
+        ctx.addEventListener('message', (ev: MessageEvent) => {
+            const transfer = ev.data as WorkerTransfer;
+            console.log(channel);
+            if (transfer.channel == channel) {
+                try {
+                    f(JSON.parse(transfer.data));
+                } catch (err) {
+                    f(transfer.data);
+                }
+            }
+        })
     }
 }
 new ProviderController();

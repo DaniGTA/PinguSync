@@ -170,8 +170,10 @@ export default class ListController {
         const anime: Anime[] = [];
         for (const provider of ProviderList.list) {
             try {
-                console.log('[Request] -> ' + provider.providerName + ' -> AllSeries');
-                anime.push(...await provider.getAllSeries(forceDownload));
+                if (provider.isUserLoggedIn()) {
+                    console.log('[Request] -> ' + provider.providerName + ' -> AllSeries');
+                    anime.push(...await provider.getAllSeries(forceDownload));
+                }
             } catch (err) {
                 console.log('[Error] -> ' + provider.providerName + ' -> AllSeries');
             }
