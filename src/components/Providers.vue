@@ -4,7 +4,11 @@
       <li v-for="item in providerList" v-bind:key="item.length">
         <div>{{item}}</div>
         <img :src="require('@/assets/'+item.toLowerCase() + '-logo.png')" />
-        <button v-on:click="openAuth(item)" v-bind:key="item+'-button'" v-bind:ref="item+'-button'"></button>
+        <button
+          v-on:click="openAuth(item)"
+          v-bind:key="item+'-button'"
+          v-bind:ref="item+'-button'"
+        >{{checkLogin(item)}}Login</button>
       </li>
     </ul>
     <div ref="authModal" class="modal">
@@ -41,7 +45,8 @@ export default class Providers extends Vue {
     App.workerController.on("all-providers", (data: string[]) => {
       that.providerList = [];
       for (const entry of data) {
-        that.checkLogin();
+        //that.providerList.push(entry);
+        //that.checkLogin(entry);
       }
       that.providerList.push(...data);
       console.log("ProviderList loaded.");
@@ -73,10 +78,12 @@ export default class Providers extends Vue {
     this.$refs.authModal.style.display = "block";
   }
 
-  checkLogin(button: any, providerName: string) {
+  checkLogin(providerName: string) {
     App.workerController.on(
       providerName.toLocaleLowerCase() + "-auth-status",
       status => {
+        const button = (this.$refs as any)[providerName + "-button"][0];
+        console.log(button);
         if (status) {
           button.classList.remove("logged-out");
           button.classList.add("logged-in");

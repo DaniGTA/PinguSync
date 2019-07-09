@@ -24,14 +24,21 @@ class ProviderController {
         ProviderController.instance = that;
         for (const pl of ProviderList.list) {
             if (pl.hasOAuthCode) {
-                this.on(pl.providerName.toLocaleLowerCase() + '-auth-status', async (code: string) => {
-                    await pl.logInUser(code);
-                    that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
+                this.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
+                    try {
+                        await pl.logInUser(code);
+                        that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
+                    } catch (err) { }
                 });
                 this.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
                     that.send('open-url', pl.getTokenAuthUrl());
                 });
             }
+            this.on(pl.providerName.toLocaleLowerCase() + '-is-logged-in', async (code: string) => {
+                try {
+                    that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
+                } catch (err) { }
+            });
         }
         this.on('path', (path) => {
             that.path = path;
@@ -77,6 +84,7 @@ class ProviderController {
         while (!success) {
             try {
                 ctx.postMessage(new WorkerTransfer(channel, JSON.stringify(data)));
+                console.log("worker send: " + channel);
                 success = true;
             } catch (err) {
                 console.log(err);
@@ -115,11 +123,13 @@ class ProviderController {
             return new Promise<string>((resolve, reject) => {
                 this.on('path', (s) => {
                     this.path = s;
+                    console.log('path: ' + s);
                     resolve(s);
                 });
                 this.send('get-path');
             })
         } else {
+            console.log('path: ' + this.path);
             return this.path;
         }
     }
@@ -131,8 +141,9 @@ class ProviderController {
     public async on(channel: string, f: (data: any) => void) {
         ctx.addEventListener('message', (ev: MessageEvent) => {
             const transfer = ev.data as WorkerTransfer;
-            console.log(channel);
+
             if (transfer.channel == channel) {
+                console.log("worker: " + channel);
                 try {
                     f(JSON.parse(transfer.data));
                 } catch (err) {

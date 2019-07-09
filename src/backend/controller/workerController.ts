@@ -1,6 +1,4 @@
 import { shell, IpcRenderer } from "electron";
-import ListProvider from '../api/ListProvider';
-import Anime from './objects/anime';
 import Worker from "worker-loader!./providerController";
 import { WorkerTransfer } from './objects/workerTransfer';
 
@@ -25,17 +23,21 @@ export default class WorkerController {
 
     public send(channel: string, data?: any) {
         this.worker.postMessage(new WorkerTransfer(channel, data));
+        console.log("frontend send: " + channel);
     }
 
     public async on(channel: string, f: (data: any) => void) {
         this.worker.addEventListener('message', (ev: MessageEvent) => {
             const transfer = ev.data as WorkerTransfer;
-            console.log(channel);
+
             if (transfer.channel == channel) {
-                try {
-                    f(JSON.parse(transfer.data));
-                } catch (err) {
-                    f(transfer.data);
+                console.log("frontend: " + channel);
+                if (typeof transfer.data != 'undefined') {
+                    try {
+                        f(JSON.parse(transfer.data));
+                    } catch (err) {
+                        f(transfer.data);
+                    }
                 }
             }
         })

@@ -26,9 +26,10 @@ function createWindow() {
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
   });
-
   ipcMain.on('get-path', (event: Electron.IpcMainEvent, string: string) => {
-    ipcMain.emit('path', (electron.app || electron.remote.app).getPath('userData'));
+    if (win != null) {
+      win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
+    }
   });
 
   //new WorkerController(win.webContents);
