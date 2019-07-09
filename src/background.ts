@@ -5,6 +5,7 @@ import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib';
+import * as electron from 'electron';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -24,7 +25,11 @@ function createWindow() {
 
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
-  })
+  });
+
+  ipcMain.on('get-path', (event: Electron.IpcMainEvent, string: string) => {
+    ipcMain.emit('path', (electron.app || electron.remote.app).getPath('userData'));
+  });
 
   //new WorkerController(win.webContents);
   //new ProviderController(win.webContents).initController();

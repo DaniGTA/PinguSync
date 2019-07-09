@@ -24,6 +24,20 @@ import { WorkerTransfer } from "./backend/controller/objects/workerTransfer";
 })
 export default class App extends Vue {
   static workerController: WorkerController = new WorkerController(ipcRenderer);
+  constructor() {
+    super();
+    ipcRenderer.on(
+      "path",
+      (event: Electron.IpcRendererEvent, string: string) => {
+        App.workerController.send("path", string);
+      }
+    );
+    App.workerController.on("get-path", () => {
+      ipcRenderer.send("get-path");
+    });
+
+    ipcRenderer.send("get-path");
+  }
 }
 </script>
 

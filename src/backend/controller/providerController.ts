@@ -14,6 +14,8 @@ class ProviderController {
 
     private static instance: ProviderController;
 
+    private path: string | null = null;
+
     constructor() {
         const that = this;
         if (typeof ProviderController.instance === 'undefined') {
@@ -24,14 +26,16 @@ class ProviderController {
             if (pl.hasOAuthCode) {
                 this.on(pl.providerName.toLocaleLowerCase() + '-auth-status', async (code: string) => {
                     await pl.logInUser(code);
-                    this.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
+                    that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                 });
                 this.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
-                    this.send('open-url', pl.getTokenAuthUrl());
+                    that.send('open-url', pl.getTokenAuthUrl());
                 });
             }
-
         }
+        this.on('path', (path) => {
+            that.path = path;
+        })
         this.send('status');
     }
 
@@ -104,6 +108,20 @@ class ProviderController {
         console.log('[Send] -> list -> anime');
         var list = new ListController().getMainList();
         this.send('series-list', list);
+    }
+
+    public async getPath(): Promise<string> {
+        if (this.path == null) {
+            return new Promise<string>((resolve, reject) => {
+                this.on('path', (s) => {
+                    this.path = s;
+                    resolve(s);
+                });
+                this.send('get-path');
+            })
+        } else {
+            return this.path;
+        }
     }
 
     public async updateClientList(targetIndex: number, updatedEntry: Anime) {

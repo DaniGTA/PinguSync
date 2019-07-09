@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { UserData } from "../userData";
 import Anime from "../../controller/objects/anime";
+import ProviderController from '../../../backend/controller/providerController';
 
 export class KitsuUserData implements UserData {
 
@@ -29,18 +30,18 @@ export class KitsuUserData implements UserData {
         this.saveData();
     }
 
-    private saveData() {
+    private async saveData() {
         try {
             console.warn('[IO] Write kitsu user file.')
-            fs.writeFileSync(this.getPath(), JSON.stringify(this));
+            fs.writeFileSync(await this.getPath(), JSON.stringify(this));
         } catch (err) { }
     }
 
-    private loadData() {
+    private async loadData() {
         try {
             console.warn('[IO] Read kitsu user file.')
-            if (fs.existsSync(this.getPath())) {
-                const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
+            if (fs.existsSync(await this.getPath())) {
+                const loadedString = fs.readFileSync(await this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
@@ -49,11 +50,11 @@ export class KitsuUserData implements UserData {
         }
     }
 
-    private getPath(): string {
+    private async getPath(): Promise<string> {
         try {
             const userDataPath = './';
             // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(userDataPath, 'kitsu_config.json');
+            return path.join(userDataPath + await ProviderController.getInstance().getPath(), 'kitsu_config.json');
         } catch (err) {
             throw err;
         }

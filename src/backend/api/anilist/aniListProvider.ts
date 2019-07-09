@@ -19,6 +19,7 @@ import aniListConverter from './aniListConverter';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
+import ProviderController from '../../../backend/controller/providerController';
 
 export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";
@@ -323,16 +324,16 @@ class AniListUserData implements UserData {
 
 
 
-    private saveData() {
+    private async saveData() {
         console.warn('[IO] Write anilist user file.')
-        fs.writeFileSync(this.getPath(), JSON.stringify(this));
+        fs.writeFileSync(await this.getPath(), JSON.stringify(this));
     }
 
-    private loadData() {
+    private async loadData() {
         try {
             console.warn('[IO] Read anilist user file.')
-            if (fs.existsSync(this.getPath())) {
-                var loadedString = fs.readFileSync(this.getPath(), "UTF-8");
+            if (fs.existsSync(await this.getPath())) {
+                var loadedString = fs.readFileSync(await this.getPath(), "UTF-8");
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
                 if (typeof this.list != 'undefined') {
@@ -347,9 +348,9 @@ class AniListUserData implements UserData {
         }
     }
 
-    private getPath(): string {
+    private async getPath(): Promise<string> {
         const userDataPath = './';
         // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-        return path.join(userDataPath, 'anilist_config.json');
+        return path.join(userDataPath + await ProviderController.getInstance().getPath(), 'anilist_config.json');
     }
 }
