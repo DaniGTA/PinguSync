@@ -3,7 +3,11 @@
     <ul class="provider-list">
       <li v-for="item in providerList" v-bind:key="item.length">
         <div>{{item}}</div>
-        <img :src="require('@/assets/'+item.toLowerCase() + '-logo.png')" />
+        <img
+          :src="require('@/assets/'+item.toLowerCase() + '-logo.png')"
+          v-bind:ref="item+'-img'"
+          class="logged-out"
+        />
         <button
           v-on:click="openAuth(item)"
           v-bind:key="item+'-button'"
@@ -16,9 +20,9 @@
       <div class="modal-content">
         <span v-on:click="closeModal()" class="close">&times;</span>
         <h2>Enter the {{currentSelectedProvider}} Code</h2>
-        <form action="#">
+        <form>
           <input v-model="code" placeholder="code" />
-          <button v-on:click="sendCode(currentSelectedProvider,code)" type="submit">Confirm</button>
+          <button v-on:click="sendCode(currentSelectedProvider,code)" type="reset">Confirm</button>
         </form>
       </div>
     </div>
@@ -83,13 +87,18 @@ export default class Providers extends Vue {
       providerName.toLocaleLowerCase() + "-auth-status",
       status => {
         const button = (this.$refs as any)[providerName + "-button"][0];
+        const img = (this.$refs as any)[providerName + "-img"][0];
         console.log(button);
         if (status) {
           button.classList.remove("logged-out");
           button.classList.add("logged-in");
+          img.classList.remove("logged-out");
+          img.classList.add("logged-in");
         } else {
           button.classList.remove("logged-in");
           button.classList.add("logged-out");
+          img.classList.add("logged-out");
+          img.classList.remove("logged-in");
         }
       }
     );

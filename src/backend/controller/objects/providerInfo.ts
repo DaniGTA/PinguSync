@@ -1,6 +1,5 @@
 import ListProvider from '../../api/ListProvider';
 import { WatchStatus } from './anime';
-import ProviderController from '../providerController';
 import ProviderList from '../providerList';
 
 export class ProviderInfo {

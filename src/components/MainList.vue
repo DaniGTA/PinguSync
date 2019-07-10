@@ -37,7 +37,6 @@ import { ipcRenderer, ipcMain } from "electron";
 import Anime from "../backend/controller/objects/anime";
 import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import WorkerController from "../backend/controller/workerController";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 @Component
@@ -57,14 +56,6 @@ export default class MainList extends Vue {
       console.log(data.data);
       that.$set(that.mainList, data.targetIndex, data.updatedEntry);
     });
-
-    App.workerController.worker.addEventListener(
-      "message",
-      (ev: MessageEvent) => {
-        const data = ev.data as WorkerTransfer;
-        console.log(ev);
-      }
-    );
   }
 
   clog(a: any) {
@@ -86,10 +77,6 @@ export default class MainList extends Vue {
 </script>
 
 <style>
-.provider-list {
-  display: inline;
-  list-style-type: none;
-}
 .main-list {
   display: flex;
   flex-flow: wrap;

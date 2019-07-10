@@ -18,6 +18,7 @@ class ProviderController {
 
     constructor() {
         const that = this;
+
         if (typeof ProviderController.instance === 'undefined') {
             this.initController()
         }
@@ -40,9 +41,6 @@ class ProviderController {
                 } catch (err) { }
             });
         }
-        this.on('path', (path) => {
-            that.path = path;
-        })
         this.send('status');
     }
 
@@ -87,13 +85,14 @@ class ProviderController {
                 console.log("worker send: " + channel);
                 success = true;
             } catch (err) {
+                ctx.postMessage(new WorkerTransfer(channel, ''));
                 console.log(err);
             }
         }
 
     }
 
-    private getProviderInstance(providerString: string): ListProvider {
+    static getProviderInstance(providerString: string): ListProvider {
         for (const provider of ProviderList.list) {
             if (provider.providerName === providerString) {
                 return provider;
@@ -118,20 +117,9 @@ class ProviderController {
         this.send('series-list', list);
     }
 
-    public async getPath(): Promise<string> {
-        if (this.path == null) {
-            return new Promise<string>((resolve, reject) => {
-                this.on('path', (s) => {
-                    this.path = s;
-                    console.log('path: ' + s);
-                    resolve(s);
-                });
-                this.send('get-path');
-            })
-        } else {
-            console.log('path: ' + this.path);
-            return this.path;
-        }
+    public getPath(): string {
+        return (process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/.local/share")) + '/list-manager/'
+
     }
 
     public async updateClientList(targetIndex: number, updatedEntry: Anime) {

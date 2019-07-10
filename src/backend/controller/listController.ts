@@ -1,4 +1,4 @@
-import ProviderController from './providerController';
+import ProviderController from './providerIPCController';
 import Anime from './objects/anime';
 import * as fs from "fs";
 import * as path from "path";
@@ -9,7 +9,6 @@ import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import sortHelper from '../helpFunctions/sortHelper';
 import ProviderList from './providerList';
-
 export default class ListController {
     private static mainList: Anime[] = [];
     static listLoaded = false;

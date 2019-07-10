@@ -12,7 +12,7 @@ import { Component, Vue } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import Providers from "./components/Providers.vue";
 import MainList from "./components/MainList.vue";
-import WorkerController from "./backend/controller/workerController";
+import WorkerController from "./backend/controller/ipcRendererController";
 import { ipcRenderer } from "electron";
 import { WorkerTransfer } from "./backend/controller/objects/workerTransfer";
 @Component({

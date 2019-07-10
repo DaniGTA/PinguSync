@@ -8,5 +8,4 @@ export default class ProviderList {
         new AniListProvider(),
         new TraktProvider(),
         new KitsuProvider()];
-
 }

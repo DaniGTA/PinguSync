@@ -2,10 +2,14 @@ module.exports = {
     configureWebpack: {
         devtool: 'source-map',
     },
+    pluginOptions: {
+        electronBuilder: {
+            // List native deps here if they don't work
+
+
+        }
+    },
     chainWebpack: (config) => {
-        config.module.rule('worker')
-            .test(/\.worker\.ts$/i)
-            .use('worker-loader')
-            .loader('worker-loader');
+        config.output.globalObject('this')
     }
 };

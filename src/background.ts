@@ -6,6 +6,9 @@ import {
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib';
 import * as electron from 'electron';
+import ProviderController from './backend/controller/providerIPCController';
+
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -22,7 +25,7 @@ function createWindow() {
       nodeIntegrationInWorker: true
     }
   })
-
+  new ProviderController(win.webContents)
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
   });
@@ -31,6 +34,8 @@ function createWindow() {
       win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
     }
   });
+
+  new ProviderController(win.webContents);
 
   //new WorkerController(win.webContents);
   //new ProviderController(win.webContents).initController();

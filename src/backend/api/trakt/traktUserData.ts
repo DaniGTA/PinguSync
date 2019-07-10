@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { UserData } from "../userData";
 import Anime from "../../controller/objects/anime";
-import ProviderController from '@/backend/controller/providerController';
+import PathHelper from '../../../backend/helpFunctions/pathHelper';
 
 export class TraktUserData implements UserData {
 
@@ -43,16 +43,18 @@ export class TraktUserData implements UserData {
 
     private async saveData() {
         try {
+            const path = this.getPath();
             console.warn('[IO] Write trakt user file.')
-            fs.writeFileSync(await this.getPath(), JSON.stringify(this));
+            fs.writeFileSync(path, JSON.stringify(this));
         } catch (err) { }
     }
 
-    private async loadData() {
+    private loadData() {
         try {
-            console.warn('[IO] Read trakt user file.')
-            if (fs.existsSync(await this.getPath())) {
-                const loadedString = fs.readFileSync(await this.getPath(), 'UTF-8');
+            const path = this.getPath();
+            console.warn('[IO] Read trakt user file. ' + path)
+            if (fs.existsSync(path)) {
+                const loadedString = fs.readFileSync(path, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
@@ -61,11 +63,10 @@ export class TraktUserData implements UserData {
         }
     }
 
-    private async getPath(): Promise<string> {
+    private getPath(): string {
         try {
-            const userDataPath = './';
             // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(userDataPath + await ProviderController.getInstance().getPath(), 'trakt_config.json');
+            return path.join(new PathHelper().getAppPath(), 'trakt_config.json');
         } catch (err) {
             throw err;
         }
