@@ -1,4 +1,4 @@
-import ProviderController from './providerIPCController';
+import ProviderController from './providerController';
 import Anime from './objects/anime';
 import * as fs from "fs";
 import * as path from "path";
@@ -9,14 +9,18 @@ import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import sortHelper from '../helpFunctions/sortHelper';
 import ProviderList from './providerList';
+import { job, start, stop } from "microjob";
 export default class ListController {
     private static mainList: Anime[] = [];
     static listLoaded = false;
     constructor() {
+        start();
         if (!ListController.listLoaded) {
             ListController.mainList = this.loadData();
             ListController.listLoaded = true;
+
             this.getSeriesList();
+
         }
     }
 
@@ -155,7 +159,7 @@ export default class ListController {
 
     public async getSeriesList(): Promise<Anime[]> {
         console.log('[calc] -> SeriesList');
-        let allSeries: Anime[] = await this.getAllEntrysFromProviders(true);
+        let allSeries: Anime[] = await job(async () => await this.getAllEntrysFromProviders(true));
 
         await this.addSeriesToMainList(...allSeries);
 
@@ -193,7 +197,7 @@ export default class ListController {
         const filledEntry = [];
         for (let entry of entrys) {
             try {
-                entry = await this.fillMissingProvider(entry);
+                entry = await job(async () => await this.fillMissingProvider(entry));
                 filledEntry.push(entry);
             } catch (err) {
                 continue;
@@ -269,7 +273,7 @@ export default class ListController {
                 let bMatch: Anime | null = null;
                 for (const b of dynamicEntrys) {
                     if (a !== b && !await that.sameProvider(a, b)) {
-                        const matches = await that.matchCalc(a, b);
+                        const matches: number = await job(async () => await that.matchCalc(a, b));
 
                         if (matches >= 3) {
                             bMatch = b;

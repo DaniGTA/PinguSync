@@ -3,7 +3,8 @@ import ListController from './listController';
 import Anime from './objects/anime';
 import IUpdateList from './objects/iupdateList';
 import ProviderList from './providerList';
-import { ipcMain } from 'electron';
+import IPCBackgroundController from '../communication/ipcBackgroundController';
+import ICommunication from '../communication/ICommunication';
 
 class ProviderController {
     public static getInstance(): ProviderController {
@@ -13,9 +14,9 @@ class ProviderController {
     private static instance: ProviderController;
 
     private path: string | null = null;
-    private webcontents: Electron.WebContents;
+    private communcation: ICommunication;
     constructor(webcontents: Electron.WebContents) {
-        this.webcontents = webcontents;
+        this.communcation = new IPCBackgroundController(webcontents);
         const that = this;
 
         if (typeof ProviderController.instance === 'undefined') {
@@ -24,55 +25,40 @@ class ProviderController {
             ProviderController.instance = that;
             for (const pl of ProviderList.list) {
                 if (pl.hasOAuthCode) {
-                    this.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
+                    this.communcation.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
                         try {
                             await pl.logInUser(code);
-                            that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
+                            that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                         } catch (err) { }
                     });
-                    this.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
-                        that.send('open-url', pl.getTokenAuthUrl());
+                    this.communcation.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
+                        that.communcation.send('open-url', pl.getTokenAuthUrl());
                     });
                 }
-                this.on(pl.providerName.toLocaleLowerCase() + '-is-logged-in', async (code: string) => {
+                this.communcation.on(pl.providerName.toLocaleLowerCase() + '-is-logged-in', async (code: string) => {
                     try {
-                        that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
+                        that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                     } catch (err) { }
                 });
             }
 
-            this.send('status');
+            this.communcation.send('status');
         }
     }
 
     public initController() {
-        this.on('get-series-list', () => {
+        this.communcation.on('get-series-list', () => {
             this.sendSeriesList();
         });
-        this.on('request-info-refresh', (data) => {
+        this.communcation.on('request-info-refresh', (data) => {
             new ListController().forceRefreshProviderInfo(data);
         });
-        this.on('get-all-providers', (data) => {
-            this.send('all-providers', ProviderList.list.flatMap(x => x.providerName));
+        this.communcation.on('get-all-providers', (data) => {
+            this.communcation.send('all-providers', ProviderList.list.flatMap(x => x.providerName));
         });
-        this.on('sync-series', (data) => {
+        this.communcation.on('sync-series', (data) => {
             this.syncSeries(data);
         });
-    }
-
-    private send(channel: string, data?: any) {
-        let success = false;
-        while (!success) {
-            try {
-                this.webcontents.send(channel, data);
-                console.log("worker send: " + channel);
-                success = true;
-            } catch (err) {
-                this.webcontents.send(channel);
-                console.log(err);
-            }
-        }
-
     }
 
     static getProviderInstance(providerString: string): ListProvider {
@@ -97,7 +83,7 @@ class ProviderController {
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
         var list = new ListController().getMainList();
-        this.send('series-list', list);
+        this.communcation.send('series-list', list);
     }
 
     public getPath(): string {
@@ -107,18 +93,7 @@ class ProviderController {
 
     public async updateClientList(targetIndex: number, updatedEntry: Anime) {
         console.log('[Send] -> update -> anime');
-        this.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
-    }
-
-    public async on(channel: string, f: (data: any) => void) {
-        ipcMain.on(channel, (event: Electron.IpcMainEvent, data: any) => {
-            console.log('recieved: ' + channel)
-            try {
-                f(JSON.parse(data));
-            } catch (err) {
-                f(data);
-            }
-        })
+        this.communcation.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }
 }
 

@@ -1,6 +1,6 @@
 import { shell, IpcRenderer } from "electron";
 import Worker from "worker-loader!./providerController";
-import { WorkerTransfer } from './objects/workerTransfer';
+import { WorkerTransfer } from '../controller/objects/workerTransfer';
 
 export default class WorkerController {
     worker: Worker;

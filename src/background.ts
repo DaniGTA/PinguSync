@@ -6,7 +6,7 @@ import {
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib';
 import * as electron from 'electron';
-import ProviderController from './backend/controller/providerIPCController';
+import ProviderController from './backend/controller/providerController';
 
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
