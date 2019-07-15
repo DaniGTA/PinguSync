@@ -49,10 +49,6 @@ export default class Providers extends Vue {
     const that = this;
     App.workerController.on("all-providers", (data: string[]) => {
       that.providerList = [];
-      for (const entry of data) {
-        //that.providerList.push(entry);
-        //that.checkLogin(entry);
-      }
       that.providerList.push(...data);
       console.log("ProviderList loaded.");
       App.workerController.send("get-series-list");
@@ -87,17 +83,15 @@ export default class Providers extends Vue {
     App.workerController.on(
       providerName.toLocaleLowerCase() + "-auth-status",
       status => {
-        const button = (this.$refs as any)[providerName + "-button"][0];
-        const img = (this.$refs as any)[providerName + "-img"][0];
+        const button = (this.$refs as any)[providerName + "-button"][0] as HTMLElement;
+        const img = (this.$refs as any)[providerName + "-img"][0] as HTMLElement;
         console.log(button);
         if (status) {
-          button.classList.remove("logged-out");
-          button.classList.add("logged-in");
+          button.setAttribute("disable","true")
           img.classList.remove("logged-out");
           img.classList.add("logged-in");
         } else {
-          button.classList.remove("logged-in");
-          button.classList.add("logged-out");
+          button.removeAttribute("disable")
           img.classList.add("logged-out");
           img.classList.remove("logged-in");
         }

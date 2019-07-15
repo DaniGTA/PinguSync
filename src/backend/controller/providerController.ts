@@ -59,6 +59,9 @@ class ProviderController {
         this.communcation.on('sync-series', (data) => {
             this.syncSeries(data);
         });
+        this.communcation.on('anime-update-watch-progress', (data) => {
+            this.syncSeries(data);
+        });
     }
 
     static getProviderInstance(providerString: string): ListProvider {

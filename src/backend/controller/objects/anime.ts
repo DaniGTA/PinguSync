@@ -20,7 +20,24 @@ export default class Anime {
         //Generates randome string.
         this.id = stringHelper.randomString(20);
     }
+    /**
+     * For tests
+     */
+    internalTests() {
+        return {
+            getCanSyncStatus: this.getCanSyncStatus,
+            getLastUpdatedProvider: this.getLastUpdatedProvider,
+            mergeProviders: this.mergeProviders,
+            mergeNumber: this.mergeNumber,
+            isDefined: this.isDefined,
+            mergeString: this.mergeString
+        }
+    }
 
+    /**
+     * Returns the Season of the Anime based on Season entry or name.
+     * @hasTest
+     */
     public async getSeason(): Promise<number | undefined> {
         if (typeof this.seasonNumber != 'undefined') {
             return this.seasonNumber;
@@ -58,6 +75,7 @@ export default class Anime {
         this.canSync = false;
         return false;
     }
+
     /**
      * @return the last updated provider with watchProgress !
      */
@@ -101,12 +119,12 @@ export default class Anime {
 
         newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.providerInfos.flatMap(x => x.episodes)));
         let seasonarr = await listHelper.cleanArray([this.seasonNumber, anime.seasonNumber]);
-        if(typeof seasonarr !== 'undefined') {
+        if (typeof seasonarr !== 'undefined') {
             newAnime.seasonNumber = await listHelper.findMostFrequent(seasonarr);
         }
 
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
-        
+
         newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
         newAnime.coverImage = await this.mergeString(anime.coverImage, this.coverImage);
         newAnime.providerInfos = await this.mergeProviders(...[...this.providerInfos, ...anime.providerInfos]);
@@ -167,7 +185,6 @@ export default class Anime {
         return <T>value !== undefined && <T>value !== null;
     }
     private async mergeString(a: string, b: string, topic?: string): Promise<string> {
-
         if (a === '' || a == null) {
             return b;
         } else if (b === '' || b == null) {

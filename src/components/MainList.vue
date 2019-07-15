@@ -11,7 +11,7 @@
       <th>Provider2</th>
       <th>Provider3</th>
     </tr>
-    <tr v-for="item in mainList" v-bind:key="item.id" class="main-list-entry">
+    <tr v-for="item in mainList" v-bind:key="item.id" v-bind:ref="item.id" class="main-list-entry">
       <td>{{item.names.engName}}</td>
       <td>{{item.names.mainName}}</td>
       <td>{{item.names.romajiName}}</td>
@@ -23,6 +23,11 @@
 
       <td>
         <button @click="updateAnime(item.id)">RefreshInfo</button>
+      </td>
+      <td>
+        <button @click="updateWatchProgress(item,true)">-</button>
+        <div v-bind:ref="item.id+'-watchprogress'">{{getWatchProgress(item)}}</div>
+        <button @click="updateWatchProgress(item,false)">+</button>
       </td>
       <td
         v-for="provider in item.providerInfos"
@@ -49,7 +54,20 @@ export default class MainList extends Vue {
     MainList.instance = this;
 
     App.workerController.on("series-list", (data: Anime[]) => {
-      that.mainList.push(...data);
+      let x: number = 0;
+      that.mainList = [];
+      for (const iterator of data) {
+        if (that.mainList.findIndex(x => x.id === iterator.id) !== -1) {
+          const refs = (this.$refs as any)[iterator.id];
+          const entry = refs[0] as HTMLElement;
+          entry.style.background = "red";
+        } else {
+          that.mainList.push(iterator);
+          x++;
+        }
+      }
+      console.log("Data size: " + data.length);
+      console.log("Showed size: " + x);
     });
 
     App.workerController.on("update-series-list", (data: any) => {
@@ -68,6 +86,38 @@ export default class MainList extends Vue {
     console.log("updateAnime: " + id);
     var a = this.mainList.findIndex(x => x.id === id);
     App.workerController.send("request-info-refresh", this.mainList[a]);
+  }
+  getWatchProgress(anime: Anime) {
+    const animeObject = Object.assign(new Anime(), anime);
+    animeObject.readdFunctions();
+    animeObject.getLastWatchProgress().then(number => {
+      const div = (this.$refs as any)[
+        anime.id + "-watchprogress"
+      ][0] as HTMLElement;
+      div.textContent = number + "";
+    });
+  }
+  /**
+   * if reduce is true the watchprogress will be lowered by 1,
+   * if it is false the watchprogress will be higher by 1.
+   */
+  updateWatchProgress(anime: Anime, reduce: boolean) {
+    const div = (this.$refs as any)[
+      anime.id + "-watchprogress"
+    ][0] as HTMLElement;
+    if (div.textContent != null) {
+      let watchProgress = parseInt(div.textContent);
+      if (reduce) {
+        watchProgress--;
+      } else {
+        watchProgress++;
+      }
+      div.textContent = watchProgress + "";
+      App.workerController.send("anime-update-watch-progress", {
+        anime,
+        watchProgress
+      });
+    }
   }
 
   syncAnime(id: string | number) {

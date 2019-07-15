@@ -5,7 +5,6 @@ import Anime from '../src/backend/controller/objects/anime';
 import * as assert from 'assert';
 import stringHelper from '../src/backend/helpFunctions/stringHelper';
 import listHelper from '../src/backend/helpFunctions/listHelper';
-
 describe('CombineEntrys', () => {
     it('should combine basic entrys correct', async () => {
 
@@ -24,8 +23,8 @@ describe('CombineEntrys', () => {
         var lc = new ListController();
         var entry: Anime[] = [];
         var x2 = getFilledAnime();
-        x2.episodes = 0;
-        x2.releaseYear = 0;
+        x2.episodes = undefined;
+        x2.releaseYear = undefined;
         entry.push(x2);
         entry.push(getFilledAnime());
         for (let index = 0; index < 20; index++) {
