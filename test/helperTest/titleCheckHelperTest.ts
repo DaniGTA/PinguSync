@@ -7,6 +7,7 @@ describe('TitleCheckerTest', () => {
         assert.equal(await titleCheckHelper.fastMatch(["Title Title Season 2"], ["title title II"]), true)
         assert.equal(await titleCheckHelper.fastMatch(["ATitle"], ["BTitle"]), false)
         assert.equal(await titleCheckHelper.fastMatch(["Title ABC"], ["Title CBA"]), true)
+        assert.equal(await titleCheckHelper.fastMatch(["Test"], ["Test III"]), true)
         return;
     });
     it('should remove season from title', async () => {
@@ -17,4 +18,5 @@ describe('TitleCheckerTest', () => {
         assert.equal(await titleCheckHelper.removeSeasonMarkesFromTitle("Title 2nd -Test-"), "Title -Test-")
         return;
     });
+
 });

@@ -16,4 +16,12 @@ describe('stringHelperTest', () => {
         assert.equal(await stringHelper.reverseString('test'), 'tset');
         return;
     }
+
+    it('should generate a randome string'), async () => {
+        assert.notEqual(await stringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+        assert.notEqual(await stringHelper.randomString(), '');
+        assert.notEqual(typeof await stringHelper.randomString(), 'undefined');
+        assert.notEqual(await stringHelper.randomString(), null);
+        return;
+    }
 });

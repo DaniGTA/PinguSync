@@ -9,7 +9,7 @@ export default class Anime {
     public lastUpdate: number = Date.now();
     public names: Names = new Names();
     public providerInfos: ProviderInfo[] = [];
-    public episodes?: number = 0;
+    public episodes?: number;
     public coverImage: string = '';
     public overviews: Overview[] = [];
     public releaseYear?: number;
@@ -17,21 +17,39 @@ export default class Anime {
     public runTime?: number;
     public canSync: boolean = false;
     constructor() {
+        this.providerInfos = [];
         //Generates randome string.
         this.id = stringHelper.randomString(20);
     }
-    /**
-     * For tests
-     */
-    internalTests() {
-        return {
-            getCanSyncStatus: this.getCanSyncStatus,
-            getLastUpdatedProvider: this.getLastUpdatedProvider,
-            mergeProviders: this.mergeProviders,
-            mergeNumber: this.mergeNumber,
-            isDefined: this.isDefined,
-            mergeString: this.mergeString
+
+    public getMaxEpisode(): number {
+        const array = (this.providerInfos.flatMap(x => x.episodes) as number[]);
+        if (typeof this.episodes != 'undefined') {
+            array.push(this.episodes);
         }
+        const onlyNumbers = array.filter(v => Number.isInteger(v as number));
+        if (onlyNumbers.length == 0) {
+            throw 'no episode found';
+        }
+        return Math.max(...onlyNumbers);
+    }
+
+    public async getAllEpisodes(): Promise<number[]> {
+        let result;
+        try {
+            result = await listHelper.cleanArray(this.providerInfos.flatMap(x => x.episodes))
+        } catch (e) { }
+        if (typeof result == 'undefined') {
+            if (typeof this.episodes != 'undefined') {
+                return [this.episodes];
+            }
+        } else {
+            if (typeof this.episodes != 'undefined') {
+                result.push(this.episodes);
+            }
+            return await listHelper.getUniqueList(result as number[]);
+        }
+        throw 'no episode found';
     }
 
     /**
@@ -81,12 +99,14 @@ export default class Anime {
      */
     private async getLastUpdatedProvider(): Promise<ProviderInfo | null> {
         let latestUpdatedProvider: ProviderInfo | null = null;
-        for (const provider of this.providerInfos) {
-            if (typeof provider.watchProgress != 'undefined') {
-                if (latestUpdatedProvider === null) {
-                    latestUpdatedProvider = provider;
-                } else if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
-                    latestUpdatedProvider = provider;
+        if (typeof this.providerInfos != 'undefined') {
+            for (const provider of this.providerInfos) {
+                if (typeof provider.watchProgress != 'undefined') {
+                    if (latestUpdatedProvider === null) {
+                        latestUpdatedProvider = provider;
+                    } else if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
+                        latestUpdatedProvider = provider;
+                    }
                 }
             }
         }

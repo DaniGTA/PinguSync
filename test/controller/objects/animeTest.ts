@@ -35,10 +35,11 @@ describe('animeTest', () => {
     it('should return last provider', async () => {
         const anime = new Anime();
         const providerA = new ProviderInfo();
+        providerA.watchProgress = 0;
         const providerB = new ProviderInfo();
-        anime.providerInfos = [];
+        providerB.watchProgress = 0;
         anime.providerInfos.push(providerA, providerB);
-        assert.equal(await anime.internalTests().getLastUpdatedProvider(), providerA);
+        assert.equal(await anime['getLastUpdatedProvider'](), providerA);
         return;
     });
 
@@ -48,9 +49,75 @@ describe('animeTest', () => {
         providerA.watchProgress = 5;
         const providerB = new ProviderInfo();
         providerB.watchProgress = 4;
-        anime.providerInfos = [];
         anime.providerInfos.push(providerA, providerB);
         assert.equal(await anime.getLastWatchProgress(), 5);
+        return;
+    });
+
+    it('should all episodes (1/3)', async () => {
+        const anime = new Anime();
+        const providerA = new ProviderInfo();
+        providerA.episodes = 10;
+        const providerB = new ProviderInfo();
+        providerB.episodes = 11;
+        anime.providerInfos.push(providerA, providerB);
+        const allEpisodes = await anime.getAllEpisodes();
+        assert.deepStrictEqual(allEpisodes, [10, 11]);
+        return;
+    });
+
+    it('should all episodes (2/3)', async () => {
+        const anime = new Anime();
+        const providerA = new ProviderInfo();
+        providerA.episodes = 10;
+        const providerB = new ProviderInfo();
+        anime.episodes = 11;
+        anime.providerInfos.push(providerA, providerB);
+        assert.deepStrictEqual(await anime.getAllEpisodes(), [10, 11]);
+        return;
+    });
+
+    it('should all episodes (3/3)', async () => {
+        const anime = new Anime();
+        const providerA = new ProviderInfo();
+
+        anime.providerInfos.push(providerA);
+        assert.deepStrictEqual(await anime.getAllEpisodes(), []);
+        return;
+    });
+
+    it('should max episode (1/3)', async () => {
+        const anime = new Anime();
+        const providerA = new ProviderInfo();
+        providerA.episodes = 12;
+        const providerB = new ProviderInfo();
+        anime.episodes = 11;
+        anime.providerInfos.push(providerA, providerB);
+        assert.equal(anime.getMaxEpisode(), 12);
+        return;
+    });
+
+    it('should max episode (2/3)', async () => {
+        const anime = new Anime();
+        const providerA = new ProviderInfo();
+        providerA.episodes = 12;
+        const providerB = new ProviderInfo();
+        providerA.episodes = 24;
+        anime.episodes = 11;
+        anime.providerInfos.push(providerA, providerB);
+        assert.strictEqual(anime.getMaxEpisode(), 24);
+        return;
+    });
+
+    it('should max episode (3/3)', async () => {
+        const anime = new Anime();
+        const providerA = new ProviderInfo();
+        providerA.episodes = 12;
+        const providerB = new ProviderInfo();
+        providerA.episodes = 24;
+        anime.episodes = 11;
+        anime.providerInfos.push(providerA, providerB);
+        assert.throws(anime.getMaxEpisode);
         return;
     });
 });

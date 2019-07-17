@@ -258,6 +258,7 @@ export default class ListController {
                     await timeHelper.delay(700);
                 }
             }
+
         }
         if (updatedInfo) {
             return entry;
@@ -320,8 +321,10 @@ export default class ListController {
         if (aSeason != await b.getSeason() || typeof aSeason == 'undefined') {
             matches -= 2;
         }
-
-        if (a.episodes === b.episodes) {
+        const allAEpisodes = await a.getAllEpisodes();
+        const allBEpisodes = await b.getAllEpisodes();
+        // Search if there is a match between the arrays.
+        if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
             matches++;
         }
         if (matches == 0) {

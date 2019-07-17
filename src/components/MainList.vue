@@ -11,7 +11,7 @@
       <th>Provider2</th>
       <th>Provider3</th>
     </tr>
-    <tr v-for="item in mainList" v-bind:key="item.id" v-bind:ref="item.id" class="main-list-entry">
+    <tr v-for="item of mainList" v-bind:key="item.id" v-bind:ref="item.id" class="main-list-entry">
       <td>{{item.names.engName}}</td>
       <td>{{item.names.mainName}}</td>
       <td>{{item.names.romajiName}}</td>
@@ -25,12 +25,16 @@
         <button @click="updateAnime(item.id)">RefreshInfo</button>
       </td>
       <td>
-        <button @click="updateWatchProgress(item,true)">-</button>
-        <div v-bind:ref="item.id+'-watchprogress'">{{getWatchProgress(item)}}</div>
-        <button @click="updateWatchProgress(item,false)">+</button>
+        <button @click="updateWatchProgress(item,true)" :disabled="getWatchProgress(item) <= 0">-</button>
+        <div v-bind:ref="item.id+'-watchprogress'">{{getWatchProgress(item)}}</div>/
+        <div>{{getEpisode(item)}}</div>
+        <button
+          @click="updateWatchProgress(item,false)"
+          :disabled="getWatchProgress(item) !== getEpisode(item)"
+        >+</button>
       </td>
       <td
-        v-for="provider in item.providerInfos"
+        v-for="provider of item.providerInfos"
         v-bind:key="provider.provider + provider.id"
       >{{provider.provider}} | {{provider.watchProgress}}</td>
     </tr>
@@ -71,7 +75,7 @@ export default class MainList extends Vue {
     });
 
     App.workerController.on("update-series-list", (data: any) => {
-      console.log(data.data);
+      console.log(data);
       that.$set(that.mainList, data.targetIndex, data.updatedEntry);
     });
   }
@@ -122,6 +126,13 @@ export default class MainList extends Vue {
 
   syncAnime(id: string | number) {
     App.workerController.send("sync-series", id);
+  }
+  getEpisode(anime: Anime): number | undefined {
+    try {
+      return Object.assign(new Anime(), anime).getMaxEpisode();
+    } catch (e) {
+      return anime.episodes;
+    }
   }
 }
 </script>

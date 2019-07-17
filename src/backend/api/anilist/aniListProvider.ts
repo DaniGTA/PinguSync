@@ -1,5 +1,4 @@
-import * as fs from "fs";
-import * as path from "path";
+
 import request from 'request';
 import { Viewer } from "./graphql/viewer";
 import getViewerGql from "./graphql/getViewer.gql";
@@ -7,7 +6,6 @@ import GetUserSeriesListGql from "./graphql/getUserSeriesList.gql";
 import { MediaType } from "./graphql/basics/mediaType";
 import { MediaListCollection, MediaRelation, Relation } from "./graphql/seriesList";
 import ListProvider from "../listProvider";
-import { UserData } from "../userData";
 import { ProviderInfo } from '../../controller/objects/providerInfo';
 import Anime, { WatchStatus } from '../../controller/objects/anime';
 import searchSeriesGql from './graphql/searchSeries.gql';
@@ -19,7 +17,7 @@ import aniListConverter from './aniListConverter';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
-import PathHelper from '../../../backend/helpFunctions/pathHelper';
+import { AniListUserData } from './aniListUserData';
 
 export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";
@@ -138,52 +136,7 @@ export default class AniListProvider implements ListProvider {
             for (const list of data.lists) {
                 let watchStatus = await this.convertListNameToWatchStatus(list.name);
                 for (const entry of list.entries) {
-                    var series: Anime = new Anime();
-                    series.names.engName = entry.media.title.english;
-                    series.names.mainName = entry.media.title.native;
-                    series.names.romajiName = entry.media.title.romaji;
-                    await series.names.fillNames();
-
-                    series.releaseYear = entry.media.startDate.year;
-                    series.seasonNumber = await series.names.getSeasonNumber();
-
-                    var providerInfo: ProviderInfo = new ProviderInfo(AniListProvider.getInstance());
-                    try {
-                        if (typeof series.seasonNumber === 'undefined') {
-                            if (entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL) === -1) {
-                                series.seasonNumber = 1;
-                            } else {
-
-                            }
-                        }
-                        let prequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL);
-                        if (prequel != -1) {
-                            providerInfo.prequelId = entry.media.relations.nodes[prequel].id
-                        }
-                        let sequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.SEQUEL);
-                        if (sequel != -1) {
-                            providerInfo.sequelId = entry.media.relations.nodes[sequel].id
-                        }
-                    } catch (err) {
-                        console.error(err);
-                    }
-
-
-                    providerInfo.id = entry.media.id;
-                    providerInfo.score = entry.score;
-                    providerInfo.rawEntry = entry;
-                    providerInfo.watchProgress = entry.progress;
-                    providerInfo.watchStatus = watchStatus;
-                    providerInfo.lastExternalChange = new Date(entry.updatedAt);
-
-
-
-                    if (typeof entry.media.episodes != 'undefined') {
-                        providerInfo.episodes = entry.media.episodes;
-                    }
-
-                    series.providerInfos.push(providerInfo);
-                    seriesList.push(series);
+                    seriesList.push(await aniListConverter.convertListEntryToAnime(entry, watchStatus));
                 }
             }
             this.userData.updateList(seriesList);
@@ -255,7 +208,7 @@ export default class AniListProvider implements ListProvider {
     private async webRequest<T>(options: (request.UriOptions & request.CoreOptions)): Promise<T> {
         return new Promise<T>((resolve, rejects) => {
             try {
-                request(options, function (error: any, response: any, body: any) {
+                request(options, (error: any, response: any, body: any) => {
                     console.log('error:', error); // Print the error if one occurred
                     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
                     if (response.statusCode == 200) {
@@ -278,7 +231,6 @@ export default class AniListProvider implements ListProvider {
             uri: 'https://graphql.anilist.co',
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + this.userData.access_token,
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
@@ -287,69 +239,13 @@ export default class AniListProvider implements ListProvider {
                 variables: variables
             })
         };
-        return options;
-    }
-}
-class AniListUserData implements UserData {
-    username: string = '';
-    access_token: string = "";
-    refresh_token: string = "";
-    expires_in: number = 0;
-    viewer: Viewer | undefined;
-    list: Anime[] | undefined;
-    lastListUpdate: Date | undefined;
 
-    constructor() {
-        this.loadData();
-    }
-
-    updateList(list: Anime[]) {
-        this.list = list;
-        this.lastListUpdate = new Date(Date.now());
-        this.saveData();
-    }
-
-    setViewer(viewer: Viewer) {
-        this.viewer = viewer;
-        this.username = viewer.name;
-        this.saveData();
-    }
-
-    setTokens(accessToken: string, refreshToken: string, expiresIn: number) {
-        this.access_token = accessToken;
-        this.refresh_token = refreshToken;
-        this.expires_in = expiresIn;
-        this.saveData();
-    }
-
-
-
-    private async saveData() {
-        console.warn('[IO] Write anilist user file.')
-        fs.writeFileSync(await this.getPath(), JSON.stringify(this));
-    }
-
-    private loadData() {
-        try {
-            console.warn('[IO] Read anilist user file.')
-            if (fs.existsSync(this.getPath())) {
-                var loadedString = fs.readFileSync(this.getPath(), "UTF-8");
-                const loadedData = JSON.parse(loadedString) as this;
-                Object.assign(this, loadedData);
-                if (typeof this.list != 'undefined') {
-                    for (let index = 0; index < this.list.length; index++) {
-                        this.list[index] = Object.assign(new Anime(), this.list[index]);
-                    }
-                }
-                this.lastListUpdate = loadedData.lastListUpdate;
+        if (this.userData.access_token != "" && typeof this.userData.access_token != 'undefined') {
+            if (typeof options.headers != 'undefined') {
+                options.headers.add({ 'Authorization': 'Bearer ' + this.userData.access_token })
             }
-        } catch (err) {
-
         }
-    }
 
-    private getPath(): string {
-        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-        return path.join(new PathHelper().getAppPath(), 'anilist_config.json');
+        return options;
     }
 }

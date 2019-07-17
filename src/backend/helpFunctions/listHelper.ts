@@ -42,8 +42,11 @@ class ListHelper {
     public async findMostFrequent<T>(arr: T[]): Promise<T | undefined> {
         if (arr === void 0) {
             arr = [];
+        } else if (arr.length === 0) {
+            return;
+        } else if (arr.length === 1) {
+            return arr[0];
         }
-        var current = 0;
         var max = 0;
         var mostCommonNumber: T | undefined = undefined;
         var i: number = 0;

@@ -25,6 +25,7 @@
     "microjob": "^0.5.2",
     "mocha": "^6.1.4",
     "resolve": "^1.11.1",
+    "rewire": "^4.0.1",
     "sinon": "^7.3.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
@@ -35,7 +36,7 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
-    "@types/node": "^12.6.2",
+    "@types/node": "^12.6.3",
     "@vue/cli-plugin-babel": "^3.9.2",
     "@vue/cli-plugin-eslint": "^3.9.2",
     "@vue/cli-plugin-typescript": "^3.9.0",

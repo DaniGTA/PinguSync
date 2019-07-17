@@ -13,9 +13,8 @@ export default new class TitleCheckHelper {
                     name = await stringHelper.cleanString(name);
                     var name2 = await this.removeSeasonMarkesFromTitle(name);
                     if (name2 != name) {
-                        bNameList.push(name2);
+                        aNameList.push(name2);
                     }
-                    aNameList.push();
                 } catch (err) {
                     continue;
                 }
@@ -81,7 +80,7 @@ export default new class TitleCheckHelper {
                     }
                     var shortScan = Math.ceil(shortestTextLength / 4);
                     if (shortScan < 3) {
-                        shortScan = Math.ceil(shortestTextLength / 1.5)
+                        shortScan = Math.ceil(shortestTextLength / 1.25)
                     }
                     var aResult = a.substring(0, shortScan).toLocaleLowerCase();
                     var bResult = b.substring(0, shortScan).toLocaleLowerCase();

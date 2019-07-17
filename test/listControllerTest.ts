@@ -34,11 +34,11 @@ describe('CombineEntrys', () => {
         assert.equal(a.length, 20);
         return;
     });
-    it('should combine basic entrys with season in title (1/3)', async () => {
+    it('should combine basic entrys with season in title (1/4)', async () => {
         var lc = new ListController();
         var entry: Anime[] = [];
         var x2 = getFilledAnime();
-        x2.seasonNumber = 0;
+        x2.seasonNumber = undefined;
         x2.names.engName = "Test III";
         entry.push(x2);
         entry.push(getFilledAnime());
@@ -49,11 +49,11 @@ describe('CombineEntrys', () => {
         assert.equal(a.length, 20);
         return;
     });
-    it('should combine basic entrys with season in title (2/3)', async () => {
+    it('should combine basic entrys with season in title (2/4)', async () => {
         var lc = new ListController();
         var entry: Anime[] = [];
         var x2 = getFilledAnime();
-        x2.seasonNumber = 0;
+        x2.seasonNumber = undefined;
         x2.names.engName = "Test 3";
         entry.push(x2);
         entry.push(getFilledAnime());
@@ -64,11 +64,11 @@ describe('CombineEntrys', () => {
         assert.equal(a.length, 20);
         return;
     });
-    it('should combine basic entrys with season in title (3/3)', async () => {
+    it('should combine basic entrys with season in title (3/4)', async () => {
         var lc = new ListController();
         var entry: Anime[] = [];
         var x2 = getFilledAnime();
-        x2.names.engName = "Test 3";
+        x2.names.engName = "Test Season 3";
         x2.releaseYear = 0;
         x2.episodes = 0;
         entry.push(x2);
@@ -78,6 +78,26 @@ describe('CombineEntrys', () => {
         }
         var a = await lc.InternalTesting().combineDoubleEntrys(entry);
         assert.equal(a.length, 20);
+        return;
+    });
+
+    it('should combine basic entrys with season in title (4/4)', async () => {
+        var lc = new ListController();
+        var entry: Anime[] = [];
+        let x = getFilledAnime();
+        x.seasonNumber = undefined;
+        x.names.engName = "Tesjo"
+        var x2 = getFilledAnime();
+        x2.names.engName = "Tesjo x";
+        x2.releaseYear = 0;
+        x2.episodes = 0;
+        entry.push(x2);
+        entry.push();
+        for (let index = 0; index < 22; index++) {
+            entry.push(getRandomeFilledAnime());
+        }
+        var a = await lc.InternalTesting().combineDoubleEntrys(entry);
+        assert.equal(a.length, 23);
         return;
     });
     it('should sort list', async () => {
