@@ -60,7 +60,10 @@ class ProviderController {
             this.syncSeries(data);
         });
         this.communcation.on('anime-update-watch-progress', (data) => {
-            this.syncSeries(data);
+            const lc = new ListController();
+            const anime: Anime = Object.assign(new Anime(), data.anime);
+            anime.readdFunctions();
+            lc.updateWatchProgressTo(anime, data.watchProgress);
         });
     }
 

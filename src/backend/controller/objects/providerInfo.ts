@@ -49,7 +49,7 @@ export class ProviderInfo {
                 }
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
-                if (new Date(provider.lastUpdate).getMilliseconds() > new Date(newestProvider.lastUpdate).getMilliseconds()) {
+                if (new Date(provider.lastUpdate).getMilliseconds() < new Date(newestProvider.lastUpdate).getMilliseconds()) {
                     newestProvider = provider;
                 }
                 if (typeof provider.publicScore != 'undefined') {

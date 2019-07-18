@@ -50,12 +50,19 @@ export default class ListController {
 
     public async updateWatchProgressTo(anime: Anime, watchProgess: number) {
         for (const provider of anime.providerInfos) {
-            const newProvider = await provider.getProviderInstance().updateEntry(anime, watchProgess)
-
-            var index = anime.providerInfos.findIndex(x => x.provider === provider.provider);
-            anime.providerInfos[index] = newProvider;
-            this.addSeriesToMainList(anime);
+            try {
+                const providerInstance = await provider.getProviderInstance();
+                if (await providerInstance.isUserLoggedIn()) {
+                    const newProvider = await providerInstance.updateEntry(anime, watchProgess)
+                    newProvider.lastUpdate = new Date(Date.now());
+                    var index = anime.providerInfos.findIndex(x => x.provider === provider.provider);
+                    anime.providerInfos[index] = newProvider;
+                }
+            } catch (err) {
+                console.log(err);
+            }
         }
+        this.addSeriesToMainList(anime);
     }
 
     public async addSeriesToMainList(...animes: Anime[]) {

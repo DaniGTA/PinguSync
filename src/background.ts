@@ -21,21 +21,9 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800, height: 600, webPreferences: {
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true
+      nodeIntegration: true
     }
   })
-  new ProviderController(win.webContents)
-  ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
-    shell.openExternal(data);
-  });
-  ipcMain.on('get-path', (event: Electron.IpcMainEvent, string: string) => {
-    if (win != null) {
-      win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
-    }
-  });
-
-  new ProviderController(win.webContents);
 
   //new WorkerController(win.webContents);
   //new ProviderController(win.webContents).initController();
@@ -52,6 +40,16 @@ function createWindow() {
   win.on('closed', () => {
     win = null
   })
+
+  new ProviderController(win.webContents)
+  ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
+    shell.openExternal(data);
+  });
+  ipcMain.on('get-path', (event: Electron.IpcMainEvent, string: string) => {
+    if (win != null) {
+      win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
+    }
+  });
 }
 
 // Quit when all windows are closed.

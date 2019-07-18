@@ -30,7 +30,7 @@
         <div>{{getEpisode(item)}}</div>
         <button
           @click="updateWatchProgress(item,false)"
-          :disabled="getWatchProgress(item) !== getEpisode(item)"
+          :disabled="getWatchProgress(item) === getEpisode(item)"
         >+</button>
       </td>
       <td

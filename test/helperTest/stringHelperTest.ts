@@ -1,6 +1,12 @@
 import * as assert from 'assert';
 import stringHelper from '../../src/backend/helpFunctions/stringHelper';
 describe('stringHelperTest', () => {
+    it('should generate a randome string'), () => {
+        assert.notEqual(stringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+        assert.notEqual(stringHelper.randomString(), '');
+        assert.notEqual(typeof stringHelper.randomString(), 'undefined');
+        assert.notEqual(stringHelper.randomString(), null);
+    }
     it('should clean string', async () => {
         assert.equal(await stringHelper.cleanString("Test."), "Test");
         assert.equal(await stringHelper.cleanString("Title -test-"), "Title test");
@@ -17,11 +23,5 @@ describe('stringHelperTest', () => {
         return;
     }
 
-    it('should generate a randome string'), async () => {
-        assert.notEqual(await stringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
-        assert.notEqual(await stringHelper.randomString(), '');
-        assert.notEqual(typeof await stringHelper.randomString(), 'undefined');
-        assert.notEqual(await stringHelper.randomString(), null);
-        return;
-    }
+
 });

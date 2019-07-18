@@ -35,11 +35,11 @@ export default new class TraktConverter {
     }
 
     async convertAnimeToSendEntryShow(anime: Anime, newWatchprogress: number): Promise<SendEntryShow> {
-        let currentProvider = anime.providerInfos.find(x => x.provider === TraktProvider.name);
+        let currentProvider = anime.providerInfos.find(x => x.provider === TraktProvider.getInstance().providerName);
         if (typeof currentProvider != 'undefined' && typeof anime.seasonNumber != 'undefined') {
 
             var episodes: Episode[] = [];
-            for (let index = 0; index < newWatchprogress; index++) {
+            for (var index = 1; index < newWatchprogress + 1; index++) {
                 episodes.push({ number: index });
             }
             var season: Season = {

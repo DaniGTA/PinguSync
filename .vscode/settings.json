@@ -6,4 +6,5 @@
         "ts-node/register"
     ],
     "mocha.files.glob": "test/**/*.ts",
+    "typescript.tsdk": "node_modules\\typescript\\lib",
 }

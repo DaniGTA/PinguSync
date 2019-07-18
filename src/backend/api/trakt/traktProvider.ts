@@ -93,7 +93,7 @@ export default class TraktProvider implements ListProvider {
 
                         providerInfo.id = entry.show.ids.trakt;
                         providerInfo.rawEntry = entry;
-                        providerInfo.watchProgress = season.episodes.length;
+                        providerInfo.watchProgress = Math.max(...season.episodes.flatMap(x => x.number));
                         providerInfo.watchStatus = WatchStatus.COMPLETED;
                         providerInfo.lastExternalChange = entry.last_watched_at;
                         series.providerInfos.push(providerInfo);
@@ -119,7 +119,7 @@ export default class TraktProvider implements ListProvider {
         if (typeof providerInfo != 'undefined') {
             providerInfo.watchProgress = watchProgress;
             const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress);
-            await this.traktRequest('https://api.trakt.tv/sync/collection', JSON.stringify(updatedEntry));
+            await this.traktRequest('https://api.trakt.tv/sync/history', 'POST', JSON.stringify(updatedEntry));
             return providerInfo;
         }
         throw 'err';
@@ -158,11 +158,11 @@ export default class TraktProvider implements ListProvider {
         });
     }
 
-    private traktRequest<T>(url: string, body?: string): Promise<T> {
+    private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
         const that = this;
         return new Promise<any>((resolve, reject) => {
             request({
-                method: 'GET',
+                method: method,
                 url,
                 headers: {
                     'Content-Type': 'application/json',
@@ -174,10 +174,14 @@ export default class TraktProvider implements ListProvider {
             }, (error: any, response: any, body: any) => {
                 try {
                     console.log('Status:', response.statusCode);
-                    console.log('Headers:', JSON.stringify(response.headers));
-                    console.log('Response:', body);
-                    var data: T = JSON.parse(body) as T;
-                    resolve(data);
+                    if (response.statusCode === 200) {
+                        console.log('Headers:', JSON.stringify(response.headers));
+                        console.log('Response:', body);
+                        var data: T = JSON.parse(body) as T;
+                        resolve(data);
+                    } else {
+                        reject();
+                    }
                 } catch (err) {
                     console.log(err);
                     reject();
