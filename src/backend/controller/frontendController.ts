@@ -6,12 +6,12 @@ import ProviderList from './providerList';
 import IPCBackgroundController from '../communication/ipcBackgroundController';
 import ICommunication from '../communication/ICommunication';
 
-class ProviderController {
-    public static getInstance(): ProviderController {
-        return ProviderController.instance;
+class FrontendController {
+    public static getInstance(): FrontendController {
+        return FrontendController.instance;
     }
 
-    private static instance: ProviderController;
+    private static instance: FrontendController;
 
     private path: string | null = null;
     private communcation: ICommunication;
@@ -19,10 +19,10 @@ class ProviderController {
         this.communcation = new IPCBackgroundController(webcontents);
         const that = this;
 
-        if (typeof ProviderController.instance === 'undefined') {
+        if (typeof FrontendController.instance === 'undefined') {
             this.initController()
 
-            ProviderController.instance = that;
+            FrontendController.instance = that;
             for (const pl of ProviderList.list) {
                 if (pl.hasOAuthCode) {
                     this.communcation.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
@@ -50,20 +50,28 @@ class ProviderController {
         this.communcation.on('get-series-list', () => {
             this.sendSeriesList();
         });
+
         this.communcation.on('request-info-refresh', (data) => {
             new ListController().forceRefreshProviderInfo(data);
         });
+
         this.communcation.on('get-all-providers', (data) => {
             this.communcation.send('all-providers', ProviderList.list.flatMap(x => x.providerName));
         });
+
         this.communcation.on('sync-series', (data) => {
             this.syncSeries(data);
         });
-        this.communcation.on('anime-update-watch-progress', (data) => {
+
+        this.communcation.on('anime-update-watch-progress', async (data) => {
             const lc = new ListController();
             const anime: Anime = Object.assign(new Anime(), data.anime);
             anime.readdFunctions();
-            lc.updateWatchProgressTo(anime, data.watchProgress);
+            if (data.reduce) {
+                lc.removeWatchProgress(anime, await anime.getLastWatchProgress());
+            } else {
+                lc.updateWatchProgressTo(anime, data.watchProgress);
+            }
         });
     }
 
@@ -103,4 +111,4 @@ class ProviderController {
     }
 }
 
-export default ProviderController;
+export default FrontendController;

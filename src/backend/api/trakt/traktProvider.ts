@@ -11,6 +11,7 @@ import Name from '../../../backend/controller/objects/name';
 import traktConverter from './traktConverter';
 import titleCheckHelper from '../../../backend/helpFunctions/titleCheckHelper';
 import { FullShowInfo } from './objects/fullShowInfo';
+import { WatchProgress } from '../../../backend/controller/objects/watchProgress';
 export default class TraktProvider implements ListProvider {
 
     public static getInstance() {
@@ -93,7 +94,9 @@ export default class TraktProvider implements ListProvider {
 
                         providerInfo.id = entry.show.ids.trakt;
                         providerInfo.rawEntry = entry;
-                        providerInfo.watchProgress = Math.max(...season.episodes.flatMap(x => x.number));
+                        for (let episode of season.episodes) {
+                            providerInfo.addOneEpisode(episode.number, episode.last_watched_at, episode.plays);
+                        }
                         providerInfo.watchStatus = WatchStatus.COMPLETED;
                         providerInfo.lastExternalChange = entry.last_watched_at;
                         series.providerInfos.push(providerInfo);
@@ -114,12 +117,23 @@ export default class TraktProvider implements ListProvider {
         this.userData.setUserData(data);
     }
 
-    public async updateEntry(anime: Anime, watchProgress: number): Promise<ProviderInfo> {
+    public async updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
         var providerInfo = anime.providerInfos.find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
-            providerInfo.watchProgress = watchProgress;
-            const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress);
+            providerInfo.addOneWatchProgress(watchProgress);
+            const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress.episode);
             await this.traktRequest('https://api.trakt.tv/sync/history', 'POST', JSON.stringify(updatedEntry));
+            return providerInfo;
+        }
+        throw 'err';
+    }
+
+    public async removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
+        var providerInfo = anime.providerInfos.find(x => x.provider === this.providerName);
+        if (typeof providerInfo != 'undefined') {
+            providerInfo.removeOneWatchProgress(watchProgress);
+            const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress.episode);
+            await this.traktRequest('https://api.trakt.tv/sync/history/remove', 'POST', JSON.stringify(updatedEntry));
             return providerInfo;
         }
         throw 'err';
@@ -174,7 +188,7 @@ export default class TraktProvider implements ListProvider {
             }, (error: any, response: any, body: any) => {
                 try {
                     console.log('Status:', response.statusCode);
-                    if (response.statusCode === 200) {
+                    if (response.statusCode === 200 || response.statusCode === 201) {
                         console.log('Headers:', JSON.stringify(response.headers));
                         console.log('Response:', body);
                         var data: T = JSON.parse(body) as T;

@@ -1,6 +1,8 @@
 import ListProvider from '../../api/ListProvider';
 import { WatchStatus } from './anime';
 import ProviderList from '../providerList';
+import { WatchProgress } from './watchProgress';
+import listHelper from '../../../backend/helpFunctions/listHelper';
 
 export class ProviderInfo {
     public id: number | string = -1;
@@ -12,7 +14,7 @@ export class ProviderInfo {
     public lastExternalChange: Date = new Date(0);
 
     public watchStatus?: WatchStatus;
-    public watchProgress?: number;
+    public watchProgress?: WatchProgress[];
     public score?: number;
     public episodes?: number;
     public publicScore?: number;
@@ -37,6 +39,58 @@ export class ProviderInfo {
             }
         }
         throw 'NoProviderFound';
+    }
+
+    public getHighestWatchedEpisode(): WatchProgress | undefined {
+        if (typeof this.watchProgress != 'undefined') {
+            try {
+                const maxEpisode = Math.max(...this.watchProgress.flatMap(x => x.episode));
+                const index = this.watchProgress.findIndex(x => x.episode === maxEpisode);
+                return this.watchProgress[index];
+            } catch (err) {
+                this.watchProgress = [];
+            }
+        }
+        return;
+    }
+    /**
+     * @hasTest
+     * @param episode 
+     * @param date 
+     * @param plays 
+     */
+    public addOneEpisode(episode: number, date: Date = new Date(), plays = 1): void {
+        if (typeof this.watchProgress === 'undefined') {
+            this.watchProgress = []
+        }
+        const currentWatchProgress = new WatchProgress(episode, date, plays);
+        this.watchProgress.push(currentWatchProgress);
+    }
+    /**
+     * @hasTest
+     * @param watchProgress 
+     */
+    public addOneWatchProgress(watchProgress: WatchProgress) {
+        if (typeof this.watchProgress === 'undefined') {
+            this.watchProgress = []
+        }
+        this.watchProgress.push(watchProgress);
+    }
+    /**
+     * @hasTest
+     * @param watchProgress 
+     */
+    public async removeOneWatchProgress(watchProgress: WatchProgress): Promise<boolean> {
+        if (typeof this.watchProgress === 'undefined') {
+            this.watchProgress = []
+        }
+        const index = this.watchProgress.findIndex(episode => watchProgress.episode === episode.episode);
+        if (index == -1) {
+            return false;
+        } else {
+            this.watchProgress = await listHelper.removeEntrys(this.watchProgress, this.watchProgress[index]);
+            return true;
+        }
     }
 
     static async mergeProviderInfos(...providers: ProviderInfo[]): Promise<ProviderInfo> {

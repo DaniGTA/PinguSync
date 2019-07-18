@@ -80,7 +80,11 @@ export default new class AniListConverter {
         providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;
         providerInfo.rawEntry = entry;
-        providerInfo.watchProgress = entry.progress;
+
+        for (let index = 1; index < entry.progress; index++) {
+            providerInfo.addOneEpisode(index);
+        }
+
         providerInfo.watchStatus = watchStatus;
         providerInfo.lastExternalChange = new Date(entry.updatedAt);
 

@@ -36,7 +36,7 @@
       <td
         v-for="provider of item.providerInfos"
         v-bind:key="provider.provider + provider.id"
-      >{{provider.provider}} | {{provider.watchProgress}}</td>
+      >{{provider.provider}} | {{provider.episodes}}</td>
     </tr>
   </table>
 </template>
@@ -110,16 +110,9 @@ export default class MainList extends Vue {
       anime.id + "-watchprogress"
     ][0] as HTMLElement;
     if (div.textContent != null) {
-      let watchProgress = parseInt(div.textContent);
-      if (reduce) {
-        watchProgress--;
-      } else {
-        watchProgress++;
-      }
-      div.textContent = watchProgress + "";
       App.workerController.send("anime-update-watch-progress", {
         anime,
-        watchProgress
+        reduce
       });
     }
   }

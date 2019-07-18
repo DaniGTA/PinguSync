@@ -20,7 +20,6 @@ describe('stringHelperTest', () => {
     });
     it('should make test to tset'), async () => {
         assert.equal(await stringHelper.reverseString('test'), 'tset');
-        return;
     }
 
 

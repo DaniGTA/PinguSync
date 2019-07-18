@@ -3,6 +3,7 @@ import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import Names from './names';
 import Overview from './overview';
 import listHelper from '../../../backend/helpFunctions/listHelper';
+import { WatchProgress } from './watchProgress';
 
 export default class Anime {
     public id: string = '';
@@ -74,12 +75,13 @@ export default class Anime {
             throw 'no provider with valid sync status'
         }
         for (const provider of this.providerInfos) {
+            const watchProgress = provider.getHighestWatchedEpisode();
             if (latestUpdatedProvider.provider != provider.provider && provider.getProviderInstance().userData.username != '') {
-                if (latestUpdatedProvider.watchProgress != provider.watchProgress) {
-                    if (typeof provider.watchProgress === 'undefined') {
+                if (latestUpdatedProvider.watchProgress != watchProgress) {
+                    if (typeof watchProgress === 'undefined') {
                         this.canSync = true;
                         return true;
-                    } else if (typeof this.episodes != 'undefined' && this.episodes < provider.watchProgress) {
+                    } else if (typeof this.episodes != 'undefined' && this.episodes < watchProgress.episode) {
                         this.canSync = false;
                         return false;
                     } else {
@@ -219,13 +221,14 @@ export default class Anime {
         }
     }
 
-    public async getLastWatchProgress(): Promise<number> {
+    public async getLastWatchProgress(): Promise<WatchProgress> {
         let latestUpdatedProvider = await this.getLastUpdatedProvider()
         if (latestUpdatedProvider === null) {
             throw 'no provider with valid sync status'
         }
-        if (typeof latestUpdatedProvider.watchProgress != 'undefined') {
-            return latestUpdatedProvider.watchProgress;
+        const watchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
+        if (typeof watchProgress != 'undefined') {
+            return watchProgress;
         } else {
             throw 'no watch progress';
         }

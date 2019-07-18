@@ -7,7 +7,6 @@ import stringHelper from '../src/backend/helpFunctions/stringHelper';
 import listHelper from '../src/backend/helpFunctions/listHelper';
 describe('CombineEntrys', () => {
     it('should combine basic entrys correct', async () => {
-
         var lc = new ListController();
         var entry: Anime[] = [];
         entry.push(getFilledAnime());
@@ -17,8 +16,8 @@ describe('CombineEntrys', () => {
         }
         var a = await lc.InternalTesting().combineDoubleEntrys(entry);
         assert.equal(a.length, 20);
-        return;
     });
+
     it('should combine basic entrys with less data', async () => {
         var lc = new ListController();
         var entry: Anime[] = [];

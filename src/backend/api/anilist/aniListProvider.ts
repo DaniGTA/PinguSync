@@ -18,6 +18,7 @@ import { GetSeriesByID } from './graphql/getSeriesByID';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './aniListUserData';
+import { WatchProgress } from '@/backend/controller/objects/watchProgress';
 
 export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";
@@ -161,14 +162,14 @@ export default class AniListProvider implements ListProvider {
         return watchStatus;
     }
 
-    async updateEntry(anime: Anime, watchProgress: number): Promise<ProviderInfo> {
+    async updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
         var aniListProvider = anime.providerInfos.find(x => x.provider == this.providerName);
         if (typeof aniListProvider != 'undefined') {
             var watchStatus = "";
-            if (watchProgress == 0) {
+            if (watchProgress.episode == 0) {
                 aniListProvider.watchStatus = WatchStatus.PLANNING;
                 watchStatus = "PLANNING"
-            } else if (watchProgress == aniListProvider.episodes) {
+            } else if (watchProgress.episode == aniListProvider.episodes) {
                 aniListProvider.watchStatus = WatchStatus.COMPLETED;
                 watchStatus = "COMPLETED"
             } else {
@@ -176,7 +177,7 @@ export default class AniListProvider implements ListProvider {
                 watchStatus = "CURRENT"
             }
 
-            aniListProvider.watchProgress = watchProgress;
+            aniListProvider.addOneWatchProgress(watchProgress);
 
             await this.webRequest(this.getGraphQLOptions(saveMediaListEntryGql, { mediaId: aniListProvider.id, status: watchStatus, progress: watchProgress }))
 
@@ -184,6 +185,15 @@ export default class AniListProvider implements ListProvider {
         } else {
             throw 'err - anilist update entry';
         }
+    }
+
+    public async removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
+        var providerInfo = anime.providerInfos.find(x => x.provider === this.providerName);
+        if (typeof providerInfo != 'undefined') {
+            providerInfo.removeOneWatchProgress(watchProgress);
+            return providerInfo;
+        }
+        throw 'err';
     }
 
     async getUserSeriesList(): Promise<MediaListCollection> {

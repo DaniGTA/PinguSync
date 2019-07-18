@@ -1,6 +1,6 @@
 import { Show } from './objects/search';
 import { Show as WatchedShow } from './objects/watchedInfo';
-import { Show as SendEntryShow, Season, Episode } from './objects/sendEntryUpdate';
+import { Show as SendEntryShow, Season, Episode, SendEntryUpdate } from './objects/sendEntryUpdate';
 import Anime from '../../../backend/controller/objects/anime';
 import { ProviderInfo } from '../../../backend/controller/objects/providerInfo';
 import { FullShowInfo } from './objects/fullShowInfo';
@@ -34,26 +34,44 @@ export default new class TraktConverter {
         return anime;
     }
 
-    async convertAnimeToSendEntryShow(anime: Anime, newWatchprogress: number): Promise<SendEntryShow> {
+    async convertAnimeToSendEntryShow(anime: Anime, newWatchprogress: number): Promise<SendEntryUpdate> {
         let currentProvider = anime.providerInfos.find(x => x.provider === TraktProvider.getInstance().providerName);
         if (typeof currentProvider != 'undefined' && typeof anime.seasonNumber != 'undefined') {
-
+            var seasonNumber = anime.seasonNumber;
             var episodes: Episode[] = [];
-            for (var index = 1; index < newWatchprogress + 1; index++) {
-                episodes.push({ number: index });
-            }
-            var season: Season = {
-                number: anime.seasonNumber,
-                episodes: episodes,
-            }
+            var maxEpisodes = currentProvider.episodes || newWatchprogress;
+
             let sendEntryShow: SendEntryShow = {
                 ids: {
                     trakt: currentProvider.id as number
                 },
-                seasons: [season]
+                seasons: []
 
             };
-            return sendEntryShow;
+            for (let i = 1; i < maxEpisodes; i++) {
+
+                for (var index = 1; (index < newWatchprogress + 1 && index < maxEpisodes + 1 && i < newWatchprogress + 1); index++) {
+                    if (typeof currentProvider.watchProgress != 'undefined') {
+                        if (currentProvider.watchProgress.findIndex(x => x.episode === index) === -1) {
+                            episodes.push({ number: index });
+                        }
+                    } else {
+                        episodes.push({ number: index });
+                    }
+                }
+                var season: Season = {
+                    number: seasonNumber,
+                    episodes: episodes,
+                }
+
+                sendEntryShow.seasons.push(season);
+
+                seasonNumber++;
+            }
+            const sendEntryUpdate: SendEntryUpdate = {
+                shows: [sendEntryShow]
+            }
+            return sendEntryUpdate;
         }
         throw 'failed convert';
     }

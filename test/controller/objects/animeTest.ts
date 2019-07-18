@@ -35,9 +35,9 @@ describe('animeTest', () => {
     it('should return last provider', async () => {
         const anime = new Anime();
         const providerA = new ProviderInfo();
-        providerA.watchProgress = 0;
+        providerA.watchProgress = [];
         const providerB = new ProviderInfo();
-        providerB.watchProgress = 0;
+        providerB.watchProgress = [];
         anime.providerInfos.push(providerA, providerB);
         assert.equal(await anime['getLastUpdatedProvider'](), providerA);
         return;
@@ -46,9 +46,9 @@ describe('animeTest', () => {
     it('should return last watchprogress', async () => {
         const anime = new Anime();
         const providerA = new ProviderInfo();
-        providerA.watchProgress = 5;
+        providerA.addOneEpisode(5);
         const providerB = new ProviderInfo();
-        providerB.watchProgress = 4;
+        providerB.addOneEpisode(4);
         anime.providerInfos.push(providerA, providerB);
         assert.equal(await anime.getLastWatchProgress(), 5);
         return;

@@ -6,7 +6,7 @@ import {
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib';
 import * as electron from 'electron';
-import ProviderController from './backend/controller/providerController';
+import FrontendController from './backend/controller/frontendController';
 
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -41,7 +41,7 @@ function createWindow() {
     win = null
   })
 
-  new ProviderController(win.webContents)
+  new FrontendController(win.webContents)
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
   });

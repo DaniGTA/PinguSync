@@ -1,4 +1,4 @@
-import ProviderController from './providerController';
+import FrontendController from './frontendController';
 import Anime from './objects/anime';
 import * as fs from "fs";
 import * as path from "path";
@@ -9,6 +9,8 @@ import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import sortHelper from '../helpFunctions/sortHelper';
 import ProviderList from './providerList';
+import { ProviderInfo } from './objects/providerInfo';
+import { WatchProgress } from './objects/watchProgress';
 export default class ListController {
     private static mainList: Anime[] = [];
     static listLoaded = false;
@@ -37,18 +39,20 @@ export default class ListController {
     }
 
     public async syncProvider(anime: Anime) {
-        for (const provider of anime.providerInfos) {
-            try {
-                const watchProgress = await anime.getLastWatchProgress();
-                this.updateWatchProgressTo(anime, watchProgress);
 
-            } catch (err) {
+        const watchProgress = await anime.getLastWatchProgress();
+        this.updateWatchProgressTo(anime, watchProgress);
 
-            }
-        }
     }
 
-    public async updateWatchProgressTo(anime: Anime, watchProgess: number) {
+    public async removeWatchProgress(anime: Anime, watchProgress: WatchProgress) {
+
+    }
+
+    public async updateWatchProgressTo(anime: Anime, watchProgess: WatchProgress) {
+        if (anime.providerInfos.length < ProviderList.list.length / 2) {
+            await this.fillMissingProvider(anime);
+        }
         for (const provider of anime.providerInfos) {
             try {
                 const providerInstance = await provider.getProviderInstance();
@@ -71,7 +75,7 @@ export default class ListController {
         }
         if (animes.length > 2) {
             await this.cleanBadDataFromMainList();
-            ProviderController.getInstance().sendSeriesList();
+            FrontendController.getInstance().sendSeriesList();
         }
         this.saveData(ListController.mainList);
     }
@@ -98,7 +102,7 @@ export default class ListController {
             ListController.mainList.push(anime);
 
             if (notfiyRenderer) {
-                await ProviderController.getInstance().updateClientList(await this.getIndexFromAnime(anime), anime);
+                await FrontendController.getInstance().updateClientList(await this.getIndexFromAnime(anime), anime);
             }
 
         } catch (err) {
@@ -120,7 +124,7 @@ export default class ListController {
     private updateEntryInMainList(index: number, anime: Anime, sendToRenderer: boolean = true) {
         ListController.mainList[index] = anime;
         if (sendToRenderer) {
-            ProviderController.getInstance().updateClientList(index, anime);
+            FrontendController.getInstance().updateClientList(index, anime);
         }
     }
 
@@ -146,7 +150,7 @@ export default class ListController {
         for (const entry of tempList) {
             this.addSerieToMainList(entry, false);
         }
-        await ProviderController.getInstance().sendSeriesList();
+        await FrontendController.getInstance().sendSeriesList();
     }
 
     /**
