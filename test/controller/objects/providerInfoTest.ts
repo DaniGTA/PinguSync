@@ -36,9 +36,11 @@ describe('providerTest', () => {
         providerInfo.addOneEpisode(2);
         providerInfo.addOneEpisode(4);
         providerInfo.addOneEpisode(6);
-
-        assert.equal(providerInfo.getHighestWatchedEpisode(), 6);
-
+        const result = providerInfo.getHighestWatchedEpisode();
+        if (typeof result != 'undefined') {
+            assert.equal(result.episode, 6);
+        }
+        assert.notEqual(typeof result, 'undefined');
         return;
     });
 });

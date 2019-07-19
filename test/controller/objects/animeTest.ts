@@ -50,7 +50,11 @@ describe('animeTest', () => {
         const providerB = new ProviderInfo();
         providerB.addOneEpisode(4);
         anime.providerInfos.push(providerA, providerB);
-        assert.equal(await anime.getLastWatchProgress(), 5);
+        const result = await anime.getLastWatchProgress()
+        if (typeof result != 'undefined') {
+            assert.equal(result.episode, 5);
+        }
+        assert.notEqual(typeof result, 'undefined');
         return;
     });
 

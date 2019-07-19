@@ -36,7 +36,7 @@
       <td
         v-for="provider of item.providerInfos"
         v-bind:key="provider.provider + provider.id"
-      >{{provider.provider}} | {{provider.episodes}}</td>
+      >{{provider.provider}} | {{getProviderWatchProgress(provider)}}/{{getProviderEpisodesCount(provider)}}</td>
     </tr>
   </table>
 </template>
@@ -48,6 +48,8 @@ import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
+import { ProviderInfo } from "../backend/controller/objects/providerInfo";
+
 @Component
 export default class MainList extends Vue {
   static instance: MainList;
@@ -98,12 +100,29 @@ export default class MainList extends Vue {
       const div = (this.$refs as any)[
         anime.id + "-watchprogress"
       ][0] as HTMLElement;
-      div.textContent = number + "";
+      div.textContent = number.episode + "";
     });
   }
+
+  getProviderEpisodesCount(provider: ProviderInfo): number {
+    if (typeof provider.episodes === "undefined") {
+      return -1;
+    } else {
+      return provider.episodes;
+    }
+  }
+
+  getProviderWatchProgress(provider: ProviderInfo): number {
+    provider = Object.assign(new ProviderInfo(), provider);
+    const result = provider.getHighestWatchedEpisode();
+    if (typeof result === "undefined") {
+      return -1;
+    } else {
+      return result.episode;
+    }
+  }
   /**
-   * if reduce is true the watchprogress will be lowered by 1,
-   * if it is false the watchprogress will be higher by 1.
+   *
    */
   updateWatchProgress(anime: Anime, reduce: boolean) {
     const div = (this.$refs as any)[

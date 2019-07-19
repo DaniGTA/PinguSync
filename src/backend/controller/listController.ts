@@ -41,15 +41,26 @@ export default class ListController {
     public async syncProvider(anime: Anime) {
 
         const watchProgress = await anime.getLastWatchProgress();
-        this.updateWatchProgressTo(anime, watchProgress);
+        this.updateWatchProgressTo(anime, watchProgress.episode);
 
     }
 
     public async removeWatchProgress(anime: Anime, watchProgress: WatchProgress) {
+        for (const provider of anime.providerInfos) {
+            try {
+                const providerInstance = await provider.getProviderInstance();
+                if (await providerInstance.isUserLoggedIn()) {
+                    const newProvider = await providerInstance.removeEntry(anime, watchProgress);
+                    newProvider.lastUpdate = new Date(Date.now());
+                    var index = anime.providerInfos.findIndex(x => x.provider === provider.provider);
+                    anime.providerInfos[index] = newProvider;
+                }
+            } catch (err) {
 
+            }
+        }
     }
-
-    public async updateWatchProgressTo(anime: Anime, watchProgess: WatchProgress) {
+    public async updateWatchProgressTo(anime: Anime, watchProgess: number) {
         if (anime.providerInfos.length < ProviderList.list.length / 2) {
             await this.fillMissingProvider(anime);
         }
@@ -57,7 +68,7 @@ export default class ListController {
             try {
                 const providerInstance = await provider.getProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
-                    const newProvider = await providerInstance.updateEntry(anime, watchProgess)
+                    const newProvider = await providerInstance.updateEntry(anime, new WatchProgress(watchProgess))
                     newProvider.lastUpdate = new Date(Date.now());
                     var index = anime.providerInfos.findIndex(x => x.provider === provider.provider);
                     anime.providerInfos[index] = newProvider;

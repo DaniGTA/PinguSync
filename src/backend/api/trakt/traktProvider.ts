@@ -95,7 +95,7 @@ export default class TraktProvider implements ListProvider {
                         providerInfo.id = entry.show.ids.trakt;
                         providerInfo.rawEntry = entry;
                         for (let episode of season.episodes) {
-                            providerInfo.addOneEpisode(episode.number, episode.last_watched_at, episode.plays);
+                            providerInfo.addOneEpisode(episode.number, episode.plays, episode.last_watched_at);
                         }
                         providerInfo.watchStatus = WatchStatus.COMPLETED;
                         providerInfo.lastExternalChange = entry.last_watched_at;
@@ -132,7 +132,7 @@ export default class TraktProvider implements ListProvider {
         var providerInfo = anime.providerInfos.find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.removeOneWatchProgress(watchProgress);
-            const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress.episode);
+            const updatedEntry = await traktConverter.convertAnimeToSendRemoveEntryShow(anime, watchProgress.episode);
             await this.traktRequest('https://api.trakt.tv/sync/history/remove', 'POST', JSON.stringify(updatedEntry));
             return providerInfo;
         }

@@ -66,11 +66,17 @@ class FrontendController {
         this.communcation.on('anime-update-watch-progress', async (data) => {
             const lc = new ListController();
             const anime: Anime = Object.assign(new Anime(), data.anime);
+            console.log(data);
             anime.readdFunctions();
             if (data.reduce) {
                 lc.removeWatchProgress(anime, await anime.getLastWatchProgress());
             } else {
-                lc.updateWatchProgressTo(anime, data.watchProgress);
+                const watchProgress = await anime.getLastWatchProgress();
+                if (watchProgress) {
+                    lc.updateWatchProgressTo(anime, watchProgress.episode++);
+                } else {
+                    lc.updateWatchProgressTo(anime, 1);
+                }
             }
         });
     }

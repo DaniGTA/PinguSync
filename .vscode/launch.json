@@ -5,19 +5,24 @@
             "name": "Electron: Main",
             "type": "node",
             "request": "launch",
-            "protocol": "inspector",
+            "protocol": "auto",
             "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
             "windows": {
                 "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
             },
             "preLaunchTask": "electron-debug",
+            "internalConsoleOptions": "openOnSessionStart",
+            "env": {
+                "NODE_ENV": "development"
+            },
             "args": [
                 "--remote-debugging-port=9223",
                 "./dist_electron"
             ],
             "outFiles": [
                 "${workspaceFolder}/dist_electron/**/*.js"
-            ]
+            ],
+            "outputCapture": "std"
         },
         {
             "name": "Electron: Renderer",

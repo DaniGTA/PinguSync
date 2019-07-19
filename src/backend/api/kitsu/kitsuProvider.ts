@@ -11,8 +11,12 @@ import { SearchResult } from './objects/searchResult';
 import kitsuConverter from './kitsuConverter';
 import { GetMediaResult } from './objects/getResult';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
+import { WatchProgress } from '../../../backend/controller/objects/watchProgress';
 export default class KitsuProvider implements ListProvider {
-    updateEntry(anime: Anime, watchProgress: number): Promise<ProviderInfo> {
+    removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
+        throw new Error("Method not implemented.");
+    }
+    updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
         throw new Error("Method not implemented.");
     }
 

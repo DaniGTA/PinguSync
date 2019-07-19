@@ -59,11 +59,11 @@ export class ProviderInfo {
      * @param date 
      * @param plays 
      */
-    public addOneEpisode(episode: number, date: Date = new Date(), plays = 1): void {
+    public addOneEpisode(episode: number, plays = 1, date?: Date): void {
         if (typeof this.watchProgress === 'undefined') {
             this.watchProgress = []
         }
-        const currentWatchProgress = new WatchProgress(episode, date, plays);
+        const currentWatchProgress = new WatchProgress(episode, plays, date);
         this.watchProgress.push(currentWatchProgress);
     }
     /**
