@@ -9,7 +9,6 @@ import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import sortHelper from '../helpFunctions/sortHelper';
 import ProviderList from './providerList';
-import { ProviderInfo } from './objects/providerInfo';
 import { WatchProgress } from './objects/watchProgress';
 export default class ListController {
     private static mainList: Anime[] = [];
@@ -201,7 +200,10 @@ export default class ListController {
             try {
                 if (provider.isUserLoggedIn()) {
                     console.log('[Request] -> ' + provider.providerName + ' -> AllSeries');
-                    anime.push(...await provider.getAllSeries(forceDownload));
+                    const allSeries = await provider.getAllSeries(forceDownload);
+                    anime.push(...allSeries);
+                    console.log('[Request] -> result: ' + allSeries.length + ' items');
+
                 }
             } catch (err) {
                 console.log('[Error] -> ' + provider.providerName + ' -> AllSeries');

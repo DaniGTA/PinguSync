@@ -44,6 +44,7 @@ export class ProviderInfo {
     public getHighestWatchedEpisode(): WatchProgress | undefined {
         if (typeof this.watchProgress != 'undefined') {
             try {
+                this.watchProgress = [...this.watchProgress];
                 const maxEpisode = Math.max(...this.watchProgress.flatMap(x => x.episode));
                 const index = this.watchProgress.findIndex(x => x.episode === maxEpisode);
                 return this.watchProgress[index];
@@ -93,7 +94,7 @@ export class ProviderInfo {
         }
     }
 
-    static async mergeProviderInfos(...providers: ProviderInfo[]): Promise<ProviderInfo> {
+    public static async mergeProviderInfos(...providers: ProviderInfo[]): Promise<ProviderInfo> {
         const mergedProvider = Object.assign(new ProviderInfo(), providers[0]);
         var newestProvider: ProviderInfo = Object.assign(new ProviderInfo(), providers[0]);
         for (const provider of providers) {

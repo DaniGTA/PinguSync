@@ -9,6 +9,7 @@ export class AniListUserData implements UserData {
     username: string = '';
     access_token: string = "";
     refresh_token: string = "";
+    created_token: Date = new Date();
     expires_in: number = 0;
     viewer: Viewer | undefined;
     list: Anime[] | undefined;

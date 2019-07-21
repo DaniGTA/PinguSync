@@ -28,6 +28,7 @@ export default class AniListProvider implements ListProvider {
     private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';
     private clientId = '389';
     private redirectUri = 'https://anilist.co/api/v2/oauth/pin';
+
     constructor() {
         this.userData = new AniListUserData();
         AniListProvider.instance = this;
@@ -81,6 +82,7 @@ export default class AniListProvider implements ListProvider {
     async isUserLoggedIn(): Promise<boolean> {
         return this.userData.access_token != "";
     }
+
     logInUser(code: string): Promise<boolean> {
         const _this = this;
         var options = {
@@ -105,6 +107,7 @@ export default class AniListProvider implements ListProvider {
                 console.log('body:', body); // Print the HTML for the Google homepage.
                 if (body.access_token) {
                     _this.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
+                    _this.userData.created_token = new Date();
                     _this.getUserInfo();
                     resolve();
                 } else {
@@ -252,7 +255,11 @@ export default class AniListProvider implements ListProvider {
 
         if (this.userData.access_token != "" && typeof this.userData.access_token != 'undefined') {
             if (typeof options.headers != 'undefined') {
-                options.headers.add({ 'Authorization': 'Bearer ' + this.userData.access_token })
+                options.headers = {
+                    'Authorization': 'Bearer ' + this.userData.access_token,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
             }
         }
 
