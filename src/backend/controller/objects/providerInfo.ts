@@ -22,9 +22,11 @@ export class ProviderInfo {
     public sequelId?: number;
     public prequelId?: number;
 
-    constructor(lp?: ListProvider) {
+    constructor(lp?: ListProvider | string) {
         this.lastUpdate = new Date(Date.now());
-        if (typeof lp != 'undefined') {
+        if (typeof lp === 'string') {
+            this.provider = lp;
+        } else if (typeof lp != 'undefined') {
             this.provider = lp.providerName;
         } else {
             this.provider = '';
@@ -96,7 +98,7 @@ export class ProviderInfo {
 
     public static async mergeProviderInfos(...providers: ProviderInfo[]): Promise<ProviderInfo> {
         const mergedProvider = Object.assign(new ProviderInfo(), providers[0]);
-        var newestProvider: ProviderInfo = Object.assign(new ProviderInfo(), providers[0]);
+        var newestProvider;
         for (const provider of providers) {
             if (provider.id != -1) {
                 if (mergedProvider.id != -1 && mergedProvider.id != provider.id) {
@@ -104,7 +106,9 @@ export class ProviderInfo {
                 }
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
-                if (new Date(provider.lastUpdate).getMilliseconds() < new Date(newestProvider.lastUpdate).getMilliseconds()) {
+                if (!newestProvider) {
+                    newestProvider = provider;
+                } else if (new Date(newestProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
                     newestProvider = provider;
                 }
                 if (typeof provider.publicScore != 'undefined') {
@@ -139,26 +143,28 @@ export class ProviderInfo {
                 }
             }
         }
-        if (typeof newestProvider.watchProgress != 'undefined') {
-            mergedProvider.watchProgress = newestProvider.watchProgress;
-        }
-        if (typeof newestProvider.watchStatus != 'undefined') {
-            mergedProvider.watchStatus = newestProvider.watchStatus;
-        }
-        if (typeof newestProvider.score != 'undefined') {
-            mergedProvider.score = newestProvider.score;
-        }
-        if (typeof newestProvider.score != 'undefined') {
-            mergedProvider.publicScore = newestProvider.publicScore;
-        }
-        if (typeof newestProvider.episodes != 'undefined') {
-            mergedProvider.episodes = newestProvider.episodes;
-        }
-        if (typeof newestProvider.sequelId != 'undefined') {
-            mergedProvider.sequelId = newestProvider.sequelId;
-        }
-        if (typeof newestProvider.prequelId != 'undefined') {
-            mergedProvider.prequelId = newestProvider.prequelId;
+        if (newestProvider) {
+            if (typeof newestProvider.watchProgress != 'undefined') {
+                mergedProvider.watchProgress = newestProvider.watchProgress;
+            }
+            if (typeof newestProvider.watchStatus != 'undefined') {
+                mergedProvider.watchStatus = newestProvider.watchStatus;
+            }
+            if (typeof newestProvider.score != 'undefined') {
+                mergedProvider.score = newestProvider.score;
+            }
+            if (typeof newestProvider.score != 'undefined') {
+                mergedProvider.publicScore = newestProvider.publicScore;
+            }
+            if (typeof newestProvider.episodes != 'undefined') {
+                mergedProvider.episodes = newestProvider.episodes;
+            }
+            if (typeof newestProvider.sequelId != 'undefined') {
+                mergedProvider.sequelId = newestProvider.sequelId;
+            }
+            if (typeof newestProvider.prequelId != 'undefined') {
+                mergedProvider.prequelId = newestProvider.prequelId;
+            }
         }
 
         return mergedProvider;

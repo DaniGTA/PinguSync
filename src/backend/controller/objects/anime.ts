@@ -23,6 +23,13 @@ export default class Anime {
         this.id = stringHelper.randomString(20);
     }
 
+    public addOverview(newOverview: Overview) {
+        this.overviews = [...this.overviews];
+        if (this.overviews.findIndex(x => x == newOverview) == -1) {
+            this.overviews.push(newOverview);
+        }
+    }
+
     public getMaxEpisode(): number {
         const array = (this.providerInfos.flatMap(x => x.episodes) as number[]);
         if (typeof this.episodes != 'undefined') {
@@ -69,25 +76,47 @@ export default class Anime {
      * Checks if providers can be synced.
      */
     public async getCanSyncStatus(): Promise<boolean> {
+        if (this.providerInfos.length == 1) {
+            this.canSync = false;
+            return false;
+        }
+
+        const x = await this.providerInfos[1].getProviderInstance().isUserLoggedIn()
         let latestUpdatedProvider: ProviderInfo | null = await this.getLastUpdatedProvider();
 
         if (latestUpdatedProvider === null) {
             throw 'no provider with valid sync status'
         }
+        if (!await latestUpdatedProvider.getProviderInstance().isUserLoggedIn()) {
+            latestUpdatedProvider.lastUpdate = new Date(0);
+            for (const provider of this.providerInfos) {
+                if (provider != latestUpdatedProvider) {
+                    if (new Date(provider.lastUpdate) < latestUpdatedProvider.lastUpdate) {
+
+                    }
+                }
+            }
+        }
+
         for (const provider of this.providerInfos) {
-            const watchProgress = provider.getHighestWatchedEpisode();
-            if (latestUpdatedProvider.provider != provider.provider && provider.getProviderInstance().userData.username != '') {
-                if (latestUpdatedProvider.watchProgress != watchProgress) {
-                    if (typeof watchProgress === 'undefined') {
-                        this.canSync = true;
-                        return true;
-                    } else if (typeof this.episodes != 'undefined' && this.episodes < watchProgress.episode) {
-                        this.canSync = false;
-                        return false;
-                    } else {
-                        provider.canUpdateWatchProgress = true;
-                        this.canSync = true;
-                        return true;
+            if (latestUpdatedProvider.provider != provider.provider && await provider.getProviderInstance().isUserLoggedIn()) {
+                const watchProgress = provider.getHighestWatchedEpisode();
+                const latestWatchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
+                if (latestUpdatedProvider.watchProgress && watchProgress && latestWatchProgress) {
+                    if (latestWatchProgress != watchProgress) {
+                        if (typeof latestUpdatedProvider.episodes == 'undefined' || latestWatchProgress.episode < latestUpdatedProvider.episodes) {
+                            if (typeof watchProgress === 'undefined') {
+                                this.canSync = true;
+                                return true;
+                            } else if (typeof this.episodes != 'undefined' && this.episodes < watchProgress.episode) {
+                                this.canSync = false;
+                                return false;
+                            } else {
+                                provider.canUpdateWatchProgress = true;
+                                this.canSync = true;
+                                return true;
+                            }
+                        }
                     }
                 }
             }
@@ -99,15 +128,25 @@ export default class Anime {
     /**
      * @return the last updated provider with watchProgress !
      */
-    private async getLastUpdatedProvider(): Promise<ProviderInfo | null> {
+    private async getLastUpdatedProvider(exclude: ProviderInfo[] = []): Promise<ProviderInfo | null> {
         let latestUpdatedProvider: ProviderInfo | null = null;
         if (typeof this.providerInfos != 'undefined') {
             for (const provider of this.providerInfos) {
                 if (typeof provider.watchProgress != 'undefined') {
-                    if (latestUpdatedProvider === null) {
-                        latestUpdatedProvider = provider;
-                    } else if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
-                        latestUpdatedProvider = provider;
+                    if (exclude.findIndex(x => x == latestUpdatedProvider) === -1) {
+                        if (latestUpdatedProvider === null) {
+                            latestUpdatedProvider = provider;
+                        } else {
+                            const latestExternalStatus = typeof latestUpdatedProvider.lastExternalChange != 'undefined' && new Date(latestUpdatedProvider.lastExternalChange).getTime() != 0;
+                            const providerExternalStatus = typeof provider.lastExternalChange != 'undefined' && new Date(provider.lastExternalChange).getTime() != 0;
+                            if (latestExternalStatus && providerExternalStatus) {
+                                if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
+                                    latestUpdatedProvider = provider;
+                                }
+                            } else if (new Date(latestUpdatedProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
+                                latestUpdatedProvider = provider;
+                            }
+                        }
                     }
                 }
             }

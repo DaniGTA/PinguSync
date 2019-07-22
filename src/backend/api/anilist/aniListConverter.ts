@@ -30,7 +30,7 @@ export default new class AniListConverter {
     public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<Anime> {
         const anime = new Anime();
         anime.coverImage = info.Media.coverImage.large;
-        anime.overviews.push(new Overview(info.Media.description, 'eng'));
+        anime.addOverview(new Overview(info.Media.description, 'eng'));
         anime.episodes = info.Media.episodes;
         anime.releaseYear = info.Media.startDate.year;
         anime.names.engName = info.Media.title.english;

@@ -47,20 +47,22 @@ describe('providerTest', () => {
 
     it('should merge same provider', async () => {
         const providerInfoA = new ProviderInfo();
+        providerInfoA.id = 2;
         providerInfoA.addOneEpisode(1);
         providerInfoA.episodes = 10;
         providerInfoA.score = 11;
         providerInfoA.watchStatus = WatchStatus.CURRENT;
         providerInfoA.sequelId = 10;
-        providerInfoA.lastUpdate = new Date(0);
+        providerInfoA.lastUpdate = new Date(10000);
         const providerInfoB = new ProviderInfo();
+        providerInfoB.id = 2;
         providerInfoB.addOneEpisode(1);
         providerInfoB.addOneEpisode(2);
         providerInfoB.episodes = 10;
         providerInfoB.score = 12;
         providerInfoB.watchStatus = WatchStatus.COMPLETED;
         providerInfoB.sequelId = 12;
-        providerInfoB.lastUpdate = new Date(1);
+        providerInfoB.lastUpdate = new Date(20000);
         providerInfoB.publicScore = 15;
         providerInfoB.prequelId = 105;
 
