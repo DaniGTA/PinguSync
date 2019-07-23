@@ -1,6 +1,10 @@
 import * as assert from 'assert';
 import AniListProvider from '../../../src/backend/api/anilist/aniListProvider';
 import request from 'request';
+import { MediaListCollection } from '../../../src/backend/api/anilist/graphql/seriesList';
+import aniListConverter from '../../../src/backend/api/anilist/aniListConverter';
+import { WatchStatus } from '../../../src/backend/controller/objects/anime';
+import { readFileSync, readFile } from 'fs';
 
 
 describe('AniListApi Tests', () => {
@@ -23,5 +27,26 @@ describe('AniListApi Tests', () => {
 
         return;
     })
+
+    it('should convert', async () => {
+        var rawdata = JSON.parse(readFileSync("./test/api/anilist/testResponse/anilistUserListResponse.json", { encoding: "UTF-8" }));
+        var collection = rawdata.data.MediaListCollection as MediaListCollection;
+        var entry = collection.lists[2].entries[3];
+        var anime = await aniListConverter.convertListEntryToAnime(entry, WatchStatus.COMPLETED);
+        const providerInfo = anime.providerInfos[0];
+        const highestWatchedResult = providerInfo.getHighestWatchedEpisode();
+        if (highestWatchedResult) {
+            assert.strictEqual(highestWatchedResult.episode, 1);
+        } else {
+            assert.fail();
+        }
+        assert.strictEqual(await anime.getMaxEpisode(), 1);
+        assert.strictEqual(providerInfo.watchStatus, WatchStatus.COMPLETED);
+        assert.strictEqual(providerInfo.score, 60);
+        return;
+
+    })
+
+
 
 });

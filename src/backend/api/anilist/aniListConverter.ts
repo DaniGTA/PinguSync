@@ -81,7 +81,7 @@ export default new class AniListConverter {
         providerInfo.score = entry.score;
         providerInfo.rawEntry = entry;
         if (entry.progress != 0) {
-            for (let index = 0; index <= entry.progress; index++) {
+            for (let index = 0; index < entry.progress; index++) {
                 providerInfo.addOneEpisode(index + 1);
             }
         }

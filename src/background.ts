@@ -7,8 +7,6 @@ import {
 } from 'vue-cli-plugin-electron-builder/lib';
 import * as electron from 'electron';
 import FrontendController from './backend/controller/frontendController';
-
-
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -24,6 +22,8 @@ function createWindow() {
       nodeIntegration: true
     }
   })
+
+
 
   //new WorkerController(win.webContents);
   //new ProviderController(win.webContents).initController();
