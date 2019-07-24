@@ -1,21 +1,24 @@
 <template>
-  <div v-if="series.seasonNumber === 1 || !series.seasonNumber" class="main-list-entry-content">
-    <td>{{getName()}}</td>
-    <td v-if="series.canSync">
+  <div
+    v-if="series && (series.seasonNumber === 1 || !series.seasonNumber)"
+    class="main-list-entry-content"
+  >
+    <div>{{getName()}}</div>
+    <div v-if="series.canSync">
       <button @click="syncAnime()">Sync</button>
-    </td>
-    <td v-else>✔</td>
+    </div>
+    <div v-else>✔</div>
 
-    <td>
+    <div>
       <button @click="updateAnime(series.id)">RefreshInfo</button>
-    </td>
-    <td class="main-list-update-progress">
+    </div>
+    <div class="main-list-update-progress">
       <button @click="updateWatchProgress(true)" :disabled="getWatchProgress() <= 0">-</button>
       <div v-bind:ref="series.id+'-watchprogress'">{{getWatchProgress()}}</div>/
       <div>{{getEpisode()}}</div>
       <button @click="updateWatchProgress(false)" :disabled="getWatchProgress() === getEpisode()">+</button>
-    </td>
-    <td class="main-list-provider-list">
+    </div>
+    <div class="main-list-provider-list">
       <div
         v-for="provider of series.providerInfos"
         v-bind:key="provider.provider + provider.id"
@@ -31,7 +34,7 @@
           v-if="getProviderWatchProgress(provider) != -1"
         >{{getProviderWatchProgress(provider)}}/{{getProviderEpisodesCount(provider)}}</div>
       </div>
-    </td>
+    </div>
   </div>
 </template>
 
@@ -39,23 +42,18 @@
 import { ipcRenderer, ipcMain } from "electron";
 import Anime from "../backend/controller/objects/anime";
 import IUpdateList from "../backend/controller/objects/iupdateList";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, PropSync } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 import { ProviderInfo } from "../backend/controller/objects/providerInfo";
 
 @Component
 export default class ListEntry extends Vue {
-  @Prop() series: Anime = new Anime();
+  @PropSync("serie", { type: Anime }) series!: Anime;
 
   constructor() {
     super();
     const that = this;
-  }
-  data() {
-    return {
-      serie: this.series
-    };
   }
 
   clog(a: any) {
@@ -65,16 +63,18 @@ export default class ListEntry extends Vue {
     return JSON.stringify(this.series);
   }
   async getWatchProgress() {
-    const animeObject = Object.assign(new Anime(), this.series);
-    animeObject.readdFunctions();
-    try {
-      var number = await animeObject.getLastWatchProgress();
+    if (this.series) {
+      const animeObject = Object.assign(new Anime(), this.series);
+      animeObject.readdFunctions();
+      try {
+        var number = await animeObject.getLastWatchProgress();
 
-      const div = (this.$refs as any)[
-        this.series.id + "-watchprogress"
-      ][0] as HTMLElement;
-      div.textContent = number.episode + "";
-    } catch (err) {}
+        const div = (this.$refs as any)[
+          this.series.id + "-watchprogress"
+        ][0] as HTMLElement;
+        div.textContent = number.episode + "";
+      } catch (err) {}
+    }
   }
 
   getProviderEpisodesCount(provider: ProviderInfo): number {
@@ -98,14 +98,16 @@ export default class ListEntry extends Vue {
    *
    */
   updateWatchProgress(reduce: boolean) {
-    const div = (this.$refs as any)[
-      this.series.id + "-watchprogress"
-    ][0] as HTMLElement;
-    if (div.textContent != null) {
-      App.workerController.send("anime-update-watch-progress", {
-        series: this.series,
-        reduce
-      });
+    if (this.series) {
+      const div = (this.$refs as any)[
+        this.series.id + "-watchprogress"
+      ][0] as HTMLElement;
+      if (div.textContent != null) {
+        App.workerController.send("anime-update-watch-progress", {
+          series: this.series,
+          reduce
+        });
+      }
     }
   }
 
@@ -113,22 +115,31 @@ export default class ListEntry extends Vue {
     App.workerController.send("sync-series", id);
   }
   getEpisode(): number | undefined {
-    try {
-      return Object.assign(new Anime(), this.series).getMaxEpisode();
-    } catch (e) {
-      return this.series.episodes;
+    if (this.series) {
+      try {
+        return Object.assign(new Anime(), this.series).getMaxEpisode();
+      } catch (e) {
+        return this.series.episodes;
+      }
     }
   }
 
   getName(): string {
-    if (this.series.names.engName) {
-      return this.series.names.engName;
-    } else {
-      return this.series.names.romajiName;
+    if (this.series) {
+      if (this.series.names.engName) {
+        return this.series.names.engName;
+      } else {
+        return this.series.names.romajiName;
+      }
     }
+    return "loading...";
   }
 }
 </script>
 
 <style>
+.main-list-entry {
+  box-shadow: 0 3px 15px rgba(51, 51, 51, 0.2);
+  border-radius: 10px;
+}
 </style>

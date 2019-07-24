@@ -8,23 +8,14 @@
       <a href="#" class="nav-item" active-color="rebeccapurple">Contact</a>
       <span class="nav-indicator"></span>
     </nav>
-    <table style="width:100%">
-      <tr>
-        <th>Name</th>
-        <th>CanSync?</th>
-        <th>RefreshInfo</th>
-        <th>Progress</th>
-        <th>Providers</th>
-      </tr>
-      <tr
+    <div style="width:100%">
+      <ListEntry
         v-for="item of mainList"
         v-bind:key="item.id"
         v-bind:ref="item.id"
-        class="main-list-entry"
-      >
-        <ListEntry v-bind:series="item"></ListEntry>
-      </tr>
-    </table>
+        :serie.sync="item"
+      ></ListEntry>
+    </div>
   </div>
 </template>
 
@@ -70,7 +61,9 @@ export default class MainList extends Vue {
 
     App.workerController.on("update-series-list", (data: any) => {
       console.log(data);
-      that.$set(that.mainList, data.targetIndex, data.updatedEntry);
+      this.$nextTick().then(() => {
+        that.$set(that.mainList, data.targetIndex, data.updatedEntry);
+      });
     });
   }
 
@@ -90,14 +83,6 @@ export default class MainList extends Vue {
   display: flex;
   flex-flow: wrap;
   list-style-type: none;
-}
-.main-list-entry {
-  background: #f1f1f1;
-  padding: 5px;
-  margin: 5px;
-}
-.main-list-entry-content {
-  display: contents;
 }
 .main-list-provider {
   background-color: #f2f2f2;
