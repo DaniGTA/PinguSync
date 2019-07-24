@@ -22,6 +22,9 @@ export class ProviderInfo {
     public sequelId?: number;
     public prequelId?: number;
 
+    public customList: boolean = false;
+    public customListName = '';
+
     constructor(lp?: ListProvider | string) {
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
@@ -144,26 +147,32 @@ export class ProviderInfo {
             }
         }
         if (newestProvider) {
-            if (typeof newestProvider.watchProgress != 'undefined') {
+            if (newestProvider.watchProgress) {
                 mergedProvider.watchProgress = newestProvider.watchProgress;
             }
-            if (typeof newestProvider.watchStatus != 'undefined') {
+            if (newestProvider.watchStatus) {
                 mergedProvider.watchStatus = newestProvider.watchStatus;
             }
-            if (typeof newestProvider.score != 'undefined') {
+            if (newestProvider.score) {
                 mergedProvider.score = newestProvider.score;
             }
-            if (typeof newestProvider.score != 'undefined') {
+            if (newestProvider.score) {
                 mergedProvider.publicScore = newestProvider.publicScore;
             }
-            if (typeof newestProvider.episodes != 'undefined') {
+            if (newestProvider.episodes) {
                 mergedProvider.episodes = newestProvider.episodes;
             }
-            if (typeof newestProvider.sequelId != 'undefined') {
+            if (newestProvider.sequelId) {
                 mergedProvider.sequelId = newestProvider.sequelId;
             }
-            if (typeof newestProvider.prequelId != 'undefined') {
+            if (newestProvider.prequelId) {
                 mergedProvider.prequelId = newestProvider.prequelId;
+            }
+            if (newestProvider.customList) {
+                mergedProvider.customList = newestProvider.customList;
+            }
+            if (newestProvider.customListName) {
+                mergedProvider.customListName = newestProvider.customListName;
             }
         }
 

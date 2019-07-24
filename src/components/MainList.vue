@@ -1,44 +1,31 @@
 <template>
-  <table style="width:100%">
-    <tr>
-      <th>EngName</th>
-      <th>MainName</th>
-      <th>RomanjiName</th>
-      <th>Season</th>
-      <th>CanSync?</th>
-      <th>RefreshInfo</th>
-      <th>Provider1</th>
-      <th>Provider2</th>
-      <th>Provider3</th>
-    </tr>
-    <tr v-for="item of mainList" v-bind:key="item.id" v-bind:ref="item.id" class="main-list-entry">
-      <td>{{item.names.engName}}</td>
-      <td>{{item.names.mainName}}</td>
-      <td>{{item.names.romajiName}}</td>
-      <td>{{item.seasonNumber}}</td>
-      <td v-if="item.canSync">
-        <button @click="syncAnime(item.id)">Sync</button>
-      </td>
-      <td v-else>✔</td>
-
-      <td>
-        <button @click="updateAnime(item.id)">RefreshInfo</button>
-      </td>
-      <td>
-        <button @click="updateWatchProgress(item,true)" :disabled="getWatchProgress(item) <= 0">-</button>
-        <div v-bind:ref="item.id+'-watchprogress'">{{getWatchProgress(item)}}</div>/
-        <div>{{getEpisode(item)}}</div>
-        <button
-          @click="updateWatchProgress(item,false)"
-          :disabled="getWatchProgress(item) === getEpisode(item)"
-        >+</button>
-      </td>
-      <td
-        v-for="provider of item.providerInfos"
-        v-bind:key="provider.provider + provider.id"
-      >{{provider.provider}} | {{getProviderWatchProgress(provider)}}/{{getProviderEpisodesCount(provider)}}</td>
-    </tr>
-  </table>
+  <div>
+    <nav class="nav">
+      <a href="#" class="nav-item is-active" active-color="orange">Home</a>
+      <a href="#" class="nav-item" active-color="green">About</a>
+      <a href="#" class="nav-item" active-color="blue">Testimonials</a>
+      <a href="#" class="nav-item" active-color="red">Blog</a>
+      <a href="#" class="nav-item" active-color="rebeccapurple">Contact</a>
+      <span class="nav-indicator"></span>
+    </nav>
+    <table style="width:100%">
+      <tr>
+        <th>Name</th>
+        <th>CanSync?</th>
+        <th>RefreshInfo</th>
+        <th>Progress</th>
+        <th>Providers</th>
+      </tr>
+      <tr
+        v-for="item of mainList"
+        v-bind:key="item.id"
+        v-bind:ref="item.id"
+        class="main-list-entry"
+      >
+        <ListEntry v-bind:series="item"></ListEntry>
+      </tr>
+    </table>
+  </div>
 </template>
 
 <script lang="ts">
@@ -49,11 +36,16 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 import { ProviderInfo } from "../backend/controller/objects/providerInfo";
-
-@Component
+import ListEntry from "./ListEntry.vue";
+@Component({
+  components: {
+    ListEntry
+  }
+})
 export default class MainList extends Vue {
   static instance: MainList;
   @Prop() mainList: Anime[] = [];
+
   constructor() {
     super();
     const that = this;
@@ -85,66 +77,10 @@ export default class MainList extends Vue {
   clog(a: any) {
     console.log(a);
   }
-  getObjectAsString(anime: Anime): string {
-    return JSON.stringify(anime);
-  }
   updateAnime(id: string | number) {
     console.log("updateAnime: " + id);
     var a = this.mainList.findIndex(x => x.id === id);
     App.workerController.send("request-info-refresh", this.mainList[a]);
-  }
-  getWatchProgress(anime: Anime) {
-    const animeObject = Object.assign(new Anime(), anime);
-    animeObject.readdFunctions();
-    animeObject.getLastWatchProgress().then(number => {
-      const div = (this.$refs as any)[
-        anime.id + "-watchprogress"
-      ][0] as HTMLElement;
-      div.textContent = number.episode + "";
-    });
-  }
-
-  getProviderEpisodesCount(provider: ProviderInfo): number {
-    if (typeof provider.episodes === "undefined") {
-      return -1;
-    } else {
-      return provider.episodes;
-    }
-  }
-
-  getProviderWatchProgress(provider: ProviderInfo): number {
-    provider = Object.assign(new ProviderInfo(), provider);
-    const result = provider.getHighestWatchedEpisode();
-    if (typeof result === "undefined") {
-      return -1;
-    } else {
-      return result.episode;
-    }
-  }
-  /**
-   *
-   */
-  updateWatchProgress(anime: Anime, reduce: boolean) {
-    const div = (this.$refs as any)[
-      anime.id + "-watchprogress"
-    ][0] as HTMLElement;
-    if (div.textContent != null) {
-      App.workerController.send("anime-update-watch-progress", {
-        anime,
-        reduce
-      });
-    }
-  }
-
-  syncAnime(id: string | number) {
-    App.workerController.send("sync-series", id);
-  }
-  getEpisode(anime: Anime): number | undefined {
-    try {
-      return Object.assign(new Anime(), anime).getMaxEpisode();
-    } catch (e) {
-      return anime.episodes;
-    }
   }
 }
 </script>
@@ -156,8 +92,83 @@ export default class MainList extends Vue {
   list-style-type: none;
 }
 .main-list-entry {
-  background: gainsboro;
+  background: #f1f1f1;
   padding: 5px;
   margin: 5px;
+}
+.main-list-entry-content {
+  display: contents;
+}
+.main-list-provider {
+  background-color: #f2f2f2;
+  padding: 5px;
+}
+.main-list-provider-watch-progress {
+  display: inline;
+  margin-left: 5px;
+}
+.main-list-provider-small-list-img {
+  width: 20px;
+}
+.main-list-provider-list {
+  display: table-cell;
+}
+.main-list-update-progress {
+  display: flex;
+}
+@import url("https://fonts.googleapis.com/css?family=DM+Sans:500,700&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+.nav-item {
+  color: #83818c;
+  padding: 20px;
+  text-decoration: none;
+  transition: 0.3s;
+  margin: 0 6px;
+  z-index: 1;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 500;
+  position: relative;
+}
+.nav-item:before {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: #dfe2ea;
+  border-radius: 8px 8px 0 0;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.nav-item:not(.is-active):hover:before {
+  opacity: 1;
+  bottom: 0;
+}
+
+.nav-item:not(.is-active):hover {
+  color: #333;
+}
+
+.nav-indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  transition: 0.4s;
+  height: 5px;
+  z-index: 1;
+  border-radius: 8px 8px 0 0;
+}
+
+@media (max-width: 580px) {
+  .nav {
+    overflow: auto;
+  }
 }
 </style>

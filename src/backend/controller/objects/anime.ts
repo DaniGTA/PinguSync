@@ -74,6 +74,9 @@ export default class Anime {
 
     /**
      * Checks if providers can be synced.
+     * The Provider need to have epidoes.
+     * The Provider need to have a user loggedIn.
+     * The Provider need to be out of sync.
      */
     public async getCanSyncStatus(): Promise<boolean> {
         if (this.providerInfos.length == 1) {
@@ -91,8 +94,8 @@ export default class Anime {
             latestUpdatedProvider.lastUpdate = new Date(0);
             for (const provider of this.providerInfos) {
                 if (provider != latestUpdatedProvider) {
-                    if (new Date(provider.lastUpdate) < latestUpdatedProvider.lastUpdate) {
-
+                    if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getProviderInstance().isUserLoggedIn()) {
+                        latestUpdatedProvider = provider;
                     }
                 }
             }
@@ -103,7 +106,9 @@ export default class Anime {
                 const watchProgress = provider.getHighestWatchedEpisode();
                 const latestWatchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
                 if (latestUpdatedProvider.watchProgress && watchProgress && latestWatchProgress) {
-                    if (latestWatchProgress != watchProgress) {
+                    // If the watchprogress has a difference and if the provider has a max defined episode.
+                    // Without the episodes we dont know if we can sync or not.
+                    if (latestWatchProgress != watchProgress && provider.episodes) {
                         if (typeof latestUpdatedProvider.episodes == 'undefined' || latestWatchProgress.episode < latestUpdatedProvider.episodes) {
                             if (typeof watchProgress === 'undefined') {
                                 this.canSync = true;
