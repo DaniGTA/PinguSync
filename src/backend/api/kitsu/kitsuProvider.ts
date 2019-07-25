@@ -73,8 +73,8 @@ export default class KitsuProvider implements ListProvider {
     logInUser(pass: string, username?: string | undefined): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
-    isUserLoggedIn(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async isUserLoggedIn(): Promise<boolean> {
+        return false;
     }
     getTokenAuthUrl(): string {
         throw new Error("Method not implemented.");

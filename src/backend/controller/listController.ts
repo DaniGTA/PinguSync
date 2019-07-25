@@ -26,7 +26,7 @@ export default class ListController {
     private async syncWatcher() {
         var needToSync: Anime[] = [];
         for (const item of ListController.mainList) {
-            if (item.canSync) {
+            if (await item.getCanSyncStatus()) {
                 needToSync.push(item);
             }
         }

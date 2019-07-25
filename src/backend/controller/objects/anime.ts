@@ -16,7 +16,6 @@ export default class Anime {
     public releaseYear?: number;
     public seasonNumber?: number;
     public runTime?: number;
-    public canSync: boolean = false;
     constructor() {
         this.providerInfos = [];
         //Generates randome string.
@@ -79,20 +78,20 @@ export default class Anime {
      * The Provider need to be out of sync.
      */
     public async getCanSyncStatus(): Promise<boolean> {
-        if (this.providerInfos.length == 1) {
-            this.canSync = false;
+        if (this.providerInfos.length <= 1) {
             return false;
         }
 
-        const x = await this.providerInfos[1].getProviderInstance().isUserLoggedIn()
         let latestUpdatedProvider: ProviderInfo | null = await this.getLastUpdatedProvider();
 
-        if (latestUpdatedProvider === null) {
+        if (!latestUpdatedProvider) {
             throw 'no provider with valid sync status'
         }
+        latestUpdatedProvider = Object.assign(new ProviderInfo(), latestUpdatedProvider);
         if (!await latestUpdatedProvider.getProviderInstance().isUserLoggedIn()) {
             latestUpdatedProvider.lastUpdate = new Date(0);
-            for (const provider of this.providerInfos) {
+            for (let provider of this.providerInfos) {
+                provider = Object.assign(new ProviderInfo(), provider);
                 if (provider != latestUpdatedProvider) {
                     if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getProviderInstance().isUserLoggedIn()) {
                         latestUpdatedProvider = provider;
@@ -101,24 +100,25 @@ export default class Anime {
             }
         }
 
-        for (const provider of this.providerInfos) {
+        for (let provider of this.providerInfos) {
+            provider = Object.assign(new ProviderInfo(), provider);
             if (latestUpdatedProvider.provider != provider.provider && await provider.getProviderInstance().isUserLoggedIn()) {
                 const watchProgress = provider.getHighestWatchedEpisode();
                 const latestWatchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
-                if (latestUpdatedProvider.watchProgress && watchProgress && latestWatchProgress) {
+                if (latestUpdatedProvider.watchProgress && latestWatchProgress && provider.episodes) {
+                    if (!watchProgress) {
+                        return true;
+                    }
                     // If the watchprogress has a difference and if the provider has a max defined episode.
                     // Without the episodes we dont know if we can sync or not.
-                    if (latestWatchProgress != watchProgress && provider.episodes) {
+                    if (latestWatchProgress.episode != watchProgress.episode) {
                         if (typeof latestUpdatedProvider.episodes == 'undefined' || latestWatchProgress.episode < latestUpdatedProvider.episodes) {
                             if (typeof watchProgress === 'undefined') {
-                                this.canSync = true;
                                 return true;
                             } else if (typeof this.episodes != 'undefined' && this.episodes < watchProgress.episode) {
-                                this.canSync = false;
                                 return false;
                             } else {
                                 provider.canUpdateWatchProgress = true;
-                                this.canSync = true;
                                 return true;
                             }
                         }
@@ -126,7 +126,6 @@ export default class Anime {
                 }
             }
         }
-        this.canSync = false;
         return false;
     }
 
@@ -206,11 +205,6 @@ export default class Anime {
         } catch (err) {
             console.log(err);
         }
-        try {
-            newAnime.canSync = await this.getCanSyncStatus();
-        } catch (err) {
-            console.log(err);
-        }
         return newAnime;
     }
 
@@ -266,7 +260,8 @@ export default class Anime {
     }
 
     public async getLastWatchProgress(): Promise<WatchProgress> {
-        let latestUpdatedProvider = await this.getLastUpdatedProvider()
+
+        let latestUpdatedProvider = Object.assign(new ProviderInfo(), await this.getLastUpdatedProvider())
         if (latestUpdatedProvider === null) {
             throw 'no provider with valid sync status'
         }

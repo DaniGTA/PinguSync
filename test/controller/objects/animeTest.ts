@@ -37,9 +37,11 @@ describe('animeTest', () => {
     it('should return last provider', async () => {
         const anime = new Anime();
         const providerA = new ProviderInfo();
+        providerA.lastUpdate = new Date(100);
         providerA.watchProgress = [];
         const providerB = new ProviderInfo();
         providerB.watchProgress = [];
+        providerB.lastUpdate = new Date(50);
         anime.providerInfos.push(providerA, providerB);
         assert.equal(await anime['getLastUpdatedProvider'](), providerA);
         return;
@@ -129,17 +131,17 @@ describe('animeTest', () => {
         return;
     });
 
-    it('can sync', async () => {
+    it('can sync (1/3)', async () => {
         const anime = new Anime();
-        ProviderList.list.push(new TestProvider("A"));
-        const providerA = new ProviderInfo("A");
+        ProviderList.list.push(new TestProvider("CanSync121"));
+        const providerA = new ProviderInfo("CanSync121");
         providerA.episodes = 12;
         for (let index = 0; index < 12; index++) {
             providerA.addOneEpisode(index);
         }
         providerA.watchStatus = WatchStatus.CURRENT;
-        ProviderList.list.push(new TestProvider("B"));
-        const providerB = new ProviderInfo("B");
+        ProviderList.list.push(new TestProvider("CanSync122"));
+        const providerB = new ProviderInfo("CanSync122");
         providerB.episodes = 24;
         for (let index = 0; index < 24; index++) {
             providerB.addOneEpisode(index);
@@ -149,7 +151,39 @@ describe('animeTest', () => {
         anime.providerInfos.push(providerA, providerB);
         assert.equal(await anime.getCanSyncStatus(), true);
     })
-    it('cant sync (1/6)', async () => {
+    it('can sync (2/3)', async () => {
+        const anime = new Anime();
+        ProviderList.list.push(new TestProvider("CanSync21"));
+        const providerA = new ProviderInfo("CanSync21");
+        providerA.episodes = 24;
+        for (let index = 1; index < 25; index++) {
+            providerA.addOneEpisode(index);
+        }
+        providerA.watchStatus = WatchStatus.COMPLETED;
+        ProviderList.list.push(new TestProvider("CanSync22"));
+        const providerB = new ProviderInfo("CanSync22");
+        providerB.episodes = 24;
+        anime.episodes = 24;
+        anime.providerInfos.push(providerA, providerB);
+        assert.equal(await anime.getCanSyncStatus(), true);
+    })
+    it('can sync (3/3)', async () => {
+        const anime = new Anime();
+        ProviderList.list.push(new TestProvider("CanSync31"));
+        const providerA = new ProviderInfo("CanSync31");
+        providerA.episodes = 24;
+        for (let index = 1; index < 12; index++) {
+            providerA.addOneEpisode(index);
+        }
+        providerA.watchStatus = WatchStatus.COMPLETED;
+        ProviderList.list.push(new TestProvider("CanSync32"));
+        const providerB = new ProviderInfo("CanSync32");
+        providerB.episodes = 24;
+        anime.episodes = 24;
+        anime.providerInfos.push(providerA, providerB);
+        assert.equal(await anime.getCanSyncStatus(), true);
+    })
+    it('cant sync (1/7)', async () => {
         const anime = new Anime();
         ProviderList.list.push(new TestProvider("A"));
         const providerA = new ProviderInfo("A");
@@ -171,7 +205,7 @@ describe('animeTest', () => {
         assert.equal(await anime.getCanSyncStatus(), false);
     })
 
-    it('cant sync (2/6)', async () => {
+    it('cant sync (2/7)', async () => {
         const anime = new Anime();
         ProviderList.list.push(new TestProvider("G"));
         const providerA = new ProviderInfo("G");
@@ -193,7 +227,7 @@ describe('animeTest', () => {
         assert.equal(await anime.getCanSyncStatus(), false);
     })
 
-    it('cant sync (3/6)', async () => {
+    it('cant sync (3/7)', async () => {
         const anime = new Anime();
         ProviderList.list.push(new TestProvider("E"));
         const providerA = new ProviderInfo("E");
@@ -214,7 +248,7 @@ describe('animeTest', () => {
         assert.equal(await anime.getCanSyncStatus(), false);
     })
 
-    it('cant sync (4/6)', async () => {
+    it('cant sync (4/7)', async () => {
         const anime = new Anime();
         ProviderList.list.push(new TestProvider("A"));
         const providerA = new ProviderInfo("A");
@@ -228,7 +262,7 @@ describe('animeTest', () => {
         assert.equal(await anime.getCanSyncStatus(), false);
     })
 
-    it('cant sync (5/6)', async () => {
+    it('cant sync (5/7)', async () => {
         const anime = new Anime();
         ProviderList.list.push(new TestProvider("UU"));
         const providerA = new ProviderInfo("UU");
@@ -250,7 +284,7 @@ describe('animeTest', () => {
         assert.equal(await anime.getCanSyncStatus(), false);
     })
 
-    it('cant sync (6/6)', async () => {
+    it('cant sync (6/7)', async () => {
         const anime = new Anime();
         ProviderList.list.push(new TestProvider("T"));
         const providerA = new ProviderInfo("T");
@@ -274,6 +308,26 @@ describe('animeTest', () => {
         providerC.watchStatus = WatchStatus.COMPLETED;
         anime.episodes = 24;
         anime.providerInfos.push(providerA, providerB, providerC);
+        assert.equal(await anime.getCanSyncStatus(), false);
+    })
+
+    it('cant sync (7/7)', async () => {
+        const anime = new Anime();
+        ProviderList.list.push(new TestProvider("TestProvider1"));
+        const providerA = new ProviderInfo("TestProvider1");
+        providerA.lastUpdate = new Date("2019-07-24T19:09:37.373Z");
+        providerA.episodes = 12;
+        for (let index = 1; index < 13; index++) {
+            providerA.addOneEpisode(index);
+        }
+        providerA.watchStatus = WatchStatus.CURRENT;
+        ProviderList.list.push(new TestProvider("TestProvider2"));
+        const providerB = new ProviderInfo("TestProvider2");
+        providerB.lastUpdate = new Date("2019-07-24T19:09:37.759Z");
+        for (let index = 1; index < 13; index++) {
+            providerB.addOneEpisode(index);
+        }
+        anime.providerInfos.push(providerA, providerB);
         assert.equal(await anime.getCanSyncStatus(), false);
     })
 

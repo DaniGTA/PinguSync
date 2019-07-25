@@ -8,7 +8,7 @@
       <a href="#" class="nav-item" active-color="rebeccapurple">Contact</a>
       <span class="nav-indicator"></span>
     </nav>
-    <div style="width:100%">
+    <div class="main-list">
       <ListEntry
         v-for="item of mainList"
         v-bind:key="item.id"
@@ -51,7 +51,7 @@ export default class MainList extends Vue {
           const entry = refs[0] as HTMLElement;
           entry.style.background = "red";
         } else {
-          that.mainList.push(iterator);
+          that.mainList.push(Object.assign(new Anime(), iterator));
           x++;
         }
       }
@@ -62,7 +62,11 @@ export default class MainList extends Vue {
     App.workerController.on("update-series-list", (data: any) => {
       console.log(data);
       this.$nextTick().then(() => {
-        that.$set(that.mainList, data.targetIndex, data.updatedEntry);
+        that.$set(
+          that.mainList,
+          data.targetIndex,
+          Object.assign(new Anime(), data.updatedEntry)
+        );
       });
     });
   }
@@ -70,36 +74,21 @@ export default class MainList extends Vue {
   clog(a: any) {
     console.log(a);
   }
-  updateAnime(id: string | number) {
-    console.log("updateAnime: " + id);
-    var a = this.mainList.findIndex(x => x.id === id);
-    App.workerController.send("request-info-refresh", this.mainList[a]);
-  }
 }
 </script>
 
 <style>
 .main-list {
+  width: 100%;
   display: flex;
-  flex-flow: wrap;
-  list-style-type: none;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
 }
 .main-list-provider {
   background-color: #f2f2f2;
   padding: 5px;
-}
-.main-list-provider-watch-progress {
-  display: inline;
-  margin-left: 5px;
-}
-.main-list-provider-small-list-img {
-  width: 20px;
-}
-.main-list-provider-list {
-  display: table-cell;
-}
-.main-list-update-progress {
-  display: flex;
 }
 @import url("https://fonts.googleapis.com/css?family=DM+Sans:500,700&display=swap");
 
