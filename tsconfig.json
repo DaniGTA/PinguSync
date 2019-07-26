@@ -17,11 +17,7 @@
       "mocha",
       "node",
     ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
+    "paths": {},
     "lib": [
       "esnext",
       "es6",

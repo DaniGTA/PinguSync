@@ -1,6 +1,5 @@
 import listHelper from '../../../backend/helpFunctions/listHelper';
 import stringHelper from '../../../backend/helpFunctions/stringHelper';
-import NameProviderController from '../nameProviderController';
 import Name from './name';
 
 export default class Names {
@@ -51,9 +50,9 @@ export default class Names {
      * This will search in name providers for more names
      */
     public async fillNames() {
-        for (const provider of new NameProviderController().getAllNameProviders()) {
+        //for (const provider of new NameProviderController().getAllNameProviders()) {
 
-        }
+        //}
     }
 
     public async getAllNames(): Promise<string[]> {

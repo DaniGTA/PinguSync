@@ -1,5 +1,4 @@
 import Anime, { WatchStatus } from '../../../backend/controller/objects/anime';
-import { ProviderInfo } from '../../../backend/controller/objects/providerInfo';
 import { Medium } from './graphql/searchSeries';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import Overview from '../../../backend/controller/objects/overview';
@@ -7,6 +6,7 @@ import Name from '../../../backend/controller/objects/name';
 import aniListProvider from './aniListProvider';
 import { Entry, MediaRelation } from './graphql/seriesList';
 import AniListProvider from './aniListProvider';
+import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 
 export default new class AniListConverter {
     public async convertMediaToAnime(medium: Medium): Promise<Anime> {
@@ -19,11 +19,11 @@ export default new class AniListConverter {
         anime.releaseYear = medium.startDate.year;
         anime.coverImage = medium.coverImage.large;
 
-        const provider = new ProviderInfo(aniListProvider.getInstance());
+        const provider = new ListProviderLocalData(aniListProvider.getInstance());
         provider.id = medium.id;
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
-        anime.providerInfos.push(provider);
+        anime.listProviderInfos.push(provider);
         return anime;
     }
 
@@ -38,11 +38,11 @@ export default new class AniListConverter {
         anime.names.romajiName = info.Media.title.romaji;
         anime.names.otherNames.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
 
-        const provider = new ProviderInfo(aniListProvider.getInstance());
+        const provider = new ListProviderLocalData(aniListProvider.getInstance());
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
-        anime.providerInfos.push(provider);
+        anime.listProviderInfos.push(provider);
         return anime;
     }
 
@@ -56,7 +56,7 @@ export default new class AniListConverter {
         series.releaseYear = entry.media.startDate.year;
         series.seasonNumber = await series.names.getSeasonNumber();
 
-        var providerInfo: ProviderInfo = new ProviderInfo(AniListProvider.getInstance());
+        var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
         try {
             if (typeof series.seasonNumber === 'undefined') {
                 if (entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL) === -1) {
@@ -93,7 +93,7 @@ export default new class AniListConverter {
             providerInfo.episodes = entry.media.episodes;
         }
 
-        series.providerInfos.push(providerInfo);
+        series.listProviderInfos.push(providerInfo);
         return series;
     }
 }

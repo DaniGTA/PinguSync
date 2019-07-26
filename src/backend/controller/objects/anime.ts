@@ -1,15 +1,18 @@
-import { ProviderInfo } from './providerInfo';
 import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import Names from './names';
 import Overview from './overview';
 import listHelper from '../../../backend/helpFunctions/listHelper';
 import { WatchProgress } from './watchProgress';
+import { ListProviderLocalData } from './listProviderLocalData';
+import { InfoProviderLocalData } from './infoProviderLocalData';
+import ProviderLocalData from '../interfaces/ProviderLocalData';
 
 export default class Anime {
     public id: string = '';
     public lastUpdate: number = Date.now();
     public names: Names = new Names();
-    public providerInfos: ProviderInfo[] = [];
+    public listProviderInfos: ListProviderLocalData[] = [];
+    public infoProviderInfos: InfoProviderLocalData[] = [];
     public episodes?: number;
     public coverImage: string = '';
     public overviews: Overview[] = [];
@@ -17,8 +20,8 @@ export default class Anime {
     public seasonNumber?: number;
     public runTime?: number;
     constructor() {
-        this.providerInfos = [];
-        //Generates randome string.
+        this.listProviderInfos = [];
+        // Generates randome string.
         this.id = stringHelper.randomString(20);
     }
 
@@ -30,7 +33,7 @@ export default class Anime {
     }
 
     public getMaxEpisode(): number {
-        const array = (this.providerInfos.flatMap(x => x.episodes) as number[]);
+        const array = (this.listProviderInfos.flatMap(x => x.episodes) as number[]);
         if (typeof this.episodes != 'undefined') {
             array.push(this.episodes);
         }
@@ -44,7 +47,7 @@ export default class Anime {
     public async getAllEpisodes(): Promise<number[]> {
         let result;
         try {
-            result = await listHelper.cleanArray(this.providerInfos.flatMap(x => x.episodes))
+            result = await listHelper.cleanArray(this.listProviderInfos.flatMap(x => x.episodes))
         } catch (e) { }
         if (typeof result == 'undefined') {
             if (typeof this.episodes != 'undefined') {
@@ -78,31 +81,31 @@ export default class Anime {
      * The Provider need to be out of sync.
      */
     public async getCanSyncStatus(): Promise<boolean> {
-        if (this.providerInfos.length <= 1) {
+        if (this.listProviderInfos.length <= 1) {
             return false;
         }
 
-        let latestUpdatedProvider: ProviderInfo | null = await this.getLastUpdatedProvider();
+        let latestUpdatedProvider: ListProviderLocalData | null = await this.getLastUpdatedProvider();
 
         if (!latestUpdatedProvider) {
             throw 'no provider with valid sync status'
         }
-        latestUpdatedProvider = Object.assign(new ProviderInfo(), latestUpdatedProvider);
-        if (!await latestUpdatedProvider.getProviderInstance().isUserLoggedIn()) {
+        latestUpdatedProvider = Object.assign(new ListProviderLocalData(), latestUpdatedProvider);
+        if (!await latestUpdatedProvider.getListProviderInstance().isUserLoggedIn()) {
             latestUpdatedProvider.lastUpdate = new Date(0);
-            for (let provider of this.providerInfos) {
-                provider = Object.assign(new ProviderInfo(), provider);
+            for (let provider of this.listProviderInfos) {
+                provider = Object.assign(new ListProviderLocalData(), provider);
                 if (provider != latestUpdatedProvider) {
-                    if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getProviderInstance().isUserLoggedIn()) {
+                    if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getListProviderInstance().isUserLoggedIn()) {
                         latestUpdatedProvider = provider;
                     }
                 }
             }
         }
 
-        for (let provider of this.providerInfos) {
-            provider = Object.assign(new ProviderInfo(), provider);
-            if (latestUpdatedProvider.provider != provider.provider && await provider.getProviderInstance().isUserLoggedIn()) {
+        for (let provider of this.listProviderInfos) {
+            provider = Object.assign(new ListProviderLocalData(), provider);
+            if (latestUpdatedProvider.provider != provider.provider && await provider.getListProviderInstance().isUserLoggedIn()) {
                 const watchProgress = provider.getHighestWatchedEpisode();
                 const latestWatchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
                 if (latestUpdatedProvider.watchProgress && latestWatchProgress && provider.episodes) {
@@ -132,10 +135,10 @@ export default class Anime {
     /**
      * @return the last updated provider with watchProgress !
      */
-    private async getLastUpdatedProvider(exclude: ProviderInfo[] = []): Promise<ProviderInfo | null> {
-        let latestUpdatedProvider: ProviderInfo | null = null;
-        if (typeof this.providerInfos != 'undefined') {
-            for (const provider of this.providerInfos) {
+    private async getLastUpdatedProvider(exclude: ListProviderLocalData[] = []): Promise<ListProviderLocalData | null> {
+        let latestUpdatedProvider: ListProviderLocalData | null = null;
+        if (typeof this.listProviderInfos != 'undefined') {
+            for (const provider of this.listProviderInfos) {
                 if (typeof provider.watchProgress != 'undefined') {
                     if (exclude.findIndex(x => x == latestUpdatedProvider) === -1) {
                         if (latestUpdatedProvider === null) {
@@ -163,11 +166,11 @@ export default class Anime {
         for (const overview of this.overviews) {
             overviewsCache.push(new Overview(overview.content, overview.lang));
         }
-        var providersCache: ProviderInfo[] = [];
-        for (const provider of this.providerInfos) {
-            providersCache.push(Object.assign(new ProviderInfo(), provider));
+        var providersCache: ListProviderLocalData[] = [];
+        for (const provider of this.listProviderInfos) {
+            providersCache.push(Object.assign(new ListProviderLocalData(), provider));
         }
-        this.providerInfos = providersCache;
+        this.listProviderInfos = providersCache;
         this.overviews = overviewsCache;
         this.names = Object.assign(new Names(), this.names);
     }
@@ -182,7 +185,7 @@ export default class Anime {
         newAnime.names.otherNames.push(...this.names.otherNames, ...anime.names.otherNames);
         newAnime.names.otherNames = await listHelper.getUniqueList(newAnime.names.otherNames);
 
-        newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.providerInfos.flatMap(x => x.episodes)));
+        newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.listProviderInfos.flatMap(x => x.episodes)));
         let seasonarr = await listHelper.cleanArray([this.seasonNumber, anime.seasonNumber]);
         if (typeof seasonarr !== 'undefined') {
             newAnime.seasonNumber = await listHelper.findMostFrequent(seasonarr);
@@ -192,7 +195,8 @@ export default class Anime {
 
         newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
         newAnime.coverImage = await this.mergeString(anime.coverImage, this.coverImage);
-        newAnime.providerInfos = await this.mergeProviders(...[...this.providerInfos, ...anime.providerInfos]);
+        newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
+        newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
         newAnime.coverImage = await this.mergeString(this.names.shortName, anime.names.shortName, 'CoverImage');
         try {
             if (this.overviews != null && typeof this.overviews != 'undefined') {
@@ -208,19 +212,23 @@ export default class Anime {
         return newAnime;
     }
 
-    private async mergeProviders(...providers: ProviderInfo[]): Promise<ProviderInfo[]> {
-        const mergedProviderInfos: ProviderInfo[] = []
+    private async mergeProviders(...providers: ProviderLocalData[]): Promise<ProviderLocalData[]> {
+        let mergedProviderInfos: ProviderLocalData[] = []
         for (const provider of providers) {
             var check = mergedProviderInfos.find(x => provider.provider === x.provider);
             if (typeof check === 'undefined') {
-                var collected: ProviderInfo[] = [];
+                var collected: ProviderLocalData[] = [];
                 for (const provider2 of providers) {
                     if (provider2.provider == provider.provider) {
                         collected.push(provider2);
                     }
                 }
                 if (collected.length >= 2) {
-                    mergedProviderInfos.push(await ProviderInfo.mergeProviderInfos(...collected));
+                    if (listHelper.checkType(collected, ListProviderLocalData)) {
+                        mergedProviderInfos.push(await ListProviderLocalData.mergeProviderInfos(...collected as ListProviderLocalData[]));
+                    } else if (listHelper.checkType(collected, InfoProviderLocalData)) {
+                        mergedProviderInfos.push(await InfoProviderLocalData.mergeProviderInfos(...collected as InfoProviderLocalData[]));
+                    }
                 } else {
                     mergedProviderInfos.push(provider);
                 }
@@ -261,7 +269,7 @@ export default class Anime {
 
     public async getLastWatchProgress(): Promise<WatchProgress> {
 
-        let latestUpdatedProvider = Object.assign(new ProviderInfo(), await this.getLastUpdatedProvider())
+        let latestUpdatedProvider = Object.assign(new ListProviderLocalData(), await this.getLastUpdatedProvider())
         if (latestUpdatedProvider === null) {
             throw 'no provider with valid sync status'
         }

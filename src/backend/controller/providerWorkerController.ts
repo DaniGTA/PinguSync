@@ -23,7 +23,7 @@ class ProviderController {
             this.initController()
         }
         ProviderController.instance = that;
-        for (const pl of ProviderList.list) {
+        for (const pl of ProviderList.listProviderList) {
             if (pl.hasOAuthCode) {
                 this.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
                     try {
@@ -70,7 +70,7 @@ class ProviderController {
                     this.send(channel, data);
                     break;*/
                 case 'get-all-providers':
-                    this.send('all-providers', ProviderList.list.flatMap(x => x.providerName));
+                    this.send('all-providers', ProviderList.listProviderList.flatMap(x => x.providerName));
                     break;
             }
         });
@@ -93,7 +93,7 @@ class ProviderController {
     }
 
     static getProviderInstance(providerString: string): ListProvider {
-        for (const provider of ProviderList.list) {
+        for (const provider of ProviderList.listProviderList) {
             if (provider.providerName === providerString) {
                 return provider;
             }

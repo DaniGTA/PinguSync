@@ -1,5 +1,5 @@
 import ListProvider from '../listProvider';
-import { ProviderInfo } from '../../controller/objects/providerInfo';
+import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import Anime, { WatchStatus } from '../../controller/objects/anime';
 
 import request from 'request';
@@ -13,10 +13,10 @@ import { GetMediaResult } from './objects/getResult';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
 import { WatchProgress } from '../../../backend/controller/objects/watchProgress';
 export default class KitsuProvider implements ListProvider {
-    removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
+    removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
-    updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
+    updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
 
@@ -32,7 +32,7 @@ export default class KitsuProvider implements ListProvider {
     async getMoreSeriesInfo(_anime: Anime): Promise<Anime> {
         var anime = Object.assign(new Anime(), _anime);
         anime.readdFunctions();
-        var providerInfos = anime.providerInfos.find(x => x.provider === this.providerName);
+        var providerInfos = anime.listProviderInfos.find(x => x.provider === this.providerName);
         var id = null;
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
@@ -49,7 +49,7 @@ export default class KitsuProvider implements ListProvider {
                     var b = await kitsuConverter.convertMediaToAnime(result);
                     var validSeason = (await anime.getSeason() === await b.getSeason() || (await anime.getSeason() === 1 && typeof await b.getSeason() === 'undefined'));
                     if (await titleCheckHelper.checkAnimeNames(anime, b) && validSeason) {
-                        var providerInfos = b.providerInfos.find(x => x.provider === this.providerName);
+                        var providerInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
                             id = providerInfos.id;
                             break;

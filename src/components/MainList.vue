@@ -26,7 +26,6 @@ import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
-import { ProviderInfo } from "../backend/controller/objects/providerInfo";
 import ListEntry from "./ListEntry.vue";
 @Component({
   components: {
@@ -61,13 +60,11 @@ export default class MainList extends Vue {
 
     App.workerController.on("update-series-list", (data: any) => {
       console.log(data);
-      this.$nextTick().then(() => {
-        that.$set(
-          that.mainList,
-          data.targetIndex,
-          Object.assign(new Anime(), data.updatedEntry)
-        );
-      });
+      that.$set(
+        that.mainList,
+        data.targetIndex,
+        Object.assign(new Anime(), data.updatedEntry)
+      );
     });
   }
 

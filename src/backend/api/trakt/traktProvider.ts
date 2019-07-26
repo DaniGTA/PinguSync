@@ -2,7 +2,7 @@ import ListProvider from '../listProvider';
 import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
 import { TraktSearch } from './objects/search';
-import { ProviderInfo } from '../../controller/objects/providerInfo';
+import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import Anime, { WatchStatus } from '../../controller/objects/anime';
 import { TraktUserData } from './traktUserData';
 
@@ -39,7 +39,7 @@ export default class TraktProvider implements ListProvider {
     public async getMoreSeriesInfo(_anime: Anime): Promise<Anime> {
         var anime = Object.assign(new Anime(), _anime);
         anime.readdFunctions();
-        var providerInfos = anime.providerInfos.find(x => x.provider === this.providerName);
+        var providerInfos = anime.listProviderInfos.find(x => x.provider === this.providerName);
         var id = null;
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
@@ -49,7 +49,7 @@ export default class TraktProvider implements ListProvider {
                 try {
                     var b = await traktConverter.convertShowToAnime(result.show);
                     if (await titleCheckHelper.checkAnimeNames(anime, b)) {
-                        var providerInfos = b.providerInfos.find(x => x.provider === this.providerName);
+                        var providerInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
                             id = providerInfos.id;
                         }
@@ -90,7 +90,7 @@ export default class TraktProvider implements ListProvider {
                         await series.names.fillNames();
                         series.seasonNumber = season.number;
 
-                        const providerInfo: ProviderInfo = new ProviderInfo(TraktProvider.getInstance());
+                        const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
 
                         providerInfo.id = entry.show.ids.trakt;
                         providerInfo.rawEntry = entry;
@@ -99,7 +99,7 @@ export default class TraktProvider implements ListProvider {
                         }
                         providerInfo.watchStatus = WatchStatus.COMPLETED;
                         providerInfo.lastExternalChange = entry.last_watched_at;
-                        series.providerInfos.push(providerInfo);
+                        series.listProviderInfos.push(providerInfo);
                         seriesList.push(series);
                     }
                 } catch (e) {
@@ -117,8 +117,8 @@ export default class TraktProvider implements ListProvider {
         this.userData.setUserData(data);
     }
 
-    public async updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
-        var providerInfo = anime.providerInfos.find(x => x.provider === this.providerName);
+    public async updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+        var providerInfo = anime.listProviderInfos.find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.addOneWatchProgress(watchProgress);
             const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress.episode);
@@ -128,8 +128,8 @@ export default class TraktProvider implements ListProvider {
         throw 'err';
     }
 
-    public async removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ProviderInfo> {
-        var providerInfo = anime.providerInfos.find(x => x.provider === this.providerName);
+    public async removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+        var providerInfo = anime.listProviderInfos.find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.removeOneWatchProgress(watchProgress);
             const updatedEntry = await traktConverter.convertAnimeToSendRemoveEntryShow(anime, watchProgress.episode);

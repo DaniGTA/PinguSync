@@ -2,30 +2,25 @@ import ListProvider from '../../api/ListProvider';
 import { WatchStatus } from './anime';
 import ProviderList from '../providerList';
 import { WatchProgress } from './watchProgress';
-import listHelper from '../../../backend/helpFunctions/listHelper';
+import listHelper from '../../helpFunctions/listHelper';
+import ProviderLocalData from '../interfaces/ProviderLocalData';
 
-export class ProviderInfo {
-    public id: number | string = -1;
+/**
+ * Contains info about the series and the user watch progress and the list that series is in.
+ */
+export class ListProviderLocalData extends ProviderLocalData {
     public readonly provider: string;
 
-    public rawEntry: any;
-    public lastUpdate: Date;
     public canUpdateWatchProgress = false;
-    public lastExternalChange: Date = new Date(0);
 
     public watchStatus?: WatchStatus;
     public watchProgress?: WatchProgress[];
-    public score?: number;
-    public episodes?: number;
-    public publicScore?: number;
-
-    public sequelId?: number;
-    public prequelId?: number;
 
     public customList: boolean = false;
     public customListName = '';
 
     constructor(lp?: ListProvider | string) {
+        super();
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
             this.provider = lp;
@@ -37,8 +32,8 @@ export class ProviderInfo {
     }
 
 
-    public getProviderInstance(): ListProvider {
-        for (const provider of ProviderList.list) {
+    public getListProviderInstance(): ListProvider {
+        for (const provider of ProviderList.listProviderList) {
             if (provider.providerName === this.provider) {
                 return provider;
             }
@@ -99,8 +94,8 @@ export class ProviderInfo {
         }
     }
 
-    public static async mergeProviderInfos(...providers: ProviderInfo[]): Promise<ProviderInfo> {
-        const mergedProvider = Object.assign(new ProviderInfo(), providers[0]);
+    public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
+        const mergedProvider = Object.assign(new ListProviderLocalData(), providers[0]);
         var newestProvider;
         for (const provider of providers) {
             if (provider.id != -1) {
@@ -140,7 +135,7 @@ export class ProviderInfo {
                     }
                 }
 
-                if (await ProviderInfo.isValidWatchStatus(provider.watchStatus, mergedProvider.watchStatus)) {
+                if (await ListProviderLocalData.isValidWatchStatus(provider.watchStatus, mergedProvider.watchStatus)) {
                     mergedProvider.watchStatus = provider.watchStatus;
 
                 }

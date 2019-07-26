@@ -1,9 +1,14 @@
 import * as fs from "fs";
 import * as http from "http";
 import AniDBNameManager from './anidbNameManager';
-import NameProvider from '../nameProvider';
+import InfoProvider from '../infoProvider';
 import zlib from 'zlib';
-export default class AniDBNameList implements NameProvider {
+import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
+export default class AniDBNameList implements InfoProvider {
+    providerName: string = 'anidb';
+    getSeriesInfo(anime: import("../../controller/objects/anime").default): Promise<InfoProviderLocalData> {
+        throw new Error("Method not implemented.");
+    }
     static anidbNameManager: AniDBNameManager = new AniDBNameManager();
     constructor(download: boolean = true) {
         if (this.allowDownload() && download) {

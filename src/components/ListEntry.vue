@@ -58,8 +58,8 @@ import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
-import { ProviderInfo } from "../backend/controller/objects/providerInfo";
 import { WatchProgress } from "../backend/controller/objects/watchProgress";
+import { ListProviderLocalData } from '../backend/controller/objects/listProviderLocalData';
 
 @Component
 export default class ListEntry extends Vue {
@@ -99,7 +99,7 @@ export default class ListEntry extends Vue {
     return -1;
   }
 
-  getProviderEpisodesCount(provider: ProviderInfo): number {
+  getProviderEpisodesCount(provider: ListProviderLocalData): number {
     if (typeof provider.episodes === "undefined") {
       return -1;
     } else {
@@ -107,8 +107,8 @@ export default class ListEntry extends Vue {
     }
   }
 
-  getProviderWatchProgress(provider: ProviderInfo): number {
-    provider = Object.assign(new ProviderInfo(), provider);
+  getProviderWatchProgress(provider: ListProviderLocalData): number {
+    provider = Object.assign(new ListProviderLocalData(), provider);
     const result = provider.getHighestWatchedEpisode();
     if (typeof result === "undefined") {
       return -1;

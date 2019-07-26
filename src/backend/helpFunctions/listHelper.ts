@@ -74,6 +74,35 @@ class ListHelper {
         return arr.filter((v, i, a) => a.findIndex((t) => (t === v)) === i)
     }
 
+    async is<T>(obj: any, type: { prototype: T }): Promise<T>;
+    async is(obj: any, type: any): Promise<boolean> {
+        const objType: string = typeof obj;
+        const typeString = type.toString();
+        const nameRegex: RegExp = /Arguments|Function|String|Number|Date|Array|Boolean|RegExp/;
+
+        let typeName: string;
+
+        if (obj && objType === "object") {
+            return obj instanceof type;
+        }
+
+        if (typeString.startsWith("class ")) {
+            return type.name.toLowerCase() === objType;
+        }
+
+        typeName = typeString.match(nameRegex);
+        if (typeName) {
+            return typeName[0].toLowerCase() === objType;
+        }
+
+        return false;
+    }
+
+    async checkType(myArray: any[], type: any): Promise<boolean> {
+        return myArray.every(async (item) => {
+            return await this.is(item, type);
+        });
+    }
 }
 
 export default new ListHelper();

@@ -23,7 +23,7 @@ class FrontendController {
             this.initController()
 
             FrontendController.instance = that;
-            for (const pl of ProviderList.list) {
+            for (const pl of ProviderList.listProviderList) {
                 if (pl.hasOAuthCode) {
                     this.communcation.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
                         try {
@@ -56,7 +56,7 @@ class FrontendController {
         });
 
         this.communcation.on('get-all-providers', (data) => {
-            this.communcation.send('all-providers', ProviderList.list.flatMap(x => x.providerName));
+            this.communcation.send('all-providers', ProviderList.listProviderList.flatMap(x => x.providerName));
         });
 
         this.communcation.on('sync-series', (data) => {
@@ -82,7 +82,7 @@ class FrontendController {
     }
 
     static getProviderInstance(providerString: string): ListProvider {
-        for (const provider of ProviderList.list) {
+        for (const provider of ProviderList.listProviderList) {
             if (provider.providerName === providerString) {
                 return provider;
             }

@@ -2,7 +2,7 @@ import { Media } from './objects/searchResult';
 import Anime from '../../../backend/controller/objects/anime';
 import Name from '../../../backend/controller/objects/name';
 import Overview from '../../../backend/controller/objects/overview';
-import { ProviderInfo } from '../../../backend/controller/objects/providerInfo';
+import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import KitsuProvider from './kitsuProvider';
 
 export default new class KitsuConverter {
@@ -27,12 +27,12 @@ export default new class KitsuConverter {
         anime.names.fillNames();
 
         anime.overviews.push(new Overview(media.synopsis, 'eng'));
-        const providerInfos = new ProviderInfo(KitsuProvider.getInstance());
+        const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
         providerInfos.id = media.id;
         providerInfos.publicScore = media.ratingRank;
         providerInfos.rawEntry = media;
         providerInfos.episodes = media.episodeCount;
-        anime.providerInfos.push(providerInfos);
+        anime.listProviderInfos.push(providerInfos);
 
         return anime;
     }
