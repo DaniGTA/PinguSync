@@ -3,9 +3,9 @@ import Anime from '../../../backend/controller/objects/anime';
 import { TVDBProviderData } from './tvdbProviderData';
 import request from 'request';
 import { TVDBLogin } from './models/login';
-import { Provider } from 'electron';
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import TVDBConverter from './tvdbConverter';
+import { Series } from './models/getSeries';
 
 export default class TVDBProvider implements InfoProvider {
     public providerName = 'tvdb'

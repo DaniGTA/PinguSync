@@ -1,4 +1,4 @@
-interface Series {
+export interface Series {
     data: Data;
     errors: Errors;
 }

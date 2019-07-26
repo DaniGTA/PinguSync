@@ -1,5 +1,6 @@
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import TVDBProvider from './tvdbProvider';
+import { Series } from './models/getSeries';
 
 export default class TVDBConverter {
     convertSeriesToProviderLocalData(series: Series): InfoProviderLocalData {
