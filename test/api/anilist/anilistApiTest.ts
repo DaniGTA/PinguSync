@@ -33,7 +33,7 @@ describe('AniListApi Tests', () => {
         var collection = rawdata.data.MediaListCollection as MediaListCollection;
         var entry = collection.lists[2].entries[3];
         var anime = await aniListConverter.convertListEntryToAnime(entry, WatchStatus.COMPLETED);
-        const providerInfo = anime.providerInfos[0];
+        const providerInfo = anime.listProviderInfos[0];
         const highestWatchedResult = providerInfo.getHighestWatchedEpisode();
         if (highestWatchedResult) {
             assert.strictEqual(highestWatchedResult.episode, 1);
