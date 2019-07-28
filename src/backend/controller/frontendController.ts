@@ -100,6 +100,10 @@ class FrontendController {
         }
     }
 
+    public async removeEntryFromList(index:number){
+        this.communcation.send('series-list-remove-entry',index);
+    }
+
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
         var list = new ListController().getMainList();

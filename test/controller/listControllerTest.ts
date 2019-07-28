@@ -126,7 +126,7 @@ describe('ListControllerTest | Combine', () => {
         entry.push(x3);
         entry.push(x2);
         entry = await listHelper.shuffle<Anime>(entry);
-        entry = await lc.InternalTesting().sortList(entry);
+        entry = await listHelper.sortList(entry);
         assert.equal(entry[0].names.engName, x2.names.engName);
         assert.equal(entry[1].names.engName, x3.names.engName);
         assert.equal(entry[2].names.engName, x4.names.engName);
@@ -135,7 +135,7 @@ describe('ListControllerTest | Combine', () => {
 
     it('should clean doubled entrys', async () => {
         var lc = new ListController();
-       
+       ListController['mainList'] = [];
 
         var lpld =new ListProviderLocalData();
         lpld.id = 2;
@@ -161,7 +161,7 @@ describe('ListControllerTest | Combine', () => {
     
     it('shouldnt clean doubled entrys (1/2)', async () => {
         var lc = new ListController();
-       
+        ListController['mainList'] = [];
 
         var lpld =new ListProviderLocalData();
         lpld.id = 2;
@@ -184,7 +184,7 @@ describe('ListControllerTest | Combine', () => {
 
     it('shouldnt clean doubled entrys (2/2)', async () => {
         var lc = new ListController();
-       
+        ListController['mainList'] = [];
 
         var lpld =new ListProviderLocalData();
         lpld.id = 2;

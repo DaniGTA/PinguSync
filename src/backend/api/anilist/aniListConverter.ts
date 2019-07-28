@@ -59,7 +59,7 @@ export default new class AniListConverter {
         var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
         try {
             if (typeof series.seasonNumber === 'undefined') {
-                if (entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL) === -1) {
+                if (entry.media.relations.edges.findIndex(x => x.relationType == MediaRelation.PREQUEL) === -1) {
                     series.seasonNumber = 1;
                 } else {
 

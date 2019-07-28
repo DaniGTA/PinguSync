@@ -4,7 +4,7 @@ import { Viewer } from "./graphql/viewer";
 import getViewerGql from "./graphql/getViewer.gql";
 import GetUserSeriesListGql from "./graphql/getUserSeriesList.gql";
 import { MediaType } from "./graphql/basics/mediaType";
-import { MediaListCollection, MediaRelation, Relation } from "./graphql/seriesList";
+import { MediaListCollection} from "./graphql/seriesList";
 import ListProvider from "../listProvider";
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import Anime, { WatchStatus } from '../../controller/objects/anime';

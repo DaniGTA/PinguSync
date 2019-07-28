@@ -107,23 +107,23 @@ export interface MediaListCollection {
 
 export enum MediaRelation {
     // An adaption of the media into a different format
-    ADAPTATION,
+    ADAPTATION  = "ADAPTATION",
     // Released before the relation
-    PREQUEL,
+    PREQUEL = "PREQUEL",
     // Released after the relation
-    SEQUEL,
+    SEQUEL = "SEQUEL",
     // The media a side story is from
-    PARENT,
+    PARENT = "PARENT",
     // A side story of the parent media
-    SIDE_STORY,
+    SIDE_STORY = "SIDE_STORY",
     // Shares at least 1 character
-    CHARACTER,
+    CHARACTER = "CHARACTER",
     // A shortened and summarized version
-    SUMMARY,
+    SUMMARY = "SUMMARY",
     // An alternative version of the same media
-    ALTERNATIVE,
+    ALTERNATIVE = "ALTERNATIVE",
     // An alternative version of the media with a different primary focus
-    SPIN_OFF,
+    SPIN_OFF = "SPIN_OFF",
     // Other
-    OTHER
+    OTHER = "OTHER"
 }

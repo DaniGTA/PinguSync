@@ -1,4 +1,7 @@
 import Overview from '../controller/objects/overview';
+import sortHelper from './sortHelper';
+import Anime from '../controller/objects/anime';
+import Names from '../controller/objects/names';
 
 class ListHelper {
     public async cleanArray<T>(actual: T[]): Promise<T[]> {
@@ -102,6 +105,25 @@ class ListHelper {
         return myArray.every(async (item) => {
             return await this.is(item, type);
         });
+    }
+
+            /**
+     * Sorts a list.
+     * 
+     * Default list is the main list.
+     * @param list 
+     */
+    public async sortList(list: Anime[]) {
+        list = await sortHelper.quickSort(list, async (a: Anime, b: Anime) => {
+            let aName: string = await Object.assign(new Names(), a.names).getRomajiName();
+            let bName = await Object.assign(new Names(), b.names).getRomajiName();
+
+            aName = aName.toLocaleLowerCase();
+            bName = bName.toLocaleLowerCase();
+
+            return aName.localeCompare(bName);
+        });
+        return list;
     }
 }
 

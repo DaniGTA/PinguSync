@@ -20,7 +20,7 @@ export default class ListController {
             ListController.mainList = this.loadData();
             ListController.listLoaded = true;
 
-            this.getSeriesList();
+            this.getSeriesListAndUpdateMainList();
 
 
         }
@@ -83,9 +83,11 @@ export default class ListController {
     }
 
     public async addSeriesToMainList(...animes: Anime[]) {
+        console.log('Add '+animes.length+' to mainList');
         for (const anime of animes) {
             await this.addSerieToMainList(anime, (animes.length < 2))
         }
+        console.log('Added '+ListController.mainList.length+' to mainList');
         if (animes.length > 2) {
             await this.cleanBadDataFromMainList();
             FrontendController.getInstance().sendSeriesList();
@@ -96,14 +98,28 @@ export default class ListController {
     private async findSameSeriesInMainList(entry2:Anime):Promise<Anime[]>{
         const foundedSameSeries = [];
         for (let entry of ListController.mainList) {
-            if(entry.id != entry2.id){
+            if(entry.id === entry2.id){
+                foundedSameSeries.push(entry);
+            }else{
                 for (const providerInfos of entry.listProviderInfos) {
+                    let undefinedSeasonCounter = 0;
+                    let pushed = false;
                     for (const providerInfos2 of entry2.listProviderInfos) {
                         if (providerInfos.id === providerInfos2.id && providerInfos.provider === providerInfos.provider) {
                             if (entry.seasonNumber === entry2.seasonNumber && entry.seasonNumber) {
                                 foundedSameSeries.push(entry);
+                                pushed=true;
+                                break;
+                            }else if(entry.seasonNumber === entry2.seasonNumber){
+                                undefinedSeasonCounter++;
                             }
                         }
+                    }
+                    if(pushed){
+                        continue;
+                    }
+                    if(undefinedSeasonCounter === entry.listProviderInfos.length || undefinedSeasonCounter === entry2.listProviderInfos.length){
+                        foundedSameSeries.push(entry);
                     }
                 }
             }
@@ -111,10 +127,13 @@ export default class ListController {
         return foundedSameSeries;
     }
 
-    public async removeSeriesFromMainList(anime:Anime): Promise<boolean>{
+    public async removeSeriesFromMainList(anime:Anime, notifyRenderer = false): Promise<boolean>{
         const index = await this.getIndexFromAnime(anime);
         if(index != -1){
             ListController.mainList = await listHelper.removeEntrys(ListController.mainList,ListController.mainList[index]);
+            if(notifyRenderer){
+                FrontendController.getInstance().removeEntryFromList(index);
+            }
             return true;
         }
         return false;
@@ -127,7 +146,7 @@ export default class ListController {
                 for (const entry of results) {
                     try{
                     anime = await anime.merge(entry);
-                    await this.removeSeriesFromMainList(entry);
+                    await this.removeSeriesFromMainList(entry,notfiyRenderer);
                     }catch(err){
                         console.log(err);
                     }
@@ -181,9 +200,6 @@ export default class ListController {
     public async cleanBadDataFromMainList(list:Anime[] = ListController.mainList):Promise<boolean> {
         try{
             var tempList = await this.combineDoubleEntrys(list);
-            tempList = await this.sortList(tempList);
-            console.log('Clean list');
-            ListController.mainList = [];
             for (const entry of tempList) {
                 await this.addSerieToMainList(entry, false);
             }
@@ -195,33 +211,11 @@ export default class ListController {
         }
     }
 
-    /**
-     * Sorts a list.
-     * 
-     * Default list is the main list.
-     * @param list 
-     */
-    private async sortList(list: Anime[] = ListController.mainList) {
-        list = await sortHelper.quickSort(list, async (a: Anime, b: Anime) => {
-            let aName: string = await Object.assign(new Names(), a.names).getRomajiName();
-            let bName = await Object.assign(new Names(), b.names).getRomajiName();
-
-            aName = aName.toLocaleLowerCase();
-            bName = bName.toLocaleLowerCase();
-
-            return aName.localeCompare(bName);
-        });
-        return list;
-    }
-
-    public async getSeriesList(): Promise<Anime[]> {
+    public async getSeriesListAndUpdateMainList(): Promise<void> {
         console.log('[calc] -> SeriesList');
         let allSeries: Anime[] = await this.getAllEntrysFromProviders(true);
 
         await this.addSeriesToMainList(...allSeries);
-
-        
-        return ListController.mainList;
     }
 
 
@@ -251,8 +245,7 @@ export default class ListController {
         return {
             combineDoubleEntrys: this.combineDoubleEntrys,
             sameProvider: this.sameProvider,
-            matchCalc: this.matchCalc,
-            sortList: this.sortList
+            matchCalc: this.matchCalc
         }
     }
 
