@@ -1,8 +1,8 @@
-import * as fs from "fs";
+
 import * as http from "http";
 import AniDBNameManager from './anidbNameManager';
 import InfoProvider from '../infoProvider';
-import zlib from 'zlib';
+import * as zlib from 'zlib';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
 export default class AniDBNameList implements InfoProvider {
     providerName: string = 'anidb';

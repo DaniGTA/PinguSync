@@ -1,11 +1,12 @@
 
 // if you used the '@types/mocha' method to install mocha type definitions, uncomment the following line
-import ListController from '../src/backend/controller/listController';
-import Anime from '../src/backend/controller/objects/anime';
+import ListController from '../../src/backend/controller/listController';
+import Anime from '../../src/backend/controller/objects/anime';
 import * as assert from 'assert';
-import stringHelper from '../src/backend/helpFunctions/stringHelper';
-import listHelper from '../src/backend/helpFunctions/listHelper';
-describe('CombineEntrys', () => {
+import stringHelper from '../../src/backend/helpFunctions/stringHelper';
+import listHelper from '../../src/backend/helpFunctions/listHelper';
+import { ListProviderLocalData } from '../../src/backend/controller/objects/listProviderLocalData';
+describe('ListControllerTest | Combine', () => {
     it('should combine basic entrys correct', async () => {
         var lc = new ListController();
         var entry: Anime[] = [];
@@ -33,6 +34,7 @@ describe('CombineEntrys', () => {
         assert.equal(a.length, 20);
         return;
     });
+
     it('should combine basic entrys with season in title (1/4)', async () => {
         var lc = new ListController();
         var entry: Anime[] = [];
@@ -130,7 +132,80 @@ describe('CombineEntrys', () => {
         assert.equal(entry[2].names.engName, x4.names.engName);
         return;
     });
-});
+
+    it('should clean doubled entrys', async () => {
+        var lc = new ListController();
+       
+
+        var lpld =new ListProviderLocalData();
+        lpld.id = 2;
+        lpld.episodes = 12;
+
+        var x1 = getFilledAnime();
+        x1.seasonNumber = 1;
+        x1.listProviderInfos.push(lpld);
+        var x2 = getFilledAnime();
+        x2.seasonNumber = 1;
+        x2.listProviderInfos.push(lpld);
+        var x3 = getFilledAnime();
+        x3.seasonNumber = 1;
+        x3.listProviderInfos.push(lpld);
+
+        ListController['mainList'] = [x1,x2,x3];
+
+        await lc.cleanBadDataFromMainList();
+
+        assert.equal(ListController['mainList'].length,1);
+    })
+
+    
+    it('shouldnt clean doubled entrys (1/2)', async () => {
+        var lc = new ListController();
+       
+
+        var lpld =new ListProviderLocalData();
+        lpld.id = 2;
+        lpld.episodes = 12;
+
+        var x1 = getFilledAnime();
+        x1.seasonNumber = 1;
+        x1.listProviderInfos.push(lpld);
+
+        var x2 = getFilledAnime();
+        x2.seasonNumber = 2;
+        x2.listProviderInfos.push(lpld);
+
+        ListController['mainList'] = [x1,x2];
+
+        await lc.cleanBadDataFromMainList();
+
+        assert.equal(ListController['mainList'].length,2);
+    })
+
+    it('shouldnt clean doubled entrys (2/2)', async () => {
+        var lc = new ListController();
+       
+
+        var lpld =new ListProviderLocalData();
+        lpld.id = 2;
+        lpld.episodes = 12;
+
+        var x1 = getFilledAnime();
+        x1.seasonNumber = undefined;
+        x1.listProviderInfos.push(lpld);
+
+        var x2 = getFilledAnime();
+        x2.seasonNumber = undefined;
+        x2.listProviderInfos.push(lpld);
+
+        ListController['mainList'] = [x1,x2];
+
+        await lc.cleanBadDataFromMainList();
+
+        assert.equal(ListController['mainList'].length,2);
+    })
+})
+
 function getFilledAnime(): Anime {
     var anime = new Anime();
     anime.episodes = 10;

@@ -11,7 +11,7 @@ import Name from '../../../backend/controller/objects/name';
 import traktConverter from './traktConverter';
 import titleCheckHelper from '../../../backend/helpFunctions/titleCheckHelper';
 import { FullShowInfo } from './objects/fullShowInfo';
-import { WatchProgress } from '../../../backend/controller/objects/watchProgress';
+import WatchProgress from '../../../backend/controller/objects/watchProgress';
 export default class TraktProvider implements ListProvider {
 
     public static getInstance() {
@@ -158,9 +158,6 @@ export default class TraktProvider implements ListProvider {
         };
         return new Promise<boolean>((resolve, reject) => {
             request(options, (error: any, response: any, body: any) => {
-                console.log('error:', error); // Print the error if one occurred
-                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                console.log('body:', body); // Print the HTML for the Google homepage.
                 if (body.access_token) {
                     that.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
                     that.getUserInfo();
@@ -189,8 +186,6 @@ export default class TraktProvider implements ListProvider {
                 try {
                     console.log('Status:', response.statusCode);
                     if (response.statusCode === 200 || response.statusCode === 201) {
-                        console.log('Headers:', JSON.stringify(response.headers));
-                        console.log('Response:', body);
                         var data: T = JSON.parse(body) as T;
                         resolve(data);
                     } else {

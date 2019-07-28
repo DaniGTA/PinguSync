@@ -39,8 +39,8 @@ import App from "../App.vue";
 @Component
 export default class Providers extends Vue {
   @Prop() providerList: string[] = [];
-  @Prop() currentSelectedProvider: string = "";
-  @Prop() code: string = "";
+  currentSelectedProvider: string = "";
+  code: string = "";
   $refs!: {
     authModal: HTMLElement;
   };
@@ -83,15 +83,19 @@ export default class Providers extends Vue {
     App.workerController.on(
       providerName.toLocaleLowerCase() + "-auth-status",
       status => {
-        const button = (this.$refs as any)[providerName + "-button"][0] as HTMLElement;
-        const img = (this.$refs as any)[providerName + "-img"][0] as HTMLElement;
+        const button = (this.$refs as any)[
+          providerName + "-button"
+        ][0] as HTMLElement;
+        const img = (this.$refs as any)[
+          providerName + "-img"
+        ][0] as HTMLElement;
         console.log(button);
         if (status) {
-          button.setAttribute("disable","true")
+          button.setAttribute("disable", "true");
           img.classList.remove("logged-out");
           img.classList.add("logged-in");
         } else {
-          button.removeAttribute("disable")
+          button.removeAttribute("disable");
           img.classList.add("logged-out");
           img.classList.remove("logged-in");
         }

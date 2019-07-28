@@ -1,10 +1,12 @@
-import { ProviderInfo } from "../../../src/backend/controller/objects/providerInfo";
+
 import * as assert from 'assert';
-import { WatchProgress } from "../../../src/backend/controller/objects/watchProgress";
+import  WatchProgress from "../../../src/backend/controller/objects/watchProgress";
 import { WatchStatus } from "../../../src/backend/controller/objects/anime";
+import { ListProviderLocalData } from '../../../src/backend/controller/objects/listProviderLocalData';
+
 describe('providerTest', () => {
     it('should add to watchlist', async () => {
-        const providerInfo = new ProviderInfo();
+        const providerInfo = new ListProviderLocalData();
         providerInfo.addOneEpisode(1);
         providerInfo.addOneEpisode(2);
         providerInfo.addOneEpisode(3);
@@ -17,7 +19,7 @@ describe('providerTest', () => {
     });
 
     it('should remove from watchlist', async () => {
-        const providerInfo = new ProviderInfo();
+        const providerInfo = new ListProviderLocalData();
         providerInfo.addOneEpisode(1);
         providerInfo.addOneEpisode(2);
         providerInfo.addOneEpisode(3);
@@ -32,7 +34,7 @@ describe('providerTest', () => {
     });
 
     it('should return the last watched episode', async () => {
-        const providerInfo = new ProviderInfo();
+        const providerInfo = new ListProviderLocalData();
         providerInfo.addOneEpisode(1);
         providerInfo.addOneEpisode(2);
         providerInfo.addOneEpisode(4);
@@ -46,7 +48,7 @@ describe('providerTest', () => {
     });
 
     it('should merge same provider', async () => {
-        const providerInfoA = new ProviderInfo();
+        const providerInfoA = new ListProviderLocalData();
         providerInfoA.id = 2;
         providerInfoA.addOneEpisode(1);
         providerInfoA.episodes = 10;
@@ -54,7 +56,7 @@ describe('providerTest', () => {
         providerInfoA.watchStatus = WatchStatus.CURRENT;
         providerInfoA.sequelId = 10;
         providerInfoA.lastUpdate = new Date(10000);
-        const providerInfoB = new ProviderInfo();
+        const providerInfoB = new ListProviderLocalData();
         providerInfoB.id = 2;
         providerInfoB.addOneEpisode(1);
         providerInfoB.addOneEpisode(2);
@@ -66,7 +68,7 @@ describe('providerTest', () => {
         providerInfoB.publicScore = 15;
         providerInfoB.prequelId = 105;
 
-        const providerMerged = await ProviderInfo.mergeProviderInfos(providerInfoA, providerInfoB);
+        const providerMerged = await ListProviderLocalData.mergeProviderInfos(providerInfoA, providerInfoB);
         const result = providerMerged.getHighestWatchedEpisode();
         if (typeof result != 'undefined') {
             assert.equal(result.episode, 2);

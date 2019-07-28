@@ -18,7 +18,7 @@ import { GetSeriesByID } from './graphql/getSeriesByID';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './aniListUserData';
-import { WatchProgress } from '../../../backend/controller/objects/watchProgress';
+import WatchProgress from '../../../backend/controller/objects/watchProgress';
 
 export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";

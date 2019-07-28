@@ -9,7 +9,7 @@ import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import sortHelper from '../helpFunctions/sortHelper';
 import ProviderList from './providerList';
-import { WatchProgress } from './objects/watchProgress';
+import WatchProgress  from './objects/watchProgress';
 import { InfoProviderLocalData } from './objects/infoProviderLocalData';
 export default class ListController {
     private static mainList: Anime[] = [];
@@ -21,6 +21,8 @@ export default class ListController {
             ListController.listLoaded = true;
 
             this.getSeriesList();
+
+
         }
     }
 
@@ -77,12 +79,12 @@ export default class ListController {
                 console.log(err);
             }
         }
-        this.addSeriesToMainList(anime);
+        await this.addSeriesToMainList(anime);
     }
 
     public async addSeriesToMainList(...animes: Anime[]) {
         for (const anime of animes) {
-            this.addSerieToMainList(anime, (animes.length < 2))
+            await this.addSerieToMainList(anime, (animes.length < 2))
         }
         if (animes.length > 2) {
             await this.cleanBadDataFromMainList();
@@ -91,25 +93,47 @@ export default class ListController {
         this.saveData(ListController.mainList);
     }
 
-    public async addSerieToMainList(anime: Anime, notfiyRenderer = false): Promise<boolean> {
-        try {
-            for (let entry of ListController.mainList) {
+    private async findSameSeriesInMainList(entry2:Anime):Promise<Anime[]>{
+        const foundedSameSeries = [];
+        for (let entry of ListController.mainList) {
+            if(entry.id != entry2.id){
                 for (const providerInfos of entry.listProviderInfos) {
-                    for (const providerInfos2 of anime.listProviderInfos) {
+                    for (const providerInfos2 of entry2.listProviderInfos) {
                         if (providerInfos.id === providerInfos2.id && providerInfos.provider === providerInfos.provider) {
-                            if (entry.seasonNumber === anime.seasonNumber) {
-                                const index = await this.getIndexFromAnime(entry);
-                                entry = Object.assign(new Anime(), entry);
-                                entry.readdFunctions();
-                                entry = await entry.merge(anime);
-                                this.updateEntryInMainList(index, entry, notfiyRenderer);
-                                return true;
+                            if (entry.seasonNumber === entry2.seasonNumber && entry.seasonNumber) {
+                                foundedSameSeries.push(entry);
                             }
                         }
                     }
                 }
             }
+        }
+        return foundedSameSeries;
+    }
 
+    public async removeSeriesFromMainList(anime:Anime): Promise<boolean>{
+        const index = await this.getIndexFromAnime(anime);
+        if(index != -1){
+            ListController.mainList = await listHelper.removeEntrys(ListController.mainList,ListController.mainList[index]);
+            return true;
+        }
+        return false;
+    }
+
+    public async addSerieToMainList(anime: Anime, notfiyRenderer = false): Promise<boolean> {
+        try {
+            const results = await this.findSameSeriesInMainList(anime);
+            if(results.length != 0){
+                for (const entry of results) {
+                    try{
+                    anime = await anime.merge(entry);
+                    await this.removeSeriesFromMainList(entry);
+                    }catch(err){
+                        console.log(err);
+                    }
+                }   
+            }
+               
             ListController.mainList.push(anime);
 
             if (notfiyRenderer) {
@@ -154,14 +178,21 @@ export default class ListController {
         return ListController.mainList.findIndex(x => anime.id === x.id);
     }
 
-    public async cleanBadDataFromMainList() {
-        var tempList = await this.combineDoubleEntrys(ListController.mainList);
-        tempList = await this.sortList(tempList);
-        ListController.mainList = [];
-        for (const entry of tempList) {
-            this.addSerieToMainList(entry, false);
+    public async cleanBadDataFromMainList(list:Anime[] = ListController.mainList):Promise<boolean> {
+        try{
+            var tempList = await this.combineDoubleEntrys(list);
+            tempList = await this.sortList(tempList);
+            console.log('Clean list');
+            ListController.mainList = [];
+            for (const entry of tempList) {
+                await this.addSerieToMainList(entry, false);
+            }
+            console.log('[MainListSize] -> '+ListController.mainList.length)
+            return true;
+        }catch(err){
+            console.log(err);
+            return false;
         }
-        await FrontendController.getInstance().sendSeriesList();
     }
 
     /**
@@ -189,8 +220,7 @@ export default class ListController {
 
         await this.addSeriesToMainList(...allSeries);
 
-        await this.fillMissingProviders(this.getMainList());
-
+        
         return ListController.mainList;
     }
 
@@ -199,10 +229,12 @@ export default class ListController {
         const anime: Anime[] = [];
         for (const provider of ProviderList.listProviderList) {
             try {
-                if (provider.isUserLoggedIn()) {
+                if (await provider.isUserLoggedIn()) {
                     console.log('[Request] -> ' + provider.providerName + ' -> AllSeries');
                     const allSeries = await provider.getAllSeries(forceDownload);
-                    anime.push(...allSeries);
+                    for (const iterator of allSeries) {
+                        anime.push(Object.assign(new Anime(),iterator));
+                    }
                     console.log('[Request] -> result: ' + allSeries.length + ' items');
 
                 }
@@ -325,6 +357,11 @@ export default class ListController {
         return result;
     }
 
+    /**
+     * This is a heavy comparer for series this checks if the season is the same the name release and episodes.
+     * With this information it can merge them together and prevent double entrys in the list.
+     * @param entrys 
+     */
     private async combineDoubleEntrys(entrys: Anime[]): Promise<Anime[]> {
         var that = this;
         console.log('[calc] -> CombineEntrys');

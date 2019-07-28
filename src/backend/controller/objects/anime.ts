@@ -2,7 +2,7 @@ import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import Names from './names';
 import Overview from './overview';
 import listHelper from '../../../backend/helpFunctions/listHelper';
-import { WatchProgress } from './watchProgress';
+import  WatchProgress  from './watchProgress';
 import { ListProviderLocalData } from './listProviderLocalData';
 import { InfoProviderLocalData } from './infoProviderLocalData';
 import ProviderLocalData from '../interfaces/ProviderLocalData';

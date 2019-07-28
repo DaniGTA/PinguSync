@@ -1,7 +1,7 @@
 import ListProvider from '../../api/ListProvider';
 import { WatchStatus } from './anime';
 import ProviderList from '../providerList';
-import { WatchProgress } from './watchProgress';
+import WatchProgress  from './watchProgress';
 import listHelper from '../../helpFunctions/listHelper';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 

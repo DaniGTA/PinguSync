@@ -1,10 +1,8 @@
 <template>
-  <div
-    v-if="series && (series.seasonNumber === 1 || !series.seasonNumber)"
-    class="main-list-entry-content"
-  >
+  <div v-if="series" class="main-list-entry-content">
     <img :src="series.coverImage" />
     <div class="main-list-entry-content-title">{{getName()}}</div>
+    <div v-if="series.seasonNumber">S{{series.seasonNumber}}</div>
 
     <div v-if="series.canSync">
       <button class="main-list-entry-content-sync-btn" @click="syncAnime()">Sync</button>
@@ -58,8 +56,8 @@ import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
-import { WatchProgress } from "../backend/controller/objects/watchProgress";
-import { ListProviderLocalData } from '../backend/controller/objects/listProviderLocalData';
+import WatchProgress from "../backend/controller/objects/watchProgress";
+import { ListProviderLocalData } from "../backend/controller/objects/listProviderLocalData";
 
 @Component
 export default class ListEntry extends Vue {

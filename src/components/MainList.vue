@@ -47,8 +47,10 @@ export default class MainList extends Vue {
       for (const iterator of data) {
         if (that.mainList.findIndex(x => x.id === iterator.id) !== -1) {
           const refs = (this.$refs as any)[iterator.id];
-          const entry = refs[0] as HTMLElement;
-          entry.style.background = "red";
+          if (refs) {
+            const entry = refs[0] as HTMLElement;
+            entry.style.background = "red";
+          }
         } else {
           that.mainList.push(Object.assign(new Anime(), iterator));
           x++;
