@@ -2,7 +2,7 @@ import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import Names from './names';
 import Overview from './overview';
 import listHelper from '../../../backend/helpFunctions/listHelper';
-import  WatchProgress  from './watchProgress';
+import WatchProgress from './watchProgress';
 import { ListProviderLocalData } from './listProviderLocalData';
 import { InfoProviderLocalData } from './infoProviderLocalData';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
@@ -24,14 +24,22 @@ export default class Anime {
         // Generates randome string.
         this.id = stringHelper.randomString(20);
     }
-
-    public addOverview(newOverview: Overview) {
+    /**
+     * Adds an Overview too the Anime and prevents adding if overview is already present.
+     * @param newOverview 
+     */
+    public addOverview(newOverview: Overview): boolean {
         this.overviews = [...this.overviews];
         if (this.overviews.findIndex(x => x == newOverview) == -1) {
             this.overviews.push(newOverview);
+            return true;
         }
+        return false;
     }
 
+    /**
+     * It get the max number of that anime.
+     */
     public getMaxEpisode(): number {
         const array = (this.listProviderInfos.flatMap(x => x.episodes) as number[]);
         if (typeof this.episodes != 'undefined') {
@@ -44,6 +52,9 @@ export default class Anime {
         return Math.max(...onlyNumbers);
     }
 
+    /**
+     * Give an array of all episodes in numbers.
+     */
     public async getAllEpisodes(): Promise<number[]> {
         let result;
         try {
@@ -76,7 +87,7 @@ export default class Anime {
 
     /**
      * Checks if providers can be synced.
-     * The Provider need to have epidoes.
+     * The Provider need to have episode.
      * The Provider need to have a user loggedIn.
      * The Provider need to be out of sync.
      */
@@ -161,6 +172,10 @@ export default class Anime {
         return latestUpdatedProvider;
     }
 
+    /**
+     * With this function we can restore to childs there functions.
+     * When the anime got loaded from a json or web there are no functions avaible with this we can restore it.
+     */
     public readdFunctions() {
         var overviewsCache: Overview[] = [];
         for (const overview of this.overviews) {
@@ -170,11 +185,20 @@ export default class Anime {
         for (const provider of this.listProviderInfos) {
             providersCache.push(Object.assign(new ListProviderLocalData(), provider));
         }
+        var infoPovidersCache: InfoProviderLocalData[] = [];
+        for (const provider of this.infoProviderInfos) {
+            infoPovidersCache.push(Object.assign(new InfoProviderLocalData(), provider));
+        }
         this.listProviderInfos = providersCache;
         this.overviews = overviewsCache;
         this.names = Object.assign(new Names(), this.names);
     }
 
+    /**
+     * Merge two animes to one object.
+     * Will be often used too update watchprogress.
+     * @param anime 
+     */
     public async merge(anime: Anime): Promise<Anime> {
         const newAnime: Anime = new Anime();
 
@@ -279,6 +303,34 @@ export default class Anime {
         } else {
             throw 'no watch progress';
         }
+    }
+
+    /**
+     * Get all relations from a series based on prequel id or sequel id or same provider id.
+     * @param list 
+     */
+    public async getAllRelations(list: Anime[]): Promise<Anime[]> {
+        const relations = [this as Anime];
+        for (const entry2 of relations) {
+            for (const entry of list) {
+                if (this.id != entry.id && !await listHelper.isAnimeInList(relations, entry)) {
+                    for (const entryProvider of entry.listProviderInfos) {
+                        for (const provider of entry2.listProviderInfos) {
+                            if (entryProvider.provider === provider.provider) {
+                                if (entryProvider.id === provider.id) {
+                                    relations.push(entry);
+                                } else if (provider.prequelId === entryProvider.id || entryProvider.prequelId === provider.id) {
+                                    relations.push(entry);
+                                } else if (provider.sequelId === entryProvider.id || entryProvider.sequelId === provider.id) {
+                                    relations.push(entry);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return await listHelper.removeEntrys(relations, this);
     }
 }
 

@@ -107,12 +107,12 @@ class ListHelper {
         });
     }
 
-            /**
-     * Sorts a list.
-     * 
-     * Default list is the main list.
-     * @param list 
-     */
+    /**
+* Sorts a list.
+* 
+* Default list is the main list.
+* @param list 
+*/
     public async sortList(list: Anime[]) {
         list = await sortHelper.quickSort(list, async (a: Anime, b: Anime) => {
             let aName: string = await Object.assign(new Names(), a.names).getRomajiName();
@@ -124,6 +124,10 @@ class ListHelper {
             return aName.localeCompare(bName);
         });
         return list;
+    }
+
+    public async isAnimeInList(list: Anime[], item: Anime): Promise<boolean> {
+        return list.findIndex(entry => item.id === entry.id) != -1;
     }
 }
 
