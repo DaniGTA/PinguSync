@@ -10,7 +10,7 @@
     </nav>
     <div class="main-list">
       <ListEntry
-        v-for="item of mainList"
+        v-for="item of sortedList"
         v-bind:key="item.id"
         v-bind:ref="item.id"
         :serie.sync="item"
@@ -27,6 +27,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 import ListEntry from "./ListEntry.vue";
+import listHelper from "../backend/helpFunctions/listHelper";
 @Component({
   components: {
     ListEntry
@@ -34,6 +35,7 @@ import ListEntry from "./ListEntry.vue";
 })
 export default class MainList extends Vue {
   static instance: MainList;
+  @Prop() sortedList: Anime[] = [];
   @Prop() mainList: Anime[] = [];
 
   constructor() {
@@ -41,19 +43,23 @@ export default class MainList extends Vue {
     const that = this;
     MainList.instance = this;
 
-    App.workerController.on("series-list", (data: Anime[]) => {
+    App.workerController.on("series-list", async (data: Anime[]) => {
       let x: number = 0;
       that.mainList = [];
       for (const iterator of data) {
         if (that.mainList.findIndex(x => x.id === iterator.id) !== -1) {
           const refs = (this.$refs as any)[iterator.id];
-          const entry = refs[0] as HTMLElement;
-          entry.style.background = "red";
+          if (refs) {
+            const entry = refs[0] as HTMLElement;
+            entry.style.background = "red";
+          }
         } else {
           that.mainList.push(Object.assign(new Anime(), iterator));
           x++;
         }
       }
+
+      this.refreshList();
       console.log("Data size: " + data.length);
       console.log("Showed size: " + x);
     });
@@ -65,11 +71,24 @@ export default class MainList extends Vue {
         data.targetIndex,
         Object.assign(new Anime(), data.updatedEntry)
       );
+      this.refreshList();
+    });
+
+    App.workerController.on("series-list-remove-entry", (data: number) => {
+      console.log("Remove entry: " + data);
+      that.$delete(that.mainList, data);
+      this.refreshList();
     });
   }
 
   clog(a: any) {
     console.log(a);
+  }
+
+  async refreshList() {
+    const sorted = await listHelper.sortList(this.mainList);
+    this.sortedList.length = 0;
+    this.sortedList.push(...sorted);
   }
 }
 </script>

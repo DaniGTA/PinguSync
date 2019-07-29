@@ -1,10 +1,10 @@
 {
     "mocha.options": {
-        "compilers": "ts:ts-node/register"
+        "compilers": "ts-node/register"
     },
-    "mocha.requires": [
-        "ts-node/register"
-    ],
+    "mocha.requires": ["ts-node/register"],
     "mocha.files.glob": "test/**/*.ts",
+    "mocha.env": true,
+    "mocha.logVerbose": true,
     "typescript.tsdk": "node_modules\\typescript\\lib",
 }

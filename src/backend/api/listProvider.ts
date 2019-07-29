@@ -2,7 +2,7 @@
 import { UserData } from "./userData";
 import Anime from '../controller/objects/anime';
 import { ListProviderLocalData } from '../controller/objects/listProviderLocalData';
-import { WatchProgress } from '../controller/objects/watchProgress';
+import WatchProgress from '../controller/objects/watchProgress';
 
 export default interface ListProvider {
     providerName: string;

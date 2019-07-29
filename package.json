@@ -10,10 +10,11 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "test": "mocha"
+    "test": "mocha --require ts-node/register test/**/*.ts"
   },
   "main": "background.js",
   "dependencies": {
+    "@babel/preset-typescript": "^7.3.3",
     "@parcel/workers": "^1.11.0",
     "@types/mocha": "^5.2.7",
     "@types/request": "^2.48.1",

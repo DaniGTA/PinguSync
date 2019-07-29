@@ -1,3 +1,9 @@
+import Anime from '../controller/objects/anime';
+
+import ListController from '../controller/listController';
+
+import Names from '../controller/objects/names';
+
 export default new class SortHelper {
 
 
@@ -37,4 +43,6 @@ export default new class SortHelper {
         array[i] = array[j];
         array[j] = newJ;
     }
+
+
 }

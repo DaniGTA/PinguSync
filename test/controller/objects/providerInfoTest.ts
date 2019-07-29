@@ -1,6 +1,6 @@
 
 import * as assert from 'assert';
-import { WatchProgress } from "../../../src/backend/controller/objects/watchProgress";
+import WatchProgress from "../../../src/backend/controller/objects/watchProgress";
 import { WatchStatus } from "../../../src/backend/controller/objects/anime";
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/listProviderLocalData';
 describe('providerTest', () => {

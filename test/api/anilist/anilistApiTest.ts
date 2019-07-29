@@ -1,10 +1,10 @@
-import * as assert from 'assert';
-import AniListProvider from '../../../src/backend/api/anilist/aniListProvider';
+import AnimeListProvider from '../../../src/backend/api/anilist/aniListProvider';
 import request from 'request';
 import { MediaListCollection } from '../../../src/backend/api/anilist/graphql/seriesList';
 import aniListConverter from '../../../src/backend/api/anilist/aniListConverter';
 import { WatchStatus } from '../../../src/backend/controller/objects/anime';
 import { readFileSync, readFile } from 'fs';
+import assert from 'assert';
 
 
 describe('AniListApi Tests', () => {
@@ -22,9 +22,12 @@ describe('AniListApi Tests', () => {
             })
         };
 
-        const a = new AniListProvider();
-        assert.equal(options, a["getGraphQLOptions"]("query", "variables"));
-
+        const a = new AnimeListProvider();
+        const result = a["getGraphQLOptions"]("query", "variables");
+        assert.equal(options.body, result.body);
+        assert.equal(options.headers+'', result.headers+'');
+        assert.equal(options.method, result.method);
+        assert.equal(options.uri, result.uri);
         return;
     })
 
@@ -44,9 +47,5 @@ describe('AniListApi Tests', () => {
         assert.strictEqual(providerInfo.watchStatus, WatchStatus.COMPLETED);
         assert.strictEqual(providerInfo.score, 60);
         return;
-
     })
-
-
-
 });

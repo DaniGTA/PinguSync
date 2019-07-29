@@ -1,4 +1,4 @@
-export class WatchProgress {
+export default class WatchProgress {
     episode: number = -1;
     played?: Date;
     playCount: number = 1;

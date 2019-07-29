@@ -11,7 +11,7 @@ import { SearchResult } from './objects/searchResult';
 import kitsuConverter from './kitsuConverter';
 import { GetMediaResult } from './objects/getResult';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
-import { WatchProgress } from '../../../backend/controller/objects/watchProgress';
+import  WatchProgress  from '../../../backend/controller/objects/watchProgress';
 export default class KitsuProvider implements ListProvider {
     removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
