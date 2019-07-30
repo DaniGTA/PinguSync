@@ -7,7 +7,7 @@ import { MediaType } from "./graphql/basics/mediaType";
 import { MediaListCollection} from "./graphql/seriesList";
 import ListProvider from "../listProvider";
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
-import Anime, { WatchStatus } from '../../controller/objects/anime';
+import Series, { WatchStatus } from '../../controller/objects/series';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import getSeriesByIDGql from './graphql/getSeriesByID.gql';
 import Names from '../../../backend/controller/objects/names';
@@ -42,7 +42,7 @@ export default class AniListProvider implements ListProvider {
         return AniListProvider.instance;
     }
 
-    public async getMoreSeriesInfo(anime: Anime): Promise<Anime> {
+    public async getMoreSeriesInfo(anime: Series): Promise<Series> {
 
         var ProviderInfos = anime.listProviderInfos.find(x => x.provider === this.providerName);
         var id = null;
@@ -129,13 +129,13 @@ export default class AniListProvider implements ListProvider {
         })
     }
 
-    async getAllSeries(disableCache: boolean = false): Promise<Anime[]> {
+    async getAllSeries(disableCache: boolean = false): Promise<Series[]> {
         console.log('[Request] -> AniList -> AllSeries');
         if (this.userData.list != null && this.userData.list.length != 0 && !disableCache) {
             console.log('[LoadCache] -> AniList -> AllSeries');
             return this.userData.list;
         } else {
-            var seriesList: Anime[] = [];
+            var seriesList: Series[] = [];
             var data = await this.getUserSeriesList();
             for (const list of data.lists) {
                 let watchStatus = await this.convertListNameToWatchStatus(list.name);
@@ -165,7 +165,7 @@ export default class AniListProvider implements ListProvider {
         return watchStatus;
     }
 
-    async updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+    async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         var aniListProvider = anime.listProviderInfos.find(x => x.provider == this.providerName);
         if (typeof aniListProvider != 'undefined') {
             var watchStatus = "";
@@ -190,7 +190,7 @@ export default class AniListProvider implements ListProvider {
         }
     }
 
-    public async removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+    public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         var providerInfo = anime.listProviderInfos.find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.removeOneWatchProgress(watchProgress);

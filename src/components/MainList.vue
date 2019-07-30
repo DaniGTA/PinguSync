@@ -21,13 +21,14 @@
 
 <script lang="ts">
 import { ipcRenderer, ipcMain } from "electron";
-import Anime from "../backend/controller/objects/anime";
+
 import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 import ListEntry from "./ListEntry.vue";
 import listHelper from "../backend/helpFunctions/listHelper";
+import Series from '../backend/controller/objects/series';
 @Component({
   components: {
     ListEntry
@@ -35,15 +36,15 @@ import listHelper from "../backend/helpFunctions/listHelper";
 })
 export default class MainList extends Vue {
   static instance: MainList;
-  @Prop() sortedList: Anime[] = [];
-  @Prop() mainList: Anime[] = [];
+  @Prop() sortedList: Series[] = [];
+  @Prop() mainList: Series[] = [];
 
   constructor() {
     super();
     const that = this;
     MainList.instance = this;
 
-    App.workerController.on("series-list", async (data: Anime[]) => {
+    App.workerController.on("series-list", async (data: Series[]) => {
       let x: number = 0;
       that.mainList = [];
       for (const iterator of data) {
@@ -54,7 +55,7 @@ export default class MainList extends Vue {
             entry.style.background = "red";
           }
         } else {
-          that.mainList.push(Object.assign(new Anime(), iterator));
+          that.mainList.push(Object.assign(new Series(), iterator));
           x++;
         }
       }
@@ -69,7 +70,7 @@ export default class MainList extends Vue {
       that.$set(
         that.mainList,
         data.targetIndex,
-        Object.assign(new Anime(), data.updatedEntry)
+        Object.assign(new Series(), data.updatedEntry)
       );
       this.refreshList();
     });

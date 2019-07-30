@@ -51,21 +51,21 @@
 
 <script lang="ts">
 import { ipcRenderer, ipcMain } from "electron";
-import Anime from "../backend/controller/objects/anime";
 import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 import WatchProgress from "../backend/controller/objects/watchProgress";
 import { ListProviderLocalData } from "../backend/controller/objects/listProviderLocalData";
+import Series from "../backend/controller/objects/series";
 
 @Component
 export default class ListEntry extends Vue {
-  @PropSync("serie", { type: Anime }) series!: Anime;
+  @PropSync("serie", { type: Series }) series!: Series;
   watchProgress: WatchProgress = new WatchProgress(0);
   canSync: boolean = false;
   @Watch("serie", { immediate: true, deep: true })
-  async onChildChanged(val: Anime, oldVal: Anime) {
+  async onChildChanged(val: Series, oldVal: Series) {
     console.log("ANIME CHANGE");
     try {
       this.watchProgress = await val.getLastWatchProgress();
@@ -87,7 +87,7 @@ export default class ListEntry extends Vue {
   }
   async getWatchProgress(): Promise<number> {
     if (this.series) {
-      const animeObject = Object.assign(new Anime(), this.series);
+      const animeObject = Object.assign(new Series(), this.series);
       animeObject.readdFunctions();
       try {
         var number = await animeObject.getLastWatchProgress();
@@ -137,7 +137,7 @@ export default class ListEntry extends Vue {
   getEpisode(): number | undefined {
     if (this.series) {
       try {
-        return Object.assign(new Anime(), this.series).getMaxEpisode();
+        return Object.assign(new Series(), this.series).getMaxEpisode();
       } catch (e) {
         return this.series.episodes;
       }

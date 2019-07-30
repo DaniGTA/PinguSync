@@ -1,6 +1,6 @@
-import Anime from './anime';
+import Series from './series';
 
 export default interface IUpdateList {
     targetIndex: number;
-    updatedEntry: Anime;
+    updatedEntry: Series;
 }

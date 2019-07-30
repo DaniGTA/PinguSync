@@ -1,4 +1,4 @@
-import Anime, { WatchStatus } from '../../../backend/controller/objects/anime';
+import Series, { WatchStatus } from '../../controller/objects/series';
 import { Medium } from './graphql/searchSeries';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import Overview from '../../../backend/controller/objects/overview';
@@ -9,45 +9,45 @@ import AniListProvider from './aniListProvider';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 
 export default new class AniListConverter {
-    public async convertMediaToAnime(medium: Medium): Promise<Anime> {
-        const anime = new Anime();
-        anime.episodes = medium.episodes;
-        anime.names.engName = medium.title.english;
-        anime.names.mainName = medium.title.native;
-        anime.names.romajiName = medium.title.romaji;
-        anime.names.fillNames();
-        anime.releaseYear = medium.startDate.year;
-        anime.coverImage = medium.coverImage.large;
+    public async convertMediaToAnime(medium: Medium): Promise<Series> {
+        const series = new Series();
+        series.episodes = medium.episodes;
+        series.names.engName = medium.title.english;
+        series.names.mainName = medium.title.native;
+        series.names.romajiName = medium.title.romaji;
+        series.names.fillNames();
+        series.releaseYear = medium.startDate.year;
+        series.coverImage = medium.coverImage.large;
 
         const provider = new ListProviderLocalData(aniListProvider.getInstance());
         provider.id = medium.id;
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
-        anime.listProviderInfos.push(provider);
-        return anime;
+        series.listProviderInfos.push(provider);
+        return series;
     }
 
-    public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<Anime> {
-        const anime = new Anime();
-        anime.coverImage = info.Media.coverImage.large;
-        anime.addOverview(new Overview(info.Media.description, 'eng'));
-        anime.episodes = info.Media.episodes;
-        anime.releaseYear = info.Media.startDate.year;
-        anime.names.engName = info.Media.title.english;
-        anime.names.mainName = info.Media.title.native;
-        anime.names.romajiName = info.Media.title.romaji;
-        anime.names.otherNames.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
+    public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<Series> {
+        const series = new Series();
+        series.coverImage = info.Media.coverImage.large;
+        series.addOverview(new Overview(info.Media.description, 'eng'));
+        series.episodes = info.Media.episodes;
+        series.releaseYear = info.Media.startDate.year;
+        series.names.engName = info.Media.title.english;
+        series.names.mainName = info.Media.title.native;
+        series.names.romajiName = info.Media.title.romaji;
+        series.names.otherNames.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
 
         const provider = new ListProviderLocalData(aniListProvider.getInstance());
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
-        anime.listProviderInfos.push(provider);
-        return anime;
+        series.listProviderInfos.push(provider);
+        return series;
     }
 
-    public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<Anime> {
-        var series: Anime = new Anime();
+    public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<Series> {
+        var series: Series = new Series();
         series.names.engName = entry.media.title.english;
         series.names.mainName = entry.media.title.native;
         series.names.romajiName = entry.media.title.romaji;
@@ -76,7 +76,7 @@ export default new class AniListConverter {
         } catch (err) {
             console.error(err);
         }
-
+        providerInfo.targetSeason = series.seasonNumber;
         providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;
         providerInfo.rawEntry = entry;

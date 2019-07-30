@@ -1,9 +1,9 @@
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import TVDBProvider from './tvdbProvider';
-import { Series } from './models/getSeries';
+import { TVDBSeries } from './models/getSeries';
 
 export default class TVDBConverter {
-    convertSeriesToProviderLocalData(series: Series): InfoProviderLocalData {
+    convertSeriesToProviderLocalData(series: TVDBSeries): InfoProviderLocalData {
         const infoProviderLocalData = new InfoProviderLocalData(TVDBProvider.Instance);
 
         infoProviderLocalData.lastExternalChange = new Date(series.data.lastUpdated);

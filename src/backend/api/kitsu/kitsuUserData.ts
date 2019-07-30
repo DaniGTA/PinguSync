@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { UserData } from "../userData";
-import Anime from "../../controller/objects/anime";
+import Series from "../../controller/objects/series";
 import PathHelper from '../../../backend/helpFunctions/pathHelper';
 
 export class KitsuUserData implements UserData {
@@ -10,14 +10,14 @@ export class KitsuUserData implements UserData {
     public refreshToken: string = '';
     public expiresIn: number = 0;
     public username: string = '';
-    public list: Anime[] | undefined;
+    public list: Series[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
         this.loadData();
     }
 
 
-    public updateList(list: Anime[]) {
+    public updateList(list: Series[]) {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();

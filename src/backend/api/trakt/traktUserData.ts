@@ -2,7 +2,7 @@ import { TraktUserInfo } from "./objects/userInfo";
 import * as fs from "fs";
 import * as path from "path";
 import { UserData } from "../userData";
-import Anime from "../../controller/objects/anime";
+import Series from "../../controller/objects/series";
 import PathHelper from '../../../backend/helpFunctions/pathHelper';
 
 export class TraktUserData implements UserData {
@@ -12,14 +12,14 @@ export class TraktUserData implements UserData {
     public expiresIn: number = 0;
     public username: string = '';
     public userInfo: TraktUserInfo | null = null;
-    public list: Anime[] | undefined;
+    public list: Series[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
         this.loadData();
     }
 
 
-    public updateList(list: Anime[]) {
+    public updateList(list: Series[]) {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();

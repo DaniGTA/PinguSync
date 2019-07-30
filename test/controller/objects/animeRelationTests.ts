@@ -2,9 +2,8 @@ import listHelper from "../../../src/backend/helpFunctions/listHelper";
 
 import assert from "assert";
 
-import Anime from "../../../src/backend/controller/objects/anime";
-
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
+import Series from "../../../src/backend/controller/objects/series";
 
 describe('animeTest | Relations', () => {
     it('get all Relations based on prequel id', async () => {
@@ -135,8 +134,8 @@ describe('animeTest | Relations', () => {
         assert.equal(await listHelper.isAnimeInList(result3, anime4), false);
     })
 
-    function getFilledAnime(): Anime {
-        var anime = new Anime();
+    function getFilledAnime(): Series {
+        var anime = new Series();
         anime.episodes = 10;
         anime.releaseYear = 2014;
         anime.seasonNumber = 3;

@@ -1,13 +1,13 @@
 import ListProvider from "../../../../src/backend/api/ListProvider";
 import { UserData } from "../../../../src/backend/api/userData";
-import Anime from "../../../../src/backend/controller/objects/anime";
 import { ListProviderLocalData } from "../../../../src/backend/controller/objects/listProviderLocalData";
+import Series from "../../../../src/backend/controller/objects/series";
 
 export default class TestProvider implements ListProvider {
-    updateEntry(anime: Anime, watchProgress: any): Promise<ListProviderLocalData> {
+    updateEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
-    removeEntry(anime: Anime, watchProgress: any): Promise<ListProviderLocalData> {
+    removeEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
 
@@ -22,10 +22,10 @@ export default class TestProvider implements ListProvider {
         this.loggedIn = loggedIn;
     }
 
-    getMoreSeriesInfo(a: Anime): Promise<Anime> {
+    getMoreSeriesInfo(a: Series): Promise<Series> {
         throw new Error("Method not implemented.");
     }
-    getAllSeries(disableCache?: boolean): Promise<Anime[]> {
+    getAllSeries(disableCache?: boolean): Promise<Series[]> {
         throw new Error("Method not implemented.");
     }
     logInUser(pass: string, username?: string): Promise<boolean> {

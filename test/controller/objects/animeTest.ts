@@ -1,26 +1,26 @@
 import * as assert from 'assert';
-import Anime, { WatchStatus } from '../../../src/backend/controller/objects/anime';
 import ProviderList from '../../../src/backend/controller/providerList';
 import TestProvider from './testClass/testProvider';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/listProviderLocalData';
 import listHelper from '../../../src/backend/helpFunctions/listHelper';
+import Series from '../../../src/backend/controller/objects/series';
 
 describe('animeTest', () => {
     it('should have a id', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         assert.notEqual(anime.id.length, 0);
         return;
     });
 
     it('should return season (1/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         anime.seasonNumber = 1;
         assert.equal(await anime.getSeason(), 1);
         return;
     });
 
     it('should return season (2/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         anime.names.engName = 'Test 3';
 
         assert.equal(await anime.getSeason(), 3);
@@ -28,7 +28,7 @@ describe('animeTest', () => {
     });
 
     it('should return season (3/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         anime.names.engName = 'Test III';
 
         assert.equal(await anime.getSeason(), 3);
@@ -36,7 +36,7 @@ describe('animeTest', () => {
     });
 
     it('should return last provider', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
         providerA.lastUpdate = new Date(100);
         providerA.watchProgress = [];
@@ -49,7 +49,7 @@ describe('animeTest', () => {
     });
 
     it('should return last watchprogress', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
         providerA.lastUpdate = new Date(2);
         providerA.addOneEpisode(5);
@@ -66,7 +66,7 @@ describe('animeTest', () => {
     });
 
     it('should all episodes (1/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData();
@@ -78,7 +78,7 @@ describe('animeTest', () => {
     });
 
     it('should all episodes (2/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData();
@@ -89,7 +89,7 @@ describe('animeTest', () => {
     });
 
     it('should all episodes (3/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
 
         anime.listProviderInfos.push(providerA);
@@ -98,7 +98,7 @@ describe('animeTest', () => {
     });
 
     it('should max episode (1/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData();
@@ -109,7 +109,7 @@ describe('animeTest', () => {
     });
 
     it('should max episode (2/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData();
@@ -121,7 +121,7 @@ describe('animeTest', () => {
     });
 
     it('should max episode (3/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         const providerA = new ListProviderLocalData();
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData();

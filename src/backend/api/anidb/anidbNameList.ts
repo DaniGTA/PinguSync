@@ -4,9 +4,10 @@ import AniDBNameManager from './anidbNameManager';
 import InfoProvider from '../infoProvider';
 import * as zlib from 'zlib';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
+import Series from '../../controller/objects/series';
 export default class AniDBNameList implements InfoProvider {
     providerName: string = 'anidb';
-    getSeriesInfo(anime: import("../../controller/objects/anime").default): Promise<InfoProviderLocalData> {
+    getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
         throw new Error("Method not implemented.");
     }
     static anidbNameManager: AniDBNameManager = new AniDBNameManager();

@@ -3,7 +3,7 @@ import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
 import { TraktSearch } from './objects/search';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
-import Anime, { WatchStatus } from '../../controller/objects/anime';
+import Series, { WatchStatus } from '../../controller/objects/series';
 import { TraktUserData } from './traktUserData';
 
 import request from 'request';
@@ -36,8 +36,8 @@ export default class TraktProvider implements ListProvider {
         this.userData = new TraktUserData();
     }
 
-    public async getMoreSeriesInfo(_anime: Anime): Promise<Anime> {
-        var anime = Object.assign(new Anime(), _anime);
+    public async getMoreSeriesInfo(_anime: Series): Promise<Series> {
+        var anime = Object.assign(new Series(), _anime);
         anime.readdFunctions();
         var providerInfos = anime.listProviderInfos.find(x => x.provider === this.providerName);
         var id = null;
@@ -71,17 +71,17 @@ export default class TraktProvider implements ListProvider {
     public async isUserLoggedIn(): Promise<boolean> {
         return this.userData.accessToken !== '';
     }
-    public async getAllSeries(disableCache: boolean = false): Promise<Anime[]> {
+    public async getAllSeries(disableCache: boolean = false): Promise<Series[]> {
         console.log('[Request] -> Trakt -> AllSeries');
         if (this.userData.list != null && this.userData.list.length != 0 && !disableCache) {
             return this.userData.list;
         } else if (this.userData.userInfo != null) {
-            const seriesList: Anime[] = [];
+            const seriesList: Series[] = [];
             const data = await this.traktRequest<WatchedInfo[]>('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             for (const entry of data) {
                 try {
                     for (const season of entry.seasons) {
-                        const series: Anime = new Anime();
+                        const series: Series = new Series();
                         if (season.number == 1) {
                             series.releaseYear = entry.show.year;
                         }
@@ -97,6 +97,7 @@ export default class TraktProvider implements ListProvider {
                         for (let episode of season.episodes) {
                             providerInfo.addOneEpisode(episode.number, episode.plays, episode.last_watched_at);
                         }
+                        providerInfo.targetSeason = season.number;
                         providerInfo.watchStatus = WatchStatus.COMPLETED;
                         providerInfo.lastExternalChange = entry.last_watched_at;
                         series.listProviderInfos.push(providerInfo);
@@ -117,7 +118,7 @@ export default class TraktProvider implements ListProvider {
         this.userData.setUserData(data);
     }
 
-    public async updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+    public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         var providerInfo = anime.listProviderInfos.find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.addOneWatchProgress(watchProgress);
@@ -128,7 +129,7 @@ export default class TraktProvider implements ListProvider {
         throw 'err';
     }
 
-    public async removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+    public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         var providerInfo = anime.listProviderInfos.find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.removeOneWatchProgress(watchProgress);

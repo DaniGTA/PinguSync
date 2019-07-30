@@ -1,13 +1,13 @@
-import stringHelper from '../../../backend/helpFunctions/stringHelper';
+import stringHelper from '../../helpFunctions/stringHelper';
 import Names from './names';
 import Overview from './overview';
-import listHelper from '../../../backend/helpFunctions/listHelper';
+import listHelper from '../../helpFunctions/listHelper';
 import WatchProgress from './watchProgress';
 import { ListProviderLocalData } from './listProviderLocalData';
 import { InfoProviderLocalData } from './infoProviderLocalData';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 
-export default class Anime {
+export default class Series {
     public id: string = '';
     public lastUpdate: number = Date.now();
     public names: Names = new Names();
@@ -81,6 +81,7 @@ export default class Anime {
         if (typeof this.seasonNumber != 'undefined') {
             return this.seasonNumber;
         } else {
+            this.names = Object.assign(new Names(), this.names);
             return await this.names.getSeasonNumber();
         }
     }
@@ -199,8 +200,8 @@ export default class Anime {
      * Will be often used too update watchprogress.
      * @param anime 
      */
-    public async merge(anime: Anime): Promise<Anime> {
-        const newAnime: Anime = new Anime();
+    public async merge(anime: Series): Promise<Series> {
+        const newAnime: Series = new Series();
 
         newAnime.names.engName = await this.mergeString(this.names.engName, anime.names.engName, 'EngName');
         newAnime.names.romajiName = await this.mergeString(this.names.romajiName, anime.names.romajiName, 'RomajiName');
@@ -309,8 +310,8 @@ export default class Anime {
      * Get all relations from a series based on prequel id or sequel id or same provider id.
      * @param list 
      */
-    public async getAllRelations(list: Anime[]): Promise<Anime[]> {
-        const relations = [this as Anime];
+    public async getAllRelations(list: Series[]): Promise<Series[]> {
+        const relations = [this as Series];
         for (const entry2 of relations) {
             for (const entry of list) {
                 if (this.id != entry.id && !await listHelper.isAnimeInList(relations, entry)) {

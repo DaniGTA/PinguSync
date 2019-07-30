@@ -1,4 +1,4 @@
-export interface Series {
+export interface TVDBSeries {
     data: Data;
     errors: Errors;
 }

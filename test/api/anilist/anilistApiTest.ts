@@ -2,9 +2,9 @@ import AnimeListProvider from '../../../src/backend/api/anilist/aniListProvider'
 import request from 'request';
 import { MediaListCollection } from '../../../src/backend/api/anilist/graphql/seriesList';
 import aniListConverter from '../../../src/backend/api/anilist/aniListConverter';
-import { WatchStatus } from '../../../src/backend/controller/objects/anime';
 import { readFileSync, readFile } from 'fs';
 import assert from 'assert';
+import { WatchStatus } from '../../../src/backend/controller/objects/series';
 
 
 describe('AniListApi Tests', () => {
@@ -25,7 +25,7 @@ describe('AniListApi Tests', () => {
         const a = new AnimeListProvider();
         const result = a["getGraphQLOptions"]("query", "variables");
         assert.equal(options.body, result.body);
-        assert.equal(options.headers+'', result.headers+'');
+        assert.equal(options.headers + '', result.headers + '');
         assert.equal(options.method, result.method);
         assert.equal(options.uri, result.uri);
         return;

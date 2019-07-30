@@ -1,7 +1,7 @@
 import ListProvider from '../../api/ListProvider';
-import { WatchStatus } from './anime';
+import { WatchStatus } from './series';
 import ProviderList from '../providerList';
-import WatchProgress  from './watchProgress';
+import WatchProgress from './watchProgress';
 import listHelper from '../../helpFunctions/listHelper';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 
@@ -15,6 +15,7 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     public watchStatus?: WatchStatus;
     public watchProgress?: WatchProgress[];
+    public targetSeason?: number;
 
     public customList: boolean = false;
     public customListName = '';

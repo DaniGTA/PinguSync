@@ -1,39 +1,39 @@
 import { Media } from './objects/searchResult';
-import Anime from '../../../backend/controller/objects/anime';
+import Series from '../../controller/objects/series';
 import Name from '../../../backend/controller/objects/name';
 import Overview from '../../../backend/controller/objects/overview';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import KitsuProvider from './kitsuProvider';
 
 export default new class KitsuConverter {
-    async convertMediaToAnime(media: Media): Promise<Anime> {
-        const anime = new Anime();
+    async convertMediaToAnime(media: Media): Promise<Series> {
+        const series = new Series();
         if (media.coverImage != null) {
-            anime.coverImage = media.coverImage.large;
+            series.coverImage = media.coverImage.large;
         } else {
-            anime.coverImage = media.posterImage.large;
+            series.coverImage = media.posterImage.large;
         }
 
-        anime.runTime = media.episodeLength;
-        anime.names.engName = media.titles.en;
-        anime.names.mainName = media.titles.ja_jp;
-        anime.names.romajiName = media.titles.en_jp;
-        anime.names.otherNames.push(new Name(media.slug, 'slug'));
-        anime.names.otherNames.push(new Name(media.titles.en_us, 'en_us'));
-        anime.names.otherNames.push(new Name(media.canonicalTitle, 'canonicalTitle'));
+        series.runTime = media.episodeLength;
+        series.names.engName = media.titles.en;
+        series.names.mainName = media.titles.ja_jp;
+        series.names.romajiName = media.titles.en_jp;
+        series.names.otherNames.push(new Name(media.slug, 'slug'));
+        series.names.otherNames.push(new Name(media.titles.en_us, 'en_us'));
+        series.names.otherNames.push(new Name(media.canonicalTitle, 'canonicalTitle'));
         for (const title of media.abbreviatedTitles) {
-            anime.names.otherNames.push(new Name(title, 'abbreviatedTitles'));
+            series.names.otherNames.push(new Name(title, 'abbreviatedTitles'));
         }
-        anime.names.fillNames();
+        series.names.fillNames();
 
-        anime.overviews.push(new Overview(media.synopsis, 'eng'));
+        series.overviews.push(new Overview(media.synopsis, 'eng'));
         const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
         providerInfos.id = media.id;
         providerInfos.publicScore = media.ratingRank;
         providerInfos.rawEntry = media;
         providerInfos.episodes = media.episodeCount;
-        anime.listProviderInfos.push(providerInfos);
+        series.listProviderInfos.push(providerInfos);
 
-        return anime;
+        return series;
     }
 }

@@ -1,5 +1,5 @@
 
-import Anime from '../controller/objects/anime';
+import Series from '../controller/objects/series';
 import { InfoProviderLocalData } from '../controller/objects/infoProviderLocalData';
 
 /**
@@ -8,5 +8,5 @@ import { InfoProviderLocalData } from '../controller/objects/infoProviderLocalDa
  */
 export default interface InfoProvider {
     providerName: string;
-    getSeriesInfo(anime: Anime): Promise<InfoProviderLocalData>;
+    getSeriesInfo(anime: Series): Promise<InfoProviderLocalData>;
 }

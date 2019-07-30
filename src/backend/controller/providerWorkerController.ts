@@ -1,6 +1,6 @@
 import ListProvider from '../api/ListProvider';
 import ListController from './listController';
-import Anime from './objects/anime';
+import Series from './objects/series';
 import IUpdateList from './objects/iupdateList';
 import ProviderList from './providerList';
 import { WorkerTransfer } from './objects/workerTransfer';
@@ -122,7 +122,7 @@ class ProviderController {
 
     }
 
-    public async updateClientList(targetIndex: number, updatedEntry: Anime) {
+    public async updateClientList(targetIndex: number, updatedEntry: Series) {
         console.log('[Send] -> update -> anime');
         this.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }

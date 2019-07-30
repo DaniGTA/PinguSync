@@ -1,5 +1,3 @@
-import Anime, { WatchStatus } from "../../../src/backend/controller/objects/anime";
-
 import ProviderList from "../../../src/backend/controller/providerList";
 
 import TestProvider from "./testClass/testProvider";
@@ -7,10 +5,11 @@ import TestProvider from "./testClass/testProvider";
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
 
 import assert from "assert";
+import Series, { WatchStatus } from "../../../src/backend/controller/objects/series";
 
 describe('animeTest | Sync', () => {
     it('can sync (1/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("CanSync121"));
         const providerA = new ListProviderLocalData("CanSync121");
         providerA.episodes = 12;
@@ -18,6 +17,7 @@ describe('animeTest | Sync', () => {
             providerA.addOneEpisode(index);
         }
         providerA.watchStatus = WatchStatus.CURRENT;
+
         ProviderList.listProviderList.push(new TestProvider("CanSync122"));
         const providerB = new ListProviderLocalData("CanSync122");
         providerB.episodes = 24;
@@ -30,7 +30,7 @@ describe('animeTest | Sync', () => {
         assert.equal(await anime.getCanSyncStatus(), true);
     })
     it('can sync (2/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("CanSync21"));
         const providerA = new ListProviderLocalData("CanSync21");
         providerA.episodes = 24;
@@ -46,7 +46,7 @@ describe('animeTest | Sync', () => {
         assert.equal(await anime.getCanSyncStatus(), true);
     })
     it('can sync (3/3)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("CanSync31"));
         const providerA = new ListProviderLocalData("CanSync31");
         providerA.episodes = 24;
@@ -62,7 +62,7 @@ describe('animeTest | Sync', () => {
         assert.equal(await anime.getCanSyncStatus(), true);
     })
     it('cant sync (1/7)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("A"));
         const providerA = new ListProviderLocalData("A");
         providerA.episodes = 24;
@@ -84,7 +84,7 @@ describe('animeTest | Sync', () => {
     })
 
     it('cant sync (2/7)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("G"));
         const providerA = new ListProviderLocalData("G");
         providerA.episodes = 12;
@@ -106,7 +106,7 @@ describe('animeTest | Sync', () => {
     })
 
     it('cant sync (3/7)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("E"));
         const providerA = new ListProviderLocalData("E");
         providerA.episodes = 12;
@@ -127,7 +127,7 @@ describe('animeTest | Sync', () => {
     })
 
     it('cant sync (4/7)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("A"));
         const providerA = new ListProviderLocalData("A");
         providerA.episodes = 12;
@@ -141,7 +141,7 @@ describe('animeTest | Sync', () => {
     })
 
     it('cant sync (5/7)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("UU"));
         const providerA = new ListProviderLocalData("UU");
         providerA.episodes = 12;
@@ -163,7 +163,7 @@ describe('animeTest | Sync', () => {
     })
 
     it('cant sync (6/7)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("T"));
         const providerA = new ListProviderLocalData("T");
         providerA.lastUpdate = new Date(0);
@@ -190,7 +190,7 @@ describe('animeTest | Sync', () => {
     })
 
     it('cant sync (7/7)', async () => {
-        const anime = new Anime();
+        const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("TestProvider1"));
         const providerA = new ListProviderLocalData("TestProvider1");
         providerA.lastUpdate = new Date("2019-07-24T19:09:37.373Z");

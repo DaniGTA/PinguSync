@@ -1,6 +1,6 @@
 import { Viewer } from './graphql/viewer';
 import { UserData } from '../userData';
-import Anime from '../../../backend/controller/objects/anime';
+import Series from '../../controller/objects/series';
 import { writeFileSync, existsSync, readFileSync } from 'fs';
 import PathHelper from '../../../backend/helpFunctions/pathHelper';
 import * as path from "path";
@@ -12,14 +12,14 @@ export class AniListUserData implements UserData {
     created_token: Date = new Date();
     expires_in: number = 0;
     viewer: Viewer | undefined;
-    list: Anime[] | undefined;
+    list: Series[] | undefined;
     lastListUpdate: Date | undefined;
 
     constructor() {
         this.loadData();
     }
 
-    updateList(list: Anime[]) {
+    updateList(list: Series[]) {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();
@@ -54,7 +54,7 @@ export class AniListUserData implements UserData {
                 Object.assign(this, loadedData);
                 if (typeof this.list != 'undefined') {
                     for (let index = 0; index < this.list.length; index++) {
-                        this.list[index] = Object.assign(new Anime(), this.list[index]);
+                        this.list[index] = Object.assign(new Series(), this.list[index]);
                     }
                 }
                 this.lastListUpdate = loadedData.lastListUpdate;

@@ -1,9 +1,9 @@
-import Anime from '../controller/objects/anime';
+import Series from '../controller/objects/series';
 import Names from '../controller/objects/names';
 import stringHelper from './stringHelper';
 
 export default new class TitleCheckHelper {
-    public async checkAnimeNames(a: Anime, b: Anime): Promise<boolean> {
+    public async checkAnimeNames(a: Series, b: Series): Promise<boolean> {
         let aNameList: string[] = [...await Object.assign(new Names(), a.names).getAllNames()];
         let bNameList: string[] = [...await Object.assign(new Names(), b.names).getAllNames()];
 

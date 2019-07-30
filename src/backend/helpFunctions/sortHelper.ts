@@ -1,4 +1,4 @@
-import Anime from '../controller/objects/anime';
+import Series from '../controller/objects/series';
 
 import ListController from '../controller/listController';
 

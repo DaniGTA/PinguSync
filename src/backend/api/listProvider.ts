@@ -1,6 +1,6 @@
 
 import { UserData } from "./userData";
-import Anime from '../controller/objects/anime';
+import Series from '../controller/objects/series';
 import { ListProviderLocalData } from '../controller/objects/listProviderLocalData';
 import WatchProgress from '../controller/objects/watchProgress';
 
@@ -9,12 +9,12 @@ export default interface ListProvider {
     hasOAuthCode: boolean;
 
     userData: UserData;
-    getMoreSeriesInfo(a: Anime): Promise<Anime>;
-    getAllSeries(disableCache?: boolean): Promise<Anime[]>;
+    getMoreSeriesInfo(a: Series): Promise<Series>;
+    getAllSeries(disableCache?: boolean): Promise<Series[]>;
     logInUser(pass: string, username?: string): Promise<boolean>;
     isUserLoggedIn(): Promise<boolean>;
     getTokenAuthUrl(): string;
-    updateEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
-    removeEntry(anime: Anime, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
+    updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
+    removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
 
 }

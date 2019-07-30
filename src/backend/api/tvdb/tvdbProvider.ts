@@ -1,11 +1,11 @@
 import InfoProvider from '../infoProvider';
-import Anime from '../../../backend/controller/objects/anime';
+import Series from '../../controller/objects/series';
 import { TVDBProviderData } from './tvdbProviderData';
 import request from 'request';
 import { TVDBLogin } from './models/login';
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import TVDBConverter from './tvdbConverter';
-import { Series } from './models/getSeries';
+import { TVDBSeries } from './models/getSeries';
 
 export default class TVDBProvider implements InfoProvider {
     public providerName = 'tvdb'
@@ -17,10 +17,10 @@ export default class TVDBProvider implements InfoProvider {
         TVDBProvider.Instance = this;
     }
 
-    public async getSeriesInfo(anime: Anime): Promise<InfoProviderLocalData> {
+    public async getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
         const index = anime.infoProviderInfos.findIndex(entry => entry.provider == this.providerName);
         if (index != -1) {
-            const series = await this.webRequest<Series>(this.baseUrl + '/series/' + anime.infoProviderInfos[index].id);
+            const series = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + anime.infoProviderInfos[index].id);
             return new TVDBConverter().convertSeriesToProviderLocalData(series);
         }
         throw 'no tvdb id';

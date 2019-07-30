@@ -1,6 +1,6 @@
 import ListProvider from '../api/ListProvider';
 import ListController from './listController';
-import Anime from './objects/anime';
+import Series from './objects/series';
 import IUpdateList from './objects/iupdateList';
 import ProviderList from './providerList';
 import IPCBackgroundController from '../communication/ipcBackgroundController';
@@ -65,7 +65,7 @@ class FrontendController {
 
         this.communcation.on('anime-update-watch-progress', async (data) => {
             const lc = new ListController();
-            const anime: Anime = Object.assign(new Anime(), data.anime);
+            const anime: Series = Object.assign(new Series(), data.anime);
             console.log(data);
             anime.readdFunctions();
             if (data.reduce) {
@@ -115,7 +115,7 @@ class FrontendController {
 
     }
 
-    public async updateClientList(targetIndex: number, updatedEntry: Anime) {
+    public async updateClientList(targetIndex: number, updatedEntry: Series) {
         console.log('[Send] -> update -> anime');
         this.communcation.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }

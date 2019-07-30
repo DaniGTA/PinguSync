@@ -1,6 +1,6 @@
 import Overview from '../controller/objects/overview';
 import sortHelper from './sortHelper';
-import Anime from '../controller/objects/anime';
+import Series from '../controller/objects/series';
 import Names from '../controller/objects/names';
 
 class ListHelper {
@@ -113,8 +113,8 @@ class ListHelper {
 * Default list is the main list.
 * @param list 
 */
-    public async sortList(list: Anime[]) {
-        list = await sortHelper.quickSort(list, async (a: Anime, b: Anime) => {
+    public async sortList(list: Series[]) {
+        list = await sortHelper.quickSort(list, async (a: Series, b: Series) => {
             let aName: string = await Object.assign(new Names(), a.names).getRomajiName();
             let bName = await Object.assign(new Names(), b.names).getRomajiName();
 
@@ -126,7 +126,7 @@ class ListHelper {
         return list;
     }
 
-    public async isAnimeInList(list: Anime[], item: Anime): Promise<boolean> {
+    public async isAnimeInList(list: Series[], item: Series): Promise<boolean> {
         return list.findIndex(entry => item.id === entry.id) != -1;
     }
 }
