@@ -25,7 +25,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['combineDoubleEntrys'](entry);
-        assert.equal(a.length, 20);
+        assert.equal(a.length, 21);
     });
 
     it('should combine basic entrys with less data', async () => {
@@ -40,7 +40,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['combineDoubleEntrys'](entry);
-        assert.equal(a.length, 20);
+        assert.equal(a.length, 21);
         return;
     });
 
@@ -56,7 +56,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['combineDoubleEntrys'](entry);
-        assert.equal(a.length, 20);
+        assert.equal(a.length, 21);
         return;
     });
     it('should combine basic entrys with season in title (2/4)', async () => {
@@ -71,7 +71,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['combineDoubleEntrys'](entry);
-        assert.equal(a.length, 20);
+        assert.equal(a.length, 21);
         return;
     });
     it('should combine basic entrys with season in title (3/4)', async () => {
@@ -87,7 +87,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['combineDoubleEntrys'](entry);
-        assert.equal(a.length, 20);
+        assert.equal(a.length, 21);
         return;
     });
 
@@ -149,16 +149,18 @@ describe('ListControllerTest | Combine', () => {
         var lpld = new ListProviderLocalData();
         lpld.id = 2;
         lpld.episodes = 12;
-
+        lpld.targetSeason = 1;
         var x1 = getFilledAnime();
         x1.seasonNumber = 1;
         x1.listProviderInfos.push(lpld);
         var x2 = getFilledAnime();
         x2.seasonNumber = 1;
         x2.listProviderInfos.push(lpld);
+        x2.listProviderInfos[0].targetSeason = 2;
         var x3 = getFilledAnime();
         x3.seasonNumber = 1;
         x3.listProviderInfos.push(lpld);
+        x2.listProviderInfos[0].targetSeason = 3;
 
         ListController['mainList'] = [x1, x2, x3];
 

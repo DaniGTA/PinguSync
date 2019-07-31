@@ -101,9 +101,7 @@ export default class ListController {
             if (entry.id === entry2.id) {
                 foundedSameSeries.push(entry);
             } else {
-                const matches: number = await this.matchCalc(entry, entry2);
-
-                if (matches >= 3) {
+                if (await this.matchCalc(entry, entry2)) {
                     foundedSameSeries.push(entry);
                 }
 
@@ -336,15 +334,13 @@ export default class ListController {
         let dynamicEntrys = [...entrys];
         dynamicEntrys = dynamicEntrys.reverse();
         const newList: Series[] = [];
-        for (const a of entrys) {
-
+        for (var i = 0; i < entrys.length; i++) {
+            const a = entrys[i];
             try {
                 let bMatch: Series | null = null;
                 for (const b of dynamicEntrys) {
                     if (a !== b && !await that.sameProvider(a, b)) {
-                        const matches: number = await that.matchCalc(a, b);
-
-                        if (matches >= 3) {
+                        if (await that.matchCalc(a, b)) {
                             bMatch = b;
                             break;
                         }
@@ -378,43 +374,56 @@ export default class ListController {
      * @param a 
      * @param b 
      */
-    private async matchCalc(a: Series, b: Series): Promise<number> {
+    private async matchCalc(a: Series, b: Series): Promise<boolean> {
         let matches: number = 0;
+        let matchAbleScore: number = 0;
         a = Object.assign(new Series(), a);
         b = Object.assign(new Series(), b);
-        if (a.releaseYear === b.releaseYear && typeof a.releaseYear != 'undefined') {
-            matches++;
+        // Check releaseYear
+        if (a.releaseYear && b.releaseYear) {
+            matchAbleScore++;
+            if (a.releaseYear === b.releaseYear) {
+                matches++;
+            }
         }
+
+        // Check season
         const aSeason = await a.getSeason();
-        if (aSeason != await b.getSeason() && typeof aSeason != 'undefined') {
-            matches -= 2;
+        const bSeason = await b.getSeason();
+        if (aSeason && bSeason) {
+            matchAbleScore += 3;
+            if (aSeason === bSeason) {
+                matches += 3;
+            } else if (!aSeason && bSeason === 1) {
+                matches += 1;
+            } else if (!bSeason && bSeason === 1) {
+                matches += 1;
+            }
         }
-        if (await this.checkProviderId(a, b)) {
-            matches += 2;
+        if (a.listProviderInfos.length != 0 && b.listProviderInfos.length != 0) {
+            matchAbleScore += 2;
+            if (await this.checkProviderId(a, b)) {
+                matches += 2;
+            }
         }
 
 
         const allAEpisodes = await a.getAllEpisodes();
         const allBEpisodes = await b.getAllEpisodes();
         // Search if there is a match between the arrays.
-        if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
-            matches++;
-        }
-        if (matches <= 0) {
-            if (!await animeHelper.isSameSeason(a, b)) {
-                return 0;
-            }
-        }
-        if (await titleCheckHelper.checkAnimeNames(a, b)) {
-            matches = matches + 2;
-            if (await animeHelper.isSameSeason(a, b)) {
+        if (allAEpisodes.length != 0 && allBEpisodes.length != 0) {
+            matchAbleScore++;
+            if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
                 matches++;
             }
         }
-        return matches;
+        matchAbleScore += 2;
+        if (await titleCheckHelper.checkAnimeNames(a, b)) {
+            matches += 2;
+        }
+        return matches >= matchAbleScore / 1.5;
     }
     private async checkProviderId(a: Series, b: Series): Promise<boolean> {
-
         for (const aProvider of a.listProviderInfos) {
             for (const bProvider of b.listProviderInfos) {
                 if (aProvider.provider === bProvider.provider && aProvider.id === bProvider.id) {
