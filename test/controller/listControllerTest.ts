@@ -168,6 +168,28 @@ describe('ListControllerTest | Combine', () => {
 
         assert.equal(ListController['mainList'].length, 1);
     })
+    it('should clean doubled entrys (3/3)', async () => {
+        var lc = new ListController();
+        ListController['mainList'] = [];
+
+        var lpld = new ListProviderLocalData();
+        lpld.id = 2;
+        lpld.episodes = 12;
+        lpld.targetSeason = 1;
+        var x1 = getFilledAnime();
+        x1.seasonNumber = 1;
+        x1.listProviderInfos.push(lpld);
+        var x2 = getFilledAnime();
+        x2.seasonNumber = undefined;
+        x2.listProviderInfos.push(lpld);
+        x2.listProviderInfos[0].targetSeason = undefined;
+
+        ListController['mainList'] = [x1, x2];
+
+        await lc.cleanBadDataFromMainList();
+
+        assert.equal(ListController['mainList'].length, 1);
+    })
 
 
     it('shouldnt clean doubled entrys (1/2)', async () => {
@@ -177,6 +199,9 @@ describe('ListControllerTest | Combine', () => {
         var lpld = new ListProviderLocalData();
         lpld.id = 2;
         lpld.episodes = 12;
+        var lpld2 = new ListProviderLocalData();
+        lpld2.id = 3;
+        lpld2.episodes = 12;
 
         var x1 = getFilledAnime();
         x1.seasonNumber = 1;
@@ -184,9 +209,12 @@ describe('ListControllerTest | Combine', () => {
 
         var x2 = getFilledAnime();
         x2.seasonNumber = 2;
-        x2.listProviderInfos.push(lpld);
+        x2.listProviderInfos.push(lpld2);
 
         ListController['mainList'] = [x1, x2];
+
+        console.log(x1);
+        console.log(x2);
 
         await lc.cleanBadDataFromMainList();
 
@@ -207,8 +235,8 @@ describe('ListControllerTest | Combine', () => {
 
         var x2 = getFilledAnime();
         x2.seasonNumber = undefined;
-        lpld.id = 3;
         x2.listProviderInfos.push(lpld);
+        x2.listProviderInfos[0].id = 3;
 
         ListController['mainList'] = [x1, x2];
 

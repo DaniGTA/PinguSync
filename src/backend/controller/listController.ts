@@ -390,13 +390,13 @@ export default class ListController {
         // Check season
         const aSeason = await a.getSeason();
         const bSeason = await b.getSeason();
-        if (aSeason && bSeason) {
+        if (aSeason || bSeason) {
             matchAbleScore += 3;
             if (aSeason === bSeason) {
                 matches += 3;
             } else if (!aSeason && bSeason === 1) {
                 matches += 1;
-            } else if (!bSeason && bSeason === 1) {
+            } else if (!bSeason && aSeason === 1) {
                 matches += 1;
             }
         }
@@ -421,7 +421,7 @@ export default class ListController {
         if (await titleCheckHelper.checkAnimeNames(a, b)) {
             matches += 2;
         }
-        return matches >= matchAbleScore / 1.5;
+        return matches >= matchAbleScore / 1.45;
     }
     private async checkProviderId(a: Series, b: Series): Promise<boolean> {
         for (const aProvider of a.listProviderInfos) {
