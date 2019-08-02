@@ -9,6 +9,7 @@ import * as electron from 'electron';
 import FrontendController from './backend/controller/frontendController';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+app.removeAllListeners('ready')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;

@@ -182,8 +182,7 @@ export default class ListController {
 
     public async cleanBadDataFromMainList(list: Series[] = ListController.mainList): Promise<boolean> {
         try {
-            var tempList = await this.combineDoubleEntrys(list);
-            for (const entry of tempList) {
+            for (const entry of list) {
                 await this.addSerieToMainList(entry, false);
             }
             console.log('[MainListSize] -> ' + ListController.mainList.length)
@@ -321,52 +320,6 @@ export default class ListController {
             }
         }
         return result;
-    }
-
-    /**
-     * This is a heavy comparer for series this checks if the season is the same the name release and episodes.
-     * With this information it can merge them together and prevent double entrys in the list.
-     * @param entrys 
-     */
-    private async combineDoubleEntrys(entrys: Series[]): Promise<Series[]> {
-        var that = this;
-        console.log('[calc] -> CombineEntrys');
-        let dynamicEntrys = [...entrys];
-        dynamicEntrys = dynamicEntrys.reverse();
-        const newList: Series[] = [];
-        for (var i = 0; i < entrys.length; i++) {
-            const a = entrys[i];
-            try {
-                let bMatch: Series | null = null;
-                for (const b of dynamicEntrys) {
-                    if (a !== b && !await that.sameProvider(a, b)) {
-                        if (await that.matchCalc(a, b)) {
-                            bMatch = b;
-                            break;
-                        }
-                    }
-                }
-                //
-                // AddToFinalList
-                //
-                dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, a);
-                if (bMatch != null) {
-                    dynamicEntrys = await listHelper.removeEntrys(dynamicEntrys, bMatch);
-                    entrys = await listHelper.removeEntrys(entrys, bMatch);
-
-                    const aInit = Object.assign(new Series(), a);
-                    const mergedAnime = await aInit.merge(bMatch);
-
-                    newList.push(mergedAnime);
-                } else {
-                    newList.push(Object.assign(new Series(), a));
-                }
-            } catch (e) {
-
-            }
-        }
-
-        return newList;
     }
 
     /**
