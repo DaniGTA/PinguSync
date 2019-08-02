@@ -15,9 +15,7 @@ import { ListProviderLocalData } from "../backend/controller/objects/listProvide
 import Series from "../backend/controller/objects/series";
 import SeriesPackage from "../backend/controller/objects/seriesPackage";
 
-@Component({
-  components: { VLazyImage }
-})
+@Component
 export default class ListEntry extends Vue {
   @PropSync("sPackage", { type: SeriesPackage }) seriesPackage!: SeriesPackage;
   watchProgress: WatchProgress = new WatchProgress(0);
