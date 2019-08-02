@@ -1,51 +1,6 @@
 <template>
-  <div v-if="series" class="main-list-entry-content">
-    <img :src="series.coverImage" />
-    <div class="main-list-entry-content-title">{{getName()}}</div>
-    <div v-if="series.seasonNumber">S{{series.seasonNumber}}</div>
-
-    <div v-if="series.canSync">
-      <button class="main-list-entry-content-sync-btn" @click="syncAnime()">Sync</button>
-    </div>
-    <div class="main-list-entry-content-sync-status" v-else>✔</div>
-
-    <div class="main-list-update-progress">
-      <button @click="updateWatchProgress(true)" :disabled="watchProgress.episode <= 0">-</button>
-      <div v-bind:ref="series.id+'-watchprogress'">{{watchProgress.episode}}</div>/
-      <div>{{getEpisode()}}</div>
-      <button
-        @click="updateWatchProgress(false)"
-        :disabled="watchProgress.episode === getEpisode()"
-      >+</button>
-    </div>
-
-    <hr />
-    <div class="main-list-entry-content-actions">
-      <div>
-        <button class="main-list-entry-content-refresh-btn" @click="updateAnime()">RefreshInfo</button>
-      </div>
-
-      <div class="main-list-provider-list">
-        <div
-          v-for="provider of series.providerInfos"
-          v-bind:key="provider.provider + provider.id"
-          class="main-list-provider"
-        >
-          <img
-            :src="require('@/assets/'+provider.provider.toLowerCase() + '-logo.png')"
-            v-bind:ref="series+'-img'"
-            class="main-list-provider-small-list-img"
-          />
-          <div
-            class="main-list-provider-watch-progress"
-            v-if="getProviderWatchProgress(provider) != -1"
-          >{{getProviderWatchProgress(provider)}}/{{getProviderEpisodesCount(provider)}}</div>
-        </div>
-      </div>
-      <div>
-        <button @click="clog(series)">Log object</button>
-      </div>
-    </div>
+  <div v-if="seriesPackage" class="main-list-entry-content">
+    <img :src="cover" />
   </div>
 </template>
 
@@ -60,14 +15,18 @@ import { ListProviderLocalData } from "../backend/controller/objects/listProvide
 import Series from "../backend/controller/objects/series";
 import SeriesPackage from "../backend/controller/objects/seriesPackage";
 
-@Component
+@Component({
+  components: { VLazyImage }
+})
 export default class ListEntry extends Vue {
-  @PropSync("serie", { type: SeriesPackage }) series!: SeriesPackage;
+  @PropSync("sPackage", { type: SeriesPackage }) seriesPackage!: SeriesPackage;
   watchProgress: WatchProgress = new WatchProgress(0);
   canSync: boolean = false;
-  @Watch("serie", { immediate: true, deep: true })
+  cover: string = "";
+  @Watch("sPackage", { immediate: true, deep: true })
   async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
     console.log("ANIME CHANGE");
+    this.cover = val.getAnyCoverUrl();
     try {
       // this.watchProgress = await val.getLastWatchProgress();
     } catch (err) {
@@ -83,12 +42,12 @@ export default class ListEntry extends Vue {
   clog(a: any) {
     console.log(a);
   }
-  getObjectAsString(): string {
-    return JSON.stringify(this.series);
+  getObjectAsString(series: Series): string {
+    return JSON.stringify(series);
   }
-  async getWatchProgress(): Promise<number> {
-    if (this.series) {
-      const animeObject = Object.assign(new Series(), this.series);
+  async getWatchProgress(series: Series): Promise<number> {
+    if (series) {
+      const animeObject = Object.assign(new Series(), series);
       animeObject.readdFunctions();
       try {
         var number = await animeObject.getLastWatchProgress();
@@ -118,14 +77,14 @@ export default class ListEntry extends Vue {
   /**
    *
    */
-  updateWatchProgress(reduce: boolean) {
-    if (this.series) {
+  updateWatchProgress(series: Series, reduce: boolean) {
+    if (series) {
       const div = (this.$refs as any)[
-        this.series.id + "-watchprogress"
+        series.id + "-watchprogress"
       ][0] as HTMLElement;
       if (div.textContent != null) {
         App.workerController.send("anime-update-watch-progress", {
-          series: this.series,
+          series: series,
           reduce
         });
       }
@@ -135,28 +94,9 @@ export default class ListEntry extends Vue {
   syncAnime(id: string | number) {
     App.workerController.send("sync-series", id);
   }
-  getEpisode(): number | undefined {
-    if (this.series) {
-      try {
-        return Object.assign(new Series(), this.series).getMaxEpisode();
-      } catch (e) {
-        return this.series.episodes;
-      }
-    }
-  }
 
-  getName(): string {
-    if (this.series) {
-      if (this.series.names.engName) {
-        return this.series.names.engName;
-      } else {
-        return this.series.names.romajiName;
-      }
-    }
-    return "loading...";
-  }
-  updateAnime() {
-    App.workerController.send("request-info-refresh", this.series);
+  updateAnime(series: Series) {
+    App.workerController.send("request-info-refresh", series);
   }
 }
 </script>

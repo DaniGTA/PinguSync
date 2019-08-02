@@ -105,6 +105,7 @@ export class ListProviderLocalData extends ProviderLocalData {
                 }
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
+                 mergedProvider.covers = provider.covers;
                 if (!newestProvider) {
                     newestProvider = provider;
                 } else if (new Date(newestProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
@@ -169,6 +170,9 @@ export class ListProviderLocalData extends ProviderLocalData {
             }
             if (newestProvider.customListName) {
                 mergedProvider.customListName = newestProvider.customListName;
+            }
+            if (newestProvider.covers) {
+                mergedProvider.covers = newestProvider.covers;
             }
         }
 

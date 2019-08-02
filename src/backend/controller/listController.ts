@@ -51,11 +51,17 @@ export default class ListController {
 
         const seriesPackageList: SeriesPackage[] = [];
 
-        for (const entry of tempList) {
+        for (let entry of tempList) {
+            try{
+            entry = Object.assign(new Series(),entry);
             const relations = await entry.getAllRelations(tempList);
             const tempPackage = new SeriesPackage(...relations);
             tempList = await listHelper.removeEntrys(tempList, ...relations);
             seriesPackageList.push(tempPackage);
+            }catch(err){
+                console.error("Cant create package for: ")
+                console.error(entry);
+            }
         }
         return seriesPackageList;
     }

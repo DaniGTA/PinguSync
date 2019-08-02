@@ -37,6 +37,7 @@ export default new class TraktConverter {
         provider.publicScore = fullShow.rating;
         provider.episodes = fullShow.aired_episodes;
         series.listProviderInfos.push(provider);
+        
 
         const tvdbProvider = new InfoProviderLocalData('tvdb');
         tvdbProvider.id = fullShow.ids.tvdb;

@@ -222,7 +222,7 @@ export default class AniListProvider implements ListProvider {
         return new Promise<T>((resolve, rejects) => {
             try {
                 request(options, (error: any, response: any, body: any) => {
-                    console.log('error:', error); // Print the error if one occurred
+            
                     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
                     if (response.statusCode == 200) {
                         var rawdata = JSON.parse(body);

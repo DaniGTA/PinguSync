@@ -1,3 +1,5 @@
+import Cover from '../objects/meta/Cover';
+
 export default class ProviderLocalData {
     /**
      * The version number of the data object.
@@ -33,7 +35,8 @@ export default class ProviderLocalData {
 
     public score?: number;
     public episodes?: number;
-    public publicScore?: number
+    public publicScore?: number;
+    public covers:Cover[] = [];
 
     public sequelId?: number;
     public prequelId?: number;

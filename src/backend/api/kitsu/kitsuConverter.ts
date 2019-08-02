@@ -4,15 +4,12 @@ import Name from '../../../backend/controller/objects/name';
 import Overview from '../../../backend/controller/objects/overview';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import KitsuProvider from './kitsuProvider';
+import { CoverSize } from '../../controller/objects/meta/CoverSize';
+import Cover from '../../controller/objects/meta/Cover';
 
 export default new class KitsuConverter {
     async convertMediaToAnime(media: Media): Promise<Series> {
         const series = new Series();
-        if (media.coverImage != null) {
-            series.coverImage = media.coverImage.large;
-        } else {
-            series.coverImage = media.posterImage.large;
-        }
 
         series.runTime = media.episodeLength;
         series.names.engName = media.titles.en;
@@ -28,6 +25,19 @@ export default new class KitsuConverter {
 
         series.overviews.push(new Overview(media.synopsis, 'eng'));
         const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
+
+        if (media.coverImage) {
+            providerInfos.covers.push(new Cover(media.coverImage.large,CoverSize.LARGE));
+            providerInfos.covers.push(new Cover(media.coverImage.original,CoverSize.ORIGINAL));
+            providerInfos.covers.push(new Cover(media.coverImage.small,CoverSize.SMALL));
+            providerInfos.covers.push(new Cover(media.coverImage.tiny,CoverSize.TINY));
+        } else if(media.posterImage){
+            providerInfos.covers.push(new Cover(media.posterImage.large,CoverSize.LARGE));
+            providerInfos.covers.push(new Cover(media.posterImage.original,CoverSize.ORIGINAL));
+            providerInfos.covers.push(new Cover(media.posterImage.small,CoverSize.SMALL));
+            providerInfos.covers.push(new Cover(media.posterImage.tiny,CoverSize.TINY));
+        }
+
         providerInfos.id = media.id;
         providerInfos.publicScore = media.ratingRank;
         providerInfos.rawEntry = media;

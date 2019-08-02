@@ -10,10 +10,10 @@
     </nav>
     <div class="main-list">
       <ListEntry
-        v-for="item of sortedList"
+        v-for="item of mainList"
         v-bind:key="item.id"
         v-bind:ref="item.id"
-        :serie.sync="item"
+        :sPackage.sync="item"
       ></ListEntry>
     </div>
   </div>
@@ -44,19 +44,15 @@ export default class MainList extends Vue {
     super();
     const that = this;
     MainList.instance = this;
-
     App.workerController.on("series-list", async (data: SeriesPackage[]) => {
       let x: number = 0;
       that.mainList = [];
-      for (const iterator of data) {
-        if (that.mainList.findIndex(x => x.id === iterator.id) !== -1) {
-          const refs = (this.$refs as any)[iterator.id];
-          if (refs) {
-            const entry = refs[0] as HTMLElement;
-            entry.style.background = "red";
-          }
-        } else {
-          that.mainList.push(Object.assign(new Series(), iterator));
+      console.log(data);
+      for (let entry of data) {
+        if (that.mainList.findIndex(x => x.id === entry.id) === -1) {
+          entry = Object.assign(new SeriesPackage(), entry);
+          that.mainList.push(entry);
+
           x++;
         }
       }

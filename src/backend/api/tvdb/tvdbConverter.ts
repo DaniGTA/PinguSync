@@ -1,6 +1,7 @@
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import TVDBProvider from './tvdbProvider';
 import { TVDBSeries } from './models/getSeries';
+import Cover from '../../controller/objects/meta/Cover';
 
 export default class TVDBConverter {
     convertSeriesToProviderLocalData(series: TVDBSeries): InfoProviderLocalData {
@@ -10,6 +11,7 @@ export default class TVDBConverter {
         infoProviderLocalData.id = series.data.id;
         infoProviderLocalData.publicScore = series.data.siteRating;
         infoProviderLocalData.rawEntry = series;
+        infoProviderLocalData.covers.push(new Cover(series.data.banner));
 
         return infoProviderLocalData;
     }

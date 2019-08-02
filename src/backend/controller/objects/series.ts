@@ -6,6 +6,8 @@ import WatchProgress from './watchProgress';
 import { ListProviderLocalData } from './listProviderLocalData';
 import { InfoProviderLocalData } from './infoProviderLocalData';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
+import { CoverSize } from './meta/CoverSize';
+import Cover from './meta/Cover';
 
 export default class Series {
     public id: string = '';
@@ -14,7 +16,6 @@ export default class Series {
     public listProviderInfos: ListProviderLocalData[] = [];
     public infoProviderInfos: InfoProviderLocalData[] = [];
     public episodes?: number;
-    public coverImage: string = '';
     public overviews: Overview[] = [];
     public releaseYear?: number;
     public seasonNumber?: number;
@@ -24,6 +25,24 @@ export default class Series {
         // Generates randome string.
         this.id = stringHelper.randomString(30);
     }
+
+    getCoverImage(preferedSize:CoverSize = CoverSize.LARGE):Cover | null{
+        let ressources:ProviderLocalData[] = [...this.listProviderInfos,...this.infoProviderInfos];
+        let result: Cover | null = null;
+        for (const listProvider of ressources) {
+            if(listProvider.covers && listProvider.covers.length != 0){
+                for(const cover of listProvider.covers){
+                    if(result == null){
+                        result = cover;
+                    }else if(result.size < preferedSize){
+                        result = cover;
+                    }
+                }
+            }
+        }  
+        return result; 
+    }
+
     /**
      * Adds an Overview too the Anime and prevents adding if overview is already present.
      * @param newOverview 
@@ -218,11 +237,10 @@ export default class Series {
 
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
 
-        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
-        newAnime.coverImage = await this.mergeString(anime.coverImage, this.coverImage);
+        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');  
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
-        newAnime.coverImage = await this.mergeString(this.names.shortName, anime.names.shortName, 'CoverImage');
+       
         try {
             if (this.overviews != null && typeof this.overviews != 'undefined') {
                 newAnime.overviews.push(...this.overviews);
@@ -311,8 +329,8 @@ export default class Series {
      * And this item is in the return to!
      * @param list 
      */
-    public async getAllRelations(list: Series[]): Promise<Series[]> {
-        const relations = [this as Series];
+    public async getAllRelations(list: Series[], retunWithThis = false): Promise<Series[]> {
+        let relations = [this as Series];
         for (const entry2 of relations) {
             for (const entry of list) {
                 if (this.id != entry.id && !await listHelper.isAnimeInList(relations, entry)) {
@@ -332,7 +350,10 @@ export default class Series {
                 }
             }
         }
-        return await listHelper.removeEntrys(relations, this);
+        if(!retunWithThis){
+            relations = await listHelper.removeEntrys(relations,this);
+        }
+        return relations;
     }
 }
 

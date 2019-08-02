@@ -7,6 +7,8 @@ import aniListProvider from './anilistProvider';
 import { Entry, MediaRelation } from './graphql/seriesList';
 import AniListProvider from './anilistProvider';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
+import Cover from '../../controller/objects/meta/Cover';
+import { CoverSize } from '../../controller/objects/meta/CoverSize';
 
 export default new class AniListConverter {
     public async convertMediaToAnime(medium: Medium): Promise<Series> {
@@ -17,9 +19,11 @@ export default new class AniListConverter {
         series.names.romajiName = medium.title.romaji;
         series.names.fillNames();
         series.releaseYear = medium.startDate.year;
-        series.coverImage = medium.coverImage.large;
+
 
         const provider = new ListProviderLocalData(aniListProvider.getInstance());
+        provider.covers.push(new Cover(medium.coverImage.large,CoverSize.LARGE));
+        provider.covers.push(new Cover(medium.coverImage.medium,CoverSize.MEDIUM));
         provider.id = medium.id;
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
@@ -29,7 +33,7 @@ export default new class AniListConverter {
 
     public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<Series> {
         const series = new Series();
-        series.coverImage = info.Media.coverImage.large;
+
         series.addOverview(new Overview(info.Media.description, 'eng'));
         series.episodes = info.Media.episodes;
         series.releaseYear = info.Media.startDate.year;
@@ -39,6 +43,8 @@ export default new class AniListConverter {
         series.names.otherNames.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
 
         const provider = new ListProviderLocalData(aniListProvider.getInstance());
+        provider.covers.push(new Cover(info.Media.coverImage.large,CoverSize.LARGE));
+        provider.covers.push(new Cover(info.Media.coverImage.medium,CoverSize.MEDIUM));
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
@@ -80,6 +86,8 @@ export default new class AniListConverter {
         providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;
         providerInfo.rawEntry = entry;
+        providerInfo.covers.push(new Cover(entry.media.coverImage.large,CoverSize.LARGE));
+        providerInfo.covers.push(new Cover(entry.media.coverImage.medium,CoverSize.MEDIUM));
         if (entry.progress != 0) {
             for (let index = 0; index < entry.progress; index++) {
                 providerInfo.addOneEpisode(index + 1);

@@ -48,9 +48,7 @@ class FrontendController {
 
     public initController() {
         this.communcation.on('get-series-list', async () => {
-            const lc = new ListController();
-            const packageList = lc.getSeriesPackages();
-            this.communcation.send('series-list', packageList);
+            this.sendSeriesList();
         });
 
         this.communcation.on('request-info-refresh', (data) => {
@@ -108,7 +106,7 @@ class FrontendController {
 
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
-        var list = new ListController().getMainList();
+        var list = await new ListController().getSeriesPackages();
         this.communcation.send('series-list', list);
     }
 
