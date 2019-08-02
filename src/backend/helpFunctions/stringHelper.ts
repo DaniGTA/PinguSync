@@ -30,6 +30,9 @@ class StringHelper {
         if ((string.match(/!/g) || []).length == 1) {
             string = string.replace('!', '');
         }
+        if ((string.match(/\?/g) || []).length == 1) {
+            string = string.replace('?', '');
+        }
         //title -AAA- => title AAA
         string = string.replace(' -', ' ');
         //title-A => title A

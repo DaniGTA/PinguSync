@@ -4,21 +4,21 @@ import { Viewer } from "./graphql/viewer";
 import getViewerGql from "./graphql/getViewer.gql";
 import GetUserSeriesListGql from "./graphql/getUserSeriesList.gql";
 import { MediaType } from "./graphql/basics/mediaType";
-import { MediaListCollection} from "./graphql/seriesList";
+import { MediaListCollection } from "./graphql/seriesList";
 import ListProvider from "../listProvider";
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import getSeriesByIDGql from './graphql/getSeriesByID.gql';
-import Names from '../../../backend/controller/objects/names';
+import Names from '../../controller/objects/names';
 import { SearchSeries } from './graphql/searchSeries';
-import titleCheckHelper from '../../../backend/helpFunctions/titleCheckHelper';
+import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
 import aniListConverter from './aniListConverter';
 import { GetSeriesByID } from './graphql/getSeriesByID';
-import timeHelper from '../../../backend/helpFunctions/timeHelper';
+import timeHelper from '../../helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './aniListUserData';
-import WatchProgress from '../../../backend/controller/objects/watchProgress';
+import WatchProgress from '../../controller/objects/watchProgress';
 
 export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";

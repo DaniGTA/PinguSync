@@ -47,8 +47,10 @@ class FrontendController {
     }
 
     public initController() {
-        this.communcation.on('get-series-list', () => {
-            this.sendSeriesList();
+        this.communcation.on('get-series-list', async () => {
+            const lc = new ListController();
+            const packageList = lc.getSeriesPackages();
+            this.communcation.send('series-list', packageList);
         });
 
         this.communcation.on('request-info-refresh', (data) => {
@@ -100,8 +102,8 @@ class FrontendController {
         }
     }
 
-    public async removeEntryFromList(index:number){
-        this.communcation.send('series-list-remove-entry',index);
+    public async removeEntryFromList(index: number) {
+        this.communcation.send('series-list-remove-entry', index);
     }
 
     public async sendSeriesList() {

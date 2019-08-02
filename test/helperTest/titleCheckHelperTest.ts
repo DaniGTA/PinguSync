@@ -10,6 +10,19 @@ describe('TitleCheckerTest', () => {
         assert.equal(await titleCheckHelper.fastMatch(["Test"], ["Test III"]), true)
         return;
     });
+
+    it('should match (skipFastMatch)', async () => {
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title"], ["ATitle", "title"]), true)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title"], ["ATitle", "Title"]), true)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title!"], ["ATitle", "title"]), true)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title!?"], ["ATitle", "title"]), true)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title Season 3"], ["ATitle", "Title"]), true)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title! Season 3"], ["ATitle", "Title"]), true)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title Season 3"], ["ATitle", "title"]), true)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title Season 3"], ["ATitle", "Ctitle"]), false)
+        assert.equal(await titleCheckHelper.checkAnimeNamesInArray(["Title!"], ["ATitle", "titleG"]), false)
+        return;
+    });
     it('should remove season from title', async () => {
         assert.equal(await titleCheckHelper.removeSeasonMarkesFromTitle("Title Season 2"), "Title")
         assert.equal(await titleCheckHelper.removeSeasonMarkesFromTitle("Title III"), "Title")

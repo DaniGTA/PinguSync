@@ -11,12 +11,13 @@ import sortHelper from '../helpFunctions/sortHelper';
 import ProviderList from './providerList';
 import WatchProgress from './objects/watchProgress';
 import { InfoProviderLocalData } from './objects/infoProviderLocalData';
+import SeriesPackage from './objects/seriesPackage';
 export default class ListController {
     private static mainList: Series[] = [];
     static listLoaded = false;
-    constructor() {
+    constructor(forceLoading = !ListController.listLoaded) {
 
-        if (!ListController.listLoaded) {
+        if (forceLoading) {
             ListController.mainList = this.loadData();
             ListController.listLoaded = true;
 
@@ -41,10 +42,22 @@ export default class ListController {
     }
 
     public async syncProvider(anime: Series) {
-
         const watchProgress = await anime.getLastWatchProgress();
         this.updateWatchProgressTo(anime, watchProgress.episode);
+    }
 
+    public async getSeriesPackages(): Promise<SeriesPackage[]> {
+        let tempList = [...this.getMainList()];
+
+        const seriesPackageList: SeriesPackage[] = [];
+
+        for (const entry of tempList) {
+            const relations = await entry.getAllRelations(tempList);
+            const tempPackage = new SeriesPackage(...relations);
+            tempList = await listHelper.removeEntrys(tempList, ...relations);
+            seriesPackageList.push(tempPackage);
+        }
+        return seriesPackageList;
     }
 
     public async removeWatchProgress(anime: Series, watchProgress: WatchProgress) {
@@ -89,8 +102,9 @@ export default class ListController {
         }
         console.log('Added ' + ListController.mainList.length + ' to mainList');
         if (animes.length > 2) {
-            await this.cleanBadDataFromMainList();
-            FrontendController.getInstance().sendSeriesList();
+            try {
+                FrontendController.getInstance().sendSeriesList();
+            } catch (err) { }
         }
         this.saveData(ListController.mainList);
     }
@@ -178,19 +192,6 @@ export default class ListController {
     }
     public async getIndexFromAnime(anime: Series): Promise<number> {
         return ListController.mainList.findIndex(x => anime.id === x.id);
-    }
-
-    public async cleanBadDataFromMainList(list: Series[] = ListController.mainList): Promise<boolean> {
-        try {
-            for (const entry of list) {
-                await this.addSerieToMainList(entry, false);
-            }
-            console.log('[MainListSize] -> ' + ListController.mainList.length)
-            return true;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
     }
 
     public async getSeriesListAndUpdateMainList(): Promise<void> {

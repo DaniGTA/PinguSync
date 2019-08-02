@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import listHelper from '../../src/backend/helpFunctions/listHelper';
 import Series from '../../src/backend/controller/objects/series';
+import WatchProgress from '../../src/backend/controller/objects/watchProgress';
 describe('listHelperTest', () => {
     it('should clean array', async () => {
         var arr = await listHelper.cleanArray([null, undefined, ''])
@@ -48,5 +49,16 @@ describe('listHelperTest', () => {
         const result = await listHelper.isAnimeInList(list, entry2);
 
         assert.equal(result, false);
+    });
+
+    it('should check list type', async () => {
+
+        const numberList = [1, 2, 3];
+        const watchprogressList = [new WatchProgress(1), new WatchProgress(2), new WatchProgress(3)];
+
+        assert.strictEqual(await listHelper.checkType(numberList, Number), true, "numberList is type of number");
+        assert.strictEqual(await listHelper.checkType(watchprogressList, WatchProgress), true, "watchprogressList is type of WatchProgress");
+        assert.strictEqual(await listHelper.checkType(numberList, WatchProgress), false, "numberList is not type of WatchProgress");
+        assert.strictEqual(await listHelper.checkType(watchprogressList, Number), false, "watchprogressList is not type of Number");
     });
 });

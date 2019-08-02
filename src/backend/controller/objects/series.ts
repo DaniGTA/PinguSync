@@ -22,7 +22,7 @@ export default class Series {
     constructor() {
         this.listProviderInfos = [];
         // Generates randome string.
-        this.id = stringHelper.randomString(20);
+        this.id = stringHelper.randomString(30);
     }
     /**
      * Adds an Overview too the Anime and prevents adding if overview is already present.
@@ -308,6 +308,7 @@ export default class Series {
 
     /**
      * Get all relations from a series based on prequel id or sequel id or same provider id.
+     * And this item is in the return to!
      * @param list 
      */
     public async getAllRelations(list: Series[]): Promise<Series[]> {

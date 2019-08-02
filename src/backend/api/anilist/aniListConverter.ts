@@ -3,9 +3,9 @@ import { Medium } from './graphql/searchSeries';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import Overview from '../../../backend/controller/objects/overview';
 import Name from '../../../backend/controller/objects/name';
-import aniListProvider from './aniListProvider';
+import aniListProvider from './anilistProvider';
 import { Entry, MediaRelation } from './graphql/seriesList';
-import AniListProvider from './aniListProvider';
+import AniListProvider from './anilistProvider';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 
 export default new class AniListConverter {

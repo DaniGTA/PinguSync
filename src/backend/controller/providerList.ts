@@ -4,7 +4,7 @@ import TraktProvider from '../api/trakt/traktProvider';
 import KitsuProvider from '../api/kitsu/kitsuProvider';
 import InfoProvider from '../api/infoProvider';
 import TVDBProvider from '../api/tvdb/tvdbProvider';
-import AniListProvider from '../api/anilist/aniListProvider';
+import AniListProvider from '../api/anilist/anilistProvider';
 
 export default class ProviderList {
 

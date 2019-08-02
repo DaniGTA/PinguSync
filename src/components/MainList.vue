@@ -28,7 +28,8 @@ import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 import ListEntry from "./ListEntry.vue";
 import listHelper from "../backend/helpFunctions/listHelper";
-import Series from '../backend/controller/objects/series';
+import Series from "../backend/controller/objects/series";
+import SeriesPackage from "../backend/controller/objects/seriesPackage";
 @Component({
   components: {
     ListEntry
@@ -36,15 +37,15 @@ import Series from '../backend/controller/objects/series';
 })
 export default class MainList extends Vue {
   static instance: MainList;
-  @Prop() sortedList: Series[] = [];
-  @Prop() mainList: Series[] = [];
+  @Prop() sortedList: SeriesPackage[] = [];
+  @Prop() mainList: SeriesPackage[] = [];
 
   constructor() {
     super();
     const that = this;
     MainList.instance = this;
 
-    App.workerController.on("series-list", async (data: Series[]) => {
+    App.workerController.on("series-list", async (data: SeriesPackage[]) => {
       let x: number = 0;
       that.mainList = [];
       for (const iterator of data) {
@@ -87,9 +88,9 @@ export default class MainList extends Vue {
   }
 
   async refreshList() {
-    const sorted = await listHelper.sortList(this.mainList);
-    this.sortedList.length = 0;
-    this.sortedList.push(...sorted);
+    // const sorted = await listHelper.sortList(this.mainList);
+    // this.sortedList.length = 0;
+    // this.sortedList.push(...sorted);
   }
 }
 </script>

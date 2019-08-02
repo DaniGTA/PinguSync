@@ -58,21 +58,22 @@ import App from "../App.vue";
 import WatchProgress from "../backend/controller/objects/watchProgress";
 import { ListProviderLocalData } from "../backend/controller/objects/listProviderLocalData";
 import Series from "../backend/controller/objects/series";
+import SeriesPackage from "../backend/controller/objects/seriesPackage";
 
 @Component
 export default class ListEntry extends Vue {
-  @PropSync("serie", { type: Series }) series!: Series;
+  @PropSync("serie", { type: SeriesPackage }) series!: SeriesPackage;
   watchProgress: WatchProgress = new WatchProgress(0);
   canSync: boolean = false;
   @Watch("serie", { immediate: true, deep: true })
-  async onChildChanged(val: Series, oldVal: Series) {
+  async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
     console.log("ANIME CHANGE");
     try {
-      this.watchProgress = await val.getLastWatchProgress();
+      // this.watchProgress = await val.getLastWatchProgress();
     } catch (err) {
       console.log(err);
     }
-    this.canSync = await val.getCanSyncStatus();
+    // this.canSync = await val.getCanSyncStatus();
   }
   constructor() {
     super();

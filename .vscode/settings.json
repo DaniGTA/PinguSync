@@ -1,10 +1,13 @@
 {
-    "mocha.options": {
-        "compilers": "ts-node/register"
+    "mocha.env": {
+        "TS_NODE_TRANSPILE_ONLY": true
     },
-    "mocha.requires": ["ts-node/register"],
+    "mocha.requires": [
+        "ts-node/register"
+    ],
     "mocha.files.glob": "test/**/*.ts",
-    "mocha.env": true,
-    "mocha.logVerbose": true,
-    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "mocha.runTestsOnSave": "true",
+    "mocha.options": {
+        "compilers": "ts:ts-node/register"
+    }
 }
