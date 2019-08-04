@@ -18,7 +18,6 @@ export default class Series {
     public episodes?: number;
     public overviews: Overview[] = [];
     public releaseYear?: number;
-    public seasonNumber?: number;
     public runTime?: number;
     constructor() {
         this.listProviderInfos = [];
@@ -97,12 +96,14 @@ export default class Series {
      * @hasTest
      */
     public async getSeason(): Promise<number | undefined> {
-        if (typeof this.seasonNumber != 'undefined') {
-            return this.seasonNumber;
-        } else {
-            this.names = Object.assign(new Names(), this.names);
-            return await this.names.getSeasonNumber();
+        for (const provider of this.listProviderInfos) {
+            if(provider.targetSeason){
+                return provider.targetSeason;
+            }
         }
+
+        this.names = Object.assign(new Names(), this.names);
+        return await this.names.getSeasonNumber();  
     }
 
     /**
@@ -230,11 +231,6 @@ export default class Series {
         newAnime.names.otherNames = await listHelper.getUniqueList(newAnime.names.otherNames);
 
         newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.listProviderInfos.flatMap(x => x.episodes)));
-        let seasonarr = await listHelper.cleanArray([this.seasonNumber, anime.seasonNumber]);
-        if (typeof seasonarr !== 'undefined') {
-            newAnime.seasonNumber = await listHelper.findMostFrequent(seasonarr);
-        }
-
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
 
         newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');  

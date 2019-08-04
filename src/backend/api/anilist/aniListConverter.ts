@@ -60,13 +60,13 @@ export default new class AniListConverter {
         await series.names.fillNames();
 
         series.releaseYear = entry.media.startDate.year;
-        series.seasonNumber = await series.names.getSeasonNumber();
 
         var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
+        providerInfo.targetSeason = await series.names.getSeasonNumber();
         try {
-            if (typeof series.seasonNumber === 'undefined') {
+            if (!providerInfo.targetSeason) {
                 if (entry.media.relations.edges.findIndex(x => x.relationType == MediaRelation.PREQUEL) === -1) {
-                    series.seasonNumber = 1;
+                    providerInfo.targetSeason = 1;
                 } else {
 
                 }
@@ -82,7 +82,6 @@ export default new class AniListConverter {
         } catch (err) {
             console.error(err);
         }
-        providerInfo.targetSeason = series.seasonNumber;
         providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;
         providerInfo.rawEntry = entry;

@@ -49,12 +49,14 @@ export default class MainList extends Vue {
       that.mainList = [];
       console.log(data);
       for (let entry of data) {
-        if (that.mainList.findIndex(x => x.id === entry.id) === -1) {
-          entry = Object.assign(new SeriesPackage(), entry);
-          that.mainList.push(entry);
+        try {
+          if (that.mainList.findIndex(x => x.id === entry.id) === -1) {
+            entry = Object.assign(new SeriesPackage(), entry);
+            that.mainList.push(entry);
 
-          x++;
-        }
+            x++;
+          }
+        } catch (err) {}
       }
 
       this.refreshList();
@@ -98,7 +100,6 @@ export default class MainList extends Vue {
   flex-wrap: wrap;
   align-items: center;
   align-content: center;
-  flex-direction: column;
 }
 .main-list-provider {
   background-color: #f2f2f2;

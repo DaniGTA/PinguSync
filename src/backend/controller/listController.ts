@@ -54,7 +54,7 @@ export default class ListController {
         for (let entry of tempList) {
             try{
             entry = Object.assign(new Series(),entry);
-            const relations = await entry.getAllRelations(tempList);
+            const relations = await entry.getAllRelations(tempList,true);
             const tempPackage = new SeriesPackage(...relations);
             tempList = await listHelper.removeEntrys(tempList, ...relations);
             seriesPackageList.push(tempPackage);
@@ -131,7 +131,7 @@ export default class ListController {
     }
 
     public async removeSeriesFromMainList(anime: Series, notifyRenderer = false): Promise<boolean> {
-        const index = await this.getIndexFromAnime(anime);
+        const index = await this.getIndexFromSeries(anime);
         if (index != -1) {
             ListController.mainList = await listHelper.removeEntrys(ListController.mainList, ListController.mainList[index]);
             if (notifyRenderer) {
@@ -159,7 +159,7 @@ export default class ListController {
             ListController.mainList.push(anime);
 
             if (notfiyRenderer) {
-                await FrontendController.getInstance().updateClientList(await this.getIndexFromAnime(anime), anime);
+                await FrontendController.getInstance().updateClientList(await this.getIndexFromSeries(anime), anime);
             }
 
         } catch (err) {
@@ -189,15 +189,19 @@ export default class ListController {
      * Download the info from all providers.
      * @param anime 
      */
-    public async forceRefreshProviderInfo(anime: Series) {
-        const index = await this.getIndexFromAnime(anime);
-        if (index != -1) {
-            var result = await this.fillMissingProvider(ListController.mainList[index], true);
-            this.addSeriesToMainList(result);
-        }
+    public async forceRefreshProviderInfo(packageId: string) {
+       // const index = await this.getIndexFromSeries(anime);
+       // if (index != -1) {
+       //     var result = await this.fillMissingProvider(ListController.mainList[index], true);
+       //     this.addSeriesToMainList(result);
+       // }
     }
-    public async getIndexFromAnime(anime: Series): Promise<number> {
+    public async getIndexFromSeries(anime: Series): Promise<number> {
         return ListController.mainList.findIndex(x => anime.id === x.id);
+    }
+
+    public async getIndexFromPackageId(packageId: string): Promise<number> {
+        return ListController.mainList.findIndex(x => packageId === x.id);
     }
 
     public async getSeriesListAndUpdateMainList(): Promise<void> {
@@ -383,6 +387,7 @@ export default class ListController {
         }
         return matches >= matchAbleScore / 1.45;
     }
+
     private async checkProviderId(a: Series, b: Series): Promise<boolean> {
         for (const aProvider of a.listProviderInfos) {
             for (const bProvider of b.listProviderInfos) {

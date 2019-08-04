@@ -1,6 +1,9 @@
 <template>
   <div v-if="seriesPackage" class="main-list-entry-content">
-    <img :src="cover" />
+    <div>{{name}}</div>
+    <img v-lazy.container="cover" class="series-cover" />
+    <button @click="clog(seriesPackage)">Log</button>
+    <button @click="seriesDataRefresh(seriesPackage)">Data Refresh</button>
   </div>
 </template>
 
@@ -14,6 +17,8 @@ import WatchProgress from "../backend/controller/objects/watchProgress";
 import { ListProviderLocalData } from "../backend/controller/objects/listProviderLocalData";
 import Series from "../backend/controller/objects/series";
 import SeriesPackage from "../backend/controller/objects/seriesPackage";
+import VueLazyload from "vue-lazyload";
+Vue.use(VueLazyload);
 
 @Component
 export default class ListEntry extends Vue {
@@ -21,10 +26,12 @@ export default class ListEntry extends Vue {
   watchProgress: WatchProgress = new WatchProgress(0);
   canSync: boolean = false;
   cover: string = "";
+  name: string = "?";
   @Watch("sPackage", { immediate: true, deep: true })
   async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
     console.log("ANIME CHANGE");
     this.cover = val.getAnyCoverUrl();
+    this.name = await val.getPreferedName();
     try {
       // this.watchProgress = await val.getLastWatchProgress();
     } catch (err) {
@@ -93,8 +100,11 @@ export default class ListEntry extends Vue {
     App.workerController.send("sync-series", id);
   }
 
-  updateAnime(series: Series) {
-    App.workerController.send("request-info-refresh", series);
+  /**
+   * Collect information about the series.
+   */
+  seriesDataRefresh(seriesPackage: SeriesPackage) {
+    App.workerController.send("request-info-refresh", seriesPackage.id);
   }
 }
 </script>
@@ -108,67 +118,10 @@ export default class ListEntry extends Vue {
 }
 
 .main-list-entry-content {
-  box-shadow: 0 3px 15px rgba(51, 51, 51, 0.2);
-  border-radius: 10px;
   margin: 20px;
-  padding: 10px;
-  width: 60vw;
-  min-width: min-content;
 }
 
-.main-list-entry-content-sync-status {
-  display: inline;
-  float: right;
-  color: green;
-}
-
-.main-list-entry-content-sync-btn {
-  display: inline;
-  float: right;
-}
-.main-list-entry-content-actions {
-  display: flex;
-}
-
-.main-list-provider-watch-progress {
-  display: inline;
-  margin-left: 5px;
-}
-.main-list-provider-small-list-img {
-  width: 20px;
-}
-
-.main-list-entry-content-refresh-btn {
-  border: none;
-  margin: 20px 10px 20px 10px;
-
-  text-align: center;
-  font-weight: 500;
-  padding: 12px 20px 12px 20px;
-  border-radius: 3px;
-  background-color: #34495e;
-  color: white;
-  cursor: pointer;
-}
-.main-list-entry-content-actions {
-  height: 75px;
-}
-.main-list-update-progress {
-  display: -webkit-inline-box;
-  font-size: larger;
-  text-align: center;
-  vertical-align: middle;
-  align-items: center;
-  float: right;
-}
-
-.main-list-update-progress > button {
-  border: none;
-  text-align: center;
-  font-weight: 500;
-  border-radius: 3px;
-  background-color: #34495e;
-  color: white;
-  cursor: pointer;
+.series-cover {
+  height: 15vh;
 }
 </style>

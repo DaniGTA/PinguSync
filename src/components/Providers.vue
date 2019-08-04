@@ -36,6 +36,7 @@ import MainList from "./MainList.vue";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 
+
 @Component
 export default class Providers extends Vue {
   @Prop() providerList: string[] = [];

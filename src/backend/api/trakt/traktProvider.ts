@@ -88,7 +88,6 @@ export default class TraktProvider implements ListProvider {
                         series.names.engName = entry.show.title;
                         series.names.otherNames.push(new Name(entry.show.ids.slug, 'id'));
                         await series.names.fillNames();
-                        series.seasonNumber = season.number;
 
                         const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
 

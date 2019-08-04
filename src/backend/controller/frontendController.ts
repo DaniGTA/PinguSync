@@ -51,7 +51,7 @@ class FrontendController {
             this.sendSeriesList();
         });
 
-        this.communcation.on('request-info-refresh', (data) => {
+        this.communcation.on('request-info-refresh', (data:string) => {
             new ListController().forceRefreshProviderInfo(data);
         });
 

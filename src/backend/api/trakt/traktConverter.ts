@@ -47,8 +47,9 @@ export default new class TraktConverter {
 
     async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
         let currentProvider = series.listProviderInfos.find(x => x.provider === TraktProvider.getInstance().providerName);
-        if (typeof currentProvider != 'undefined' && typeof series.seasonNumber != 'undefined') {
-            var seasonNumber = series.seasonNumber;
+        var seasonNumber = await series.getSeason();
+        if (typeof currentProvider != 'undefined' && seasonNumber) {
+            
             var episodes: Episode[] = [];
 
             episodes.push({ number: removeEpisode });
@@ -78,8 +79,9 @@ export default new class TraktConverter {
 
     async convertAnimeToSendEntryShow(series: Series, newWatchprogress: number): Promise<SendEntryUpdate> {
         let currentProvider = series.listProviderInfos.find(x => x.provider === TraktProvider.getInstance().providerName);
-        if (typeof currentProvider != 'undefined' && typeof series.seasonNumber != 'undefined') {
-            var seasonNumber = series.seasonNumber;
+        var seasonNumber = await series.getSeason();
+        if (typeof currentProvider != 'undefined' && seasonNumber) {
+            
             var episodes: Episode[] = [];
             var maxEpisodes = currentProvider.episodes || newWatchprogress;
 
