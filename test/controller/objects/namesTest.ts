@@ -1,5 +1,6 @@
 import * as assert from 'assert';
-import Names from '../../../src/backend/controller/objects/names';
+import Names from '../../../src/backend/controller/objects/meta/names';
+
 
 describe('namesTest', () => {
     it('should detect kanji', async () => {

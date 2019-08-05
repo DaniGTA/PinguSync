@@ -1,7 +1,7 @@
 import ListProvider from '../../api/ListProvider';
 import { WatchStatus } from './series';
 import ProviderList from '../providerList';
-import WatchProgress from './watchProgress';
+import WatchProgress from './meta/watchProgress';
 import listHelper from '../../helpFunctions/listHelper';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 
@@ -105,7 +105,8 @@ export class ListProviderLocalData extends ProviderLocalData {
                 }
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
-                 mergedProvider.covers = provider.covers;
+                mergedProvider.covers = provider.covers;
+
                 if (!newestProvider) {
                     newestProvider = provider;
                 } else if (new Date(newestProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
@@ -174,6 +175,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.covers) {
                 mergedProvider.covers = newestProvider.covers;
             }
+            mergedProvider.targetSeason = newestProvider.targetSeason;
         }
 
         return mergedProvider;

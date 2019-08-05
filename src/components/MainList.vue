@@ -64,12 +64,12 @@ export default class MainList extends Vue {
       console.log("Showed size: " + x);
     });
 
-    App.workerController.on("update-series-list", (data: any) => {
+    App.workerController.on("update-series-list", (data: IUpdateList) => {
       console.log(data);
       that.$set(
         that.mainList,
         data.targetIndex,
-        Object.assign(new Series(), data.updatedEntry)
+        Object.assign(new SeriesPackage(), data.updatedEntry)
       );
       this.refreshList();
     });

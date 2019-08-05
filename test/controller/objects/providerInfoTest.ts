@@ -1,9 +1,9 @@
 
 import * as assert from 'assert';
-import WatchProgress from "../../../src/backend/controller/objects/watchProgress";
 
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/listProviderLocalData';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
+import WatchProgress from '../../../src/backend/controller/objects/meta/watchProgress';
 describe('providerTest', () => {
     it('should add to watchlist', async () => {
         const providerInfo = new ListProviderLocalData();

@@ -1,5 +1,5 @@
-import listHelper from '../../../backend/helpFunctions/listHelper';
-import stringHelper from '../../../backend/helpFunctions/stringHelper';
+import listHelper from '../../../helpFunctions/listHelper';
+import stringHelper from '../../../helpFunctions/stringHelper';
 import Name from './name';
 
 export default class Names {

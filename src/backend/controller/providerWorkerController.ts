@@ -4,6 +4,7 @@ import Series from './objects/series';
 import IUpdateList from './objects/iupdateList';
 import ProviderList from './providerList';
 import { WorkerTransfer } from './objects/workerTransfer';
+import SeriesPackage from './objects/seriesPackage';
 
 const ctx: Worker = self as any;
 
@@ -122,7 +123,7 @@ class ProviderController {
 
     }
 
-    public async updateClientList(targetIndex: number, updatedEntry: Series) {
+    public async updateClientList(targetIndex: number, updatedEntry: SeriesPackage) {
         console.log('[Send] -> update -> anime');
         this.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }

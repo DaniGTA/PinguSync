@@ -3,13 +3,13 @@ import Series from './objects/series';
 import * as fs from "fs";
 import * as path from "path";
 import animeHelper from '../helpFunctions/animeHelper';
-import Names from './objects/names';
+import Names from './objects/meta/names';
 import listHelper from '../helpFunctions/listHelper';
 import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import sortHelper from '../helpFunctions/sortHelper';
 import ProviderList from './providerList';
-import WatchProgress from './objects/watchProgress';
+import WatchProgress from './objects/meta/watchProgress';
 import { InfoProviderLocalData } from './objects/infoProviderLocalData';
 import SeriesPackage from './objects/seriesPackage';
 export default class ListController {
@@ -46,24 +46,51 @@ export default class ListController {
         this.updateWatchProgressTo(anime, watchProgress.episode);
     }
 
+    public async getSeriesPackage(series: Series): Promise<SeriesPackage> {
+        if (series.packageId) {
+            const allSeriesInThePackage = ListController.mainList.filter(x => x.packageId === series.packageId);
+            const seriesPackage = new SeriesPackage(...allSeriesInThePackage);
+            seriesPackage.id = series.packageId;
+            return seriesPackage;
+        } else {
+            return this.createPackage(series);
+        }
+    }
+
     public async getSeriesPackages(): Promise<SeriesPackage[]> {
         let tempList = [...this.getMainList()];
 
         const seriesPackageList: SeriesPackage[] = [];
 
         for (let entry of tempList) {
-            try{
-            entry = Object.assign(new Series(),entry);
-            const relations = await entry.getAllRelations(tempList,true);
-            const tempPackage = new SeriesPackage(...relations);
-            tempList = await listHelper.removeEntrys(tempList, ...relations);
-            seriesPackageList.push(tempPackage);
-            }catch(err){
-                console.error("Cant create package for: ")
-                console.error(entry);
-            }
+            try {
+                const tempPackage = await this.createPackage(entry, tempList);
+                tempList = await listHelper.removeEntrys(tempList, ...tempPackage.allRelations);
+                seriesPackageList.push(tempPackage);
+            } catch (err) { }
         }
         return seriesPackageList;
+    }
+
+    private async createPackage(series: Series, list: Series[] = ListController.mainList): Promise<SeriesPackage> {
+        try {
+            series = Object.assign(new Series(), series);
+            const relations = await series.getAllRelations(list, true);
+            const tempPackage = new SeriesPackage(...relations);
+
+            for (const relation of relations) {
+                const index = ListController.mainList.findIndex(x => x.id === relation.id);
+                if (index != -1) {
+                    relation.packageId = tempPackage.id;
+                    ListController.mainList[index] = relation;
+                }
+            }
+            return tempPackage;
+        } catch (err) {
+            console.error("Cant create package for: ")
+            console.error(series);
+            throw "cant create package";
+        }
     }
 
     public async removeWatchProgress(anime: Series, watchProgress: WatchProgress) {
@@ -142,13 +169,13 @@ export default class ListController {
         return false;
     }
 
-    public async addSerieToMainList(anime: Series, notfiyRenderer = false): Promise<boolean> {
+    public async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
         try {
-            const results = await this.findSameSeriesInMainList(anime);
+            const results = await this.findSameSeriesInMainList(series);
             if (results.length != 0) {
                 for (const entry of results) {
                     try {
-                        anime = await anime.merge(entry);
+                        series = await series.merge(entry);
                         await this.removeSeriesFromMainList(entry, notfiyRenderer);
                     } catch (err) {
                         console.log(err);
@@ -156,10 +183,11 @@ export default class ListController {
                 }
             }
 
-            ListController.mainList.push(anime);
+            ListController.mainList.push(series);
 
             if (notfiyRenderer) {
-                await FrontendController.getInstance().updateClientList(await this.getIndexFromSeries(anime), anime);
+
+                await FrontendController.getInstance().updateClientList(await this.getIndexFromSeries(series), await this.getSeriesPackage(series));
             }
 
         } catch (err) {
@@ -174,28 +202,20 @@ export default class ListController {
     }
 
     /**
-     * Change the index and updates the client list on the frontend.
-     * @param index 
-     * @param anime 
-     */
-    private updateEntryInMainList(index: number, anime: Series, sendToRenderer: boolean = true) {
-        ListController.mainList[index] = anime;
-        if (sendToRenderer) {
-            FrontendController.getInstance().updateClientList(index, anime);
-        }
-    }
-
-    /**
      * Download the info from all providers.
      * @param anime 
      */
     public async forceRefreshProviderInfo(packageId: string) {
-       // const index = await this.getIndexFromSeries(anime);
-       // if (index != -1) {
-       //     var result = await this.fillMissingProvider(ListController.mainList[index], true);
-       //     this.addSeriesToMainList(result);
-       // }
+        const allSeriesInThePackage = ListController.mainList.filter(x => x.packageId === packageId);
+        for (const series of allSeriesInThePackage) {
+            const index = await this.getIndexFromSeries(series);
+            if (index != -1) {
+                var result = await this.fillMissingProvider(ListController.mainList[index], true);
+                this.addSeriesToMainList(result);
+            }
+        }
     }
+
     public async getIndexFromSeries(anime: Series): Promise<number> {
         return ListController.mainList.findIndex(x => anime.id === x.id);
     }
@@ -382,7 +402,7 @@ export default class ListController {
             }
         }
         matchAbleScore += 2;
-        if (await titleCheckHelper.checkAnimeNames(a, b)) {
+        if (await titleCheckHelper.checkSeriesNames(a, b)) {
             matches += 2;
         }
         return matches >= matchAbleScore / 1.45;

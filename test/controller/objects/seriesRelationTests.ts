@@ -5,7 +5,7 @@ import assert from "assert";
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
 import Series from "../../../src/backend/controller/objects/series";
 
-describe('animeTest | Relations', () => {
+describe('seriesTest | Relations', () => {
     it('get all Relations based on prequel id', async () => {
         const anime1 = getFilledAnime();
         anime1.listProviderInfos[0].id = 1;
@@ -135,12 +135,12 @@ describe('animeTest | Relations', () => {
     })
 
     function getFilledAnime(): Series {
+        const provider = new ListProviderLocalData();
         var anime = new Series();
         anime.episodes = 10;
         anime.releaseYear = 2014;
-        anime.seasonNumber = 3;
         anime.names.engName = "Test";
-        const provider = new ListProviderLocalData('test');
+        provider.targetSeason = 3;
         anime.listProviderInfos.push(provider);
         return anime;
     }

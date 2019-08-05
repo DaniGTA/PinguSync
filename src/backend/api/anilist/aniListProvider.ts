@@ -10,7 +10,7 @@ import { ListProviderLocalData } from '../../controller/objects/listProviderLoca
 import Series, { WatchStatus } from '../../controller/objects/series';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import getSeriesByIDGql from './graphql/getSeriesByID.gql';
-import Names from '../../controller/objects/names';
+import Names from '../../controller/objects/meta/names';
 import { SearchSeries } from './graphql/searchSeries';
 import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
 import aniListConverter from './aniListConverter';
@@ -18,7 +18,7 @@ import { GetSeriesByID } from './graphql/getSeriesByID';
 import timeHelper from '../../helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './aniListUserData';
-import WatchProgress from '../../controller/objects/watchProgress';
+import WatchProgress from '../../controller/objects/meta/watchProgress';
 
 export default class AniListProvider implements ListProvider {
     providerName: string = "AniList";
@@ -54,7 +54,7 @@ export default class AniListProvider implements ListProvider {
             for (const result of searchResults.Page.media) {
                 try {
                     var b = await aniListConverter.convertMediaToAnime(result);
-                    if (await titleCheckHelper.checkAnimeNames(anime, b)) {
+                    if (await titleCheckHelper.checkSeriesNames(anime, b)) {
                         var bProviderInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof bProviderInfos != 'undefined') {
                             id = bProviderInfos.id;
@@ -222,7 +222,7 @@ export default class AniListProvider implements ListProvider {
         return new Promise<T>((resolve, rejects) => {
             try {
                 request(options, (error: any, response: any, body: any) => {
-            
+
                     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
                     if (response.statusCode == 200) {
                         var rawdata = JSON.parse(body);

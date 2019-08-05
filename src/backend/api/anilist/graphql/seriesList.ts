@@ -1,3 +1,4 @@
+import { MediaFormat } from './mediaFormat';
 
 export interface StartedAt {
     year?: number;
@@ -45,6 +46,7 @@ export interface Media {
     endDate: EndDate;
     coverImage: CoverImage;
     relations: Relation;
+    format: MediaFormat;
 }
 
 export interface Relation {
@@ -107,7 +109,7 @@ export interface MediaListCollection {
 
 export enum MediaRelation {
     // An adaption of the media into a different format
-    ADAPTATION  = "ADAPTATION",
+    ADAPTATION = "ADAPTATION",
     // Released before the relation
     PREQUEL = "PREQUEL",
     // Released after the relation

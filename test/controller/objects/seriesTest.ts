@@ -5,7 +5,7 @@ import { ListProviderLocalData } from '../../../src/backend/controller/objects/l
 import listHelper from '../../../src/backend/helpFunctions/listHelper';
 import Series from '../../../src/backend/controller/objects/series';
 
-describe('animeTest', () => {
+describe('series basic tests', () => {
     it('should have a id', async () => {
         const anime = new Series();
         assert.notEqual(anime.id.length, 0);
@@ -14,7 +14,9 @@ describe('animeTest', () => {
 
     it('should return season (1/3)', async () => {
         const anime = new Series();
-        anime.seasonNumber = 1;
+        const provider = new ListProviderLocalData();
+        provider.targetSeason = 1;
+        anime.listProviderInfos.push(provider);
         assert.equal(await anime.getSeason(), 1);
         return;
     });

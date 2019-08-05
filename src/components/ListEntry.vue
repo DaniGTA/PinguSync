@@ -13,11 +13,12 @@ import IUpdateList from "../backend/controller/objects/iupdateList";
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
 import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
-import WatchProgress from "../backend/controller/objects/watchProgress";
+
 import { ListProviderLocalData } from "../backend/controller/objects/listProviderLocalData";
 import Series from "../backend/controller/objects/series";
 import SeriesPackage from "../backend/controller/objects/seriesPackage";
 import VueLazyload from "vue-lazyload";
+import WatchProgress from '../backend/controller/objects/meta/watchProgress';
 Vue.use(VueLazyload);
 
 @Component

@@ -5,6 +5,7 @@ import IUpdateList from './objects/iupdateList';
 import ProviderList from './providerList';
 import IPCBackgroundController from '../communication/ipcBackgroundController';
 import ICommunication from '../communication/ICommunication';
+import SeriesPackage from './objects/seriesPackage';
 
 class FrontendController {
     public static getInstance(): FrontendController {
@@ -51,7 +52,7 @@ class FrontendController {
             this.sendSeriesList();
         });
 
-        this.communcation.on('request-info-refresh', (data:string) => {
+        this.communcation.on('request-info-refresh', (data: string) => {
             new ListController().forceRefreshProviderInfo(data);
         });
 
@@ -115,7 +116,7 @@ class FrontendController {
 
     }
 
-    public async updateClientList(targetIndex: number, updatedEntry: Series) {
+    public async updateClientList(targetIndex: number, updatedEntry: SeriesPackage) {
         console.log('[Send] -> update -> anime');
         this.communcation.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }

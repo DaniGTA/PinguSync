@@ -1,45 +1,50 @@
 import stringHelper from '../../helpFunctions/stringHelper';
-import Names from './names';
-import Overview from './overview';
+import Names from './meta/names';
+import Overview from './meta/overview';
 import listHelper from '../../helpFunctions/listHelper';
-import WatchProgress from './watchProgress';
+import WatchProgress from './meta/watchProgress';
 import { ListProviderLocalData } from './listProviderLocalData';
 import { InfoProviderLocalData } from './infoProviderLocalData';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 import { CoverSize } from './meta/CoverSize';
 import Cover from './meta/Cover';
+import { MediaType } from './meta/mediaType';
+import ListController from '../listController';
 
 export default class Series {
+    public packageId: string = '';
     public id: string = '';
     public lastUpdate: number = Date.now();
     public names: Names = new Names();
+    public mediaType: MediaType = MediaType.SERIES;
     public listProviderInfos: ListProviderLocalData[] = [];
     public infoProviderInfos: InfoProviderLocalData[] = [];
     public episodes?: number;
     public overviews: Overview[] = [];
     public releaseYear?: number;
     public runTime?: number;
+    private cachedSeason?: number | null = null;
     constructor() {
         this.listProviderInfos = [];
         // Generates randome string.
         this.id = stringHelper.randomString(30);
     }
 
-    getCoverImage(preferedSize:CoverSize = CoverSize.LARGE):Cover | null{
-        let ressources:ProviderLocalData[] = [...this.listProviderInfos,...this.infoProviderInfos];
+    getCoverImage(preferedSize: CoverSize = CoverSize.LARGE): Cover | null {
+        let ressources: ProviderLocalData[] = [...this.listProviderInfos, ...this.infoProviderInfos];
         let result: Cover | null = null;
         for (const listProvider of ressources) {
-            if(listProvider.covers && listProvider.covers.length != 0){
-                for(const cover of listProvider.covers){
-                    if(result == null){
+            if (listProvider.covers && listProvider.covers.length != 0) {
+                for (const cover of listProvider.covers) {
+                    if (result == null) {
                         result = cover;
-                    }else if(result.size < preferedSize){
+                    } else if (result.size < preferedSize) {
                         result = cover;
                     }
                 }
             }
-        }  
-        return result; 
+        }
+        return result;
     }
 
     /**
@@ -96,14 +101,54 @@ export default class Series {
      * @hasTest
      */
     public async getSeason(): Promise<number | undefined> {
-        for (const provider of this.listProviderInfos) {
-            if(provider.targetSeason){
-                return provider.targetSeason;
+        if (this.cachedSeason === null) {
+
+            for (const provider of this.listProviderInfos) {
+                if (provider.targetSeason) {
+                    this.cachedSeason = provider.targetSeason;
+                    return provider.targetSeason;
+                }
+            }
+
+            this.names = Object.assign(new Names(), this.names);
+            const numberFromName = await this.names.getSeasonNumber();
+
+            if (numberFromName) {
+                this.cachedSeason = numberFromName;
+                return numberFromName;
+            }
+            try {
+                let prquel = await this.getPrequel();
+                let searchCount = 0;
+                while (prquel) {
+                    searchCount++;
+                    const prequelSeason = await prquel.getSeason();
+                    if (prequelSeason === 1 || prequelSeason === 0) {
+                        this.cachedSeason = prequelSeason + searchCount;
+                        return prequelSeason + searchCount;
+                    } else {
+                        prquel = await prquel.getPrequel();
+                    }
+                }
+            } catch (err) { }
+            this.cachedSeason = undefined;
+        }
+        return this.cachedSeason;
+    }
+
+    public async getPrequel(searchInList = new ListController().getMainList()): Promise<Series> {
+        for (const listProvider of this.listProviderInfos) {
+            if (listProvider.prequelId) {
+                for (const entry of searchInList) {
+                    for (const entryListProvider of entry.listProviderInfos) {
+                        if (entryListProvider.provider === listProvider.provider && entryListProvider.id === listProvider.prequelId) {
+                            return entry;
+                        }
+                    }
+                }
             }
         }
-
-        this.names = Object.assign(new Names(), this.names);
-        return await this.names.getSeasonNumber();  
+        throw 'no prequel found';
     }
 
     /**
@@ -233,10 +278,10 @@ export default class Series {
         newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.listProviderInfos.flatMap(x => x.episodes)));
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
 
-        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');  
+        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
-       
+
         try {
             if (this.overviews != null && typeof this.overviews != 'undefined') {
                 newAnime.overviews.push(...this.overviews);
@@ -248,6 +293,7 @@ export default class Series {
         } catch (err) {
             console.log(err);
         }
+        await newAnime.getSeason();
         return newAnime;
     }
 
@@ -346,8 +392,8 @@ export default class Series {
                 }
             }
         }
-        if(!retunWithThis){
-            relations = await listHelper.removeEntrys(relations,this);
+        if (!retunWithThis) {
+            relations = await listHelper.removeEntrys(relations, this);
         }
         return relations;
     }

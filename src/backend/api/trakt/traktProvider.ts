@@ -7,11 +7,11 @@ import Series, { WatchStatus } from '../../controller/objects/series';
 import { TraktUserData } from './traktUserData';
 
 import request from 'request';
-import Name from '../../../backend/controller/objects/name';
+import Name from '../../controller/objects/meta/name';
 import traktConverter from './traktConverter';
 import titleCheckHelper from '../../../backend/helpFunctions/titleCheckHelper';
 import { FullShowInfo } from './objects/fullShowInfo';
-import WatchProgress from '../../../backend/controller/objects/watchProgress';
+import WatchProgress from '../../controller/objects/meta/watchProgress';
 export default class TraktProvider implements ListProvider {
 
     public static getInstance() {
@@ -48,7 +48,7 @@ export default class TraktProvider implements ListProvider {
             for (const result of searchResults) {
                 try {
                     var b = await traktConverter.convertShowToAnime(result.show);
-                    if (await titleCheckHelper.checkAnimeNames(anime, b)) {
+                    if (await titleCheckHelper.checkSeriesNames(anime, b)) {
                         var providerInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
                             id = providerInfos.id;

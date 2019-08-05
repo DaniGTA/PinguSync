@@ -30,7 +30,7 @@ export interface Media {
     endDate: EndDate;
     coverImage: CoverImage;
     bannerImage: string;
-    format: string;
+    format: MediaFormat;
     type: string;
     status: string;
     episodes: number;

@@ -1,7 +1,7 @@
 import { Media } from './objects/searchResult';
 import Series from '../../controller/objects/series';
-import Name from '../../../backend/controller/objects/name';
-import Overview from '../../../backend/controller/objects/overview';
+import Name from '../../controller/objects/meta/name';
+import Overview from '../../controller/objects/meta/overview';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import KitsuProvider from './kitsuProvider';
 import { CoverSize } from '../../controller/objects/meta/CoverSize';
@@ -27,15 +27,15 @@ export default new class KitsuConverter {
         const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
 
         if (media.coverImage) {
-            providerInfos.covers.push(new Cover(media.coverImage.large,CoverSize.LARGE));
-            providerInfos.covers.push(new Cover(media.coverImage.original,CoverSize.ORIGINAL));
-            providerInfos.covers.push(new Cover(media.coverImage.small,CoverSize.SMALL));
-            providerInfos.covers.push(new Cover(media.coverImage.tiny,CoverSize.TINY));
-        } else if(media.posterImage){
-            providerInfos.covers.push(new Cover(media.posterImage.large,CoverSize.LARGE));
-            providerInfos.covers.push(new Cover(media.posterImage.original,CoverSize.ORIGINAL));
-            providerInfos.covers.push(new Cover(media.posterImage.small,CoverSize.SMALL));
-            providerInfos.covers.push(new Cover(media.posterImage.tiny,CoverSize.TINY));
+            providerInfos.covers.push(new Cover(media.coverImage.large, CoverSize.LARGE));
+            providerInfos.covers.push(new Cover(media.coverImage.original, CoverSize.ORIGINAL));
+            providerInfos.covers.push(new Cover(media.coverImage.small, CoverSize.SMALL));
+            providerInfos.covers.push(new Cover(media.coverImage.tiny, CoverSize.TINY));
+        } else if (media.posterImage) {
+            providerInfos.covers.push(new Cover(media.posterImage.large, CoverSize.LARGE));
+            providerInfos.covers.push(new Cover(media.posterImage.original, CoverSize.ORIGINAL));
+            providerInfos.covers.push(new Cover(media.posterImage.small, CoverSize.SMALL));
+            providerInfos.covers.push(new Cover(media.posterImage.tiny, CoverSize.TINY));
         }
 
         providerInfos.id = media.id;

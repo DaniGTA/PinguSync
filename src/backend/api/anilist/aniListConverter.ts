@@ -1,14 +1,16 @@
 import Series, { WatchStatus } from '../../controller/objects/series';
 import { Medium } from './graphql/searchSeries';
 import { GetSeriesByID } from './graphql/getSeriesByID';
-import Overview from '../../../backend/controller/objects/overview';
-import Name from '../../../backend/controller/objects/name';
+import Overview from '../../controller/objects/meta/overview';
+import Name from '../../controller/objects/meta/name';
 import aniListProvider from './anilistProvider';
 import { Entry, MediaRelation } from './graphql/seriesList';
 import AniListProvider from './anilistProvider';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import Cover from '../../controller/objects/meta/Cover';
 import { CoverSize } from '../../controller/objects/meta/CoverSize';
+import { MediaType } from '../../controller/objects/meta/mediaType';
+import { MediaFormat } from './graphql/mediaFormat';
 
 export default new class AniListConverter {
     public async convertMediaToAnime(medium: Medium): Promise<Series> {
@@ -19,16 +21,27 @@ export default new class AniListConverter {
         series.names.romajiName = medium.title.romaji;
         series.names.fillNames();
         series.releaseYear = medium.startDate.year;
-
+        series.mediaType = await this.convertTypeToMediaType(medium.format);
 
         const provider = new ListProviderLocalData(aniListProvider.getInstance());
-        provider.covers.push(new Cover(medium.coverImage.large,CoverSize.LARGE));
-        provider.covers.push(new Cover(medium.coverImage.medium,CoverSize.MEDIUM));
+        provider.covers.push(new Cover(medium.coverImage.large, CoverSize.LARGE));
+        provider.covers.push(new Cover(medium.coverImage.medium, CoverSize.MEDIUM));
         provider.id = medium.id;
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
         series.listProviderInfos.push(provider);
         return series;
+    }
+
+    private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {
+        if (type === MediaFormat.MOVIE) {
+            return MediaType.MOVIE;
+        } else if (type === MediaFormat.TV || type === MediaFormat.TV_SHORT) {
+            return MediaType.SERIES;
+        } else if (type === MediaFormat.SPECIAL || MediaFormat.OVA || MediaFormat.ONA) {
+            return MediaType.SPECIAL;
+        }
+        return MediaType.UNKOWN;
     }
 
     public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<Series> {
@@ -41,10 +54,11 @@ export default new class AniListConverter {
         series.names.mainName = info.Media.title.native;
         series.names.romajiName = info.Media.title.romaji;
         series.names.otherNames.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
+        series.mediaType = await this.convertTypeToMediaType(info.Media.format);
 
         const provider = new ListProviderLocalData(aniListProvider.getInstance());
-        provider.covers.push(new Cover(info.Media.coverImage.large,CoverSize.LARGE));
-        provider.covers.push(new Cover(info.Media.coverImage.medium,CoverSize.MEDIUM));
+        provider.covers.push(new Cover(info.Media.coverImage.large, CoverSize.LARGE));
+        provider.covers.push(new Cover(info.Media.coverImage.medium, CoverSize.MEDIUM));
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
@@ -59,6 +73,8 @@ export default new class AniListConverter {
         series.names.romajiName = entry.media.title.romaji;
         await series.names.fillNames();
 
+        series.mediaType = await this.convertTypeToMediaType(entry.media.format);
+
         series.releaseYear = entry.media.startDate.year;
 
         var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
@@ -66,11 +82,16 @@ export default new class AniListConverter {
         try {
             if (!providerInfo.targetSeason) {
                 if (entry.media.relations.edges.findIndex(x => x.relationType == MediaRelation.PREQUEL) === -1) {
-                    providerInfo.targetSeason = 1;
+                    if (series.mediaType === MediaType.SPECIAL) {
+                        providerInfo.targetSeason = 0;
+                    } else {
+                        providerInfo.targetSeason = 1;
+                    }
                 } else {
 
                 }
             }
+
             let prequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL);
             if (prequel != -1) {
                 providerInfo.prequelId = entry.media.relations.nodes[prequel].id
@@ -85,8 +106,8 @@ export default new class AniListConverter {
         providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;
         providerInfo.rawEntry = entry;
-        providerInfo.covers.push(new Cover(entry.media.coverImage.large,CoverSize.LARGE));
-        providerInfo.covers.push(new Cover(entry.media.coverImage.medium,CoverSize.MEDIUM));
+        providerInfo.covers.push(new Cover(entry.media.coverImage.large, CoverSize.LARGE));
+        providerInfo.covers.push(new Cover(entry.media.coverImage.medium, CoverSize.MEDIUM));
         if (entry.progress != 0) {
             for (let index = 0; index < entry.progress; index++) {
                 providerInfo.addOneEpisode(index + 1);

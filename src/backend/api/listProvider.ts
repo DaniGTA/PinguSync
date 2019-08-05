@@ -2,7 +2,7 @@
 import { UserData } from "./userData";
 import Series from '../controller/objects/series';
 import { ListProviderLocalData } from '../controller/objects/listProviderLocalData';
-import WatchProgress from '../controller/objects/watchProgress';
+import WatchProgress from '../controller/objects/meta/watchProgress';
 
 export default interface ListProvider {
     providerName: string;

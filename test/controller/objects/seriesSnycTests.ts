@@ -7,7 +7,7 @@ import { ListProviderLocalData } from "../../../src/backend/controller/objects/l
 import assert from "assert";
 import Series, { WatchStatus } from "../../../src/backend/controller/objects/series";
 
-describe('animeTest | Sync', () => {
+describe('seriesTest | Sync', () => {
     it('can sync (1/3)', async () => {
         const anime = new Series();
         ProviderList.listProviderList.push(new TestProvider("CanSync121"));

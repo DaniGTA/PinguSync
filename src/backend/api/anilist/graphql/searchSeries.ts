@@ -26,7 +26,7 @@ export interface Medium {
     id: number;
     title: Title;
     coverImage: CoverImage;
-    format: string;
+    format: MediaFormat;
     type: string;
     averageScore?: number;
     popularity: number;

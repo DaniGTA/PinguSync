@@ -54,6 +54,7 @@ fragment mediaListEntry on MediaList {
       native
       userPreferred
     }
+    format
     type
     status
     episodes

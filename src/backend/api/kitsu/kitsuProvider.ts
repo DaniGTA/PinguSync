@@ -8,7 +8,7 @@ import { SearchResult } from './objects/searchResult';
 import kitsuConverter from './kitsuConverter';
 import { GetMediaResult } from './objects/getResult';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
-import WatchProgress from '../../../backend/controller/objects/watchProgress';
+import WatchProgress from '../../controller/objects/meta/watchProgress';
 export default class KitsuProvider implements ListProvider {
     removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
@@ -45,7 +45,7 @@ export default class KitsuProvider implements ListProvider {
                 try {
                     var b = await kitsuConverter.convertMediaToAnime(result);
                     var validSeason = (await anime.getSeason() === await b.getSeason() || (await anime.getSeason() === 1 && typeof await b.getSeason() === 'undefined'));
-                    if (await titleCheckHelper.checkAnimeNames(anime, b) && validSeason) {
+                    if (await titleCheckHelper.checkSeriesNames(anime, b) && validSeason) {
                         var providerInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
                             id = providerInfos.id;

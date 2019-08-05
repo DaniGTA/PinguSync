@@ -2,7 +2,7 @@ import Series from '../controller/objects/series';
 
 import ListController from '../controller/listController';
 
-import Names from '../controller/objects/names';
+import Names from '../controller/objects/meta/names';
 
 export default new class SortHelper {
 
