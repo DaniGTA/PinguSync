@@ -1,3 +1,4 @@
+import { MediaFormat } from './mediaFormat';
 
 export interface Title {
     romaji: string;

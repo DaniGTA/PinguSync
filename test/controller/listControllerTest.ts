@@ -174,10 +174,10 @@ describe('ListControllerTest | Combine', () => {
         var x2 = getFilledAnime();
 
         x2.listProviderInfos.push(lpld);
-        x2.listProviderInfos[0].targetSeason = 2;
+        x2.listProviderInfos[0].targetSeason = 1;
         var x3 = getFilledAnime();
         x3.listProviderInfos.push(lpld);
-        x2.listProviderInfos[0].targetSeason = 3;
+        x3.listProviderInfos[0].targetSeason = 1;
 
         await lc.addSeriesToMainList(x1, x2, x3);
 
