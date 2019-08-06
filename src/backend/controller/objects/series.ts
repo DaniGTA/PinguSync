@@ -100,7 +100,7 @@ export default class Series {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(): Promise<number | undefined> {
+    public async getSeason(searchInList: Series[] = new ListController().getMainList()): Promise<number | undefined> {
         if (this.cachedSeason === null) {
 
             for (const provider of this.listProviderInfos) {
@@ -121,14 +121,15 @@ export default class Series {
                 let prquel = await this.getPrequel();
                 let searchCount = 0;
                 while (prquel) {
-                    searchCount++;
-                    const prequelSeason = await prquel.getSeason();
-                    if (prequelSeason === 1 || prequelSeason === 0) {
-                        this.cachedSeason = prequelSeason + searchCount;
-                        return prequelSeason + searchCount;
-                    } else {
-                        prquel = await prquel.getPrequel();
+                    if (prquel.mediaType === this.mediaType) {
+                        searchCount++;
+                        const prequelSeason = await prquel.getSeason(searchInList);
+                        if (prequelSeason === 1 || prequelSeason === 0) {
+                            this.cachedSeason = prequelSeason + searchCount;
+                            return prequelSeason + searchCount;
+                        }
                     }
+                    prquel = await prquel.getPrequel(searchInList);
                 }
             } catch (err) { }
             this.cachedSeason = undefined;
@@ -334,9 +335,11 @@ export default class Series {
             return a as number;
         }
     }
+
     private isDefined<T>(value: T | undefined | null): value is T {
         return <T>value !== undefined && <T>value !== null;
     }
+
     private async mergeString(a: string, b: string, topic?: string): Promise<string> {
         if (a === '' || a == null) {
             return b;

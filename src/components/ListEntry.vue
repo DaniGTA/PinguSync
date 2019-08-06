@@ -4,6 +4,25 @@
     <img v-lazy.container="cover" class="series-cover" />
     <button @click="clog(seriesPackage)">Log</button>
     <button @click="seriesDataRefresh(seriesPackage)">Data Refresh</button>
+    <div v-for="item of seriesPackage.allRelations" v-bind:key="item.id">
+      <Promised
+        :promise="getSeason(item)"
+        v-slot:combined="{ isPending, isDelayOver, data, error }"
+      >Season: {{ data }}</Promised>
+      <Promised
+        :promise="canSync(item)"
+        v-slot:combined="{ isPending, isDelayOver, data, error }"
+      >{{ data }}</Promised>
+      <div
+        v-for="listProvider of item.listProviderInfos"
+        v-bind:key="listProvider.provider+item.id"
+      >
+        {{listProvider.provider}}
+        {{getProviderWatchProgress(listProvider)}}
+        /
+        {{getProviderEpisodesCount(listProvider)}}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -18,14 +37,15 @@ import { ListProviderLocalData } from "../backend/controller/objects/listProvide
 import Series from "../backend/controller/objects/series";
 import SeriesPackage from "../backend/controller/objects/seriesPackage";
 import VueLazyload from "vue-lazyload";
-import WatchProgress from '../backend/controller/objects/meta/watchProgress';
+import WatchProgress from "../backend/controller/objects/meta/watchProgress";
+import { Promised } from "vue-promised";
+Vue.component("Promised", Promised);
 Vue.use(VueLazyload);
 
 @Component
 export default class ListEntry extends Vue {
   @PropSync("sPackage", { type: SeriesPackage }) seriesPackage!: SeriesPackage;
   watchProgress: WatchProgress = new WatchProgress(0);
-  canSync: boolean = false;
   cover: string = "";
   name: string = "?";
   @Watch("sPackage", { immediate: true, deep: true })
@@ -60,7 +80,7 @@ export default class ListEntry extends Vue {
         return number.episode;
       } catch (err) {}
     }
-    return -1;
+    return 0;
   }
 
   getProviderEpisodesCount(provider: ListProviderLocalData): number {
@@ -107,10 +127,22 @@ export default class ListEntry extends Vue {
   seriesDataRefresh(seriesPackage: SeriesPackage) {
     App.workerController.send("request-info-refresh", seriesPackage.id);
   }
+
+  async getSeason(series: Series): Promise<number | undefined> {
+    series = Object.assign(new Series(), series);
+    return series.getSeason([]);
+  }
+  async canSync(series: Series): Promise<boolean> {
+    series = Object.assign(new Series(), series);
+    return series.getCanSyncStatus();
+  }
 }
 </script>
 
 <style>
+* {
+  color: white;
+}
 .main-list-entry-content-title {
   text-align: left;
   font-size: 24px;

@@ -19,6 +19,7 @@ export default class KitsuProvider implements ListProvider {
 
     providerName: string = 'Kitsu';
     hasOAuthCode: boolean = true;
+    hasUniqueIdForSeasons = true;
     userData: KitsuUserData;
     api: Kitsu;
     constructor() {

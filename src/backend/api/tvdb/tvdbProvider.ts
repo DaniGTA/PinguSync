@@ -6,8 +6,13 @@ import { TVDBLogin } from './models/login';
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import TVDBConverter from './tvdbConverter';
 import { TVDBSeries } from './models/getSeries';
+import Names from 'src/backend/controller/objects/meta/names';
+import Name from 'src/backend/controller/objects/meta/name';
 
 export default class TVDBProvider implements InfoProvider {
+    getAllNames(names: Names): Promise<Name[]> {
+        throw new Error("Method not implemented.");
+    }
     public providerName = 'tvdb'
     private apiKey = '790G98VXW5MZHGV0';
     private baseUrl = 'https://api.thetvdb.com';

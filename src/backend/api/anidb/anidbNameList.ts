@@ -5,7 +5,13 @@ import InfoProvider from '../infoProvider';
 import * as zlib from 'zlib';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
 import Series from '../../controller/objects/series';
+import { createWriteStream, readFileSync, createReadStream } from 'fs';
+import Names from 'src/backend/controller/objects/meta/names';
+import Name from 'src/backend/controller/objects/meta/name';
 export default class AniDBNameList implements InfoProvider {
+    getAllNames(names: Names): Promise<Name[]> {
+        throw new Error("Method not implemented.");
+    }
     providerName: string = 'anidb';
     getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
         throw new Error("Method not implemented.");
@@ -13,7 +19,7 @@ export default class AniDBNameList implements InfoProvider {
     static anidbNameManager: AniDBNameManager = new AniDBNameManager();
     constructor(download: boolean = true) {
         if (this.allowDownload() && download) {
-            //this.downloadFile();
+            this.getData();
         }
     }
 
@@ -46,36 +52,31 @@ export default class AniDBNameList implements InfoProvider {
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
-    private downloadFile() {
+    private getData() {
         const that = this;
         console.warn('[ANIDB] Download anime names.')
-        this.getGzipped("http://anidb.net/api/anime-titles.xml.gz").then(value => {
-            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), value);
+        this.downloadFile("http://anidb.net/api/anime-titles.xml.gz").then(value => {
+            const fileContents = createReadStream('./anidb-anime-titles.xml.gz');
+            const writeStream = createWriteStream('./anidb-anime-titles.xml');
+            const unzip = zlib.createGunzip();
+            fileContents.pipe(unzip).pipe(writeStream);
+            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), readFileSync('./anidb-anime-titles.xml'));
         }).catch((err) => {
             AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), "");
             console.log(err);
         });
     }
 
-    private async getGzipped(url: string): Promise<string> {
+    private async downloadFile(url: string): Promise<string> {
         return new Promise<string>((resolve, rejects) => {
-            // buffer to store the streamed decompression
-            var buffer: string[] = [];
+            const path = "./anidb-anime-titles.xml.gz";
+            const file = createWriteStream(path);
             http.get(url, function (res) {
-                // pipe the response into the gunzip to decompress
-                var gunzip = zlib.createGunzip();
-                res.pipe(gunzip);
-
-                gunzip.on('data', function (data) {
-                    // decompression chunk ready, add it to the buffer
-                    buffer.push(data.toString())
-                }).on("end", function () {
-                    // response and decompression complete, join the buffer and return
-                    resolve(buffer.join(""));
-                }).on("error", function (e) {
-                    console.log(e);
-                    rejects();
-                })
+                res.pipe(file);
+                file.on('finish', function () {
+                    file.close();  // close() is async, call cb after close completes.
+                    resolve(readFileSync(path, "UTF-8"));
+                });
             }).on('error', function (e) {
                 console.log(e);
                 rejects();

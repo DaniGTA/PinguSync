@@ -7,7 +7,7 @@ import WatchProgress from '../controller/objects/meta/watchProgress';
 export default interface ListProvider {
     providerName: string;
     hasOAuthCode: boolean;
-
+    hasUniqueIdForSeasons: boolean; 
     userData: UserData;
     getMoreSeriesInfo(a: Series): Promise<Series>;
     getAllSeries(disableCache?: boolean): Promise<Series[]>;
