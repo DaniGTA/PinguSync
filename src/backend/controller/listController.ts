@@ -2,7 +2,7 @@ import FrontendController from './frontendController';
 import Series from './objects/series';
 import * as fs from "fs";
 import * as path from "path";
-import animeHelper from '../helpFunctions/animeHelper';
+import animeHelper from '../helpFunctions/seriesHelper';
 import Names from './objects/meta/names';
 import listHelper from '../helpFunctions/listHelper';
 import titleCheckHelper from '../helpFunctions/titleCheckHelper';
@@ -12,6 +12,7 @@ import ProviderList from './providerList';
 import WatchProgress from './objects/meta/watchProgress';
 import { InfoProviderLocalData } from './objects/infoProviderLocalData';
 import SeriesPackage from './objects/seriesPackage';
+import ProviderHelper from '../helpFunctions/provider/providerHelper';
 export default class ListController {
     private static mainList: Series[] = [];
     static listLoaded = false;
@@ -384,13 +385,18 @@ export default class ListController {
                 matches += 1;
             }
         }
+
         if (a.listProviderInfos.length != 0 && b.listProviderInfos.length != 0) {
             matchAbleScore += 2;
-            if (await this.checkProviderId(a, b)) {
+            let result = await new ProviderHelper().checkProviderId(a, b);
+            if (result.sameId) {
                 matches += 2;
+                if(result.uniqueIdForSeasons){
+                    matchAbleScore += 8;
+                    matches += 8;
+                }
             }
         }
-
 
         const allAEpisodes = await a.getAllEpisodes();
         const allBEpisodes = await b.getAllEpisodes();
@@ -406,31 +412,6 @@ export default class ListController {
             matches += 2;
         }
         return matches >= matchAbleScore / 1.45;
-    }
-
-    private async checkProviderId(a: Series, b: Series): Promise<boolean> {
-        for (const aProvider of a.listProviderInfos) {
-            for (const bProvider of b.listProviderInfos) {
-                if (aProvider.provider === bProvider.provider && aProvider.id === bProvider.id) {
-                    if (aProvider.targetSeason === bProvider.targetSeason) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private async sameProvider(a: Series, b: Series): Promise<boolean> {
-        for (const aProvider of a.listProviderInfos) {
-            for (const bProvider of b.listProviderInfos) {
-                if (aProvider.provider === bProvider.provider) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private saveData(list: Series[]) {

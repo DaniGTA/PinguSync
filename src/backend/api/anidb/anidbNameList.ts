@@ -3,6 +3,7 @@ import * as http from "http";
 import AniDBNameManager from './anidbNameManager';
 import InfoProvider from '../infoProvider';
 import * as zlib from 'zlib';
+import * as converter from 'xml-js';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
 import Series from '../../controller/objects/series';
 import { createWriteStream, readFileSync, createReadStream } from 'fs';
@@ -55,12 +56,18 @@ export default class AniDBNameList implements InfoProvider {
     private getData() {
         const that = this;
         console.warn('[ANIDB] Download anime names.')
-        this.downloadFile("http://anidb.net/api/anime-titles.xml.gz").then(value => {
+        this.downloadFile("http://anidb.net/api/anime-titles.xml.gz").then(async (value) => {
             const fileContents = createReadStream('./anidb-anime-titles.xml.gz');
             const writeStream = createWriteStream('./anidb-anime-titles.xml');
             const unzip = zlib.createGunzip();
-            fileContents.pipe(unzip).pipe(writeStream);
-            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), readFileSync('./anidb-anime-titles.xml'));
+
+            var stream = fileContents.pipe(unzip).pipe(writeStream);
+            // Wait until the Stream ends.
+            await new Promise(fulfill =>{stream.on("finish", fulfill);stream.on("close", fulfill);});
+            
+            var data =  readFileSync('./anidb-anime-titles.xml','UTF-8');
+            var result1 = converter.xml2json(data, {compact: true, spaces: 4});
+            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()),result1);
         }).catch((err) => {
             AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), "");
             console.log(err);

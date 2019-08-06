@@ -21,6 +21,7 @@ import { AniListUserData } from './aniListUserData';
 import WatchProgress from '../../controller/objects/meta/watchProgress';
 
 export default class AniListProvider implements ListProvider {
+    hasUniqueIdForSeasons: boolean = true;
     providerName: string = "AniList";
     hasOAuthCode = true;
     private static instance: AniListProvider;

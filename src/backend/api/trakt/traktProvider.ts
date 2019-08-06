@@ -22,7 +22,7 @@ export default class TraktProvider implements ListProvider {
         return TraktProvider.instance;
     }
     private static instance: TraktProvider;
-
+    hasUniqueIdForSeasons: boolean = false;
     public providerName: string = 'Trakt';
     public hasOAuthCode = true;
     public userData: TraktUserData;
