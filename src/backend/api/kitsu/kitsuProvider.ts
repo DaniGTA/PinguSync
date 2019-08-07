@@ -9,6 +9,7 @@ import kitsuConverter from './kitsuConverter';
 import { GetMediaResult } from './objects/getResult';
 import timeHelper from '../../../backend/helpFunctions/timeHelper';
 import WatchProgress from '../../controller/objects/meta/watchProgress';
+import Name from '../../controller/objects/meta/name';
 export default class KitsuProvider implements ListProvider {
     removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
@@ -35,7 +36,7 @@ export default class KitsuProvider implements ListProvider {
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            var text = await anime.names.getRomajiName();
+            var text = await Name.getRomajiName(anime.names);
             const searchResults: SearchResult = ((await this.api.get('anime', {
                 filter: {
                     text: text

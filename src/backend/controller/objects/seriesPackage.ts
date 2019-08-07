@@ -1,6 +1,5 @@
 import Series from './series';
 import stringHelper from '../../../backend/helpFunctions/stringHelper';
-import Names from './meta/names';
 import { PreferedSeriesNameHelper } from './settings/preferedSeriesName';
 
 /**

@@ -1,11 +1,10 @@
 import Series from '../controller/objects/series';
-import Names from '../controller/objects/meta/names';
 import stringHelper from './stringHelper';
 
 export default new class TitleCheckHelper {
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
-        let aNameList: string[] = [...await Object.assign(new Names(), a.names).getAllNamesAsString()];
-        let bNameList: string[] = [...await Object.assign(new Names(), b.names).getAllNamesAsString()];
+        let aNameList: string[] =  a.getAllNames().flatMap(x=> x.name);
+        let bNameList: string[] = b.getAllNames().flatMap(x=> x.name);
         return await this.checkNames(aNameList, bNameList);
     }
 
@@ -73,23 +72,26 @@ export default new class TitleCheckHelper {
             var al = [...aList];
             var bl = [...bList];
             for (let a of al) {
-                for (let b of bl) {
+                if(a){
+                    for (let b of bl) {
+                        if(b){
+                            var shortestTextLength = 0;
+                            if (a.length < b.length) {
+                                shortestTextLength = a.length;
+                            } else {
+                                shortestTextLength = b.length;
+                            }
+                            var shortScan = Math.ceil(shortestTextLength / 4);
+                            if (shortScan < 3) {
+                                shortScan = Math.ceil(shortestTextLength / 1.25)
+                            }
+                            var aResult = a.substring(0, shortScan).toLocaleLowerCase();
+                            var bResult = b.substring(0, shortScan).toLocaleLowerCase();
 
-                    var shortestTextLength = 0;
-                    if (a.length < b.length) {
-                        shortestTextLength = a.length;
-                    } else {
-                        shortestTextLength = b.length;
-                    }
-                    var shortScan = Math.ceil(shortestTextLength / 4);
-                    if (shortScan < 3) {
-                        shortScan = Math.ceil(shortestTextLength / 1.25)
-                    }
-                    var aResult = a.substring(0, shortScan).toLocaleLowerCase();
-                    var bResult = b.substring(0, shortScan).toLocaleLowerCase();
-
-                    if (aResult === bResult) {
-                        return true;
+                            if (aResult === bResult) {
+                                return true;
+                            }
+                        }
                     }
                 }
             }

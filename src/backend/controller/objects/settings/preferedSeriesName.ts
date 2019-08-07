@@ -1,6 +1,6 @@
 import Series from '../series';
-import Names from '../meta/names';
 import UserSettings from './userSettings';
+import Name from '../meta/name';
 
 export enum PreferedSeriesName {
     NONE,
@@ -14,26 +14,21 @@ export enum PreferedSeriesName {
 export class PreferedSeriesNameHelper {
     async getPreferedNameOfSeries(series: Series): Promise<string> {
         const userSettings = new UserSettings();
-        const seriesNames = Object.assign(new Names(), series.names);
-        const names = await seriesNames.getAllNamesAsString();
+        const seriesNames = series.getAllNames();
         try {
             if (userSettings.preferedSeriesName === PreferedSeriesName.ENGLISH) {
-                if (seriesNames.engName) {
-                    return seriesNames.engName;
+                if (seriesNames) {
+                    return seriesNames[0].name;
                 } else {
-                    return seriesNames.getRomajiName();
+                    return Name.getRomajiName(seriesNames);
                 }
             } else if (userSettings.preferedSeriesName === PreferedSeriesName.ROMANJI) {
-                if (seriesNames.romajiName) {
-                    return seriesNames.romajiName;
-                } else {
-                    return seriesNames.getRomajiName();
-                }
+                return Name.getRomajiName(seriesNames);
             } else {
-                return seriesNames.getRomajiName();
+                return Name.getRomajiName(seriesNames);
             }
         } catch (err) { }
 
-        return (await seriesNames.getAllNamesAsString())[0];
+        return seriesNames[0].name;
     }
 }

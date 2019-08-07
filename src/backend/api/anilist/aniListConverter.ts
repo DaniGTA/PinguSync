@@ -10,15 +10,15 @@ import Cover from '../../controller/objects/meta/Cover';
 import { CoverSize } from '../../controller/objects/meta/CoverSize';
 import { MediaType } from '../../controller/objects/meta/mediaType';
 import { MediaFormat } from './graphql/mediaFormat';
+import { NameType } from '../../controller/objects/meta/nameType';
 
 export default new class AniListConverter {
     public async convertMediaToAnime(medium: Medium): Promise<Series> {
         const series = new Series();
         series.episodes = medium.episodes;
-        series.names.engName = medium.title.english;
-        series.names.mainName = medium.title.native;
-        series.names.romajiName = medium.title.romaji;
-        series.names.fillNames();
+        series.names.push(new Name(medium.title.romaji,'x-jap',NameType.OFFICIAL));
+        series.names.push(new Name(medium.title.english,'unknown',NameType.MAIN));
+        series.names.push(new Name(medium.title.native,'jap'));
         series.releaseYear = medium.startDate.year;
         series.mediaType = await this.convertTypeToMediaType(medium.format);
 
@@ -49,10 +49,10 @@ export default new class AniListConverter {
         series.addOverview(new Overview(info.Media.description, 'eng'));
         series.episodes = info.Media.episodes;
         series.releaseYear = info.Media.startDate.year;
-        series.names.engName = info.Media.title.english;
-        series.names.mainName = info.Media.title.native;
-        series.names.romajiName = info.Media.title.romaji;
-        series.names.otherNames.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
+        series.names.push(new Name(info.Media.title.romaji,'x-jap',NameType.OFFICIAL));
+        series.names.push(new Name(info.Media.title.english,'unknown',NameType.MAIN));
+        series.names.push(new Name(info.Media.title.native,'jap'));
+        series.names.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
         series.mediaType = await this.convertTypeToMediaType(info.Media.format);
 
         const provider = new ListProviderLocalData(AniListProvider.getInstance());
@@ -67,17 +67,16 @@ export default new class AniListConverter {
 
     public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<Series> {
         var series: Series = new Series();
-        series.names.engName = entry.media.title.english;
-        series.names.mainName = entry.media.title.native;
-        series.names.romajiName = entry.media.title.romaji;
-        await series.names.fillNames();
+        series.names.push(new Name(entry.media.title.romaji,'x-jap',NameType.OFFICIAL));
+        series.names.push(new Name(entry.media.title.english,'unknown',NameType.MAIN));
+        series.names.push(new Name(entry.media.title.native,'jap'));
 
         series.mediaType = await this.convertTypeToMediaType(entry.media.format);
 
         series.releaseYear = entry.media.startDate.year;
 
         var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
-        providerInfo.targetSeason = await series.names.getSeasonNumber();
+        providerInfo.targetSeason = await Name.getSeasonNumber(series.names);
         try {
             if (!providerInfo.targetSeason) {
                 if (entry.media.relations.edges.findIndex(x => x.relationType == MediaRelation.PREQUEL) === -1) {

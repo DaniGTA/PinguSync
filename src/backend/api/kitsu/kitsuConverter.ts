@@ -6,22 +6,24 @@ import { ListProviderLocalData } from '../../controller/objects/listProviderLoca
 import KitsuProvider from './kitsuProvider';
 import { CoverSize } from '../../controller/objects/meta/CoverSize';
 import Cover from '../../controller/objects/meta/Cover';
+import { NameType } from '../../controller/objects/meta/nameType';
 
 export default new class KitsuConverter {
     async convertMediaToAnime(media: Media): Promise<Series> {
         const series = new Series();
 
         series.runTime = media.episodeLength;
-        series.names.engName = media.titles.en;
-        series.names.mainName = media.titles.ja_jp;
-        series.names.romajiName = media.titles.en_jp;
-        series.names.otherNames.push(new Name(media.slug, 'slug'));
-        series.names.otherNames.push(new Name(media.titles.en_us, 'en_us'));
-        series.names.otherNames.push(new Name(media.canonicalTitle, 'canonicalTitle'));
+
+        series.names.push(new Name(media.titles.en, 'en'));
+        series.names.push(new Name(media.titles.en_us, 'en_us',NameType.OFFICIAL));
+        series.names.push(new Name(media.titles.ja_jp, 'jap'));
+
+        series.names.push(new Name(media.slug, 'slug'));
+        series.names.push(new Name(media.titles.en_us, 'en_us'));
+        series.names.push(new Name(media.canonicalTitle, 'canonicalTitle'));
         for (const title of media.abbreviatedTitles) {
-            series.names.otherNames.push(new Name(title, 'abbreviatedTitles'));
+            series.names.push(new Name(title, 'abbreviatedTitles'));
         }
-        series.names.fillNames();
 
         series.overviews.push(new Overview(media.synopsis, 'eng'));
         const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());

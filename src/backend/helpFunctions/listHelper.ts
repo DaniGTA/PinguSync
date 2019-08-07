@@ -1,7 +1,7 @@
 import Overview from '../controller/objects/meta/overview';
 import sortHelper from './sortHelper';
 import Series from '../controller/objects/series';
-import Names from '../controller/objects/meta/names';
+import Name from '../controller/objects/meta/name';
 
 class ListHelper {
     public async cleanArray<T>(actual: T[]): Promise<T[]> {
@@ -73,6 +73,10 @@ class ListHelper {
         return arr.filter((v, i, a) => a.findIndex((t) => (t.content === v.content)) === i)
     }
 
+    async getUniqueNameList(arr: Name[]): Promise<Name[]> {
+        return arr.filter((v, i, a) => a.findIndex((t) => (t.name === v.name)) === i)
+    }
+
     async getUniqueList<T>(arr: T[]): Promise<T[]> {
         return arr.filter((v, i, a) => a.findIndex((t) => (t === v)) === i)
     }
@@ -115,8 +119,8 @@ class ListHelper {
 */
     public async sortList(list: Series[]) {
         list = await sortHelper.quickSort(list, async (a: Series, b: Series) => {
-            let aName: string = await Object.assign(new Names(), a.names).getRomajiName();
-            let bName = await Object.assign(new Names(), b.names).getRomajiName();
+            let aName: string = await Name.getRomajiName(a.names);
+            let bName: string = await Name.getRomajiName(b.names);
 
             aName = aName.toLocaleLowerCase();
             bName = bName.toLocaleLowerCase();

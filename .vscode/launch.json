@@ -1,7 +1,6 @@
 {
     "version": "0.2.0",
-    "configurations": [
-        {
+    "configurations": [{
             "name": "Electron: Main",
             "type": "node",
             "request": "launch",
@@ -30,7 +29,7 @@
             "request": "attach",
             "port": 9223,
             "urlFilter": "http://localhost:*",
-            "timeout": 30000,
+            "timeout": 45000,
             "webRoot": "${workspaceFolder}/src",
             "sourceMapPathOverrides": {
                 "webpack:///./src/*": "${webRoot}/*"
@@ -54,13 +53,11 @@
             "internalConsoleOptions": "openOnSessionStart"
         }
     ],
-    "compounds": [
-        {
-            "name": "Electron: All",
-            "configurations": [
-                "Electron: Main",
-                "Electron: Renderer"
-            ]
-        }
-    ]
+    "compounds": [{
+        "name": "Electron: All",
+        "configurations": [
+            "Electron: Main",
+            "Electron: Renderer"
+        ]
+    }]
 }

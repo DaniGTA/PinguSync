@@ -6,13 +6,13 @@ import { xml2json } from 'xml-js';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
 import Series from '../../controller/objects/series';
 import { createWriteStream, readFileSync, createReadStream } from 'fs';
-import Names from '../../controller/objects/meta/names';
 import Name from '../../controller/objects/meta/name';
-import AniDBNameListXML from './objects/anidbNameListXML';
+import AniDBNameListXML, { Title } from './objects/anidbNameListXML';
 import { createGunzip } from 'zlib';
 import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
 export default class AniDBNameList implements InfoProvider {
     providerName: string = 'anidb';
+    version:number = 1;
     static anidbNameManager: AniDBNameManager = new AniDBNameManager();
 
     constructor(download: boolean = true) {
@@ -21,34 +21,37 @@ export default class AniDBNameList implements InfoProvider {
         }
     }
 
-    getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
-        throw new Error("Method not implemented.");
-    }
-
-    async getAllNames(names: Names): Promise<Name[]> {
-        const allNames = await names.getAllNames();
-        const resultNames = [...allNames];
+    async getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
+        const allNames = await anime.names;
         const nameDBList = AniDBNameList.anidbNameManager.data;
 
         if (nameDBList) {
             for (const seriesDB of nameDBList.animetitles.anime) {
-                if (Array.isArray(seriesDB.title)) {
-                    if (titleCheckHelper.checkNames(allNames.flatMap(x => x.name), seriesDB.title.flatMap(x => x._text))) {
-                        for (const title of seriesDB.title) {
-                            resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
-                        }
-                        return resultNames;
-                    }
-                } else {
-                    if (titleCheckHelper.checkNames(allNames.flatMap(x => x.name), [seriesDB.title._text])) {
-                        resultNames.push(new Name(seriesDB.title._text, seriesDB.title._attributes["xml:lang"]));
-                        return resultNames;
-                    }
+                const result = await this.checkTitles(allNames,seriesDB.title);
+                if(result){
+                    let ipld = new InfoProviderLocalData(this.providerName);
+                    ipld.id = seriesDB._attributes.aid;
+                    ipld.version = this.version;
+                    ipld.names = result;
+                    return ipld;
                 }
             }
         }
+        throw 'nothing found';
+    
+    }
 
-        return resultNames;
+    async checkTitles(allNames:Name[],titles: Title[]){
+        const resultNames = [...allNames];
+        if (await titleCheckHelper.checkNames(allNames.flatMap(x => x.name), titles.flatMap(x => x._text))) {
+            for (const title of titles) {
+                if(title._text){
+                    resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
+                }
+            }
+            return resultNames;
+        }
+        return null;
     }
 
     public InternalTesting() {

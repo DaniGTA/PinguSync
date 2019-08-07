@@ -1,9 +1,3 @@
-import Series from '../controller/objects/series';
-
-import ListController from '../controller/listController';
-
-import Names from '../controller/objects/meta/names';
-
 export default new class SortHelper {
 
 
@@ -43,6 +37,4 @@ export default new class SortHelper {
         array[i] = array[j];
         array[j] = newJ;
     }
-
-
 }

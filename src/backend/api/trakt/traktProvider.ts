@@ -44,7 +44,7 @@ export default class TraktProvider implements ListProvider {
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + await anime.names.getRomajiName());
+            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + await Name.getRomajiName(anime.names));
             for (const result of searchResults) {
                 try {
                     var b = await traktConverter.convertShowToAnime(result.show);
@@ -85,9 +85,8 @@ export default class TraktProvider implements ListProvider {
                         if (season.number == 1) {
                             series.releaseYear = entry.show.year;
                         }
-                        series.names.engName = entry.show.title;
-                        series.names.otherNames.push(new Name(entry.show.ids.slug, 'id'));
-                        await series.names.fillNames();
+                        series.names.push(new Name(entry.show.title,'en'));
+                        series.names.push(new Name(entry.show.ids.slug, 'id'));
 
                         const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
 

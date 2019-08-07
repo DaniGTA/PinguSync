@@ -1,13 +1,14 @@
 import ProviderList from '../providerList';
 import InfoProvider from '../../../backend/api/infoProvider';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
+import Name from './meta/name';
 /**
  * Only contains infos about the series.
  */
 export class InfoProviderLocalData extends ProviderLocalData {
 
     public readonly provider: string;
-
+    public names: Name[] = [];
     constructor(lp?: InfoProvider | string) {
         super();
         this.lastUpdate = new Date(Date.now());

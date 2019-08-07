@@ -10,7 +10,6 @@ import { ListProviderLocalData } from '../../controller/objects/listProviderLoca
 import Series, { WatchStatus } from '../../controller/objects/series';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import getSeriesByIDGql from './graphql/getSeriesByID.gql';
-import Names from '../../controller/objects/meta/names';
 import { SearchSeries } from './graphql/searchSeries';
 import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
 import aniListConverter from './aniListConverter';

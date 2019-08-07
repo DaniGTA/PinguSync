@@ -13,7 +13,7 @@ class StringHelper {
     /**
      * Generates a randome string.
      * 
-     * [!] Dont make this async.
+     * [!] Dont make this async. because it will be used by construtors.
      * @param length 
      */
     public randomString(length: number = 10): string {
@@ -42,6 +42,40 @@ class StringHelper {
         string = string.replace("'", '');
         string = string.replace('.', '');
         return string.replace('  ', ' ').trim();
+    }
+    public async getSeasonNumberFromTitle(title: string): Promise<number> {
+        var reversedTitle = await this.reverseString(title);
+        var lastChar = reversedTitle.charAt(0);
+        var countLastChar = 0;
+        if (title.toLocaleLowerCase().includes('episode')) {
+            throw 'That name dont have a Season';
+        }
+        if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd/gmi)) {
+            var match = /Season\s{1,}(\d{1,})|(\d{1,})nd/gmi.exec(title);
+            if (match != null) {
+                if (typeof match[1] !== 'undefined') {
+                    return parseInt(match[1]);
+                } else if (typeof match[2] !== 'undefined') {
+                    return parseInt(match[2]);
+                }
+            }
+        } else if ('0123456789'.includes(lastChar)) {
+            return parseInt(lastChar, 10);
+        } else if (['I'].includes(lastChar)) {
+            while (lastChar === reversedTitle.charAt(0)) {
+                countLastChar++;
+                reversedTitle = reversedTitle.substr(1);
+            }
+        }
+        if (countLastChar != 1) {
+            return countLastChar;
+        } else {
+            throw 'That name dont have a Season';
+        }
+    }
+
+    public async hasKanji(s: string): Promise<boolean> {
+        return s.match('[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}') != null;
     }
 }
 

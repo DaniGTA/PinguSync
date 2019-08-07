@@ -1,5 +1,4 @@
 import stringHelper from '../../helpFunctions/stringHelper';
-import Names from './meta/names';
 import Overview from './meta/overview';
 import listHelper from '../../helpFunctions/listHelper';
 import WatchProgress from './meta/watchProgress';
@@ -10,12 +9,13 @@ import { CoverSize } from './meta/CoverSize';
 import Cover from './meta/Cover';
 import { MediaType } from './meta/mediaType';
 import ListController from '../listController';
+import Name from './meta/name';
 
 export default class Series {
     public packageId: string = '';
     public id: string = '';
     public lastUpdate: number = Date.now();
-    public names: Names = new Names();
+    public names: Name[] = [];
     public mediaType: MediaType = MediaType.SERIES;
     public listProviderInfos: ListProviderLocalData[] = [];
     public infoProviderInfos: InfoProviderLocalData[] = [];
@@ -30,6 +30,24 @@ export default class Series {
         this.id = stringHelper.randomString(30);
     }
 
+
+    getAllNames():Name[]{
+        const names = [...this.names];
+        for (const provider of this.infoProviderInfos) {
+            names.push(...provider.names);
+        }
+        return names;
+    }
+
+    /**
+     * Get a Cover image of a prefered size.
+     * 
+     * If the prefered size can not be found it will search of a lower size.
+     * 
+     * If the series have no covers then it will return [null].
+     * 
+     * @param preferedSize default: LARGE
+     */
     getCoverImage(preferedSize: CoverSize = CoverSize.LARGE): Cover | null {
         let ressources: ProviderLocalData[] = [...this.listProviderInfos, ...this.infoProviderInfos];
         let result: Cover | null = null;
@@ -109,9 +127,7 @@ export default class Series {
                     return provider.targetSeason;
                 }
             }
-
-            this.names = Object.assign(new Names(), this.names);
-            const numberFromName = await this.names.getSeasonNumber();
+            const numberFromName = await Name.getSeasonNumber(this.names);
 
             if (numberFromName) {
                 this.cachedSeason = numberFromName;
@@ -258,7 +274,6 @@ export default class Series {
         }
         this.listProviderInfos = providersCache;
         this.overviews = overviewsCache;
-        this.names = Object.assign(new Names(), this.names);
     }
 
     /**
@@ -269,17 +284,14 @@ export default class Series {
     public async merge(anime: Series): Promise<Series> {
         const newAnime: Series = new Series();
 
-        newAnime.names.engName = await this.mergeString(this.names.engName, anime.names.engName, 'EngName');
-        newAnime.names.romajiName = await this.mergeString(this.names.romajiName, anime.names.romajiName, 'RomajiName');
-        newAnime.names.mainName = await this.mergeString(this.names.mainName, anime.names.mainName, 'MainName');
-        newAnime.names.shortName = await this.mergeString(this.names.shortName, anime.names.shortName, 'ShortNmae');
-        newAnime.names.otherNames.push(...this.names.otherNames, ...anime.names.otherNames);
-        newAnime.names.otherNames = await listHelper.getUniqueList(newAnime.names.otherNames);
+        
+        newAnime.names.push(...this.names, ...anime.names);
+        newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
 
         newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.listProviderInfos.flatMap(x => x.episodes)));
-        newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names.mainName, 'ReleaseYear');
+        newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names[0].name, 'ReleaseYear');
 
-        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names.mainName, 'RunTime');
+        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names[0].name, 'RunTime');
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
 

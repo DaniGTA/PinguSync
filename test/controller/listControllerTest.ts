@@ -7,6 +7,7 @@ import listHelper from '../../src/backend/helpFunctions/listHelper';
 import { ListProviderLocalData } from '../../src/backend/controller/objects/listProviderLocalData';
 import Series from '../../src/backend/controller/objects/series';
 import TestProvider from './objects/testClass/testProvider';
+import Name from '../../src/backend/controller/objects/meta/name';
 describe('ListControllerTest | Combine', () => {
     var lc = new ListController(false);
     before(() => {
@@ -57,7 +58,7 @@ describe('ListControllerTest | Combine', () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime();
         x2.listProviderInfos[0].targetSeason = undefined;
-        x2.names.engName = "Test III";
+        x2.names.push(new Name("Test III","en"));
         entry.push(x2);
         entry.push(getFilledAnime());
         for (let index = 0; index < 20; index++) {
@@ -71,7 +72,7 @@ describe('ListControllerTest | Combine', () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime();
         x2.listProviderInfos[0].targetSeason = undefined;
-        x2.names.engName = "Test 3";
+        x2.names.push(new Name("Test 3","en"));
         entry.push(x2);
         entry.push(getFilledAnime());
         for (let index = 0; index < 20; index++) {
@@ -84,7 +85,7 @@ describe('ListControllerTest | Combine', () => {
     it('should combine basic entrys with season in title (3/4)', async () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime();
-        x2.names.engName = "Test Season 3";
+        x2.names.push(new Name("Test Season 3","en"));
         x2.releaseYear = 0;
         x2.episodes = 0;
         entry.push(x2);
@@ -100,9 +101,9 @@ describe('ListControllerTest | Combine', () => {
     it('should combine basic entrys with season in title (4/4)', async () => {
         var entry: Series[] = [];
         let x = getFilledAnime();
-        x.names.engName = "Tesjo"
+        x.names.push(new Name("Test","en"));
         var x2 = getFilledAnime();
-        x2.names.engName = "Tesjo x";
+        x2.names.push(new Name("Test x","en"));
         x2.releaseYear = 0;
         x2.episodes = 0;
         entry.push(x2);
@@ -137,17 +138,17 @@ describe('ListControllerTest | Combine', () => {
     it('should sort list', async () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime();
-        x2.names.engName = 'A';
+        x2.names.push(new Name("A","en"));
         var x3 = getFilledAnime();
-        x3.names.engName = 'B';
+        x3.names.push(new Name("B","en"));
         var x4 = getFilledAnime();
-        x4.names.engName = 'C';
+        x4.names.push(new Name("C","en"));
         var x5 = getFilledAnime();
-        x5.names.engName = 'D';
+        x5.names.push(new Name("D","en"));
         var x6 = getFilledAnime();
-        x6.names.engName = 'X';
+        x6.names.push(new Name("E","en"));
         var x7 = getFilledAnime();
-        x7.names.engName = 'F';
+        x7.names.push(new Name("F","en"));
 
         entry.push(x7);
         entry.push(x6);
@@ -157,9 +158,9 @@ describe('ListControllerTest | Combine', () => {
         entry.push(x2);
         entry = await listHelper.shuffle<Series>(entry);
         entry = await listHelper.sortList(entry);
-        assert.equal(entry[0].names.engName, x2.names.engName);
-        assert.equal(entry[1].names.engName, x3.names.engName);
-        assert.equal(entry[2].names.engName, x4.names.engName);
+        assert.equal(entry[0].names, x2.names);
+        assert.equal(entry[1].names, x3.names);
+        assert.equal(entry[2].names, x4.names);
         return;
     });
 
@@ -298,7 +299,7 @@ function getFilledAnime(): Series {
     var anime = new Series();
     anime.episodes = 10;
     anime.releaseYear = 2014;
-    anime.names.engName = "Test";
+    anime.names.push(new Name("Test","en"));
     provider.targetSeason = 3;
     anime.listProviderInfos.push(provider);
     return anime;
@@ -311,7 +312,7 @@ function getRandomeFilledAnime(): Series {
     anime.releaseYear = Math.random() * (+2019 - +1989) + +1989;
 
     provider.targetSeason = Math.random() * (+3 - +0) + +0;
-    anime.names.engName = stringHelper.randomString();
+    anime.names.push(new Name(stringHelper.randomString(),"en"));
     anime.listProviderInfos.push(provider);
     return anime;
 }

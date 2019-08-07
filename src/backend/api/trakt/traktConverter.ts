@@ -7,10 +7,11 @@ import { FullShowInfo } from './objects/fullShowInfo';
 import Overview from '../../controller/objects/meta/overview';
 import TraktProvider from './traktProvider';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
+import Name from '../../controller/objects/meta/name';
 export default new class TraktConverter {
     async convertShowToAnime(show: Show | WatchedShow): Promise<Series> {
         const series = new Series();
-        series.names.engName = show.title;
+       series.names.push(new Name(show.title,'en'));
         series.releaseYear = show.year;
 
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
@@ -26,7 +27,7 @@ export default new class TraktConverter {
     }
     async convertFullShowInfoToAnime(fullShow: FullShowInfo): Promise<Series> {
         const series = new Series();
-        series.names.engName = fullShow.title;
+        series.names.push(new Name(fullShow.title,'en'));
         series.releaseYear = fullShow.year;
         series.overviews.push(new Overview(fullShow.overview, 'eng'));
         series.runTime = fullShow.runtime;

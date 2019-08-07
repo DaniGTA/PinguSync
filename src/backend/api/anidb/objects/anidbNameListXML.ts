@@ -8,10 +8,10 @@ interface Animetitles {
 
 interface Anime {
     _attributes: Attributes2;
-    title: Title[] | Title;
+    title: Title[];
 }
 
-interface Title {
+export interface Title {
     _attributes: Attributes3;
     _text: string;
 }
