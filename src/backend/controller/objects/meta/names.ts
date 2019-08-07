@@ -36,7 +36,7 @@ export default class Names {
     }
     public async getSeasonNumber(): Promise<number | undefined> {
         var highestSeasonDetected: number | undefined;
-        for (const name of await this.getAllNames()) {
+        for (const name of await this.getAllNamesAsString()) {
             try {
                 var nr = await this.getSeasonNumberFromTitle(name);
                 if (nr > (highestSeasonDetected ? highestSeasonDetected : 0)) {
@@ -58,10 +58,23 @@ export default class Names {
         }
     }
 
-    public async getAllNames(): Promise<string[]> {
+    public async getAllNamesAsString(): Promise<string[]> {
         var allNames = [this.engName, this.mainName, this.romajiName, this.shortName];
         if (this.otherNames != null && this.otherNames.length !== 0) {
             allNames.push(...this.otherNames.flatMap(x => x.name));
+        }
+        return await listHelper.cleanArray(allNames);
+    }
+
+    public async getAllNames(): Promise<Name[]> {
+        var allNames = [
+            new Name(this.engName, 'en'),
+            new Name(this.mainName, 'main'),
+            new Name(this.romajiName, 'romaji'),
+            new Name(this.shortName, 'shortname')];
+
+        if (this.otherNames != null && this.otherNames.length !== 0) {
+            allNames.push(...this.otherNames);
         }
         return await listHelper.cleanArray(allNames);
     }

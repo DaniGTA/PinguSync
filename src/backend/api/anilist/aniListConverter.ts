@@ -3,9 +3,8 @@ import { Medium } from './graphql/searchSeries';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import Overview from '../../controller/objects/meta/overview';
 import Name from '../../controller/objects/meta/name';
-import aniListProvider from './anilistProvider';
 import { Entry, MediaRelation } from './graphql/seriesList';
-import AniListProvider from './anilistProvider';
+import AniListProvider from './aniListProvider';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import Cover from '../../controller/objects/meta/Cover';
 import { CoverSize } from '../../controller/objects/meta/CoverSize';
@@ -23,7 +22,7 @@ export default new class AniListConverter {
         series.releaseYear = medium.startDate.year;
         series.mediaType = await this.convertTypeToMediaType(medium.format);
 
-        const provider = new ListProviderLocalData(aniListProvider.getInstance());
+        const provider = new ListProviderLocalData(AniListProvider.getInstance());
         provider.covers.push(new Cover(medium.coverImage.large, CoverSize.LARGE));
         provider.covers.push(new Cover(medium.coverImage.medium, CoverSize.MEDIUM));
         provider.id = medium.id;
@@ -56,7 +55,7 @@ export default new class AniListConverter {
         series.names.otherNames.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
         series.mediaType = await this.convertTypeToMediaType(info.Media.format);
 
-        const provider = new ListProviderLocalData(aniListProvider.getInstance());
+        const provider = new ListProviderLocalData(AniListProvider.getInstance());
         provider.covers.push(new Cover(info.Media.coverImage.large, CoverSize.LARGE));
         provider.covers.push(new Cover(info.Media.coverImage.medium, CoverSize.MEDIUM));
         provider.id = info.Media.id;

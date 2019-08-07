@@ -41,6 +41,17 @@
             "request": "launch",
             "name": "Launch this",
             "sourceMaps": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/mocha",
+            "args": [
+                "--inspect-brk"
+            ],
+            "port": 9229,
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ],
     "compounds": [

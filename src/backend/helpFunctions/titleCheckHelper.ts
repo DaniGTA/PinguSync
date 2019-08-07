@@ -4,9 +4,12 @@ import stringHelper from './stringHelper';
 
 export default new class TitleCheckHelper {
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
-        let aNameList: string[] = [...await Object.assign(new Names(), a.names).getAllNames()];
-        let bNameList: string[] = [...await Object.assign(new Names(), b.names).getAllNames()];
+        let aNameList: string[] = [...await Object.assign(new Names(), a.names).getAllNamesAsString()];
+        let bNameList: string[] = [...await Object.assign(new Names(), b.names).getAllNamesAsString()];
+        return await this.checkNames(aNameList, bNameList);
+    }
 
+    public async checkNames(aNameList: string[], bNameList: string[]) {
         if (await this.fastMatch(aNameList, bNameList)) {
             for (let name of aNameList) {
                 try {

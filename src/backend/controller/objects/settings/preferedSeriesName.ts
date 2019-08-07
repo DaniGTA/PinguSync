@@ -15,7 +15,7 @@ export class PreferedSeriesNameHelper {
     async getPreferedNameOfSeries(series: Series): Promise<string> {
         const userSettings = new UserSettings();
         const seriesNames = Object.assign(new Names(), series.names);
-        const names = await seriesNames.getAllNames();
+        const names = await seriesNames.getAllNamesAsString();
         try {
             if (userSettings.preferedSeriesName === PreferedSeriesName.ENGLISH) {
                 if (seriesNames.engName) {
@@ -34,6 +34,6 @@ export class PreferedSeriesNameHelper {
             }
         } catch (err) { }
 
-        return (await seriesNames.getAllNames())[0];
+        return (await seriesNames.getAllNamesAsString())[0];
     }
 }

@@ -2,26 +2,53 @@
 import * as http from "http";
 import AniDBNameManager from './anidbNameManager';
 import InfoProvider from '../infoProvider';
-import * as zlib from 'zlib';
-import * as converter from 'xml-js';
+import { xml2json } from 'xml-js';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
 import Series from '../../controller/objects/series';
 import { createWriteStream, readFileSync, createReadStream } from 'fs';
-import Names from 'src/backend/controller/objects/meta/names';
-import Name from 'src/backend/controller/objects/meta/name';
+import Names from '../../controller/objects/meta/names';
+import Name from '../../controller/objects/meta/name';
+import AniDBNameListXML from './objects/anidbNameListXML';
+import { createGunzip } from 'zlib';
+import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
 export default class AniDBNameList implements InfoProvider {
-    getAllNames(names: Names): Promise<Name[]> {
-        throw new Error("Method not implemented.");
-    }
     providerName: string = 'anidb';
-    getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
-        throw new Error("Method not implemented.");
-    }
     static anidbNameManager: AniDBNameManager = new AniDBNameManager();
+
     constructor(download: boolean = true) {
         if (this.allowDownload() && download) {
             this.getData();
         }
+    }
+
+    getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
+        throw new Error("Method not implemented.");
+    }
+
+    async getAllNames(names: Names): Promise<Name[]> {
+        const allNames = await names.getAllNames();
+        const resultNames = [...allNames];
+        const nameDBList = AniDBNameList.anidbNameManager.data;
+
+        if (nameDBList) {
+            for (const seriesDB of nameDBList.animetitles.anime) {
+                if (Array.isArray(seriesDB.title)) {
+                    if (titleCheckHelper.checkNames(allNames.flatMap(x => x.name), seriesDB.title.flatMap(x => x._text))) {
+                        for (const title of seriesDB.title) {
+                            resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
+                        }
+                        return resultNames;
+                    }
+                } else {
+                    if (titleCheckHelper.checkNames(allNames.flatMap(x => x.name), [seriesDB.title._text])) {
+                        resultNames.push(new Name(seriesDB.title._text, seriesDB.title._attributes["xml:lang"]));
+                        return resultNames;
+                    }
+                }
+            }
+        }
+
+        return resultNames;
     }
 
     public InternalTesting() {
@@ -57,21 +84,30 @@ export default class AniDBNameList implements InfoProvider {
         const that = this;
         console.warn('[ANIDB] Download anime names.')
         this.downloadFile("http://anidb.net/api/anime-titles.xml.gz").then(async (value) => {
-            const fileContents = createReadStream('./anidb-anime-titles.xml.gz');
-            const writeStream = createWriteStream('./anidb-anime-titles.xml');
-            const unzip = zlib.createGunzip();
 
-            var stream = fileContents.pipe(unzip).pipe(writeStream);
-            // Wait until the Stream ends.
-            await new Promise(fulfill =>{stream.on("finish", fulfill);stream.on("close", fulfill);});
-            
-            var data =  readFileSync('./anidb-anime-titles.xml','UTF-8');
-            var result1 = converter.xml2json(data, {compact: true, spaces: 4});
-            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()),result1);
+            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML());
+
         }).catch((err) => {
-            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), "");
+            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()));
             console.log(err);
         });
+    }
+
+    private async getAniDBNameListXML(): Promise<AniDBNameListXML> {
+        const fileContents = createReadStream('./anidb-anime-titles.xml.gz');
+        const writeStream = createWriteStream('./anidb-anime-titles.xml');
+        const unzip = createGunzip();
+
+        var stream = fileContents.pipe(unzip).pipe(writeStream);
+        // Wait until the Stream ends.
+        await new Promise(fulfill => { stream.on("finish", fulfill); stream.on("close", fulfill); });
+
+        var data = readFileSync('./anidb-anime-titles.xml', 'UTF-8');
+        var json = xml2json(data, { compact: true, spaces: 0 });
+        if (json) {
+            return JSON.parse(json) as AniDBNameListXML;
+        }
+        throw 'convert from anidb xml to json failed';
     }
 
     private async downloadFile(url: string): Promise<string> {

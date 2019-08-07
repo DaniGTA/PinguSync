@@ -6,8 +6,8 @@ import { TVDBLogin } from './models/login';
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import TVDBConverter from './tvdbConverter';
 import { TVDBSeries } from './models/getSeries';
-import Names from 'src/backend/controller/objects/meta/names';
-import Name from 'src/backend/controller/objects/meta/name';
+import Names from '../../controller/objects/meta/names';
+import Name from '../../controller/objects/meta/name';
 
 export default class TVDBProvider implements InfoProvider {
     getAllNames(names: Names): Promise<Name[]> {

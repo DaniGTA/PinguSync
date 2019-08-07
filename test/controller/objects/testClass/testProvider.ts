@@ -11,7 +11,7 @@ export default class TestProvider implements ListProvider {
         throw new Error("Method not implemented.");
     }
 
-
+    hasUniqueIdForSeasons = false;
     providerName: string = "";
     hasOAuthCode: boolean = true;
     loggedIn: boolean;

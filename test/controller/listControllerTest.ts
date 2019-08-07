@@ -171,10 +171,11 @@ describe('ListControllerTest | Combine', () => {
         var x1 = getFilledAnime();
         x1.listProviderInfos[0].targetSeason = 1;
         x1.listProviderInfos.push(lpld);
-        var x2 = getFilledAnime();
 
+        var x2 = getFilledAnime();
         x2.listProviderInfos.push(lpld);
         x2.listProviderInfos[0].targetSeason = 1;
+
         var x3 = getFilledAnime();
         x3.listProviderInfos.push(lpld);
         x3.listProviderInfos[0].targetSeason = 1;
