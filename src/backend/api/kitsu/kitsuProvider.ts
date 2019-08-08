@@ -29,14 +29,15 @@ export default class KitsuProvider implements ListProvider {
     }
 
     async getMoreSeriesInfo(_anime: Series): Promise<Series> {
-        var anime = Object.assign(new Series(), _anime);
-        anime.readdFunctions();
-        var providerInfos = anime.listProviderInfos.find(x => x.provider === this.providerName);
+        console.log('[Kitsu] Start API Request');
+        var series = Object.assign(new Series(), _anime);
+        series.readdFunctions();
+        var providerInfos = series.listProviderInfos.find(x => x.provider === this.providerName);
         var id = null;
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            var text = await Name.getRomajiName(anime.names);
+            var text = await Name.getRomajiName(await series.getAllNames());
             const searchResults: SearchResult = ((await this.api.get('anime', {
                 filter: {
                     text: text
@@ -46,8 +47,8 @@ export default class KitsuProvider implements ListProvider {
             for (const result of searchResults.data) {
                 try {
                     var b = await kitsuConverter.convertMediaToAnime(result);
-                    var validSeason = (await anime.getSeason() === await b.getSeason() || (await anime.getSeason() === 1 && typeof await b.getSeason() === 'undefined'));
-                    if (await titleCheckHelper.checkSeriesNames(anime, b) && validSeason) {
+                    var validSeason = (await series.getSeason() === await b.getSeason() || (await series.getSeason() === 1 && typeof await b.getSeason() === 'undefined'));
+                    if (await titleCheckHelper.checkSeriesNames(series, b) && validSeason) {
                         var providerInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
                             id = providerInfos.id;
@@ -60,8 +61,10 @@ export default class KitsuProvider implements ListProvider {
         if (id != null) {
             await timeHelper.delay(1500);
             const getResult = ((await this.api.get('anime/' + id)) as unknown) as GetMediaResult;
-            return await (await kitsuConverter.convertMediaToAnime(getResult.data)).merge(anime);
+            console.log('[Kitsu] API Request SUCCESS');
+            return await (await kitsuConverter.convertMediaToAnime(getResult.data)).merge(series);
         } else {
+            console.log('[Kitsu] API Request SUCCESS but no results');
             throw 'NoMatch in Kitsu';
         }
 

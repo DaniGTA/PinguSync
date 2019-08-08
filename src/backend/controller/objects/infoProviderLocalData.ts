@@ -78,6 +78,9 @@ export class InfoProviderLocalData extends ProviderLocalData {
             if (newestProvider.prequelId) {
                 mergedProvider.prequelId = newestProvider.prequelId;
             }
+            if (newestProvider.names) {
+                mergedProvider.names = newestProvider.names;
+            }
         }
 
         return mergedProvider;

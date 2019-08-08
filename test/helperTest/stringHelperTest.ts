@@ -19,12 +19,15 @@ describe('stringHelperTest', () => {
         assert.strictEqual(await stringHelper.cleanString("Title  test"), "Title test");
         return;
     });
+    it('should not crash on check kanij', async () => {
+        assert.strictEqual(await stringHelper.hasKanji(null as unknown as string), false);
+    });
+
     it('should make test to tset', async () => {
         const result = await stringHelper.reverseString('test');
         assert.equal(result, 'tset');
         return;
     });
-
 
 
 });

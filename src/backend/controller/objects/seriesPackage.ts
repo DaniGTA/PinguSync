@@ -1,6 +1,7 @@
 import Series from './series';
 import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import { PreferedSeriesNameHelper } from './settings/preferedSeriesName';
+import listHelper from 'src/backend/helpFunctions/listHelper';
 
 /**
  * Contains all Relations of a Series.
@@ -9,7 +10,12 @@ export default class SeriesPackage {
     id: string;
     allRelations: Series[] = [];
     constructor(...series: Series[]) {
-        this.allRelations = series;
+        for (const serie of series) {
+            if (this.allRelations.findIndex(x => serie.id === x.id) === -1) {
+                this.allRelations.push(serie);
+            }
+        }
+
         this.id = stringHelper.randomString(25);
     }
 

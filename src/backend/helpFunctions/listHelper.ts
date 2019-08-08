@@ -119,8 +119,8 @@ class ListHelper {
 */
     public async sortList(list: Series[]) {
         list = await sortHelper.quickSort(list, async (a: Series, b: Series) => {
-            let aName: string = await Name.getRomajiName(a.names);
-            let bName: string = await Name.getRomajiName(b.names);
+            let aName: string = await Name.getRomajiName(await a.getAllNames());
+            let bName: string = await Name.getRomajiName(await b.getAllNames());
 
             aName = aName.toLocaleLowerCase();
             bName = bName.toLocaleLowerCase();

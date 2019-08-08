@@ -329,19 +329,19 @@ export default class ListController {
 
     }
 
-    private async updateInfoProviderData(anime: Series): Promise<InfoProviderLocalData[]> {
+    private async updateInfoProviderData(series: Series): Promise<InfoProviderLocalData[]> {
         const result: InfoProviderLocalData[] = [];
         for (const infoProvider of ProviderList.infoProviderList) {
             try {
-                const index = anime.infoProviderInfos.findIndex(entry => infoProvider.providerName == infoProvider.providerName);
+                const index = series.infoProviderInfos.findIndex(entry => infoProvider.providerName == infoProvider.providerName);
                 if (index != -1) {
-                    const provider = anime.infoProviderInfos[index];
+                    const provider = series.infoProviderInfos[index];
                     if (new Date().getTime() - provider.lastUpdate.getTime() < new Date(0).setHours(72)) {
-                        const data = await infoProvider.getSeriesInfo(anime);
+                        const data = await infoProvider.getSeriesInfo(series);
                         result.push(data);
                     }
                 } else {
-                    const data = await infoProvider.getSeriesInfo(anime);
+                    const data = await infoProvider.getSeriesInfo(series);
                     result.push(data);
                 }
             } catch (err) {
@@ -388,9 +388,8 @@ export default class ListController {
             let result = await new ProviderHelper().checkProviderId(a, b);
             if (result.sameId) {
                 matches += 2;
-                if(result.uniqueIdForSeasons){
-                    matchAbleScore += 8;
-                    matches += 8;
+                if (result.uniqueIdForSeasons) {
+                    return true;
                 }
             }
         }

@@ -18,6 +18,7 @@ import timeHelper from '../../helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './aniListUserData';
 import WatchProgress from '../../controller/objects/meta/watchProgress';
+import Name from '../../controller/objects/meta/name';
 
 export default class AniListProvider implements ListProvider {
     hasUniqueIdForSeasons: boolean = true;
@@ -49,7 +50,7 @@ export default class AniListProvider implements ListProvider {
         if (typeof ProviderInfos != 'undefined') {
             id = ProviderInfos.id;
         } else {
-            var name = await Object.assign(new Names(), anime.names).getRomajiName();
+            var name = await Name.getRomajiName(anime.names);
             var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: name, type: 'ANIME' })) as SearchSeries;
             for (const result of searchResults.Page.media) {
                 try {
@@ -219,11 +220,12 @@ export default class AniListProvider implements ListProvider {
     }
 
     private async webRequest<T>(options: (request.UriOptions & request.CoreOptions)): Promise<T> {
+        console.log('[AniList] Start WebRequest');
         return new Promise<T>((resolve, rejects) => {
             try {
                 request(options, (error: any, response: any, body: any) => {
 
-                    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                    console.log('[AniList] statusCode:', response && response.statusCode); // Print the response status code if a response was received
                     if (response.statusCode == 200) {
                         var rawdata = JSON.parse(body);
                         resolve(rawdata.data as T);

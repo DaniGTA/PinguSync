@@ -4,6 +4,7 @@ import TestProvider from './testClass/testProvider';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/listProviderLocalData';
 import listHelper from '../../../src/backend/helpFunctions/listHelper';
 import Series from '../../../src/backend/controller/objects/series';
+import Name from '../../../src/backend/controller/objects/meta/name';
 
 describe('series basic tests', () => {
     it('should have a id', async () => {
@@ -23,7 +24,7 @@ describe('series basic tests', () => {
 
     it('should return season (2/3)', async () => {
         const anime = new Series();
-        anime.names.engName = 'Test 3';
+        anime.names.push(new Name('Test 3', 'en'));
 
         assert.equal(await anime.getSeason(), 3);
         return;
@@ -31,7 +32,7 @@ describe('series basic tests', () => {
 
     it('should return season (3/3)', async () => {
         const anime = new Series();
-        anime.names.engName = 'Test III';
+        anime.names.push(new Name('Test III', 'en'));
 
         assert.equal(await anime.getSeason(), 3);
         return;

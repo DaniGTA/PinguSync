@@ -4,6 +4,7 @@ import assert from "assert";
 
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
 import Series from "../../../src/backend/controller/objects/series";
+import Name from "../../../src/backend/controller/objects/meta/name";
 
 describe('seriesTest | Relations', () => {
     it('get all Relations based on prequel id', async () => {
@@ -139,7 +140,7 @@ describe('seriesTest | Relations', () => {
         var anime = new Series();
         anime.episodes = 10;
         anime.releaseYear = 2014;
-        anime.names.engName = "Test";
+        anime.names.push(new Name("Test", "en"));
         provider.targetSeason = 3;
         anime.listProviderInfos.push(provider);
         return anime;

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import AniDBNameList from './anidbNameList';
+import AniDBNameProvider from './anidbNameProvider';
 import AniDBNameListXML from './objects/anidbNameListXML';
 
 export default class AniDBNameManager {

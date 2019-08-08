@@ -37,18 +37,18 @@ export default class TraktProvider implements ListProvider {
     }
 
     public async getMoreSeriesInfo(_anime: Series): Promise<Series> {
-        var anime = Object.assign(new Series(), _anime);
-        anime.readdFunctions();
-        var providerInfos = anime.listProviderInfos.find(x => x.provider === this.providerName);
+        var series = Object.assign(new Series(), _anime);
+        series.readdFunctions();
+        var providerInfos = series.listProviderInfos.find(x => x.provider === this.providerName);
         var id = null;
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + await Name.getRomajiName(anime.names));
+            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + await Name.getRomajiName(await series.getAllNames()));
             for (const result of searchResults) {
                 try {
                     var b = await traktConverter.convertShowToAnime(result.show);
-                    if (await titleCheckHelper.checkSeriesNames(anime, b)) {
+                    if (await titleCheckHelper.checkSeriesNames(series, b)) {
                         var providerInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
                             id = providerInfos.id;
@@ -59,7 +59,7 @@ export default class TraktProvider implements ListProvider {
         }
         if (id != null) {
             const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + id);
-            return await (await traktConverter.convertFullShowInfoToAnime(res)).merge(anime);
+            return await (await traktConverter.convertFullShowInfoToAnime(res)).merge(series);
         } else {
             throw 'NoMatch in TraktSearch';
         }
@@ -85,7 +85,7 @@ export default class TraktProvider implements ListProvider {
                         if (season.number == 1) {
                             series.releaseYear = entry.show.year;
                         }
-                        series.names.push(new Name(entry.show.title,'en'));
+                        series.names.push(new Name(entry.show.title, 'en'));
                         series.names.push(new Name(entry.show.ids.slug, 'id'));
 
                         const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
@@ -169,6 +169,7 @@ export default class TraktProvider implements ListProvider {
     }
 
     private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+        console.log('[Trakt] Start WebRequest');
         const that = this;
         return new Promise<any>((resolve, reject) => {
             request({
@@ -183,7 +184,7 @@ export default class TraktProvider implements ListProvider {
                 body: body,
             }, (error: any, response: any, body: any) => {
                 try {
-                    console.log('Status:', response.statusCode);
+                    console.log('[Trakt] status code:', response.statusCode);
                     if (response.statusCode === 200 || response.statusCode === 201) {
                         var data: T = JSON.parse(body) as T;
                         resolve(data);

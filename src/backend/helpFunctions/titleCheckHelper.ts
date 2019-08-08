@@ -3,8 +3,8 @@ import stringHelper from './stringHelper';
 
 export default new class TitleCheckHelper {
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
-        let aNameList: string[] =  a.getAllNames().flatMap(x=> x.name);
-        let bNameList: string[] = b.getAllNames().flatMap(x=> x.name);
+        let aNameList: string[] = (await a.getAllNames()).flatMap(x => x.name);
+        let bNameList: string[] = (await b.getAllNames()).flatMap(x => x.name);
         return await this.checkNames(aNameList, bNameList);
     }
 
@@ -72,9 +72,9 @@ export default new class TitleCheckHelper {
             var al = [...aList];
             var bl = [...bList];
             for (let a of al) {
-                if(a){
+                if (a) {
                     for (let b of bl) {
-                        if(b){
+                        if (b) {
                             var shortestTextLength = 0;
                             if (a.length < b.length) {
                                 shortestTextLength = a.length;

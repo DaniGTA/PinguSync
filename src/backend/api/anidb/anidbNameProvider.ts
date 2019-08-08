@@ -3,17 +3,17 @@ import * as http from "http";
 import AniDBNameManager from './anidbNameManager';
 import InfoProvider from '../infoProvider';
 import { xml2json } from 'xml-js';
-import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
+import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import Series from '../../controller/objects/series';
 import { createWriteStream, readFileSync, createReadStream } from 'fs';
 import Name from '../../controller/objects/meta/name';
 import AniDBNameListXML, { Title } from './objects/anidbNameListXML';
 import { createGunzip } from 'zlib';
 import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
-export default class AniDBNameList implements InfoProvider {
-    providerName: string = 'anidb';
-    version:number = 1;
-    static anidbNameManager: AniDBNameManager = new AniDBNameManager();
+export default class AniDBNameProvider implements InfoProvider {
+    public providerName: string = 'anidb';
+    private version: number = 1;
+    public static anidbNameManager: AniDBNameManager = new AniDBNameManager();
 
     constructor(download: boolean = true) {
         if (this.allowDownload() && download) {
@@ -21,14 +21,14 @@ export default class AniDBNameList implements InfoProvider {
         }
     }
 
-    async getSeriesInfo(anime: Series): Promise<InfoProviderLocalData> {
-        const allNames = await anime.names;
-        const nameDBList = AniDBNameList.anidbNameManager.data;
+    async getSeriesInfo(series: Series): Promise<InfoProviderLocalData> {
+        const allNames = await series.getAllNames();
+        const nameDBList = AniDBNameProvider.anidbNameManager.data;
 
         if (nameDBList) {
             for (const seriesDB of nameDBList.animetitles.anime) {
-                const result = await this.checkTitles(allNames,seriesDB.title);
-                if(result){
+                const result = await this.checkTitles(allNames, seriesDB.title);
+                if (result) {
                     let ipld = new InfoProviderLocalData(this.providerName);
                     ipld.id = seriesDB._attributes.aid;
                     ipld.version = this.version;
@@ -38,14 +38,14 @@ export default class AniDBNameList implements InfoProvider {
             }
         }
         throw 'nothing found';
-    
+
     }
 
-    async checkTitles(allNames:Name[],titles: Title[]){
+    async checkTitles(allNames: Name[], titles: Title[]) {
         const resultNames = [...allNames];
         if (await titleCheckHelper.checkNames(allNames.flatMap(x => x.name), titles.flatMap(x => x._text))) {
             for (const title of titles) {
-                if(title._text){
+                if (title._text) {
                     resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
                 }
             }
@@ -59,14 +59,14 @@ export default class AniDBNameList implements InfoProvider {
             needDownload: this.allowDownload,
             dateDiffInDays: this.dateDiffInDays,
             downloadFile: this.downloadFile,
-            anidbNameManager: AniDBNameList.anidbNameManager
+            anidbNameManager: AniDBNameProvider.anidbNameManager
         }
     }
 
     private allowDownload(): boolean {
-        if (typeof AniDBNameList.anidbNameManager.lastDownloadTime === 'undefined') {
+        if (typeof AniDBNameProvider.anidbNameManager.lastDownloadTime === 'undefined') {
             return true;
-        } else if (this.dateDiffInDays(AniDBNameList.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 2) {
+        } else if (this.dateDiffInDays(AniDBNameProvider.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 2) {
             return true;
         }
         return false;
@@ -88,10 +88,10 @@ export default class AniDBNameList implements InfoProvider {
         console.warn('[ANIDB] Download anime names.')
         this.downloadFile("http://anidb.net/api/anime-titles.xml.gz").then(async (value) => {
 
-            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML());
+            AniDBNameProvider.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML());
 
         }).catch((err) => {
-            AniDBNameList.anidbNameManager.updateData(new Date(Date.now()));
+            AniDBNameProvider.anidbNameManager.updateData(new Date(Date.now()));
             console.log(err);
         });
     }

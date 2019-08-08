@@ -31,12 +31,12 @@ export default class Series {
     }
 
 
-    getAllNames():Name[]{
+    async getAllNames(): Promise<Name[]> {
         const names = [...this.names];
         for (const provider of this.infoProviderInfos) {
             names.push(...provider.names);
         }
-        return names;
+        return await listHelper.getUniqueNameList(names);
     }
 
     /**
@@ -127,7 +127,7 @@ export default class Series {
                     return provider.targetSeason;
                 }
             }
-            const numberFromName = await Name.getSeasonNumber(this.names);
+            const numberFromName = await Name.getSeasonNumber(await this.getAllNames());
 
             if (numberFromName) {
                 this.cachedSeason = numberFromName;
@@ -145,7 +145,12 @@ export default class Series {
                             return prequelSeason + searchCount;
                         }
                     }
-                    prquel = await prquel.getPrequel(searchInList);
+                    try {
+                        prquel = await prquel.getPrequel(searchInList);
+                    } catch (err) {
+                        this.cachedSeason = searchCount;
+                        return searchCount;
+                    }
                 }
             } catch (err) { }
             this.cachedSeason = undefined;
@@ -284,7 +289,7 @@ export default class Series {
     public async merge(anime: Series): Promise<Series> {
         const newAnime: Series = new Series();
 
-        
+
         newAnime.names.push(...this.names, ...anime.names);
         newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
 
@@ -394,6 +399,9 @@ export default class Series {
                     for (const entryProvider of entry.listProviderInfos) {
                         for (const provider of entry2.listProviderInfos) {
                             if (entryProvider.provider === provider.provider) {
+                                if (entryProvider.id === provider.id && provider.getListProviderInstance().hasUniqueIdForSeasons) {
+                                    break;
+                                }
                                 if (entryProvider.id === provider.id) {
                                     relations.push(entry);
                                 } else if (provider.prequelId === entryProvider.id || entryProvider.prequelId === provider.id) {

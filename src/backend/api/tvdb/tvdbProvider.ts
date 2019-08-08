@@ -57,6 +57,7 @@ export default class TVDBProvider implements InfoProvider {
     }
 
     private async webRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+        console.log('[TVDB] Start WebRequest');
         return new Promise<any>(async (resolve, reject) => {
             request({
                 method: method,
@@ -69,6 +70,7 @@ export default class TVDBProvider implements InfoProvider {
                 body: body,
             }, (error: any, response: any, body: any) => {
                 try {
+                    console.log('[TVDB] status code: ' + response.statusCode);
                     if (response.statusCode === 200 || response.statusCode === 201) {
                         var data: T = JSON.parse(body) as T;
                         resolve(data);
