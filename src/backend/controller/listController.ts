@@ -105,7 +105,9 @@ export default class ListController {
     }
     public async updateWatchProgressTo(anime: Series, watchProgess: number) {
         if (anime.listProviderInfos.length < ProviderList.listProviderList.length / 2) {
-            await this.fillMissingProvider(anime);
+            try {
+                await this.fillMissingProvider(anime);
+            } catch (err) { }
         }
         for (const provider of anime.listProviderInfos) {
             try {
@@ -132,7 +134,9 @@ export default class ListController {
                 console.log("[WARN] Find more or none entry after adding it.");
             } else {
                 var index = await this.getIndexFromSeries(entry[0]);
-                ListController.mainList[index] = await this.fillMissingProvider(entry[0]);
+                try {
+                    ListController.mainList[index] = await this.fillMissingProvider(entry[0]);
+                } catch (err) { }
             }
         }
         console.log('Added ' + ListController.mainList.length + ' to mainList');
@@ -212,8 +216,12 @@ export default class ListController {
         for (const series of allSeriesInThePackage) {
             const index = await this.getIndexFromSeries(series);
             if (index != -1) {
-                var result = await this.fillMissingProvider(ListController.mainList[index], true);
-                this.addSeriesToMainList(result);
+                try {
+                    var result = await this.fillMissingProvider(ListController.mainList[index], true);
+                    this.addSeriesToMainList(result);
+                } catch (err) {
+                    console.log(err);
+                }
             }
         }
     }
