@@ -37,10 +37,14 @@ export default class KitsuProvider implements ListProvider {
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            var text = await Name.getRomajiName(await series.getAllNames());
+            const names = await series.getAllNames();
+            let name = names[0].name;
+            try {
+                name = await Name.getRomajiName(names);
+            } catch (err) { }
             const searchResults: SearchResult = ((await this.api.get('anime', {
                 filter: {
-                    text: text
+                    text: name
                 }
             })) as unknown) as SearchResult;
 

@@ -18,10 +18,7 @@ export default class ListController {
         if (forceLoading) {
             ListController.mainList = this.loadData();
             ListController.listLoaded = true;
-
             this.getSeriesListAndUpdateMainList();
-
-
         }
     }
 
@@ -129,7 +126,14 @@ export default class ListController {
     public async addSeriesToMainList(...animes: Series[]) {
         console.log('Add ' + animes.length + ' to mainList');
         for (const anime of animes) {
-            await this.addSerieToMainList(anime, (animes.length < 2))
+            await this.addSerieToMainList(anime);
+            const entry = await this.findSameSeriesInMainList(anime);
+            if (entry.length != 1) {
+                console.log("[WARN] Find more or none entry after adding it.");
+            } else {
+                var index = await this.getIndexFromSeries(entry[0]);
+                ListController.mainList[index] = await this.fillMissingProvider(entry[0]);
+            }
         }
         console.log('Added ' + ListController.mainList.length + ' to mainList');
         if (animes.length > 2) {
@@ -266,10 +270,6 @@ export default class ListController {
 
     private async fillMissingProvider(entry: Series, forceUpdate = false): Promise<Series> {
         let updatedInfo = false;
-        let days = - 1000 * 60 * 60 * 24 * (Math.floor(Math.random() * 6) + 2);
-        if (typeof entry.lastUpdate != 'undefined' && entry.lastUpdate + days < Date.now() && !forceUpdate) {
-            return entry;
-        }
         const results = await this.updateInfoProviderData(entry);
         for (const infoProviderResult of results) {
             const searchResult = entry.infoProviderInfos.findIndex(entry => entry.provider === infoProviderResult.provider);
@@ -329,14 +329,14 @@ export default class ListController {
 
     }
 
-    private async updateInfoProviderData(series: Series): Promise<InfoProviderLocalData[]> {
+    private async updateInfoProviderData(series: Series, forceUpdate = false): Promise<InfoProviderLocalData[]> {
         const result: InfoProviderLocalData[] = [];
         for (const infoProvider of ProviderList.infoProviderList) {
             try {
                 const index = series.infoProviderInfos.findIndex(entry => infoProvider.providerName == infoProvider.providerName);
                 if (index != -1) {
                     const provider = series.infoProviderInfos[index];
-                    if (new Date().getTime() - provider.lastUpdate.getTime() < new Date(0).setHours(72)) {
+                    if (new Date().getTime() - provider.lastUpdate.getTime() < new Date(0).setHours(72) || forceUpdate) {
                         const data = await infoProvider.getSeriesInfo(series);
                         result.push(data);
                     }

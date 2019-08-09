@@ -43,19 +43,23 @@ export default class AniListProvider implements ListProvider {
         return AniListProvider.instance;
     }
 
-    public async getMoreSeriesInfo(anime: Series): Promise<Series> {
+    public async getMoreSeriesInfo(series: Series): Promise<Series> {
 
-        var ProviderInfos = anime.listProviderInfos.find(x => x.provider === this.providerName);
+        var ProviderInfos = series.listProviderInfos.find(x => x.provider === this.providerName);
         var id = null;
         if (typeof ProviderInfos != 'undefined') {
             id = ProviderInfos.id;
         } else {
-            var name = await Name.getRomajiName(anime.names);
+            const names = await series.getAllNames();
+            let name = names[0].name;
+            try {
+                name = await Name.getRomajiName(names);
+            } catch (err) { }
             var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: name, type: 'ANIME' })) as SearchSeries;
             for (const result of searchResults.Page.media) {
                 try {
                     var b = await aniListConverter.convertMediaToAnime(result);
-                    if (await titleCheckHelper.checkSeriesNames(anime, b)) {
+                    if (await titleCheckHelper.checkSeriesNames(series, b)) {
                         var bProviderInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
                         if (typeof bProviderInfos != 'undefined') {
                             id = bProviderInfos.id;
@@ -70,7 +74,7 @@ export default class AniListProvider implements ListProvider {
             await timeHelper.delay(2500);
             var fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: id, type: 'ANIME' })) as GetSeriesByID;
 
-            return await (await aniListConverter.convertExtendedInfoToAnime(fullInfo)).merge(anime);
+            return await (await aniListConverter.convertExtendedInfoToAnime(fullInfo)).merge(series);
         } else {
             throw 'NoSeriesInfoFound - AniList';
         }
