@@ -55,7 +55,6 @@ export default new class ProviderHelper {
         }catch(err){}
         if(!data){
             alreadySearchedNames.push(firstname);
-            console.log("["+provider.providerName+"] Request failed ☹");
             for (const name of names) {
                 if(alreadySearchedNames.findIndex(x=>name.name===x) === -1 && name.name){
                     console.log("["+provider.providerName+"] Request (Search series info by name) with value: "+name.name);

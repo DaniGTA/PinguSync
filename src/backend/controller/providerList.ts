@@ -15,7 +15,7 @@ export default class ProviderList {
         new KitsuProvider()];
 
     public static infoProviderList: InfoProvider[] = [
-        new TVDBProvider(),
-        new AniDBNameProvider()
+        new AniDBNameProvider(),
+        new TVDBProvider()
     ];
 }

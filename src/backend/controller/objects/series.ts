@@ -26,7 +26,9 @@ export default class Series {
     public overviews: Overview[] = [];
     public releaseYear?: number;
     public runTime?: number;
+
     private cachedSeason?: number | null = null;
+    private seasonDetectionType: string ="";
     private canSync:boolean | null = null;
     constructor() {
         this.listProviderInfos = [];
@@ -178,6 +180,7 @@ export default class Series {
             for (const provider of this.listProviderInfos) {
                 if (provider.targetSeason) {
                     this.cachedSeason = provider.targetSeason;
+                    this.seasonDetectionType = "Provider: "+provider.provider; 
                     return provider.targetSeason;
                 }
             }
@@ -185,6 +188,7 @@ export default class Series {
 
             if (numberFromName) {
                 this.cachedSeason = numberFromName;
+                this.seasonDetectionType = "Name"; 
                 return numberFromName;
             }
             try {
@@ -196,6 +200,7 @@ export default class Series {
                         const prequelSeason = await prquel.getSeason(searchInList);
                         if (prequelSeason === 1 || prequelSeason === 0) {
                             this.cachedSeason = prequelSeason + searchCount;
+                            this.seasonDetectionType = "PrequelTrace"; 
                             return prequelSeason + searchCount;
                         }
                     }

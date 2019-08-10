@@ -29,9 +29,9 @@ class SeriesHelper {
         const aSeason = await a.getSeason();
         const bSeason = await b.getSeason();
         if (aSeason || bSeason) {
-            matchAbleScore += 3;
+            matchAbleScore += 2.5;
             if (aSeason === bSeason) {
-                matches += 3;
+                matches += 2.5;
             } else if (!aSeason && bSeason === 1) {
                 matches += 1;
             } else if (!bSeason && aSeason === 1) {

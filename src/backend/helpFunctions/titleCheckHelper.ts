@@ -108,7 +108,7 @@ export default new class TitleCheckHelper {
     }
 
     private equalIgnoreCase(s1: string, s2: string) {
-        return this.collator.compare(s1, s2) === 0;
+       return s1.toUpperCase() === s2.toUpperCase();
     }
 
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
