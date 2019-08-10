@@ -36,25 +36,20 @@ export default class TraktProvider implements ListProvider {
         this.userData = new TraktUserData();
     }
 
-    public async getMoreSeriesInfo(_anime: Series): Promise<Series> {
+    public async getMoreSeriesInfoByName(_anime: Series,seriesName:string): Promise<Series> {
         var series = Object.assign(new Series(), _anime);
         series.readdFunctions();
-        var providerInfos = series.listProviderInfos.find(x => x.provider === this.providerName);
+        var providerInfos = series.getListProvidersInfos().find(x => x.provider === this.providerName);
         var id = null;
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            const names = await series.getAllNames();
-            let name = names[0].name;
-            try {
-                name = await Name.getRomajiName(names);
-            } catch (err) { }
-            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + name);
+            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + seriesName);
             for (const result of searchResults) {
                 try {
                     var b = await traktConverter.convertShowToAnime(result.show);
                     if (await titleCheckHelper.checkSeriesNames(series, b)) {
-                        var providerInfos = b.listProviderInfos.find(x => x.provider === this.providerName);
+                        var providerInfos = b.getListProvidersInfos().find(x => x.provider === this.providerName);
                         if (typeof providerInfos != 'undefined') {
                             id = providerInfos.id;
                         }
@@ -90,8 +85,8 @@ export default class TraktProvider implements ListProvider {
                         if (season.number == 1) {
                             series.releaseYear = entry.show.year;
                         }
-                        series.names.push(new Name(entry.show.title, 'en'));
-                        series.names.push(new Name(entry.show.ids.slug, 'id'));
+                        series.addSeriesName(new Name(entry.show.title, 'en'));
+                        series.addSeriesName(new Name(entry.show.ids.slug, 'slug'));
 
                         const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
 
@@ -103,7 +98,7 @@ export default class TraktProvider implements ListProvider {
                         providerInfo.targetSeason = season.number;
                         providerInfo.watchStatus = WatchStatus.COMPLETED;
                         providerInfo.lastExternalChange = entry.last_watched_at;
-                        series.listProviderInfos.push(providerInfo);
+                        series.addListProvider(providerInfo);
                         seriesList.push(series);
                     }
                 } catch (e) {
@@ -122,7 +117,7 @@ export default class TraktProvider implements ListProvider {
     }
 
     public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        var providerInfo = anime.listProviderInfos.find(x => x.provider === this.providerName);
+        var providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.addOneWatchProgress(watchProgress);
             const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress.episode);
@@ -133,7 +128,7 @@ export default class TraktProvider implements ListProvider {
     }
 
     public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        var providerInfo = anime.listProviderInfos.find(x => x.provider === this.providerName);
+        var providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.removeOneWatchProgress(watchProgress);
             const updatedEntry = await traktConverter.convertAnimeToSendRemoveEntryShow(anime, watchProgress.episode);
@@ -202,6 +197,7 @@ export default class TraktProvider implements ListProvider {
                 }
             }).on('error', (err) => {
                 console.log(err);
+                reject();
             })
         });
     }

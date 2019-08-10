@@ -7,9 +7,9 @@ import titleCheckHelper from '../helpFunctions/titleCheckHelper';
 import timeHelper from '../helpFunctions/timeHelper';
 import ProviderList from './providerList';
 import WatchProgress from './objects/meta/watchProgress';
-import { InfoProviderLocalData } from './objects/infoProviderLocalData';
 import SeriesPackage from './objects/seriesPackage';
 import ProviderHelper from '../helpFunctions/provider/providerHelper';
+import seriesHelper from '../helpFunctions/seriesHelper';
 export default class ListController {
     private static mainList: Series[] = [];
     static listLoaded = false;
@@ -25,7 +25,7 @@ export default class ListController {
     private async syncWatcher() {
         var needToSync: Series[] = [];
         for (const item of ListController.mainList) {
-            if (await item.getCanSyncStatus()) {
+            if (await item.getCanSync()) {
                 needToSync.push(item);
             }
         }
@@ -89,14 +89,14 @@ export default class ListController {
     }
 
     public async removeWatchProgress(anime: Series, watchProgress: WatchProgress) {
-        for (const provider of anime.listProviderInfos) {
+        for (const provider of anime.getListProvidersInfos()) {
             try {
                 const providerInstance = await provider.getListProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
                     const newProvider = await providerInstance.removeEntry(anime, watchProgress);
                     newProvider.lastUpdate = new Date(Date.now());
-                    var index = anime.listProviderInfos.findIndex(x => x.provider === provider.provider);
-                    anime.listProviderInfos[index] = newProvider;
+                    var index = anime.getListProvidersInfos().findIndex(x => x.provider === provider.provider);
+                    anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
 
@@ -104,24 +104,26 @@ export default class ListController {
         }
     }
     public async updateWatchProgressTo(anime: Series, watchProgess: number) {
-        if (anime.listProviderInfos.length < ProviderList.listProviderList.length / 2) {
+        if (anime.getListProvidersInfos().length < ProviderList.listProviderList.length / 2) {
             try {
                 await this.fillMissingProvider(anime);
             } catch (err) { }
         }
-        for (const provider of anime.listProviderInfos) {
+        for (const provider of anime.getListProvidersInfos()) {
             try {
                 const providerInstance = await provider.getListProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
                     const newProvider = await providerInstance.updateEntry(anime, new WatchProgress(watchProgess))
                     newProvider.lastUpdate = new Date(Date.now());
-                    var index = anime.listProviderInfos.findIndex(x => x.provider === provider.provider);
-                    anime.listProviderInfos[index] = newProvider;
+                    var index = anime.getListProvidersInfos().findIndex(x => x.provider === provider.provider);
+                    anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
                 console.log(err);
             }
         }
+        
+        this.saveData(ListController.mainList);
         await this.addSeriesToMainList(anime);
     }
 
@@ -142,10 +144,10 @@ export default class ListController {
         console.log('Added ' + ListController.mainList.length + ' to mainList');
         if (animes.length > 2) {
             try {
+                this.saveData(ListController.mainList);
                 FrontendController.getInstance().sendSeriesList();
             } catch (err) { }
         }
-        this.saveData(ListController.mainList);
     }
 
     private async findSameSeriesInMainList(entry2: Series): Promise<Series[]> {
@@ -154,7 +156,7 @@ export default class ListController {
             if (entry.id === entry2.id) {
                 foundedSameSeries.push(entry);
             } else {
-                if (await this.matchCalc(entry, entry2)) {
+                if (await seriesHelper.isSameSeries(entry, entry2)) {
                     foundedSameSeries.push(entry);
                 }
 
@@ -176,13 +178,14 @@ export default class ListController {
     }
 
     public async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
+        const that = this;
         try {
-            const results = await this.findSameSeriesInMainList(series);
+            const results = await that.findSameSeriesInMainList(series);
             if (results.length != 0) {
                 for (const entry of results) {
                     try {
                         series = await series.merge(entry);
-                        await this.removeSeriesFromMainList(entry, notfiyRenderer);
+                        await that.removeSeriesFromMainList(entry, notfiyRenderer);
                     } catch (err) {
                         console.log(err);
                     }
@@ -192,7 +195,6 @@ export default class ListController {
             ListController.mainList.push(series);
 
             if (notfiyRenderer) {
-
                 await FrontendController.getInstance().updateClientList(await this.getIndexFromSeries(series), await this.getSeriesPackage(series));
             }
 
@@ -277,148 +279,79 @@ export default class ListController {
     }
 
     private async fillMissingProvider(entry: Series, forceUpdate = false): Promise<Series> {
-        let updatedInfo = false;
-        const results = await this.updateInfoProviderData(entry);
-        for (const infoProviderResult of results) {
-            const searchResult = entry.infoProviderInfos.findIndex(entry => entry.provider === infoProviderResult.provider);
-            if (searchResult != -1) {
-                entry.infoProviderInfos[searchResult] = infoProviderResult;
-            } else {
-                entry.infoProviderInfos.push(infoProviderResult);
-            }
-        }
-
-        if (entry.listProviderInfos.length != ProviderList.listProviderList.length || forceUpdate) {
-            for (const provider of ProviderList.listProviderList) {
-                var result = entry.listProviderInfos.find(x => x.provider === provider.providerName);
-                if (typeof result === 'undefined' || forceUpdate) {
-                    if (!forceUpdate) {
-                        // Check if anime exist in main list and have already all providers in.
-                        var validProvider = entry.listProviderInfos.find(x => (typeof x.id != 'undefined' && x.id != null));
-                        if (typeof validProvider != 'undefined') {
-                            for (const anime of this.getMainList()) {
-                                for (const oldprovider of anime.listProviderInfos) {
-                                    if (oldprovider.provider == validProvider.provider && oldprovider.id == validProvider.id) {
-                                        if (oldprovider.lastUpdate < validProvider.lastUpdate || typeof oldprovider.lastUpdate == 'undefined') {
-                                            var providerInfos = await listHelper.removeEntrys(entry.listProviderInfos, oldprovider);
-                                            providerInfos.push(validProvider);
-                                            entry.listProviderInfos = providerInfos;
-                                        }
-                                        var findSearchedProvider = anime.listProviderInfos.find(x => x.provider === provider.providerName);
-                                        if (typeof findSearchedProvider != 'undefined') {
-                                            if (new Date(findSearchedProvider.lastUpdate).getMilliseconds() < new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).getMilliseconds()) {
+        if(new Date().getTime() - entry.lastInfoUpdate > new Date(0).setHours(72) || forceUpdate){
+            entry = await this.updateInfoProviderData(entry);
+            if (entry.getListProvidersInfos().length != ProviderList.listProviderList.length || forceUpdate) {
+                for (const provider of ProviderList.listProviderList) {
+                    var result = entry.getListProvidersInfos().find(x => x.provider === provider.providerName);
+                    if (typeof result === 'undefined' || forceUpdate) {
+                        if (!forceUpdate) {
+                            // Check if anime exist in main list and have already all providers in.
+                            var validProvider = entry.getListProvidersInfos().find(x => (typeof x.id != 'undefined' && x.id != null));
+                            if (typeof validProvider != 'undefined') {
+                                for (const anime of this.getMainList()) {
+                                    for (const oldprovider of anime.getListProvidersInfos()) {
+                                        if (oldprovider.provider == validProvider.provider && oldprovider.id == validProvider.id) {
+                                            if (oldprovider.lastUpdate < validProvider.lastUpdate || typeof oldprovider.lastUpdate == 'undefined') {
+                                                var providerInfos = await listHelper.removeEntrys(entry.getListProvidersInfos(), oldprovider);
+                                                providerInfos.push(validProvider);
+                                                entry.addListProvider(...providerInfos);
+                                            }
+                                            var findSearchedProvider = anime.getListProvidersInfos().find(x => x.provider === provider.providerName);
+                                            if (typeof findSearchedProvider != 'undefined') {
+                                                if (new Date(findSearchedProvider.lastUpdate).getMilliseconds() < new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).getMilliseconds()) {
+                                                    break;
+                                                }
+                                            } else {
                                                 break;
                                             }
-                                        } else {
-                                            break;
                                         }
                                     }
                                 }
                             }
+
                         }
-
+                        try {
+                            entry = await ProviderHelper.getProviderSeriesInfoByName(entry,provider);
+                        } catch (err) {
+                            console.log(err);
+                        }
+                        await timeHelper.delay(700);
                     }
-                    try {
-                        entry = await provider.getMoreSeriesInfo(entry);
-                        updatedInfo = true;
-                    } catch (err) {
-                        console.log(err);
-                    }
-                    await timeHelper.delay(700);
                 }
+
             }
-
+            entry.lastInfoUpdate = Date.now();
         }
-        if (updatedInfo) {
-            return entry;
-        } else {
-            throw 'No info updated';
-        }
-
+        return entry;
     }
 
-    private async updateInfoProviderData(series: Series, forceUpdate = false): Promise<InfoProviderLocalData[]> {
-        const result: InfoProviderLocalData[] = [];
+    private async updateInfoProviderData(series: Series, forceUpdate = false): Promise<Series> {
         for (const infoProvider of ProviderList.infoProviderList) {
             try {
-                const index = series.infoProviderInfos.findIndex(entry => infoProvider.providerName == infoProvider.providerName);
+                const index = series.getInfoProvidersInfos().findIndex(entry => infoProvider.providerName == entry.provider);
                 if (index != -1) {
-                    const provider = series.infoProviderInfos[index];
+                    const provider = series.getInfoProvidersInfos()[index];
                     if (new Date().getTime() - provider.lastUpdate.getTime() < new Date(0).setHours(72) || forceUpdate) {
-                        const data = await infoProvider.getSeriesInfo(series);
-                        result.push(data);
+                        const data = await ProviderHelper.getProviderSeriesInfoByName(series,infoProvider);
+                        series = await series.merge(data);
                     }
-                } else {
-                    const data = await infoProvider.getSeriesInfo(series);
-                    result.push(data);
+                }else{
+                    const data = await ProviderHelper.getProviderSeriesInfoByName(series,infoProvider);
+                    series = await series.merge(data);
                 }
             } catch (err) {
                 console.log(err);
             }
         }
-        return result;
+        return series;
     }
 
-    /**
-     * Calculate the value
-     * @param a 
-     * @param b 
-     */
-    private async matchCalc(a: Series, b: Series): Promise<boolean> {
-        let matches: number = 0;
-        let matchAbleScore: number = 0;
-        a = Object.assign(new Series(), a);
-        b = Object.assign(new Series(), b);
-        // Check releaseYear
-        if (a.releaseYear && b.releaseYear) {
-            matchAbleScore++;
-            if (a.releaseYear === b.releaseYear) {
-                matches++;
-            }
-        }
+    
 
-        // Check season
-        const aSeason = await a.getSeason();
-        const bSeason = await b.getSeason();
-        if (aSeason || bSeason) {
-            matchAbleScore += 3;
-            if (aSeason === bSeason) {
-                matches += 3;
-            } else if (!aSeason && bSeason === 1) {
-                matches += 1;
-            } else if (!bSeason && aSeason === 1) {
-                matches += 1;
-            }
-        }
 
-        if (a.listProviderInfos.length != 0 && b.listProviderInfos.length != 0) {
-            matchAbleScore += 2;
-            let result = await new ProviderHelper().checkProviderId(a, b);
-            if (result.sameId) {
-                matches += 2;
-                if (result.uniqueIdForSeasons) {
-                    return true;
-                }
-            }
-        }
 
-        const allAEpisodes = await a.getAllEpisodes();
-        const allBEpisodes = await b.getAllEpisodes();
-        // Search if there is a match between the arrays.
-        if (allAEpisodes.length != 0 && allBEpisodes.length != 0) {
-            matchAbleScore++;
-            if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
-                matches++;
-            }
-        }
-        matchAbleScore += 2;
-        if (await titleCheckHelper.checkSeriesNames(a, b)) {
-            matches += 2;
-        }
-        return matches >= matchAbleScore / 1.45;
-    }
-
-    private saveData(list: Series[]) {
+    private async saveData(list: Series[]) {
         console.log('Save list');
         console.log(this.getPath());
         fs.writeFileSync(this.getPath(), JSON.stringify(list));

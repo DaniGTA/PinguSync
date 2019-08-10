@@ -16,6 +16,8 @@ let win: BrowserWindow | null;
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }, { scheme: 'background', privileges: { secure: true, standard: true } }])
 
+const fc =new FrontendController()
+
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
@@ -23,7 +25,7 @@ function createWindow() {
       nodeIntegration: true
     }
   })
-
+  fc.mainInit(win.webContents);
 
 
   //new WorkerController(win.webContents);
@@ -41,8 +43,6 @@ function createWindow() {
   win.on('closed', () => {
     win = null
   })
-
-  new FrontendController(win.webContents)
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
   });

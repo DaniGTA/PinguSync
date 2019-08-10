@@ -11,23 +11,25 @@ import Name from '../../controller/objects/meta/name';
 export default new class TraktConverter {
     async convertShowToAnime(show: Show | WatchedShow): Promise<Series> {
         const series = new Series();
-       series.names.push(new Name(show.title,'en'));
+        series.addSeriesName(new Name(show.title,'en'));
+        series.addSeriesName(new Name(show.ids.slug,'slug'));
         series.releaseYear = show.year;
 
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
         provider.id = show.ids.trakt;
         provider.rawEntry = show;
-        series.listProviderInfos.push(provider);
+        series.addListProvider(provider);
 
         const tvdbProvider = new InfoProviderLocalData('tvdb');
         tvdbProvider.id = show.ids.tvdb;
-        series.infoProviderInfos.push(tvdbProvider);
+        await series.addInfoProvider(tvdbProvider);
 
         return series;
     }
     async convertFullShowInfoToAnime(fullShow: FullShowInfo): Promise<Series> {
         const series = new Series();
-        series.names.push(new Name(fullShow.title,'en'));
+        series.addSeriesName(new Name(fullShow.title,'en'));
+        series.addSeriesName(new Name(fullShow.ids.slug,'slug'));
         series.releaseYear = fullShow.year;
         series.overviews.push(new Overview(fullShow.overview, 'eng'));
         series.runTime = fullShow.runtime;
@@ -37,17 +39,17 @@ export default new class TraktConverter {
         provider.rawEntry = fullShow;
         provider.publicScore = fullShow.rating;
         provider.episodes = fullShow.aired_episodes;
-        series.listProviderInfos.push(provider);
+        series.addListProvider(provider);
 
 
         const tvdbProvider = new InfoProviderLocalData('tvdb');
         tvdbProvider.id = fullShow.ids.tvdb;
-        series.infoProviderInfos.push(tvdbProvider);
+        await series.addInfoProvider(tvdbProvider);
         return series;
     }
 
     async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
-        let currentProvider = series.listProviderInfos.find(x => x.provider === TraktProvider.getInstance().providerName);
+        let currentProvider = series.getListProvidersInfos().find(x => x.provider === TraktProvider.getInstance().providerName);
         var seasonNumber = await series.getSeason();
         if (typeof currentProvider != 'undefined' && seasonNumber) {
 
@@ -79,7 +81,7 @@ export default new class TraktConverter {
     }
 
     async convertAnimeToSendEntryShow(series: Series, newWatchprogress: number): Promise<SendEntryUpdate> {
-        let currentProvider = series.listProviderInfos.find(x => x.provider === TraktProvider.getInstance().providerName);
+        let currentProvider = series.getListProvidersInfos().find(x => x.provider === TraktProvider.getInstance().providerName);
         var seasonNumber = await series.getSeason();
         if (typeof currentProvider != 'undefined' && seasonNumber) {
 

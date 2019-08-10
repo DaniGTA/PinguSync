@@ -21,33 +21,46 @@ export default class AniDBNameProvider implements InfoProvider {
         }
     }
 
-    async getSeriesInfo(series: Series): Promise<InfoProviderLocalData> {
-        const allNames = await series.getAllNames();
+    async getMoreSeriesInfoByName(series: Series,searchTitle: string): Promise<Series> {
         const nameDBList = AniDBNameProvider.anidbNameManager.data;
-
         if (nameDBList) {
             for (const seriesDB of nameDBList.animetitles.anime) {
-                const result = await this.checkTitles(allNames, seriesDB.title);
+                try{
+                const result = await this.checkTitles(searchTitle, seriesDB.title);
                 if (result) {
                     let ipld = new InfoProviderLocalData(this.providerName);
                     ipld.id = seriesDB._attributes.aid;
                     ipld.version = this.version;
-                    ipld.names = result;
-                    return ipld;
+                    await series.addInfoProvider(ipld);
+                    series.addSeriesName(...result);
+                    return series;
                 }
+            }catch(err){
+                console.log(err);
+            }
             }
         }
         throw 'nothing found';
 
     }
 
-    async checkTitles(allNames: Name[], titles: Title[]) {
-        const resultNames = [...allNames];
-        if (await titleCheckHelper.checkNames(allNames.flatMap(x => x.name), titles.flatMap(x => x._text))) {
-            for (const title of titles) {
-                if (title._text) {
-                    resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
+    async checkTitles(name:string, titles: Title[] | Title) {
+        const resultNames = [];
+        let stringTitles = [];
+        if(Array.isArray(titles)){
+            stringTitles =  titles.flatMap(x => x._text)
+        }else{
+            stringTitles.push(titles._text);
+        }
+        if (await titleCheckHelper.checkNames([name],stringTitles)) {
+            if(Array.isArray(titles)){
+                for (const title of titles) {
+                    if (title._text) {
+                        resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
+                    }
                 }
+            }else{
+                resultNames.push(new Name(titles._text, titles._attributes["xml:lang"]));
             }
             return resultNames;
         }

@@ -8,5 +8,5 @@ import { InfoProviderLocalData } from '../controller/objects/infoProviderLocalDa
  */
 export default interface InfoProvider {
     providerName: string;
-    getSeriesInfo(anime: Series): Promise<InfoProviderLocalData>;
+    getMoreSeriesInfoByName(anime: Series,searchTitle: string): Promise<Series>;
 }

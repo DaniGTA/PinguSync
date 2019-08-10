@@ -134,7 +134,7 @@ export default class ListEntry extends Vue {
   }
   async canSync(series: Series): Promise<boolean> {
     series = Object.assign(new Series(), series);
-    return series.getCanSyncStatus();
+    return series.getCanSync();
   }
 }
 </script>

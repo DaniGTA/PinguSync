@@ -1,7 +1,6 @@
 import Series from './series';
 import stringHelper from '../../../backend/helpFunctions/stringHelper';
 import { PreferedSeriesNameHelper } from './settings/preferedSeriesName';
-import listHelper from 'src/backend/helpFunctions/listHelper';
 
 /**
  * Contains all Relations of a Series.

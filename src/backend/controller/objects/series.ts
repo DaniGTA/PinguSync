@@ -12,18 +12,22 @@ import ListController from '../listController';
 import Name from './meta/name';
 
 export default class Series {
+    public static version = 1;
+
     public packageId: string = '';
     public id: string = '';
     public lastUpdate: number = Date.now();
-    public names: Name[] = [];
+    public lastInfoUpdate: number = 0;
+    private names: Name[] = [];
     public mediaType: MediaType = MediaType.SERIES;
-    public listProviderInfos: ListProviderLocalData[] = [];
-    public infoProviderInfos: InfoProviderLocalData[] = [];
+    private listProviderInfos: ListProviderLocalData[] = [];
+    private infoProviderInfos: InfoProviderLocalData[] = [];
     public episodes?: number;
     public overviews: Overview[] = [];
     public releaseYear?: number;
     public runTime?: number;
     private cachedSeason?: number | null = null;
+    private canSync:boolean | null = null;
     constructor() {
         this.listProviderInfos = [];
         // Generates randome string.
@@ -63,6 +67,56 @@ export default class Series {
             }
         }
         return result;
+    }
+
+    /**
+     * Prevents too have double entrys of the same provider.
+     * @param infoProvider 
+     */
+    public async addInfoProvider(infoProvider:InfoProviderLocalData){
+       const index = this.infoProviderInfos.findIndex(x=> infoProvider.provider === x.provider);
+       if(index === -1){
+           this.infoProviderInfos.push(infoProvider);
+       }else{
+           this.infoProviderInfos[index] =  await InfoProviderLocalData.mergeProviderInfos(this.infoProviderInfos[index],infoProvider);;
+       }
+    }
+
+    /**
+     * Prevents too have double entrys of the same provider.
+     * @param listProvider 
+     */
+    public async addListProvider(...listProviders:ListProviderLocalData[]){
+        for(const listProvider of listProviders){
+            const index = this.listProviderInfos.findIndex(x=> listProvider.provider === x.provider);
+            if(index === -1){
+                this.listProviderInfos.push(listProvider);
+            }else{
+                this.listProviderInfos[index] = await ListProviderLocalData.mergeProviderInfos(this.listProviderInfos[index],listProvider);
+            }
+        }
+    }
+
+    public getListProvidersInfos(){
+        return this.listProviderInfos;
+    }
+
+    public getInfoProvidersInfos(){
+        return this.infoProviderInfos;
+    }
+
+     /**
+     * Prevents too have double entrys for same name.
+     * @param infoProvider 
+     */
+    public addSeriesName(...names:Name[]){
+        for (const name of names) {
+            if(name){
+                if(this.names.findIndex(x=> x.name === name.name && x.lang === x.lang) === -1){
+                    this.names.push(name);
+                }
+            }
+        }
     }
 
     /**
@@ -173,19 +227,36 @@ export default class Series {
         throw 'no prequel found';
     }
 
+    public async getCanSync(): Promise<boolean> {
+        const that = this;
+        if(that.canSync){
+            return that.canSync;
+        }
+        try{
+        that.canSync = await that.getCanSyncStatus();
+        }catch(err){
+            console.log(err);
+            that.canSync = false;
+        }
+        return that.canSync;
+    }
+
     /**
      * Checks if providers can be synced.
      * The Provider need to have episode.
      * The Provider need to have a user loggedIn.
      * The Provider need to be out of sync.
      */
-    public async getCanSyncStatus(): Promise<boolean> {
+    private async getCanSyncStatus(): Promise<boolean> {
         if (this.listProviderInfos.length <= 1) {
             return false;
         }
-
-        let latestUpdatedProvider: ListProviderLocalData | null = await this.getLastUpdatedProvider();
-
+        let latestUpdatedProvider: ListProviderLocalData | null  = null;
+        try{
+            latestUpdatedProvider = await this.getLastUpdatedProvider();
+        }catch(err){
+            console.log(err);
+        }
         if (!latestUpdatedProvider) {
             throw 'no provider with valid sync status'
         }
@@ -289,6 +360,11 @@ export default class Series {
     public async merge(anime: Series): Promise<Series> {
         const newAnime: Series = new Series();
 
+        if(this.lastInfoUpdate < anime.lastInfoUpdate){
+            newAnime.lastInfoUpdate = anime.lastInfoUpdate;
+        }else{
+            newAnime.lastInfoUpdate = this.lastInfoUpdate;
+        }
 
         newAnime.names.push(...this.names, ...anime.names);
         newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
@@ -312,6 +388,8 @@ export default class Series {
             console.log(err);
         }
         await newAnime.getSeason();
+        
+        await newAnime.getCanSync();
         return newAnime;
     }
 
@@ -393,31 +471,36 @@ export default class Series {
      */
     public async getAllRelations(list: Series[], retunWithThis = false): Promise<Series[]> {
         let relations = [this as Series];
-        for (const entry2 of relations) {
-            for (const entry of list) {
-                if (this.id != entry.id && !await listHelper.isAnimeInList(relations, entry)) {
-                    for (const entryProvider of entry.listProviderInfos) {
-                        for (const provider of entry2.listProviderInfos) {
-                            if (entryProvider.provider === provider.provider) {
-                                if (entryProvider.id === provider.id && provider.getListProviderInstance().hasUniqueIdForSeasons) {
-                                    break;
-                                }
-                                if (entryProvider.id === provider.id) {
-                                    relations.push(entry);
-                                } else if (provider.prequelId === entryProvider.id || entryProvider.prequelId === provider.id) {
-                                    relations.push(entry);
-                                } else if (provider.sequelId === entryProvider.id || entryProvider.sequelId === provider.id) {
-                                    relations.push(entry);
+        
+            for (const entry2 of relations) {
+                for (const entry of list) {
+                    if (this.id != entry.id && !await listHelper.isAnimeInList(relations, entry)) {
+                        for (const entryProvider of entry.listProviderInfos) {
+                            for (const provider of entry2.listProviderInfos) {
+                                if (entryProvider.provider === provider.provider) {
+                                    try{
+                                        if (entryProvider.id === provider.id && provider.getListProviderInstance().hasUniqueIdForSeasons) {
+                                            break;
+                                        }else if (entryProvider.id === provider.id) {
+                                            relations.push(entry);
+                                        } 
+                                    }catch(err){}
+                                    
+                                    if (provider.prequelId === entryProvider.id || entryProvider.prequelId === provider.id) {
+                                        relations.push(entry);
+                                    } else if (provider.sequelId === entryProvider.id || entryProvider.sequelId === provider.id) {
+                                        relations.push(entry);
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-        if (!retunWithThis) {
-            relations = await listHelper.removeEntrys(relations, this);
-        }
+            if (!retunWithThis) {
+                relations = await listHelper.removeEntrys(relations, this);
+            }
+       
         return relations;
     }
 }

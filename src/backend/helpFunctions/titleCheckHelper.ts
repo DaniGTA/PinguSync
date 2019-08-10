@@ -2,6 +2,9 @@ import Series from '../controller/objects/series';
 import stringHelper from './stringHelper';
 
 export default new class TitleCheckHelper {
+
+    private collator = new Intl.Collator("en-US", { sensitivity: "base" });
+
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
         let aNameList: string[] = (await a.getAllNames()).flatMap(x => x.name);
         let bNameList: string[] = (await b.getAllNames()).flatMap(x => x.name);
@@ -68,6 +71,7 @@ export default new class TitleCheckHelper {
     }
 
     public async fastMatch(aList: string[], bList: string[]): Promise<boolean> {
+        const that = this;
         try {
             var al = [...aList];
             var bl = [...bList];
@@ -75,6 +79,9 @@ export default new class TitleCheckHelper {
                 if (a) {
                     for (let b of bl) {
                         if (b) {
+                            if(!that.equalIgnoreCase(a.substring(0, 3),b.substring(0, 3))){
+                          	    continue;
+                            }
                             var shortestTextLength = 0;
                             if (a.length < b.length) {
                                 shortestTextLength = a.length;
@@ -85,12 +92,10 @@ export default new class TitleCheckHelper {
                             if (shortScan < 3) {
                                 shortScan = Math.ceil(shortestTextLength / 1.25)
                             }
-                            var aResult = a.substring(0, shortScan).toLocaleLowerCase();
-                            var bResult = b.substring(0, shortScan).toLocaleLowerCase();
+                            var aResult = a.substring(0, shortScan);
+                            var bResult = b.substring(0, shortScan);
 
-                            if (aResult === bResult) {
-                                return true;
-                            }
+                            return that.equalIgnoreCase(aResult, bResult);
                         }
                     }
                 }
@@ -100,6 +105,10 @@ export default new class TitleCheckHelper {
             console.log(err);
             return false;
         }
+    }
+
+    private equalIgnoreCase(s1: string, s2: string) {
+        return this.collator.compare(s1, s2) === 0;
     }
 
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {

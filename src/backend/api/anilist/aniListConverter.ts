@@ -16,9 +16,9 @@ export default new class AniListConverter {
     public async convertMediaToAnime(medium: Medium): Promise<Series> {
         const series = new Series();
         series.episodes = medium.episodes;
-        series.names.push(new Name(medium.title.romaji,'x-jap',NameType.OFFICIAL));
-        series.names.push(new Name(medium.title.english,'unknown',NameType.MAIN));
-        series.names.push(new Name(medium.title.native,'jap'));
+        series.addSeriesName(new Name(medium.title.romaji,'x-jap',NameType.OFFICIAL));
+        series.addSeriesName(new Name(medium.title.english,'unknown',NameType.MAIN));
+        series.addSeriesName(new Name(medium.title.native,'jap'));
         series.releaseYear = medium.startDate.year;
         series.mediaType = await this.convertTypeToMediaType(medium.format);
 
@@ -28,7 +28,7 @@ export default new class AniListConverter {
         provider.id = medium.id;
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
-        series.listProviderInfos.push(provider);
+        await series.addListProvider(provider);
         return series;
     }
 
@@ -49,10 +49,10 @@ export default new class AniListConverter {
         series.addOverview(new Overview(info.Media.description, 'eng'));
         series.episodes = info.Media.episodes;
         series.releaseYear = info.Media.startDate.year;
-        series.names.push(new Name(info.Media.title.romaji,'x-jap',NameType.OFFICIAL));
-        series.names.push(new Name(info.Media.title.english,'unknown',NameType.MAIN));
-        series.names.push(new Name(info.Media.title.native,'jap'));
-        series.names.push(new Name(info.Media.title.userPreferred, 'userPreferred'));
+        series.addSeriesName(new Name(info.Media.title.romaji,'x-jap',NameType.OFFICIAL));
+        series.addSeriesName(new Name(info.Media.title.english,'unknown',NameType.MAIN));
+        series.addSeriesName(new Name(info.Media.title.native,'jap'));
+        series.addSeriesName(new Name(info.Media.title.userPreferred, 'userPreferred'));
         series.mediaType = await this.convertTypeToMediaType(info.Media.format);
 
         const provider = new ListProviderLocalData(AniListProvider.getInstance());
@@ -61,22 +61,22 @@ export default new class AniListConverter {
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
-        series.listProviderInfos.push(provider);
+        await series.addListProvider(provider);
         return series;
     }
 
     public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<Series> {
         var series: Series = new Series();
-        series.names.push(new Name(entry.media.title.romaji,'x-jap',NameType.OFFICIAL));
-        series.names.push(new Name(entry.media.title.english,'unknown',NameType.MAIN));
-        series.names.push(new Name(entry.media.title.native,'jap'));
+        series.addSeriesName(new Name(entry.media.title.romaji,'x-jap',NameType.OFFICIAL));
+        series.addSeriesName(new Name(entry.media.title.english,'unknown',NameType.MAIN));
+        series.addSeriesName(new Name(entry.media.title.native,'jap'));
 
         series.mediaType = await this.convertTypeToMediaType(entry.media.format);
 
         series.releaseYear = entry.media.startDate.year;
 
         var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
-        providerInfo.targetSeason = await Name.getSeasonNumber(series.names);
+        providerInfo.targetSeason = await Name.getSeasonNumber(await series.getAllNames());
         try {
             if (!providerInfo.targetSeason) {
                 if (entry.media.relations.edges.findIndex(x => x.relationType == MediaRelation.PREQUEL) === -1) {
@@ -119,7 +119,7 @@ export default new class AniListConverter {
             providerInfo.episodes = entry.media.episodes;
         }
 
-        series.listProviderInfos.push(providerInfo);
+        await series.addListProvider(providerInfo);
         return series;
     }
 }

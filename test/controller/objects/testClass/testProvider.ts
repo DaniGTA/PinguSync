@@ -4,6 +4,9 @@ import { ListProviderLocalData } from "../../../../src/backend/controller/object
 import Series from "../../../../src/backend/controller/objects/series";
 
 export default class TestProvider implements ListProvider {
+    getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
+        throw new Error("Method not implemented.");
+    }
     updateEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
@@ -20,10 +23,6 @@ export default class TestProvider implements ListProvider {
     constructor(providerName: string, loggedIn: boolean = true) {
         this.providerName = providerName;
         this.loggedIn = loggedIn;
-    }
-
-    getMoreSeriesInfo(a: Series): Promise<Series> {
-        throw new Error("Method not implemented.");
     }
     getAllSeries(disableCache?: boolean): Promise<Series[]> {
         throw new Error("Method not implemented.");

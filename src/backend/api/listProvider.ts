@@ -9,12 +9,12 @@ export default interface ListProvider {
     hasOAuthCode: boolean;
     hasUniqueIdForSeasons: boolean; 
     userData: UserData;
-    getMoreSeriesInfo(a: Series): Promise<Series>;
+
+    getMoreSeriesInfoByName(series: Series,searchTitle: string): Promise<Series>;
     getAllSeries(disableCache?: boolean): Promise<Series[]>;
     logInUser(pass: string, username?: string): Promise<boolean>;
     isUserLoggedIn(): Promise<boolean>;
     getTokenAuthUrl(): string;
     updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
     removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
-
 }

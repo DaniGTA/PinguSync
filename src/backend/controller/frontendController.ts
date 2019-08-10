@@ -15,12 +15,18 @@ class FrontendController {
     private static instance: FrontendController;
 
     private path: string | null = null;
-    private communcation: ICommunication;
-    constructor(webcontents: Electron.WebContents) {
+    private communcation: ICommunication = new IPCBackgroundController({} as Electron.WebContents);;
+    constructor(webcontents?: Electron.WebContents) {
+       if(webcontents){
+           this.mainInit(webcontents);
+       }
+    }
+
+    public mainInit(webcontents: Electron.WebContents){
         this.communcation = new IPCBackgroundController(webcontents);
         const that = this;
 
-        if (typeof FrontendController.instance === 'undefined') {
+        if (typeof FrontendController.instance === 'undefined' && this.communcation) {
             this.initController()
 
             FrontendController.instance = that;

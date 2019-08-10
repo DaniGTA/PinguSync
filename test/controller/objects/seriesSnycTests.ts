@@ -26,8 +26,8 @@ describe('seriesTest | Sync', () => {
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), true);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), true);
     })
     it('can sync (2/3)', async () => {
         const anime = new Series();
@@ -42,8 +42,8 @@ describe('seriesTest | Sync', () => {
         const providerB = new ListProviderLocalData("CanSync22");
         providerB.episodes = 24;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), true);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), true);
     })
     it('can sync (3/3)', async () => {
         const anime = new Series();
@@ -58,8 +58,8 @@ describe('seriesTest | Sync', () => {
         const providerB = new ListProviderLocalData("CanSync32");
         providerB.episodes = 24;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), true);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), true);
     })
     it('cant sync (1/7)', async () => {
         const anime = new Series();
@@ -79,8 +79,8 @@ describe('seriesTest | Sync', () => {
         providerB.addOneEpisode(1);
         providerB.watchStatus = WatchStatus.COMPLETED;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), false);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), false);
     })
 
     it('cant sync (2/7)', async () => {
@@ -101,8 +101,8 @@ describe('seriesTest | Sync', () => {
         providerB.addOneEpisode(1);
         providerB.watchStatus = WatchStatus.COMPLETED;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), false);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), false);
     })
 
     it('cant sync (3/7)', async () => {
@@ -122,8 +122,8 @@ describe('seriesTest | Sync', () => {
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), false);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), false);
     })
 
     it('cant sync (4/7)', async () => {
@@ -136,8 +136,8 @@ describe('seriesTest | Sync', () => {
         }
         providerA.watchStatus = WatchStatus.CURRENT;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA);
-        assert.equal(await anime.getCanSyncStatus(), false);
+        anime.addListProvider(providerA);
+        assert.equal(await anime.getCanSync(), false);
     })
 
     it('cant sync (5/7)', async () => {
@@ -158,8 +158,8 @@ describe('seriesTest | Sync', () => {
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), false);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), false);
     })
 
     it('cant sync (6/7)', async () => {
@@ -185,8 +185,8 @@ describe('seriesTest | Sync', () => {
         }
         providerC.watchStatus = WatchStatus.COMPLETED;
         anime.episodes = 24;
-        anime.listProviderInfos.push(providerA, providerB, providerC);
-        assert.equal(await anime.getCanSyncStatus(), false);
+        anime.addListProvider(providerA, providerB, providerC);
+        assert.equal(await anime.getCanSync(), false);
     })
 
     it('cant sync (7/7)', async () => {
@@ -205,7 +205,7 @@ describe('seriesTest | Sync', () => {
         for (let index = 1; index < 13; index++) {
             providerB.addOneEpisode(index);
         }
-        anime.listProviderInfos.push(providerA, providerB);
-        assert.equal(await anime.getCanSyncStatus(), false);
+        anime.addListProvider(providerA, providerB);
+        assert.equal(await anime.getCanSync(), false);
     })
 });
