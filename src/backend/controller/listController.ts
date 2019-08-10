@@ -332,7 +332,7 @@ export default class ListController {
                 const index = series.getInfoProvidersInfos().findIndex(entry => infoProvider.providerName == entry.provider);
                 if (index != -1) {
                     const provider = series.getInfoProvidersInfos()[index];
-                    if (new Date().getTime() - provider.lastUpdate.getTime() < new Date(0).setHours(72) || forceUpdate) {
+                    if (new Date().getTime() - new Date(provider.lastUpdate).getTime() < new Date(0).setHours(72) || forceUpdate) {
                         const data = await ProviderHelper.getProviderSeriesInfoByName(series,infoProvider);
                         series = await series.merge(data);
                     }

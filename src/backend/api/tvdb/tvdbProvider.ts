@@ -21,7 +21,7 @@ export default class TVDBProvider implements InfoProvider {
     public async getMoreSeriesInfoByName(series: Series,searchTitle: string): Promise<Series> {
         try{
             const tvDbConverter =new TVDBConverter();
-            let id;
+            let id: string| number|undefined;
             const index = series.getInfoProvidersInfos().findIndex(entry => entry.provider == this.providerName);
             if (index === -1) {
                const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name='+searchTitle);
@@ -35,7 +35,7 @@ export default class TVDBProvider implements InfoProvider {
                     } 
                 }
             }else{
-                id = series.getInfoProvidersInfos()[index];
+                id = series.getInfoProvidersInfos()[index].id;
             }
             if(id){
                 const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + id);
@@ -61,9 +61,9 @@ export default class TVDBProvider implements InfoProvider {
                     body: `{
                         "apikey": "`+ TVDBProvider.Instance.apiKey + `"
                     }`
-                }, (error: any, response: any, body: TVDBLogin) => {
+                }, (error: any, response: any, body: string) => {
                     if (response.statusCode === 200 || response.statusCode === 201) {
-                        resolve(body.token);
+                        resolve((JSON.parse(body) as TVDBLogin).token);
                     } else {
                         reject();
                     }
