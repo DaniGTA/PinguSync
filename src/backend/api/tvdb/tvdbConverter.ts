@@ -6,6 +6,7 @@ import { SeriesSearchResult } from './models/searchResults';
 import Series from '../../controller/objects/series';
 import Name from '../../controller/objects/meta/name';
 import Overview from '../../controller/objects/meta/overview';
+import { NameType } from '../../controller/objects/meta/nameType';
 
 export default class TVDBConverter {
     async convertSeriesToProviderLocalData(series: TVDBSeries): Promise<InfoProviderLocalData> {
@@ -34,10 +35,10 @@ export default class TVDBConverter {
     async convertSearchResultToSeries(searchResult: SeriesSearchResult):  Promise<Series>{
         let series = new Series();
         if(searchResult.seriesName){
-            series.addSeriesName(new Name(searchResult.seriesName,'en'));
+            series.addSeriesName(new Name(searchResult.seriesName,'en',NameType.OFFICIAL));
         }
         if(searchResult.slug){
-            series.addSeriesName(new Name(searchResult.slug,'slug'));
+            series.addSeriesName(new Name(searchResult.slug,'slug', NameType.SLUG));
         }
         if(searchResult.firstAired){
             series.releaseYear = new Date(searchResult.firstAired).getFullYear();

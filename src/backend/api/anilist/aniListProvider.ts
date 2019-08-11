@@ -11,14 +11,13 @@ import Series, { WatchStatus } from '../../controller/objects/series';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import getSeriesByIDGql from './graphql/getSeriesByID.gql';
 import { SearchSeries } from './graphql/searchSeries';
-import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
 import aniListConverter from './aniListConverter';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import timeHelper from '../../helpFunctions/timeHelper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './aniListUserData';
 import WatchProgress from '../../controller/objects/meta/watchProgress';
-import Name from '../../controller/objects/meta/name';
+import seriesHelper from '../../helpFunctions/seriesHelper';
 
 export default class AniListProvider implements ListProvider {
     hasUniqueIdForSeasons: boolean = true;
@@ -54,7 +53,7 @@ export default class AniListProvider implements ListProvider {
             for (const result of searchResults.Page.media) {
                 try {
                     var b = await aniListConverter.convertMediaToAnime(result);
-                    if (await titleCheckHelper.checkSeriesNames(series, b)) {
+                    if (await seriesHelper.isSameSeries(b,series)) {
                         var bProviderInfos = b.getListProvidersInfos().find(x => x.provider === this.providerName);
                         if (typeof bProviderInfos != 'undefined') {
                             id = bProviderInfos.id;

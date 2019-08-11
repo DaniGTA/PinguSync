@@ -31,13 +31,17 @@ export default class Name {
     public static async getSeasonNumber(names: Name[]): Promise<number | undefined> {
         var highestSeasonDetected: number | undefined;
         for (const name of names) {
-            if(name.name){
-                try {
-                    var nr = await stringHelper.getSeasonNumberFromTitle(name.name);
-                    if (nr > (highestSeasonDetected ? highestSeasonDetected : 0)) {
-                        highestSeasonDetected = nr;
+            if (name && name.name) {
+                if (name.lang !== "slug") {
+                    if (name.nameType != NameType.SLUG) {
+                        try {
+                            var nr = await stringHelper.getSeasonNumberFromTitle(name.name);
+                            if (nr > (highestSeasonDetected ? highestSeasonDetected : 0)) {
+                                highestSeasonDetected = nr;
+                            }
+                        } catch (err) { }
                     }
-                } catch (err) { }
+                }
             }
         }
         return highestSeasonDetected;

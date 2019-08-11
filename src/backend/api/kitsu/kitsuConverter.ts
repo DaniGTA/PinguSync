@@ -19,7 +19,7 @@ export default new class KitsuConverter {
         series.addSeriesName(new Name(media.titles.en_us, 'en_us',NameType.OFFICIAL));
         series.addSeriesName(new Name(media.titles.ja_jp, 'jap'));
 
-        series.addSeriesName(new Name(media.slug, 'slug'));
+        series.addSeriesName(new Name(media.slug, 'slug', NameType.SLUG));
         series.addSeriesName(new Name(media.titles.en_us, 'en_us'));
         series.addSeriesName(new Name(media.canonicalTitle, 'canonicalTitle'));
     

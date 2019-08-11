@@ -1,6 +1,6 @@
 
-import AniDBNameProvider from '../../../src/backend/api/anidb/anidbNameProvider';
-import { deepEqual, notStrictEqual } from 'assert';
+
+import { notStrictEqual } from 'assert';
 import TVDBProvider from '../../../src/backend/api/tvdb/tvdbProvider';
 
 describe('TVDB Tests', () => {

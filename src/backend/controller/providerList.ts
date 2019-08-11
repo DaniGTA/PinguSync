@@ -4,8 +4,8 @@ import TraktProvider from '../api/trakt/traktProvider';
 import KitsuProvider from '../api/kitsu/kitsuProvider';
 import InfoProvider from '../api/infoProvider';
 import TVDBProvider from '../api/tvdb/tvdbProvider';
-import AniDBNameProvider from '../api/anidb/anidbNameProvider';
 import AniListProvider from '../api/anilist/aniListProvider';
+import AniDBProvider  from '../api/anidb/anidb-provider';
 
 export default class ProviderList {
 
@@ -15,7 +15,7 @@ export default class ProviderList {
         new KitsuProvider()];
 
     public static infoProviderList: InfoProvider[] = [
-        new AniDBNameProvider(),
+        new AniDBProvider(),
         new TVDBProvider()
     ];
 }

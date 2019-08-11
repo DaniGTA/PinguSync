@@ -1,14 +1,42 @@
 import { Show } from './objects/search';
-import { Show as WatchedShow } from './objects/watchedInfo';
+import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import { Show as SendEntryShow, Season, Episode, SendEntryUpdate } from './objects/sendEntryUpdate';
-import Series from '../../controller/objects/series';
+import Series, { WatchStatus } from '../../controller/objects/series';
 import { ListProviderLocalData } from '../../controller/objects/listProviderLocalData';
 import { FullShowInfo } from './objects/fullShowInfo';
 import Overview from '../../controller/objects/meta/overview';
 import TraktProvider from './traktProvider';
 import { InfoProviderLocalData } from '../../../backend/controller/objects/infoProviderLocalData';
 import Name from '../../controller/objects/meta/name';
+import { NameType } from '../../controller/objects/meta/nameType';
 export default new class TraktConverter {
+    async convertSeasonsToSeries(watchedInfo:WatchedInfo):Promise<Series[]>{
+        const result = [];
+        for (const season of watchedInfo.seasons) {
+            const series: Series = new Series();
+            if (season.number == 1) {
+                series.releaseYear = watchedInfo.show.year;
+            }
+            series.addSeriesName(new Name(watchedInfo.show.title, 'en', NameType.OFFICIAL));
+            series.addSeriesName(new Name(watchedInfo.show.ids.slug, 'slug', NameType.SLUG));
+
+            const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
+
+            providerInfo.id = watchedInfo.show.ids.trakt;
+            providerInfo.rawEntry = watchedInfo;
+            for (let episode of season.episodes) {
+                providerInfo.addOneEpisode(episode.number, episode.plays, episode.last_watched_at);
+            }
+            providerInfo.targetSeason = season.number;
+            providerInfo.watchStatus = WatchStatus.COMPLETED;
+            providerInfo.lastExternalChange = watchedInfo.last_watched_at;
+            providerInfo.hasFullInfo = false;
+            series.addListProvider(providerInfo);
+            result.push(series);
+        }
+        return result;
+    }
+
     async convertShowToAnime(show: Show | WatchedShow): Promise<Series> {
         const series = new Series();
         series.addSeriesName(new Name(show.title,'en'));

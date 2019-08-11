@@ -3,5 +3,6 @@ export enum NameType {
     OFFICIAL = "official",
     SHORT = "short",
     SYN = "syn",
+    SLUG = "slug",
     UNKNOWN = "unkown"
 }

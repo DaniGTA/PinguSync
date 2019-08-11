@@ -481,12 +481,13 @@ export default class Series {
                 for (const entry of list) {
                     if (this.id != entry.id && !await listHelper.isAnimeInList(relations, entry)) {
                         for (const entryProvider of entry.listProviderInfos) {
-                            for (const provider of entry2.listProviderInfos) {
+                            for (let provider of entry2.listProviderInfos) {
                                 if (entryProvider.provider === provider.provider) {
+                                    provider = Object.assign(new ListProviderLocalData(), provider);
                                     try{
                                         if (entryProvider.id === provider.id && provider.getListProviderInstance().hasUniqueIdForSeasons) {
                                             break;
-                                        }else if (entryProvider.id === provider.id) {
+                                        }else if (entryProvider.id === provider.id && entryProvider.targetSeason !== provider.targetSeason) {
                                             relations.push(entry);
                                         } 
                                     }catch(err){}

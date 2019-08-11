@@ -80,27 +80,7 @@ export default class TraktProvider implements ListProvider {
             const data = await this.traktRequest<WatchedInfo[]>('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             for (const entry of data) {
                 try {
-                    for (const season of entry.seasons) {
-                        const series: Series = new Series();
-                        if (season.number == 1) {
-                            series.releaseYear = entry.show.year;
-                        }
-                        series.addSeriesName(new Name(entry.show.title, 'en'));
-                        series.addSeriesName(new Name(entry.show.ids.slug, 'slug'));
-
-                        const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
-
-                        providerInfo.id = entry.show.ids.trakt;
-                        providerInfo.rawEntry = entry;
-                        for (let episode of season.episodes) {
-                            providerInfo.addOneEpisode(episode.number, episode.plays, episode.last_watched_at);
-                        }
-                        providerInfo.targetSeason = season.number;
-                        providerInfo.watchStatus = WatchStatus.COMPLETED;
-                        providerInfo.lastExternalChange = entry.last_watched_at;
-                        series.addListProvider(providerInfo);
-                        seriesList.push(series);
-                    }
+                    seriesList.push(...await traktConverter.convertSeasonsToSeries(entry));
                 } catch (e) {
                     console.error(e);
                 }
@@ -164,41 +144,49 @@ export default class TraktProvider implements ListProvider {
                 } else {
                     reject();
                 }
-            });
+            }).on('error', (err) => {
+                console.log(err);
+                reject();
+            })
         });
     }
 
     private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
         console.log('[Trakt] Start WebRequest');
         const that = this;
-        return new Promise<any>((resolve, reject) => {
-            request({
-                method: method,
-                url,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + that.userData.accessToken,
-                    'trakt-api-version': '2',
-                    'trakt-api-key': that.clientId,
-                },
-                body: body,
-            }, (error: any, response: any, body: any) => {
-                try {
-                    console.log('[Trakt] status code:', response.statusCode);
-                    if (response.statusCode === 200 || response.statusCode === 201) {
-                        var data: T = JSON.parse(body) as T;
-                        resolve(data);
-                    } else {
+        return new Promise<T>((resolve, reject) => {
+            try {
+                request({
+                    method: method,
+                    url,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + that.userData.accessToken,
+                        'trakt-api-version': '2',
+                        'trakt-api-key': that.clientId,
+                    },
+                    body: body,
+                }, (error: any, response: any, body: any) => {
+                    try {
+                        console.log('[Trakt] status code:', response.statusCode);
+                        if (response.statusCode === 200 || response.statusCode === 201) {
+                            var data: T = JSON.parse(body) as T;
+                            resolve(data);
+                        } else {
+                            reject();
+                        }
+                    } catch (err) {
+                        console.log(err);
                         reject();
                     }
-                } catch (err) {
+                }).on('error', (err) => {
                     console.log(err);
                     reject();
-                }
-            }).on('error', (err) => {
+                })
+            } catch (err) {
                 console.log(err);
                 reject();
-            })
+            }
         });
     }
 }
