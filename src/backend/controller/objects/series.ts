@@ -365,12 +365,6 @@ export default class Series {
     public async merge(anime: Series): Promise<Series> {
         const newAnime: Series = new Series();
 
-        if (this.lastInfoUpdate < anime.lastInfoUpdate) {
-            newAnime.lastInfoUpdate = anime.lastInfoUpdate;
-        } else {
-            newAnime.lastInfoUpdate = this.lastInfoUpdate;
-        }
-
         newAnime.names.push(...this.names, ...anime.names);
         newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
 
@@ -395,6 +389,13 @@ export default class Series {
         await newAnime.getSeason();
 
         await newAnime.getCanSync();
+
+        if (this.lastInfoUpdate < anime.lastInfoUpdate) {
+            newAnime.lastInfoUpdate = anime.lastInfoUpdate;
+        } else {
+            newAnime.lastInfoUpdate = this.lastInfoUpdate;
+        }
+
         return newAnime;
     }
 
