@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import listHelper from '../helpFunctions/listHelper';
 import timeHelper from '../helpFunctions/timeHelper';
-import ProviderList from './providerList';
+import ProviderList from './provider-list';
 import WatchProgress from './objects/meta/watchProgress';
 import SeriesPackage from './objects/seriesPackage';
 import ProviderHelper from '../helpFunctions/provider/providerHelper';
@@ -122,7 +122,7 @@ export default class ListController {
                 console.log(err);
             }
         }
-        
+
         this.saveData(ListController.mainList);
         await this.addSeriesToMainList(anime);
     }
@@ -279,7 +279,7 @@ export default class ListController {
     }
 
     private async fillMissingProvider(entry: Series, forceUpdate = false): Promise<Series> {
-        if(new Date().getTime() - entry.lastInfoUpdate > new Date(0).setHours(72) || forceUpdate){
+        if (new Date().getTime() - entry.lastInfoUpdate > new Date(0).setHours(72) || forceUpdate) {
             entry = await this.updateInfoProviderData(entry);
             try {
                 entry = await this.fillListProvider(entry);
@@ -298,11 +298,11 @@ export default class ListController {
                 var result = undefined;
                 try {
                     result = entry.getListProvidersInfos().find(x => x.provider === provider.providerName);
-                }catch(err){}
+                } catch (err) { }
                 if (result || forceUpdate) {
                     if (!forceUpdate) {
                         // Check if anime exist in main list and have already all providers in.
-                        entry = await this.checkIfProviderExistInMainList(entry,provider);
+                        entry = await this.checkIfProviderExistInMainList(entry, provider);
                     }
                     try {
                         entry = await ProviderHelper.getProviderSeriesInfoByName(entry, provider);
@@ -316,7 +316,7 @@ export default class ListController {
         return entry;
     }
 
-    private async checkIfProviderExistInMainList(entry: Series,provider: ListProvider):Promise<Series> {
+    private async checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Promise<Series> {
         var validProvider = entry.getListProvidersInfos().find(x => (x.id && x.id));
         try {
             if (validProvider) {
@@ -340,7 +340,7 @@ export default class ListController {
                     }
                 }
             }
-        }catch(err){}
+        } catch (err) { }
         return entry;
     }
 
@@ -351,11 +351,11 @@ export default class ListController {
                 if (index != -1) {
                     const provider = series.getInfoProvidersInfos()[index];
                     if (new Date().getTime() - new Date(provider.lastUpdate).getTime() < new Date(0).setHours(72) || forceUpdate) {
-                        const data = await ProviderHelper.getProviderSeriesInfoByName(series,infoProvider);
+                        const data = await ProviderHelper.getProviderSeriesInfoByName(series, infoProvider);
                         series = await series.merge(data);
                     }
-                }else{
-                    const data = await ProviderHelper.getProviderSeriesInfoByName(series,infoProvider);
+                } else {
+                    const data = await ProviderHelper.getProviderSeriesInfoByName(series, infoProvider);
                     series = await series.merge(data);
                 }
             } catch (err) {
@@ -365,7 +365,7 @@ export default class ListController {
         return series;
     }
 
-    
+
 
 
 

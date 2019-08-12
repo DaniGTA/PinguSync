@@ -1,11 +1,7 @@
 import * as assert from 'assert';
-import ProviderList from '../../../src/backend/controller/providerList';
-import TestProvider from './testClass/testProvider';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/listProviderLocalData';
-import listHelper from '../../../src/backend/helpFunctions/listHelper';
 import Series from '../../../src/backend/controller/objects/series';
 import Name from '../../../src/backend/controller/objects/meta/name';
-import { async } from 'q';
 
 describe('series basic tests', () => {
     it('should have a id', async () => {
@@ -112,22 +108,22 @@ describe('series basic tests', () => {
         return;
     });
 
-    it('should prevent duplicates in names',async () => {
+    it('should prevent duplicates in names', async () => {
         const series = new Series();
-        series.addSeriesName(new Name('Test','eng'));
-        series.addSeriesName(new Name('Test','eng'));
-        assert.strictEqual((await series.getAllNames()).length,1);
+        series.addSeriesName(new Name('Test', 'eng'));
+        series.addSeriesName(new Name('Test', 'eng'));
+        assert.strictEqual((await series.getAllNames()).length, 1);
     });
 
-    it('should prevent null entrys in names',async () => {
+    it('should prevent null entrys in names', async () => {
         const series = new Series();
         series.addSeriesName(null as unknown as Name);
-        assert.strictEqual((await series.getAllNames()).length,0);
+        assert.strictEqual((await series.getAllNames()).length, 0);
     });
 
-    it('should prevent undefined entrys in names',async () => {
+    it('should prevent undefined entrys in names', async () => {
         const series = new Series();
         series.addSeriesName(undefined as unknown as Name);
-        assert.strictEqual((await series.getAllNames()).length,0);
+        assert.strictEqual((await series.getAllNames()).length, 0);
     });
 });

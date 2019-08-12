@@ -2,7 +2,7 @@ import ListProvider from '../api/ListProvider';
 import ListController from './listController';
 import Series from './objects/series';
 import IUpdateList from './objects/iupdateList';
-import ProviderList from './providerList';
+import ProviderList from './provider-list';
 import { WorkerTransfer } from './objects/workerTransfer';
 import SeriesPackage from './objects/seriesPackage';
 

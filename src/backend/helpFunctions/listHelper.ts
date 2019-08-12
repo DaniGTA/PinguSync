@@ -136,8 +136,11 @@ class ListHelper {
         return list;
     }
 
-    public async isAnimeInList(list: Series[], item: Series): Promise<boolean> {
+    public async isSeriesInList(list: Series[], item: Series): Promise<boolean> {
         return list.findIndex(entry => item.id === entry.id) != -1;
+    }
+    public async isItemInList<T>(list: T[], item: T): Promise<boolean> {
+        return list.findIndex(x => x === item) !== -1;
     }
 }
 

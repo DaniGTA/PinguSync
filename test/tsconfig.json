@@ -7,13 +7,20 @@
         "sourceMap": true,
         "experimentalDecorators": true,
         "esModuleInterop": true,
-        "lib": ["dom", "es6", "es5", "dom.iterable", "esnext.array"]
+        "lib": [
+            "dom",
+            "es6",
+            "es5",
+            "dom.iterable",
+            "esnext.array"
+        ],
+        "rootDirs": [
+            "src"
+        ]
     },
     "include": [
-        "./src/**/*"
-    ],
-    "exclude": [
-        "./src/**/*.spec.ts"
+        "../src/**/*",
+        "./**/*"
     ],
     "compileOnSave": false
 }

@@ -28,8 +28,8 @@ export default class Series {
     public runTime?: number;
 
     private cachedSeason?: number | null = null;
-    private seasonDetectionType: string ="";
-    private canSync:boolean | null = null;
+    private seasonDetectionType: string = "";
+    private canSync: boolean | null = null;
     constructor() {
         this.listProviderInfos = [];
         // Generates randome string.
@@ -75,46 +75,46 @@ export default class Series {
      * Prevents too have double entrys of the same provider.
      * @param infoProvider 
      */
-    public async addInfoProvider(infoProvider:InfoProviderLocalData){
-       const index = this.infoProviderInfos.findIndex(x=> infoProvider.provider === x.provider);
-       if(index === -1){
-           this.infoProviderInfos.push(infoProvider);
-       }else{
-           this.infoProviderInfos[index] =  await InfoProviderLocalData.mergeProviderInfos(this.infoProviderInfos[index],infoProvider);;
-       }
+    public async addInfoProvider(infoProvider: InfoProviderLocalData) {
+        const index = this.infoProviderInfos.findIndex(x => infoProvider.provider === x.provider);
+        if (index === -1) {
+            this.infoProviderInfos.push(infoProvider);
+        } else {
+            this.infoProviderInfos[index] = await InfoProviderLocalData.mergeProviderInfos(this.infoProviderInfos[index], infoProvider);;
+        }
     }
 
     /**
      * Prevents too have double entrys of the same provider.
      * @param listProvider 
      */
-    public async addListProvider(...listProviders:ListProviderLocalData[]){
-        for(const listProvider of listProviders){
-            const index = this.listProviderInfos.findIndex(x=> listProvider.provider === x.provider);
-            if(index === -1){
+    public async addListProvider(...listProviders: ListProviderLocalData[]) {
+        for (const listProvider of listProviders) {
+            const index = this.listProviderInfos.findIndex(x => listProvider.provider === x.provider);
+            if (index === -1) {
                 this.listProviderInfos.push(listProvider);
-            }else{
-                this.listProviderInfos[index] = await ListProviderLocalData.mergeProviderInfos(this.listProviderInfos[index],listProvider);
+            } else {
+                this.listProviderInfos[index] = await ListProviderLocalData.mergeProviderInfos(this.listProviderInfos[index], listProvider);
             }
         }
     }
 
-    public getListProvidersInfos(){
+    public getListProvidersInfos() {
         return this.listProviderInfos;
     }
 
-    public getInfoProvidersInfos(){
+    public getInfoProvidersInfos() {
         return this.infoProviderInfos;
     }
 
-     /**
-     * Prevents too have double entrys for same name.
-     * @param infoProvider 
-     */
-    public addSeriesName(...names:Name[]){
+    /**
+    * Prevents too have double entrys for same name.
+    * @param infoProvider 
+    */
+    public addSeriesName(...names: Name[]) {
         for (const name of names) {
-            if(name){
-                if(this.names.findIndex(x=> x.name === name.name && x.lang === x.lang) === -1){
+            if (name) {
+                if (this.names.findIndex(x => x.name === name.name && x.lang === x.lang) === -1) {
                     this.names.push(name);
                 }
             }
@@ -180,7 +180,7 @@ export default class Series {
             for (const provider of this.listProviderInfos) {
                 if (provider.targetSeason) {
                     this.cachedSeason = provider.targetSeason;
-                    this.seasonDetectionType = "Provider: "+provider.provider; 
+                    this.seasonDetectionType = "Provider: " + provider.provider;
                     return provider.targetSeason;
                 }
             }
@@ -188,7 +188,7 @@ export default class Series {
 
             if (numberFromName) {
                 this.cachedSeason = numberFromName;
-                this.seasonDetectionType = "Name"; 
+                this.seasonDetectionType = "Name";
                 return numberFromName;
             }
             try {
@@ -200,7 +200,7 @@ export default class Series {
                         const prequelSeason = await prquel.getSeason(searchInList);
                         if (prequelSeason === 1 || prequelSeason === 0) {
                             this.cachedSeason = prequelSeason + searchCount;
-                            this.seasonDetectionType = "PrequelTrace"; 
+                            this.seasonDetectionType = "PrequelTrace";
                             return prequelSeason + searchCount;
                         }
                     }
@@ -234,12 +234,12 @@ export default class Series {
 
     public async getCanSync(): Promise<boolean> {
         const that = this;
-        if(that.canSync){
+        if (that.canSync) {
             return that.canSync;
         }
-        try{
-        that.canSync = await that.getCanSyncStatus();
-        }catch(err){
+        try {
+            that.canSync = await that.getCanSyncStatus();
+        } catch (err) {
             console.log(err);
             that.canSync = false;
         }
@@ -256,10 +256,10 @@ export default class Series {
         if (this.listProviderInfos.length <= 1) {
             return false;
         }
-        let latestUpdatedProvider: ListProviderLocalData | null  = null;
-        try{
+        let latestUpdatedProvider: ListProviderLocalData | null = null;
+        try {
             latestUpdatedProvider = await this.getLastUpdatedProvider();
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
         if (!latestUpdatedProvider) {
@@ -365,9 +365,9 @@ export default class Series {
     public async merge(anime: Series): Promise<Series> {
         const newAnime: Series = new Series();
 
-        if(this.lastInfoUpdate < anime.lastInfoUpdate){
+        if (this.lastInfoUpdate < anime.lastInfoUpdate) {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;
-        }else{
+        } else {
             newAnime.lastInfoUpdate = this.lastInfoUpdate;
         }
 
@@ -393,7 +393,7 @@ export default class Series {
             console.log(err);
         }
         await newAnime.getSeason();
-        
+
         await newAnime.getCanSync();
         return newAnime;
     }
@@ -407,6 +407,7 @@ export default class Series {
                 for (const provider2 of providers) {
                     if (provider2.provider == provider.provider) {
                         collected.push(provider2);
+                        break;
                     }
                 }
                 if (collected.length >= 2) {
@@ -476,38 +477,46 @@ export default class Series {
      */
     public async getAllRelations(list: Series[], retunWithThis = false): Promise<Series[]> {
         let relations = [this as Series];
-        
-            for (const entry2 of relations) {
-                for (const entry of list) {
-                    if (this.id != entry.id && !await listHelper.isAnimeInList(relations, entry)) {
-                        for (const entryProvider of entry.listProviderInfos) {
-                            for (let provider of entry2.listProviderInfos) {
-                                if (entryProvider.provider === provider.provider) {
-                                    provider = Object.assign(new ListProviderLocalData(), provider);
-                                    try{
-                                        if (entryProvider.id === provider.id && provider.getListProviderInstance().hasUniqueIdForSeasons) {
-                                            break;
-                                        }else if (entryProvider.id === provider.id && entryProvider.targetSeason !== provider.targetSeason) {
-                                            relations.push(entry);
-                                        } 
-                                    }catch(err){}
-                                    
-                                    if (provider.prequelId === entryProvider.id || entryProvider.prequelId === provider.id) {
-                                        relations.push(entry);
-                                    } else if (provider.sequelId === entryProvider.id || entryProvider.sequelId === provider.id) {
-                                        relations.push(entry);
-                                    }
-                                }
-                            }
+
+        for (const entry2 of relations) {
+            for (const entry of list) {
+                if (!await listHelper.isSeriesInList(relations, entry)) {
+                    try {
+                        relations.push(await this.searchInProviderForRelations(entry, entry2));
+                    } catch (err) { }
+                }
+            }
+        }
+        if (!retunWithThis) {
+            relations = await listHelper.removeEntrys(relations, this);
+        }
+
+        return relations;
+    }
+
+    private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {
+        for (const entryProvider of a.listProviderInfos) {
+            for (let provider of b.listProviderInfos) {
+                if (entryProvider.provider === provider.provider) {
+                    provider = Object.assign(new ListProviderLocalData(), provider);
+                    try {
+                        if (entryProvider.id === provider.id && provider.getListProviderInstance().hasUniqueIdForSeasons) {
+                            break;
+                        } else if (entryProvider.id === provider.id && entryProvider.targetSeason !== provider.targetSeason) {
+                            return a;
+
                         }
+                    } catch (err) { }
+
+                    if (provider.prequelId === entryProvider.id || entryProvider.prequelId === provider.id) {
+                        return a;
+                    } else if (provider.sequelId === entryProvider.id || entryProvider.sequelId === provider.id) {
+                        return a;
                     }
                 }
             }
-            if (!retunWithThis) {
-                relations = await listHelper.removeEntrys(relations, this);
-            }
-       
-        return relations;
+        }
+        throw "no relations found in the providers";
     }
 }
 

@@ -33,7 +33,7 @@ describe('listHelperTest', () => {
         const entry3 = new Series();
         entry3.id = '3';
         const list = [entry1, entry2, entry3];
-        const result = await listHelper.isAnimeInList(list, entry2);
+        const result = await listHelper.isSeriesInList(list, entry2);
 
         assert.equal(result, true);
     });
@@ -47,9 +47,15 @@ describe('listHelperTest', () => {
         const entry3 = new Series();
         entry3.id = '3';
         const list = [entry1, entry3];
-        const result = await listHelper.isAnimeInList(list, entry2);
+        const result = await listHelper.isSeriesInList(list, entry2);
 
         assert.equal(result, false);
+    });
+
+    it('it should look if item is in list', async () => {
+        const array = ["Test", "Test2", "Test3"];
+        assert.strictEqual(await listHelper.isItemInList(array, "Test"), true);
+        assert.strictEqual(await listHelper.isItemInList(array, "xTestx"), false);
     });
 
     it('should check list type', async () => {

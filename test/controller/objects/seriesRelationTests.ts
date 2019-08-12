@@ -5,13 +5,13 @@ import assert from "assert";
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
 import Series from "../../../src/backend/controller/objects/series";
 import Name from "../../../src/backend/controller/objects/meta/name";
-import ProviderList from "../../../src/backend/controller/providerList";
+import ProviderList from "../../../src/backend/controller/provider-list";
 import TestProvider from "./testClass/testProvider";
 
 describe('seriesTest | Relations', () => {
 
-    before(()=>{
-        const testprovider =new TestProvider("Test");
+    before(() => {
+        const testprovider = new TestProvider("Test");
         testprovider.hasUniqueIdForSeasons = false;
         ProviderList.listProviderList.push(testprovider);
     })
@@ -38,14 +38,14 @@ describe('seriesTest | Relations', () => {
         assert.equal(result2.length, 2);
         assert.equal(result3.length, 2);
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime1), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime2), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime3), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime1), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime2), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime3), false);
 
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime4), false);
     })
 
     it('get all Relations based on sequel id', async () => {
@@ -70,14 +70,14 @@ describe('seriesTest | Relations', () => {
         assert.equal(result2.length, 2);
         assert.equal(result3.length, 2);
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime1), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime2), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime3), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime1), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime2), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime3), false);
 
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime4), false);
     })
 
     it('get all Relations based on sequel id and prequel id', async () => {
@@ -104,23 +104,26 @@ describe('seriesTest | Relations', () => {
         assert.equal(result2.length, 2);
         assert.equal(result3.length, 2);
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime1), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime2), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime3), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime1), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime2), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime3), false);
 
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime4), false);
     })
 
     it('get all Relations based on provider id', async () => {
         const anime1 = getFilledAnime();
         anime1.getListProvidersInfos()[0].id = 1;
+        anime1.getListProvidersInfos()[0].targetSeason = 1;
         const anime2 = getFilledAnime();
         anime2.getListProvidersInfos()[0].id = 1;
+        anime2.getListProvidersInfos()[0].targetSeason = 2;
         const anime3 = getFilledAnime();
         anime3.getListProvidersInfos()[0].id = 1;
+        anime3.getListProvidersInfos()[0].targetSeason = 3;
         const anime4 = getFilledAnime();
         anime4.getListProvidersInfos()[0].id = 4;
 
@@ -134,14 +137,14 @@ describe('seriesTest | Relations', () => {
         assert.equal(result2.length, 2);
         assert.equal(result3.length, 2);
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime1), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime2), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime3), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime1), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime2), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime3), false);
 
 
-        assert.equal(await listHelper.isAnimeInList(result1, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result2, anime4), false);
-        assert.equal(await listHelper.isAnimeInList(result3, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result1, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result2, anime4), false);
+        assert.equal(await listHelper.isSeriesInList(result3, anime4), false);
     })
 
     function getFilledAnime(): Series {

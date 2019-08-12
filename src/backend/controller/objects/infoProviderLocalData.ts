@@ -1,4 +1,4 @@
-import ProviderList from '../providerList';
+import ProviderList from '../provider-list';
 import InfoProvider from '../../../backend/api/infoProvider';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 import Name from './meta/name';

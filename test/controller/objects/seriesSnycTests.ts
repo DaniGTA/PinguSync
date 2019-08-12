@@ -1,4 +1,4 @@
-import ProviderList from "../../../src/backend/controller/providerList";
+import ProviderList from "../../../src/backend/controller/provider-list";
 
 import TestProvider from "./testClass/testProvider";
 

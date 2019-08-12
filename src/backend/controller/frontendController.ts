@@ -2,7 +2,7 @@ import ListProvider from '../api/ListProvider';
 import ListController from './listController';
 import Series from './objects/series';
 import IUpdateList from './objects/iupdateList';
-import ProviderList from './providerList';
+import ProviderList from './provider-list';
 import IPCBackgroundController from '../communication/ipcBackgroundController';
 import ICommunication from '../communication/ICommunication';
 import SeriesPackage from './objects/seriesPackage';
@@ -17,12 +17,12 @@ class FrontendController {
     private path: string | null = null;
     private communcation: ICommunication = new IPCBackgroundController({} as Electron.WebContents);;
     constructor(webcontents?: Electron.WebContents) {
-       if(webcontents){
-           this.mainInit(webcontents);
-       }
+        if (webcontents) {
+            this.mainInit(webcontents);
+        }
     }
 
-    public mainInit(webcontents: Electron.WebContents){
+    public mainInit(webcontents: Electron.WebContents) {
         this.communcation = new IPCBackgroundController(webcontents);
         const that = this;
 

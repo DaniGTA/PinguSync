@@ -7,7 +7,7 @@ import listHelper from '../../src/backend/helpFunctions/listHelper';
 import { ListProviderLocalData } from '../../src/backend/controller/objects/listProviderLocalData';
 import Series from '../../src/backend/controller/objects/series';
 import Name from '../../src/backend/controller/objects/meta/name';
-import ProviderList from '../../src/backend/controller/providerList';
+import ProviderList from '../../src/backend/controller/provider-list';
 describe('ListControllerTest | Combine', () => {
     var lc = new ListController(false);
     before(() => {
@@ -60,7 +60,7 @@ describe('ListControllerTest | Combine', () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime("TestA");
         x2.getListProvidersInfos()[0].targetSeason = undefined;
-        x2.addSeriesName(new Name("Test III","en"));
+        x2.addSeriesName(new Name("Test III", "en"));
         entry.push(x2);
         entry.push(getFilledAnime("TestB"));
         for (let index = 0; index < 20; index++) {
@@ -74,7 +74,7 @@ describe('ListControllerTest | Combine', () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime("TestA");
         x2.getListProvidersInfos()[0].targetSeason = undefined;
-        x2.addSeriesName(new Name("Test 3","en"));
+        x2.addSeriesName(new Name("Test 3", "en"));
         entry.push(x2);
         entry.push(getFilledAnime("TestB"));
         for (let index = 0; index < 20; index++) {
@@ -87,7 +87,7 @@ describe('ListControllerTest | Combine', () => {
     it('should combine basic entrys with season in title (3/4)', async () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime("TestA");
-        x2.addSeriesName(new Name("Test Season 3","en"));
+        x2.addSeriesName(new Name("Test Season 3", "en"));
         x2.releaseYear = 0;
         x2.episodes = 0;
         entry.push(x2);
@@ -103,9 +103,9 @@ describe('ListControllerTest | Combine', () => {
     it('should combine basic entrys with season in title (4/4)', async () => {
         var entry: Series[] = [];
         let x = getFilledAnime("TestA");
-        x.addSeriesName(new Name("Test","en"));
+        x.addSeriesName(new Name("Test", "en"));
         var x2 = getFilledAnime("TestB");
-        x2.addSeriesName(new Name("Test x","en"));
+        x2.addSeriesName(new Name("Test x", "en"));
         x2.releaseYear = 0;
         x2.episodes = 0;
         entry.push(x2);
@@ -140,17 +140,17 @@ describe('ListControllerTest | Combine', () => {
     it('should sort list', async () => {
         var entry: Series[] = [];
         var x2 = getFilledAnime();
-        x2.addSeriesName(new Name("A","en"));
+        x2.addSeriesName(new Name("A", "en"));
         var x3 = getFilledAnime();
-        x3.addSeriesName(new Name("B","en"));
+        x3.addSeriesName(new Name("B", "en"));
         var x4 = getFilledAnime();
-        x4.addSeriesName(new Name("C","en"));
+        x4.addSeriesName(new Name("C", "en"));
         var x5 = getFilledAnime();
-        x5.addSeriesName(new Name("D","en"));
+        x5.addSeriesName(new Name("D", "en"));
         var x6 = getFilledAnime();
-        x6.addSeriesName(new Name("E","en"));
+        x6.addSeriesName(new Name("E", "en"));
         var x7 = getFilledAnime();
-        x7.addSeriesName(new Name("F","en"));
+        x7.addSeriesName(new Name("F", "en"));
 
         entry.push(x7);
         entry.push(x6);
@@ -301,7 +301,7 @@ function getFilledAnime(providername: string = ""): Series {
     var anime = new Series();
     anime.episodes = 10;
     anime.releaseYear = 2014;
-    anime.addSeriesName(new Name("Test","en"));
+    anime.addSeriesName(new Name("Test", "en"));
     provider.targetSeason = 3;
     anime.addListProvider(provider);
     return anime;
@@ -314,7 +314,7 @@ function getRandomeFilledAnime(): Series {
     anime.releaseYear = Math.random() * (+2019 - +1989) + +1989;
 
     provider.targetSeason = Math.random() * (+3 - +0) + +0;
-    anime.addSeriesName(new Name(stringHelper.randomString(),"en"));
+    anime.addSeriesName(new Name(stringHelper.randomString(), "en"));
     anime.addListProvider(provider);
     return anime;
 }
