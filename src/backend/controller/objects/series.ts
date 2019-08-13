@@ -353,6 +353,7 @@ export default class Series {
         for (const provider of this.infoProviderInfos) {
             infoPovidersCache.push(Object.assign(new InfoProviderLocalData(), provider));
         }
+        this.infoProviderInfos = infoPovidersCache;
         this.listProviderInfos = providersCache;
         this.overviews = overviewsCache;
     }

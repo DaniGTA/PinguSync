@@ -4,6 +4,7 @@ import ProviderList from '../provider-list';
 import WatchProgress from './meta/watchProgress';
 import listHelper from '../../helpFunctions/listHelper';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
+import Cover from './meta/Cover';
 
 /**
  * Contains info about the series and the user watch progress and the list that series is in.
@@ -99,7 +100,8 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
         const mergedProvider = Object.assign(new ListProviderLocalData(), providers[0]);
-        var newestProvider;
+        var newestProvider: ListProviderLocalData | undefined;
+        const covers: Cover[] = [];
         for (const provider of providers) {
             if (provider.id != -1) {
                 if (mergedProvider.id != -1 && mergedProvider.id != provider.id) {
@@ -108,18 +110,23 @@ export class ListProviderLocalData extends ProviderLocalData {
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
                 mergedProvider.covers = provider.covers;
-
+                if (provider.covers) {
+                    covers.push(...provider.covers);
+                }
                 if (!newestProvider) {
                     newestProvider = provider;
                 } else if (new Date(newestProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
                     newestProvider = provider;
                 }
-                if (typeof provider.publicScore != 'undefined') {
-                    if (typeof mergedProvider.publicScore != 'undefined') {
+                if (provider.publicScore) {
+                    if (mergedProvider.publicScore) {
                         mergedProvider.publicScore = (mergedProvider.publicScore + provider.publicScore) / 2;
                     } else {
                         mergedProvider.publicScore = provider.publicScore;
                     }
+                }
+                if (provider.targetSeason) {
+                    mergedProvider.targetSeason = provider.targetSeason;
                 }
 
                 if (typeof provider.score != 'undefined') {
@@ -156,7 +163,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.score) {
                 mergedProvider.score = newestProvider.score;
             }
-            if (newestProvider.score) {
+            if (newestProvider.publicScore) {
                 mergedProvider.publicScore = newestProvider.publicScore;
             }
             if (newestProvider.episodes) {
@@ -177,12 +184,14 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.covers) {
                 mergedProvider.covers = newestProvider.covers;
             }
-            if (newestProvider.hasFullInfo) {
-                mergedProvider.hasFullInfo = newestProvider.hasFullInfo;
-            }
-            mergedProvider.targetSeason = newestProvider.targetSeason;
-        }
 
+            mergedProvider.hasFullInfo = newestProvider.hasFullInfo;
+            if (newestProvider.targetSeason) {
+                mergedProvider.targetSeason = newestProvider.targetSeason;
+            }
+            mergedProvider.lastUpdate = newestProvider.lastUpdate;
+        }
+        mergedProvider.covers = covers;
         return mergedProvider;
     }
 

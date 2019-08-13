@@ -2,6 +2,8 @@ import ProviderList from '../provider-list';
 import InfoProvider from '../../../backend/api/infoProvider';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 import Name from './meta/name';
+import Cover from './meta/Cover';
+import listHelper from '../../helpFunctions/listHelper';
 /**
  * Only contains infos about the series.
  */
@@ -32,11 +34,15 @@ export class InfoProviderLocalData extends ProviderLocalData {
 
     public static async mergeProviderInfos(...providers: InfoProviderLocalData[]): Promise<InfoProviderLocalData> {
         const mergedProvider = Object.assign(new InfoProviderLocalData(), providers[0]);
-        var newestProvider;
+        var newestProvider: InfoProviderLocalData | undefined;
+        const covers: Cover[] = [];
         for (const provider of providers) {
             if (provider.id != -1) {
                 if (mergedProvider.id != -1 && mergedProvider.id != provider.id) {
                     continue;
+                }
+                if (provider.covers) {
+                    covers.push(...provider.covers);
                 }
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
@@ -66,7 +72,7 @@ export class InfoProviderLocalData extends ProviderLocalData {
             if (newestProvider.score) {
                 mergedProvider.score = newestProvider.score;
             }
-            if (newestProvider.score) {
+            if (newestProvider.publicScore) {
                 mergedProvider.publicScore = newestProvider.publicScore;
             }
             if (newestProvider.episodes) {
@@ -81,8 +87,11 @@ export class InfoProviderLocalData extends ProviderLocalData {
             if (newestProvider.names) {
                 mergedProvider.names = newestProvider.names;
             }
+            mergedProvider.lastUpdate = newestProvider.lastUpdate;
+            mergedProvider.lastExternalChange = newestProvider.lastExternalChange;
         }
 
+        mergedProvider.covers = covers;
         return mergedProvider;
     }
 }
