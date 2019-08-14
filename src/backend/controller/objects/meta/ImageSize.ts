@@ -1,4 +1,4 @@
-export enum CoverSize {
+export enum ImageSize {
     MAX,
     ORIGINAL,
     LARGE,

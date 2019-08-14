@@ -5,6 +5,7 @@ import WatchProgress from './meta/watchProgress';
 import listHelper from '../../helpFunctions/listHelper';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
 import Cover from './meta/Cover';
+import Banner from './meta/Banner';
 
 /**
  * Contains info about the series and the user watch progress and the list that series is in.
@@ -58,6 +59,14 @@ export class ListProviderLocalData extends ProviderLocalData {
         }
         return;
     }
+
+    public addEpisodes(episodes: number, plays = 0) {
+        for (let index = 1; index < episodes + 1; index++) {
+            this.addOneEpisode(index, plays);
+
+        }
+    }
+
     /**
      * @hasTest
      * @param episode 
@@ -102,6 +111,7 @@ export class ListProviderLocalData extends ProviderLocalData {
         const mergedProvider = Object.assign(new ListProviderLocalData(), providers[0]);
         var newestProvider: ListProviderLocalData | undefined;
         const covers: Cover[] = [];
+        const banners: Banner[] = []
         for (const provider of providers) {
             if (provider.id != -1) {
                 if (mergedProvider.id != -1 && mergedProvider.id != provider.id) {
@@ -111,7 +121,18 @@ export class ListProviderLocalData extends ProviderLocalData {
                 mergedProvider.rawEntry = provider.rawEntry;
                 mergedProvider.covers = provider.covers;
                 if (provider.covers) {
-                    covers.push(...provider.covers);
+                    for (const cover of provider.covers) {
+                        if (!await listHelper.isCoverInList(covers, cover)) {
+                            covers.push(cover);
+                        }
+                    }
+                }
+                if (provider.banners) {
+                    for (const banner of provider.banners) {
+                        if (!await listHelper.isCoverInList(banners, banner)) {
+                            banners.push(banner);
+                        }
+                    }
                 }
                 if (!newestProvider) {
                     newestProvider = provider;
@@ -192,6 +213,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             mergedProvider.lastUpdate = newestProvider.lastUpdate;
         }
         mergedProvider.covers = covers;
+        mergedProvider.banners = banners;
         return mergedProvider;
     }
 

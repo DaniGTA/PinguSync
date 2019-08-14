@@ -8,6 +8,7 @@ query ($query: String, $type: MediaType) {
         english
         native
       }
+      bannerImage
       coverImage {
         medium
         large

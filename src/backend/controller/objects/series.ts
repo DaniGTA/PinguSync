@@ -5,7 +5,7 @@ import WatchProgress from './meta/watchProgress';
 import { ListProviderLocalData } from './listProviderLocalData';
 import { InfoProviderLocalData } from './infoProviderLocalData';
 import ProviderLocalData from '../interfaces/ProviderLocalData';
-import { CoverSize } from './meta/CoverSize';
+import { ImageSize } from './meta/ImageSize';
 import Cover from './meta/Cover';
 import { MediaType } from './meta/mediaType';
 import ListController from '../listController';
@@ -26,6 +26,8 @@ export default class Series {
     public overviews: Overview[] = [];
     public releaseYear?: number;
     public runTime?: number;
+    public isNSFW = false;
+
 
     private cachedSeason?: number | null = null;
     private seasonDetectionType: string = "";
@@ -54,7 +56,7 @@ export default class Series {
      * 
      * @param preferedSize default: LARGE
      */
-    getCoverImage(preferedSize: CoverSize = CoverSize.LARGE): Cover | null {
+    getCoverImage(preferedSize: ImageSize = ImageSize.LARGE): Cover | null {
         let ressources: ProviderLocalData[] = [...this.listProviderInfos, ...this.infoProviderInfos];
         let result: Cover | null = null;
         for (const listProvider of ressources) {

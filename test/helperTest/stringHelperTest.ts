@@ -23,6 +23,26 @@ describe('stringHelperTest', () => {
         assert.strictEqual(await stringHelper.hasKanji(null as unknown as string), false);
     });
 
+    it('should detect cryillic', async () => {
+        assert.strictEqual(await stringHelper.hasCyrillic('Привіт'), true);
+        return;
+    })
+
+    it('should not detect cryillic', async () => {
+        assert.strictEqual(await stringHelper.hasCyrillic('Hello'), false);
+        return;
+    })
+
+    it('should detect hangul letters', async () => {
+        assert.strictEqual(await stringHelper.hasHangul('안녕'), true);
+        return;
+    })
+
+    it('should not detect hangul letters', async () => {
+        assert.strictEqual(await stringHelper.hasHangul('Hello'), false);
+        return;
+    })
+
     it('should make test to tset', async () => {
         const result = await stringHelper.reverseString('test');
         assert.equal(result, 'tset');

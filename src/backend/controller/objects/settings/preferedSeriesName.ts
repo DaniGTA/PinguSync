@@ -7,8 +7,6 @@ export enum PreferedSeriesName {
     ROMANJI,
     JAPANESE,
     ENGLISH
-
-
 }
 
 export class PreferedSeriesNameHelper {

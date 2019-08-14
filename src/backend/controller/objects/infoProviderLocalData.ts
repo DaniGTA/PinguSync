@@ -4,6 +4,7 @@ import ProviderLocalData from '../interfaces/ProviderLocalData';
 import Name from './meta/name';
 import Cover from './meta/Cover';
 import listHelper from '../../helpFunctions/listHelper';
+import Banner from './meta/Banner';
 /**
  * Only contains infos about the series.
  */
@@ -36,13 +37,25 @@ export class InfoProviderLocalData extends ProviderLocalData {
         const mergedProvider = Object.assign(new InfoProviderLocalData(), providers[0]);
         var newestProvider: InfoProviderLocalData | undefined;
         const covers: Cover[] = [];
+        const banners: Banner[] = [];
         for (const provider of providers) {
             if (provider.id != -1) {
                 if (mergedProvider.id != -1 && mergedProvider.id != provider.id) {
                     continue;
                 }
                 if (provider.covers) {
-                    covers.push(...provider.covers);
+                    for (const cover of provider.covers) {
+                        if (!await listHelper.isCoverInList(covers, cover)) {
+                            covers.push(...provider.covers);
+                        }
+                    }
+                }
+                if (provider.banners) {
+                    for (const banner of provider.banners) {
+                        if (!await listHelper.isCoverInList(banners, banner)) {
+                            banners.push(banner);
+                        }
+                    }
                 }
                 mergedProvider.id = provider.id;
                 mergedProvider.rawEntry = provider.rawEntry;
@@ -92,6 +105,7 @@ export class InfoProviderLocalData extends ProviderLocalData {
         }
 
         mergedProvider.covers = covers;
+        mergedProvider.banners = banners;
         return mergedProvider;
     }
 }

@@ -85,7 +85,7 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.covers.length, 1);
         strictEqual(merged.episodes, 15);
         strictEqual(merged.publicScore, 20);
-        strictEqual(merged.lastUpdate, 1);
+        strictEqual(merged.lastUpdate.getTime(), 2);
         strictEqual(merged.score, 40);
         return;
     });

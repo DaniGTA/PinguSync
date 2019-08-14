@@ -74,10 +74,34 @@ class StringHelper {
         }
         throw 'That name dont have a Season';
     }
-
+    /**
+     * Check if the string contains any japanese letters.
+     * @param s 
+     */
     public async hasKanji(s: string): Promise<boolean> {
         if (s) {
             return s.match('[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}') != null;
+        }
+        return false;
+    }
+    /**
+     * Check if the string contains any korean letters.
+     * @param s 
+     */
+    public async hasHangul(s: string): Promise<boolean> {
+        if (s) {
+            return s.match('/[\u3131-\uD79D]/ugi') != null;
+        }
+        return false;
+    }
+
+    /**
+     * Check if the string contains any russian letters.
+     * @param s 
+     */
+    public async hasCyrillic(s: string): Promise<boolean> {
+        if (s) {
+            return s.match('/[\u0400-\u04FF]/') != null;
         }
         return false;
     }

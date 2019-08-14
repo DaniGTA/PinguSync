@@ -45,6 +45,7 @@ export interface Media {
     startDate: StartDate;
     endDate: EndDate;
     coverImage: CoverImage;
+    bannerImage: string;
     relations: Relation;
     format: MediaFormat;
 }

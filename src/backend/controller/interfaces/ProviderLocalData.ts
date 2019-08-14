@@ -1,4 +1,5 @@
 import Cover from '../objects/meta/Cover';
+import Banner from '../objects/meta/Banner';
 
 export default class ProviderLocalData {
     /**
@@ -36,7 +37,8 @@ export default class ProviderLocalData {
     public score?: number;
     public episodes?: number;
     public publicScore?: number;
-    public covers:Cover[] = [];
+    public covers: Cover[] = [];
+    public banners: Banner[] = [];
 
     public sequelId?: number;
     public prequelId?: number;

@@ -2,6 +2,7 @@ import Overview from '../controller/objects/meta/overview';
 import sortHelper from './sortHelper';
 import Series from '../controller/objects/series';
 import Name from '../controller/objects/meta/name';
+import Cover from '../controller/objects/meta/Cover';
 
 class ListHelper {
     public async cleanArray<T>(actual: T[]): Promise<T[]> {
@@ -141,6 +142,9 @@ class ListHelper {
     }
     public async isItemInList<T>(list: T[], item: T): Promise<boolean> {
         return list.findIndex(x => x === item) !== -1;
+    }
+    public async isCoverInList(list: Cover[], item: Cover): Promise<boolean> {
+        return list.findIndex(x => x.url === item.url) !== -1;
     }
 }
 

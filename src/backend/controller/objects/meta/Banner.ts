@@ -1,6 +1,6 @@
 import { ImageSize } from './ImageSize';
 
-export default class Cover {
+export default class Banner {
     public url: string;
     public size: ImageSize;
     constructor(url: string, size: ImageSize = ImageSize.UNKNOWN) {

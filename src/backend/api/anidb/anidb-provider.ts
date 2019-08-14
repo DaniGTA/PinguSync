@@ -1,7 +1,5 @@
 
 import * as http from "http";
-import AniDBNameManager from './anidbNameManager';
-import InfoProvider from '../infoProvider';
 import { xml2json } from 'xml-js';
 import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
 import Series from '../../controller/objects/series';
@@ -10,6 +8,8 @@ import Name from '../../controller/objects/meta/name';
 import AniDBNameListXML, { Title } from './objects/anidbNameListXML';
 import { createGunzip } from 'zlib';
 import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
+import AniDBNameManager from './anidbNameManager';
+import InfoProvider from '../infoProvider';
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
     private version: number = 1;
@@ -21,45 +21,45 @@ export default class AniDBProvider implements InfoProvider {
         }
     }
 
-    async getMoreSeriesInfoByName(series: Series,searchTitle: string): Promise<Series> {
+    async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
         const nameDBList = AniDBProvider.anidbNameManager.data;
         if (nameDBList) {
             for (const seriesDB of nameDBList.animetitles.anime) {
-                try{
-                const result = await this.checkTitles(searchTitle, seriesDB.title);
-                if (result) {
-                    let ipld = new InfoProviderLocalData(this.providerName);
-                    ipld.id = seriesDB._attributes.aid;
-                    ipld.version = this.version;
-                    await series.addInfoProvider(ipld);
-                    series.addSeriesName(...result);
-                    return series;
+                try {
+                    const result = await this.checkTitles(searchTitle, seriesDB.title);
+                    if (result) {
+                        let ipld = new InfoProviderLocalData(this.providerName);
+                        ipld.id = seriesDB._attributes.aid;
+                        ipld.version = this.version;
+                        await series.addInfoProvider(ipld);
+                        series.addSeriesName(...result);
+                        return series;
+                    }
+                } catch (err) {
+                    console.log(err);
                 }
-            }catch(err){
-                console.log(err);
-            }
             }
         }
         throw 'nothing found';
 
     }
 
-    async checkTitles(name:string, titles: Title[] | Title) {
+    async checkTitles(name: string, titles: Title[] | Title) {
         const resultNames = [];
         let stringTitles = [];
-        if(Array.isArray(titles)){
-            stringTitles =  titles.flatMap(x => x._text)
-        }else{
+        if (Array.isArray(titles)) {
+            stringTitles = titles.flatMap(x => x._text)
+        } else {
             stringTitles.push(titles._text);
         }
-        if (await titleCheckHelper.checkNames([name],stringTitles)) {
-            if(Array.isArray(titles)){
+        if (await titleCheckHelper.checkNames([name], stringTitles)) {
+            if (Array.isArray(titles)) {
                 for (const title of titles) {
                     if (title._text) {
                         resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
                     }
                 }
-            }else{
+            } else {
                 resultNames.push(new Name(titles._text, titles._attributes["xml:lang"]));
             }
             return resultNames;

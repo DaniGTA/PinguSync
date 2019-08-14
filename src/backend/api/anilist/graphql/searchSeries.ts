@@ -27,6 +27,7 @@ export interface Medium {
     id: number;
     title: Title;
     coverImage: CoverImage;
+    bannerImage: string;
     format: MediaFormat;
     type: string;
     averageScore?: number;

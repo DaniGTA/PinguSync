@@ -76,6 +76,7 @@ fragment mediaListEntry on MediaList {
       month
       day
     }
+    bannerImage
     coverImage {
       large
       medium

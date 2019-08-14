@@ -16,14 +16,14 @@ export default class TVDBConverter {
         infoProviderLocalData.id = series.data.id;
         infoProviderLocalData.publicScore = series.data.siteRating;
         infoProviderLocalData.rawEntry = series;
-        infoProviderLocalData.covers.push(new Cover(series.data.banner));
+        infoProviderLocalData.banners.push(new Cover(series.data.banner));
 
         return infoProviderLocalData;
     }
 
-    async convertSearchResultToProviderLocalData(searchResult: SeriesSearchResult):  Promise<InfoProviderLocalData> {
+    async convertSearchResultToProviderLocalData(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
         const infoProviderLocalData = new InfoProviderLocalData(TVDBProvider.Instance);
-        if(searchResult.id){
+        if (searchResult.id) {
             infoProviderLocalData.id = searchResult.id;
         }
         infoProviderLocalData.rawEntry = searchResult;
@@ -32,19 +32,19 @@ export default class TVDBConverter {
         return infoProviderLocalData;
     }
 
-    async convertSearchResultToSeries(searchResult: SeriesSearchResult):  Promise<Series>{
+    async convertSearchResultToSeries(searchResult: SeriesSearchResult): Promise<Series> {
         let series = new Series();
-        if(searchResult.seriesName){
-            series.addSeriesName(new Name(searchResult.seriesName,'en',NameType.OFFICIAL));
+        if (searchResult.seriesName) {
+            series.addSeriesName(new Name(searchResult.seriesName, 'en', NameType.OFFICIAL));
         }
-        if(searchResult.slug){
-            series.addSeriesName(new Name(searchResult.slug,'slug', NameType.SLUG));
+        if (searchResult.slug) {
+            series.addSeriesName(new Name(searchResult.slug, 'slug', NameType.SLUG));
         }
-        if(searchResult.firstAired){
+        if (searchResult.firstAired) {
             series.releaseYear = new Date(searchResult.firstAired).getFullYear();
         }
-        if(searchResult.overview){
-            series.addOverview(new Overview(searchResult.overview,'en'));
+        if (searchResult.overview) {
+            series.addOverview(new Overview(searchResult.overview, 'en'));
         }
         await series.addInfoProvider(await this.convertSearchResultToProviderLocalData(searchResult));
         return series;
