@@ -40,6 +40,6 @@ export default class ProviderLocalData {
     public covers: Cover[] = [];
     public banners: Banner[] = [];
 
-    public sequelId?: number;
-    public prequelId?: number;
+    public sequelIds: number[] = [];
+    public prequelIds: number[] = [];
 }

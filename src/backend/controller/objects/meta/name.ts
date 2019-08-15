@@ -17,8 +17,10 @@ export default class Name {
             if (name.lang == 'x-jap' && name.nameType === NameType.MAIN) {
                 return name.name;
             }
-            if (!await stringHelper.hasKanji(name.name)) {
-                kanjiTitle = name.name;
+            if (!await stringHelper.hasKanji(name.name) && !await stringHelper.hasCyrillic(name.name)) {
+                if (!await stringHelper.hasHangul(name.name)) {
+                    kanjiTitle = name.name;
+                }
             }
         }
 

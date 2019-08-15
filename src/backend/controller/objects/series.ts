@@ -214,6 +214,7 @@ export default class Series {
                     }
                 }
             } catch (err) { }
+            this.seasonDetectionType = "None";
             this.cachedSeason = undefined;
         }
         return this.cachedSeason;
@@ -221,10 +222,10 @@ export default class Series {
 
     public async getPrequel(searchInList = new ListController().getMainList()): Promise<Series> {
         for (const listProvider of this.listProviderInfos) {
-            if (listProvider.prequelId) {
+            if (listProvider.prequelIds) {
                 for (const entry of searchInList) {
                     for (const entryListProvider of entry.listProviderInfos) {
-                        if (entryListProvider.provider === listProvider.provider && entryListProvider.id === listProvider.prequelId) {
+                        if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
                             return entry;
                         }
                     }
@@ -499,23 +500,39 @@ export default class Series {
     }
 
     private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {
-        for (const entryProvider of a.listProviderInfos) {
-            for (let provider of b.listProviderInfos) {
-                if (entryProvider.provider === provider.provider) {
-                    provider = Object.assign(new ListProviderLocalData(), provider);
-                    try {
-                        if (entryProvider.id === provider.id && provider.getListProviderInstance().hasUniqueIdForSeasons) {
-                            break;
-                        } else if (entryProvider.id === provider.id && entryProvider.targetSeason !== provider.targetSeason) {
-                            return a;
+        if (a.mediaType === b.mediaType) {
+            for (const providerA of a.listProviderInfos) {
+                for (let providerB of b.listProviderInfos) {
+                    if (providerA.provider === providerB.provider) {
+                        providerB = Object.assign(new ListProviderLocalData(), providerB);
+                        try {
+                            if (providerA.id === providerB.id && providerB.getListProviderInstance().hasUniqueIdForSeasons) {
+                                break;
+                            } else if (providerA.id === providerB.id && providerA.targetSeason !== providerB.targetSeason) {
+                                return a;
 
+                            }
+                        } catch (err) { }
+                        for (const prequelIdB of providerB.prequelIds) {
+                            if (prequelIdB === providerA.id) {
+                                return a;
+                            }
                         }
-                    } catch (err) { }
-
-                    if (provider.prequelId === entryProvider.id || entryProvider.prequelId === provider.id) {
-                        return a;
-                    } else if (provider.sequelId === entryProvider.id || entryProvider.sequelId === provider.id) {
-                        return a;
+                        for (const preqielIdA of providerA.prequelIds) {
+                            if (preqielIdA === providerB.id) {
+                                return a;
+                            }
+                        }
+                        for (const sequelIdB of providerB.sequelIds) {
+                            if (sequelIdB === providerA.id) {
+                                return a;
+                            }
+                        }
+                        for (const sequelIdA of providerA.sequelIds) {
+                            if (sequelIdA === providerB.id) {
+                                return a;
+                            }
+                        }
                     }
                 }
             }

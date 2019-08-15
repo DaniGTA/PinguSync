@@ -1,17 +1,18 @@
 import Series from "../controller/objects/series";
 import titleCheckHelper from './titleCheckHelper';
 import providerHelper from './provider/providerHelper';
+import { ListProviderLocalData } from "../controller/objects/listProviderLocalData";
 
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
         return a.getSeason() === b.getSeason();
     }
 
-        /**
-     * Calculate the value
-     * @param a 
-     * @param b 
-     */
+    /**
+ * Calculate the value
+ * @param a 
+ * @param b 
+ */
     public async isSameSeries(a: Series, b: Series): Promise<boolean> {
         let matches: number = 0;
         let matchAbleScore: number = 0;
@@ -39,21 +40,22 @@ class SeriesHelper {
             }
         }
 
-        if (await providerHelper.hasSameListProvider(a,b)) {
-            for (const aProvider of a.getListProvidersInfos()) {
+        if (await providerHelper.hasSameListProvider(a, b)) {
+            for (let aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {
-                    if(aProvider.provider == bProvider.provider){
+                    if (aProvider.provider == bProvider.provider) {
                         matchAbleScore += 3;
-                        if(aProvider.id == bProvider.id){
+                        if (aProvider.id == bProvider.id) {
+                            aProvider = Object.assign(new ListProviderLocalData(), aProvider);
                             matches += 2;
-                            if(aProvider.targetSeason === bProvider.targetSeason){
-                                try{
-                                    if(aProvider.getListProviderInstance().hasUniqueIdForSeasons){
-                                        return true;
-                                    }else{
-                                        matches++;
-                                    }
-                                }catch(err){}
+                            try {
+                                if (aProvider.getListProviderInstance().hasUniqueIdForSeasons) {
+                                    return true;
+                                } else if (aProvider.targetSeason === bProvider.targetSeason) {
+                                    return true;
+                                }
+                            } catch (err) {
+
                             }
                         }
                     }

@@ -100,7 +100,7 @@ describe('ListControllerTest | Combine', () => {
         return;
     });
 
-    it('should combine basic entrys with season in title (4/4)', async () => {
+    it('should combine basic entrys with season in title (4/5)', async () => {
         var entry: Series[] = [];
         let x = getFilledAnime("TestA");
         x.addSeriesName(new Name("Test", "en"));
@@ -109,7 +109,7 @@ describe('ListControllerTest | Combine', () => {
         x2.releaseYear = 0;
         x2.episodes = 0;
         entry.push(x2);
-        entry.push();
+        entry.push(x);
         for (let index = 0; index < 22; index++) {
             entry.push(getRandomeFilledAnime());
         }

@@ -99,11 +99,11 @@ export default new class AniListConverter {
 
             let prequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL);
             if (prequel != -1) {
-                providerInfo.prequelId = entry.media.relations.nodes[prequel].id
+                providerInfo.prequelIds.push(entry.media.relations.nodes[prequel].id);
             }
             let sequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.SEQUEL);
             if (sequel != -1) {
-                providerInfo.sequelId = entry.media.relations.nodes[sequel].id
+                providerInfo.sequelIds.push(entry.media.relations.nodes[sequel].id);
             }
         } catch (err) {
             console.error(err);

@@ -80,7 +80,8 @@ class StringHelper {
      */
     public async hasKanji(s: string): Promise<boolean> {
         if (s) {
-            return s.match('[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}') != null;
+            const regex = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}/
+            return s.match(regex) != null;
         }
         return false;
     }
@@ -90,7 +91,8 @@ class StringHelper {
      */
     public async hasHangul(s: string): Promise<boolean> {
         if (s) {
-            return s.match('/[\u3131-\uD79D]/ugi') != null;
+            const regex = /[\u3131-\uD79D]/ugi
+            return s.match(regex) != null;
         }
         return false;
     }
@@ -101,7 +103,8 @@ class StringHelper {
      */
     public async hasCyrillic(s: string): Promise<boolean> {
         if (s) {
-            return s.match('/[\u0400-\u04FF]/') != null;
+            const regex = /[\u0400-\u04FF]/;
+            return s.match(regex) != null;
         }
         return false;
     }

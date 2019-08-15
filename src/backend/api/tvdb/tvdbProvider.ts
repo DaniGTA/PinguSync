@@ -10,6 +10,7 @@ import seriesHelper from '../../helpFunctions/seriesHelper';
 
 export default class TVDBProvider implements InfoProvider {
     public providerName = 'tvdb'
+    public isOffline = false;
     private apiKey = '790G98VXW5MZHGV0';
     private baseUrl = 'https://api.thetvdb.com';
     private apiData: TVDBProviderData = new TVDBProviderData();
@@ -18,46 +19,46 @@ export default class TVDBProvider implements InfoProvider {
         TVDBProvider.Instance = this;
     }
 
-    public async getMoreSeriesInfoByName(series: Series,searchTitle: string): Promise<Series> {
-        try{
-            const tvDbConverter =new TVDBConverter();
-            let id: string| number|undefined;
+    public async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
+        try {
+            const tvDbConverter = new TVDBConverter();
+            let id: string | number | undefined;
             const index = series.getInfoProvidersInfos().findIndex(entry => entry.provider == this.providerName);
             if (index === -1) {
-               const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name='+searchTitle);
-               if(data.data){
+                const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + searchTitle);
+                if (data.data) {
                     for (const searchResult of data.data) {
-                       const series2:Series =  await tvDbConverter.convertSearchResultToSeries(searchResult);
-                        if(await seriesHelper.isSameSeries(series,series2)){
-                           id = (await tvDbConverter.convertSearchResultToProviderLocalData(searchResult)).id;
-                           break;
+                        const series2: Series = await tvDbConverter.convertSearchResultToSeries(searchResult);
+                        if (await seriesHelper.isSameSeries(series, series2)) {
+                            id = (await tvDbConverter.convertSearchResultToProviderLocalData(searchResult)).id;
+                            break;
                         }
-                    } 
+                    }
                 }
-            }else{
+            } else {
                 id = series.getInfoProvidersInfos()[index].id;
             }
-            if(id){
+            if (id) {
                 const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + id);
                 await series.addInfoProvider(await tvDbConverter.convertSeriesToProviderLocalData(data));
                 return series;
             }
-            
-        }catch(err){
+
+        } catch (err) {
             console.log(err);
         }
         throw 'no tvdb id';
     }
 
     private async getAccessKey(): Promise<string> {
-        if (TVDBProvider.Instance.apiData.accessToken && TVDBProvider.Instance.apiData.expiresIn && new Date().getTime() < TVDBProvider.Instance .apiData.expiresIn) {
+        if (TVDBProvider.Instance.apiData.accessToken && TVDBProvider.Instance.apiData.expiresIn && new Date().getTime() < TVDBProvider.Instance.apiData.expiresIn) {
             return TVDBProvider.Instance.apiData.accessToken;
         } else {
             const token = await new Promise<string>((resolve, reject) => {
                 request({
                     method: 'POST',
                     url: TVDBProvider.Instance.baseUrl + '/login',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: `{
                         "apikey": "`+ TVDBProvider.Instance.apiKey + `"
                     }`
@@ -81,38 +82,38 @@ export default class TVDBProvider implements InfoProvider {
     private async webRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
         console.log('[TVDB] Start WebRequest');
         return new Promise<any>((resolve, reject) => {
-            (async () =>{
-                try{
-                request({
-                    method: method,
-                    url,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + await TVDBProvider.Instance.getAccessKey(),
-                    },
+            (async () => {
+                try {
+                    request({
+                        method: method,
+                        url,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + await TVDBProvider.Instance.getAccessKey(),
+                        },
 
-                    body: body,
-                }, (error: any, response: any, body: any) => {
-                    try {
-                        console.log('[TVDB] status code: ' + response.statusCode);
-                        if (response.statusCode === 200 || response.statusCode === 201) {
-                            var data: T = JSON.parse(body) as T;
-                            resolve(data);
-                        } else {
+                        body: body,
+                    }, (error: any, response: any, body: any) => {
+                        try {
+                            console.log('[TVDB] status code: ' + response.statusCode);
+                            if (response.statusCode === 200 || response.statusCode === 201) {
+                                var data: T = JSON.parse(body) as T;
+                                resolve(data);
+                            } else {
+                                reject();
+                            }
+                        } catch (err) {
+                            console.log(err);
                             reject();
                         }
-                    } catch (err) {
+                    }).on('error', (err) => {
                         console.log(err);
                         reject();
-                    }
-                }).on('error', (err) => {
+                    })
+                } catch (err) {
                     console.log(err);
                     reject();
-                })
-            }catch(err){
-                console.log(err);
-                reject();
-            }
+                }
             })();
         });
     }

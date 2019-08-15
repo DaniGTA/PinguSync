@@ -190,11 +190,11 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.episodes) {
                 mergedProvider.episodes = newestProvider.episodes;
             }
-            if (newestProvider.sequelId) {
-                mergedProvider.sequelId = newestProvider.sequelId;
+            if (newestProvider.sequelIds) {
+                mergedProvider.sequelIds = newestProvider.sequelIds;
             }
-            if (newestProvider.prequelId) {
-                mergedProvider.prequelId = newestProvider.prequelId;
+            if (newestProvider.prequelIds) {
+                mergedProvider.prequelIds = newestProvider.prequelIds;
             }
             if (newestProvider.customList) {
                 mergedProvider.customList = newestProvider.customList;

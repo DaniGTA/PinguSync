@@ -12,9 +12,10 @@ import seriesHelper from '../helpFunctions/seriesHelper';
 import ListProvider from '../api/ListProvider';
 export default class ListController {
     private static mainList: Series[] = [];
+    public static instance: ListController;
     static listLoaded = false;
     constructor(forceLoading = !ListController.listLoaded) {
-
+        ListController.instance = this;
         if (forceLoading) {
             ListController.mainList = this.loadData();
             ListController.listLoaded = true;
@@ -278,45 +279,22 @@ export default class ListController {
         return entrys;
     }
 
-    private async fillMissingProvider(entry: Series, forceUpdate = false): Promise<Series> {
+    private async fillMissingProvider(entry: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
         if (new Date().getTime() - entry.lastInfoUpdate > new Date(0).setHours(72) || forceUpdate) {
             entry = await this.updateInfoProviderData(entry);
-            try {
-                entry = await this.fillListProvider(entry);
-            } catch (err) {
-                console.log(err);
-            }
-            entry.lastInfoUpdate = Date.now();
-        }
-        return entry;
-    }
-
-    private async fillListProvider(entry: Series, forceUpdate = false): Promise<Series> {
-        entry = Object.assign(new Series(), entry);
-        if (entry.getListProvidersInfos().length != ProviderList.listProviderList.length || forceUpdate) {
-            for (const provider of ProviderList.listProviderList) {
-                var result = undefined;
+            if (!offlineOnly) {
                 try {
-                    result = entry.getListProvidersInfos().find(x => x.provider === provider.providerName);
-                } catch (err) { }
-                if (result || forceUpdate) {
-                    if (!forceUpdate) {
-                        // Check if anime exist in main list and have already all providers in.
-                        entry = await this.checkIfProviderExistInMainList(entry, provider);
-                    }
-                    try {
-                        entry = await ProviderHelper.getProviderSeriesInfoByName(entry, provider);
-                    } catch (err) {
-                        console.log(err);
-                    }
-                    await timeHelper.delay(700);
+                    entry = await ProviderHelper.fillListProvider(entry);
+                } catch (err) {
+                    console.log(err);
                 }
+                entry.lastInfoUpdate = Date.now();
             }
         }
         return entry;
     }
 
-    private async checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Promise<Series> {
+    public async checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Promise<Series> {
         var validProvider = entry.getListProvidersInfos().find(x => (x.id && x.id));
         try {
             if (validProvider) {
@@ -344,8 +322,13 @@ export default class ListController {
         return entry;
     }
 
-    private async updateInfoProviderData(series: Series, forceUpdate = false): Promise<Series> {
+    private async updateInfoProviderData(series: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
         for (const infoProvider of ProviderList.infoProviderList) {
+            if (offlineOnly) {
+                if (!infoProvider.isOffline) {
+                    continue;
+                }
+            }
             try {
                 const index = series.getInfoProvidersInfos().findIndex(entry => infoProvider.providerName == entry.provider);
                 if (index != -1) {

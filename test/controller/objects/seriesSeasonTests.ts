@@ -4,7 +4,7 @@ import Series from "../../../src/backend/controller/objects/series";
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
 
 describe('seriesTest | Season', () => {
-        it('should return season (1/6)', async () => {
+    it('should return season (1/6)', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData("TestA");
         provider.targetSeason = 1;
@@ -17,7 +17,7 @@ describe('seriesTest | Season', () => {
         const series = new Series();
         series.addSeriesName(new Name('Test 3', 'en'));
 
-       strictEqual(await series.getSeason(), 3);
+        strictEqual(await series.getSeason(), 3);
         return;
     });
 
@@ -32,7 +32,7 @@ describe('seriesTest | Season', () => {
     it('should return season (4/6)', async () => {
         const series = new Series();
         const lpld = new ListProviderLocalData();
-        lpld.prequelId = 6;
+        lpld.prequelIds.push(6);
         series.addListProvider(lpld);
         series.addSeriesName(new Name('Test III', 'en'));
 
@@ -43,36 +43,36 @@ describe('seriesTest | Season', () => {
     it('should return season (5/6)', async () => {
         const series = new Series();
         const lpld = new ListProviderLocalData();
-        lpld.prequelId = 6;
+        lpld.prequelIds.push(6);
         series.addListProvider(lpld);
         series.addSeriesName(new Name('Test III', 'en'));
 
         const series2 = new Series();
         const lpld2 = new ListProviderLocalData();
-        lpld2.prequelId = 5;
-        lpld2.sequelId = 6;
+        lpld2.prequelIds.push(5);
+        lpld2.sequelIds.push(6);
         series2.addListProvider(lpld);
         series2.addSeriesName(new Name('Test II', 'en'));
 
-        strictEqual(await series.getSeason([series,series2]), 3);
+        strictEqual(await series.getSeason([series, series2]), 3);
         return;
     });
 
     it('should return season (6/6)', async () => {
         const series = new Series();
         const lpld = new ListProviderLocalData();
-        lpld.prequelId = 6;
+        lpld.prequelIds.push(6);
         series.addListProvider(lpld);
         series.addSeriesName(new Name('Test III', 'en'));
 
         const series2 = new Series();
         const lpld2 = new ListProviderLocalData();
-        lpld2.prequelId = 5;
-        lpld2.sequelId = 6;
+        lpld2.prequelIds.push(5);
+        lpld2.sequelIds.push(6);
         series2.addListProvider(lpld);
         series2.addSeriesName(new Name('Test II', 'en'));
 
-        strictEqual(await series2.getSeason([series,series2]), 2);
+        strictEqual(await series2.getSeason([series, series2]), 2);
         return;
     });
 

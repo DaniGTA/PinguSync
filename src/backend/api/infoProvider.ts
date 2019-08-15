@@ -6,5 +6,7 @@ import Series from '../controller/objects/series';
  */
 export default interface InfoProvider {
     providerName: string;
+    isOffline: boolean;
     getMoreSeriesInfoByName(anime: Series, searchTitle: string): Promise<Series>;
+
 }

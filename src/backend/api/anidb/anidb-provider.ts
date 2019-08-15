@@ -13,6 +13,7 @@ import InfoProvider from '../infoProvider';
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
     private version: number = 1;
+    public isOffline = true;
     public static anidbNameManager: AniDBNameManager = new AniDBNameManager();
 
     constructor(download: boolean = true) {

@@ -54,7 +54,7 @@ describe('providerTest', () => {
         providerInfoA.episodes = 10;
         providerInfoA.score = 11;
         providerInfoA.watchStatus = WatchStatus.CURRENT;
-        providerInfoA.sequelId = 10;
+        providerInfoA.sequelIds.push(10);
         providerInfoA.lastUpdate = new Date(10000);
         const providerInfoB = new ListProviderLocalData();
         providerInfoB.id = 2;
@@ -63,10 +63,10 @@ describe('providerTest', () => {
         providerInfoB.episodes = 10;
         providerInfoB.score = 12;
         providerInfoB.watchStatus = WatchStatus.COMPLETED;
-        providerInfoB.sequelId = 12;
+        providerInfoB.sequelIds.push(12);
         providerInfoB.lastUpdate = new Date(20000);
         providerInfoB.publicScore = 15;
-        providerInfoB.prequelId = 105;
+        providerInfoB.prequelIds.push(105);
 
         const providerMerged = await ListProviderLocalData.mergeProviderInfos(providerInfoA, providerInfoB);
         const result = providerMerged.getHighestWatchedEpisode();
@@ -75,10 +75,10 @@ describe('providerTest', () => {
         }
         assert.notEqual(typeof result, 'undefined');
 
-        assert.equal(providerMerged.sequelId, 12);
+        assert.equal(providerMerged.sequelIds, 12);
         assert.equal(providerMerged.score, 12);
         assert.equal(providerMerged.watchStatus, WatchStatus.COMPLETED);
         assert.equal(providerMerged.publicScore, 15);
-        assert.equal(providerMerged.prequelId, 105);
+        assert.equal(providerMerged.prequelIds, 105);
     })
 });
