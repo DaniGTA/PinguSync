@@ -33,7 +33,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { ipcRenderer } from "electron";
 import MainList from "./MainList.vue";
-import { WorkerTransfer } from "../backend/controller/objects/workerTransfer";
 import App from "../App.vue";
 
 
@@ -83,7 +82,7 @@ export default class Providers extends Vue {
   checkLogin(providerName: string) {
     App.workerController.on(
       providerName.toLocaleLowerCase() + "-auth-status",
-      status => {
+      (status:boolean) => {
         const button = (this.$refs as any)[
           providerName + "-button"
         ][0] as HTMLElement;
