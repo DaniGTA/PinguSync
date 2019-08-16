@@ -4,13 +4,18 @@
         "target": "esnext",
         "module": "commonjs",
         "moduleResolution": "node",
+        "importHelpers": true,
         "sourceMap": true,
         "experimentalDecorators": true,
         "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        
         "lib": [
             "dom",
+            "esnext",
             "es6",
-            "es5",
+            "es7",
             "dom.iterable",
             "esnext.array"
         ],

@@ -3,29 +3,25 @@ import Series from './objects/series';
 import * as fs from "fs";
 import * as path from "path";
 import listHelper from '../helpFunctions/list-helper';
-import timeHelper from '../helpFunctions/time-helper';
-import ProviderList from './provider-list';
+import ProviderList from './provider-manager/provider-list';
 import WatchProgress from './objects/meta/watch-progress';
-import SeriesPackage from './objects/series-package';
 import ProviderHelper from '../helpFunctions/provider/provider-helper';
-import seriesHelper from '../helpFunctions/series-helper';
 import ListProvider from '../api/list-provider';
+import MainListManager from './main-list-manager';
 export default class ListController {
-    private static mainList: Series[] = [];
     public static instance: ListController;
-    static listLoaded = false;
-    constructor(forceLoading = !ListController.listLoaded) {
+    constructor(forceLoading = !MainListManager.listLoaded) {
         ListController.instance = this;
         if (forceLoading) {
-            ListController.mainList = this.loadData();
-            ListController.listLoaded = true;
+            this.addSeriesToMainList(...this.loadData());
+            MainListManager.listLoaded = true;
             this.getSeriesListAndUpdateMainList();
         }
     }
 
     private async syncWatcher() {
         var needToSync: Series[] = [];
-        for (const item of ListController.mainList) {
+        for (const item of MainListManager.getMainList()) {
             if (await item.getCanSync()) {
                 needToSync.push(item);
             }
@@ -42,57 +38,10 @@ export default class ListController {
         this.updateWatchProgressTo(anime, watchProgress.episode);
     }
 
-    public async getSeriesPackage(series: Series): Promise<SeriesPackage> {
-        if (series.packageId) {
-            const allSeriesInThePackage = ListController.mainList.filter(x => x.packageId === series.packageId);
-            const seriesPackage = new SeriesPackage(...allSeriesInThePackage);
-            seriesPackage.id = series.packageId;
-            return seriesPackage;
-        } else {
-            return this.createPackage(series);
-        }
-    }
-
-    public async getSeriesPackages(): Promise<SeriesPackage[]> {
-        let tempList = [...this.getMainList()];
-
-        const seriesPackageList: SeriesPackage[] = [];
-
-        for (let entry of tempList) {
-            try {
-                const tempPackage = await this.createPackage(entry, tempList);
-                tempList = await listHelper.removeEntrys(tempList, ...tempPackage.allRelations);
-                seriesPackageList.push(tempPackage);
-            } catch (err) { }
-        }
-        return seriesPackageList;
-    }
-
-    private async createPackage(series: Series, list: Series[] = ListController.mainList): Promise<SeriesPackage> {
-        try {
-            series = Object.assign(new Series(), series);
-            const relations = await series.getAllRelations(list, true);
-            const tempPackage = new SeriesPackage(...relations);
-
-            for (const relation of relations) {
-                const index = ListController.mainList.findIndex(x => x.id === relation.id);
-                if (index != -1) {
-                    relation.packageId = tempPackage.id;
-                    ListController.mainList[index] = relation;
-                }
-            }
-            return tempPackage;
-        } catch (err) {
-            console.error("Cant create package for: ")
-            console.error(series);
-            throw "cant create package";
-        }
-    }
-
     public async removeWatchProgress(anime: Series, watchProgress: WatchProgress) {
         for (const provider of anime.getListProvidersInfos()) {
             try {
-                const providerInstance = await provider.getListProviderInstance();
+                const providerInstance = await provider.getProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
                     const newProvider = await providerInstance.removeEntry(anime, watchProgress);
                     newProvider.lastUpdate = new Date(Date.now());
@@ -105,14 +54,14 @@ export default class ListController {
         }
     }
     public async updateWatchProgressTo(anime: Series, watchProgess: number) {
-        if (anime.getListProvidersInfos().length < ProviderList.listProviderList.length / 2) {
+        if (anime.getListProvidersInfos().length < ProviderList.getListProviderList().length / 2) {
             try {
                 await this.fillMissingProvider(anime);
             } catch (err) { }
         }
         for (const provider of anime.getListProvidersInfos()) {
             try {
-                const providerInstance = await provider.getListProviderInstance();
+                const providerInstance = await provider.getProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
                     const newProvider = await providerInstance.updateEntry(anime, new WatchProgress(watchProgess))
                     newProvider.lastUpdate = new Date(Date.now());
@@ -124,26 +73,26 @@ export default class ListController {
             }
         }
 
-        this.saveData(ListController.mainList);
+        this.saveData(MainListManager.getMainList());
         await this.addSeriesToMainList(anime);
     }
 
     public async addSeriesToMainList(...animes: Series[]) {
         console.log('Add ' + animes.length + ' to mainList');
         for (const anime of animes) {
-            await this.addSerieToMainList(anime);
-            const entry = await this.findSameSeriesInMainList(anime);
+            await MainListManager.addSerieToMainList(anime);
+            const entry = await MainListManager.findSameSeriesInMainList(anime);
             if (entry.length != 1) {
                 console.log("[WARN] Find more or none entry after adding it.");
             } else {
-                var index = await this.getIndexFromSeries(entry[0]);
+                var index = await MainListManager.getIndexFromSeries(entry[0]);
                 try {
-                    await this.addSerieToMainList(await this.fillMissingProvider(entry[0]));
-                    this.saveData(ListController.mainList);
+                    await MainListManager.addSerieToMainList(await this.fillMissingProvider(entry[0]));
+                    this.saveData(MainListManager.getMainList());
                 } catch (err) { }
             }
         }
-        console.log('Added ' + ListController.mainList.length + ' to mainList');
+        console.log('Added ' + MainListManager.getMainList().length + ' to mainList');
         if (animes.length > 2) {
             try {
                 FrontendController.getInstance().sendSeriesList();
@@ -151,63 +100,9 @@ export default class ListController {
         }
     }
 
-    private async findSameSeriesInMainList(entry2: Series): Promise<Series[]> {
-        const foundedSameSeries = [];
-        for (let entry of ListController.mainList) {
-            if (entry.id === entry2.id) {
-                foundedSameSeries.push(entry);
-            } else {
-                if (await seriesHelper.isSameSeries(entry, entry2)) {
-                    foundedSameSeries.push(entry);
-                }
-
-            }
-        }
-        return foundedSameSeries;
-    }
-
-    public async removeSeriesFromMainList(anime: Series, notifyRenderer = false): Promise<boolean> {
-        const index = await this.getIndexFromSeries(anime);
-        if (index != -1) {
-            ListController.mainList = await listHelper.removeEntrys(ListController.mainList, ListController.mainList[index]);
-            if (notifyRenderer) {
-                FrontendController.getInstance().removeEntryFromList(index);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
-        const that = this;
-        try {
-            const results = await that.findSameSeriesInMainList(series);
-            if (results.length != 0) {
-                for (const entry of results) {
-                    try {
-                        series = await series.merge(entry);
-                        await that.removeSeriesFromMainList(entry, notfiyRenderer);
-                    } catch (err) {
-                        console.log(err);
-                    }
-                }
-            }
-
-            ListController.mainList.push(series);
-
-            if (notfiyRenderer) {
-                await FrontendController.getInstance().updateClientList(await this.getIndexFromSeries(series), await this.getSeriesPackage(series));
-            }
-
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
-        return true;
-    }
 
     public getMainList(): Series[] {
-        return ListController.mainList;
+        return MainListManager.getMainList();
     }
 
     /**
@@ -215,26 +110,18 @@ export default class ListController {
      * @param anime 
      */
     public async forceRefreshProviderInfo(packageId: string) {
-        const allSeriesInThePackage = ListController.mainList.filter(x => x.packageId === packageId);
+        const allSeriesInThePackage = MainListManager.getMainList().filter(x => x.packageId === packageId);
         for (const series of allSeriesInThePackage) {
-            const index = await this.getIndexFromSeries(series);
+            const index = await MainListManager.getIndexFromSeries(series);
             if (index != -1) {
                 try {
-                    var result = await this.fillMissingProvider(ListController.mainList[index], true);
+                    var result = await this.fillMissingProvider(MainListManager.getMainList()[index], true);
                     this.addSeriesToMainList(result);
                 } catch (err) {
                     console.log(err);
                 }
             }
         }
-    }
-
-    public async getIndexFromSeries(anime: Series): Promise<number> {
-        return ListController.mainList.findIndex(x => anime.id === x.id);
-    }
-
-    public async getIndexFromPackageId(packageId: string): Promise<number> {
-        return ListController.mainList.findIndex(x => packageId === x.id);
     }
 
     public async getSeriesListAndUpdateMainList(): Promise<void> {
@@ -247,7 +134,7 @@ export default class ListController {
 
     public async getAllEntrysFromProviders(forceDownload: boolean = false): Promise<Series[]> {
         const anime: Series[] = [];
-        for (const provider of ProviderList.listProviderList) {
+        for (const provider of ProviderList.getListProviderList()) {
             try {
                 if (await provider.isUserLoggedIn()) {
                     console.log('[Request] -> ' + provider.providerName + ' -> AllSeries');
@@ -309,7 +196,7 @@ export default class ListController {
     }
 
     private async updateInfoProviderData(series: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
-        for (const infoProvider of ProviderList.infoProviderList) {
+        for (const infoProvider of ProviderList.getInfoProviderList()) {
             if (offlineOnly) {
                 if (!infoProvider.isOffline) {
                     continue;

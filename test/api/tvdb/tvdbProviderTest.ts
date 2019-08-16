@@ -1,7 +1,7 @@
 
 
 import { notStrictEqual } from 'assert';
-import TVDBProvider from '../../../src/backend/api/tvdb/tvdbProvider';
+import TVDBProvider from '../../../src/backend/api/tvdb/tvdb-provider';
 
 describe('TVDB Tests', () => {
     it('should get access key', async () => {

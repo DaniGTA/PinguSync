@@ -1,15 +1,14 @@
-import ProviderList from '../provider-list';
 import InfoProvider from '../../api/info-provider';
 import ProviderLocalData from '../interfaces/provider-local-data';
 import Name from './meta/name';
 import Cover from './meta/cover';
 import listHelper from '../../helpFunctions/list-helper';
 import Banner from './meta/banner';
+import ProviderList from '../provider-manager/provider-list';
 /**
  * Only contains infos about the series.
  */
-export class InfoProviderLocalData extends ProviderLocalData {
-
+export class InfoProviderLocalData extends ProviderLocalData{
     public readonly provider: string;
     public names: Name[] = [];
     constructor(lp?: InfoProvider | string) {
@@ -24,8 +23,8 @@ export class InfoProviderLocalData extends ProviderLocalData {
         }
     }
 
-    public getListProviderInstance(): InfoProvider {
-        for (const provider of ProviderList.infoProviderList) {
+    public getProviderInstance(): InfoProvider {
+        for (const provider of ProviderList.getInfoProviderList()) {
             if (provider.providerName === this.provider) {
                 return provider;
             }

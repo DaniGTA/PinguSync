@@ -2,10 +2,12 @@ import ListProvider from '../api/list-provider';
 import ListController from './list-controller';
 import Series from './objects/series';
 import IUpdateList from './objects/update-list';
-import ProviderList from './provider-list';
+import ProviderList from './provider-manager/provider-list';
 import IPCBackgroundController from '../communication/ipc-background-controller';
 import ICommunication from '../communication/icommunication';
 import SeriesPackage from './objects/series-package';
+import MainListPackageManager from './main-list-package-manager';
+import MainListManager from './main-list-manager';
 
 class FrontendController {
     public static getInstance(): FrontendController {
@@ -30,7 +32,7 @@ class FrontendController {
             this.initController()
 
             FrontendController.instance = that;
-            for (const pl of ProviderList.listProviderList) {
+            for (const pl of ProviderList.getListProviderList()) {
                 if (pl.hasOAuthCode) {
                     this.communcation.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
                         try {
@@ -63,7 +65,7 @@ class FrontendController {
         });
 
         this.communcation.on('get-all-providers', (data) => {
-            this.communcation.send('all-providers', ProviderList.listProviderList.flatMap(x => x.providerName));
+            this.communcation.send('all-providers', ProviderList.getListProviderList().flatMap(x => x.providerName));
         });
 
         this.communcation.on('sync-series', (data) => {
@@ -89,7 +91,7 @@ class FrontendController {
     }
 
     static getProviderInstance(providerString: string): ListProvider {
-        for (const provider of ProviderList.listProviderList) {
+        for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === providerString) {
                 return provider;
             }
@@ -113,7 +115,7 @@ class FrontendController {
 
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
-        var list = await new ListController().getSeriesPackages();
+        var list = await new MainListPackageManager().getSeriesPackages(MainListManager.getMainList());
         this.communcation.send('series-list', list);
     }
 

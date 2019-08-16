@@ -1,10 +1,11 @@
-import AnimeListProvider from '../../../src/backend/api/anilist/aniListProvider';
+
 import request from 'request';
 import { MediaListCollection } from '../../../src/backend/api/anilist/graphql/seriesList';
-import aniListConverter from '../../../src/backend/api/anilist/aniListConverter';
 import { readFileSync, readFile } from 'fs';
 import assert from 'assert';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
+import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
+import anilistConverter from '../../../src/backend/api/anilist/anilist-converter';
 
 
 describe('AniListApi Tests', () => {
@@ -22,7 +23,7 @@ describe('AniListApi Tests', () => {
             })
         };
 
-        const a = new AnimeListProvider();
+        const a = new AniListProvider();
         const result = a["getGraphQLOptions"]("query", "variables");
         assert.equal(options.body, result.body);
         assert.equal(options.headers + '', result.headers + '');
@@ -35,7 +36,7 @@ describe('AniListApi Tests', () => {
         var rawdata = JSON.parse(readFileSync("./test/api/anilist/testResponse/anilistUserListResponse.json", { encoding: "UTF-8" }));
         var collection = rawdata.data.MediaListCollection as MediaListCollection;
         var entry = collection.lists[2].entries[3];
-        var anime = await aniListConverter.convertListEntryToAnime(entry, WatchStatus.COMPLETED);
+        var anime = await anilistConverter.convertListEntryToAnime(entry, WatchStatus.COMPLETED);
         const providerInfo = anime.getListProvidersInfos()[0];
         const highestWatchedResult = providerInfo.getHighestWatchedEpisode();
         if (highestWatchedResult) {

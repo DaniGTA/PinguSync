@@ -9,7 +9,7 @@ import Cover from '../../controller/objects/meta/cover';
 import { NameType } from '../../controller/objects/meta/name-type';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Banner from '../../controller/objects/meta/banner';
-import { ImageSize } from 'src/backend/controller/objects/meta/image-size';
+import { ImageSize } from '../../controller/objects/meta/image-size';
 
 export default new class KitsuConverter {
     async convertMediaToAnime(media: Media): Promise<Series> {

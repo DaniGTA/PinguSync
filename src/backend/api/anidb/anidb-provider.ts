@@ -1,38 +1,37 @@
-
+import { createReadStream, createWriteStream, readFileSync } from 'fs';
 import * as http from "http";
 import { xml2json } from 'xml-js';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import Series from '../../controller/objects/series';
-import { createWriteStream, readFileSync, createReadStream } from 'fs';
-import Name from '../../controller/objects/meta/name';
-import AniDBNameListXML, { Title } from './objects/anidbNameListXML';
 import { createGunzip } from 'zlib';
+import Name from '../../controller/objects/meta/name';
+import Series from '../../controller/objects/series';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
-import AniDBNameManager from './anidb-name-manager';
 import InfoProvider from '../info-provider';
+import AniDBNameManager from './anidb-name-manager';
+import AniDBNameListXML, { Title } from './objects/anidbNameListXML';
+import AniDBConverter from './anidb-converter';
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
-    private version: number = 1;
+    public version: number = 1;
     public isOffline = true;
-    public static anidbNameManager: AniDBNameManager = new AniDBNameManager();
-
+    private static anidbNameManager: AniDBNameManager = new AniDBNameManager();
+    public static instance: AniDBProvider;
     constructor(download: boolean = true) {
+        AniDBProvider.instance = this;
         if (this.allowDownload() && download) {
             this.getData();
         }
     }
 
     async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
+        const converter = new AniDBConverter();
         const nameDBList = AniDBProvider.anidbNameManager.data;
         if (nameDBList) {
             for (const seriesDB of nameDBList.animetitles.anime) {
                 try {
                     const result = await this.checkTitles(searchTitle, seriesDB.title);
                     if (result) {
-                        let ipld = new InfoProviderLocalData(this.providerName);
-                        ipld.id = seriesDB._attributes.aid;
-                        ipld.version = this.version;
-                        await series.addInfoProvider(ipld);
+                        const localdata = await converter.convertAnimeToLocalData(seriesDB);
+                        series.addInfoProvider(localdata);
                         series.addSeriesName(...result);
                         return series;
                     }

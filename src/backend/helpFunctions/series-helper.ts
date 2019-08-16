@@ -2,6 +2,9 @@ import Series from "../controller/objects/series";
 import titleCheckHelper from './title-check-helper';
 import providerHelper from './provider/provider-helper';
 import { ListProviderLocalData } from "../controller/objects/list-provider-local-data";
+import SearchSeasonValueResult from "../controller/objects/transfer/search-season-value-results";
+import Name from "../controller/objects/meta/name";
+import ListController from "../controller/list-controller";
 
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
@@ -28,7 +31,7 @@ class SeriesHelper {
                             aProvider = Object.assign(new ListProviderLocalData(), aProvider);
                             matches += 2;
                             try {
-                                if (aProvider.getListProviderInstance().hasUniqueIdForSeasons) {
+                                if (aProvider.getProviderInstance().hasUniqueIdForSeasons) {
                                     return true;
                                 } else if (aProvider.targetSeason === bProvider.targetSeason) {
                                     return true;
@@ -78,6 +81,39 @@ class SeriesHelper {
             matches += 3;
         }
         return matches >= matchAbleScore / 1.39;
+    }
+
+
+    async searchSeasonValue(series:Series,seriesList:Series[] = ListController.instance.getMainList()): Promise<SearchSeasonValueResult> {
+        for (const provider of series.getListProvidersInfos()) {
+                if (provider.targetSeason) {
+                    return new SearchSeasonValueResult(provider.targetSeason,"Provider: " + provider.provider);
+                }
+            }
+            const numberFromName = await Name.getSeasonNumber(await series.getAllNames());
+
+            if (numberFromName) {
+                return new SearchSeasonValueResult(numberFromName,"Name");
+            }
+            try {
+                let prquel = await series.getPrequel(seriesList);
+                let searchCount = 0;
+                while (prquel) {
+                    if (prquel.mediaType === series.mediaType) {
+                        searchCount++;
+                        const prequelSeason = await prquel.getSeason();
+                        if (prequelSeason === 1 || prequelSeason === 0) {
+                            return new SearchSeasonValueResult(prequelSeason + searchCount,"PrequelTrace");
+                        }
+                    }
+                    try {
+                        prquel = await prquel.getPrequel(seriesList);
+                    } catch (err) {
+                        return new SearchSeasonValueResult(searchCount,"PrequelTrace");
+                    }
+                }
+            } catch (err) { }
+          return new SearchSeasonValueResult(undefined,"None");
     }
 }
 

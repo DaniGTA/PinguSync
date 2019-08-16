@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import timeHelper from '../../src/backend/helpFunctions/timeHelper';
+import timeHelper from '../../src/backend/helpFunctions/time-helper';
 describe('timeHelperTest', () => {
     it('should wait 50ms', async () => {
         const start = new Date().getTime();

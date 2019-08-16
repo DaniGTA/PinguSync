@@ -2,7 +2,7 @@ import ListProvider from '../api/list-provider';
 import ListController from './list-controller';
 import Series from './objects/series';
 import IUpdateList from './objects/update-list';
-import ProviderList from './provider-list';
+import ProviderList from './provider-manager/provider-list';
 import { WorkerTransfer } from './objects/worker-transfer';
 import SeriesPackage from './objects/series-package';
 
@@ -24,7 +24,7 @@ class ProviderController {
             this.initController()
         }
         ProviderController.instance = that;
-        for (const pl of ProviderList.listProviderList) {
+        for (const pl of ProviderList.getListProviderList()) {
             if (pl.hasOAuthCode) {
                 this.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
                     try {
@@ -71,7 +71,7 @@ class ProviderController {
                     this.send(channel, data);
                     break;*/
                 case 'get-all-providers':
-                    this.send('all-providers', ProviderList.listProviderList.flatMap(x => x.providerName));
+                    this.send('all-providers', ProviderList.getListProviderList().flatMap(x => x.providerName));
                     break;
             }
         });
@@ -94,7 +94,7 @@ class ProviderController {
     }
 
     static getProviderInstance(providerString: string): ListProvider {
-        for (const provider of ProviderList.listProviderList) {
+        for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === providerString) {
                 return provider;
             }

@@ -1,18 +1,18 @@
-import stringHelper from '../../helpFunctions/string-helper';
-import Overview from './meta/overview';
 import listHelper from '../../helpFunctions/list-helper';
+import seriesHelper from '../../helpFunctions/series-helper';
+import stringHelper from '../../helpFunctions/string-helper';
+import ProviderLocalData from '../interfaces/provider-local-data';
+import Cover from './meta/cover';
+import { ImageSize } from './meta/image-size';
+import { MediaType } from './meta/media-type';
+import Name from './meta/name';
+import Overview from './meta/overview';
 import WatchProgress from './meta/watch-progress';
+import SeriesProviderExtension from './extension/series-provider-extension';
 import { ListProviderLocalData } from './list-provider-local-data';
 import { InfoProviderLocalData } from './info-provider-local-data';
-import ProviderLocalData from '../interfaces/provider-local-data';
 
-import Cover from './meta/cover';
-import { MediaType } from './meta/media-type';
-import ListController from '../list-controller';
-import Name from './meta/name';
-import { ImageSize } from './meta/image-size';
-
-export default class Series {
+export default class Series extends SeriesProviderExtension{
     public static version = 1;
 
     public packageId: string = '';
@@ -21,20 +21,17 @@ export default class Series {
     public lastInfoUpdate: number = 0;
     private names: Name[] = [];
     public mediaType: MediaType = MediaType.SERIES;
-    private listProviderInfos: ListProviderLocalData[] = [];
-    private infoProviderInfos: InfoProviderLocalData[] = [];
     public episodes?: number;
     public overviews: Overview[] = [];
     public releaseYear?: number;
     public runTime?: number;
     public isNSFW = false;
 
-
     private cachedSeason?: number | null = null;
     private seasonDetectionType: string = "";
     private canSync: boolean | null = null;
     constructor() {
-        this.listProviderInfos = [];
+        super();
         // Generates randome string.
         this.id = stringHelper.randomString(30);
     }
@@ -42,7 +39,7 @@ export default class Series {
 
     async getAllNames(): Promise<Name[]> {
         const names = [...this.names];
-        for (const provider of this.infoProviderInfos) {
+        for (const provider of this.getInfoProvidersInfos()) {
             names.push(...provider.names);
         }
         return await listHelper.getUniqueNameList(names);
@@ -58,7 +55,7 @@ export default class Series {
      * @param preferedSize default: LARGE
      */
     getCoverImage(preferedSize: ImageSize = ImageSize.LARGE): Cover | null {
-        let ressources: ProviderLocalData[] = [...this.listProviderInfos, ...this.infoProviderInfos];
+        let ressources: ProviderLocalData[] = [...this.getListProvidersInfos(), ...this.getInfoProvidersInfos()];
         let result: Cover | null = null;
         for (const listProvider of ressources) {
             if (listProvider.covers && listProvider.covers.length != 0) {
@@ -72,42 +69,6 @@ export default class Series {
             }
         }
         return result;
-    }
-
-    /**
-     * Prevents too have double entrys of the same provider.
-     * @param infoProvider 
-     */
-    public async addInfoProvider(infoProvider: InfoProviderLocalData) {
-        const index = this.infoProviderInfos.findIndex(x => infoProvider.provider === x.provider);
-        if (index === -1) {
-            this.infoProviderInfos.push(infoProvider);
-        } else {
-            this.infoProviderInfos[index] = await InfoProviderLocalData.mergeProviderInfos(this.infoProviderInfos[index], infoProvider);;
-        }
-    }
-
-    /**
-     * Prevents too have double entrys of the same provider.
-     * @param listProvider 
-     */
-    public async addListProvider(...listProviders: ListProviderLocalData[]) {
-        for (const listProvider of listProviders) {
-            const index = this.listProviderInfos.findIndex(x => listProvider.provider === x.provider);
-            if (index === -1) {
-                this.listProviderInfos.push(listProvider);
-            } else {
-                this.listProviderInfos[index] = await ListProviderLocalData.mergeProviderInfos(this.listProviderInfos[index], listProvider);
-            }
-        }
-    }
-
-    public getListProvidersInfos() {
-        return this.listProviderInfos;
-    }
-
-    public getInfoProvidersInfos() {
-        return this.infoProviderInfos;
     }
 
     /**
@@ -141,7 +102,7 @@ export default class Series {
      * It get the max number of that anime.
      */
     public getMaxEpisode(): number {
-        const array = (this.listProviderInfos.flatMap(x => x.episodes) as number[]);
+        const array = (this.getListProvidersInfos().flatMap(x => x.episodes) as number[]);
         if (typeof this.episodes != 'undefined') {
             array.push(this.episodes);
         }
@@ -158,7 +119,7 @@ export default class Series {
     public async getAllEpisodes(): Promise<number[]> {
         let result;
         try {
-            result = await listHelper.cleanArray(this.listProviderInfos.flatMap(x => x.episodes))
+            result = await listHelper.cleanArray(this.getListProvidersInfos().flatMap(x => x.episodes))
         } catch (e) { }
         if (typeof result == 'undefined') {
             if (typeof this.episodes != 'undefined') {
@@ -177,55 +138,20 @@ export default class Series {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList: Series[] = new ListController().getMainList()): Promise<number | undefined> {
+    public async getSeason(searchInList?:Series[]): Promise<number | undefined> {
         if (this.cachedSeason === null) {
-
-            for (const provider of this.listProviderInfos) {
-                if (provider.targetSeason) {
-                    this.cachedSeason = provider.targetSeason;
-                    this.seasonDetectionType = "Provider: " + provider.provider;
-                    return provider.targetSeason;
-                }
-            }
-            const numberFromName = await Name.getSeasonNumber(await this.getAllNames());
-
-            if (numberFromName) {
-                this.cachedSeason = numberFromName;
-                this.seasonDetectionType = "Name";
-                return numberFromName;
-            }
-            try {
-                let prquel = await this.getPrequel();
-                let searchCount = 0;
-                while (prquel) {
-                    if (prquel.mediaType === this.mediaType) {
-                        searchCount++;
-                        const prequelSeason = await prquel.getSeason(searchInList);
-                        if (prequelSeason === 1 || prequelSeason === 0) {
-                            this.cachedSeason = prequelSeason + searchCount;
-                            this.seasonDetectionType = "PrequelTrace";
-                            return prequelSeason + searchCount;
-                        }
-                    }
-                    try {
-                        prquel = await prquel.getPrequel(searchInList);
-                    } catch (err) {
-                        this.cachedSeason = searchCount;
-                        return searchCount;
-                    }
-                }
-            } catch (err) { }
-            this.seasonDetectionType = "None";
-            this.cachedSeason = undefined;
+            const result = await seriesHelper.searchSeasonValue(this,searchInList);
+            this.cachedSeason = result.season;
+            this.seasonDetectionType = result.foundType;
         }
         return this.cachedSeason;
     }
 
-    public async getPrequel(searchInList = new ListController().getMainList()): Promise<Series> {
-        for (const listProvider of this.listProviderInfos) {
+    public async getPrequel(searchInList: Series[]): Promise<Series> {
+        for (const listProvider of this.getListProvidersInfos()) {
             if (listProvider.prequelIds) {
                 for (const entry of searchInList) {
-                    for (const entryListProvider of entry.listProviderInfos) {
+                    for (const entryListProvider of entry.getListProvidersInfos()) {
                         if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
                             return entry;
                         }
@@ -270,12 +196,12 @@ export default class Series {
             throw 'no provider with valid sync status'
         }
         latestUpdatedProvider = Object.assign(new ListProviderLocalData(), latestUpdatedProvider);
-        if (!await latestUpdatedProvider.getListProviderInstance().isUserLoggedIn()) {
+        if (!await latestUpdatedProvider.getProviderInstance().isUserLoggedIn()) {
             latestUpdatedProvider.lastUpdate = new Date(0);
             for (let provider of this.listProviderInfos) {
                 provider = Object.assign(new ListProviderLocalData(), provider);
                 if (provider != latestUpdatedProvider) {
-                    if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getListProviderInstance().isUserLoggedIn()) {
+                    if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getProviderInstance().isUserLoggedIn()) {
                         latestUpdatedProvider = provider;
                     }
                 }
@@ -284,7 +210,7 @@ export default class Series {
 
         for (let provider of this.listProviderInfos) {
             provider = Object.assign(new ListProviderLocalData(), provider);
-            if (latestUpdatedProvider.provider != provider.provider && await provider.getListProviderInstance().isUserLoggedIn()) {
+            if (latestUpdatedProvider.provider != provider.provider && await provider.getProviderInstance().isUserLoggedIn()) {
                 const watchProgress = provider.getHighestWatchedEpisode();
                 const latestWatchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
                 if (latestUpdatedProvider.watchProgress && latestWatchProgress && provider.episodes) {
@@ -316,8 +242,8 @@ export default class Series {
      */
     private async getLastUpdatedProvider(exclude: ListProviderLocalData[] = []): Promise<ListProviderLocalData | null> {
         let latestUpdatedProvider: ListProviderLocalData | null = null;
-        if (typeof this.listProviderInfos != 'undefined') {
-            for (const provider of this.listProviderInfos) {
+        if (typeof this.getListProvidersInfos() != 'undefined') {
+            for (const provider of this.getListProvidersInfos()) {
                 if (typeof provider.watchProgress != 'undefined') {
                     if (exclude.findIndex(x => x == latestUpdatedProvider) === -1) {
                         if (latestUpdatedProvider === null) {
@@ -350,11 +276,11 @@ export default class Series {
             overviewsCache.push(new Overview(overview.content, overview.lang));
         }
         var providersCache: ListProviderLocalData[] = [];
-        for (const provider of this.listProviderInfos) {
+        for (const provider of this.getListProvidersInfos()) {
             providersCache.push(Object.assign(new ListProviderLocalData(), provider));
         }
         var infoPovidersCache: InfoProviderLocalData[] = [];
-        for (const provider of this.infoProviderInfos) {
+        for (const provider of this.getInfoProvidersInfos()) {
             infoPovidersCache.push(Object.assign(new InfoProviderLocalData(), provider));
         }
         this.infoProviderInfos = infoPovidersCache;
@@ -447,21 +373,6 @@ export default class Series {
         return <T>value !== undefined && <T>value !== null;
     }
 
-    private async mergeString(a: string, b: string, topic?: string): Promise<string> {
-        if (a === '' || a == null) {
-            return b;
-        } else if (b === '' || b == null) {
-            return a;
-        } else {
-            if (a.toLocaleLowerCase() === b.toLocaleLowerCase() && a !== '' && b !== '' && a != null && b != null) {
-                return a;
-            } else {
-                console.log(a + ' != ' + b + ' | How to handle that? (' + topic + ')');
-                return a;
-            }
-        }
-    }
-
     public async getLastWatchProgress(): Promise<WatchProgress> {
 
         let latestUpdatedProvider = Object.assign(new ListProviderLocalData(), await this.getLastUpdatedProvider())
@@ -507,7 +418,7 @@ export default class Series {
                     if (providerA.provider === providerB.provider) {
                         providerB = Object.assign(new ListProviderLocalData(), providerB);
                         try {
-                            if (providerA.id === providerB.id && providerB.getListProviderInstance().hasUniqueIdForSeasons) {
+                            if (providerA.id === providerB.id && providerB.getProviderInstance().hasUniqueIdForSeasons) {
                                 break;
                             } else if (providerA.id === providerB.id && providerA.targetSeason !== providerB.targetSeason) {
                                 return a;

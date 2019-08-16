@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import Name from '../../../src/backend/controller/objects/meta/name';
-import stringHelper from '../../../src/backend/helpFunctions/stringHelper';
+import stringHelper from '../../../src/backend/helpFunctions/string-helper';
 
 describe('namesTest', () => {
     it('should detect kanji', async () => {

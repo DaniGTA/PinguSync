@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import stringHelper from '../../src/backend/helpFunctions/stringHelper';
+import stringHelper from '../../src/backend/helpFunctions/string-helper';
 describe('stringHelperTest', () => {
     it('should generate a randome string', async () => {
         assert.notEqual(stringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');

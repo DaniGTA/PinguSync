@@ -1,23 +1,27 @@
 
 // if you used the '@types/mocha' method to install mocha type definitions, uncomment the following line
-import ListController from '../../src/backend/controller/listController';
+
 import * as assert from 'assert';
-import stringHelper from '../../src/backend/helpFunctions/stringHelper';
-import listHelper from '../../src/backend/helpFunctions/listHelper';
-import { ListProviderLocalData } from '../../src/backend/controller/objects/listProviderLocalData';
+
 import Series from '../../src/backend/controller/objects/series';
 import Name from '../../src/backend/controller/objects/meta/name';
-import ProviderList from '../../src/backend/controller/provider-list';
+import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import ListController from '../../src/backend/controller/list-controller';
+import listHelper from '../../src/backend/helpFunctions/list-helper';
+import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
+import stringHelper from '../../src/backend/helpFunctions/string-helper';
+import MainListManager from '../../src/backend/controller/main-list-manager';
+
 describe('ListControllerTest | Combine', () => {
     var lc = new ListController(false);
     before(() => {
-        ProviderList.infoProviderList = [];
-        ProviderList.listProviderList = [];
-        ListController['listLoaded'] = true;
+        ProviderList['loadedListProvider'] = [];
+        ProviderList['loadedInfoProvider'] = [];
+        MainListManager['listLoaded'] = true;
         lc['saveData'] = async () => { }
     })
     beforeEach(() => {
-        ListController['mainList'] = [];
+        MainListManager['mainList'] = [];
     })
     it('should combine same entry', async () => {
 
@@ -26,7 +30,7 @@ describe('ListControllerTest | Combine', () => {
         entry.push(getFilledAnime());
         entry.push(getFilledAnime());
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 1);
+        assert.equal(MainListManager['mainList'].length, 1);
     });
 
     it('should combine basic entrys correct', async () => {
@@ -38,7 +42,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 21);
     });
 
     it('should combine basic entrys with less data', async () => {
@@ -52,7 +56,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 21);
         return;
     });
 
@@ -67,7 +71,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 21);
         return;
     });
     it('should combine basic entrys with season in title (2/4)', async () => {
@@ -81,7 +85,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 21);
         return;
     });
     it('should combine basic entrys with season in title (3/4)', async () => {
@@ -96,7 +100,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 21);
         return;
     });
 
@@ -114,7 +118,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 23);
+        assert.equal(MainListManager['mainList'].length, 23);
         return;
     });
 
@@ -133,7 +137,7 @@ describe('ListControllerTest | Combine', () => {
             entry.push(getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(ListController['mainList'].length, 23);
+        assert.equal(MainListManager['mainList'].length, 23);
         return;
     });
 
@@ -185,7 +189,7 @@ describe('ListControllerTest | Combine', () => {
 
         await lc.addSeriesToMainList(x1, x2, x3);
 
-        assert.equal(ListController['mainList'].length, 1);
+        assert.equal(MainListManager['mainList'].length, 1);
     })
     it('should clean doubled entrys (3/3)', async () => {
         var lpld = new ListProviderLocalData();
@@ -199,11 +203,11 @@ describe('ListControllerTest | Combine', () => {
         x2.addListProvider(lpld);
         x2.getListProvidersInfos()[0].targetSeason = undefined;
 
-        ListController['mainList'] = [x1, x2];
+        MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(ListController['mainList'].length, 1);
+        assert.equal(MainListManager['mainList'].length, 1);
     })
 
 
@@ -228,7 +232,7 @@ describe('ListControllerTest | Combine', () => {
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(ListController['mainList'].length, 2);
+        assert.equal(MainListManager['mainList'].length, 2);
     })
 
     it('shouldnt clean doubled entrys (2/2)', async () => {
@@ -247,11 +251,11 @@ describe('ListControllerTest | Combine', () => {
         x2.getListProvidersInfos()[0].targetSeason = undefined;
         x2.addListProvider(lpld2);
 
-        ListController['mainList'] = [x1, x2];
+        MainListManager['mainList'] = [x1, x2];
 
         const x = await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(ListController['mainList'].length, 2);
+        assert.equal(MainListManager['mainList'].length, 2);
     })
 
     it('should clean doubled entrys (2/2)', async () => {
@@ -267,11 +271,11 @@ describe('ListControllerTest | Combine', () => {
         x2.getListProvidersInfos()[0].targetSeason = undefined;
         x2.addListProvider(lpld);
 
-        ListController['mainList'] = [x1, x2];
+        MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(ListController['mainList'].length, 1);
+        assert.equal(MainListManager['mainList'].length, 1);
     })
 
     it('should clean doubled entrys (2/3)', async () => {
@@ -288,11 +292,11 @@ describe('ListControllerTest | Combine', () => {
         x2.getListProvidersInfos()[0].targetSeason = 1;
         x2.addListProvider(lpld);
 
-        ListController['mainList'] = [x1, x2];
+        MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(ListController['mainList'].length, 1);
+        assert.equal(MainListManager['mainList'].length, 1);
     })
 })
 

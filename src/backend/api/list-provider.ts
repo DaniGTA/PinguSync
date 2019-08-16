@@ -1,5 +1,3 @@
-
-
 import Series from '../controller/objects/series';
 import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
 import WatchProgress from '../controller/objects/meta/watch-progress';

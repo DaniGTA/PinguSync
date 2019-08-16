@@ -6,7 +6,7 @@ interface Animetitles {
     anime: Anime[];
 }
 
-interface Anime {
+export interface Anime {
     _attributes: Attributes2;
     title: Title[];
 }

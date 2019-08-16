@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import { ListProviderLocalData } from '../../../src/backend/controller/objects/listProviderLocalData';
 import Series from '../../../src/backend/controller/objects/series';
 import Name from '../../../src/backend/controller/objects/meta/name';
+import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 
 describe('series basic tests', () => {
     it('should have a id', async () => {

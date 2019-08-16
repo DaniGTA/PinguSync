@@ -1,7 +1,8 @@
-import { ListProviderLocalData } from '../../../src/backend/controller/objects/ListProviderLocalData';
+
 import Cover from '../../../src/backend/controller/objects/meta/Cover';
 import { strictEqual } from 'assert';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
+import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 
 describe('listProviderLocalData tests', () => {
     it('should merge two', async () => {

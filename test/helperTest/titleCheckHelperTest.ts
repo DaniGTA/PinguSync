@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import titleCheckHelper from '../../src/backend/helpFunctions/titleCheckHelper';
+import titleCheckHelper from '../../src/backend/helpFunctions/title-check-helper';
 describe('TitleCheckerTest', () => {
     it('should match (fastMatch)', async () => {
         assert.equal(await titleCheckHelper.fastMatch(["Abc"], ["abcdefg", "ABCD"]), true)

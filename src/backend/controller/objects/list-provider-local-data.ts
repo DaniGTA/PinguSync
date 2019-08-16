@@ -1,6 +1,6 @@
 import ListProvider from '../../api/list-provider';
 import { WatchStatus } from './series';
-import ProviderList from '../provider-list';
+import ProviderList from '../provider-manager/provider-list';
 import WatchProgress from './meta/watch-progress';
 import listHelper from '../../helpFunctions/list-helper';
 import ProviderLocalData from '../interfaces/provider-local-data';
@@ -37,8 +37,8 @@ export class ListProviderLocalData extends ProviderLocalData {
     }
 
 
-    public getListProviderInstance(): ListProvider {
-        for (const provider of ProviderList.listProviderList) {
+    public getProviderInstance(): ListProvider {
+        for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === this.provider) {
                 return provider;
             }

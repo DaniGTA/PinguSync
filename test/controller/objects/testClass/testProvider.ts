@@ -1,7 +1,8 @@
-import ListProvider from "../../../../src/backend/api/ListProvider";
-import { UserData } from "../../../../src/backend/api/userData";
-import { ListProviderLocalData } from "../../../../src/backend/controller/objects/listProviderLocalData";
+
 import Series from "../../../../src/backend/controller/objects/series";
+import ListProvider from "../../../../src/backend/api/list-provider";
+import { ListProviderLocalData } from "../../../../src/backend/controller/objects/list-provider-local-data";
+import { UserData } from "../../../../src/backend/api/user-data";
 
 export default class TestProvider implements ListProvider {
     getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {

@@ -1,6 +1,7 @@
-import { InfoProviderLocalData } from '../../../src/backend/controller/objects/infoProviderLocalData';
+
 import Cover from '../../../src/backend/controller/objects/meta/Cover';
 import { strictEqual } from 'assert';
+import { InfoProviderLocalData } from '../../../src/backend/controller/objects/info-provider-local-data';
 
 describe('infoProviderLocalData tests', () => {
     it('should merge two', async () => {

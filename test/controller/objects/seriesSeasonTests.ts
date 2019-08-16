@@ -1,7 +1,7 @@
 import { strictEqual } from "assert";
 import Name from "../../../src/backend/controller/objects/meta/name";
 import Series from "../../../src/backend/controller/objects/series";
-import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
+import { ListProviderLocalData } from "../../../src/backend/controller/objects/list-provider-local-data";
 
 describe('seriesTest | Season', () => {
     it('should return season (1/6)', async () => {

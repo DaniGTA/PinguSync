@@ -5,7 +5,7 @@ import Name from '../../controller/objects/meta/name';
 import InfoProvider from '../../api/info-provider';
 import ListProvider from '../../api/list-provider';
 import listHelper from '../list-helper';
-import ProviderList from '../../controller/provider-list';
+import ProviderList from '../../controller/provider-manager/provider-list';
 import ListController from '../../controller/list-controller';
 import timeHelper from '../time-helper';
 
@@ -17,7 +17,7 @@ export default new class ProviderHelper {
                     if (aProvider.provider === bProvider.provider && aProvider.id === bProvider.id) {
                         if (aProvider.targetSeason === bProvider.targetSeason) {
                             aProvider = Object.assign(new ListProviderLocalData(), aProvider);
-                            return new SameIdAndUniqueId(true, aProvider.getListProviderInstance().hasUniqueIdForSeasons);
+                            return new SameIdAndUniqueId(true, aProvider.getProviderInstance().hasUniqueIdForSeasons);
                         }
                     }
                 }
@@ -81,8 +81,8 @@ export default new class ProviderHelper {
 
     public async fillListProvider(entry: Series, forceUpdate = false): Promise<Series> {
         entry = Object.assign(new Series(), entry);
-        if (entry.getListProvidersInfos().length != ProviderList.listProviderList.length || forceUpdate) {
-            for (const provider of ProviderList.listProviderList) {
+        if (entry.getListProvidersInfos().length != ProviderList.getListProviderList().length || forceUpdate) {
+            for (const provider of ProviderList.getListProviderList()) {
                 var result = undefined;
                 try {
                     result = entry.getListProvidersInfos().find(x => x.provider === provider.providerName);

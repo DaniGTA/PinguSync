@@ -1,20 +1,19 @@
-import listHelper from "../../../src/backend/helpFunctions/listHelper";
-
 import assert from "assert";
-
-import { ListProviderLocalData } from "../../../src/backend/controller/objects/listProviderLocalData";
 import Series from "../../../src/backend/controller/objects/series";
 import Name from "../../../src/backend/controller/objects/meta/name";
-import ProviderList from "../../../src/backend/controller/provider-list";
+import ProviderList from "../../../src/backend/controller/provider-manager/provider-list";
 import TestProvider from "./testClass/testProvider";
-import { MediaType } from "../../../src/backend/controller/objects/meta/mediaType";
+import { MediaType } from "../../../src/backend/controller/objects/meta/media-type";
+import { ListProviderLocalData } from "../../../src/backend/controller/objects/list-provider-local-data";
+import listHelper from "../../../src/backend/helpFunctions/list-helper";
 
 describe('seriesTest | Relations', () => {
 
     before(() => {
         const testprovider = new TestProvider("Test");
         testprovider.hasUniqueIdForSeasons = false;
-        ProviderList.listProviderList.push(testprovider);
+        ProviderList['loadedListProvider'] = ProviderList.getListProviderList();
+        ProviderList['loadedListProvider'].push(testprovider);
     })
 
     it('get all Relations based on prequel id', async () => {

@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import listHelper from '../../src/backend/helpFunctions/listHelper';
 import Series from '../../src/backend/controller/objects/series';
-import WatchProgress from '../../src/backend/controller/objects/meta/watchProgress';
+import listHelper from '../../src/backend/helpFunctions/list-helper';
+import WatchProgress from '../../src/backend/controller/objects/meta/watch-progress';
 
 describe('listHelperTest', () => {
     it('should clean array', async () => {
