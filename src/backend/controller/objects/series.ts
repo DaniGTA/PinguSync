@@ -1,15 +1,16 @@
-import stringHelper from '../../helpFunctions/stringHelper';
+import stringHelper from '../../helpFunctions/string-helper';
 import Overview from './meta/overview';
-import listHelper from '../../helpFunctions/listHelper';
-import WatchProgress from './meta/watchProgress';
-import { ListProviderLocalData } from './listProviderLocalData';
-import { InfoProviderLocalData } from './infoProviderLocalData';
-import ProviderLocalData from '../interfaces/ProviderLocalData';
-import { ImageSize } from './meta/ImageSize';
-import Cover from './meta/Cover';
-import { MediaType } from './meta/mediaType';
-import ListController from '../listController';
+import listHelper from '../../helpFunctions/list-helper';
+import WatchProgress from './meta/watch-progress';
+import { ListProviderLocalData } from './list-provider-local-data';
+import { InfoProviderLocalData } from './info-provider-local-data';
+import ProviderLocalData from '../interfaces/provider-local-data';
+
+import Cover from './meta/cover';
+import { MediaType } from './meta/media-type';
+import ListController from '../list-controller';
 import Name from './meta/name';
+import { ImageSize } from './meta/image-size';
 
 export default class Series {
     public static version = 1;

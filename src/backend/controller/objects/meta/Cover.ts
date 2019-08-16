@@ -1,4 +1,4 @@
-import { ImageSize } from './ImageSize';
+import { ImageSize } from './image-size';
 
 export default class Cover {
     public url: string;

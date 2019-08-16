@@ -1,5 +1,5 @@
-import { NameType } from './nameType';
-import stringHelper from '../../../helpFunctions/stringHelper';
+import { NameType } from './name-type';
+import stringHelper from '../../../helpFunctions/string-helper';
 
 export default class Name {
     name: string = '';

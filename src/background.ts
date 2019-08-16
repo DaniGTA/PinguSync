@@ -6,7 +6,7 @@ import {
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib';
 import * as electron from 'electron';
-import FrontendController from './backend/controller/frontendController';
+import FrontendController from './backend/controller/frontend-controller';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.removeAllListeners('ready')
@@ -16,7 +16,7 @@ let win: BrowserWindow | null;
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }, { scheme: 'background', privileges: { secure: true, standard: true } }])
 
-const fc =new FrontendController()
+const fc = new FrontendController()
 
 function createWindow() {
   // Create the browser window.

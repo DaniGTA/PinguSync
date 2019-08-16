@@ -1,15 +1,15 @@
 
 import * as http from "http";
 import { xml2json } from 'xml-js';
-import { InfoProviderLocalData } from '../../controller/objects/infoProviderLocalData';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import Series from '../../controller/objects/series';
 import { createWriteStream, readFileSync, createReadStream } from 'fs';
 import Name from '../../controller/objects/meta/name';
 import AniDBNameListXML, { Title } from './objects/anidbNameListXML';
 import { createGunzip } from 'zlib';
-import titleCheckHelper from '../../helpFunctions/titleCheckHelper';
-import AniDBNameManager from './anidbNameManager';
-import InfoProvider from '../infoProvider';
+import titleCheckHelper from '../../helpFunctions/title-check-helper';
+import AniDBNameManager from './anidb-name-manager';
+import InfoProvider from '../info-provider';
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
     private version: number = 1;
