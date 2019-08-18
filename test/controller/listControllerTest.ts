@@ -168,17 +168,19 @@ describe('ListControllerTest | Combine', () => {
         let xs1 =new Series();
         xs1['cachedSeason'] = 1;
         xs1.addSeriesName(new Name("Rewrite", "en", NameType.OFFICIAL));
+        xs1.addListProvider(lplcs1);
         
         const lplc2 = new ListProviderLocalData('test2');
-        lplc.targetSeason = 2;
+        lplc2.targetSeason = 2;
+        lplc2.id = 1
         var x2 = new Series();
         x2.addSeriesName(new Name("Rewrite", "en", NameType.OFFICIAL));
         x2.addSeriesName(new Name("rewrite", "slug", NameType.SLUG));
         x2.addSeriesName(new Name("リライト", "ja", NameType.UNKNOWN));
     
-        x2.addListProvider(lplc)
+        x2.addListProvider(lplc2)
 
-        var a = await lc['addSeriesToMainList'](x,x2,xs1);
+        var a = await lc['addSeriesToMainList'](x,xs1,x2);
         assert.equal(MainListManager['mainList'].length, 2);
         return;
     });

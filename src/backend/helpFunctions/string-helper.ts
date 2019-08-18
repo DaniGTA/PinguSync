@@ -60,7 +60,7 @@ class StringHelper {
                         return parseInt(match[2]);
                     }
                 }
-            } else if ('0123456789'.includes(lastChar)) {
+            } else if ('0123456789'.includes(lastChar) && !title.includes('part')) {
                 return parseInt(lastChar, 10);
             } else if (['I'].includes(lastChar)) {
                 while (lastChar === reversedTitle.charAt(0)) {

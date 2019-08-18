@@ -51,7 +51,7 @@ describe('seriesTest | Season', () => {
         const lpld2 = new ListProviderLocalData();
         lpld2.prequelIds.push(5);
         lpld2.sequelIds.push(6);
-        series2.addListProvider(lpld);
+        series2.addListProvider(lpld2);
         series2.addSeriesName(new Name('Test II', 'en'));
 
         strictEqual(await series.getSeason([series, series2]), 3);
@@ -69,7 +69,7 @@ describe('seriesTest | Season', () => {
         const lpld2 = new ListProviderLocalData();
         lpld2.prequelIds.push(5);
         lpld2.sequelIds.push(6);
-        series2.addListProvider(lpld);
+        series2.addListProvider(lpld2);
         series2.addSeriesName(new Name('Test II', 'en'));
 
         strictEqual(await series2.getSeason([series, series2]), 2);
@@ -88,7 +88,7 @@ describe('seriesTest | Season', () => {
         const lpld2 = new ListProviderLocalData("Test");
         lpld2.sequelIds.push(6);
         lpld2.id = 5;
-        series2.addListProvider(lpld);
+        series2.addListProvider(lpld2);
         series2.addSeriesName(new Name('Test Test', 'en'));
 
         strictEqual(await series.getSeason([series, series2]), 2);
@@ -109,14 +109,14 @@ describe('seriesTest | Season', () => {
         lpld2.sequelIds.push(7);
         lpld2.prequelIds.push(5);
         lpld2.id = 6;
-        series2.addListProvider(lpld);
+        series2.addListProvider(lpld2);
         series2.addSeriesName(new Name('Test Test', 'en'));
 
         const series3 = new Series();
         const lpld3 = new ListProviderLocalData();
         lpld3.prequelIds.push(6);
         lpld3.id = 7;
-        series3.addListProvider(lpld);
+        series3.addListProvider(lpld3);
         series3.addSeriesName(new Name('Test Testooo', 'en'));
 
         strictEqual(await series.getSeason([series, series2,series3]), 1);
