@@ -44,7 +44,7 @@ class SeriesHelper {
                 }
             }
         }
-
+        
         // Check releaseYear
         if (a.releaseYear && b.releaseYear) {
             matchAbleScore++;
@@ -53,6 +53,8 @@ class SeriesHelper {
             }
         }
 
+        let aFirstSeason = null;
+        let bFirstSeason = null;
         // Check season
         const aSeason = await a.getSeason();
         const bSeason = await b.getSeason();
@@ -64,7 +66,16 @@ class SeriesHelper {
                 matches += 1;
             } else if (!bSeason && aSeason === 1) {
                 matches += 1;
+            } else if (bSeason != 1 && aSeason != 1) {
+                try {
+                    if (this.hasOnlyProviderWithSameIdForSeasons(a) && !this.hasOnlyProviderWithSameIdForSeasons(b)) {
+                        bFirstSeason = await b.getFirstSeason();
+                    } else if (this.hasOnlyProviderWithSameIdForSeasons(b) && !this.hasOnlyProviderWithSameIdForSeasons(a)) {
+                        aFirstSeason = await b.getFirstSeason();
+                    }
+                }catch(err){}
             }
+            
         }
 
         const allAEpisodes = await a.getAllEpisodes();
@@ -79,41 +90,72 @@ class SeriesHelper {
         matchAbleScore += 3;
         if (await titleCheckHelper.checkSeriesNames(a, b)) {
             matches += 3;
+        } else if (aFirstSeason) {
+            if (await titleCheckHelper.checkSeriesNames(aFirstSeason, b)) {
+                matches += 4;
+            }
+        } else if (bFirstSeason) {
+            if (await titleCheckHelper.checkSeriesNames(a, bFirstSeason)) {
+                matches += 4;
+            }
         }
         return matches >= matchAbleScore / 1.39;
     }
 
+    async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean>{
+        let hasOnlyProviderWithSameId = true;
+        for (const providerlistinfo of series.getListProvidersInfos()) {
+            if (providerlistinfo.getProviderInstance().hasUniqueIdForSeasons) {
+                hasOnlyProviderWithSameId = false;
+            }
+        }
+        return hasOnlyProviderWithSameId;
+    }
 
-    async searchSeasonValue(series:Series,seriesList:Series[] = ListController.instance.getMainList()): Promise<SearchSeasonValueResult> {
+
+    async searchSeasonValue(series: Series, seriesList?: Series[]): Promise<SearchSeasonValueResult> {
+        if (!seriesList) {
+            seriesList = await new ListController().getMainList();
+        }
         for (const provider of series.getListProvidersInfos()) {
-                if (provider.targetSeason) {
-                    return new SearchSeasonValueResult(provider.targetSeason,"Provider: " + provider.provider);
-                }
+            if (provider.targetSeason) {
+                return new SearchSeasonValueResult(provider.targetSeason,"Provider: " + provider.provider);
             }
-            const numberFromName = await Name.getSeasonNumber(await series.getAllNames());
+        }
+        const numberFromName = await Name.getSeasonNumber(await series.getAllNames());
 
-            if (numberFromName) {
-                return new SearchSeasonValueResult(numberFromName,"Name");
-            }
-            try {
-                let prquel = await series.getPrequel(seriesList);
-                let searchCount = 0;
-                while (prquel) {
-                    if (prquel.mediaType === series.mediaType) {
-                        searchCount++;
-                        const prequelSeason = await prquel.getSeason();
-                        if (prequelSeason === 1 || prequelSeason === 0) {
-                            return new SearchSeasonValueResult(prequelSeason + searchCount,"PrequelTrace");
-                        }
-                    }
-                    try {
-                        prquel = await prquel.getPrequel(seriesList);
-                    } catch (err) {
-                        return new SearchSeasonValueResult(searchCount,"PrequelTrace");
+        if (numberFromName) {
+            return new SearchSeasonValueResult(numberFromName,"Name");
+        }
+        let prquel = null;
+        try {
+            prquel = await series.getPrequel(seriesList);
+            let searchCount = 0;
+            while (prquel) {
+                if (prquel.mediaType === series.mediaType) {
+                    searchCount++;
+                    const prequelSeason = await prquel.getSeason();
+                    if (prequelSeason === 1 || prequelSeason === 0) {
+                        return new SearchSeasonValueResult(prequelSeason + searchCount,"PrequelTrace");
                     }
                 }
-            } catch (err) { }
-          return new SearchSeasonValueResult(undefined,"None");
+                try {
+                    prquel = await prquel.getPrequel(seriesList);
+                } catch (err) {
+                    return new SearchSeasonValueResult(searchCount,"PrequelTrace");
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            if (!prquel && await series.getSequel(seriesList)) {
+                return new SearchSeasonValueResult(1, "NoPrequelButSequel");
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        return new SearchSeasonValueResult(undefined,"None");
     }
 }
 

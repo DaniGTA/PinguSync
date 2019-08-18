@@ -90,7 +90,7 @@ export default new class ProviderHelper {
                 if (result || forceUpdate) {
                     if (!forceUpdate) {
                         // Check if anime exist in main list and have already all providers in.
-                        entry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
+                        entry = await new ListController().checkIfProviderExistInMainList(entry, provider);
                     }
                     try {
                         entry = await this.getProviderSeriesInfoByName(entry, provider);

@@ -1,6 +1,5 @@
 import ListProvider from '../api/list-provider';
 import ListController from './list-controller';
-import Series from './objects/series';
 import IUpdateList from './objects/update-list';
 import ProviderList from './provider-manager/provider-list';
 import { WorkerTransfer } from './objects/worker-transfer';
@@ -102,9 +101,9 @@ class ProviderController {
         throw 'NoProviderFound';
     }
 
-    private syncSeries(id: string | number) {
+    private async syncSeries(id: string | number) {
         var lc = new ListController();
-        var anime = lc.getMainList().find(x => x.id === id);
+        var anime = (await lc.getMainList()).find(x => x.id === id);
         if (typeof anime != 'undefined') {
             lc.syncProvider(anime);
         } else {

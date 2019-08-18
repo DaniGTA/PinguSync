@@ -10,15 +10,19 @@ import ListController from '../../src/backend/controller/list-controller';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
-import MainListManager from '../../src/backend/controller/main-list-manager';
+import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
+import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
+import { NameType } from '../../src/backend/controller/objects/meta/name-type';
+import seriesHelper from '../../src/backend/helpFunctions/series-helper';
+import TestProvider from './objects/testClass/testProvider';
 
 describe('ListControllerTest | Combine', () => {
-    var lc = new ListController(false);
+    var lc = new ListController();
+    
     before(() => {
         ProviderList['loadedListProvider'] = [];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['listLoaded'] = true;
-        lc['saveData'] = async () => { }
     })
     beforeEach(() => {
         MainListManager['mainList'] = [];
@@ -132,7 +136,7 @@ describe('ListControllerTest | Combine', () => {
         x2.releaseYear = 2002;
         x2.episodes = 220;
         entry.push(x2);
-        entry.push();
+        entry.push(x);
         for (let index = 0; index < 22; index++) {
             entry.push(getRandomeFilledAnime());
         }
@@ -140,6 +144,45 @@ describe('ListControllerTest | Combine', () => {
         assert.equal(MainListManager['mainList'].length, 23);
         return;
     });
+
+    it('should combine 6', async () => {
+        const testListProvider1 = new TestProvider('test', false);
+        testListProvider1.hasUniqueIdForSeasons = true;
+        const testListProvider2 = new TestProvider('test2', false);
+        testListProvider1.hasUniqueIdForSeasons = false;
+        ProviderList['loadedListProvider'] = [];
+        ProviderList['loadedListProvider'].push(testListProvider1, testListProvider2);
+        var entry: Series[] = [];
+        const lplc = new ListProviderLocalData('test');
+        lplc.prequelIds.push(1);
+        lplc.id = 2;
+        let x = new Series();
+        x['cachedSeason'] = 2;
+        x.releaseYear = 2017
+        x.episodes = 11;
+        x.addSeriesName(new Name("Test", "unkown", NameType.UNKNOWN));
+
+        const lplcs1 = new ListProviderLocalData('test');
+        lplcs1.sequelIds.push(2);
+        lplcs1.id = 1;
+        let xs1 =new Series();
+        xs1['cachedSeason'] = 1;
+        xs1.addSeriesName(new Name("Rewrite", "en", NameType.OFFICIAL));
+        
+        const lplc2 = new ListProviderLocalData('test2');
+        lplc.targetSeason = 2;
+        var x2 = new Series();
+        x2.addSeriesName(new Name("Rewrite", "en", NameType.OFFICIAL));
+        x2.addSeriesName(new Name("rewrite", "slug", NameType.SLUG));
+        x2.addSeriesName(new Name("リライト", "ja", NameType.UNKNOWN));
+    
+        x2.addListProvider(lplc)
+
+        var a = await lc['addSeriesToMainList'](x,x2,xs1);
+        assert.equal(MainListManager['mainList'].length, 2);
+        return;
+    });
+
 
     it('should sort list', async () => {
         var entry: Series[] = [];

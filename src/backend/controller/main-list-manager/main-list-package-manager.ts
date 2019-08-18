@@ -1,6 +1,7 @@
-import SeriesPackage from './objects/series-package';
-import listHelper from '../helpFunctions/list-helper';
-import Series from './objects/series';
+import SeriesPackage from '../objects/series-package';
+import listHelper from '../../helpFunctions/list-helper';
+import Series from '../objects/series';
+import seriesHelper from '../../helpFunctions/series-helper';
 
 export default class MainListPackageManager {
     public async getIndexFromPackageId(packageId: string,list: Series[]): Promise<number> {
@@ -16,6 +17,14 @@ export default class MainListPackageManager {
             try {
                 const tempPackage = await this.createPackage(entry, tempList);
                 tempList = await listHelper.removeEntrys(tempList, ...tempPackage.allRelations);
+                for (const entry of tempPackage.allRelations) {
+                    for (const entry2 of tempPackage.allRelations) {
+                        if (await entry.getSeason() === await entry2.getSeason() && entry.id !== entry2.id) {
+                            const result = await seriesHelper.isSameSeason(entry,entry2)
+                            console.log('Same season in package. Detected as same series:'+result);
+                        }
+                    }
+                }
                 seriesPackageList.push(tempPackage);
             } catch (err) { }
         }

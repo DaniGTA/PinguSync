@@ -125,8 +125,8 @@ class ListHelper {
             let aName = aNames[0].name;
             let bName = bNames[0].name;
             try {
-                let aName: string = await Name.getRomajiName(aNames);
-                let bName: string = await Name.getRomajiName(bNames);
+                 aName = await Name.getRomajiName(aNames);
+                 bName = await Name.getRomajiName(bNames);
             } catch (err) { }
 
             aName = aName.toLocaleLowerCase();

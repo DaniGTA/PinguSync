@@ -11,6 +11,7 @@ import WatchProgress from './meta/watch-progress';
 import SeriesProviderExtension from './extension/series-provider-extension';
 import { ListProviderLocalData } from './list-provider-local-data';
 import { InfoProviderLocalData } from './info-provider-local-data';
+import ListController from '../list-controller';
 
 export default class Series extends SeriesProviderExtension{
     public static version = 1;
@@ -148,18 +149,43 @@ export default class Series extends SeriesProviderExtension{
     }
 
     public async getPrequel(searchInList: Series[]): Promise<Series> {
+      try {
         for (const listProvider of this.getListProvidersInfos()) {
             if (listProvider.prequelIds) {
                 for (const entry of searchInList) {
                     for (const entryListProvider of entry.getListProvidersInfos()) {
-                        if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
+                        if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id == x) !== -1) {
                             return entry;
                         }
                     }
                 }
             }
         }
+        } catch (err) {
+            console.log(err);
+        }
         throw 'no prequel found';
+    }
+
+    public async getSequel(searchInList: Series[]): Promise<Series> {
+        try {
+            for (const listProvider of this.getListProvidersInfos()) {
+                if (listProvider.sequelIds) {
+                    for (const entry of searchInList) {
+                       
+                        for (const entryListProvider of entry.getListProvidersInfos()) {
+                            if (entryListProvider.provider === listProvider.provider && listProvider.sequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
+                                return entry;
+                            }
+                        }
+      
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        throw 'no sequel found';
     }
 
     public async getCanSync(): Promise<boolean> {
@@ -385,6 +411,22 @@ export default class Series extends SeriesProviderExtension{
         } else {
             throw 'no watch progress';
         }
+    }
+
+    async getFirstSeason(list?: Series[]): Promise<Series> {
+        if (await this.getSeason() === 1) {
+            return this;
+        }
+        if (!list) {
+            list = await new ListController().getMainList();
+        }
+        const allRelations = await this.getAllRelations(list);
+        for (const relation of allRelations) {
+            if (await relation.getSeason() === 1) {
+                return relation;
+            }
+        }
+        throw 'no first season found';
     }
 
     /**

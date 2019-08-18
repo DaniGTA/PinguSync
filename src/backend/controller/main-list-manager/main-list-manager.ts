@@ -1,12 +1,13 @@
-import Series from "./objects/series";
-import FrontendController from './frontend-controller';
-import seriesHelper from '../helpFunctions/series-helper';
-import listHelper from '../helpFunctions/list-helper';
+import Series from "../objects/series";
+import FrontendController from '../frontend-controller';
+import seriesHelper from '../../helpFunctions/series-helper';
+import listHelper from '../../helpFunctions/list-helper';
 import MainListPackageManager from './main-list-package-manager';
+import MainListLoader from './main-list-loader';
 
 export default class MainListManager {
     private static mainList: Series[] = [];
-    public static listLoaded = false;
+    private static listLoaded = false;
 
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
         try {
@@ -14,6 +15,9 @@ export default class MainListManager {
             if (results.length != 0) {
                 for (const entry of results) {
                     try {
+                        if (typeof series.merge != 'function') {
+                            series = Object.assign(new Series(), series);
+                        } 
                         series = await series.merge(entry);
                         await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                     } catch (err) {
@@ -25,7 +29,7 @@ export default class MainListManager {
             MainListManager.mainList.push(series);
 
             if (notfiyRenderer) {
-                const seriesPackage = await new MainListPackageManager().getSeriesPackage(series,this.getMainList());
+                const seriesPackage = await new MainListPackageManager().getSeriesPackage(series,await this.getMainList());
                 await FrontendController.getInstance().updateClientList(await MainListManager.getIndexFromSeries(series), seriesPackage);
             }
 
@@ -63,12 +67,18 @@ export default class MainListManager {
         return false;
     }
     
-    public static getMainList(): Series[] {
+    static async getMainList(): Promise<Series[]> {
+        if (!MainListManager.listLoaded) {
+            const loader = new MainListLoader();
+            MainListManager.mainList = loader.loadData();
+             
+            MainListManager.listLoaded = true;
+        }
         return MainListManager.mainList;
     }
 
     public static async getIndexFromSeries(anime: Series): Promise<number> {
-        return MainListManager.getMainList().findIndex(x => anime.id === x.id);
+        return (await MainListManager.getMainList()).findIndex(x => anime.id === x.id);
     }
 
    

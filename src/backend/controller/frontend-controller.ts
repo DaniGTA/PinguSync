@@ -6,8 +6,8 @@ import ProviderList from './provider-manager/provider-list';
 import IPCBackgroundController from '../communication/ipc-background-controller';
 import ICommunication from '../communication/icommunication';
 import SeriesPackage from './objects/series-package';
-import MainListPackageManager from './main-list-package-manager';
-import MainListManager from './main-list-manager';
+import MainListPackageManager from './main-list-manager/main-list-package-manager';
+import MainListManager from './main-list-manager/main-list-manager';
 
 class FrontendController {
     public static getInstance(): FrontendController {
@@ -99,9 +99,9 @@ class FrontendController {
         throw 'NoProviderFound';
     }
 
-    private syncSeries(id: string | number) {
+    private async syncSeries(id: string | number) {
         var lc = new ListController();
-        var anime = lc.getMainList().find(x => x.id === id);
+        var anime = (await lc.getMainList()).find(x => x.id === id);
         if (typeof anime != 'undefined') {
             lc.syncProvider(anime);
         } else {
@@ -115,7 +115,7 @@ class FrontendController {
 
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
-        var list = await new MainListPackageManager().getSeriesPackages(MainListManager.getMainList());
+        var list = await new MainListPackageManager().getSeriesPackages(await new ListController().getMainList());
         this.communcation.send('series-list', list);
     }
 

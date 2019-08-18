@@ -37,11 +37,11 @@ export default new class AniListConverter {
     }
 
     private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {
-        if (type === MediaFormat.MOVIE) {
+        if (type == MediaFormat.MOVIE) {
             return MediaType.MOVIE;
-        } else if (type === MediaFormat.TV || type === MediaFormat.TV_SHORT) {
+        } else if (type == MediaFormat.TV || type == MediaFormat.TV_SHORT) {
             return MediaType.SERIES;
-        } else if (type === MediaFormat.SPECIAL || MediaFormat.OVA || MediaFormat.ONA) {
+        } else if (type == MediaFormat.SPECIAL || MediaFormat.OVA || MediaFormat.ONA) {
             return MediaType.SPECIAL;
         }
         return MediaType.UNKOWN;

@@ -1,27 +1,25 @@
 import FrontendController from './frontend-controller';
 import Series from './objects/series';
-import * as fs from "fs";
-import * as path from "path";
 import listHelper from '../helpFunctions/list-helper';
 import ProviderList from './provider-manager/provider-list';
 import WatchProgress from './objects/meta/watch-progress';
 import ProviderHelper from '../helpFunctions/provider/provider-helper';
 import ListProvider from '../api/list-provider';
-import MainListManager from './main-list-manager';
+import MainListManager from './main-list-manager/main-list-manager';
 export default class ListController {
-    public static instance: ListController;
-    constructor(forceLoading = !MainListManager.listLoaded) {
-        ListController.instance = this;
-        if (forceLoading) {
-            this.addSeriesToMainList(...this.loadData());
-            MainListManager.listLoaded = true;
+    public static instance: ListController | null = null;
+    constructor() {
+        if (!ListController.instance) {
+            console.log('Start ListController.')
             this.getSeriesListAndUpdateMainList();
+            ListController.instance = this;
         }
+     
     }
 
     private async syncWatcher() {
         var needToSync: Series[] = [];
-        for (const item of MainListManager.getMainList()) {
+        for (const item of await MainListManager.getMainList()) {
             if (await item.getCanSync()) {
                 needToSync.push(item);
             }
@@ -72,8 +70,6 @@ export default class ListController {
                 console.log(err);
             }
         }
-
-        this.saveData(MainListManager.getMainList());
         await this.addSeriesToMainList(anime);
     }
 
@@ -88,11 +84,10 @@ export default class ListController {
                 var index = await MainListManager.getIndexFromSeries(entry[0]);
                 try {
                     await MainListManager.addSerieToMainList(await this.fillMissingProvider(entry[0]));
-                    this.saveData(MainListManager.getMainList());
                 } catch (err) { }
             }
         }
-        console.log('Added ' + MainListManager.getMainList().length + ' to mainList');
+        console.log('Added ' + (await MainListManager.getMainList()).length + ' to mainList');
         if (animes.length > 2) {
             try {
                 FrontendController.getInstance().sendSeriesList();
@@ -101,8 +96,8 @@ export default class ListController {
     }
 
 
-    public getMainList(): Series[] {
-        return MainListManager.getMainList();
+    public async getMainList(): Promise<Series[]> {
+        return await MainListManager.getMainList();
     }
 
     /**
@@ -110,12 +105,12 @@ export default class ListController {
      * @param anime 
      */
     public async forceRefreshProviderInfo(packageId: string) {
-        const allSeriesInThePackage = MainListManager.getMainList().filter(x => x.packageId === packageId);
+        const allSeriesInThePackage = (await MainListManager.getMainList()).filter(x => x.packageId === packageId);
         for (const series of allSeriesInThePackage) {
             const index = await MainListManager.getIndexFromSeries(series);
             if (index != -1) {
                 try {
-                    var result = await this.fillMissingProvider(MainListManager.getMainList()[index], true);
+                    var result = await this.fillMissingProvider((await MainListManager.getMainList())[index], true);
                     this.addSeriesToMainList(result);
                 } catch (err) {
                     console.log(err);
@@ -171,7 +166,7 @@ export default class ListController {
         var validProvider = entry.getListProvidersInfos().find(x => (x.id && x.id));
         try {
             if (validProvider) {
-                for (const anime of this.getMainList()) {
+                for (const anime of await this.getMainList()) {
                     for (const oldprovider of anime.getListProvidersInfos()) {
                         if (oldprovider.provider == validProvider.provider && oldprovider.id == validProvider.id) {
                             if (oldprovider.lastUpdate < validProvider.lastUpdate || oldprovider.lastUpdate) {
@@ -219,39 +214,5 @@ export default class ListController {
             }
         }
         return series;
-    }
-
-
-
-
-
-    private async saveData(list: Series[]) {
-        console.log('Save list');
-        console.log(this.getPath());
-        fs.writeFileSync(this.getPath(), JSON.stringify(list));
-    }
-
-    private loadData(): Series[] {
-        try {
-            if (fs.existsSync(this.getPath())) {
-                const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
-                const loadedData = JSON.parse(loadedString) as Series[];
-                for (let data of loadedData) {
-                    data = Object.assign(new Series(), data);
-                    data.readdFunctions();
-                }
-                return loadedData;
-            }
-        } catch (err) {
-            console.log(err);
-            return [];
-        }
-        return [];
-    }
-
-    private getPath(): string {
-        const userDataPath = './';
-        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-        return path.join(userDataPath, 'list.json');
     }
 }
