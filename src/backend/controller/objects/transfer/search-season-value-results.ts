@@ -1,7 +1,7 @@
 export default class SearchSeasonValueResult {
-    season: number | undefined;
+    season: number;
     foundType: string = 'NONE';
-    constructor(seasonNumber: number | undefined, foundType: string) {
+    constructor(seasonNumber: number, foundType: string) {
         this.season = seasonNumber;
         this.foundType = foundType;
     }

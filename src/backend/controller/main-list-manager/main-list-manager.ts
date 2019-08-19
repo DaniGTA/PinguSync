@@ -8,6 +8,8 @@ import MainListLoader from './main-list-loader';
 export default class MainListManager {
     private static mainList: Series[] = [];
     private static listLoaded = false;
+    private static listMaintance = false;
+    private static secondList: Series[] = [];
 
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
         try {
@@ -17,7 +19,7 @@ export default class MainListManager {
                     try {
                         if (typeof series.merge != 'function') {
                             series = Object.assign(new Series(), series);
-                        } 
+                        }
                         series = await series.merge(entry);
                         await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                     } catch (err) {
@@ -29,7 +31,7 @@ export default class MainListManager {
             MainListManager.mainList.push(series);
 
             if (notfiyRenderer) {
-                const seriesPackage = await new MainListPackageManager().getSeriesPackage(series,await this.getMainList());
+                const seriesPackage = await new MainListPackageManager().getSeriesPackage(series, await this.getMainList());
                 await FrontendController.getInstance().updateClientList(await MainListManager.getIndexFromSeries(series), seriesPackage);
             }
 
@@ -40,9 +42,22 @@ export default class MainListManager {
         return true;
     }
 
+    public static async finishListFilling() {
+        this.listMaintance = true;
+        this.secondList = [...this.mainList];
+        this.mainList = [];
+        for (const entry of this.secondList) {
+            await entry.resetCache();
+            await this.addSerieToMainList(entry);
+        }
+        const loader = new MainListLoader();
+        await loader.saveData(this.mainList);
+        this.listMaintance = false;
+    }
+
     public static async findSameSeriesInMainList(entry2: Series): Promise<Series[]> {
         const foundedSameSeries = [];
-        for (let entry of MainListManager.mainList) {
+        for (let entry of await MainListManager.getMainList()) {
             if (entry.id === entry2.id) {
                 foundedSameSeries.push(entry);
             } else {
@@ -58,7 +73,8 @@ export default class MainListManager {
     public static async removeSeriesFromMainList(anime: Series, notifyRenderer = false): Promise<boolean> {
         const index = await MainListManager.getIndexFromSeries(anime);
         if (index != -1) {
-            MainListManager.mainList = await listHelper.removeEntrys(MainListManager.mainList, MainListManager.mainList[index]);
+            let ref = await MainListManager.getMainList();
+            ref = await listHelper.removeEntrys(ref, ref[index]);
             if (notifyRenderer) {
                 FrontendController.getInstance().removeEntryFromList(index);
             }
@@ -66,20 +82,23 @@ export default class MainListManager {
         }
         return false;
     }
-    
+
     static async getMainList(): Promise<Series[]> {
         if (!MainListManager.listLoaded) {
             const loader = new MainListLoader();
             MainListManager.mainList = loader.loadData();
-             
             MainListManager.listLoaded = true;
         }
-        return MainListManager.mainList;
+        if (this.listMaintance) {
+            return MainListManager.secondList;
+        } else {
+            return MainListManager.mainList;
+        }
     }
 
     public static async getIndexFromSeries(anime: Series): Promise<number> {
         return (await MainListManager.getMainList()).findIndex(x => anime.id === x.id);
     }
 
-   
+
 }

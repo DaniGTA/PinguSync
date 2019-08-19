@@ -14,7 +14,7 @@ export default class ListController {
             this.getSeriesListAndUpdateMainList();
             ListController.instance = this;
         }
-     
+
     }
 
     private async syncWatcher() {
@@ -88,6 +88,7 @@ export default class ListController {
             }
         }
         console.log('Added ' + (await MainListManager.getMainList()).length + ' to mainList');
+        await MainListManager.finishListFilling();
         if (animes.length > 2) {
             try {
                 FrontendController.getInstance().sendSeriesList();

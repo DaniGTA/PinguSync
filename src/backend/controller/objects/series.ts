@@ -13,7 +13,7 @@ import { ListProviderLocalData } from './list-provider-local-data';
 import { InfoProviderLocalData } from './info-provider-local-data';
 import ListController from '../list-controller';
 
-export default class Series extends SeriesProviderExtension{
+export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
     public packageId: string = '';
@@ -28,7 +28,7 @@ export default class Series extends SeriesProviderExtension{
     public runTime?: number;
     public isNSFW = false;
 
-    private cachedSeason?: number | null = null;
+    private cachedSeason?: number;
     private seasonDetectionType: string = "";
     private canSync: boolean | null = null;
     constructor() {
@@ -37,6 +37,10 @@ export default class Series extends SeriesProviderExtension{
         this.id = stringHelper.randomString(30);
     }
 
+    async resetCache() {
+        this.cachedSeason = undefined;
+        this.seasonDetectionType = "";
+    }
 
     async getAllNames(): Promise<Name[]> {
         const names = [...this.names];
@@ -139,28 +143,30 @@ export default class Series extends SeriesProviderExtension{
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList?:Series[]): Promise<number | undefined> {
-        if (this.cachedSeason === null) {
-            const result = await seriesHelper.searchSeasonValue(this,searchInList);
+    public async getSeason(searchInList?: Series[]): Promise<number | undefined> {
+        if (this.cachedSeason) {
+            const result = await seriesHelper.searchSeasonValue(this, searchInList);
             this.cachedSeason = result.season;
             this.seasonDetectionType = result.foundType;
+        } else if (this.cachedSeason === -1) {
+            return undefined;
         }
         return this.cachedSeason;
     }
 
     public async getPrequel(searchInList: Series[]): Promise<Series> {
-      try {
-        for (const listProvider of this.getListProvidersInfos()) {
-            if (listProvider.prequelIds) {
-                for (const entry of searchInList) {
-                    for (const entryListProvider of entry.getListProvidersInfos()) {
-                        if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id == x) !== -1) {
-                            return entry;
+        try {
+            for (const listProvider of this.getListProvidersInfos()) {
+                if (listProvider.prequelIds) {
+                    for (const entry of searchInList) {
+                        for (const entryListProvider of entry.getListProvidersInfos()) {
+                            if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id == x) !== -1) {
+                                return entry;
+                            }
                         }
                     }
                 }
             }
-        }
         } catch (err) {
             console.log(err);
         }
@@ -172,13 +178,13 @@ export default class Series extends SeriesProviderExtension{
             for (const listProvider of this.getListProvidersInfos()) {
                 if (listProvider.sequelIds) {
                     for (const entry of searchInList) {
-                       
+
                         for (const entryListProvider of entry.getListProvidersInfos()) {
                             if (entryListProvider.provider === listProvider.provider && listProvider.sequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
                                 return entry;
                             }
                         }
-      
+
                     }
                 }
             }

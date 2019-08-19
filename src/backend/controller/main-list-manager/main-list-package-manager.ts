@@ -4,7 +4,7 @@ import Series from '../objects/series';
 import seriesHelper from '../../helpFunctions/series-helper';
 
 export default class MainListPackageManager {
-    public async getIndexFromPackageId(packageId: string,list: Series[]): Promise<number> {
+    public async getIndexFromPackageId(packageId: string, list: Series[]): Promise<number> {
         return list.findIndex(x => packageId === x.id);
     }
 
@@ -20,8 +20,8 @@ export default class MainListPackageManager {
                 for (const entry of tempPackage.allRelations) {
                     for (const entry2 of tempPackage.allRelations) {
                         if (await entry.getSeason() === await entry2.getSeason() && entry.id !== entry2.id) {
-                            const result = await seriesHelper.isSameSeason(entry,entry2)
-                            console.log('Same season in package. Detected as same series:'+result);
+                            const result = await seriesHelper.isSameSeries(entry, entry2)
+                            console.log('Same season in package. Detected as same series:' + result);
                         }
                     }
                 }
@@ -52,14 +52,14 @@ export default class MainListPackageManager {
         }
     }
 
-    public async getSeriesPackage(series: Series,list:Series[]): Promise<SeriesPackage> {
+    public async getSeriesPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
         if (series.packageId) {
             const allSeriesInThePackage = list.filter(x => x.packageId === series.packageId);
             const seriesPackage = new SeriesPackage(...allSeriesInThePackage);
             seriesPackage.id = series.packageId;
             return seriesPackage;
         } else {
-            return this.createPackage(series,list);
+            return this.createPackage(series, list);
         }
     }
 }

@@ -44,7 +44,7 @@ class SeriesHelper {
                 }
             }
         }
-        
+
         // Check releaseYear
         if (a.releaseYear && b.releaseYear) {
             matchAbleScore++;
@@ -64,9 +64,9 @@ class SeriesHelper {
                 matches += 2.5;
                 if (bSeason != 1 && aSeason != 1) {
                     try {
-                        if (this.hasOnlyProviderWithSameIdForSeasons(a) && !this.hasOnlyProviderWithSameIdForSeasons(b)) {
+                        if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
                             bFirstSeason = await b.getFirstSeason();
-                        } else if (this.hasOnlyProviderWithSameIdForSeasons(b) && !this.hasOnlyProviderWithSameIdForSeasons(a)) {
+                        } else if (await this.hasOnlyProviderWithSameIdForSeasons(b) && !await this.hasOnlyProviderWithSameIdForSeasons(a)) {
                             aFirstSeason = await b.getFirstSeason();
                         }
                     } catch (err) { }
@@ -78,7 +78,7 @@ class SeriesHelper {
                                 }
                             }
                         }
-                      
+
                     } else if (bFirstSeason) {
                         for (const listProviderInfos of bFirstSeason.getListProvidersInfos()) {
                             for (const lpi of a.getListProvidersInfos()) {
@@ -87,7 +87,7 @@ class SeriesHelper {
                                 }
                             }
                         }
-                    } 
+                    }
                 }
             } else if (!aSeason && bSeason === 1) {
                 matches += 1;
@@ -120,7 +120,7 @@ class SeriesHelper {
         return matches >= matchAbleScore / 1.39;
     }
 
-    async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean>{
+    async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean> {
         let hasOnlyProviderWithSameId = true;
         for (const providerlistinfo of series.getListProvidersInfos()) {
             if (providerlistinfo.getProviderInstance().hasUniqueIdForSeasons) {
@@ -137,13 +137,13 @@ class SeriesHelper {
         }
         for (const provider of series.getListProvidersInfos()) {
             if (provider.targetSeason) {
-                return new SearchSeasonValueResult(provider.targetSeason,"Provider: " + provider.provider);
+                return new SearchSeasonValueResult(provider.targetSeason, "Provider: " + provider.provider);
             }
         }
         const numberFromName = await Name.getSeasonNumber(await series.getAllNames());
 
         if (numberFromName) {
-            return new SearchSeasonValueResult(numberFromName,"Name");
+            return new SearchSeasonValueResult(numberFromName, "Name");
         }
         let prquel = null;
         try {
@@ -154,13 +154,13 @@ class SeriesHelper {
                     searchCount++;
                     const prequelSeason = await prquel.getSeason(seriesList);
                     if (prequelSeason === 1 || prequelSeason === 0) {
-                        return new SearchSeasonValueResult(prequelSeason + searchCount,"PrequelTrace");
+                        return new SearchSeasonValueResult(prequelSeason + searchCount, "PrequelTrace");
                     }
                 }
                 try {
                     prquel = await prquel.getPrequel(seriesList);
                 } catch (err) {
-                    return new SearchSeasonValueResult(searchCount,"PrequelTrace");
+                    return new SearchSeasonValueResult(searchCount, "PrequelTrace");
                 }
             }
         } catch (err) {
@@ -173,7 +173,7 @@ class SeriesHelper {
         } catch (err) {
             console.log(err);
         }
-        return new SearchSeasonValueResult(undefined,"None");
+        return new SearchSeasonValueResult(-1, "None");
     }
 }
 
