@@ -182,7 +182,7 @@ describe('ListControllerTest | Combine', () => {
         x2.addListProvider(lplc2)
 
         var a = await lc['addSeriesToMainList'](x, xs1, x2);
-        assert.equal(MainListManager['mainList'].length, 2);
+        assert.equal(MainListManager['mainList'].length, 2,MainListManager['mainList'].toString());
         return;
     });
 
@@ -327,7 +327,7 @@ describe('ListControllerTest | Combine', () => {
     it('should clean doubled entrys (2/3)', async () => {
         var lpld = new ListProviderLocalData();
         lpld.id = 2;
-        lpld.episodes = 12;
+        lpld.episodes = 10;
 
         var x1 = getFilledAnime();
         x1.getListProvidersInfos()[0].targetSeason = undefined;

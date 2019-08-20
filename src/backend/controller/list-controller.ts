@@ -83,7 +83,6 @@ export default class ListController {
             if (entry.length != 1) {
                 console.log("[WARN] Find more or none entry after adding it.");
             } else {
-                var index = await MainListManager.getIndexFromSeries(entry[0]);
                 try {
                     await MainListManager.addSerieToMainList(await this.fillMissingProvider(entry[0]));
                 } catch (err) { }

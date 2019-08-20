@@ -333,8 +333,17 @@ export default class Series extends SeriesProviderExtension {
 
         newAnime.names.push(...this.names, ...anime.names);
         newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
-
-        newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(newAnime.listProviderInfos.flatMap(x => x.episodes)));
+        try {
+            const number = newAnime.listProviderInfos.flatMap(x => x.episodes);
+            if (this.episodes) {
+                number.push(this.episodes);
+            }
+            if (anime.episodes) {
+                number.push(anime.episodes);
+            }
+            newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(number));
+            newAnime.episodes = newAnime.getMaxEpisode();
+        }catch(err){}
 
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names[0].name, 'ReleaseYear');
 
