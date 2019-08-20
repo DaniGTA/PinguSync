@@ -194,7 +194,7 @@ describe('seriesTest | Relations', () => {
     function getFilledAnime(): Series {
         const provider = new ListProviderLocalData("Test");
         var anime = new Series();
-        anime.episodes = 10;
+        anime['episodes'] = 10;
         anime.releaseYear = 2014;
         anime.addSeriesName(new Name("Test", "en"));
         provider.targetSeason = 3;

@@ -16,7 +16,6 @@ import Banner from '../../controller/objects/meta/banner';
 export default new class AniListConverter {
     public async convertMediaToAnime(medium: Medium): Promise<Series> {
         const series = new Series();
-        series.episodes = medium.episodes;
         series.addSeriesName(new Name(medium.title.romaji, 'x-jap', NameType.OFFICIAL));
         series.addSeriesName(new Name(medium.title.english, 'unknown', NameType.MAIN));
         series.addSeriesName(new Name(medium.title.native, 'jap'));
@@ -51,7 +50,6 @@ export default new class AniListConverter {
         const series = new Series();
 
         series.addOverview(new Overview(info.Media.description, 'eng'));
-        series.episodes = info.Media.episodes;
         series.releaseYear = info.Media.startDate.year;
         series.addSeriesName(new Name(info.Media.title.romaji, 'x-jap', NameType.OFFICIAL));
         series.addSeriesName(new Name(info.Media.title.english, 'unknown', NameType.MAIN));
@@ -117,7 +115,7 @@ export default new class AniListConverter {
         providerInfo.banners.push(new Banner(entry.media.bannerImage, ImageSize.LARGE));
         if (entry.progress != 0) {
             for (let index = 0; index < entry.progress; index++) {
-                providerInfo.addOneEpisode(index + 1);
+                providerInfo.addOneWatchedEpisode(index + 1);
             }
         }
 

@@ -22,7 +22,7 @@ export default class Series extends SeriesProviderExtension {
     public lastInfoUpdate: number = 0;
     private names: Name[] = [];
     public mediaType: MediaType = MediaType.SERIES;
-    public episodes?: number;
+    private episodes?: number;
     public overviews: Overview[] = [];
     public releaseYear?: number;
     public runTime?: number;
@@ -144,11 +144,12 @@ export default class Series extends SeriesProviderExtension {
      * @hasTest
      */
     public async getSeason(searchInList?: Series[]): Promise<number | undefined> {
-        if (this.cachedSeason) {
+        if (!this.cachedSeason) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
             this.cachedSeason = result.season;
             this.seasonDetectionType = result.foundType;
-        } else if (this.cachedSeason === -1) {
+        }
+        if (this.cachedSeason == -1) {
             return undefined;
         }
         return this.cachedSeason;
@@ -168,7 +169,6 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         } catch (err) {
-            console.log(err);
         }
         throw 'no prequel found';
     }
@@ -189,7 +189,6 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         } catch (err) {
-            console.log(err);
         }
         throw 'no sequel found';
     }
@@ -328,15 +327,18 @@ export default class Series extends SeriesProviderExtension {
     public async merge(anime: Series): Promise<Series> {
         const newAnime: Series = new Series();
 
+        newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
+        newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
+
+
         newAnime.names.push(...this.names, ...anime.names);
         newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
 
-        newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(this.listProviderInfos.flatMap(x => x.episodes)));
+        newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(newAnime.listProviderInfos.flatMap(x => x.episodes)));
+
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names[0].name, 'ReleaseYear');
 
         newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names[0].name, 'RunTime');
-        newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
-        newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
 
         try {
             if (this.overviews != null && typeof this.overviews != 'undefined') {
@@ -371,7 +373,7 @@ export default class Series extends SeriesProviderExtension {
                 for (const provider2 of providers) {
                     if (provider2.provider == provider.provider) {
                         collected.push(provider2);
-                        break;
+                        continue;
                     }
                 }
                 if (collected.length >= 2) {

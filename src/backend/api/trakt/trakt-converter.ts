@@ -25,7 +25,7 @@ export default new class TraktConverter {
             providerInfo.id = watchedInfo.show.ids.trakt;
             providerInfo.rawEntry = watchedInfo;
             for (let episode of season.episodes) {
-                providerInfo.addOneEpisode(episode.number, episode.plays, episode.last_watched_at);
+                providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
             }
             providerInfo.targetSeason = season.number;
             providerInfo.watchStatus = WatchStatus.COMPLETED;

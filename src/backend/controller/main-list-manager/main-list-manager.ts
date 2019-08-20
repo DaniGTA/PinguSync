@@ -43,16 +43,22 @@ export default class MainListManager {
     }
 
     public static async finishListFilling() {
-        this.listMaintance = true;
-        this.secondList = [...this.mainList];
-        this.mainList = [];
-        for (const entry of this.secondList) {
+        console.log("Cleanup Mainlist");
+        MainListManager.listMaintance = true;
+        MainListManager.secondList = [...MainListManager.mainList];
+        MainListManager.mainList = [];
+        while (this.secondList.length != 0) {
+            const entry = MainListManager.secondList[0];
+            const oldLength = MainListManager.secondList.length;
             await entry.resetCache();
-            await this.addSerieToMainList(entry);
+            await MainListManager.addSerieToMainList(entry);
+            if (oldLength === MainListManager.secondList.length) {
+                console.log("Force Remove Item | " + MainListManager.secondList.length + " left");
+                MainListManager.secondList.shift();
+            }
         }
-        const loader = new MainListLoader();
-        await loader.saveData(this.mainList);
-        this.listMaintance = false;
+        await MainListLoader.saveData(MainListManager.mainList);
+        MainListManager.listMaintance = false;
     }
 
     public static async findSameSeriesInMainList(entry2: Series): Promise<Series[]> {
@@ -86,7 +92,7 @@ export default class MainListManager {
     static async getMainList(): Promise<Series[]> {
         if (!MainListManager.listLoaded) {
             const loader = new MainListLoader();
-            MainListManager.mainList = loader.loadData();
+            MainListManager.mainList = MainListLoader.loadData();
             MainListManager.listLoaded = true;
         }
         if (this.listMaintance) {

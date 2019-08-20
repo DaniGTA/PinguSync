@@ -40,4 +40,6 @@ export default class SeriesProviderExtension {
     public getInfoProvidersInfos() {
         return this.infoProviderInfos;
     }
+
+
 }

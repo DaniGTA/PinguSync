@@ -8,9 +8,9 @@ import WatchProgress from '../../../src/backend/controller/objects/meta/watch-pr
 describe('providerTest', () => {
     it('should add to watchlist', async () => {
         const providerInfo = new ListProviderLocalData();
-        providerInfo.addOneEpisode(1);
-        providerInfo.addOneEpisode(2);
-        providerInfo.addOneEpisode(3);
+        providerInfo.addOneWatchedEpisode(1);
+        providerInfo.addOneWatchedEpisode(2);
+        providerInfo.addOneWatchedEpisode(3);
         if (typeof providerInfo.watchProgress != 'undefined') {
             assert.equal(providerInfo.watchProgress.length, 3);
         } else {
@@ -21,9 +21,9 @@ describe('providerTest', () => {
 
     it('should remove from watchlist', async () => {
         const providerInfo = new ListProviderLocalData();
-        providerInfo.addOneEpisode(1);
-        providerInfo.addOneEpisode(2);
-        providerInfo.addOneEpisode(3);
+        providerInfo.addOneWatchedEpisode(1);
+        providerInfo.addOneWatchedEpisode(2);
+        providerInfo.addOneWatchedEpisode(3);
 
         providerInfo.removeOneWatchProgress(new WatchProgress(2))
         if (typeof providerInfo.watchProgress != 'undefined') {
@@ -36,10 +36,10 @@ describe('providerTest', () => {
 
     it('should return the last watched episode', async () => {
         const providerInfo = new ListProviderLocalData();
-        providerInfo.addOneEpisode(1);
-        providerInfo.addOneEpisode(2);
-        providerInfo.addOneEpisode(4);
-        providerInfo.addOneEpisode(6);
+        providerInfo.addOneWatchedEpisode(1);
+        providerInfo.addOneWatchedEpisode(2);
+        providerInfo.addOneWatchedEpisode(4);
+        providerInfo.addOneWatchedEpisode(6);
         const result = providerInfo.getHighestWatchedEpisode();
         if (typeof result != 'undefined') {
             assert.equal(result.episode, 6);
@@ -51,7 +51,7 @@ describe('providerTest', () => {
     it('should merge same provider', async () => {
         const providerInfoA = new ListProviderLocalData();
         providerInfoA.id = 2;
-        providerInfoA.addOneEpisode(1);
+        providerInfoA.addOneWatchedEpisode(1);
         providerInfoA.episodes = 10;
         providerInfoA.score = 11;
         providerInfoA.watchStatus = WatchStatus.CURRENT;
@@ -59,8 +59,8 @@ describe('providerTest', () => {
         providerInfoA.lastUpdate = new Date(10000);
         const providerInfoB = new ListProviderLocalData();
         providerInfoB.id = 2;
-        providerInfoB.addOneEpisode(1);
-        providerInfoB.addOneEpisode(2);
+        providerInfoB.addOneWatchedEpisode(1);
+        providerInfoB.addOneWatchedEpisode(2);
         providerInfoB.episodes = 10;
         providerInfoB.score = 12;
         providerInfoB.watchStatus = WatchStatus.COMPLETED;

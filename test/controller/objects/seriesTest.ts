@@ -28,10 +28,10 @@ describe('series basic tests', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData();
         providerA.lastUpdate = new Date(2);
-        providerA.addOneEpisode(5);
+        providerA.addOneWatchedEpisode(5);
         const providerB = new ListProviderLocalData();
         providerB.lastUpdate = new Date(1);
-        providerB.addOneEpisode(4);
+        providerB.addOneWatchedEpisode(4);
         series.addListProvider(providerA, providerB);
         const result = await series.getLastWatchProgress()
         if (typeof result != 'undefined') {
@@ -58,7 +58,7 @@ describe('series basic tests', () => {
         const providerA = new ListProviderLocalData();
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData();
-        series.episodes = 11;
+        series['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.deepStrictEqual(await series.getAllEpisodes(), [10, 11]);
         return;
@@ -78,7 +78,7 @@ describe('series basic tests', () => {
         const providerA = new ListProviderLocalData("TestA");
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData("TestB");
-        series.episodes = 11;
+        series['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 12);
         return;
@@ -90,7 +90,7 @@ describe('series basic tests', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData("TestB");
         providerB.episodes = 24;
-        series.episodes = 11;
+        series['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.strictEqual(series.getMaxEpisode(), 24);
         return;
@@ -102,7 +102,7 @@ describe('series basic tests', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData();
         providerB.episodes = 24;
-        series.episodes = 11;
+        series['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.throws(series.getMaxEpisode);
         return;

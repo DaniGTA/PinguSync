@@ -119,13 +119,13 @@ describe('seriesTest | Season', () => {
         series3.addListProvider(lpld3);
         series3.addSeriesName(new Name('Test Testooo', 'en'));
 
-        strictEqual(await series.getSeason([series, series2,series3]), 1);
+        strictEqual(await series.getSeason([series, series2, series3]), 1);
         strictEqual(await series2.getSeason([series, series2, series3]), 2);
-        strictEqual(await series3.getSeason([series, series2,series3]), 3);
+        strictEqual(await series3.getSeason([series, series2, series3]), 3);
         return;
     });
 
-    it('should return season 9', async () => {
+    it('should not return season 2', async () => {
         const series = new Series();
         series.addSeriesName(new Name('Test S3 part 2', 'en'));
 

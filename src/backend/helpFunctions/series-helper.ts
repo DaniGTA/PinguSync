@@ -23,10 +23,11 @@ class SeriesHelper {
         b = Object.assign(new Series(), b);
 
         if (await providerHelper.hasSameListProvider(a, b)) {
+            matchAbleScore += 2;
             for (let aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {
                     if (aProvider.provider == bProvider.provider) {
-                        matchAbleScore += 3;
+
                         if (aProvider.id == bProvider.id) {
                             aProvider = Object.assign(new ListProviderLocalData(), aProvider);
                             matches += 2;
@@ -56,58 +57,65 @@ class SeriesHelper {
         let aFirstSeason = null;
         let bFirstSeason = null;
         // Check season
-        const aSeason = await a.getSeason();
-        const bSeason = await b.getSeason();
-        if (aSeason || bSeason) {
-            matchAbleScore += 2.5;
-            if (aSeason === bSeason) {
-                matches += 2.5;
-                if (bSeason != 1 && aSeason != 1) {
-                    try {
-                        if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
-                            bFirstSeason = await b.getFirstSeason();
-                        } else if (await this.hasOnlyProviderWithSameIdForSeasons(b) && !await this.hasOnlyProviderWithSameIdForSeasons(a)) {
-                            aFirstSeason = await b.getFirstSeason();
-                        }
-                    } catch (err) { }
-                    if (aFirstSeason) {
-                        for (const listProviderInfos of aFirstSeason.getListProvidersInfos()) {
-                            for (const lpi of b.getListProvidersInfos()) {
-                                if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await aFirstSeason.getSeason()) {
-                                    return true;
+        try {
+            const aSeason = await a.getSeason();
+            const bSeason = await b.getSeason();
+            if (aSeason || bSeason) {
+                matchAbleScore += 2.5;
+                if (aSeason === bSeason) {
+                    matches += 2.5;
+                    if (bSeason != 1 && aSeason != 1) {
+                        try {
+                            if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
+                                bFirstSeason = await b.getFirstSeason();
+                            } else if (await this.hasOnlyProviderWithSameIdForSeasons(b) && !await this.hasOnlyProviderWithSameIdForSeasons(a)) {
+                                aFirstSeason = await b.getFirstSeason();
+                            }
+                        } catch (err) { }
+                        if (aFirstSeason) {
+                            for (const listProviderInfos of aFirstSeason.getListProvidersInfos()) {
+                                for (const lpi of b.getListProvidersInfos()) {
+                                    if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await aFirstSeason.getSeason()) {
+                                        return true;
+                                    }
                                 }
                             }
-                        }
 
-                    } else if (bFirstSeason) {
-                        for (const listProviderInfos of bFirstSeason.getListProvidersInfos()) {
-                            for (const lpi of a.getListProvidersInfos()) {
-                                if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await bFirstSeason.getSeason()) {
-                                    return true;
+                        } else if (bFirstSeason) {
+                            for (const listProviderInfos of bFirstSeason.getListProvidersInfos()) {
+                                for (const lpi of a.getListProvidersInfos()) {
+                                    if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await bFirstSeason.getSeason()) {
+                                        return true;
+                                    }
                                 }
                             }
                         }
                     }
+                } else if (!aSeason && bSeason === 1) {
+                    matches += 1;
+                } else if (!bSeason && aSeason === 1) {
+                    matches += 1;
                 }
-            } else if (!aSeason && bSeason === 1) {
-                matches += 1;
-            } else if (!bSeason && aSeason === 1) {
-                matches += 1;
             }
+        } catch (err) {
+            console.log("FATAL ERROR:")
+            console.log(err);
+            console.log("PREVENT THIS FROM THROWN SO FAR AWAY");
         }
-
-        const allAEpisodes = await a.getAllEpisodes();
-        const allBEpisodes = await b.getAllEpisodes();
-        // Search if there is a match between the arrays.
-        if (allAEpisodes.length != 0 && allBEpisodes.length != 0) {
-            matchAbleScore++;
-            if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
-                matches++;
+        try {
+            const allAEpisodes = await a.getAllEpisodes();
+            const allBEpisodes = await b.getAllEpisodes();
+            // Search if there is a match between the arrays.
+            if (allAEpisodes.length != 0 && allBEpisodes.length != 0) {
+                matchAbleScore++;
+                if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
+                    matches++;
+                }
             }
-        }
-        matchAbleScore += 3;
+        } catch (err) { }
+        matchAbleScore += 4;
         if (await titleCheckHelper.checkSeriesNames(a, b)) {
-            matches += 3;
+            matches += 4;
         } else if (aFirstSeason) {
             if (await titleCheckHelper.checkSeriesNames(aFirstSeason, b)) {
                 matches += 4;
@@ -116,6 +124,9 @@ class SeriesHelper {
             if (await titleCheckHelper.checkSeriesNames(a, bFirstSeason)) {
                 matches += 4;
             }
+        }
+        if (matchAbleScore === 0) {
+            return false;
         }
         return matches >= matchAbleScore / 1.39;
     }
@@ -164,14 +175,12 @@ class SeriesHelper {
                 }
             }
         } catch (err) {
-            console.log(err);
         }
         try {
             if (!prquel && await series.getSequel(seriesList)) {
                 return new SearchSeasonValueResult(1, "NoPrequelButSequel");
             }
         } catch (err) {
-            console.log(err);
         }
         return new SearchSeasonValueResult(-1, "None");
     }

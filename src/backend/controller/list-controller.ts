@@ -8,10 +8,12 @@ import ListProvider from '../api/list-provider';
 import MainListManager from './main-list-manager/main-list-manager';
 export default class ListController {
     public static instance: ListController | null = null;
-    constructor() {
+    constructor(disableOnlineMode = false) {
         if (!ListController.instance) {
             console.log('Start ListController.')
-            this.getSeriesListAndUpdateMainList();
+            if (!disableOnlineMode) {
+                this.getSeriesListAndUpdateMainList();
+            }
             ListController.instance = this;
         }
 

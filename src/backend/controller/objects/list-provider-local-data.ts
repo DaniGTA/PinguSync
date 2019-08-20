@@ -60,9 +60,9 @@ export class ListProviderLocalData extends ProviderLocalData {
         return;
     }
 
-    public addEpisodes(episodes: number, plays = 0) {
+    public addWatchedEpisodes(episodes: number, plays = 0) {
         for (let index = 1; index < episodes + 1; index++) {
-            this.addOneEpisode(index, plays);
+            this.addOneWatchedEpisode(index, plays);
 
         }
     }
@@ -73,7 +73,7 @@ export class ListProviderLocalData extends ProviderLocalData {
      * @param date 
      * @param plays 
      */
-    public addOneEpisode(episode: number, plays = 1, date?: Date): void {
+    public addOneWatchedEpisode(episode: number, plays = 1, date?: Date): void {
         if (typeof this.watchProgress === 'undefined') {
             this.watchProgress = []
         }
