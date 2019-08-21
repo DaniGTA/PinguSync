@@ -330,9 +330,10 @@ export default class Series extends SeriesProviderExtension {
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
 
-
-        newAnime.names.push(...this.names, ...anime.names);
-        newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
+        try {
+            newAnime.names.push(...this.names, ...anime.names);
+            newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
+        } catch (err) { }
         try {
             const number = newAnime.listProviderInfos.flatMap(x => x.episodes);
             if (this.episodes) {
@@ -343,7 +344,7 @@ export default class Series extends SeriesProviderExtension {
             }
             newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(number));
             newAnime.episodes = newAnime.getMaxEpisode();
-        }catch(err){}
+        } catch (err) { }
 
         newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names[0].name, 'ReleaseYear');
 
@@ -384,19 +385,19 @@ export default class Series extends SeriesProviderExtension {
                         collected.push(provider2);
                         continue;
                     }
-                }
-                if (collected.length >= 2) {
-                    if (listHelper.checkType(collected, ListProviderLocalData)) {
-                        mergedProviderInfos.push(await ListProviderLocalData.mergeProviderInfos(...collected as ListProviderLocalData[]));
-                    } else if (listHelper.checkType(collected, InfoProviderLocalData)) {
-                        mergedProviderInfos.push(await InfoProviderLocalData.mergeProviderInfos(...collected as InfoProviderLocalData[]));
+                    if (collected.length >= 2) {
+                        if (listHelper.checkType(collected, ListProviderLocalData)) {
+                            mergedProviderInfos.push(await ListProviderLocalData.mergeProviderInfos(...collected as ListProviderLocalData[]));
+                        } else if (listHelper.checkType(collected, InfoProviderLocalData)) {
+                            mergedProviderInfos.push(await InfoProviderLocalData.mergeProviderInfos(...collected as InfoProviderLocalData[]));
+                        }
+                    } else {
+                        mergedProviderInfos.push(provider);
                     }
-                } else {
-                    mergedProviderInfos.push(provider);
                 }
             }
+            return mergedProviderInfos;
         }
-        return mergedProviderInfos;
     }
 
     private async mergeNumber(a: number | undefined, b: number | undefined, name?: string, target?: string): Promise<number> {
@@ -468,6 +469,20 @@ export default class Series extends SeriesProviderExtension {
         }
 
         return relations;
+    }
+
+    async isAnySequelPresent(): Promise<boolean> {
+        for (const listprovider of this.getListProvidersInfos()) {
+            if (listprovider.sequelIds.length != 0) {
+                return true;
+            }
+        }
+        for (const infoprovider of this.getInfoProvidersInfos()) {
+            if (infoprovider.sequelIds.length != 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {

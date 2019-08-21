@@ -23,14 +23,14 @@ class SeriesHelper {
         b = Object.assign(new Series(), b);
 
         if (await providerHelper.hasSameListProvider(a, b)) {
-            matchAbleScore += 2;
+            matchAbleScore += 2.5;
             for (let aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {
                     if (aProvider.provider == bProvider.provider) {
 
                         if (aProvider.id == bProvider.id) {
                             aProvider = Object.assign(new ListProviderLocalData(), aProvider);
-                            matches += 2;
+                            matches += 2.5;
                             try {
                                 if (aProvider.getProviderInstance().hasUniqueIdForSeasons) {
                                     return true;
@@ -177,7 +177,7 @@ class SeriesHelper {
         } catch (err) {
         }
         try {
-            if (!prquel && await series.getSequel(seriesList)) {
+            if (!prquel && await series.isAnySequelPresent()) {
                 return new SearchSeasonValueResult(1, "NoPrequelButSequel");
             }
         } catch (err) {

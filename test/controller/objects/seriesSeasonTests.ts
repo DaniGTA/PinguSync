@@ -125,6 +125,17 @@ describe('seriesTest | Season', () => {
         return;
     });
 
+    it('should return season 9', async () => {
+        const series = new Series();
+        const lpld = new ListProviderLocalData();
+        lpld.sequelIds.push(6);
+        series.addListProvider(lpld);
+        series.addSeriesName(new Name('Test', 'en'));
+
+        strictEqual(await series.getSeason([series]), 1);
+        return;
+    });
+
     it('should not return season 2', async () => {
         const series = new Series();
         series.addSeriesName(new Name('Test S3 part 2', 'en'));

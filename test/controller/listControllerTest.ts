@@ -149,8 +149,10 @@ describe('ListControllerTest | Combine', () => {
     it('should combine 6', async () => {
         const testListProvider1 = new TestProvider('test', false);
         testListProvider1.hasUniqueIdForSeasons = true;
+
         const testListProvider2 = new TestProvider('test2', false);
-        testListProvider1.hasUniqueIdForSeasons = false;
+        testListProvider2.hasUniqueIdForSeasons = false;
+
         ProviderList['loadedListProvider'] = [];
         ProviderList['loadedListProvider'].push(testListProvider1, testListProvider2);
 
@@ -159,15 +161,18 @@ describe('ListControllerTest | Combine', () => {
         lplc.id = 2;
         let x = new Series();
         x['cachedSeason'] = 2;
-        x.releaseYear = 2017
+        x.releaseYear = 2017;
+        x.lastInfoUpdate = Date.now();
         x['episodes'] = 11;
         x.addSeriesName(new Name("Test", "unkown", NameType.UNKNOWN));
+        x.addListProvider(lplc);
 
         const lplcs1 = new ListProviderLocalData('test');
         lplcs1.sequelIds.push(2);
         lplcs1.id = 1;
         let xs1 = new Series();
         xs1['cachedSeason'] = 1;
+        xs1.lastInfoUpdate = Date.now();
         xs1.addSeriesName(new Name("Rewrite", "en", NameType.OFFICIAL));
         xs1.addListProvider(lplcs1);
 
@@ -175,6 +180,7 @@ describe('ListControllerTest | Combine', () => {
         lplc2.targetSeason = 2;
         lplc2.id = 1
         var x2 = new Series();
+        x2.lastInfoUpdate = Date.now();
         x2.addSeriesName(new Name("Rewrite", "en", NameType.OFFICIAL));
         x2.addSeriesName(new Name("rewrite", "slug", NameType.SLUG));
         x2.addSeriesName(new Name("リライト", "ja", NameType.UNKNOWN));
@@ -182,7 +188,7 @@ describe('ListControllerTest | Combine', () => {
         x2.addListProvider(lplc2)
 
         var a = await lc['addSeriesToMainList'](x, xs1, x2);
-        assert.equal(MainListManager['mainList'].length, 2,MainListManager['mainList'].toString());
+        assert.equal(MainListManager['mainList'].length, 2, MainListManager['mainList'].toString());
         return;
     });
 
