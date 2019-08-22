@@ -77,6 +77,7 @@ export default class ListController {
 
     public async addSeriesToMainList(...animes: Series[]) {
         console.log('Add ' + animes.length + ' to mainList');
+        let added = 0;
         for (const anime of animes) {
             await MainListManager.addSerieToMainList(anime);
             const entry = await MainListManager.findSameSeriesInMainList(anime);
@@ -87,6 +88,8 @@ export default class ListController {
                     await MainListManager.addSerieToMainList(await this.fillMissingProvider(entry[0]));
                 } catch (err) { }
             }
+            added++;
+            console.log('Adding Series to list. Progress: ' + added + ' /' + animes.length);
         }
         console.log('Added ' + (await MainListManager.getMainList()).length + ' to mainList');
         await MainListManager.finishListFilling();

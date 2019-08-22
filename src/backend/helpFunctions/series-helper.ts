@@ -1,10 +1,11 @@
 import Series from "../controller/objects/series";
-import titleCheckHelper from './title-check-helper';
-import providerHelper from './provider/provider-helper';
-import { ListProviderLocalData } from "../controller/objects/list-provider-local-data";
 import SearchSeasonValueResult from "../controller/objects/transfer/search-season-value-results";
 import Name from "../controller/objects/meta/name";
 import ListController from "../controller/list-controller";
+import ProviderComperator from './comperators/provider-comperator';
+import SeasonComperator from './comperators/season-comperator';
+import TitleComperator from './comperators/title-comperator';
+import EpisodeComperator from './comperators/episode-comperator';
 
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
@@ -22,29 +23,12 @@ class SeriesHelper {
         a = Object.assign(new Series(), a);
         b = Object.assign(new Series(), b);
 
-        if (await providerHelper.hasSameListProvider(a, b)) {
-            matchAbleScore += 2.5;
-            for (let aProvider of a.getListProvidersInfos()) {
-                for (const bProvider of b.getListProvidersInfos()) {
-                    if (aProvider.provider == bProvider.provider) {
-
-                        if (aProvider.id == bProvider.id) {
-                            aProvider = Object.assign(new ListProviderLocalData(), aProvider);
-                            matches += 2.5;
-                            try {
-                                if (aProvider.getProviderInstance().hasUniqueIdForSeasons) {
-                                    return true;
-                                } else if (aProvider.targetSeason === bProvider.targetSeason) {
-                                    return true;
-                                }
-                            } catch (err) {
-
-                            }
-                        }
-                    }
-                }
-            }
+        const providerResult = await ProviderComperator.compareProviders(a, b);
+        if (providerResult.isAbsolute) {
+            return true;
         }
+        matchAbleScore += providerResult.matchAble;
+        matches += providerResult.matches;
 
         // Check releaseYear
         if (a.releaseYear && b.releaseYear) {
@@ -53,94 +37,35 @@ class SeriesHelper {
                 matches++;
             }
         }
-
-        let aFirstSeason = null;
-        let bFirstSeason = null;
         // Check season
-        try {
-            const aSeason = await a.getSeason();
-            const bSeason = await b.getSeason();
-            if (aSeason || bSeason) {
-                matchAbleScore += 2.5;
-                if (aSeason === bSeason) {
-                    matches += 2.5;
-                    if (bSeason != 1 && aSeason != 1) {
-                        try {
-                            if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
-                                bFirstSeason = await b.getFirstSeason();
-                            } else if (await this.hasOnlyProviderWithSameIdForSeasons(b) && !await this.hasOnlyProviderWithSameIdForSeasons(a)) {
-                                aFirstSeason = await b.getFirstSeason();
-                            }
-                        } catch (err) { }
-                        if (aFirstSeason) {
-                            for (const listProviderInfos of aFirstSeason.getListProvidersInfos()) {
-                                for (const lpi of b.getListProvidersInfos()) {
-                                    if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await aFirstSeason.getSeason()) {
-                                        return true;
-                                    }
-                                }
-                            }
+        const seasonResult = await SeasonComperator.compareSeasons(a, b);
+        if (seasonResult.isAbsolute) {
+            return true;
+        }
+        matchAbleScore += seasonResult.matchAble;
+        matches += seasonResult.matches;
+        let aFirstSeason = seasonResult.aFirstSeason;
+        let bFirstSeason = seasonResult.bFirstSeason;
+    
+        const episodeResult = await EpisodeComperator.compareEpisodes(a, b);
+        if (episodeResult.isAbsolute) {
+            return true;
+        }
+        matchAbleScore += episodeResult.matchAble;
+        matches += episodeResult.matches;
 
-                        } else if (bFirstSeason) {
-                            for (const listProviderInfos of bFirstSeason.getListProvidersInfos()) {
-                                for (const lpi of a.getListProvidersInfos()) {
-                                    if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await bFirstSeason.getSeason()) {
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else if (!aSeason && bSeason === 1) {
-                    matches += 1;
-                } else if (!bSeason && aSeason === 1) {
-                    matches += 1;
-                }
-            }
-        } catch (err) {
-            console.log("FATAL ERROR:")
-            console.log(err);
-            console.log("PREVENT THIS FROM THROWN SO FAR AWAY");
+        const titleResult = await TitleComperator.compareTitle(a, b,aFirstSeason,bFirstSeason);
+        if (titleResult.isAbsolute) {
+            return true;
         }
-        try {
-            const allAEpisodes = await a.getAllEpisodes();
-            const allBEpisodes = await b.getAllEpisodes();
-            // Search if there is a match between the arrays.
-            if (allAEpisodes.length != 0 && allBEpisodes.length != 0) {
-                matchAbleScore++;
-                if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
-                    matches++;
-                }
-            }
-        } catch (err) { }
-        matchAbleScore += 4;
-        if (await titleCheckHelper.checkSeriesNames(a, b)) {
-            matches += 4;
-        } else if (aFirstSeason) {
-            if (await titleCheckHelper.checkSeriesNames(aFirstSeason, b)) {
-                matches += 4;
-            }
-        } else if (bFirstSeason) {
-            if (await titleCheckHelper.checkSeriesNames(a, bFirstSeason)) {
-                matches += 4;
-            }
-        }
+        matchAbleScore += titleResult.matchAble;
+        matches += titleResult.matches;
+
         if (matchAbleScore === 0) {
             return false;
         }
         return matches >= matchAbleScore / 1.39;
     }
-
-    async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean> {
-        let hasOnlyProviderWithSameId = true;
-        for (const providerlistinfo of series.getListProvidersInfos()) {
-            if (providerlistinfo.getProviderInstance().hasUniqueIdForSeasons) {
-                hasOnlyProviderWithSameId = false;
-            }
-        }
-        return hasOnlyProviderWithSameId;
-    }
-
 
     async searchSeasonValue(series: Series, seriesList?: Series[]): Promise<SearchSeasonValueResult> {
         if (!seriesList) {
