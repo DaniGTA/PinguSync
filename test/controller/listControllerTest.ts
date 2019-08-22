@@ -32,8 +32,8 @@ describe('ListControllerTest | Combine', () => {
 
 
         var entry: Series[] = [];
-        entry.push(getFilledAnime());
-        entry.push(getFilledAnime());
+        entry.push(await getFilledAnime());
+        entry.push(await getFilledAnime());
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 1);
     });
@@ -41,10 +41,10 @@ describe('ListControllerTest | Combine', () => {
     it('should combine basic entrys correct', async () => {
 
         var entry: Series[] = [];
-        entry.push(getFilledAnime("Test A"));
-        entry.push(getFilledAnime("Test B"));
+        entry.push(await getFilledAnime("Test A"));
+        entry.push(await getFilledAnime("Test B"));
         for (let index = 0; index < 20; index++) {
-            entry.push(getRandomeFilledAnime());
+            entry.push(await getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 21);
@@ -52,13 +52,13 @@ describe('ListControllerTest | Combine', () => {
 
     it('should combine basic entrys with less data', async () => {
         var entry: Series[] = [];
-        var x2 = getFilledAnime("Test A");
+        var x2 = await getFilledAnime("Test A");
         x2['episodes'] = undefined;
         x2.releaseYear = undefined;
         entry.push(x2);
-        entry.push(getFilledAnime("Test B"));
+        entry.push(await getFilledAnime("Test B"));
         for (let index = 0; index < 20; index++) {
-            entry.push(getRandomeFilledAnime());
+            entry.push(await getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 21);
@@ -67,13 +67,13 @@ describe('ListControllerTest | Combine', () => {
 
     it('should combine basic entrys with season in title (1/4)', async () => {
         var entry: Series[] = [];
-        var x2 = getFilledAnime("TestA");
+        var x2 = await getFilledAnime("TestA");
         x2.getListProvidersInfos()[0].targetSeason = undefined;
         x2.addSeriesName(new Name("Test III", "en"));
         entry.push(x2);
-        entry.push(getFilledAnime("TestB"));
+        entry.push(await getFilledAnime("TestB"));
         for (let index = 0; index < 20; index++) {
-            entry.push(getRandomeFilledAnime());
+            entry.push(await getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 21);
@@ -81,13 +81,13 @@ describe('ListControllerTest | Combine', () => {
     });
     it('should combine basic entrys with season in title (2/4)', async () => {
         var entry: Series[] = [];
-        var x2 = getFilledAnime("TestA");
+        var x2 = await getFilledAnime("TestA");
         x2.getListProvidersInfos()[0].targetSeason = undefined;
         x2.addSeriesName(new Name("Test 3", "en"));
         entry.push(x2);
-        entry.push(getFilledAnime("TestB"));
+        entry.push(await getFilledAnime("TestB"));
         for (let index = 0; index < 20; index++) {
-            entry.push(getRandomeFilledAnime());
+            entry.push(await getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 21);
@@ -95,14 +95,14 @@ describe('ListControllerTest | Combine', () => {
     });
     it('should combine basic entrys with season in title (3/4)', async () => {
         var entry: Series[] = [];
-        var x2 = getFilledAnime("TestA");
+        var x2 = await getFilledAnime("TestA");
         x2.addSeriesName(new Name("Test Season 3", "en"));
         x2.releaseYear = 0;
         x2['episodes'] = 0;
         entry.push(x2);
-        entry.push(getFilledAnime("TestB"));
+        entry.push(await getFilledAnime("TestB"));
         for (let index = 0; index < 20; index++) {
-            entry.push(getRandomeFilledAnime());
+            entry.push(await getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 21);
@@ -111,16 +111,16 @@ describe('ListControllerTest | Combine', () => {
 
     it('should combine basic entrys with season in title (4/5)', async () => {
         var entry: Series[] = [];
-        let x = getFilledAnime("TestA");
+        let x = await getFilledAnime("TestA");
         x.addSeriesName(new Name("Test", "en"));
-        var x2 = getFilledAnime("TestB");
+        var x2 = await getFilledAnime("TestB");
         x2.addSeriesName(new Name("Test x", "en"));
         x2.releaseYear = 0;
         x2['episodes'] = 0;
         entry.push(x2);
         entry.push(x);
         for (let index = 0; index < 22; index++) {
-            entry.push(getRandomeFilledAnime());
+            entry.push(await getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 23);
@@ -129,17 +129,17 @@ describe('ListControllerTest | Combine', () => {
 
     it('should combine (4/4)', async () => {
         var entry: Series[] = [];
-        let x = getFilledAnime();
+        let x = await getFilledAnime();
         x.releaseYear = 2002;
         x['episodes'] = 220;
-        var x2 = getFilledAnime();
+        var x2 = await getFilledAnime();
 
         x2.releaseYear = 2002;
         x2['episodes'] = 220;
         entry.push(x2);
         entry.push(x);
         for (let index = 0; index < 22; index++) {
-            entry.push(getRandomeFilledAnime());
+            entry.push(await getRandomeFilledAnime());
         }
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 23);
@@ -165,7 +165,7 @@ describe('ListControllerTest | Combine', () => {
         x.lastInfoUpdate = Date.now();
         x['episodes'] = 11;
         x.addSeriesName(new Name("Test", "unkown", NameType.UNKNOWN));
-        x.addListProvider(lplc);
+        await x.addListProvider(lplc);
 
         const lplcs1 = new ListProviderLocalData('test');
         lplcs1.sequelIds.push(2);
@@ -174,7 +174,7 @@ describe('ListControllerTest | Combine', () => {
         xs1['cachedSeason'] = 1;
         xs1.lastInfoUpdate = Date.now();
         xs1.addSeriesName(new Name("Rewrite", "en", NameType.OFFICIAL));
-        xs1.addListProvider(lplcs1);
+        await xs1.addListProvider(lplcs1);
 
         const lplc2 = new ListProviderLocalData('test2');
         lplc2.targetSeason = 2;
@@ -185,7 +185,7 @@ describe('ListControllerTest | Combine', () => {
         x2.addSeriesName(new Name("rewrite", "slug", NameType.SLUG));
         x2.addSeriesName(new Name("リライト", "ja", NameType.UNKNOWN));
 
-        x2.addListProvider(lplc2)
+        await x2.addListProvider(lplc2)
 
         var a = await lc['addSeriesToMainList'](x, xs1, x2);
         assert.equal(MainListManager['mainList'].length, 2, MainListManager['mainList'].toString());
@@ -195,17 +195,17 @@ describe('ListControllerTest | Combine', () => {
 
     it('should sort list', async () => {
         var entry: Series[] = [];
-        var x2 = getFilledAnime();
+        var x2 = await getFilledAnime();
         x2.addSeriesName(new Name("A", "en"));
-        var x3 = getFilledAnime();
+        var x3 = await getFilledAnime();
         x3.addSeriesName(new Name("B", "en"));
-        var x4 = getFilledAnime();
+        var x4 = await getFilledAnime();
         x4.addSeriesName(new Name("C", "en"));
-        var x5 = getFilledAnime();
+        var x5 = await getFilledAnime();
         x5.addSeriesName(new Name("D", "en"));
-        var x6 = getFilledAnime();
+        var x6 = await getFilledAnime();
         x6.addSeriesName(new Name("E", "en"));
-        var x7 = getFilledAnime();
+        var x7 = await getFilledAnime();
         x7.addSeriesName(new Name("F", "en"));
 
         entry.push(x7);
@@ -227,16 +227,16 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 12;
         lpld.targetSeason = 1;
-        var x1 = getFilledAnime();
+        var x1 = await getFilledAnime();
         x1.getListProvidersInfos()[0].targetSeason = 1;
-        x1.addListProvider(lpld);
+        await x1.addListProvider(lpld);
 
-        var x2 = getFilledAnime();
-        x2.addListProvider(lpld);
+        var x2 = await getFilledAnime();
+        await x2.addListProvider(lpld);
         x2.getListProvidersInfos()[0].targetSeason = 1;
 
-        var x3 = getFilledAnime();
-        x3.addListProvider(lpld);
+        var x3 = await getFilledAnime();
+        await x3.addListProvider(lpld);
         x3.getListProvidersInfos()[0].targetSeason = 1;
 
         await lc.addSeriesToMainList(x1, x2, x3);
@@ -248,11 +248,11 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 12;
         lpld.targetSeason = 1;
-        var x1 = getFilledAnime();
+        var x1 = await getFilledAnime();
         x1.getListProvidersInfos()[0].targetSeason = 1;
-        x1.addListProvider(lpld);
-        var x2 = getFilledAnime();
-        x2.addListProvider(lpld);
+        await x1.addListProvider(lpld);
+        var x2 = await getFilledAnime();
+        await x2.addListProvider(lpld);
         x2.getListProvidersInfos()[0].targetSeason = undefined;
 
         MainListManager['mainList'] = [x1, x2];
@@ -271,14 +271,13 @@ describe('ListControllerTest | Combine', () => {
         lpld2.id = 3;
         lpld2.episodes = 12;
 
-        var x1 = getFilledAnime();
+        var x1 = await getFilledAnime();
+        await x1.addListProvider(lpld);
         x1.getListProvidersInfos()[0].targetSeason = 1;
-        x1.addListProvider(lpld);
 
-        var x2 = getFilledAnime();
+        var x2 = await getFilledAnime();
+        await x2.addListProvider(lpld2);
         x2.getListProvidersInfos()[0].targetSeason = 2;
-        x2.addListProvider(lpld2);
-
         console.log(x1);
         console.log(x2);
 
@@ -295,13 +294,15 @@ describe('ListControllerTest | Combine', () => {
         lpld2.id = 3;
         lpld2.episodes = 12;
 
-        var x1 = getFilledAnime();
+        var x1 = await getFilledAnime();
+        x1['listProviderInfos'] = [];
         x1.getListProvidersInfos()[0].targetSeason = undefined;
-        x1.addListProvider(lpld);
+        await x1.addListProvider(lpld);
 
-        var x2 = getFilledAnime();
+        var x2 = await getFilledAnime();
         x2.getListProvidersInfos()[0].targetSeason = undefined;
-        x2.addListProvider(lpld2);
+        x2['listProviderInfos'] = [];
+        await x2.addListProvider(lpld2);
 
         MainListManager['mainList'] = [x1, x2];
 
@@ -315,14 +316,15 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 12;
 
-        var x1 = getFilledAnime();
+        var x1 = await getFilledAnime();
+        x1['listProviderInfos'] = [];
+        await x1.addListProvider(lpld);
         x1.getListProvidersInfos()[0].targetSeason = undefined;
-        x1.addListProvider(lpld);
 
-        var x2 = getFilledAnime();
+        var x2 = await getFilledAnime();
+        x1['listProviderInfos'] = [];
+        await x2.addListProvider(lpld);
         x2.getListProvidersInfos()[0].targetSeason = undefined;
-        x2.addListProvider(lpld);
-
         MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
@@ -335,14 +337,14 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 10;
 
-        var x1 = getFilledAnime();
+        var x1 = await getFilledAnime();
         x1.getListProvidersInfos()[0].targetSeason = undefined;
-        x1.addListProvider(lpld);
+        await x1.addListProvider(lpld);
 
 
-        var x2 = getFilledAnime();
+        var x2 = await getFilledAnime();
         x2.getListProvidersInfos()[0].targetSeason = 1;
-        x2.addListProvider(lpld);
+        await x2.addListProvider(lpld);
 
         MainListManager['mainList'] = [x1, x2];
 
@@ -352,7 +354,7 @@ describe('ListControllerTest | Combine', () => {
     })
 })
 
-function getFilledAnime(providername: string = "Test"): Series {
+async function getFilledAnime(providername: string = "Test"): Promise<Series> {
     const provider = new ListProviderLocalData(providername);
     provider.id = Math.random() * (+0 - +10000) + +10000;
     var anime = new Series();
@@ -360,11 +362,11 @@ function getFilledAnime(providername: string = "Test"): Series {
     anime.releaseYear = 2014;
     anime.addSeriesName(new Name("FilledTest", "en"));
     provider.targetSeason = 3;
-    anime.addListProvider(provider);
+    await anime.addListProvider(provider);
     return anime;
 }
 
-function getRandomeFilledAnime(): Series {
+async function getRandomeFilledAnime(): Promise<Series> {
     const provider = new ListProviderLocalData(stringHelper.randomString());
     var anime: Series = new Series();
     anime['episodes'] = Math.random() * (+13 - +0) + +0;
@@ -373,6 +375,6 @@ function getRandomeFilledAnime(): Series {
     provider.targetSeason = Math.random() * (+3 - +0) + +0;
     provider.id = Math.random() * (+0 - +10000) + +10000;
     anime.addSeriesName(new Name(stringHelper.randomString(), "en"));
-    anime.addListProvider(provider);
+    await anime.addListProvider(provider);
     return anime;
 }

@@ -378,26 +378,27 @@ export default class Series extends SeriesProviderExtension {
         let mergedProviderInfos: ProviderLocalData[] = []
         for (const provider of providers) {
             var check = mergedProviderInfos.find(x => provider.provider === x.provider);
-            if (typeof check === 'undefined') {
+            if (!check) {
                 var collected: ProviderLocalData[] = [];
                 for (const provider2 of providers) {
                     if (provider2.provider == provider.provider) {
                         collected.push(provider2);
                         continue;
                     }
-                    if (collected.length >= 2) {
-                        if (listHelper.checkType(collected, ListProviderLocalData)) {
-                            mergedProviderInfos.push(await ListProviderLocalData.mergeProviderInfos(...collected as ListProviderLocalData[]));
-                        } else if (listHelper.checkType(collected, InfoProviderLocalData)) {
-                            mergedProviderInfos.push(await InfoProviderLocalData.mergeProviderInfos(...collected as InfoProviderLocalData[]));
-                        }
-                    } else {
-                        mergedProviderInfos.push(provider);
-                    }
                 }
+                if (collected.length >= 2) {
+                    if (listHelper.checkType(collected, ListProviderLocalData)) {
+                        mergedProviderInfos.push(await ListProviderLocalData.mergeProviderInfos(...collected as ListProviderLocalData[]));
+                    } else if (listHelper.checkType(collected, InfoProviderLocalData)) {
+                        mergedProviderInfos.push(await InfoProviderLocalData.mergeProviderInfos(...collected as InfoProviderLocalData[]));
+                    }
+                } else {
+                    mergedProviderInfos.push(provider);
+                }
+
             }
-            return mergedProviderInfos;
         }
+        return mergedProviderInfos;
     }
 
     private async mergeNumber(a: number | undefined, b: number | undefined, name?: string, target?: string): Promise<number> {
