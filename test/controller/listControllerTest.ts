@@ -296,13 +296,13 @@ describe('ListControllerTest | Combine', () => {
 
         var x1 = await getFilledAnime();
         x1['listProviderInfos'] = [];
-        x1.getListProvidersInfos()[0].targetSeason = undefined;
         await x1.addListProvider(lpld);
+        x1.getListProvidersInfos()[0].targetSeason = undefined;
 
         var x2 = await getFilledAnime();
-        x2.getListProvidersInfos()[0].targetSeason = undefined;
         x2['listProviderInfos'] = [];
         await x2.addListProvider(lpld2);
+        x2.getListProvidersInfos()[0].targetSeason = undefined;
 
         MainListManager['mainList'] = [x1, x2];
 
