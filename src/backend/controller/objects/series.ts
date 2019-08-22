@@ -88,6 +88,9 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         }
+        if (names.length > 25) {
+            console.log(".");
+        }
     }
 
     /**
@@ -371,6 +374,9 @@ export default class Series extends SeriesProviderExtension {
             newAnime.lastInfoUpdate = this.lastInfoUpdate;
         }
 
+        if (newAnime.names.length > 25) {
+            console.log(".");
+        }
         return newAnime;
     }
 
