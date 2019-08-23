@@ -1,9 +1,10 @@
 import Series from "../../controller/objects/series";
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
+import { AbsoluteResult } from './comperator-results.ts/comperator-result';
 
 export default class SeasonComperator {
-    static async compareSeasons(a: Series, b: Series):Promise<SeasonComperatorResult> {
-        const comperatorResult:SeasonComperatorResult = new SeasonComperatorResult();
+    static async compareSeasons(a: Series, b: Series): Promise<SeasonComperatorResult> {
+        const comperatorResult: SeasonComperatorResult = new SeasonComperatorResult();
         const aSeason = await a.getSeason();
         const bSeason = await b.getSeason();
         if (aSeason || bSeason) {
@@ -22,7 +23,7 @@ export default class SeasonComperator {
                         for (const listProviderInfos of comperatorResult.aFirstSeason.getListProvidersInfos()) {
                             for (const lpi of b.getListProvidersInfos()) {
                                 if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await comperatorResult.aFirstSeason.getSeason()) {
-                                    comperatorResult.isAbsolute = true;
+                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                                     return comperatorResult;
                                 }
                             }
@@ -32,7 +33,7 @@ export default class SeasonComperator {
                         for (const listProviderInfos of comperatorResult.bFirstSeason.getListProvidersInfos()) {
                             for (const lpi of a.getListProvidersInfos()) {
                                 if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await comperatorResult.bFirstSeason.getSeason()) {
-                                    comperatorResult.isAbsolute = true;
+                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                                     return comperatorResult;
                                 }
                             }
@@ -57,5 +58,5 @@ export default class SeasonComperator {
         }
         return hasOnlyProviderWithSameId;
     }
-  
+
 }

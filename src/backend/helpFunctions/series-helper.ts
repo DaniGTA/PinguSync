@@ -6,6 +6,7 @@ import ProviderComperator from './comperators/provider-comperator';
 import SeasonComperator from './comperators/season-comperator';
 import TitleComperator from './comperators/title-comperator';
 import EpisodeComperator from './comperators/episode-comperator';
+import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
 
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
@@ -13,22 +14,33 @@ class SeriesHelper {
     }
 
     /**
- * Calculate the value
- * @param a 
- * @param b 
- */
+     * Calculate the value
+     * @param a 
+     * @param b 
+     */
     public async isSameSeries(a: Series, b: Series): Promise<boolean> {
         let matches: number = 0;
         let matchAbleScore: number = 0;
         a = Object.assign(new Series(), a);
         b = Object.assign(new Series(), b);
 
-        const providerResult = await ProviderComperator.compareProviders(a, b);
-        if (providerResult.isAbsolute) {
+        const listProviderResult = await ProviderComperator.compareListProviders(a, b);
+        if (listProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
+        } else if (listProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
+            return false;
         }
-        matchAbleScore += providerResult.matchAble;
-        matches += providerResult.matches;
+        matchAbleScore += listProviderResult.matchAble;
+        matches += listProviderResult.matches;
+
+        const infoProviderResult = await ProviderComperator.compareInfoProviders(a, b);
+        if (infoProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
+            return true;
+        } else if (infoProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
+            return false;
+        }
+        matchAbleScore += infoProviderResult.matchAble;
+        matches += infoProviderResult.matches;
 
         // Check releaseYear
         if (a.releaseYear && b.releaseYear) {
@@ -39,23 +51,23 @@ class SeriesHelper {
         }
         // Check season
         const seasonResult = await SeasonComperator.compareSeasons(a, b);
-        if (seasonResult.isAbsolute) {
+        if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
         }
         matchAbleScore += seasonResult.matchAble;
         matches += seasonResult.matches;
         let aFirstSeason = seasonResult.aFirstSeason;
         let bFirstSeason = seasonResult.bFirstSeason;
-    
+
         const episodeResult = await EpisodeComperator.compareEpisodes(a, b);
-        if (episodeResult.isAbsolute) {
+        if (episodeResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
         }
         matchAbleScore += episodeResult.matchAble;
         matches += episodeResult.matches;
 
-        const titleResult = await TitleComperator.compareTitle(a, b,aFirstSeason,bFirstSeason);
-        if (titleResult.isAbsolute) {
+        const titleResult = await TitleComperator.compareTitle(a, b, aFirstSeason, bFirstSeason);
+        if (titleResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
         }
         matchAbleScore += titleResult.matchAble;

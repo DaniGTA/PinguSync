@@ -4,10 +4,10 @@ import { ListProviderLocalData } from '../../controller/objects/list-provider-lo
 import Name from '../../controller/objects/meta/name';
 import InfoProvider from '../../api/info-provider';
 import ListProvider from '../../api/list-provider';
-import listHelper from '../list-helper';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import ListController from '../../controller/list-controller';
 import timeHelper from '../time-helper';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -32,6 +32,22 @@ export default new class ProviderHelper {
         try {
             for (let aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {
+                    if (aProvider.provider === bProvider.provider) {
+                        return true;
+                    }
+                }
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+        return false;
+    }
+
+    public async hasSameInfoProvider(a: InfoProviderLocalData[], b: InfoProviderLocalData[]): Promise<boolean> {
+        try {
+            for (let aProvider of a) {
+                for (const bProvider of b) {
                     if (aProvider.provider === bProvider.provider) {
                         return true;
                     }
