@@ -9,6 +9,7 @@ describe('stringHelperTest', () => {
         return;
     });
     it('should clean string', async () => {
+        assert.strictEqual(await stringHelper.cleanString("Title ~Title!~"), "Title Title");
         assert.strictEqual(await stringHelper.cleanString("Test."), "Test");
         assert.strictEqual(await stringHelper.cleanString("Title -test-"), "Title test");
         assert.strictEqual(await stringHelper.cleanString("Title-test"), "Title test");
@@ -17,8 +18,14 @@ describe('stringHelperTest', () => {
         assert.strictEqual(await stringHelper.cleanString("Title!!"), "Title!!");
         assert.strictEqual(await stringHelper.cleanString("Title: test"), "Title test");
         assert.strictEqual(await stringHelper.cleanString("Title  test"), "Title test");
+        assert.strictEqual(await stringHelper.cleanString("Title`Title`"), "TitleTitle");
         return;
     });
+
+    it('should clean string of other characters', async () => {
+        assert.strictEqual(await stringHelper.cleanString("この素晴らしい世界に祝福を！紅伝説"), "この素晴らしい世界に祝福を 紅伝説")
+        assert.strictEqual(await stringHelper.cleanString("この素晴らしい世界に祝福を! 紅伝説"), "この素晴らしい世界に祝福を 紅伝説")
+    })
     it('should not crash on check kanij', async () => {
         assert.strictEqual(await stringHelper.hasKanji(null as unknown as string), false);
     });
@@ -49,5 +56,12 @@ describe('stringHelperTest', () => {
         return;
     });
 
+    it('shoul get right season number from title', async () => {
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2);
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya'), undefined);
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title'), undefined);
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2);
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2006'), undefined);
+    })
 
 });

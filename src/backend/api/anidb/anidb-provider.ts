@@ -25,15 +25,20 @@ export default class AniDBProvider implements InfoProvider {
     async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
         const converter = new AniDBConverter();
         const nameDBList = AniDBProvider.anidbNameManager.data;
+        const season = await series.getSeason();
         if (nameDBList) {
             for (const seriesDB of nameDBList.animetitles.anime) {
                 try {
                     const result = await this.checkTitles(searchTitle, seriesDB.title);
+                  
                     if (result) {
-                        const localdata = await converter.convertAnimeToLocalData(seriesDB);
-                        series.addInfoProvider(localdata);
-                        series.addSeriesName(...result);
-                        return series;
+                        const seasonOfTitle = await Name.getSeasonNumber(result);
+                        if (seasonOfTitle === season || !season || !seasonOfTitle) {
+                            const localdata = await converter.convertAnimeToLocalData(seriesDB);
+                            await series.addInfoProvider(localdata);
+                            await series.addSeriesName(...result);
+                            return series;
+                        }
                     }
                 } catch (err) {
                     console.log(err);

@@ -27,6 +27,8 @@ class StringHelper {
      */
     public async cleanString(string: string): Promise<string> {
         string = string.replace(':', '');
+        string = string.replace("！", "! ");
+        string = string.replace("!", "!");
         if ((string.match(/!/g) || []).length == 1) {
             string = string.replace('!', '');
         }
@@ -36,12 +38,16 @@ class StringHelper {
         //title -AAA- => title AAA
         string = string.replace(' -', ' ');
         //title-A => title A
-        string = string.replace('-', ' ');
-        string = string.replace('’', '');
-        string = string.replace("'", '');
-        string = string.replace("'", '');
-        string = string.replace('.', '');
-        return string.replace('  ', ' ').trim();
+        //Remove text decorations.
+        string = string.replace(/\-/g, ' ');
+        string = string.replace(/\’/g, '');
+        string = string.replace(/\'/g, '');
+        string = string.replace(/\'/g, '');
+        string = string.replace(/\./g, '');
+        string = string.replace(/\`/g, '');
+        string = string.replace(/\~/g, '');
+        string = string.replace(/\,/g, '');
+        return string.replace(/\ \ /g, ' ').trim();
     }
     public async getSeasonNumberFromTitle(title: string): Promise<number> {
         if (title) {
@@ -51,8 +57,8 @@ class StringHelper {
             if (title.toLocaleLowerCase().includes('episode')) {
                 throw 'That name dont have a Season';
             }
-            if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd/gmi)) {
-                var match = /Season\s{1,}(\d{1,})|(\d{1,})nd/gmi.exec(title);
+            if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s\d{1,}($|\s))/gmi)) {
+                var match = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s\d{1,}($|\s))/gmi.exec(title);
                 if (match != null) {
                     if (typeof match[1] !== 'undefined') {
                         return parseInt(match[1]);
@@ -63,6 +69,11 @@ class StringHelper {
             } else if ('0123456789'.includes(lastChar) && !title.includes('part')) {
                 return parseInt(lastChar, 10);
             } else if (['I'].includes(lastChar)) {
+                while (lastChar === reversedTitle.charAt(0)) {
+                    countLastChar++;
+                    reversedTitle = reversedTitle.substr(1);
+                }
+            } else if (['X'].includes(lastChar)) {
                 while (lastChar === reversedTitle.charAt(0)) {
                     countLastChar++;
                     reversedTitle = reversedTitle.substr(1);

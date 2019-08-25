@@ -19,21 +19,19 @@ describe('ListControllerTest | Combine', () => {
     var lc = new ListController(true);
 
     before(() => {
-        ProviderList['loadedListProvider'] = [];
-        ProviderList['loadedInfoProvider'] = [];
         MainListManager['listLoaded'] = true;
         MainListLoader['loadData'] = () => { return [] };
         MainListLoader['saveData'] = async () => { };
     })
     beforeEach(() => {
+        ProviderList['loadedListProvider'] = [new TestProvider("Test"),new TestProvider("")];
+        ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     })
     it('should combine same entry', async () => {
-
-
         var entry: Series[] = [];
         entry.push(await getFilledAnime());
-        entry.push(await getFilledAnime());
+        entry.push(await getFilledAnime(""));
         var a = await lc['addSeriesToMainList'](...entry);
         assert.equal(MainListManager['mainList'].length, 1);
     });
@@ -132,10 +130,11 @@ describe('ListControllerTest | Combine', () => {
         let x = await getFilledAnime();
         x.releaseYear = 2002;
         x['episodes'] = 220;
-        var x2 = await getFilledAnime();
 
+        var x2 = await getFilledAnime("");
         x2.releaseYear = 2002;
         x2['episodes'] = 220;
+        
         entry.push(x2);
         entry.push(x);
         for (let index = 0; index < 22; index++) {
@@ -248,10 +247,10 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 12;
         lpld.targetSeason = 1;
-        var x1 = await getFilledAnime();
+        var x1 = await getFilledAnime("",1);
         x1.getListProvidersInfos()[0].targetSeason = 1;
         await x1.addListProvider(lpld);
-        var x2 = await getFilledAnime();
+        var x2 = await getFilledAnime("",1);
         await x2.addListProvider(lpld);
         x2.getListProvidersInfos()[0].targetSeason = undefined;
 
@@ -337,12 +336,12 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 10;
 
-        var x1 = await getFilledAnime();
+        var x1 = await getFilledAnime("Test",1);
         x1.getListProvidersInfos()[0].targetSeason = undefined;
         await x1.addListProvider(lpld);
 
 
-        var x2 = await getFilledAnime();
+        var x2 = await getFilledAnime("Test",1);
         x2.getListProvidersInfos()[0].targetSeason = 1;
         await x2.addListProvider(lpld);
 
@@ -354,9 +353,13 @@ describe('ListControllerTest | Combine', () => {
     })
 })
 
-async function getFilledAnime(providername: string = "Test"): Promise<Series> {
+async function getFilledAnime(providername: string = "Test", providerId:number = -1): Promise<Series> {
     const provider = new ListProviderLocalData(providername);
-    provider.id = Math.random() * (+0 - +10000) + +10000;
+    if (providerId != -1) {
+        provider.id = providerId;
+    } else {
+        provider.id = Math.random() * (+0 - +10000) + +10000;
+    }
     var anime = new Series();
     anime['episodes'] = 10;
     anime.releaseYear = 2014;

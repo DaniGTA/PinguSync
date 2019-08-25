@@ -15,8 +15,8 @@ export default new class TitleCheckHelper {
         if (await this.fastMatch(aNameList, bNameList)) {
             for (let name of aNameList) {
                 try {
-                    name = await stringHelper.cleanString(name);
-                    var name2 = await this.removeSeasonMarkesFromTitle(name);
+                    var name2 = await stringHelper.cleanString(name);
+                    name2 = await this.removeSeasonMarkesFromTitle(name2);
                     if (name2 != name) {
                         aNameList.push(name2);
                     }
@@ -26,8 +26,8 @@ export default new class TitleCheckHelper {
             }
             for (let name of bNameList) {
                 try {
-                    name = await stringHelper.cleanString(name);
-                    var name2 = await this.removeSeasonMarkesFromTitle(name);
+                    var name2 = await stringHelper.cleanString(name);
+                    name2 = await this.removeSeasonMarkesFromTitle(name2);
                     if (name2 != name) {
                         bNameList.push(name2);
                     }
@@ -58,8 +58,8 @@ export default new class TitleCheckHelper {
                         if (aName === bName) {
                             return true;
                         }
-                        aName = aName.replace(/Season\s{1,}(\d{1,})/gmi, '').trim()
-                        bName = bName.replace(/Season\s{1,}(\d{1,})/gmi, '').trim()
+                        aName = await this.removeSeasonMarkesFromTitle(aName);
+                        bName = await this.removeSeasonMarkesFromTitle(bName);
                         if (aName === bName) {
                             return true;
                         }
@@ -91,11 +91,16 @@ export default new class TitleCheckHelper {
                             var shortScan = Math.ceil(shortestTextLength / 4);
                             if (shortScan < 3) {
                                 shortScan = Math.ceil(shortestTextLength / 1.25)
+                            } else if (shortScan > 10) {
+                                shortScan = 5;
                             }
                             var aResult = a.substring(0, shortScan);
                             var bResult = b.substring(0, shortScan);
 
-                            return that.equalIgnoreCase(aResult, bResult);
+                            const result = that.equalIgnoreCase(aResult, bResult);
+                            if (result) {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -108,7 +113,7 @@ export default new class TitleCheckHelper {
     }
 
     private equalIgnoreCase(s1: string, s2: string) {
-        return s1.toUpperCase() === s2.toUpperCase();
+        return s1.toUpperCase() ===  s2.toUpperCase();
     }
 
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
@@ -116,8 +121,8 @@ export default new class TitleCheckHelper {
             var reversedTitle = await stringHelper.reverseString(title);
             var lastChar = reversedTitle.charAt(0);
             var countLastChar = 0;
-            if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd/gmi)) {
-                var match = /Season\s{1,}(\d{1,})|(\d{1,})nd/gmi.exec(title);
+            if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi)) {
+                var match = /Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi.exec(title);
                 if (match != null) {
                     return title.replace(match[0], "").replace('  ', ' ').trim();
                 }
@@ -136,6 +141,7 @@ export default new class TitleCheckHelper {
                     return (await stringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
                 }
             }
+            return title;
         }
         throw 'NoName';
     }

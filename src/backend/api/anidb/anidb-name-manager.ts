@@ -30,7 +30,7 @@ export default class AniDBNameManager {
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
                 if (this.data) {
-                    this.data = JSON.parse(this.data as unknown as string);
+                    this.data = Object.freeze(JSON.parse(this.data as unknown as string));
                 }
             }
         } catch (err) {

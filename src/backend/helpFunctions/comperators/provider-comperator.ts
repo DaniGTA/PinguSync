@@ -13,17 +13,20 @@ export default class ProviderComperator {
                     if (aProvider.provider == bProvider.provider) {
                         if (aProvider.id == bProvider.id) {
                             aProvider = Object.assign(new ListProviderLocalData(), aProvider);
-                            comperatorResult.matches += 2.5;
+                            comperatorResult.matches += 2.0;
                             try {
                                 if (aProvider.getProviderInstance().hasUniqueIdForSeasons) {
                                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                                     return comperatorResult;
+                                } else if ((typeof aProvider.targetSeason == 'undefined') || (typeof bProvider.targetSeason == 'undefined')) {
+                                    
                                 } else if (aProvider.targetSeason === bProvider.targetSeason) {
                                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                                     return comperatorResult;
                                 }
+                                comperatorResult.matches += 0.5;
                             } catch (err) {
-
+                                console.log(err);
                             }
                         } else {
                             comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
@@ -42,7 +45,6 @@ export default class ProviderComperator {
             for (let aProvider of a.getInfoProvidersInfos()) {
                 for (const bProvider of b.getInfoProvidersInfos()) {
                     if (aProvider.provider == bProvider.provider) {
-
                         if (aProvider.id == bProvider.id) {
                             aProvider = Object.assign(new ListProviderLocalData(), aProvider);
                             comperatorResult.matches += 2.5;

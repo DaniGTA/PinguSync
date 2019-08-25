@@ -93,28 +93,38 @@ class SeriesHelper {
         if (numberFromName) {
             return new SearchSeasonValueResult(numberFromName, "Name");
         }
-        let prquel = null;
-        try {
-            prquel = await series.getPrequel(seriesList);
-            let searchCount = 0;
-            while (prquel) {
-                if (prquel.mediaType === series.mediaType) {
-                    searchCount++;
-                    const prequelSeason = await prquel.getSeason(seriesList);
-                    if (prequelSeason === 1 || prequelSeason === 0) {
-                        return new SearchSeasonValueResult(prequelSeason + searchCount, "PrequelTrace");
+        let prequel = null;
+     
+        if (await series.isAnyPrequelPresent()) {
+            try {
+                prequel = await series.getPrequel(seriesList);
+                let searchCount = 0;
+                while (prequel) {
+                    if (prequel.mediaType === series.mediaType) {
+                        searchCount++;
+                        const prequelSeason = await prequel.getSeason(seriesList);
+                        if (prequelSeason === 1 || prequelSeason === 0) {
+                            return new SearchSeasonValueResult(prequelSeason + searchCount, "PrequelTrace");
+                        }
+                    }
+                    if (await prequel.isAnyPrequelPresent()) {
+                        try {
+                            prequel = await prequel.getPrequel(seriesList);
+
+                        } catch (err) {
+                            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
+                        }
+                    } else {
+                         return new SearchSeasonValueResult(searchCount, "PrequelTrace");
                     }
                 }
-                try {
-                    prquel = await prquel.getPrequel(seriesList);
-                } catch (err) {
-                    return new SearchSeasonValueResult(searchCount, "PrequelTrace");
-                }
+            } catch (err) {
             }
-        } catch (err) {
+             return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
         }
+
         try {
-            if (!prquel && await series.isAnySequelPresent()) {
+            if (!await series.isAnyPrequelPresent() && await series.isAnySequelPresent()) {
                 return new SearchSeasonValueResult(1, "NoPrequelButSequel");
             }
         } catch (err) {

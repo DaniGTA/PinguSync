@@ -1,5 +1,6 @@
 import { NameType } from './name-type';
 import stringHelper from '../../../helpFunctions/string-helper';
+import listHelper from '../../../helpFunctions/list-helper';
 
 export default class Name {
     name: string = '';
@@ -31,21 +32,24 @@ export default class Name {
         throw names + 'HasNoRomajiName';
     }
     public static async getSeasonNumber(names: Name[]): Promise<number | undefined> {
-        var highestSeasonDetected: number | undefined;
+        var seasonsDetected: number[] =  [];
         for (const name of names) {
             if (name && name.name) {
                 if (name.lang !== "slug") {
                     if (name.nameType != NameType.SLUG) {
                         try {
                             var nr = await stringHelper.getSeasonNumberFromTitle(name.name);
-                            if (nr > (highestSeasonDetected ? highestSeasonDetected : 0)) {
-                                highestSeasonDetected = nr;
+                            if (nr > (seasonsDetected ? seasonsDetected : 0)) {
+                                seasonsDetected.push(nr);
                             }
                         } catch (err) { }
                     }
                 }
             }
         }
-        return highestSeasonDetected;
+        if (seasonsDetected.length === 0) {
+            return undefined;
+        }
+        return listHelper.findMostFrequent(seasonsDetected);
     }
 }

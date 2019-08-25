@@ -136,6 +136,15 @@ describe('seriesTest | Season', () => {
         return;
     });
 
+    it('should not return season 10', async () => {
+        const series = new Series();
+        series.addSeriesName(new Name('Title xx', 'eng'));
+        series.addSeriesName(new Name('Title XX', 'eng'));
+
+        strictEqual(await series.getSeason(), 2);
+        return;
+    });
+
     it('should not return season 2', async () => {
         const series = new Series();
         series.addSeriesName(new Name('Test S3 part 2', 'en'));

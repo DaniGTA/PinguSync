@@ -82,7 +82,7 @@ export default class Series extends SeriesProviderExtension {
     */
     public addSeriesName(...names: Name[]) {
         for (const name of names) {
-            if (name) {
+            if (name && name.name && name.name != 'null') {
                 if (this.names.findIndex(x => x.name === name.name && x.lang === x.lang) === -1) {
                     this.names.push(name);
                 }
@@ -149,8 +149,13 @@ export default class Series extends SeriesProviderExtension {
     public async getSeason(searchInList?: Series[]): Promise<number | undefined> {
         if (!this.cachedSeason) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
-            this.cachedSeason = result.season;
-            this.seasonDetectionType = result.foundType;
+            if (result.season === -2) {
+                // UKNOWN SEASON
+                return undefined;
+            } else {
+                this.cachedSeason = result.season;
+                this.seasonDetectionType = result.foundType;
+            }
         }
         if (this.cachedSeason == -1) {
             return undefined;
@@ -486,6 +491,20 @@ export default class Series extends SeriesProviderExtension {
         }
         for (const infoprovider of this.getInfoProvidersInfos()) {
             if (infoprovider.sequelIds.length != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    async isAnyPrequelPresent(): Promise<boolean> {
+        for (const listprovider of this.getListProvidersInfos()) {
+            if (listprovider.prequelIds.length != 0) {
+                return true;
+            }
+        }
+        for (const infoprovider of this.getInfoProvidersInfos()) {
+            if (infoprovider.prequelIds.length != 0) {
                 return true;
             }
         }
