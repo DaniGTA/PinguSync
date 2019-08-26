@@ -75,7 +75,8 @@ export default new class ProviderHelper {
         if (!data) {
             alreadySearchedNames.push(firstname);
             for (const name of names) {
-                if (alreadySearchedNames.findIndex(x => name.name === x) === -1 && name.name) {
+                const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
+                if (!alreadySearchedName && name.name) {
                     console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
                     try {
                         data = await provider.getMoreSeriesInfoByName(series, name.name);
@@ -95,18 +96,32 @@ export default new class ProviderHelper {
         throw 'no series info found by name';
     }
 
+    /**
+     * Fill missing providers in a Series.
+     * It wold not update a provider
+     */
     public async fillListProvider(entry: Series, forceUpdate = false): Promise<Series> {
         entry = Object.assign(new Series(), entry);
         if (entry.getListProvidersInfos().length != ProviderList.getListProviderList().length || forceUpdate) {
             for (const provider of ProviderList.getListProviderList()) {
                 var result = undefined;
+                // Check if anime exist in main list and have already all providers in.
+                const mainListEntry = await new ListController().checkIfProviderExistInMainList(entry, provider);
+                if (mainListEntry) {
+                    const mainListResult = mainListEntry.getListProvidersInfos().find(x => x.provider === provider.providerName);
+                    if (mainListResult && mainListResult.version === provider.version) {
+                        continue;
+                    } else {
+                        entry = mainListEntry;
+                    }
+                }
+
                 try {
                     result = entry.getListProvidersInfos().find(x => x.provider === provider.providerName);
                 } catch (err) { }
                 if (result || forceUpdate) {
                     if (!forceUpdate) {
-                        // Check if anime exist in main list and have already all providers in.
-                        entry = await new ListController().checkIfProviderExistInMainList(entry, provider);
+
                     }
                     try {
                         entry = await this.getProviderSeriesInfoByName(entry, provider);
@@ -114,6 +129,8 @@ export default new class ProviderHelper {
                         console.log(err);
                     }
                     await timeHelper.delay(700);
+                } else {
+                    entry = await this.getProviderSeriesInfoByName(entry, provider);
                 }
             }
         }

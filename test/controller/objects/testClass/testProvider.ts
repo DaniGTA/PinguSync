@@ -14,7 +14,7 @@ export default class TestProvider implements ListProvider {
     removeEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
-
+    version = 1;
     hasUniqueIdForSeasons = false;
     providerName: string = "";
     hasOAuthCode: boolean = true;

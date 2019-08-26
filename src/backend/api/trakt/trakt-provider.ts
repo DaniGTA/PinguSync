@@ -3,11 +3,10 @@ import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
 import { TraktSearch } from './objects/search';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
-import Series, { WatchStatus } from '../../controller/objects/series';
+import Series from '../../controller/objects/series';
 import { TraktUserData } from './trakt-user-data';
 
 import request from 'request';
-import Name from '../../controller/objects/meta/name';
 import traktConverter from './trakt-converter';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import { FullShowInfo } from './objects/fullShowInfo';
@@ -22,11 +21,11 @@ export default class TraktProvider implements ListProvider {
         return TraktProvider.instance;
     }
     private static instance: TraktProvider;
-    hasUniqueIdForSeasons: boolean = false;
+    public hasUniqueIdForSeasons: boolean = false;
     public providerName: string = 'Trakt';
     public hasOAuthCode = true;
     public userData: TraktUserData;
-
+    public version = 1;
 
     private clientSecret = '9968dd9718a5aa812431980a045999547eefa48be7e0e9c638e329e5f9d6a0b2';
     private clientId = '94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd';

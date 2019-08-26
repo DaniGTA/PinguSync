@@ -1,6 +1,5 @@
 import FrontendController from './frontend-controller';
 import Series from './objects/series';
-import listHelper from '../helpFunctions/list-helper';
 import ProviderList from './provider-manager/provider-list';
 import WatchProgress from './objects/meta/watch-progress';
 import ProviderHelper from '../helpFunctions/provider/provider-helper';
@@ -168,25 +167,13 @@ export default class ListController {
     }
 
     public async checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Promise<Series> {
-        var validProvider = entry.getListProvidersInfos().find(x => (x.id && x.id));
+        var validProvider = entry.getListProvidersInfos().find(x => (x.provider == provider.providerName));
         try {
             if (validProvider) {
-                for (const anime of await this.getMainList()) {
-                    for (const oldprovider of anime.getListProvidersInfos()) {
+                for (const seriesMainListEntry of await this.getMainList()) {
+                    for (const oldprovider of seriesMainListEntry.getListProvidersInfos()) {
                         if (oldprovider.provider == validProvider.provider && oldprovider.id == validProvider.id) {
-                            if (oldprovider.lastUpdate < validProvider.lastUpdate || oldprovider.lastUpdate) {
-                                var providerInfos = await listHelper.removeEntrys(entry.getListProvidersInfos(), oldprovider);
-                                providerInfos.push(validProvider);
-                                entry.addListProvider(...providerInfos);
-                            }
-                            var findSearchedProvider = anime.getListProvidersInfos().find(x => x.provider === provider.providerName);
-                            if (findSearchedProvider) {
-                                if (new Date(findSearchedProvider.lastUpdate).getMilliseconds() < new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).getMilliseconds() && findSearchedProvider.hasFullInfo) {
-                                    break;
-                                }
-                            } else {
-                                break;
-                            }
+                            return seriesMainListEntry;
                         }
                     }
                 }

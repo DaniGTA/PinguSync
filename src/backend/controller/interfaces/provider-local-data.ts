@@ -12,6 +12,10 @@ export default class ProviderLocalData {
      */
     public id: number | string = -1;
     /**
+     * 
+     */
+    public fullInfo: boolean = true;
+    /**
      * The provider name
      */
     public readonly provider: string = '';
