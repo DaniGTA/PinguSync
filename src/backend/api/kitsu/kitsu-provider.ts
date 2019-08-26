@@ -16,6 +16,7 @@ export default class KitsuProvider implements ListProvider {
     updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
+    public version = 1;
 
     providerName: string = 'Kitsu';
     hasOAuthCode: boolean = true;

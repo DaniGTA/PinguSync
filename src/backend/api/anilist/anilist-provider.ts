@@ -20,9 +20,11 @@ import WatchProgress from '../../controller/objects/meta/watch-progress';
 import seriesHelper from '../../helpFunctions/series-helper';
 
 export default class AniListProvider implements ListProvider {
-    hasUniqueIdForSeasons: boolean = true;
-    providerName: string = "AniList";
-    hasOAuthCode = true;
+    public hasUniqueIdForSeasons: boolean = true;
+    public providerName: string = "AniList";
+    public version = 1;
+    public hasOAuthCode = true;
+
     private static instance: AniListProvider;
     userData: AniListUserData;
     private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';

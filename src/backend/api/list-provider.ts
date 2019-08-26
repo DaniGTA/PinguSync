@@ -8,6 +8,7 @@ export default interface ListProvider {
     hasOAuthCode: boolean;
     hasUniqueIdForSeasons: boolean;
     userData: UserData;
+    version: number;
 
     getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series>;
     getAllSeries(disableCache?: boolean): Promise<Series[]>;
