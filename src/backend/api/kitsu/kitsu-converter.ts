@@ -16,6 +16,7 @@ export default new class KitsuConverter {
         const series = new Series();
 
         series.runTime = media.episodeLength;
+        
 
         series.addSeriesName(new Name(media.titles.en, 'en'));
         series.addSeriesName(new Name(media.titles.en_us, 'en_us', NameType.OFFICIAL));

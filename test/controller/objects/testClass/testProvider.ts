@@ -21,9 +21,10 @@ export default class TestProvider implements ListProvider {
     loggedIn: boolean;
     userData: UserData = {} as UserData;
 
-    constructor(providerName: string, loggedIn: boolean = true) {
+    constructor(providerName: string, loggedIn: boolean = true,hasUniqueIdForSeasons :boolean = false) {
         this.providerName = providerName;
         this.loggedIn = loggedIn;
+        this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;
     }
     getAllSeries(disableCache?: boolean): Promise<Series[]> {
         throw new Error("Method not implemented.");

@@ -9,9 +9,9 @@ export default class EpisodeComperator{
             const allBEpisodes = await b.getAllEpisodes();
             // Search if there is a match between the arrays.
             if (allAEpisodes.length != 0 && allBEpisodes.length != 0) {
-                result.matchAble++;
+                result.matchAble += 2;
                 if (allAEpisodes.findIndex((valueA) => allBEpisodes.findIndex(valueB => valueB === valueA) != -1) != -1) {
-                    result.matches++;
+                    result.matches += 2;
                 }
             }
         } catch (err) { }

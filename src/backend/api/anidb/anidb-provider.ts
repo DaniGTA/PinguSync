@@ -13,6 +13,7 @@ export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
     public version: number = 1;
     public isOffline = true;
+    public hasUniqueIdForSeasons = true;
     private static anidbNameManager: AniDBNameManager = new AniDBNameManager();
     public static instance: AniDBProvider;
     constructor(download: boolean = true) {

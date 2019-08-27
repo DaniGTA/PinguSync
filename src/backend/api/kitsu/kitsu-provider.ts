@@ -57,8 +57,8 @@ export default class KitsuProvider implements ListProvider {
                 }
             }
         }
+        await timeHelper.delay(1500);
         if (id != null) {
-            await timeHelper.delay(1500);
             const getResult = ((await this.api.get('anime/' + id)) as unknown) as GetMediaResult;
             return await (await kitsuConverter.convertMediaToAnime(getResult.data)).merge(series);
         } else {

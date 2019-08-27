@@ -9,6 +9,7 @@ import ListController from '../../controller/list-controller';
 import timeHelper from '../time-helper';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import listHelper from '../list-helper';
+import ProviderSearchResultManager from '../../controller/stats-manager/models/provider-search-result-manager';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -77,8 +78,10 @@ export default new class ProviderHelper {
                 } catch (err) { }
                 if (data) {
                     console.log("[" + provider.providerName + "] Request success 🎉");
+                    ProviderSearchResultManager.addNewSearchResult(provider.providerName,name,true);
                     return data;
                 }
+                ProviderSearchResultManager.addNewSearchResult(provider.providerName,name,false);
                 alreadySearchedNames.push(name.name);
             }
         }

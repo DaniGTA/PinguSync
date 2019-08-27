@@ -16,7 +16,7 @@ export default class SeasonComperator {
                         if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
                             comperatorResult.bFirstSeason = await b.getFirstSeason();
                         } else if (await this.hasOnlyProviderWithSameIdForSeasons(b) && !await this.hasOnlyProviderWithSameIdForSeasons(a)) {
-                            comperatorResult.aFirstSeason = await b.getFirstSeason();
+                            comperatorResult.aFirstSeason = await a.getFirstSeason();
                         }
                     } catch (err) { }
                     if (comperatorResult.aFirstSeason) {
@@ -52,6 +52,11 @@ export default class SeasonComperator {
     static async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean> {
         let hasOnlyProviderWithSameId = true;
         for (const providerlistinfo of series.getListProvidersInfos()) {
+            if (providerlistinfo.getProviderInstance().hasUniqueIdForSeasons) {
+                hasOnlyProviderWithSameId = false;
+            }
+        }
+        for (const providerlistinfo of series.getInfoProvidersInfos()) {
             if (providerlistinfo.getProviderInstance().hasUniqueIdForSeasons) {
                 hasOnlyProviderWithSameId = false;
             }

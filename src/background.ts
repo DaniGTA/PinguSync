@@ -6,7 +6,23 @@ import {
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib';
 import * as electron from 'electron';
+import * as mongoose from "mongoose";
 import FrontendController from './backend/controller/frontend-controller';
+import DatabaseLoader from './backend/controller/stats-manager/database-loader';
+
+try {
+  
+    mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
+        if (err) {
+            console.log(err.message);
+        } else {
+            console.log("Successfully Connected!");
+        }
+    });
+} catch (err) {
+    console.log(err);
+}
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.removeAllListeners('ready')

@@ -7,7 +7,6 @@ import IPCBackgroundController from '../communication/ipc-background-controller'
 import ICommunication from '../communication/icommunication';
 import SeriesPackage from './objects/series-package';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
-import MainListManager from './main-list-manager/main-list-manager';
 
 class FrontendController {
     public static getInstance(): FrontendController {

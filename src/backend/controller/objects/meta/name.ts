@@ -14,8 +14,11 @@ export default class Name {
 
     public static getSearchAbleScore(name: Name): number {
         let score = 0;
-        if (name.lang.includes("en")) {
-            score += 5;
+        if (name.lang.includes("en") || name.lang.includes("x-jap")) {
+            score += 10;
+        }
+        if (name.nameType === NameType.OFFICIAL || name.nameType === NameType.MAIN) {
+             score += 10;
         }
         score += (name.name.match(/\w/g) || []).length;
         return score;

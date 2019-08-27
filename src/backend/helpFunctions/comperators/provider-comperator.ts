@@ -48,6 +48,20 @@ export default class ProviderComperator {
                         if (aProvider.id == bProvider.id) {
                             aProvider = Object.assign(new ListProviderLocalData(), aProvider);
                             comperatorResult.matches += 2.5;
+                            try {
+                                if (aProvider.getProviderInstance().hasUniqueIdForSeasons) {
+                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                                    return comperatorResult;
+                                } else if ((typeof a.getSeason() == 'undefined') || (typeof b.getSeason() == 'undefined')) {
+                                    
+                                } else if ( a.getSeason()  === b.getSeason()) {
+                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                                    return comperatorResult;
+                                }
+                                comperatorResult.matches += 0.5;
+                            } catch (err) {
+                                console.log(err);
+                            }
                         }
                     }
                 }

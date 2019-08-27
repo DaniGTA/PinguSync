@@ -12,6 +12,7 @@ import { TVDBProviderData } from './tvdb-provider-data';
 export default class TVDBProvider implements InfoProvider {
     public providerName = 'tvdb'
     public isOffline = false;
+    public hasUniqueIdForSeasons = false;
     private apiKey = '790G98VXW5MZHGV0';
     private baseUrl = 'https://api.thetvdb.com';
     private apiData: TVDBProviderData = new TVDBProviderData();
@@ -94,6 +95,7 @@ export default class TVDBProvider implements InfoProvider {
                         },
 
                         body: body,
+                        timeout: 5000
                     }, (error: any, response: any, body: any) => {
                         try {
                             console.log('[TVDB] status code: ' + response.statusCode);
