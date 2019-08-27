@@ -10,6 +10,5 @@ jobs:
     - name: Tests
       run: |
         npm i
-        npm i mocha -g
-        mocha
+        npx mocha
         
