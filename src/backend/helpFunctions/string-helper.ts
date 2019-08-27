@@ -79,7 +79,7 @@ class StringHelper {
                     reversedTitle = reversedTitle.substr(1);
                 }
             }
-            if (countLastChar != 1) {
+            if (countLastChar > 1) {
                 return countLastChar;
             }
         }
