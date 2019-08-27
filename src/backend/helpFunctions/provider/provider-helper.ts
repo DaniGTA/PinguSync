@@ -8,6 +8,7 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import ListController from '../../controller/list-controller';
 import timeHelper from '../time-helper';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import listHelper from '../list-helper';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -61,37 +62,27 @@ export default new class ProviderHelper {
     }
 
     public async getProviderSeriesInfoByName(series: Series, provider: ListProvider | InfoProvider): Promise<Series> {
-        const names = await series.getAllNames();
+        let names = await series.getAllNames();
+        names = names.sort((a, b) => Name.getSearchAbleScore(b) - Name.getSearchAbleScore(a));
+        names = await listHelper.getLazyUniqueStringList(names);
         const alreadySearchedNames: string[] = [];
-        let firstname = names[0].name;
-        try {
-            firstname = await Name.getRomajiName(names);
-        } catch (err) { }
-        console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + firstname);
-        let data = null;
-        try {
-            data = await provider.getMoreSeriesInfoByName(series, firstname);
-        } catch (err) { }
-        if (!data) {
-            alreadySearchedNames.push(firstname);
-            for (const name of names) {
-                const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
-                if (!alreadySearchedName && name.name) {
-                    console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
-                    try {
-                        data = await provider.getMoreSeriesInfoByName(series, name.name);
-                    } catch (err) { }
-                    if (data) {
-                        console.log("[" + provider.providerName + "] Request success 🎉");
-                        return data;
-                    }
-                    alreadySearchedNames.push(name.name);
+
+        let data;
+        for (const name of names) {
+            const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
+            if (!alreadySearchedName && name.name) {
+                console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
+                try {
+                    data = await provider.getMoreSeriesInfoByName(series, name.name);
+                } catch (err) { }
+                if (data) {
+                    console.log("[" + provider.providerName + "] Request success 🎉");
+                    return data;
                 }
+                alreadySearchedNames.push(name.name);
             }
-        } else {
-            console.log("[" + provider.providerName + "] Request success 🎉");
-            return data;
         }
+
         console.log("[" + provider.providerName + "] Request failed ☹");
         throw 'no series info found by name';
     }

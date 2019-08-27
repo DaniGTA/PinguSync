@@ -24,25 +24,34 @@ export default new class KitsuConverter {
         series.addSeriesName(new Name(media.slug, 'slug', NameType.SLUG));
         series.addSeriesName(new Name(media.titles.en_us, 'en_us'));
         series.addSeriesName(new Name(media.canonicalTitle, 'canonicalTitle'));
-
-        for (const title of media.abbreviatedTitles) {
-            series.addSeriesName(new Name(title, 'abbreviatedTitles'));
-        }
+        try {
+            if (Array.isArray(media.abbreviatedTitles)) {
+                for (const title of media.abbreviatedTitles) {
+                    series.addSeriesName(new Name(title, 'abbreviatedTitles'));
+                }
+            } else if ((media.abbreviatedTitles as any).title) {
+                series.addSeriesName(new Name((media.abbreviatedTitles as any).title, 'abbreviatedTitles'));
+            }
+        } catch (err) { };
 
         series.overviews.push(new Overview(media.synopsis, 'eng'));
         series.releaseYear = new Date(media.startDate).getFullYear();
         series.mediaType = this.convertShowTypeToMediaType(media.showType);
         const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
 
-        providerInfos.covers.push(new Cover(media.posterImage.large, ImageSize.LARGE));
-        providerInfos.covers.push(new Cover(media.posterImage.original, ImageSize.ORIGINAL));
-        providerInfos.covers.push(new Cover(media.posterImage.small, ImageSize.SMALL));
-        providerInfos.covers.push(new Cover(media.posterImage.tiny, ImageSize.TINY));
+        try {
+            providerInfos.covers.push(new Cover(media.posterImage.original, ImageSize.ORIGINAL));
+            providerInfos.covers.push(new Cover(media.posterImage.tiny, ImageSize.TINY));
+            providerInfos.covers.push(new Cover(media.posterImage.small, ImageSize.SMALL));
+            providerInfos.covers.push(new Cover(media.posterImage.large, ImageSize.LARGE));
+        } catch (err) { }
 
-        providerInfos.banners.push(new Banner(media.coverImage.large, ImageSize.LARGE));
-        providerInfos.banners.push(new Banner(media.coverImage.original, ImageSize.ORIGINAL));
-        providerInfos.banners.push(new Banner(media.coverImage.small, ImageSize.SMALL));
-        providerInfos.banners.push(new Banner(media.coverImage.tiny, ImageSize.TINY));
+        try {
+            providerInfos.banners.push(new Banner(media.coverImage.original, ImageSize.ORIGINAL));
+            providerInfos.banners.push(new Banner(media.coverImage.tiny, ImageSize.TINY));
+            providerInfos.banners.push(new Banner(media.coverImage.small, ImageSize.SMALL));
+            providerInfos.banners.push(new Banner(media.coverImage.large, ImageSize.LARGE));
+        } catch (err) { }
 
         providerInfos.id = media.id;
         providerInfos.publicScore = media.ratingRank;

@@ -7,7 +7,7 @@ import Series from '../../controller/objects/series';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import InfoProvider from '../info-provider';
 import AniDBNameManager from './anidb-name-manager';
-import AniDBNameListXML, { Title } from './objects/anidbNameListXML';
+import AniDBNameListXML, { Title, Anime } from './objects/anidbNameListXML';
 import AniDBConverter from './anidb-converter';
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
@@ -23,30 +23,43 @@ export default class AniDBProvider implements InfoProvider {
     }
 
     async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
-        const converter = new AniDBConverter();
+
         const nameDBList = AniDBProvider.anidbNameManager.data;
         const season = await series.getSeason();
+        let lastResult: Name[] | null = null;
+        let lastSeriesDB: Anime | null = null;
         if (nameDBList) {
             for (const seriesDB of nameDBList.animetitles.anime) {
                 try {
                     const result = await this.checkTitles(searchTitle, seriesDB.title);
-                  
+
                     if (result) {
                         const seasonOfTitle = await Name.getSeasonNumber(result);
-                        if (seasonOfTitle === season || !season || !seasonOfTitle) {
-                            const localdata = await converter.convertAnimeToLocalData(seriesDB);
-                            await series.addInfoProvider(localdata);
-                            await series.addSeriesName(...result);
-                            return series;
+                        if (!seasonOfTitle) {
+                            lastResult = result;
+                            lastSeriesDB = seriesDB;
+                        }
+                        if (seasonOfTitle === season || !season) {
+                            return await this.fillSeries(series, seriesDB, result);
                         }
                     }
                 } catch (err) {
                     console.log(err);
                 }
             }
+            if (lastResult && lastSeriesDB) {
+                return await this.fillSeries(series, lastSeriesDB, lastResult);
+            }
         }
         throw 'nothing found';
+    }
 
+    private async fillSeries(series: Series, seriesDB: Anime, result: Name[]): Promise<Series> {
+        const converter = new AniDBConverter();
+        const localdata = await converter.convertAnimeToLocalData(seriesDB);
+        await series.addInfoProvider(localdata);
+        await series.addSeriesName(...result);
+        return series;
     }
 
     async checkTitles(name: string, titles: Title[] | Title) {

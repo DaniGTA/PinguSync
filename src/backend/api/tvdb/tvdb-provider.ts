@@ -26,7 +26,7 @@ export default class TVDBProvider implements InfoProvider {
             let id: string | number | undefined;
             const index = series.getInfoProvidersInfos().findIndex(entry => entry.provider == this.providerName);
             if (index === -1) {
-                const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + searchTitle);
+                const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + encodeURI(searchTitle));
                 if (data.data) {
                     for (const searchResult of data.data) {
                         const series2: Series = await tvDbConverter.convertSearchResultToSeries(searchResult);

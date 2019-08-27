@@ -58,10 +58,21 @@ describe('stringHelperTest', () => {
 
     it('shoul get right season number from title', async () => {
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2);
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya'), undefined);
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title'), undefined);
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2);
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2006'), undefined);
+
+        try {
+            await stringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya');
+            assert.fail();
+        } catch (e) { }
+        try {
+            await stringHelper.getSeasonNumberFromTitle('Title');
+            assert.fail();
+        } catch (e) { }
+        try {
+            await stringHelper.getSeasonNumberFromTitle('Title 2006');
+            assert.fail();
+        } catch (e) { }
+
     })
 
 });

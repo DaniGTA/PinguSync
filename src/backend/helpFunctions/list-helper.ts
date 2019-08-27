@@ -82,6 +82,10 @@ class ListHelper {
         return arr.filter((v, i, a) => a.findIndex((t) => (t === v)) === i)
     }
 
+    async getLazyUniqueStringList(arr: Name[]): Promise<Name[]> {
+        return arr.filter((string, index, array) => array.findIndex((item) => (string.name.toLocaleLowerCase() === item.name.toLocaleLowerCase())) === index);
+    }
+
     async is<T>(obj: any, type: { prototype: T }): Promise<T>;
     async is(obj: any, type: any): Promise<boolean> {
         const objType: string = typeof obj;
@@ -125,8 +129,8 @@ class ListHelper {
             let aName = aNames[0].name;
             let bName = bNames[0].name;
             try {
-                 aName = await Name.getRomajiName(aNames);
-                 bName = await Name.getRomajiName(bNames);
+                aName = await Name.getRomajiName(aNames);
+                bName = await Name.getRomajiName(bNames);
             } catch (err) { }
 
             aName = aName.toLocaleLowerCase();
