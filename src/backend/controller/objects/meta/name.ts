@@ -12,6 +12,15 @@ export default class Name {
         this.nameType = nameType;
     }
 
+    public static getSearchAbleScore(name: Name): number {
+        let score = 0;
+        if (name.lang.includes("en")) {
+            score += 5;
+        }
+        score += (name.name.match(/\w/g) || []).length;
+        return score;
+    }
+
     public static async getRomajiName(names: Name[]): Promise<string> {
         let kanjiTitle = null;
         for (const name of names) {
@@ -31,8 +40,9 @@ export default class Name {
 
         throw names + 'HasNoRomajiName';
     }
+
     public static async getSeasonNumber(names: Name[]): Promise<number | undefined> {
-        var seasonsDetected: number[] =  [];
+        var seasonsDetected: number[] = [];
         for (const name of names) {
             if (name && name.name) {
                 if (name.lang !== "slug") {

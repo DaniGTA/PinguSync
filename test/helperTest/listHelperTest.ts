@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import Series from '../../src/backend/controller/objects/series';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 import WatchProgress from '../../src/backend/controller/objects/meta/watch-progress';
+import Name from '../../src/backend/controller/objects/meta/name';
 
 describe('listHelperTest', () => {
     it('should clean array', async () => {
@@ -57,6 +58,12 @@ describe('listHelperTest', () => {
         assert.strictEqual(await listHelper.isItemInList(array, "Test"), true);
         assert.strictEqual(await listHelper.isItemInList(array, "xTestx"), false);
     });
+
+    it('get lazy uniqe string list', async () => {
+        const array = [new Name("Test", "en"), new Name("test", "en"), new Name("tesT", "en"), new Name("Test2", "en")];
+        assert.strictEqual((await listHelper.getLazyUniqueStringList(array)).length, 2);
+    });
+
 
     it('should check list type', async () => {
 

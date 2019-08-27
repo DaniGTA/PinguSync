@@ -43,7 +43,7 @@ export default class TraktProvider implements ListProvider {
         if (typeof providerInfos != 'undefined') {
             id = providerInfos.id;
         } else {
-            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + seriesName);
+            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + encodeURI(seriesName));
             for (const result of searchResults) {
                 try {
                     var b = await traktConverter.convertShowToAnime(result.show);

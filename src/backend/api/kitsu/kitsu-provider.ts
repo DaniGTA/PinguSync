@@ -52,7 +52,9 @@ export default class KitsuProvider implements ListProvider {
                             break;
                         }
                     }
-                } catch (err) { }
+                } catch (err) {
+                    console.log(err);
+                }
             }
         }
         if (id != null) {
