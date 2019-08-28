@@ -20,12 +20,6 @@ export default class Series extends SeriesProviderExtension {
     public id: string = '';
     public lastUpdate: number = Date.now();
     public lastInfoUpdate: number = 0;
-    private names: Name[] = [];
-    private episodes?: number;
-    public overviews: Overview[] = [];
-    public releaseYear?: number;
-    public runTime?: number;
-    public isNSFW = false;
 
     private cachedSeason?: number;
     private seasonDetectionType: string = "";
@@ -42,11 +36,29 @@ export default class Series extends SeriesProviderExtension {
     }
 
     async getAllNames(): Promise<Name[]> {
-        const names = [...this.names];
-        for (const provider of this.getInfoProvidersInfos()) {
-            names.push(...provider.names);
+        const names = [];
+        for (const provider of await this.getAllProviderLocalDatas()) {
+            names.push(...provider.getAllNames());
         }
         return await listHelper.getUniqueNameList(names);
+    }
+
+    async getAllOverviews(): Promise<Overview[]> {
+        const overviews = [];
+        for (const provider of await this.getAllProviderLocalDatas()) {
+            overviews.push(...provider.getAllOverviews());
+        }
+        return await listHelper.getUniqueOverviewList(overviews);
+    }
+
+    addProviderDatas(...localdatas: ProviderLocalData[]) {
+        for (const localdata of localdatas) {
+            if (typeof localdata === typeof ListProviderLocalData) {
+                this.addListProvider(localdata as ListProviderLocalData)
+            } else if (typeof localdata === typeof InfoProviderLocalData) {
+                this.addInfoProvider(localdata as InfoProviderLocalData);
+            }
+        }
     }
 
     /**
@@ -76,43 +88,10 @@ export default class Series extends SeriesProviderExtension {
     }
 
     /**
-    * Prevents too have double entrys for same name.
-    * @param infoProvider 
-    */
-    public addSeriesName(...names: Name[]) {
-        for (const name of names) {
-            if (name && name.name && name.name != 'null') {
-                if (this.names.findIndex(x => x.name === name.name && x.lang === x.lang) === -1) {
-                    this.names.push(name);
-                }
-            }
-        }
-        if (names.length > 25) {
-            console.log(".");
-        }
-    }
-
-    /**
-     * Adds an Overview too the Anime and prevents adding if overview is already present.
-     * @param newOverview 
-     */
-    public addOverview(newOverview: Overview): boolean {
-        this.overviews = [...this.overviews];
-        if (this.overviews.findIndex(x => x == newOverview) == -1) {
-            this.overviews.push(newOverview);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * It get the max number of that anime.
      */
     public getMaxEpisode(): number {
         const array = (this.getListProvidersInfos().flatMap(x => x.episodes) as number[]);
-        if (typeof this.episodes != 'undefined') {
-            array.push(this.episodes);
-        }
         const onlyNumbers = array.filter(v => Number.isInteger(v as number));
         if (onlyNumbers.length == 0) {
             throw 'no episode found';
@@ -128,14 +107,7 @@ export default class Series extends SeriesProviderExtension {
         try {
             result = await listHelper.cleanArray(this.getListProvidersInfos().flatMap(x => x.episodes))
         } catch (e) { }
-        if (typeof result == 'undefined') {
-            if (typeof this.episodes != 'undefined') {
-                return [this.episodes];
-            }
-        } else {
-            if (typeof this.episodes != 'undefined') {
-                result.push(this.episodes);
-            }
+        if (result){
             return await listHelper.getUniqueList(result as number[]);
         }
         throw 'no episode found';
@@ -258,14 +230,18 @@ export default class Series extends SeriesProviderExtension {
                     // If the watchprogress has a difference and if the provider has a max defined episode.
                     // Without the episodes we dont know if we can sync or not.
                     if (latestWatchProgress.episode != watchProgress.episode) {
-                        if (typeof latestUpdatedProvider.episodes == 'undefined' || latestWatchProgress.episode < latestUpdatedProvider.episodes) {
-                            if (typeof watchProgress === 'undefined') {
-                                return true;
-                            } else if (typeof this.episodes != 'undefined' && this.episodes < watchProgress.episode) {
+                        if (!latestUpdatedProvider.episodes|| latestWatchProgress.episode < latestUpdatedProvider.episodes) {
+                            try {
+                                if (!watchProgress) {
+                                    return true;
+                                } else if (this.getMaxEpisode() < watchProgress.episode) {
+                                    return false;
+                                } else {
+                                    provider.canUpdateWatchProgress = true;
+                                    return true;
+                                }
+                            } catch (err) {
                                 return false;
-                            } else {
-                                provider.canUpdateWatchProgress = true;
-                                return true;
                             }
                         }
                     }
@@ -309,10 +285,6 @@ export default class Series extends SeriesProviderExtension {
      * When the anime got loaded from a json or web there are no functions avaible with this we can restore it.
      */
     public readdFunctions() {
-        var overviewsCache: Overview[] = [];
-        for (const overview of this.overviews) {
-            overviewsCache.push(new Overview(overview.content, overview.lang));
-        }
         var providersCache: ListProviderLocalData[] = [];
         for (const provider of this.getListProvidersInfos()) {
             providersCache.push(Object.assign(new ListProviderLocalData(), provider));
@@ -323,7 +295,6 @@ export default class Series extends SeriesProviderExtension {
         }
         this.infoProviderInfos = infoPovidersCache;
         this.listProviderInfos = providersCache;
-        this.overviews = overviewsCache;
     }
 
     /**
@@ -337,37 +308,6 @@ export default class Series extends SeriesProviderExtension {
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
 
-        try {
-            newAnime.names.push(...this.names, ...anime.names);
-            newAnime.names = await listHelper.getUniqueNameList(newAnime.names);
-        } catch (err) { }
-        try {
-            const number = newAnime.listProviderInfos.flatMap(x => x.episodes);
-            if (this.episodes) {
-                number.push(this.episodes);
-            }
-            if (anime.episodes) {
-                number.push(anime.episodes);
-            }
-            newAnime.episodes = await listHelper.findMostFrequent(await listHelper.cleanArray(number));
-            newAnime.episodes = newAnime.getMaxEpisode();
-        } catch (err) { }
-
-        newAnime.releaseYear = await this.mergeNumber(this.releaseYear, anime.releaseYear, newAnime.names[0].name, 'ReleaseYear');
-
-        newAnime.runTime = await this.mergeNumber(this.runTime, anime.runTime, newAnime.names[0].name, 'RunTime');
-
-        try {
-            if (this.overviews != null && typeof this.overviews != 'undefined') {
-                newAnime.overviews.push(...this.overviews);
-            }
-            if (anime.overviews != null && typeof anime.overviews != 'undefined') {
-                newAnime.overviews.push(...anime.overviews);
-            }
-            newAnime.overviews = await listHelper.getUniqueOverviewList(await listHelper.cleanArray(newAnime.overviews));
-        } catch (err) {
-            console.log(err);
-        }
         await newAnime.getSeason();
 
         await newAnime.getCanSync();
@@ -378,7 +318,7 @@ export default class Series extends SeriesProviderExtension {
             newAnime.lastInfoUpdate = this.lastInfoUpdate;
         }
 
-        if (newAnime.names.length > 25) {
+        if ((await newAnime.getAllNames()).length > 25) {
             console.log(".");
         }
         return newAnime;
@@ -574,6 +514,24 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         return MediaType.UNKOWN;
+    }
+
+    async getReleaseYear(): Promise<number|undefined> {
+        const collectedMediaTypes: number[] = [];
+        for (const localdata of await this.getAllProviderLocalDatas()) {
+            if (localdata.releaseYear) {
+                collectedMediaTypes.push(localdata.releaseYear);
+            }
+        }
+        if (collectedMediaTypes.length === 0) {
+            return;
+        } else {
+            const result = await listHelper.findMostFrequent(collectedMediaTypes);
+            if (result) {
+                return result;
+            }
+        }
+        return;
     }
 }
 

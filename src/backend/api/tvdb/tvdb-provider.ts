@@ -1,20 +1,20 @@
 import InfoProvider from '../info-provider';
-import Series from '../../controller/objects/series';
-
 import request from 'request';
 import { TVDBLogin } from './models/login';
 import TVDBConverter from './tvdb-converter';
 import { TVDBSeries } from './models/getSeries';
 import SeriesSearchResults from './models/searchResults';
-import seriesHelper from '../../helpFunctions/series-helper';
 import { TVDBProviderData } from './tvdb-provider-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import MultiProviderResult from '../multi-provider-result';
 
 export default class TVDBProvider implements InfoProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public providerName = 'tvdb'
     public isOffline = false;
     public hasUniqueIdForSeasons = false;
+    public version = 1;
     private apiKey = '790G98VXW5MZHGV0';
     private baseUrl = 'https://api.thetvdb.com';
     private apiData: TVDBProviderData = new TVDBProviderData();
@@ -23,35 +23,25 @@ export default class TVDBProvider implements InfoProvider {
         TVDBProvider.Instance = this;
     }
 
-    public async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
+    public async getMoreSeriesInfoByName(searchTitle: string): Promise<MultiProviderResult[]> {
+        const result = [];
         try {
             const tvDbConverter = new TVDBConverter();
-            let id: string | number | undefined;
-            const index = series.getInfoProvidersInfos().findIndex(entry => entry.provider == this.providerName);
-            if (index === -1) {
-                const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + encodeURI(searchTitle));
-                if (data.data) {
-                    for (const searchResult of data.data) {
-                        const series2: Series = await tvDbConverter.convertSearchResultToSeries(searchResult);
-                        if (await seriesHelper.isSameSeries(series, series2)) {
-                            id = (await tvDbConverter.convertSearchResultToProviderLocalData(searchResult)).id;
-                            break;
-                        }
-                    }
+            const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + encodeURI(searchTitle));
+         
+            if (data.data) {
+                for (const searchResult of data.data) {
+                    result.push(new MultiProviderResult(await tvDbConverter.convertSearchResultToSeries(searchResult)));
                 }
-            } else {
-                id = series.getInfoProvidersInfos()[index].id;
             }
-            if (id) {
-                const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + id);
-                await series.addInfoProvider(await tvDbConverter.convertSeriesToProviderLocalData(data));
-                return series;
-            }
-
-        } catch (err) {
-            console.log(err);
-        }
-        throw 'no tvdb id';
+        }catch(err){}
+        return result;
+    }
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+        const tvDbConverter = new TVDBConverter();
+        const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + provider.id);
+        
+        return new MultiProviderResult(await tvDbConverter.convertSeriesToProviderLocalData(data));
     }
 
     private async getAccessKey(): Promise<string> {

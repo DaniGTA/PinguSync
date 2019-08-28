@@ -31,8 +31,8 @@ describe('AniListConverter Tests', () => {
         const tvResult = await anilistConverter['convertTypeToMediaType']( MediaFormat.TV);
         const tvShortResult = await anilistConverter['convertTypeToMediaType'](MediaFormat.TV_SHORT);
         assert.strictEqual(movieResult, MediaType.MOVIE);
-        assert.strictEqual(tvResult, MediaType.SERIES);
-        assert.strictEqual(tvShortResult, MediaType.SERIES);
+        assert.strictEqual(tvResult, MediaType.ANIME);
+        assert.strictEqual(tvShortResult, MediaType.ANIME);
         return;
     })
 });

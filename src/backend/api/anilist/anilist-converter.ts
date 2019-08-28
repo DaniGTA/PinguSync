@@ -14,25 +14,26 @@ import { NameType } from '../../controller/objects/meta/name-type';
 import Banner from '../../controller/objects/meta/banner';
 
 export default new class AniListConverter {
-    public async convertMediaToAnime(medium: Medium): Promise<Series> {
-        const series = new Series();
-        series.addSeriesName(new Name(medium.title.romaji, 'x-jap', NameType.OFFICIAL));
-        series.addSeriesName(new Name(medium.title.english, 'unknown', NameType.MAIN));
-        series.addSeriesName(new Name(medium.title.native, 'jap'));
-        series.releaseYear = medium.startDate.year;
+    public async convertMediaToLocalData(medium: Medium): Promise<ListProviderLocalData> {
+
+
 
         const provider = new ListProviderLocalData(AniListProvider.getInstance());
+        provider.addSeriesName(new Name(medium.title.romaji, 'x-jap', NameType.OFFICIAL));
+        provider.addSeriesName(new Name(medium.title.english, 'unknown', NameType.MAIN));
+        provider.addSeriesName(new Name(medium.title.native, 'jap'));
         provider.mediaType = await this.convertTypeToMediaType(medium.format);
         provider.covers.push(new Cover(medium.coverImage.large, ImageSize.LARGE));
         provider.covers.push(new Cover(medium.coverImage.medium, ImageSize.MEDIUM));
-
+        provider.releaseYear = medium.startDate.year;
         provider.banners.push(new Banner(medium.bannerImage, ImageSize.LARGE));
+
+        provider.fullInfo = false;
 
         provider.id = medium.id;
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
-        await series.addListProvider(provider);
-        return series;
+        return provider;
     }
 
     private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {
@@ -46,42 +47,39 @@ export default new class AniListConverter {
         return MediaType.UNKOWN;
     }
 
-    public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<Series> {
-        const series = new Series();
-
-        series.addOverview(new Overview(info.Media.description, 'eng'));
-        series.releaseYear = info.Media.startDate.year;
-        series.addSeriesName(new Name(info.Media.title.romaji, 'x-jap', NameType.OFFICIAL));
-        series.addSeriesName(new Name(info.Media.title.english, 'unknown', NameType.MAIN));
-        series.addSeriesName(new Name(info.Media.title.native, 'jap'));
-        series.addSeriesName(new Name(info.Media.title.userPreferred, 'userPreferred'));
-
+    public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<ListProviderLocalData> {
         const provider = new ListProviderLocalData(AniListProvider.getInstance());
+        provider.addOverview(new Overview(info.Media.description, 'eng'));
+        
+        provider.addSeriesName(new Name(info.Media.title.romaji, 'x-jap', NameType.OFFICIAL));
+        provider.addSeriesName(new Name(info.Media.title.english, 'unknown', NameType.MAIN));
+        provider.addSeriesName(new Name(info.Media.title.native, 'jap'));
+        provider.addSeriesName(new Name(info.Media.title.userPreferred, 'userPreferred'));
         provider.mediaType = await this.convertTypeToMediaType(info.Media.format);
         provider.covers.push(new Cover(info.Media.coverImage.large, ImageSize.LARGE));
         provider.covers.push(new Cover(info.Media.coverImage.medium, ImageSize.MEDIUM));
-
+        provider.releaseYear = info.Media.startDate.year;
         provider.banners.push(new Banner(info.Media.bannerImage, ImageSize.LARGE));
 
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
-        await series.addListProvider(provider);
-        return series;
+        return provider;
     }
 
     public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<Series> {
         var series: Series = new Series();
-        series.addSeriesName(new Name(entry.media.title.romaji, 'x-jap', NameType.OFFICIAL));
-        series.addSeriesName(new Name(entry.media.title.english, 'unknown', NameType.MAIN));
-        series.addSeriesName(new Name(entry.media.title.native, 'jap'));
 
-
-        series.releaseYear = entry.media.startDate.year;
 
         var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
+        providerInfo.addSeriesName(new Name(entry.media.title.romaji, 'x-jap', NameType.OFFICIAL));
+        providerInfo.addSeriesName(new Name(entry.media.title.english, 'unknown', NameType.MAIN));
+        providerInfo.addSeriesName(new Name(entry.media.title.native, 'jap'));
+        providerInfo.releaseYear = entry.media.startDate.year;
+        providerInfo.releaseYear = entry.media.startDate.year;
         providerInfo.mediaType = await this.convertTypeToMediaType(entry.media.format);
         providerInfo.targetSeason = await Name.getSeasonNumber(await series.getAllNames());
+
         try {
             if (!providerInfo.targetSeason) {
                 if (entry.media.relations.edges.findIndex(x => x.relationType == MediaRelation.PREQUEL) === -1) {

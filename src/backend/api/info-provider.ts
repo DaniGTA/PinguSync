@@ -1,16 +1,9 @@
-import Series from "../controller/objects/series";
-import { MediaType } from '../controller/objects/meta/media-type';
+import ExternalProvider from './external-provider';
 
 /**
  * A name provider gives only a list of names.
  * That can be used to find other variants of the name.
  */
-export default interface InfoProvider {
-    providerName: string;
+export default interface InfoProvider extends ExternalProvider{
     isOffline: boolean;
-    hasUniqueIdForSeasons: boolean;
-    supportedMediaTypes: MediaType[];
-
-    getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series>;
-
 }

@@ -43,9 +43,9 @@ class SeriesHelper {
         matches += infoProviderResult.matches;
 
         // Check releaseYear
-        if (a.releaseYear && b.releaseYear) {
+        if (await a.getReleaseYear() && await b.getReleaseYear()) {
             matchAbleScore++;
-            if (a.releaseYear === b.releaseYear) {
+            if (await a.getReleaseYear() === await b.getReleaseYear()) {
                 matches++;
             }
         }

@@ -31,19 +31,18 @@ describe('seriesHelperTest', () => {
         var infoProvider = new InfoProviderLocalData("test3");
         infoProvider.id = "14792";
         a.addInfoProvider(infoProvider);
-        a.isNSFW = false;
         var listProvider = new ListProviderLocalData("test2");
         listProvider.id = 108632;
         listProvider.targetSeason = 2;
         listProvider.fullInfo = true;
         listProvider.prequelIds.push(21355);
+        listProvider.isNSFW = false;
+        listProvider.addSeriesName(new Name("Test 2", "x-jap"));
         a.addListProvider(listProvider);
-        a.addSeriesName(new Name("Test 2", "x-jap"));
         // B is related too C
         var b = new Series();
         b['cachedSeason'] = 1;
         b['canSync'] = false;
-        b.isNSFW = false;
         var infoProvider = new InfoProviderLocalData("test4");
         infoProvider.fullInfo = true;
         infoProvider.id = 260449;
@@ -52,9 +51,10 @@ describe('seriesHelperTest', () => {
         listProvider.id = 43973;
         listProvider.targetSeason = 1;
         listProvider.fullInfo = true;
+        listProvider.releaseYear = 2013;
+        listProvider.isNSFW = false;
+        listProvider.addSeriesName(new Name("Test", "x-jap"));
         b.addListProvider(listProvider);
-        b.releaseYear  = 2013
-        b.addSeriesName(new Name("Test", "x-jap"));
 
 
         MainListManager['mainList'] = [a, b];
@@ -62,14 +62,14 @@ describe('seriesHelperTest', () => {
         var c = new Series();
         c['cachedSeason'] = 2;
         c['canSync'] = false;
-        c.isNSFW = false;
         var listProvider =
-         new ListProviderLocalData("test");
+            new ListProviderLocalData("test");
+         listProvider.isNSFW = false;
         listProvider.id = 43973;
         listProvider.targetSeason = 2;
         listProvider.fullInfo = true;
+        listProvider.addSeriesName(new Name("Series Test", "x-jap"));
         c.addListProvider(listProvider);
-        c.addSeriesName(new Name("Series Test", "x-jap"));
 
         strictEqual(await seriesHelper.isSameSeries(a, c), false);
     });

@@ -3,11 +3,18 @@ import Series from "../../../../src/backend/controller/objects/series";
 import ListProvider from "../../../../src/backend/api/list-provider";
 import { ListProviderLocalData } from "../../../../src/backend/controller/objects/list-provider-local-data";
 import { UserData } from "../../../../src/backend/api/user-data";
+import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
+import { InfoProviderLocalData } from '../../../../src/backend/controller/objects/info-provider-local-data';
+import MultiProviderResult from '../../../../src/backend/api/multi-provider-result';
 
 export default class TestProvider implements ListProvider {
-    getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
+    getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
         throw new Error("Method not implemented.");
     }
+    getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+        throw new Error("Method not implemented.");
+    }
+
     updateEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
@@ -20,6 +27,7 @@ export default class TestProvider implements ListProvider {
     hasOAuthCode: boolean = true;
     loggedIn: boolean;
     userData: UserData = {} as UserData;
+    supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
 
     constructor(providerName: string, loggedIn: boolean = true,hasUniqueIdForSeasons :boolean = false) {
         this.providerName = providerName;

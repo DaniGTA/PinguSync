@@ -58,7 +58,7 @@ describe('series basic tests', () => {
         const providerA = new ListProviderLocalData();
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData();
-        series['episodes'] = 11;
+        providerB['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.deepStrictEqual(await series.getAllEpisodes(), [10, 11]);
         return;
@@ -78,7 +78,7 @@ describe('series basic tests', () => {
         const providerA = new ListProviderLocalData("TestA");
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData("TestB");
-        series['episodes'] = 11;
+        providerB['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 12);
         return;
@@ -90,7 +90,7 @@ describe('series basic tests', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData("TestB");
         providerB.episodes = 24;
-        series['episodes'] = 11;
+        providerB['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.strictEqual(series.getMaxEpisode(), 24);
         return;
@@ -102,7 +102,7 @@ describe('series basic tests', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData();
         providerB.episodes = 24;
-        series['episodes'] = 11;
+        providerB['episodes'] = 11;
         series.addListProvider(providerA, providerB);
         assert.throws(series.getMaxEpisode);
         return;
@@ -110,20 +110,26 @@ describe('series basic tests', () => {
 
     it('should prevent duplicates in names', async () => {
         const series = new Series();
-        series.addSeriesName(new Name('Test', 'eng'));
-        series.addSeriesName(new Name('Test', 'eng'));
+          const providerA = new ListProviderLocalData();
+        providerA.addSeriesName(new Name('Test', 'eng'));
+        providerA.addSeriesName(new Name('Test', 'eng'));
+         series.addListProvider(providerA);
         assert.strictEqual((await series.getAllNames()).length, 1);
     });
 
     it('should prevent null entrys in names', async () => {
         const series = new Series();
-        series.addSeriesName(null as unknown as Name);
+            const providerA = new ListProviderLocalData();
+        providerA.addSeriesName(null as unknown as Name);
+         series.addListProvider(providerA);
         assert.strictEqual((await series.getAllNames()).length, 0);
     });
 
     it('should prevent undefined entrys in names', async () => {
         const series = new Series();
-        series.addSeriesName(undefined as unknown as Name);
+            const providerA = new ListProviderLocalData();
+        providerA.addSeriesName(undefined as unknown as Name);
+           series.addListProvider(providerA);
         assert.strictEqual((await series.getAllNames()).length, 0);
     });
 });

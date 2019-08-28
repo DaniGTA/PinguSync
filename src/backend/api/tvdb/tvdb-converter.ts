@@ -3,7 +3,6 @@ import TVDBProvider from './tvdb-provider';
 import { TVDBSeries } from './models/getSeries';
 import Cover from '../../controller/objects/meta/cover';
 import { SeriesSearchResult } from './models/searchResults';
-import Series from '../../controller/objects/series';
 import Name from '../../controller/objects/meta/name';
 import Overview from '../../controller/objects/meta/overview';
 import { NameType } from '../../controller/objects/meta/name-type';
@@ -28,25 +27,24 @@ export default class TVDBConverter {
         }
         infoProviderLocalData.rawEntry = searchResult;
 
-
         return infoProviderLocalData;
     }
 
-    async convertSearchResultToSeries(searchResult: SeriesSearchResult): Promise<Series> {
-        let series = new Series();
+    async convertSearchResultToSeries(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
+        const providerLocalData = await this.convertSearchResultToProviderLocalData(searchResult);
+        if (searchResult.firstAired) {
+            providerLocalData.releaseYear = new Date(searchResult.firstAired).getFullYear();
+        }
         if (searchResult.seriesName) {
-            series.addSeriesName(new Name(searchResult.seriesName, 'en', NameType.OFFICIAL));
+            providerLocalData.addSeriesName(new Name(searchResult.seriesName, 'en', NameType.OFFICIAL));
         }
         if (searchResult.slug) {
-            series.addSeriesName(new Name(searchResult.slug, 'slug', NameType.SLUG));
+            providerLocalData.addSeriesName(new Name(searchResult.slug, 'slug', NameType.SLUG));
         }
-        if (searchResult.firstAired) {
-            series.releaseYear = new Date(searchResult.firstAired).getFullYear();
-        }
+
         if (searchResult.overview) {
-            series.addOverview(new Overview(searchResult.overview, 'en'));
+            providerLocalData.addOverview(new Overview(searchResult.overview, 'en'));
         }
-        await series.addInfoProvider(await this.convertSearchResultToProviderLocalData(searchResult));
-        return series;
+        return providerLocalData;
     }
 }

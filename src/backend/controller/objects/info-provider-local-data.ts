@@ -10,7 +10,6 @@ import ProviderList from '../provider-manager/provider-list';
  */
 export class InfoProviderLocalData extends ProviderLocalData{
     public readonly provider: string;
-    public names: Name[] = [];
     constructor(lp?: InfoProvider | string) {
         super();
         this.lastUpdate = new Date(Date.now());
@@ -99,6 +98,16 @@ export class InfoProviderLocalData extends ProviderLocalData{
             if (newestProvider.names) {
                 mergedProvider.names = newestProvider.names;
             }
+            if (newestProvider.overviews) {
+                mergedProvider.overviews = newestProvider.overviews;
+            }
+            if (newestProvider.covers) {
+                mergedProvider.releaseYear = newestProvider.releaseYear;
+            }
+            if (newestProvider.covers) {
+                mergedProvider.runTime = newestProvider.runTime;
+            }
+            mergedProvider.fullInfo = newestProvider.fullInfo;
             mergedProvider.lastUpdate = newestProvider.lastUpdate;
             mergedProvider.lastExternalChange = newestProvider.lastExternalChange;
         }

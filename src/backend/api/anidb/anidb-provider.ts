@@ -3,13 +3,14 @@ import * as http from "http";
 import { xml2json } from 'xml-js';
 import { createGunzip } from 'zlib';
 import Name from '../../controller/objects/meta/name';
-import Series from '../../controller/objects/series';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import InfoProvider from '../info-provider';
 import AniDBNameManager from './anidb-name-manager';
 import AniDBNameListXML, { Title, Anime } from './objects/anidbNameListXML';
 import AniDBConverter from './anidb-converter';
 import { MediaType } from '../../controller/objects/meta/media-type';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import MultiProviderResult from '../multi-provider-result';
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
     public version: number = 1;
@@ -25,10 +26,8 @@ export default class AniDBProvider implements InfoProvider {
         }
     }
 
-    async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
-
+    async getMoreSeriesInfoByName(searchTitle: string,season?:number): Promise<MultiProviderResult[]> {
         const nameDBList = AniDBProvider.anidbNameManager.data;
-        const season = await series.getSeason();
         let lastResult: Name[] | null = null;
         let lastSeriesDB: Anime | null = null;
         if (nameDBList) {
@@ -43,7 +42,7 @@ export default class AniDBProvider implements InfoProvider {
                             lastSeriesDB = seriesDB;
                         }
                         if (seasonOfTitle === season || !season) {
-                            return await this.fillSeries(series, seriesDB, result);
+                            return [await this.fillSeries(seriesDB, result)];
                         }
                     }
                 } catch (err) {
@@ -51,18 +50,21 @@ export default class AniDBProvider implements InfoProvider {
                 }
             }
             if (lastResult && lastSeriesDB) {
-                return await this.fillSeries(series, lastSeriesDB, lastResult);
+                return [await this.fillSeries(lastSeriesDB, lastResult)];
             }
         }
         throw 'nothing found';
     }
 
-    private async fillSeries(series: Series, seriesDB: Anime, result: Name[]): Promise<Series> {
+    getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+        throw 'not implemented yet';     
+    }
+
+    private async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {
         const converter = new AniDBConverter();
         const localdata = await converter.convertAnimeToLocalData(seriesDB);
-        await series.addInfoProvider(localdata);
-        await series.addSeriesName(...result);
-        return series;
+        await localdata.mainProvider.addSeriesName(...result);
+        return localdata;
     }
 
     async checkTitles(name: string, titles: Title[] | Title) {

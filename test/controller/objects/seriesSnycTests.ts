@@ -23,7 +23,7 @@ describe('seriesTest | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
     })
@@ -39,7 +39,7 @@ describe('seriesTest | Sync', () => {
         ProviderList.getListProviderList().push(new TestProvider("CanSync22"));
         const providerB = new ListProviderLocalData("CanSync22");
         providerB.episodes = 24;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
     })
@@ -55,7 +55,7 @@ describe('seriesTest | Sync', () => {
         ProviderList.getListProviderList().push(new TestProvider("CanSync32"));
         const providerB = new ListProviderLocalData("CanSync32");
         providerB.episodes = 24;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
     })
@@ -76,7 +76,7 @@ describe('seriesTest | Sync', () => {
         }
         providerB.addOneWatchedEpisode(1);
         providerB.watchStatus = WatchStatus.COMPLETED;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     })
@@ -98,7 +98,7 @@ describe('seriesTest | Sync', () => {
         }
         providerB.addOneWatchedEpisode(1);
         providerB.watchStatus = WatchStatus.COMPLETED;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     })
@@ -119,7 +119,7 @@ describe('seriesTest | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     })
@@ -133,7 +133,7 @@ describe('seriesTest | Sync', () => {
             providerA.addOneWatchedEpisode(index);
         }
         providerA.watchStatus = WatchStatus.CURRENT;
-        anime['episodes'] = 24;
+        providerA['episodes'] = 24;
         anime.addListProvider(providerA);
         assert.equal(await anime.getCanSync(), false);
     })
@@ -155,7 +155,7 @@ describe('seriesTest | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     })
@@ -182,7 +182,7 @@ describe('seriesTest | Sync', () => {
             providerC.addOneWatchedEpisode(index);
         }
         providerC.watchStatus = WatchStatus.COMPLETED;
-        anime['episodes'] = 24;
+        providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB, providerC);
         assert.equal(await anime.getCanSync(), false);
     })

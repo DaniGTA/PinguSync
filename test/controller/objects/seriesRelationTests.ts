@@ -108,7 +108,6 @@ describe('seriesTest | Relations', () => {
         assert.equal(await listHelper.isSeriesInList(result2, series2), false);
         assert.equal(await listHelper.isSeriesInList(result3, series3), false);
 
-
         assert.equal(await listHelper.isSeriesInList(result1, series4), false);
         assert.equal(await listHelper.isSeriesInList(result2, series4), false);
         assert.equal(await listHelper.isSeriesInList(result3, series4), false);
@@ -148,16 +147,13 @@ describe('seriesTest | Relations', () => {
 
     it('get all Relations based on multi sequels id', async () => {
         const series1 = getFilledAnime();
-        series1.mediaType = MediaType.SERIES;
         series1.getListProvidersInfos()[0].id = 1;
         series1.getListProvidersInfos()[0].sequelIds.push(2);
         series1.getListProvidersInfos()[0].sequelIds.push(3);
         const series2 = getFilledAnime();
         series2.getListProvidersInfos()[0].id = 2;
-        series2.mediaType = MediaType.MOVIE;
         series2.getListProvidersInfos()[0].sequelIds.push(5);
         const series3 = getFilledAnime();
-        series3.mediaType = MediaType.SERIES;
         series3.getListProvidersInfos()[0].id = 3;
         series3.getListProvidersInfos()[0].sequelIds.push(4);
         series3.getListProvidersInfos()[0].prequelIds.push(1);
@@ -194,10 +190,10 @@ describe('seriesTest | Relations', () => {
     function getFilledAnime(): Series {
         const provider = new ListProviderLocalData("Test");
         var anime = new Series();
-        anime['episodes'] = 10;
-        anime.releaseYear = 2014;
-        anime.addSeriesName(new Name("Test", "en"));
+        provider.addSeriesName(new Name("Test", "en"));
         provider.targetSeason = 3;
+        provider['episodes'] = 10;
+        provider.releaseYear = 2014;
         anime.addListProvider(provider);
         return anime;
     }

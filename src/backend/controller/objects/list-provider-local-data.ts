@@ -22,8 +22,6 @@ export class ListProviderLocalData extends ProviderLocalData {
     public customList: boolean = false;
     public customListName = '';
 
-    public hasFullInfo = true;
-
     constructor(lp?: ListProvider | string) {
         super();
         this.lastUpdate = new Date(Date.now());
@@ -205,8 +203,19 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.covers) {
                 mergedProvider.covers = newestProvider.covers;
             }
-
-            mergedProvider.hasFullInfo = newestProvider.hasFullInfo;
+            if (newestProvider.covers) {
+                mergedProvider.releaseYear = newestProvider.releaseYear;
+            }
+            if (newestProvider.covers) {
+                mergedProvider.runTime = newestProvider.runTime;
+            }
+            if (newestProvider.names) {
+                mergedProvider.names = newestProvider.names;
+            }
+            if (newestProvider.overviews) {
+                mergedProvider.overviews = newestProvider.overviews;
+            }
+            mergedProvider.fullInfo = newestProvider.fullInfo;
             if (newestProvider.targetSeason) {
                 mergedProvider.targetSeason = newestProvider.targetSeason;
             }

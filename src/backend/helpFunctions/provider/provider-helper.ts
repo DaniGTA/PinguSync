@@ -12,6 +12,8 @@ import listHelper from '../list-helper';
 import ProviderSearchResultManager from '../../controller/stats-manager/models/provider-search-result-manager';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import stringHelper from '../string-helper';
+import MultiProviderResult from '../../api/multi-provider-result';
+import seriesHelper from '../series-helper';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -74,19 +76,23 @@ export default new class ProviderHelper {
             //Test
             names.unshift(new Name(await stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType))
 
-            let data;
             for (const name of names) {
                 const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
                 if (!alreadySearchedName && name.name) {
                     console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
                     try {
-                        data = await provider.getMoreSeriesInfoByName(series, name.name);
+                        const results = await provider.getMoreSeriesInfoByName(name.name,await series.getSeason());
+                        if (results) {
+                            for (const result of results) {
+                                if (await this.checkIfProviderIsValid(series, result)) {            
+                                    console.log("[" + provider.providerName + "] Request success 🎉");
+                                    ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, true, seriesMediaType);
+                                    await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+                                    return series;
+                               }
+                            }
+                        }
                     } catch (err) { }
-                    if (data) {
-                        console.log("[" + provider.providerName + "] Request success 🎉");
-                        ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, true, seriesMediaType);
-                        return data;
-                    }
                     ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, false, seriesMediaType);
                     alreadySearchedNames.push(name.name);
                 }
@@ -95,6 +101,12 @@ export default new class ProviderHelper {
 
         console.log("[" + provider.providerName + "] Request failed ☹");
         throw 'no series info found by name';
+    }
+
+    public async checkIfProviderIsValid(series:Series, result: MultiProviderResult):Promise<boolean> {
+        const tempSeries = new Series();
+        await tempSeries.addProviderDatas(result.mainProvider, ...result.subProviders);
+        return await seriesHelper.isSameSeries(series, tempSeries);
     }
 
     /**

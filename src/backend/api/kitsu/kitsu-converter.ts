@@ -1,5 +1,4 @@
 import { Media } from './objects/searchResult';
-import Series from '../../controller/objects/series';
 import Name from '../../controller/objects/meta/name';
 import Overview from '../../controller/objects/meta/overview';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
@@ -12,33 +11,31 @@ import Banner from '../../controller/objects/meta/banner';
 import { ImageSize } from '../../controller/objects/meta/image-size';
 
 export default new class KitsuConverter {
-    async convertMediaToAnime(media: Media): Promise<Series> {
-        const series = new Series();
+    async convertMediaToAnime(media: Media): Promise<ListProviderLocalData> {
+        const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
 
-        series.runTime = media.episodeLength;
+        providerInfos.addSeriesName(new Name(media.titles.en, 'en'));
+        providerInfos.addSeriesName(new Name(media.titles.en_us, 'en_us', NameType.OFFICIAL));
+        providerInfos.addSeriesName(new Name(media.titles.ja_jp, 'jap'));
 
-
-        series.addSeriesName(new Name(media.titles.en, 'en'));
-        series.addSeriesName(new Name(media.titles.en_us, 'en_us', NameType.OFFICIAL));
-        series.addSeriesName(new Name(media.titles.ja_jp, 'jap'));
-
-        series.addSeriesName(new Name(media.slug, 'slug', NameType.SLUG));
-        series.addSeriesName(new Name(media.titles.en_us, 'en_us'));
-        series.addSeriesName(new Name(media.canonicalTitle, 'canonicalTitle'));
+        providerInfos.addSeriesName(new Name(media.slug, 'slug', NameType.SLUG));
+        providerInfos.addSeriesName(new Name(media.titles.en_us, 'en_us'));
+        providerInfos.addSeriesName(new Name(media.canonicalTitle, 'canonicalTitle'));
+        
         try {
             if (Array.isArray(media.abbreviatedTitles)) {
                 for (const title of media.abbreviatedTitles) {
-                    series.addSeriesName(new Name(title, 'abbreviatedTitles'));
+                    providerInfos.addSeriesName(new Name(title, 'abbreviatedTitles'));
                 }
             } else if ((media.abbreviatedTitles as any).title) {
-                series.addSeriesName(new Name((media.abbreviatedTitles as any).title, 'abbreviatedTitles'));
+                providerInfos.addSeriesName(new Name((media.abbreviatedTitles as any).title, 'abbreviatedTitles'));
             }
         } catch (err) { };
 
-        series.overviews.push(new Overview(media.synopsis, 'eng'));
-        series.releaseYear = new Date(media.startDate).getFullYear();
+        providerInfos.overviews.push(new Overview(media.synopsis, 'eng'));
 
-        const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
+        providerInfos.releaseYear = new Date(media.startDate).getFullYear();
+        providerInfos.runTime = media.episodeLength;
         providerInfos.mediaType = this.convertShowTypeToMediaType(media.showType);
         try {
             providerInfos.covers.push(new Cover(media.posterImage.original, ImageSize.ORIGINAL));
@@ -59,9 +56,8 @@ export default new class KitsuConverter {
         providerInfos.rawEntry = media;
         providerInfos.episodes = media.episodeCount;
         providerInfos.lastExternalChange = new Date(media.updatedAt);
-        series.addListProvider(providerInfos);
 
-        return series;
+        return providerInfos;
     }
 
     convertShowTypeToMediaType(showType: string): MediaType {

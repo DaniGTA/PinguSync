@@ -1,6 +1,8 @@
 import Cover from '../objects/meta/cover';
 import Banner from '../objects/meta/banner';
 import { MediaType } from '../objects/meta/media-type';
+import Name from '../objects/meta/name';
+import Overview from '../objects/meta/overview';
 
 export default class ProviderLocalData {
     /**
@@ -13,7 +15,7 @@ export default class ProviderLocalData {
      */
     public id: number | string = -1;
     /**
-     * 
+     * Cant get more info from this provider. 
      */
     public fullInfo: boolean = true;
     /**
@@ -45,7 +47,53 @@ export default class ProviderLocalData {
     public covers: Cover[] = [];
     public banners: Banner[] = [];
     public mediaType: MediaType = MediaType.UNKOWN;
+    public releaseYear?: number;
+    public runTime?: number;
+    protected names: Name[] = [];
+    public overviews: Overview[] = [];
+    public isNSFW = false;
+
 
     public sequelIds: number[] = [];
     public prequelIds: number[] = [];
+
+        /**
+    * Prevents too have double entrys for same name.
+    * @param infoProvider 
+    */
+    public addSeriesName(...names: Name[]) {
+        for (const name of names) {
+            if (name && name.name && name.name != 'null') {
+                if (this.names.findIndex(x => x.name === name.name && x.lang === x.lang) === -1) {
+                    this.names.push(name);
+                }
+            }
+        }
+        if (names.length > 25) {
+            console.log(".");
+        }
+    }
+
+    /**
+     * Adds an Overview too the Anime and prevents adding if overview is already present.
+     * @param newOverview 
+     */
+    public addOverview(newOverview: Overview): boolean {
+        this.overviews = [...this.overviews];
+        if (this.overviews.findIndex(x => x == newOverview) == -1) {
+            this.overviews.push(newOverview);
+            return true;
+        }
+        return false;
+    }
+
+    getAllNames(): Name[] {
+         return this.names;
+    }
+
+    getAllOverviews(): Overview[] {
+         return this.overviews;
+    }
+
+
 }

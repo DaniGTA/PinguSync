@@ -12,13 +12,13 @@ import getSeriesByIDGql from './graphql/getSeriesByID.gql';
 import { SearchSeries } from './graphql/searchSeries';
 import aniListConverter from './anilist-converter';
 import { GetSeriesByID } from './graphql/getSeriesByID';
-import timeHelper from '../../helpFunctions/time-helper';
 import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './anilist-user-data';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
-import seriesHelper from '../../helpFunctions/series-helper';
 import * as meta from '../../controller/objects/meta/media-type';
 import { MediaType } from './graphql/basics/mediaType';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import MultiProviderResult from '../multi-provider-result';
 
 export default class AniListProvider implements ListProvider {
     public hasUniqueIdForSeasons: boolean = true;
@@ -45,36 +45,26 @@ export default class AniListProvider implements ListProvider {
         return AniListProvider.instance;
     }
 
-    public async getMoreSeriesInfoByName(series: Series, seriesName: string): Promise<Series> {
-        var ProviderInfos = series.getListProvidersInfos().find(x => x.provider === this.providerName);
-        var id = null;
-        if (typeof ProviderInfos != 'undefined') {
-            id = ProviderInfos.id;
-        } else {
-
-            var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: seriesName, type: 'ANIME' })) as SearchSeries;
-            for (const result of searchResults.Page.media) {
+    public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
+        var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: seriesName, type: 'ANIME' })) as SearchSeries;
+        const endResult: MultiProviderResult[] = [];
+        for (const result of searchResults.Page.media) {
                 try {
-                    var b = await aniListConverter.convertMediaToAnime(result);
-                    if (await seriesHelper.isSameSeries(b, series)) {
-                        var bProviderInfos = b.getListProvidersInfos().find(x => x.provider === this.providerName);
-                        if (typeof bProviderInfos != 'undefined') {
-                            id = bProviderInfos.id;
-                        }
-                    }
+                    endResult.push(new MultiProviderResult(await aniListConverter.convertMediaToLocalData(result))); 
                 } catch (err) {
                     continue;
                 }
-            }
         }
-        if (id != null) {
-            await timeHelper.delay(2500);
-            var fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: id, type: 'ANIME' })) as GetSeriesByID;
+        return endResult;
+    }
 
-            return await (await aniListConverter.convertExtendedInfoToAnime(fullInfo)).merge(series);
-        } else {
-            throw 'NoSeriesInfoFound - AniList';
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+        if (provider.provider === this.providerName && provider.id) {
+            var fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' })) as GetSeriesByID;
+
+            return new MultiProviderResult(await(await aniListConverter.convertExtendedInfoToAnime(fullInfo)));
         }
+        throw 'False provider - AniList';
     }
 
     getTokenAuthUrl(): string {

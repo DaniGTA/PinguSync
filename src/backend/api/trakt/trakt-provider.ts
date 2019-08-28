@@ -11,7 +11,8 @@ import traktConverter from './trakt-converter';
 import { FullShowInfo } from './objects/fullShowInfo';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import { MediaType } from '../../controller/objects/meta/media-type';
-import seriesHelper from '../../helpFunctions/series-helper';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import MultiProviderResult from '../multi-provider-result';
 export default class TraktProvider implements ListProvider {
     supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
 
@@ -37,42 +38,25 @@ export default class TraktProvider implements ListProvider {
         this.userData = new TraktUserData();
     }
 
-    public async getMoreSeriesInfoByName(_anime: Series, seriesName: string): Promise<Series> {
-        var series = Object.assign(new Series(), _anime);
-        series.readdFunctions();
-        var providerInfos = series.getListProvidersInfos().find(x => x.provider === this.providerName);
-        var id = null;
-        if (providerInfos) {
-            id = providerInfos.id;
-        } else {
-            const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + encodeURI(seriesName));
-            for (const result of searchResults) {
-                try {
-                    var seriesList: Series[] = [];
-                    if (result.show) {
-                        seriesList.push(await traktConverter.convertShowToSeries(result.show));
-                    }
-                    if (result.movie) {
-                        seriesList.push(await traktConverter.convertMovieToSeries(result.movie));
-                    }
-                    for (const b of seriesList) {
-                        if (b && await seriesHelper.isSameSeries(series, b)) {
-                            var providerInfos = b.getListProvidersInfos().find(x => x.provider === this.providerName);
-                            if (providerInfos) {
-                                id = providerInfos.id;
-                                break;
-                            }
-                        }
-                    }
-                } catch (err) { }
-            }
+    public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
+        const endResult: MultiProviderResult[] = [];
+        const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + encodeURI(seriesName));
+        for (const result of searchResults) {
+            try {
+                if (result.show) {
+                    endResult.push(await traktConverter.convertShowToLocalData(result.show));
+                }
+                if (result.movie) {
+                    endResult.push(await traktConverter.convertMovieToLocalData(result.movie));
+                }
+            } catch (err) { }
         }
-        if (id != null) {
-            const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + id);
-            return await (await traktConverter.convertFullShowInfoToAnime(res)).merge(series);
-        } else {
-            throw 'NoMatch in TraktSearch';
-        }
+        return endResult;
+    }
+
+    public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+        const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id);
+        return await (await traktConverter.convertFullShowInfoToLocalData(res));
     }
 
     public getTokenAuthUrl(): string {

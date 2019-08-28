@@ -7,62 +7,85 @@ import { ListProviderLocalData } from '../../../src/backend/controller/objects/l
 describe('seriesTest | Merge', () => {
     it('should merge episode', async () => {
         const seriesA = new Series();
-        seriesA.addSeriesName(new Name('Test', 'en'));
-        seriesA['episodes'] = 10;
+        const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('Test', 'en'));
+        lpld['episodes'] = 10;
+        seriesA.addListProvider(lpld);
+
         const seriesB = new Series();
-        seriesB['episodes'] = 10;
+        const lpld2 = new ListProviderLocalData();
+        lpld2['episodes'] = 10;
+        seriesB.addListProvider(lpld2);
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(seriesA.getMaxEpisode(), 10);
+        strictEqual(merged.getMaxEpisode(), 10);
         return;
     });
     it('should merge episode (2)', async () => {
         const seriesA = new Series();
-        seriesA.addSeriesName(new Name('Test', 'en'));
-        seriesA['episodes'] = 10;
+        const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('Test', 'en'));
+        lpld['episodes'] = 10;
+        seriesA.addListProvider(lpld);
         const seriesB = new Series();
-
         const merged = await seriesA.merge(seriesB);
-        strictEqual(seriesA.getMaxEpisode(), 10);
+        strictEqual(merged.getMaxEpisode(), 10);
         return;
     });
     it('should merge overview', async () => {
         const seriesA = new Series();
-        seriesA.addSeriesName(new Name('Test', 'en'));
-        seriesA.addOverview(new Overview('Test', 'en'));
+           const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('Test', 'en'));
+        lpld.addOverview(new Overview('Test', 'en'));
+            seriesA.addListProvider(lpld);
         const seriesB = new Series();
-        seriesB.addOverview(new Overview('Test', 'en'));
+         const lpld2 = new ListProviderLocalData();
+        lpld2.addOverview(new Overview('Test', 'en'));
+        seriesB.addListProvider(lpld2);
+
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.overviews.length, 1);
+        strictEqual((await merged.getAllOverviews()).length, 1);
         return;
     });
     it('should merge overview (2)', async () => {
         const seriesA = new Series();
-        seriesA.addOverview(new Overview('TestA', 'en'));
-        seriesA.addSeriesName(new Name('Test', 'en'));
+        const lpld = new ListProviderLocalData();
+        lpld.addOverview(new Overview('TestA', 'en'));
+        lpld.addSeriesName(new Name('Test', 'en'));
+        seriesA.addListProvider(lpld);
+
         const seriesB = new Series();
-        seriesB.addOverview(new Overview('TestB', 'en'));
+        const lpld2 = new ListProviderLocalData();
+        lpld2.addOverview(new Overview('TestB', 'en'));
+        seriesB.addListProvider(lpld2);
+
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.overviews.length, 2);
+        strictEqual((await merged.getAllOverviews()).length, 2);
         return;
     });
     it('should merge overview (3)', async () => {
         const seriesA = new Series();
-        seriesA.addSeriesName(new Name('Test', 'en'));
-        seriesA.addOverview(new Overview('TestA', 'en'));
+        const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('Test', 'en'));
+        lpld.addOverview(new Overview('TestA', 'en'));
+        seriesA.addListProvider(lpld);
         const seriesB = new Series();
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.overviews.length, 1);
+        strictEqual((await merged.getAllOverviews()).length, 1);
         return;
     });
     it('should merge name', async () => {
         const seriesA = new Series();
-        seriesA.addSeriesName(new Name('Test', 'en'));
+            const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('Test', 'en'));
+          seriesA.addListProvider(lpld);
         const seriesB = new Series();
-        seriesB.addSeriesName(new Name('Test', 'en'));
+            const lpld2 = new ListProviderLocalData();
+        lpld2.addSeriesName(new Name('Test', 'en'));
+          seriesB.addListProvider(lpld2);
 
         const merged = await seriesA.merge(seriesB);
         strictEqual((await merged.getAllNames()).length, 1);
@@ -70,17 +93,22 @@ describe('seriesTest | Merge', () => {
     });
     it('should merge name (2)', async () => {
         const seriesA = new Series();
-        seriesA.addSeriesName(new Name('TestA', 'en'));
+          const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('TestA', 'en'));
+        seriesA.addListProvider(lpld);
         const seriesB = new Series();
-        seriesB.addSeriesName(new Name('TestB', 'en'));
-
+          const lpld2 = new ListProviderLocalData();
+        lpld2.addSeriesName(new Name('TestB', 'en'));
+        seriesB.addListProvider(lpld2);
         const merged = await seriesA.merge(seriesB);
         strictEqual((await merged.getAllNames()).length, 2);
         return;
     });
     it('should merge name (3)', async () => {
         const seriesA = new Series();
-        seriesA.addSeriesName(new Name('TestA', 'en'));
+         const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('TestA', 'en'));
+         seriesA.addListProvider(lpld);
         const seriesB = new Series();
 
         const merged = await seriesA.merge(seriesB);
@@ -93,7 +121,7 @@ describe('seriesTest | Merge', () => {
         const lpld = new ListProviderLocalData("Test");
         lpld.targetSeason = 1;
         lpld.id = 2;
-        seriesA.addSeriesName(new Name('TestA', 'en'));
+        lpld.addSeriesName(new Name('TestA', 'en'));
         seriesA.addListProvider(lpld);
         const seriesB = new Series();
         const lpld2 = new ListProviderLocalData("Test");
