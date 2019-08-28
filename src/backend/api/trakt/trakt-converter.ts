@@ -1,4 +1,4 @@
-import { Show } from './objects/search';
+import { Show, Movie } from './objects/search';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import { Show as SendEntryShow, Season, Episode, SendEntryUpdate } from './objects/sendEntryUpdate';
 import Series, { WatchStatus } from '../../controller/objects/series';
@@ -9,6 +9,8 @@ import TraktProvider from './trakt-provider';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import TVDBProvider from '../tvdb/tvdb-provider';
 export default new class TraktConverter {
     async convertSeasonsToSeries(watchedInfo: WatchedInfo): Promise<Series[]> {
         const result = [];
@@ -37,10 +39,12 @@ export default new class TraktConverter {
         return result;
     }
 
-    async convertShowToAnime(show: Show | WatchedShow): Promise<Series> {
+    async convertShowToSeries(show: Show | WatchedShow): Promise<Series> {
         const series = new Series();
-        series.addSeriesName(new Name(show.title, 'en'));
-        series.addSeriesName(new Name(show.ids.slug, 'slug'));
+        try {
+            series.addSeriesName(new Name(show.title, 'en', NameType.OFFICIAL));
+        } catch (err) { }
+        series.addSeriesName(new Name(show.ids.slug, 'slug', NameType.SLUG));
         series.releaseYear = show.year;
 
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
@@ -48,16 +52,34 @@ export default new class TraktConverter {
         provider.rawEntry = show;
         series.addListProvider(provider);
 
-        const tvdbProvider = new InfoProviderLocalData('tvdb');
+        const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
         tvdbProvider.id = show.ids.tvdb;
         await series.addInfoProvider(tvdbProvider);
 
         return series;
     }
+
+    async convertMovieToSeries(traktMovie: Movie | WatchedShow): Promise<Series> {
+        const movie = new Series();
+        try {
+            movie.addSeriesName(new Name(traktMovie.title, 'en', NameType.OFFICIAL));
+        } catch (err) { }
+        movie.addSeriesName(new Name(traktMovie.ids.slug, 'slug', NameType.SLUG));
+        movie.releaseYear = traktMovie.year;
+
+        const provider = new ListProviderLocalData(TraktProvider.getInstance());
+        provider.id = traktMovie.ids.trakt;
+        provider.rawEntry = traktMovie;
+        provider.mediaType = MediaType.MOVIE;
+        movie.addListProvider(provider);
+
+        return movie;
+    }
+
     async convertFullShowInfoToAnime(fullShow: FullShowInfo): Promise<Series> {
         const series = new Series();
-        series.addSeriesName(new Name(fullShow.title, 'en'));
-        series.addSeriesName(new Name(fullShow.ids.slug, 'slug'));
+        series.addSeriesName(new Name(fullShow.title, 'en', NameType.OFFICIAL));
+        series.addSeriesName(new Name(fullShow.ids.slug, 'slug', NameType.SLUG));
         series.releaseYear = fullShow.year;
         series.overviews.push(new Overview(fullShow.overview, 'eng'));
         series.runTime = fullShow.runtime;
@@ -70,7 +92,7 @@ export default new class TraktConverter {
         series.addListProvider(provider);
 
 
-        const tvdbProvider = new InfoProviderLocalData('tvdb');
+        const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
         tvdbProvider.id = fullShow.ids.tvdb;
         await series.addInfoProvider(tvdbProvider);
         return series;

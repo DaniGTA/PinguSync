@@ -3,7 +3,6 @@ import request from 'request';
 import { Viewer } from "./graphql/viewer";
 import getViewerGql from "./graphql/getViewer.gql";
 import GetUserSeriesListGql from "./graphql/getUserSeriesList.gql";
-import { MediaType } from "./graphql/basics/mediaType";
 import { MediaListCollection } from "./graphql/seriesList";
 import ListProvider from "../list-provider";
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
@@ -18,13 +17,15 @@ import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { AniListUserData } from './anilist-user-data';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import seriesHelper from '../../helpFunctions/series-helper';
+import * as meta from '../../controller/objects/meta/media-type';
+import { MediaType } from './graphql/basics/mediaType';
 
 export default class AniListProvider implements ListProvider {
     public hasUniqueIdForSeasons: boolean = true;
     public providerName: string = "AniList";
     public version = 1;
     public hasOAuthCode = true;
-
+    public supportedMediaTypes: meta.MediaType[] = [meta.MediaType.MOVIE, meta.MediaType.ANIME, meta.MediaType.SPECIAL];
     private static instance: AniListProvider;
     userData: AniListUserData;
     private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';

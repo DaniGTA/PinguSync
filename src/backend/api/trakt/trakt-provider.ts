@@ -8,10 +8,12 @@ import { TraktUserData } from './trakt-user-data';
 
 import request from 'request';
 import traktConverter from './trakt-converter';
-import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import { FullShowInfo } from './objects/fullShowInfo';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import seriesHelper from '../../helpFunctions/series-helper';
 export default class TraktProvider implements ListProvider {
+    supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
 
     public static getInstance() {
         if (!TraktProvider.instance) {
@@ -40,17 +42,26 @@ export default class TraktProvider implements ListProvider {
         series.readdFunctions();
         var providerInfos = series.getListProvidersInfos().find(x => x.provider === this.providerName);
         var id = null;
-        if (typeof providerInfos != 'undefined') {
+        if (providerInfos) {
             id = providerInfos.id;
         } else {
             const searchResults = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/movie,show?query=' + encodeURI(seriesName));
             for (const result of searchResults) {
                 try {
-                    var b = await traktConverter.convertShowToAnime(result.show);
-                    if (await titleCheckHelper.checkSeriesNames(series, b)) {
-                        var providerInfos = b.getListProvidersInfos().find(x => x.provider === this.providerName);
-                        if (typeof providerInfos != 'undefined') {
-                            id = providerInfos.id;
+                    var seriesList: Series[] = [];
+                    if (result.show) {
+                        seriesList.push(await traktConverter.convertShowToSeries(result.show));
+                    }
+                    if (result.movie) {
+                        seriesList.push(await traktConverter.convertMovieToSeries(result.movie));
+                    }
+                    for (const b of seriesList) {
+                        if (b && await seriesHelper.isSameSeries(series, b)) {
+                            var providerInfos = b.getListProvidersInfos().find(x => x.provider === this.providerName);
+                            if (providerInfos) {
+                                id = providerInfos.id;
+                                break;
+                            }
                         }
                     }
                 } catch (err) { }

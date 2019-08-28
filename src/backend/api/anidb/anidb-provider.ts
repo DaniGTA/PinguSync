@@ -9,11 +9,13 @@ import InfoProvider from '../info-provider';
 import AniDBNameManager from './anidb-name-manager';
 import AniDBNameListXML, { Title, Anime } from './objects/anidbNameListXML';
 import AniDBConverter from './anidb-converter';
+import { MediaType } from '../../controller/objects/meta/media-type';
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
     public version: number = 1;
     public isOffline = true;
     public hasUniqueIdForSeasons = true;
+    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     private static anidbNameManager: AniDBNameManager = new AniDBNameManager();
     public static instance: AniDBProvider;
     constructor(download: boolean = true) {

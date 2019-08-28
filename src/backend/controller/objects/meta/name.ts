@@ -18,7 +18,11 @@ export default class Name {
             score += 10;
         }
         if (name.nameType === NameType.OFFICIAL || name.nameType === NameType.MAIN) {
-             score += 10;
+            score += 10;
+        } else if (name.nameType === NameType.UNKNOWN) {
+            score -= 10;
+        } else if (name.nameType == NameType.SLUG) {
+            score += 5;
         }
         score += (name.name.match(/\w/g) || []).length;
         return score;

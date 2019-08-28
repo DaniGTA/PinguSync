@@ -2,6 +2,7 @@ import Series from '../controller/objects/series';
 import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
 import WatchProgress from '../controller/objects/meta/watch-progress';
 import { UserData } from './user-data';
+import { MediaType } from '../controller/objects/meta/media-type';
 
 export default interface ListProvider {
     providerName: string;
@@ -9,6 +10,7 @@ export default interface ListProvider {
     hasUniqueIdForSeasons: boolean;
     userData: UserData;
     version: number;
+    supportedMediaTypes: MediaType[];
 
     getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series>;
     getAllSeries(disableCache?: boolean): Promise<Series[]>;

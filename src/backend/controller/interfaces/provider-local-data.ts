@@ -1,5 +1,6 @@
 import Cover from '../objects/meta/cover';
 import Banner from '../objects/meta/banner';
+import { MediaType } from '../objects/meta/media-type';
 
 export default class ProviderLocalData {
     /**
@@ -43,6 +44,7 @@ export default class ProviderLocalData {
     public publicScore?: number;
     public covers: Cover[] = [];
     public banners: Banner[] = [];
+    public mediaType: MediaType = MediaType.UNKOWN;
 
     public sequelIds: number[] = [];
     public prequelIds: number[] = [];

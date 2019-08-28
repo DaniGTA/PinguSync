@@ -9,6 +9,7 @@ import { GetMediaResult } from './objects/getResult';
 import timeHelper from '../../helpFunctions/time-helper';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import seriesHelper from '../../helpFunctions/series-helper';
+import { MediaType } from '../../controller/objects/meta/media-type';
 export default class KitsuProvider implements ListProvider {
     removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
@@ -17,6 +18,7 @@ export default class KitsuProvider implements ListProvider {
         throw new Error("Method not implemented.");
     }
     public version = 1;
+    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
 
     providerName: string = 'Kitsu';
     hasOAuthCode: boolean = true;

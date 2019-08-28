@@ -6,10 +6,12 @@ import { ListProviderLocalData } from 'src/backend/controller/objects/list-provi
 import request from 'request';
 import CodeResponse from './objects/codeResponse';
 import { UserListResponse } from './objects/userListResonse';
+import { MediaType } from '../../controller/objects/meta/media-type';
 
 export default class SimklProvider implements ListProvider {
     static instance: SimklProvider;
     userData: SimklUserData = new SimklUserData();
+    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public providerName = "Simkl";
     public version = 1;
     public hasOAuthCode = true;

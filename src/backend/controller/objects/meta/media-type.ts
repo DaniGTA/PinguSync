@@ -1,6 +1,7 @@
 export enum MediaType {
-    UNKOWN,
-    SERIES,
-    MOVIE,
-    SPECIAL
+    UNKOWN = "UNKOWN",
+    SERIES = "SERIES",
+    ANIME = "ANIME",
+    MOVIE = "MOVIE",
+    SPECIAL = "SPECIAL"
 }

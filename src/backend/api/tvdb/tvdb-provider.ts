@@ -8,8 +8,10 @@ import { TVDBSeries } from './models/getSeries';
 import SeriesSearchResults from './models/searchResults';
 import seriesHelper from '../../helpFunctions/series-helper';
 import { TVDBProviderData } from './tvdb-provider-data';
+import { MediaType } from '../../controller/objects/meta/media-type';
 
 export default class TVDBProvider implements InfoProvider {
+    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public providerName = 'tvdb'
     public isOffline = false;
     public hasUniqueIdForSeasons = false;

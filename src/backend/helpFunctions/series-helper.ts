@@ -94,13 +94,13 @@ class SeriesHelper {
             return new SearchSeasonValueResult(numberFromName, "Name");
         }
         let prequel = null;
-     
+
         if (await series.isAnyPrequelPresent()) {
             try {
                 prequel = await series.getPrequel(seriesList);
                 let searchCount = 0;
                 while (prequel) {
-                    if (prequel.mediaType === series.mediaType) {
+                    if (await prequel.getMediaType() === await series.getMediaType()) {
                         searchCount++;
                         const prequelSeason = await prequel.getSeason(seriesList);
                         if (prequelSeason === 1 || prequelSeason === 0) {
@@ -115,12 +115,12 @@ class SeriesHelper {
                             return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
                         }
                     } else {
-                         return new SearchSeasonValueResult(searchCount, "PrequelTrace");
+                        return new SearchSeasonValueResult(searchCount, "PrequelTrace");
                     }
                 }
             } catch (err) {
             }
-             return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
+            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
         }
 
         try {

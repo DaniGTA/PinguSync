@@ -16,7 +16,7 @@ export default new class KitsuConverter {
         const series = new Series();
 
         series.runTime = media.episodeLength;
-        
+
 
         series.addSeriesName(new Name(media.titles.en, 'en'));
         series.addSeriesName(new Name(media.titles.en_us, 'en_us', NameType.OFFICIAL));
@@ -37,9 +37,9 @@ export default new class KitsuConverter {
 
         series.overviews.push(new Overview(media.synopsis, 'eng'));
         series.releaseYear = new Date(media.startDate).getFullYear();
-        series.mediaType = this.convertShowTypeToMediaType(media.showType);
-        const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
 
+        const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
+        providerInfos.mediaType = this.convertShowTypeToMediaType(media.showType);
         try {
             providerInfos.covers.push(new Cover(media.posterImage.original, ImageSize.ORIGINAL));
             providerInfos.covers.push(new Cover(media.posterImage.tiny, ImageSize.TINY));
@@ -70,7 +70,7 @@ export default new class KitsuConverter {
         } else if (showType == "OVA") {
             return MediaType.SPECIAL;
         } else if (showType == "TV") {
-            return MediaType.SERIES;
+            return MediaType.ANIME;
         } else if (showType == "movie") {
             return MediaType.MOVIE;
         } else if (showType == "music") {

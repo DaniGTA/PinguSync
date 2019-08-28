@@ -20,9 +20,9 @@ export default new class AniListConverter {
         series.addSeriesName(new Name(medium.title.english, 'unknown', NameType.MAIN));
         series.addSeriesName(new Name(medium.title.native, 'jap'));
         series.releaseYear = medium.startDate.year;
-        series.mediaType = await this.convertTypeToMediaType(medium.format);
 
         const provider = new ListProviderLocalData(AniListProvider.getInstance());
+        provider.mediaType = await this.convertTypeToMediaType(medium.format);
         provider.covers.push(new Cover(medium.coverImage.large, ImageSize.LARGE));
         provider.covers.push(new Cover(medium.coverImage.medium, ImageSize.MEDIUM));
 
@@ -39,7 +39,7 @@ export default new class AniListConverter {
         if (type == MediaFormat.MOVIE) {
             return MediaType.MOVIE;
         } else if (type == MediaFormat.TV || type == MediaFormat.TV_SHORT) {
-            return MediaType.SERIES;
+            return MediaType.ANIME;
         } else if (type == MediaFormat.SPECIAL || MediaFormat.OVA || MediaFormat.ONA) {
             return MediaType.SPECIAL;
         }
@@ -55,9 +55,9 @@ export default new class AniListConverter {
         series.addSeriesName(new Name(info.Media.title.english, 'unknown', NameType.MAIN));
         series.addSeriesName(new Name(info.Media.title.native, 'jap'));
         series.addSeriesName(new Name(info.Media.title.userPreferred, 'userPreferred'));
-        series.mediaType = await this.convertTypeToMediaType(info.Media.format);
 
         const provider = new ListProviderLocalData(AniListProvider.getInstance());
+        provider.mediaType = await this.convertTypeToMediaType(info.Media.format);
         provider.covers.push(new Cover(info.Media.coverImage.large, ImageSize.LARGE));
         provider.covers.push(new Cover(info.Media.coverImage.medium, ImageSize.MEDIUM));
 
@@ -76,16 +76,16 @@ export default new class AniListConverter {
         series.addSeriesName(new Name(entry.media.title.english, 'unknown', NameType.MAIN));
         series.addSeriesName(new Name(entry.media.title.native, 'jap'));
 
-        series.mediaType = await this.convertTypeToMediaType(entry.media.format);
 
         series.releaseYear = entry.media.startDate.year;
 
         var providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
+        providerInfo.mediaType = await this.convertTypeToMediaType(entry.media.format);
         providerInfo.targetSeason = await Name.getSeasonNumber(await series.getAllNames());
         try {
             if (!providerInfo.targetSeason) {
                 if (entry.media.relations.edges.findIndex(x => x.relationType == MediaRelation.PREQUEL) === -1) {
-                    if (series.mediaType === MediaType.SPECIAL) {
+                    if (await series.getMediaType() === MediaType.SPECIAL) {
                         providerInfo.targetSeason = 0;
                     } else {
                         providerInfo.targetSeason = 1;

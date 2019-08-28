@@ -21,7 +21,6 @@ export default class Series extends SeriesProviderExtension {
     public lastUpdate: number = Date.now();
     public lastInfoUpdate: number = 0;
     private names: Name[] = [];
-    public mediaType: MediaType = MediaType.SERIES;
     private episodes?: number;
     public overviews: Overview[] = [];
     public releaseYear?: number;
@@ -512,7 +511,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {
-        if (a.mediaType === b.mediaType) {
+        if (await a.getMediaType() === await b.getMediaType()) {
             for (const providerA of a.listProviderInfos) {
                 for (let providerB of b.listProviderInfos) {
                     if (providerA.provider === providerB.provider) {
@@ -550,6 +549,31 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         throw "no relations found in the providers";
+    }
+
+    async getAllProviderLocalDatas(): Promise<ProviderLocalData[]> {
+        const localdata = [];
+        localdata.push(...this.getInfoProvidersInfos());
+        localdata.push(...this.getListProvidersInfos());
+        return localdata;
+    }
+
+    async getMediaType(): Promise<MediaType> {
+        const collectedMediaTypes: MediaType[] = [];
+        for (const localdata of await this.getAllProviderLocalDatas()) {
+            if (localdata.mediaType != MediaType.UNKOWN) {
+                collectedMediaTypes.push(localdata.mediaType);
+            }
+        }
+        if (collectedMediaTypes.length === 0) {
+            return MediaType.UNKOWN;
+        } else {
+            const result = await listHelper.findMostFrequent(collectedMediaTypes);
+            if (result) {
+                return result;
+            }
+        }
+        return MediaType.UNKOWN;
     }
 }
 

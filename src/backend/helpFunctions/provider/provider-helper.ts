@@ -10,6 +10,8 @@ import timeHelper from '../time-helper';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import listHelper from '../list-helper';
 import ProviderSearchResultManager from '../../controller/stats-manager/models/provider-search-result-manager';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import stringHelper from '../string-helper';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -63,26 +65,31 @@ export default new class ProviderHelper {
     }
 
     public async getProviderSeriesInfoByName(series: Series, provider: ListProvider | InfoProvider): Promise<Series> {
-        let names = await series.getAllNames();
-        names = names.sort((a, b) => Name.getSearchAbleScore(b) - Name.getSearchAbleScore(a));
-        names = await listHelper.getLazyUniqueStringList(names);
-        const alreadySearchedNames: string[] = [];
+        const seriesMediaType = await series.getMediaType();
+        if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
+            let names = await series.getAllNames();
+            names = names.sort((a, b) => Name.getSearchAbleScore(b) - Name.getSearchAbleScore(a));
+            names = await listHelper.getLazyUniqueStringList(names);
+            const alreadySearchedNames: string[] = [];
+            //Test
+            names.unshift(new Name(await stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType))
 
-        let data;
-        for (const name of names) {
-            const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
-            if (!alreadySearchedName && name.name) {
-                console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
-                try {
-                    data = await provider.getMoreSeriesInfoByName(series, name.name);
-                } catch (err) { }
-                if (data) {
-                    console.log("[" + provider.providerName + "] Request success 🎉");
-                    ProviderSearchResultManager.addNewSearchResult(provider.providerName,name,true);
-                    return data;
+            let data;
+            for (const name of names) {
+                const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
+                if (!alreadySearchedName && name.name) {
+                    console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
+                    try {
+                        data = await provider.getMoreSeriesInfoByName(series, name.name);
+                    } catch (err) { }
+                    if (data) {
+                        console.log("[" + provider.providerName + "] Request success 🎉");
+                        ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, true, seriesMediaType);
+                        return data;
+                    }
+                    ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, false, seriesMediaType);
+                    alreadySearchedNames.push(name.name);
                 }
-                ProviderSearchResultManager.addNewSearchResult(provider.providerName,name,false);
-                alreadySearchedNames.push(name.name);
             }
         }
 
