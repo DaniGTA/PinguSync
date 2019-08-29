@@ -111,65 +111,66 @@ export class ListProviderLocalData extends ProviderLocalData {
         const covers: Cover[] = [];
         const banners: Banner[] = []
         for (const provider of providers) {
-            if (provider.id != -1) {
-                if (mergedProvider.id != -1 && mergedProvider.id != provider.id) {
-                    continue;
-                }
-                mergedProvider.id = provider.id;
-                mergedProvider.rawEntry = provider.rawEntry;
-                mergedProvider.covers = provider.covers;
-                if (provider.covers) {
-                    for (const cover of provider.covers) {
-                        if (!await listHelper.isCoverInList(covers, cover)) {
-                            covers.push(cover);
-                        }
+            if (mergedProvider.id != provider.id) {
+                continue;
+            }
+            mergedProvider.addSeriesName(...provider.names);
+            mergedProvider.addOverview(...provider.overviews);
+            mergedProvider.id = provider.id;
+            mergedProvider.rawEntry = provider.rawEntry;
+            mergedProvider.covers = provider.covers;
+            mergedProvider.episodes = provider.episodes
+            if (provider.covers) {
+                for (const cover of provider.covers) {
+                    if (!await listHelper.isCoverInList(covers, cover)) {
+                        covers.push(cover);
                     }
                 }
-                if (provider.banners) {
-                    for (const banner of provider.banners) {
-                        if (!await listHelper.isCoverInList(banners, banner)) {
-                            banners.push(banner);
-                        }
+            }
+            if (provider.banners) {
+                for (const banner of provider.banners) {
+                    if (!await listHelper.isCoverInList(banners, banner)) {
+                        banners.push(banner);
                     }
                 }
-                if (!newestProvider) {
-                    newestProvider = provider;
-                } else if (new Date(newestProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
-                    newestProvider = provider;
+            }
+            if (!newestProvider) {
+                newestProvider = provider;
+            } else if (new Date(newestProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
+                newestProvider = provider;
+            }
+            if (provider.publicScore) {
+                if (mergedProvider.publicScore) {
+                    mergedProvider.publicScore = (mergedProvider.publicScore + provider.publicScore) / 2;
+                } else {
+                    mergedProvider.publicScore = provider.publicScore;
                 }
-                if (provider.publicScore) {
-                    if (mergedProvider.publicScore) {
-                        mergedProvider.publicScore = (mergedProvider.publicScore + provider.publicScore) / 2;
-                    } else {
-                        mergedProvider.publicScore = provider.publicScore;
-                    }
-                }
-                if (provider.targetSeason) {
-                    mergedProvider.targetSeason = provider.targetSeason;
-                }
+            }
+            if (provider.targetSeason) {
+                mergedProvider.targetSeason = provider.targetSeason;
+            }
 
-                if (typeof provider.score != 'undefined') {
-                    if (typeof mergedProvider.score != 'undefined') {
-                        mergedProvider.score = (mergedProvider.score + provider.score) / 2;
-                    } else {
-                        mergedProvider.score = provider.score;
-                    }
+            if (typeof provider.score != 'undefined') {
+                if (typeof mergedProvider.score != 'undefined') {
+                    mergedProvider.score = (mergedProvider.score + provider.score) / 2;
+                } else {
+                    mergedProvider.score = provider.score;
                 }
+            }
 
-                if (typeof provider.watchProgress != 'undefined') {
-                    if (typeof mergedProvider.watchProgress != 'undefined') {
-                        if (mergedProvider.watchProgress < provider.watchProgress) {
-                            mergedProvider.watchProgress = provider.watchProgress;
-                        }
-                    } else {
+            if (typeof provider.watchProgress != 'undefined') {
+                if (typeof mergedProvider.watchProgress != 'undefined') {
+                    if (mergedProvider.watchProgress < provider.watchProgress) {
                         mergedProvider.watchProgress = provider.watchProgress;
                     }
+                } else {
+                    mergedProvider.watchProgress = provider.watchProgress;
                 }
+            }
 
-                if (await ListProviderLocalData.isValidWatchStatus(provider.watchStatus, mergedProvider.watchStatus)) {
-                    mergedProvider.watchStatus = provider.watchStatus;
+            if (await ListProviderLocalData.isValidWatchStatus(provider.watchStatus, mergedProvider.watchStatus)) {
+                mergedProvider.watchStatus = provider.watchStatus;
 
-                }
             }
         }
         if (newestProvider) {
@@ -209,16 +210,12 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.covers) {
                 mergedProvider.runTime = newestProvider.runTime;
             }
-            if (newestProvider.names) {
-                mergedProvider.names = newestProvider.names;
-            }
-            if (newestProvider.overviews) {
-                mergedProvider.overviews = newestProvider.overviews;
-            }
             mergedProvider.fullInfo = newestProvider.fullInfo;
             if (newestProvider.targetSeason) {
                 mergedProvider.targetSeason = newestProvider.targetSeason;
             }
+            mergedProvider.names = await listHelper.getUniqueNameList(mergedProvider.names);
+            mergedProvider.overviews = await listHelper.getUniqueOverviewList(mergedProvider.overviews);
             mergedProvider.lastUpdate = newestProvider.lastUpdate;
         }
         mergedProvider.covers = covers;

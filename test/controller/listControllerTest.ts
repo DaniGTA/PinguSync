@@ -24,7 +24,7 @@ describe('ListControllerTest | Combine', () => {
         MainListLoader['saveData'] = async () => { };
     })
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider("Test"),new TestProvider("")];
+        ProviderList['loadedListProvider'] = [new TestProvider("Test"), new TestProvider("")];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     })
@@ -248,10 +248,10 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 12;
         lpld.targetSeason = 1;
-        var x1 = await getFilledAnime("",1);
+        var x1 = await getFilledAnime("", 1);
         x1.getListProvidersInfos()[0].targetSeason = 1;
         await x1.addListProvider(lpld);
-        var x2 = await getFilledAnime("",1);
+        var x2 = await getFilledAnime("", 1);
         await x2.addListProvider(lpld);
         x2.getListProvidersInfos()[0].targetSeason = undefined;
 
@@ -337,12 +337,12 @@ describe('ListControllerTest | Combine', () => {
         lpld.id = 2;
         lpld.episodes = 10;
 
-        var x1 = await getFilledAnime("Test",1);
+        var x1 = await getFilledAnime("Test", 1);
         x1.getListProvidersInfos()[0].targetSeason = undefined;
         await x1.addListProvider(lpld);
 
 
-        var x2 = await getFilledAnime("Test",1);
+        var x2 = await getFilledAnime("Test", 1);
         x2.getListProvidersInfos()[0].targetSeason = 1;
         await x2.addListProvider(lpld);
 
@@ -354,7 +354,7 @@ describe('ListControllerTest | Combine', () => {
     })
 })
 
-async function getFilledAnime(providername: string = "Test", providerId:number = -1): Promise<Series> {
+async function getFilledAnime(providername: string = "Test", providerId: number = -1): Promise<Series> {
     const provider = new ListProviderLocalData(providername);
     if (providerId != -1) {
         provider.id = providerId;
@@ -362,8 +362,8 @@ async function getFilledAnime(providername: string = "Test", providerId:number =
         provider.id = Math.random() * (+0 - +10000) + +10000;
     }
     var anime = new Series();
-    anime.getListProvidersInfos()[0]['episodes'] = 10;
-    anime.getListProvidersInfos()[0]['releaseYear'] = 2014;
+    provider.episodes = 10;
+    provider.releaseYear = 2014;
     provider.addSeriesName(new Name("FilledTest", "en"));
     provider.targetSeason = 3;
     await anime.addListProvider(provider);

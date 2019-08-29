@@ -21,7 +21,7 @@ export default new class KitsuConverter {
         providerInfos.addSeriesName(new Name(media.slug, 'slug', NameType.SLUG));
         providerInfos.addSeriesName(new Name(media.titles.en_us, 'en_us'));
         providerInfos.addSeriesName(new Name(media.canonicalTitle, 'canonicalTitle'));
-        
+
         try {
             if (Array.isArray(media.abbreviatedTitles)) {
                 for (const title of media.abbreviatedTitles) {
@@ -32,7 +32,7 @@ export default new class KitsuConverter {
             }
         } catch (err) { };
 
-        providerInfos.overviews.push(new Overview(media.synopsis, 'eng'));
+        providerInfos.addOverview(new Overview(media.synopsis, 'eng'));
 
         providerInfos.releaseYear = new Date(media.startDate).getFullYear();
         providerInfos.runTime = media.episodeLength;

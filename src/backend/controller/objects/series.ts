@@ -37,7 +37,7 @@ export default class Series extends SeriesProviderExtension {
 
     async getAllNames(): Promise<Name[]> {
         const names = [];
-        for (const provider of await this.getAllProviderLocalDatas()) {
+        for (const provider of this.getAllProviderLocalDatas()) {
             names.push(...provider.getAllNames());
         }
         return await listHelper.getUniqueNameList(names);
@@ -45,7 +45,7 @@ export default class Series extends SeriesProviderExtension {
 
     async getAllOverviews(): Promise<Overview[]> {
         const overviews = [];
-        for (const provider of await this.getAllProviderLocalDatas()) {
+        for (const provider of this.getAllProviderLocalDatas()) {
             overviews.push(...provider.getAllOverviews());
         }
         return await listHelper.getUniqueOverviewList(overviews);
@@ -91,7 +91,8 @@ export default class Series extends SeriesProviderExtension {
      * It get the max number of that anime.
      */
     public getMaxEpisode(): number {
-        const array = (this.getListProvidersInfos().flatMap(x => x.episodes) as number[]);
+        const providers = this.getAllProviderLocalDatas();
+        const array = (providers.flatMap(x => x.episodes) as number[]);
         const onlyNumbers = array.filter(v => Number.isInteger(v as number));
         if (onlyNumbers.length == 0) {
             throw 'no episode found';
@@ -105,9 +106,9 @@ export default class Series extends SeriesProviderExtension {
     public async getAllEpisodes(): Promise<number[]> {
         let result;
         try {
-            result = await listHelper.cleanArray(this.getListProvidersInfos().flatMap(x => x.episodes))
+            result = await listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap(x => x.episodes))
         } catch (e) { }
-        if (result){
+        if (result) {
             return await listHelper.getUniqueList(result as number[]);
         }
         throw 'no episode found';
@@ -230,7 +231,7 @@ export default class Series extends SeriesProviderExtension {
                     // If the watchprogress has a difference and if the provider has a max defined episode.
                     // Without the episodes we dont know if we can sync or not.
                     if (latestWatchProgress.episode != watchProgress.episode) {
-                        if (!latestUpdatedProvider.episodes|| latestWatchProgress.episode < latestUpdatedProvider.episodes) {
+                        if (!latestUpdatedProvider.episodes || latestWatchProgress.episode < latestUpdatedProvider.episodes) {
                             try {
                                 if (!watchProgress) {
                                     return true;
@@ -491,7 +492,7 @@ export default class Series extends SeriesProviderExtension {
         throw "no relations found in the providers";
     }
 
-    async getAllProviderLocalDatas(): Promise<ProviderLocalData[]> {
+    getAllProviderLocalDatas(): ProviderLocalData[] {
         const localdata = [];
         localdata.push(...this.getInfoProvidersInfos());
         localdata.push(...this.getListProvidersInfos());
@@ -500,7 +501,7 @@ export default class Series extends SeriesProviderExtension {
 
     async getMediaType(): Promise<MediaType> {
         const collectedMediaTypes: MediaType[] = [];
-        for (const localdata of await this.getAllProviderLocalDatas()) {
+        for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.mediaType != MediaType.UNKOWN) {
                 collectedMediaTypes.push(localdata.mediaType);
             }
@@ -516,9 +517,9 @@ export default class Series extends SeriesProviderExtension {
         return MediaType.UNKOWN;
     }
 
-    async getReleaseYear(): Promise<number|undefined> {
+    async getReleaseYear(): Promise<number | undefined> {
         const collectedMediaTypes: number[] = [];
-        for (const localdata of await this.getAllProviderLocalDatas()) {
+        for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.releaseYear) {
                 collectedMediaTypes.push(localdata.releaseYear);
             }

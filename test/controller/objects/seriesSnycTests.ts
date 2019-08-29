@@ -82,7 +82,7 @@ describe('seriesTest | Sync', () => {
     })
 
     it('cant sync (2/7)', async () => {
-        const anime = new Series();
+        const series = new Series();
         ProviderList.getListProviderList().push(new TestProvider("G"));
         const providerA = new ListProviderLocalData("G");
         providerA.episodes = 12;
@@ -91,6 +91,7 @@ describe('seriesTest | Sync', () => {
         }
         providerA.watchStatus = WatchStatus.COMPLETED;
         ProviderList.getListProviderList().push(new TestProvider("C"));
+
         const providerB = new ListProviderLocalData("C");
         providerB.episodes = 12;
         for (let index = 0; index < 13; index++) {
@@ -98,9 +99,9 @@ describe('seriesTest | Sync', () => {
         }
         providerB.addOneWatchedEpisode(1);
         providerB.watchStatus = WatchStatus.COMPLETED;
-        providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB);
-        assert.equal(await anime.getCanSync(), false);
+        providerB.episodes = 24;
+        series.addListProvider(providerA, providerB);
+        assert.equal(await series.getCanSync(), false);
     })
 
     it('cant sync (3/7)', async () => {

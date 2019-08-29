@@ -45,7 +45,7 @@ export default new class TraktConverter {
         try {
             provider.addSeriesName(new Name(show.title, 'en', NameType.OFFICIAL));
         } catch (err) { }
-        
+
         provider.addSeriesName(new Name(show.ids.slug, 'slug', NameType.SLUG));
         provider.releaseYear = show.year;
         provider.id = show.ids.trakt;
@@ -54,7 +54,7 @@ export default new class TraktConverter {
         const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
         tvdbProvider.id = show.ids.tvdb;
         tvdbProvider.fullInfo = false;
-        return new MultiProviderResult(provider,tvdbProvider);
+        return new MultiProviderResult(provider, tvdbProvider);
     }
 
     async convertMovieToLocalData(traktMovie: Movie | WatchedShow): Promise<MultiProviderResult> {
@@ -75,8 +75,8 @@ export default new class TraktConverter {
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
         provider.addSeriesName(new Name(fullShow.title, 'en', NameType.OFFICIAL));
         provider.addSeriesName(new Name(fullShow.ids.slug, 'slug', NameType.SLUG));
-     
-        provider.overviews.push(new Overview(fullShow.overview, 'eng'));
+
+        provider.addOverview(new Overview(fullShow.overview, 'eng'));
         provider.runTime = fullShow.runtime;
         provider.releaseYear = fullShow.year;
         provider.id = fullShow.ids.trakt;
@@ -88,7 +88,7 @@ export default new class TraktConverter {
         const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
         tvdbProvider.id = fullShow.ids.tvdb;
         tvdbProvider.fullInfo = false;
-        return new MultiProviderResult(provider,tvdbProvider);
+        return new MultiProviderResult(provider, tvdbProvider);
     }
 
     async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {

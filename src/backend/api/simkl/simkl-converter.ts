@@ -19,7 +19,7 @@ export default class SimklConverter {
         aniDBListProvider.id = anime.show.ids.anidb;
         aniDBListProvider.fullInfo = false;
 
-        series.addSeriesName(new Name(anime.show.title, "unkown", NameType.UNKNOWN))
+        listProvider.addSeriesName(new Name(anime.show.title, "unkown", NameType.UNKNOWN))
 
 
         // - END - 

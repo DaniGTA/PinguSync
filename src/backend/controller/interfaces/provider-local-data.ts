@@ -50,17 +50,17 @@ export default class ProviderLocalData {
     public releaseYear?: number;
     public runTime?: number;
     protected names: Name[] = [];
-    public overviews: Overview[] = [];
+    protected overviews: Overview[] = [];
     public isNSFW = false;
 
 
     public sequelIds: number[] = [];
     public prequelIds: number[] = [];
 
-        /**
-    * Prevents too have double entrys for same name.
-    * @param infoProvider 
-    */
+    /**
+* Prevents too have double entrys for same name.
+* @param infoProvider 
+*/
     public addSeriesName(...names: Name[]) {
         for (const name of names) {
             if (name && name.name && name.name != 'null') {
@@ -78,21 +78,25 @@ export default class ProviderLocalData {
      * Adds an Overview too the Anime and prevents adding if overview is already present.
      * @param newOverview 
      */
-    public addOverview(newOverview: Overview): boolean {
+    public addOverview(...newOverviews: Overview[]): boolean {
         this.overviews = [...this.overviews];
-        if (this.overviews.findIndex(x => x == newOverview) == -1) {
-            this.overviews.push(newOverview);
-            return true;
+        for (const newOverview of newOverviews) {
+
+
+            if (this.overviews.findIndex(x => x == newOverview) == -1) {
+                this.overviews.push(newOverview);
+                return true;
+            }
         }
         return false;
     }
 
     getAllNames(): Name[] {
-         return this.names;
+        return this.names;
     }
 
     getAllOverviews(): Overview[] {
-         return this.overviews;
+        return this.overviews;
     }
 
 

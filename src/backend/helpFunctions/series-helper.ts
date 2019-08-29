@@ -73,7 +73,7 @@ class SeriesHelper {
         matchAbleScore += titleResult.matchAble;
         matches += titleResult.matches;
 
-        if (matchAbleScore === 0) {
+        if (matchAbleScore === 0 || matches === 0) {
             return false;
         }
         return matches >= matchAbleScore / 1.39;
