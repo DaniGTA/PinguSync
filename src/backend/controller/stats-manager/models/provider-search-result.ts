@@ -8,6 +8,7 @@ export interface IProviderSearchResult extends mongoose.Document {
     searchStringLang: string;
     searchStringLength: number;
     searchStringSearchAbleScore: number;
+    providerId: string;
 
 }
 
@@ -19,7 +20,8 @@ export const ProviderSearchResultSchema = new mongoose.Schema({
     searchStringLang: { type: String, required: true },
     searchMediaType: { type: String, required: true },
     searchStringLength: { type: Number, required: true },
-    searchStringSearchAbleScore: { type: Number, required: true }
+    searchStringSearchAbleScore: { type: Number, required: true },
+    providerId: { type: String }
 });
 
 export default mongoose.model<IProviderSearchResult>("ProviderSearchResult", ProviderSearchResultSchema);

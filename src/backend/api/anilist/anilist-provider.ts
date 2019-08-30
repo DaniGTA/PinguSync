@@ -49,20 +49,20 @@ export default class AniListProvider implements ListProvider {
         var searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: seriesName, type: 'ANIME' })) as SearchSeries;
         const endResult: MultiProviderResult[] = [];
         for (const result of searchResults.Page.media) {
-                try {
-                    endResult.push(new MultiProviderResult(await aniListConverter.convertMediaToLocalData(result))); 
-                } catch (err) {
-                    continue;
-                }
+            try {
+                endResult.push(new MultiProviderResult(await aniListConverter.convertMediaToLocalData(result)));
+            } catch (err) {
+                continue;
+            }
         }
         return endResult;
     }
 
-    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName && provider.id) {
             var fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' })) as GetSeriesByID;
 
-            return new MultiProviderResult(await(await aniListConverter.convertExtendedInfoToAnime(fullInfo)));
+            return new MultiProviderResult(await (await aniListConverter.convertExtendedInfoToAnime(fullInfo)));
         }
         throw 'False provider - AniList';
     }

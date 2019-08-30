@@ -19,6 +19,8 @@ export default class AniDBProvider implements InfoProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     private static anidbNameManager: AniDBNameManager = new AniDBNameManager();
     public static instance: AniDBProvider;
+
+
     constructor(download: boolean = true) {
         AniDBProvider.instance = this;
         if (this.allowDownload() && download) {
@@ -26,7 +28,7 @@ export default class AniDBProvider implements InfoProvider {
         }
     }
 
-    async getMoreSeriesInfoByName(searchTitle: string,season?:number): Promise<MultiProviderResult[]> {
+    async getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
         const nameDBList = AniDBProvider.anidbNameManager.data;
         let lastResult: Name[] | null = null;
         let lastSeriesDB: Anime | null = null;
@@ -41,7 +43,7 @@ export default class AniDBProvider implements InfoProvider {
                             lastResult = result;
                             lastSeriesDB = seriesDB;
                         }
-                        if (seasonOfTitle === season || !season) {
+                        if (seasonOfTitle == season || !season) {
                             return [await this.fillSeries(seriesDB, result)];
                         }
                     }
@@ -56,8 +58,8 @@ export default class AniDBProvider implements InfoProvider {
         throw 'nothing found';
     }
 
-    getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
-        throw 'not implemented yet';     
+    getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+        throw 'not implemented yet';
     }
 
     private async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {

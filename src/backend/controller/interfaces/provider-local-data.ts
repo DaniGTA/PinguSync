@@ -3,6 +3,8 @@ import Banner from '../objects/meta/banner';
 import { MediaType } from '../objects/meta/media-type';
 import Name from '../objects/meta/name';
 import Overview from '../objects/meta/overview';
+import ExternalProvider from '../../api/external-provider';
+import ProviderList from '../provider-manager/provider-list';
 
 export default class ProviderLocalData {
     /**
@@ -98,6 +100,17 @@ export default class ProviderLocalData {
     getAllOverviews(): Overview[] {
         return this.overviews;
     }
-
-
+    public getExternalProviderInstance(): ExternalProvider {
+        for (const provider of ProviderList.getListProviderList()) {
+            if (provider.providerName === this.provider) {
+                return provider;
+            }
+        }
+        for (const provider of ProviderList.getInfoProviderList()) {
+            if (provider.providerName === this.provider) {
+                return provider;
+            }
+        }
+        throw 'NoProviderFound';
+    }
 }

@@ -10,7 +10,7 @@ import { InfoProviderLocalData } from '../../controller/objects/info-provider-lo
 import MultiProviderResult from '../multi-provider-result';
 
 export default class TVDBProvider implements InfoProvider {
-    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
+    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.SPECIAL];
     public providerName = 'tvdb'
     public isOffline = false;
     public hasUniqueIdForSeasons = false;
@@ -28,19 +28,19 @@ export default class TVDBProvider implements InfoProvider {
         try {
             const tvDbConverter = new TVDBConverter();
             const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + encodeURI(searchTitle));
-         
+
             if (data.data) {
                 for (const searchResult of data.data) {
                     result.push(new MultiProviderResult(await tvDbConverter.convertSearchResultToSeries(searchResult)));
                 }
             }
-        }catch(err){}
+        } catch (err) { }
         return result;
     }
-    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const tvDbConverter = new TVDBConverter();
         const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + provider.id);
-        
+
         return new MultiProviderResult(await tvDbConverter.convertSeriesToProviderLocalData(data));
     }
 

@@ -194,11 +194,11 @@ export default class ListController {
                 if (index != -1) {
                     const provider = series.getInfoProvidersInfos()[index];
                     if (new Date().getTime() - new Date(provider.lastUpdate).getTime() < new Date(0).setHours(72) || forceUpdate) {
-                        const data = await ProviderHelper.getProviderSeriesInfoByName(series, infoProvider);
+                        const data = await ProviderHelper.getProviderSeriesInfo(series, infoProvider);
                         series = await series.merge(data);
                     }
                 } else {
-                    const data = await ProviderHelper.getProviderSeriesInfoByName(series, infoProvider);
+                    const data = await ProviderHelper.getProviderSeriesInfo(series, infoProvider);
                     series = await series.merge(data);
                 }
             } catch (err) {

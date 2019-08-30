@@ -7,6 +7,7 @@ import SeasonComperator from './comperators/season-comperator';
 import TitleComperator from './comperators/title-comperator';
 import EpisodeComperator from './comperators/episode-comperator';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+import { MediaType } from '../controller/objects/meta/media-type';
 
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
@@ -41,6 +42,15 @@ class SeriesHelper {
         }
         matchAbleScore += infoProviderResult.matchAble;
         matches += infoProviderResult.matches;
+
+        const aMediaType = await a.getMediaType();
+        const bMediaType = await b.getMediaType();
+        if (aMediaType !== MediaType.UNKOWN && bMediaType !== MediaType.UNKOWN) {
+            matchAbleScore++;
+            if (aMediaType === bMediaType) {
+                matches++;
+            }
+        }
 
         // Check releaseYear
         if (await a.getReleaseYear() && await b.getReleaseYear()) {

@@ -14,6 +14,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import stringHelper from '../string-helper';
 import MultiProviderResult from '../../api/multi-provider-result';
 import seriesHelper from '../series-helper';
+import titleCheckHelper from '../title-check-helper';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -66,7 +67,7 @@ export default new class ProviderHelper {
         return false;
     }
 
-    public async getProviderSeriesInfoByName(series: Series, provider: ListProvider | InfoProvider): Promise<Series> {
+    public async getProviderSeriesInfo(series: Series, provider: ListProvider | InfoProvider): Promise<Series> {
         const seriesMediaType = await series.getMediaType();
         if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
             let names = await series.getAllNames();
@@ -81,15 +82,26 @@ export default new class ProviderHelper {
                 if (!alreadySearchedName && name.name) {
                     console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
                     try {
-                        const results = await provider.getMoreSeriesInfoByName(name.name,await series.getSeason());
+                        let results = [];
+                        const allLocalProviders = series.getAllProviderLocalDatas();
+                        const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
+                        if (indexOfCurrentProvider === -1) {
+                            results = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
+                        } else {
+                            const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
+                            console.log("[" + provider.providerName + "] ID Request success 🎉");
+                            ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, true, seriesMediaType, result.mainProvider.id.toString());
+                            await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+                            return series;
+                        }
                         if (results) {
                             for (const result of results) {
-                                if (await this.checkIfProviderIsValid(series, result)) {            
+                                if (await this.checkIfProviderIsValid(series, result)) {
                                     console.log("[" + provider.providerName + "] Request success 🎉");
-                                    ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, true, seriesMediaType);
+                                    ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, true, seriesMediaType, result.mainProvider.id.toString());
                                     await series.addProviderDatas(result.mainProvider, ...result.subProviders);
                                     return series;
-                               }
+                                }
                             }
                         }
                     } catch (err) { }
@@ -103,10 +115,27 @@ export default new class ProviderHelper {
         throw 'no series info found by name';
     }
 
-    public async checkIfProviderIsValid(series:Series, result: MultiProviderResult):Promise<boolean> {
+    public async checkIfProviderIsValid(series: Series, result: MultiProviderResult): Promise<boolean> {
         const tempSeries = new Series();
         await tempSeries.addProviderDatas(result.mainProvider, ...result.subProviders);
-        return await seriesHelper.isSameSeries(series, tempSeries);
+        const seasonA = await series.getSeason();
+        const seasonB = await tempSeries.getSeason();
+        if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
+            if (result.mainProvider.getExternalProviderInstance().hasUniqueIdForSeasons) {
+                if (seasonA) {
+                    if (seasonA === seasonB) {
+                        return true;
+                    } else if (!seasonB && seasonA === 1) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -137,13 +166,13 @@ export default new class ProviderHelper {
 
                     }
                     try {
-                        entry = await this.getProviderSeriesInfoByName(entry, provider);
+                        entry = await this.getProviderSeriesInfo(entry, provider);
                     } catch (err) {
                         console.log(err);
                     }
                     await timeHelper.delay(700);
                 } else {
-                    entry = await this.getProviderSeriesInfoByName(entry, provider);
+                    entry = await this.getProviderSeriesInfo(entry, provider);
                 }
             }
         }

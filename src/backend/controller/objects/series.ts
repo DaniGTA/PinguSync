@@ -53,9 +53,9 @@ export default class Series extends SeriesProviderExtension {
 
     addProviderDatas(...localdatas: ProviderLocalData[]) {
         for (const localdata of localdatas) {
-            if (typeof localdata === typeof ListProviderLocalData) {
+            if (localdata instanceof ListProviderLocalData) {
                 this.addListProvider(localdata as ListProviderLocalData)
-            } else if (typeof localdata === typeof InfoProviderLocalData) {
+            } else if (localdata instanceof InfoProviderLocalData) {
                 this.addInfoProvider(localdata as InfoProviderLocalData);
             }
         }
