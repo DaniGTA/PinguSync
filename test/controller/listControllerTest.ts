@@ -14,6 +14,7 @@ import MainListManager from '../../src/backend/controller/main-list-manager/main
 import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import TestProvider from './objects/testClass/testProvider';
+import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
 
 describe('ListControllerTest | Combine', () => {
     var lc = new ListController(true);
@@ -26,6 +27,9 @@ describe('ListControllerTest | Combine', () => {
     beforeEach(() => {
         ProviderList['loadedListProvider'] = [new TestProvider("Test"), new TestProvider("")];
         ProviderList['loadedInfoProvider'] = [];
+        const waitlist:Series[] = [];
+        MainListAdder['addingWaitlist'] = waitlist;
+        MainListAdder['addingWaitlistWorker'] = undefined;
         MainListManager['mainList'] = [];
     })
     it('should combine same entry', async () => {
@@ -278,8 +282,6 @@ describe('ListControllerTest | Combine', () => {
         var x2 = await getFilledAnime();
         await x2.addListProvider(lpld2);
         x2.getListProvidersInfos()[0].targetSeason = 2;
-        console.log(x1);
-        console.log(x2);
 
         await lc.addSeriesToMainList(x1, x2);
 

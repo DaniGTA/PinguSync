@@ -10,6 +10,8 @@ import WatchProgress from '../../controller/objects/meta/watch-progress';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import MultiProviderResult from '../multi-provider-result';
+import timeHelper from '../../helpFunctions/time-helper';
+
 export default class KitsuProvider implements ListProvider {
     removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
@@ -32,11 +34,11 @@ export default class KitsuProvider implements ListProvider {
 
     async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
         const endResults:MultiProviderResult[] = [];
-        const searchResults: SearchResult = ((await this.api.get('anime', {
-            filter: {
-                text: seriesName
-            }
-        })) as unknown) as SearchResult;
+        let searchResults = await this.search(seriesName);
+        if (searchResults.data.length === 0) {
+            timeHelper.delay(1000);
+            searchResults = await this.search(seriesName);
+        }
 
         for (const result of searchResults.data) {
             try {
@@ -47,7 +49,16 @@ export default class KitsuProvider implements ListProvider {
                 console.log(err);
             }
         }
+        
         return endResults;
+    }
+
+    private async search(string: string):Promise<SearchResult> {
+        return ((await this.api.get('anime', {
+            filter: {
+                text: string
+            }
+        })) as unknown) as SearchResult;
     }
 
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{

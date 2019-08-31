@@ -99,7 +99,6 @@ class SeriesHelper {
         if (numberFromName) {
             return new SearchSeasonValueResult(numberFromName, "Name");
         }
-        let prequelSearch:RelationSearchResults|null = null;
         let prequel: Series | null = null;
         if (await series.isAnyPrequelPresent()) {
  
@@ -107,8 +106,8 @@ class SeriesHelper {
                 prequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
-                await new ListController().addSeriesToMainList(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
-                return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
+                
+                return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible",searchResult);
             } else {
                 while (prequel) {
                     if (await prequel.getMediaType() === await series.getMediaType()) {
@@ -122,8 +121,7 @@ class SeriesHelper {
                         
                         const searchResult = await prequel.getPrequel(seriesList);
                         if (searchResult.relationExistButNotFounded) {
-                            await new ListController().addSeriesToMainList(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
-                            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
+                            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible",searchResult);
                         }
                         prequel = searchResult.foundedSeries;
                     } else {

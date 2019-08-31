@@ -120,10 +120,14 @@ export default class Series extends SeriesProviderExtension {
      * @hasTest
      */
     public async getSeason(searchInList?: readonly Series[]|Series[]): Promise<number | undefined> {
-        if (!this.cachedSeason) {
+        if (!this.cachedSeason || this.cachedSeason === -2) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
             if (result.season === -2) {
                 // UKNOWN SEASON
+                if (result.searchResultDetails && this.cachedSeason === undefined) {
+                    new ListController().addSeriesToMainList(...await seriesHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
+                }
+                this.cachedSeason = -2;
                 return undefined;
             } else {
                 this.cachedSeason = result.season;

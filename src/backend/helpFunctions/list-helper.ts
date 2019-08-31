@@ -16,7 +16,7 @@ class ListHelper {
         return newArray;
     }
 
-    public async removeEntrys<T>(array: T[], ...entrys: T[]): Promise<T[]> {
+    public async removeEntrys<T>(array: T[], ...entrys: T[] | readonly T[]): Promise<T[]> {
         for (const entry of entrys) {
             const i = array.indexOf(entry);
             if (i > -1) {

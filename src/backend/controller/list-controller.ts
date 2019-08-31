@@ -73,7 +73,6 @@ export default class ListController {
             }
         }
         await this.addSeriesToMainList(anime);
-        ProviderList
     }
 
     public async addSeriesToMainList(...animes: Series[]) {

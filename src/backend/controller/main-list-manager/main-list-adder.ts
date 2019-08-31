@@ -33,39 +33,46 @@ export default class MainListAdder{
                     MainListAdder.addingWaitlist.push(newSeries);
             }
         }
-        await this.startWaitlistWorker();
+        while (MainListAdder.addingWaitlist.length != 0) {
+            console.log("Start waitlist worker");
+            await this.startWaitlistWorker();
+        }
+        await MainListManager.finishListFilling();
     }
 
     private async startWaitlistWorker():Promise<void> {
         if (!MainListAdder.addingWaitlistWorker) {
-            MainListAdder.addingWaitlistWorker = this.waitlistWorker();
-        }
+            return MainListAdder.addingWaitlistWorker = this.waitlistWorker();
+        } 
         return MainListAdder.addingWaitlistWorker;
     }
 
     private async waitlistWorker() {
-        
+        console.log("Worker started to process " + MainListAdder.addingWaitlist.length + ' Items.');
         let addCounter = 0;
-        for (const anime of MainListAdder.addingWaitlist) {
-            await MainListManager.addSerieToMainList(anime);
-            const entry = await MainListManager.findSameSeriesInMainList(anime);
-            if (entry.length != 1) {
-                console.log("[WARN] Find more or none entry after adding it.");
-            } else {
-                try {
-                    await MainListManager.addSerieToMainList(await providerHelper.fillMissingProvider(entry[0]));
-                } catch (err) { }
+        for (const series of MainListAdder.addingWaitlist) {
+            const cachedSeries =series;
+            try {
+                await MainListManager.addSerieToMainList(series);
+                const entry = await MainListManager.findSameSeriesInMainList(series);
+                if (entry.length != 1) {
+                    console.log("[WARN] Find more or none entry after adding it.");
+                } else {
+                    try {
+                        await MainListManager.addSerieToMainList(await providerHelper.fillMissingProvider(entry[0]));
+                    } catch (err) { }
+                }
+                addCounter++;
+                console.log('Adding Series to list. Progress: ' + MainListAdder.addingWaitlist.length);
+            } catch (err) {
+                console.log(err);
             }
-            addCounter++;
-            console.log('Adding Series to list. Progress: ' + MainListAdder.addingWaitlist.length);
-            MainListAdder.addingWaitlist = await listHelper.removeEntrys(MainListAdder.addingWaitlist, anime);
+            MainListAdder.addingWaitlist = await listHelper.removeEntrys(MainListAdder.addingWaitlist, cachedSeries);
         }
 
         console.log('Added ' + addCounter + ' to mainList');
-        await MainListManager.finishListFilling();
-        if (MainListAdder.addingWaitlist.length != 0) {
-            MainListAdder.addingWaitlistWorker = undefined;
-            this.startWaitlistWorker();
-        }
+        console.log("End waitlist worker");
+        MainListAdder.addingWaitlistWorker = undefined;
+        return;
     }
 }
