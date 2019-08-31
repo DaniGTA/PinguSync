@@ -4,11 +4,11 @@ import Series from '../objects/series';
 import seriesHelper from '../../helpFunctions/series-helper';
 
 export default class MainListPackageManager {
-    public async getIndexFromPackageId(packageId: string, list: Series[]): Promise<number> {
+    public async getIndexFromPackageId(packageId: string, list: readonly Series[]|Series[]): Promise<number> {
         return list.findIndex(x => packageId === x.id);
     }
 
-    public async getSeriesPackages(list: Series[]): Promise<SeriesPackage[]> {
+    public async getSeriesPackages(list: readonly Series[]|Series[]): Promise<SeriesPackage[]> {
         let tempList = [...list];
 
         const seriesPackageList: SeriesPackage[] = [];

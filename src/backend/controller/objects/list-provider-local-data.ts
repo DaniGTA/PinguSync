@@ -17,7 +17,6 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     public watchStatus?: WatchStatus;
     public watchProgress?: WatchProgress[];
-    public targetSeason?: number;
 
     public customList: boolean = false;
     public customListName = '';

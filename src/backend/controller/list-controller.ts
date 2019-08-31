@@ -78,11 +78,11 @@ export default class ListController {
 
     public async addSeriesToMainList(...animes: Series[]) {
         console.log('Add ' + animes.length + ' to mainList');
-        new MainListAdder().addSeries(...animes);
+        await new MainListAdder().addSeries(...animes);
     }
 
-    public async getMainList(): Promise<Series[]> {
-        return await MainListManager.getMainList();
+    public async getMainList(): Promise<readonly Series[]> {
+        return Object.freeze([...await MainListManager.getMainList()]);
     }
 
     /**

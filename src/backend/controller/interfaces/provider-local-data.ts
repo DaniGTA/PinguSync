@@ -26,6 +26,10 @@ export default class ProviderLocalData {
     public readonly provider: string = '';
     /**
      * Saves the raw response from the provider
+     * 
+     * This data can be very usefull in debug sessions.
+     * 
+     * Info: This var has no logic its just data that sits here.
      */
     public rawEntry: any;
     /**
@@ -54,15 +58,21 @@ export default class ProviderLocalData {
     protected names: Name[] = [];
     protected overviews: Overview[] = [];
     public isNSFW = false;
+    public targetSeason?: number;
 
-
+    /**
+     * Only fill this if provider give sequel ids and have different ids for every season.
+     */
     public sequelIds: number[] = [];
+    /**
+     * Only fill this if provider give prequel ids and have different ids for every season.
+     */
     public prequelIds: number[] = [];
 
     /**
-* Prevents too have double entrys for same name.
-* @param infoProvider 
-*/
+    * Prevents too have double entrys for same name.
+    * @param infoProvider 
+    */
     public addSeriesName(...names: Name[]) {
         for (const name of names) {
             if (name && name.name && name.name != 'null') {
@@ -93,11 +103,21 @@ export default class ProviderLocalData {
         return false;
     }
 
-    getAllNames(): Name[] {
-        return this.names;
+    /**
+     * Returns all names that this provider have.
+     * 
+     * DIRECT ACCESS IS FORBIDDEN TO PREVENT DOUBLE ENTRYS.
+     */
+    getAllNames(): readonly Name[] {
+        return Object.freeze([...this.names]);
     }
 
-    getAllOverviews(): Overview[] {
-        return this.overviews;
+    /**
+     * Returns all overviews that this provider have.
+     * 
+     * DIRECT ACCESS IS FORBIDDEN TO PREVENT DOUBLE ENTRYS.
+     */
+    getAllOverviews(): readonly Overview[] {
+        return Object.freeze([...this.overviews]);
     }
 }

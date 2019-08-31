@@ -30,7 +30,7 @@ class SeriesHelper {
         a = Object.assign(new Series(), a);
         b = Object.assign(new Series(), b);
 
-        const listProviderResult = await ProviderComperator.compareListProviders(a, b);
+        const listProviderResult = await ProviderComperator.compareAllProviders(a, b);
         if (listProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
         } else if (listProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
@@ -38,15 +38,6 @@ class SeriesHelper {
         }
         matchAbleScore += listProviderResult.matchAble;
         matches += listProviderResult.matches;
-
-        const infoProviderResult = await ProviderComperator.compareInfoProviders(a, b);
-        if (infoProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
-            return true;
-        } else if (infoProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
-            return false;
-        }
-        matchAbleScore += infoProviderResult.matchAble;
-        matches += infoProviderResult.matches;
 
         const aMediaType = await a.getMediaType();
         const bMediaType = await b.getMediaType();
@@ -94,7 +85,7 @@ class SeriesHelper {
         return matches >= matchAbleScore / 1.39;
     }
 
-    async searchSeasonValue(series: Series, seriesList?: Series[]): Promise<SearchSeasonValueResult> {
+    async searchSeasonValue(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         if (!seriesList) {
             seriesList = await new ListController().getMainList();
         }
@@ -116,7 +107,7 @@ class SeriesHelper {
                 prequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
-                new MainListAdder().addSeries(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
+                await new ListController().addSeriesToMainList(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
                 return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
             } else {
                 while (prequel) {
@@ -129,13 +120,12 @@ class SeriesHelper {
                     }
                     if (await prequel.isAnyPrequelPresent()) {
                         
-                             const searchResult = await prequel.getPrequel(seriesList);
-
+                        const searchResult = await prequel.getPrequel(seriesList);
                         if (searchResult.relationExistButNotFounded) {
-                            new MainListAdder().addSeries(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
+                            await new ListController().addSeriesToMainList(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
                             return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
                         }
-                        
+                        prequel = searchResult.foundedSeries;
                     } else {
                         return new SearchSeasonValueResult(searchCount, "PrequelTrace");
                     }
@@ -162,10 +152,12 @@ class SeriesHelper {
                     if (localDatas instanceof ListProviderLocalData) {
                         const newProvider = new ListProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
+                        newProvider.fullInfo = false;
                         series.addProviderDatas(newProvider);
                     } else if (localDatas instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
+                        newProvider.fullInfo = false;
                         series.addProviderDatas(newProvider);
                     }
                     result.push(series);

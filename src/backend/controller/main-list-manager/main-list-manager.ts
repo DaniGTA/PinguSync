@@ -91,7 +91,6 @@ export default class MainListManager {
 
     static async getMainList(): Promise<Series[]> {
         if (!MainListManager.listLoaded) {
-            const loader = new MainListLoader();
             MainListManager.mainList = MainListLoader.loadData();
             MainListManager.listLoaded = true;
         }

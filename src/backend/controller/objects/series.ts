@@ -119,7 +119,7 @@ export default class Series extends SeriesProviderExtension {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList?: Series[]): Promise<number | undefined> {
+    public async getSeason(searchInList?: readonly Series[]|Series[]): Promise<number | undefined> {
         if (!this.cachedSeason) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
             if (result.season === -2) {
@@ -136,7 +136,7 @@ export default class Series extends SeriesProviderExtension {
         return this.cachedSeason;
     }
 
-    public async getPrequel(searchInList: Series[]): Promise<RelationSearchResults> {
+    public async getPrequel(searchInList: readonly Series[]|Series[]): Promise<RelationSearchResults> {
         const searchedProviders: ProviderLocalData[]  = [];
         try {
             for (const listProvider of this.getListProvidersInfos()) {
@@ -156,7 +156,7 @@ export default class Series extends SeriesProviderExtension {
         return new RelationSearchResults(null,...searchedProviders);
     }
 
-    public async getSequel(searchInList: Series[]): Promise<RelationSearchResults> {
+    public async getSequel(searchInList: readonly Series[]|Series[]): Promise<RelationSearchResults> {
         const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getListProvidersInfos()) {
@@ -371,7 +371,7 @@ export default class Series extends SeriesProviderExtension {
         }
     }
 
-    async getFirstSeason(list?: Series[]): Promise<Series> {
+    async getFirstSeason(list?: readonly Series[]|Series[]): Promise<Series> {
         if (await this.getSeason() === 1) {
             return this;
         }
@@ -392,7 +392,7 @@ export default class Series extends SeriesProviderExtension {
      * And this item is in the return to!
      * @param list 
      */
-    public async getAllRelations(list: Series[], retunWithThis = false): Promise<Series[]> {
+    public async getAllRelations(list: readonly Series[]|Series[], retunWithThis = false): Promise<Series[]> {
         let relations = [this as Series];
 
         for (const entry2 of relations) {
@@ -480,7 +480,7 @@ export default class Series extends SeriesProviderExtension {
         throw "no relations found in the providers";
     }
 
-    getAllProviderLocalDatas(): ProviderLocalData[] {
+    public getAllProviderLocalDatas(): ProviderLocalData[] {
         const localdata = [];
         localdata.push(...this.getInfoProvidersInfos());
         localdata.push(...this.getListProvidersInfos());
