@@ -13,7 +13,6 @@ import ProviderSearchResultManager from '../../controller/stats-manager/models/p
 import { MediaType } from '../../controller/objects/meta/media-type';
 import stringHelper from '../string-helper';
 import MultiProviderResult from '../../api/multi-provider-result';
-import seriesHelper from '../series-helper';
 import titleCheckHelper from '../title-check-helper';
 
 export default new class ProviderHelper {
@@ -82,7 +81,7 @@ export default new class ProviderHelper {
                 if (!alreadySearchedName && name.name) {
                     console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
                     try {
-                        let results = [];
+                        let results:MultiProviderResult[] = [];
                         const allLocalProviders = series.getAllProviderLocalDatas();
                         const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
                         if (indexOfCurrentProvider === -1) {
@@ -121,7 +120,7 @@ export default new class ProviderHelper {
         const seasonA = await series.getSeason();
         const seasonB = await tempSeries.getSeason();
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
-            if (result.mainProvider.getExternalProviderInstance().hasUniqueIdForSeasons) {
+            if (ProviderList.getExternalProviderInstance(result.mainProvider).hasUniqueIdForSeasons) {
                 if (seasonA) {
                     if (seasonA === seasonB) {
                         return true;
@@ -178,4 +177,46 @@ export default new class ProviderHelper {
         }
         return entry;
     }
+
+    public async fillMissingProvider(entry: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
+        if (new Date().getTime() - entry.lastInfoUpdate > new Date(0).setHours(1920) || forceUpdate) {
+            entry = await this.updateInfoProviderData(entry);
+            if (!offlineOnly) {
+                try {
+                    entry = await this.fillListProvider(entry);
+                } catch (err) {
+                    console.log(err);
+                }
+                entry.lastInfoUpdate = Date.now();
+            }
+        }
+        return entry;
+    }
+
+    private async updateInfoProviderData(series: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
+        for (const infoProvider of ProviderList.getInfoProviderList()) {
+            if (offlineOnly) {
+                if (!infoProvider.isOffline) {
+                    continue;
+                }
+            }
+            try {
+                const index = series.getInfoProvidersInfos().findIndex(entry => infoProvider.providerName == entry.provider);
+                if (index != -1) {
+                    const provider = series.getInfoProvidersInfos()[index];
+                    if (new Date().getTime() - new Date(provider.lastUpdate).getTime() < new Date(0).setHours(72) || forceUpdate) {
+                        const data = await this.getProviderSeriesInfo(series, infoProvider);
+                        series = await series.merge(data);
+                    }
+                } else {
+                    const data = await this.getProviderSeriesInfo(series, infoProvider);
+                    series = await series.merge(data);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        return series;
+    }
 }
+

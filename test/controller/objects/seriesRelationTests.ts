@@ -173,12 +173,12 @@ describe('seriesTest | Relations', () => {
         const result2 = await series3.getAllRelations(list);
         const result3 = await series4.getAllRelations(list);
 
-        assert.equal(result1.length, 2, "Id 1 failed");
-        assert.equal(result2.length, 2, "Id 2 failed");
-        assert.equal(result3.length, 2, "Id 3 failed");
+        assert.equal(result1.length, 5, "Id 1 failed");
+        assert.equal(result2.length, 5, "Id 2 failed");
+        assert.equal(result3.length, 5, "Id 3 failed");
 
         assert.equal(await listHelper.isSeriesInList(result1, series1), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series2), false);
+        assert.equal(await listHelper.isSeriesInList(result2, series2), true);
         assert.equal(await listHelper.isSeriesInList(result3, series6), false);
 
 

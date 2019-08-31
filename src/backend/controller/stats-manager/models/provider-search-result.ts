@@ -8,7 +8,7 @@ export interface IProviderSearchResult extends mongoose.Document {
     searchStringLang: string;
     searchStringLength: number;
     searchStringSearchAbleScore: number;
-    providerId: string;
+    providerId?: string;
 
 }
 

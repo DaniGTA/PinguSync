@@ -47,6 +47,8 @@ class StringHelper {
         string = string.replace(/\`/g, '');
         string = string.replace(/\~/g, '');
         string = string.replace(/\,/g, '');
+        string = string.replace(/\³/g, '3');
+        string = string.replace(/\²/g, '2');
         return string.replace(/\ \ /g, ' ').trim();
     }
     public async getSeasonNumberFromTitle(title: string): Promise<number> {

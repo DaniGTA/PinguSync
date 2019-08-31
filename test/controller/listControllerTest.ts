@@ -161,9 +161,9 @@ describe('ListControllerTest | Combine', () => {
         lplc.id = 2;
         let x = new Series();
         x['cachedSeason'] = 2;
-        x.getListProvidersInfos()[0]['releaseYear'] = 2017;
+        lplc.releaseYear = 2017;
         x.lastInfoUpdate = Date.now();
-        x.getListProvidersInfos()[0]['episodes'] = 11;
+        lplc.episodes = 11;
         lplc.addSeriesName(new Name("Test", "unkown", NameType.UNKNOWN));
         await x.addListProvider(lplc);
 

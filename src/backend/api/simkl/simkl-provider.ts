@@ -9,6 +9,12 @@ import { UserListResponse } from './objects/userListResonse';
 import { MediaType } from '../../controller/objects/meta/media-type';
 
 export default class SimklProvider implements ListProvider {
+    getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<import("../multi-provider-result").default[]> {
+        throw new Error("Method not implemented.");
+    }
+    getFullInfoById(provider: import("../../controller/objects/info-provider-local-data").InfoProviderLocalData): Promise<import("../multi-provider-result").default> {
+        throw new Error("Method not implemented.");
+    }
     static instance: SimklProvider;
     userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
@@ -26,9 +32,7 @@ export default class SimklProvider implements ListProvider {
         SimklProvider.instance = this;
     }
 
-    public async getMoreSeriesInfoByName(series: Series, searchTitle: string): Promise<Series> {
-        throw new Error("Method not implemented.");
-    }
+
     public async getAllSeries(disableCache?: boolean | undefined): Promise<Series[]> {
         const result = await this.simklRequest<UserListResponse>(this.apiUrl + "sync/all-items/anime/?extended=full");
         const resultList: Series[] = [];

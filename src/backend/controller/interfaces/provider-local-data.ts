@@ -100,17 +100,4 @@ export default class ProviderLocalData {
     getAllOverviews(): Overview[] {
         return this.overviews;
     }
-    public getExternalProviderInstance(): ExternalProvider {
-        for (const provider of ProviderList.getListProviderList()) {
-            if (provider.providerName === this.provider) {
-                return provider;
-            }
-        }
-        for (const provider of ProviderList.getInfoProviderList()) {
-            if (provider.providerName === this.provider) {
-                return provider;
-            }
-        }
-        throw 'NoProviderFound';
-    }
 }

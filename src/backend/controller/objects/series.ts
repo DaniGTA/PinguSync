@@ -12,6 +12,7 @@ import SeriesProviderExtension from './extension/series-provider-extension';
 import { ListProviderLocalData } from './list-provider-local-data';
 import { InfoProviderLocalData } from './info-provider-local-data';
 import ListController from '../list-controller';
+import RelationSearchResults from './transfer/relation-search-results';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -135,14 +136,16 @@ export default class Series extends SeriesProviderExtension {
         return this.cachedSeason;
     }
 
-    public async getPrequel(searchInList: Series[]): Promise<Series> {
+    public async getPrequel(searchInList: Series[]): Promise<RelationSearchResults> {
+        const searchedProviders: ProviderLocalData[]  = [];
         try {
             for (const listProvider of this.getListProvidersInfos()) {
                 if (listProvider.prequelIds) {
+                    searchedProviders.push(listProvider);
                     for (const entry of searchInList) {
                         for (const entryListProvider of entry.getListProvidersInfos()) {
                             if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id == x) !== -1) {
-                                return entry;
+                                return new RelationSearchResults(entry);
                             }
                         }
                     }
@@ -150,18 +153,20 @@ export default class Series extends SeriesProviderExtension {
             }
         } catch (err) {
         }
-        throw 'no prequel found';
+        return new RelationSearchResults(null,...searchedProviders);
     }
 
-    public async getSequel(searchInList: Series[]): Promise<Series> {
+    public async getSequel(searchInList: Series[]): Promise<RelationSearchResults> {
+        const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getListProvidersInfos()) {
+                searchedProviders.push(listProvider);
                 if (listProvider.sequelIds) {
                     for (const entry of searchInList) {
 
                         for (const entryListProvider of entry.getListProvidersInfos()) {
                             if (entryListProvider.provider === listProvider.provider && listProvider.sequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
-                                return entry;
+                                return new RelationSearchResults(entry);
                             }
                         }
 
@@ -170,7 +175,7 @@ export default class Series extends SeriesProviderExtension {
             }
         } catch (err) {
         }
-        throw 'no sequel found';
+        return new RelationSearchResults(null,...searchedProviders);
     }
 
     public async getCanSync(): Promise<boolean> {
@@ -352,23 +357,6 @@ export default class Series extends SeriesProviderExtension {
         return mergedProviderInfos;
     }
 
-    private async mergeNumber(a: number | undefined, b: number | undefined, name?: string, target?: string): Promise<number> {
-        if (this.isDefined(b) && b === a) {
-            return b;
-        } else if ((b === 0 || !this.isDefined(b)) && (this.isDefined(a) || a !== 0)) {
-            return a as number;
-        } else if ((!this.isDefined(a) || a === 0) && (this.isDefined(b) || b !== 0)) {
-            return b as number;
-        } else {
-            console.log('(' + target + ') Cant find a valid number: ' + a + ' vs ' + b + ' | ' + name);
-            return a as number;
-        }
-    }
-
-    private isDefined<T>(value: T | undefined | null): value is T {
-        return <T>value !== undefined && <T>value !== null;
-    }
-
     public async getLastWatchProgress(): Promise<WatchProgress> {
 
         let latestUpdatedProvider = Object.assign(new ListProviderLocalData(), await this.getLastUpdatedProvider())
@@ -411,8 +399,9 @@ export default class Series extends SeriesProviderExtension {
             for (const entry of list) {
                 if (!await listHelper.isSeriesInList(relations, entry)) {
                     try {
-                        relations.push(await this.searchInProviderForRelations(entry, entry2));
-                    } catch (err) { }
+                       relations.push(await this.searchInProviderForRelations(entry, entry2));                        
+                    } catch (err) { 
+                    }
                 }
             }
         }
@@ -462,7 +451,6 @@ export default class Series extends SeriesProviderExtension {
                                 break;
                             } else if (providerA.id === providerB.id && providerA.targetSeason !== providerB.targetSeason) {
                                 return a;
-
                             }
                         } catch (err) { }
                         for (const prequelIdB of providerB.prequelIds) {

@@ -13,6 +13,7 @@ export default class ProviderSearchResultManager {
         psr.searchStringLength = searchedName.name.length;
         psr.searchMediaType = seriesMediaType;
         psr.searchStringSearchAbleScore = Name.getSearchAbleScore(searchedName);
+        psr.providerId = providerId;
         psr.save();
     }
 }

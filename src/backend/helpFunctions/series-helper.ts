@@ -8,6 +8,11 @@ import TitleComperator from './comperators/title-comperator';
 import EpisodeComperator from './comperators/episode-comperator';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
 import { MediaType } from '../controller/objects/meta/media-type';
+import MainListAdder from '../controller/main-list-manager/main-list-adder';
+import RelationSearchResults from '../controller/objects/transfer/relation-search-results';
+import ProviderLocalData from '../controller/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
+import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
 
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
@@ -103,12 +108,17 @@ class SeriesHelper {
         if (numberFromName) {
             return new SearchSeasonValueResult(numberFromName, "Name");
         }
-        let prequel = null;
-
+        let prequelSearch:RelationSearchResults|null = null;
+        let prequel: Series | null = null;
         if (await series.isAnyPrequelPresent()) {
-            try {
-                prequel = await series.getPrequel(seriesList);
-                let searchCount = 0;
+ 
+                const searchResult = await series.getPrequel(seriesList);
+                prequel = searchResult.foundedSeries;
+            let searchCount = 0;
+            if (searchResult.relationExistButNotFounded) {
+                new MainListAdder().addSeries(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
+                return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
+            } else {
                 while (prequel) {
                     if (await prequel.getMediaType() === await series.getMediaType()) {
                         searchCount++;
@@ -118,17 +128,18 @@ class SeriesHelper {
                         }
                     }
                     if (await prequel.isAnyPrequelPresent()) {
-                        try {
-                            prequel = await prequel.getPrequel(seriesList);
+                        
+                             const searchResult = await prequel.getPrequel(seriesList);
 
-                        } catch (err) {
+                        if (searchResult.relationExistButNotFounded) {
+                            new MainListAdder().addSeries(...await this.createTempSeriesFromPrequels(searchResult.searchedProviders));
                             return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
                         }
+                        
                     } else {
                         return new SearchSeasonValueResult(searchCount, "PrequelTrace");
                     }
                 }
-            } catch (err) {
             }
             return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible");
         }
@@ -140,6 +151,28 @@ class SeriesHelper {
         } catch (err) {
         }
         return new SearchSeasonValueResult(-1, "None");
+    }
+
+    async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
+        const result: Series[] = [];
+        for (const entry of localDatas) {
+            for (const prequelId of entry.prequelIds) {
+                if (prequelId) {
+                    const series = new Series();
+                    if (localDatas instanceof ListProviderLocalData) {
+                        const newProvider = new ListProviderLocalData(entry.provider);
+                        newProvider.id = prequelId;
+                        series.addProviderDatas(newProvider);
+                    } else if (localDatas instanceof InfoProviderLocalData) {
+                        const newProvider = new InfoProviderLocalData(entry.provider);
+                        newProvider.id = prequelId;
+                        series.addProviderDatas(newProvider);
+                    }
+                    result.push(series);
+                }
+            }
+        }
+        return result;
     }
 }
 
