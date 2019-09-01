@@ -27,8 +27,9 @@ export default class MainListManager {
                     }
                 }
             }
-
+            
             MainListManager.mainList.push(series);
+            
 
             if (notfiyRenderer) {
                 const seriesPackage = await new MainListPackageManager().getSeriesPackage(series, await this.getMainList());

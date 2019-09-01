@@ -33,32 +33,37 @@ export default class KitsuProvider implements ListProvider {
     }
 
     async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
-        const endResults:MultiProviderResult[] = [];
-        let searchResults = await this.search(seriesName);
-        if (searchResults.data.length === 0) {
-            timeHelper.delay(1000);
-            searchResults = await this.search(seriesName);
-        }
-
-        for (const result of searchResults.data) {
-            try {
-                const providerResult = await kitsuConverter.convertMediaToAnime(result);
-                providerResult.fullInfo = false;
-                endResults.push(new MultiProviderResult(providerResult));
-            } catch (err) {
-                console.log(err);
+        const endResults: MultiProviderResult[] = [];
+        try {
+            let searchResults = await this.search(seriesName);
+            if (searchResults.data.length === 0) {
+                timeHelper.delay(1000);
+                searchResults = await this.search(seriesName);
             }
+            for (const result of searchResults.data) {
+                try {
+                    const providerResult = await kitsuConverter.convertMediaToAnime(result);
+                    providerResult.fullInfo = false;
+                    endResults.push(new MultiProviderResult(providerResult));
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        } catch (err) {
+            console.log(err);
         }
         
         return endResults;
     }
 
-    private async search(string: string):Promise<SearchResult> {
-        return ((await this.api.get('anime', {
-            filter: {
-                text: string
-            }
-        })) as unknown) as SearchResult;
+    private async search(string: string): Promise<SearchResult> {
+             return ((await this.api.get('anime', {
+                filter: {
+                    text: string
+                }
+            })) as unknown) as SearchResult;
+
+      
     }
 
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{

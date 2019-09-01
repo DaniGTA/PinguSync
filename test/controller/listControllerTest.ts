@@ -27,9 +27,6 @@ describe('ListControllerTest | Combine', () => {
     beforeEach(() => {
         ProviderList['loadedListProvider'] = [new TestProvider("Test"), new TestProvider("")];
         ProviderList['loadedInfoProvider'] = [];
-        const waitlist:Series[] = [];
-        MainListAdder['addingWaitlist'] = waitlist;
-        MainListAdder['addingWaitlistWorker'] = undefined;
         MainListManager['mainList'] = [];
     })
     it('should combine same entry', async () => {

@@ -5,17 +5,17 @@ import providerHelper from '../../../src/backend/helpFunctions/provider/provider
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 import Name from '../../../src/backend/controller/objects/meta/name';
-import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
+import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 
-describe('Kitsu Tests', () => {
-    const kitsuProvider = new KitsuProvider();
+describe('Trakt Tests', () => {
+    const traktProvider = new TraktProvider();
 
-    beforeEach(() => {
+    before(() => {
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
     })
-
+    
     it('should get a series (1/5)', async () => {
 
         const series = new Series();
@@ -23,7 +23,7 @@ describe('Kitsu Tests', () => {
         unkownProvider.addSeriesName(new Name("Sankarea", "en"));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
     })
 
@@ -34,7 +34,7 @@ describe('Kitsu Tests', () => {
         unkownProvider.addSeriesName(new Name("Seitokai Yakuindomo＊", "en"));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
     })
 
@@ -45,7 +45,7 @@ describe('Kitsu Tests', () => {
         unkownProvider.addSeriesName(new Name("The Asterisk War: The Academy City on the Water", "en"));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
         })
     
@@ -56,7 +56,7 @@ describe('Kitsu Tests', () => {
         unkownProvider.addSeriesName(new Name("Little Witch Academia", "en"));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
         })
     
@@ -67,7 +67,7 @@ describe('Kitsu Tests', () => {
         unkownProvider.addSeriesName(new Name("Avatar: The Last Airbender", "en"));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
     })
 

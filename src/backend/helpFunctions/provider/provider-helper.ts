@@ -85,6 +85,7 @@ export default new class ProviderHelper {
                         const allLocalProviders = series.getAllProviderLocalDatas();
                         const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
                         if (indexOfCurrentProvider === -1) {
+                            console.log("[" + provider.providerName + '] Search by name started');
                             results = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
                         } else {
                             const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
@@ -94,6 +95,7 @@ export default new class ProviderHelper {
                             return series;
                         }
                         if (results) {
+                            console.log("[" + provider.providerName + '] Results: '+results.length)
                             for (const result of results) {
                                 if (await this.checkIfProviderIsValid(series, result)) {
                                     console.log("[" + provider.providerName + "] Request success 🎉");
@@ -102,8 +104,12 @@ export default new class ProviderHelper {
                                     return series;
                                 }
                             }
+                        } else {
+                            console.log("no results");
                         }
-                    } catch (err) { }
+                    } catch (err) { 
+                        console.log(err);
+                    }
                     ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, false, seriesMediaType);
                     alreadySearchedNames.push(name.name);
                 }

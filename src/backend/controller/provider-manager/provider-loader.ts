@@ -20,7 +20,7 @@ export default class ProviderLoader {
         return [
             new AniListProvider(),
             new TraktProvider(),
-            new KitsuProvider()
+            new TraktProvider()
         ];
     }
 
