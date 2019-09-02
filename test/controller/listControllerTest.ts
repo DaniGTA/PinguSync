@@ -14,7 +14,6 @@ import MainListManager from '../../src/backend/controller/main-list-manager/main
 import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import TestProvider from './objects/testClass/testProvider';
-import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
 
 describe('ListControllerTest | Combine', () => {
     var lc = new ListController(true);
@@ -265,6 +264,10 @@ describe('ListControllerTest | Combine', () => {
 
 
     it('shouldnt clean doubled entrys (1/2)', async () => {
+        const testListProvider1 = new TestProvider('TestA', false);
+        const testListProvider2 = new TestProvider('TestB', false);
+        ProviderList['loadedListProvider'] = [];
+        ProviderList['loadedListProvider'].push(testListProvider1, testListProvider2);
         var lpld = new ListProviderLocalData("TestA");
         lpld.id = 2;
         lpld.episodes = 12;
