@@ -59,6 +59,8 @@ export default class ProviderLocalData {
     protected overviews: Overview[] = [];
     public isNSFW = false;
     public targetSeason?: number;
+    public country?: string;
+    public genre?: string[];
 
     /**
      * Only fill this if provider give sequel ids and have different ids for every season.

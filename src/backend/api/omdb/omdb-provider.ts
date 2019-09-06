@@ -6,15 +6,24 @@ import { ListProviderLocalData } from '../../controller/objects/list-provider-lo
 import InfoProvider from '../info-provider';
 import request from 'request';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { SearchResults } from './models/search-results';
+import OMDbConverter from './omdb-converter';
+import { IdRequestResult } from './models/id-request-result';
 
 export default class OMDbProvider implements InfoProvider {
     isOffline: boolean = false;
     hasOAuthCode: boolean = false;
-    providerName: string = "omdb";
-    hasUniqueIdForSeasons: boolean = true;
+    public providerName: string = "omdb";
+    hasUniqueIdForSeasons: boolean = false;
     supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
     version: number = 1;
     apikey = "728e1e03";
+    public static instance: OMDbProvider;
+    constructor() {
+        if (!OMDbProvider.instance) {
+            OMDbProvider.instance = this;
+        }
+    }
 
     async getAllSeries(disableCache?: boolean | undefined): Promise<import("../../controller/objects/series").default[]> {
         throw new Error("Method not implemented.");
@@ -36,17 +45,24 @@ export default class OMDbProvider implements InfoProvider {
     }
 
     async getMoreSeriesInfoByName(searchTitle: string, season?: number | undefined): Promise<MultiProviderResult[]> {
+        const results: MultiProviderResult[] = [];
+        const converter = new OMDbConverter();
         try {
-            const result = await this.webRequest('https://www.omdbapi.com/?apikey=' + this.apikey + "&s=" + searchTitle);
-            console.log(result);
+            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.apikey + "&s=" + searchTitle);
+            for (const resultEntry of result.Search) {
+                results.push(converter.convertSearchResult(resultEntry));
+            }
+            return results;
+
         } catch (err) {
             console.log(err);
         }
         throw new Error("Test");
     }
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        const result = await this.webRequest('https://www.omdbapi.com/?apikey=' + this.apikey + "$i=" + provider.id);
-        throw new Error("Method not implemented.");
+        const converter = new OMDbConverter();
+        const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + "&i=" + provider.id);
+        return converter.convertIdRequest(result);
     }
 
 

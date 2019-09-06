@@ -81,7 +81,7 @@ export default new class ProviderHelper {
                 if (!alreadySearchedName && name.name) {
                     console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
                     try {
-                        let results:MultiProviderResult[] = [];
+                        let results: MultiProviderResult[] = [];
                         const allLocalProviders = series.getAllProviderLocalDatas();
                         const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
                         if (indexOfCurrentProvider === -1) {
@@ -95,7 +95,7 @@ export default new class ProviderHelper {
                             return series;
                         }
                         if (results) {
-                            console.log("[" + provider.providerName + '] Results: '+results.length)
+                            console.log("[" + provider.providerName + '] Results: ' + results.length)
                             for (const result of results) {
                                 if (await this.checkIfProviderIsValid(series, result)) {
                                     console.log("[" + provider.providerName + "] Request success 🎉");
@@ -107,7 +107,7 @@ export default new class ProviderHelper {
                         } else {
                             console.log("no results");
                         }
-                    } catch (err) { 
+                    } catch (err) {
                         console.log(err);
                     }
                     ProviderSearchResultManager.addNewSearchResult(provider.providerName, name, false, seriesMediaType);

@@ -8,11 +8,12 @@ import TitleComperator from './comperators/title-comperator';
 import EpisodeComperator from './comperators/episode-comperator';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
 import { MediaType } from '../controller/objects/meta/media-type';
-import MainListAdder from '../controller/main-list-manager/main-list-adder';
-import RelationSearchResults from '../controller/objects/transfer/relation-search-results';
 import ProviderLocalData from '../controller/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
 import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
+import ProviderList from '../controller/provider-manager/provider-list';
+import ListProvider from '../api/list-provider';
+import InfoProvider from '../api/list-provider';
 
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
@@ -101,13 +102,13 @@ class SeriesHelper {
         }
         let prequel: Series | null = null;
         if (await series.isAnyPrequelPresent()) {
- 
-                const searchResult = await series.getPrequel(seriesList);
-                prequel = searchResult.foundedSeries;
+
+            const searchResult = await series.getPrequel(seriesList);
+            prequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
-                
-                return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible",searchResult);
+
+                return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible", searchResult);
             } else {
                 while (prequel) {
                     if (await prequel.getMediaType() === await series.getMediaType()) {
@@ -118,10 +119,10 @@ class SeriesHelper {
                         }
                     }
                     if (await prequel.isAnyPrequelPresent()) {
-                        
+
                         const searchResult = await prequel.getPrequel(seriesList);
                         if (searchResult.relationExistButNotFounded) {
-                            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible",searchResult);
+                            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible", searchResult);
                         }
                         prequel = searchResult.foundedSeries;
                     } else {
@@ -147,16 +148,21 @@ class SeriesHelper {
             for (const prequelId of entry.prequelIds) {
                 if (prequelId) {
                     const series = new Series();
-                    if (localDatas instanceof ListProviderLocalData) {
+                    const entryProvider = ProviderList.getExternalProviderInstance(entry);
+                    //TODO FIX THIS instanceof.
+                    if (entry instanceof ListProviderLocalData) {
                         const newProvider = new ListProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
                         newProvider.fullInfo = false;
                         series.addProviderDatas(newProvider);
-                    } else if (localDatas instanceof InfoProviderLocalData) {
+                    } else if (entry instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
                         newProvider.fullInfo = false;
                         series.addProviderDatas(newProvider);
+                    } else {
+                        continue;
+
                     }
                     result.push(series);
                 }

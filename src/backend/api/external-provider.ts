@@ -3,7 +3,7 @@ import { InfoProviderLocalData } from '../controller/objects/info-provider-local
 import { MediaType } from '../controller/objects/meta/media-type';
 import MultiProviderResult from './multi-provider-result';
 
-export default interface ExternalProvider{
+export default interface ExternalProvider {
     providerName: string;
     hasUniqueIdForSeasons: boolean;
     supportedMediaTypes: MediaType[];

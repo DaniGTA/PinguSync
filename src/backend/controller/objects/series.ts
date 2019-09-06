@@ -119,7 +119,7 @@ export default class Series extends SeriesProviderExtension {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList?: readonly Series[]|Series[]): Promise<number | undefined> {
+    public async getSeason(searchInList?: readonly Series[] | Series[]): Promise<number | undefined> {
         if (!this.cachedSeason || this.cachedSeason === -2) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
             if (result.season === -2) {
@@ -140,8 +140,8 @@ export default class Series extends SeriesProviderExtension {
         return this.cachedSeason;
     }
 
-    public async getPrequel(searchInList: readonly Series[]|Series[]): Promise<RelationSearchResults> {
-        const searchedProviders: ProviderLocalData[]  = [];
+    public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+        const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getListProvidersInfos()) {
                 if (listProvider.prequelIds) {
@@ -157,17 +157,16 @@ export default class Series extends SeriesProviderExtension {
             }
         } catch (err) {
         }
-        return new RelationSearchResults(null,...searchedProviders);
+        return new RelationSearchResults(null, ...searchedProviders);
     }
 
-    public async getSequel(searchInList: readonly Series[]|Series[]): Promise<RelationSearchResults> {
+    public async getSequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
         const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getListProvidersInfos()) {
                 searchedProviders.push(listProvider);
                 if (listProvider.sequelIds) {
                     for (const entry of searchInList) {
-
                         for (const entryListProvider of entry.getListProvidersInfos()) {
                             if (entryListProvider.provider === listProvider.provider && listProvider.sequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
                                 return new RelationSearchResults(entry);
@@ -179,7 +178,7 @@ export default class Series extends SeriesProviderExtension {
             }
         } catch (err) {
         }
-        return new RelationSearchResults(null,...searchedProviders);
+        return new RelationSearchResults(null, ...searchedProviders);
     }
 
     public async getCanSync(): Promise<boolean> {
@@ -375,7 +374,7 @@ export default class Series extends SeriesProviderExtension {
         }
     }
 
-    async getFirstSeason(list?: readonly Series[]|Series[]): Promise<Series> {
+    async getFirstSeason(list?: readonly Series[] | Series[]): Promise<Series> {
         if (await this.getSeason() === 1) {
             return this;
         }
@@ -396,15 +395,15 @@ export default class Series extends SeriesProviderExtension {
      * And this item is in the return to!
      * @param list 
      */
-    public async getAllRelations(list: readonly Series[]|Series[], retunWithThis = false): Promise<Series[]> {
+    public async getAllRelations(list: readonly Series[] | Series[], retunWithThis = false): Promise<Series[]> {
         let relations = [this as Series];
 
         for (const entry2 of relations) {
             for (const entry of list) {
                 if (!await listHelper.isSeriesInList(relations, entry)) {
                     try {
-                       relations.push(await this.searchInProviderForRelations(entry, entry2));                        
-                    } catch (err) { 
+                        relations.push(await this.searchInProviderForRelations(entry, entry2));
+                    } catch (err) {
                     }
                 }
             }
