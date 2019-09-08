@@ -5,6 +5,8 @@ import KitsuProvider from '../../api/kitsu/kitsu-provider';
 import InfoProvider from '../../api/info-provider';
 import AniDBProvider from '../../api/anidb/anidb-provider';
 import TVDBProvider from '../../api/tvdb/tvdb-provider';
+import OMDbProvider from '../../api/omdb/omdb-provider';
+import TVMazeProvider from '../../api/tvmaze/tvmaze-provider';
 
 export default class ProviderLoader {
     /**
@@ -20,14 +22,16 @@ export default class ProviderLoader {
         return [
             new AniListProvider(),
             new TraktProvider(),
-            new TraktProvider()
+            new KitsuProvider()
         ];
     }
 
     protected static loadInfoProviderList(): InfoProvider[] {
         return [
             new AniDBProvider(),
-            new TVDBProvider()
+            new TVMazeProvider(),
+            new OMDbProvider(),
+            new TVDBProvider(),
         ];
     }
 }
