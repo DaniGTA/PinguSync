@@ -29,6 +29,20 @@ describe('OMDb Tests', () => {
         strictEqual(result.getInfoProvidersInfos().length, 1);
         return;
     })
+
+    it('should get a series (2/5)', async () => {
+
+        const series = new Series();
+        const unkownProvider = new ListProviderLocalData();
+        unkownProvider.addSeriesName(new Name("Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu", "en"));
+        series.addProviderDatas(unkownProvider);
+
+        const result = await providerHelper['getProviderSeriesInfo'](series, omdbProvider);
+        strictEqual(result.getInfoProvidersInfos().length, 1);
+        return;
+    })
+
+
     it('should get series by id', async () => {
         const unkownProvider = new InfoProviderLocalData();
         unkownProvider.id = "tt2341379";

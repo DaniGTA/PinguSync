@@ -3,7 +3,7 @@ import { Show, Type } from './models/tvmaze-model';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import Cover from '../../controller/objects/meta/Cover';
+import Cover from '../../controller/objects/meta/cover';
 import { ImageSize } from '../../controller/objects/meta/image-size';
 import Overview from '../../controller/objects/meta/overview';
 import TVDBProvider from '../tvdb/tvdb-provider';
@@ -33,13 +33,13 @@ export default class TVMazeConverter {
         pld.mediaType = this.convertTypeToMediaType(show.type);
         pld.id = show.id;
 
-        if(show.rating.average)
+        if (show.rating.average)
             pld.score = show.rating.average;
-        if(show.runtime)
+        if (show.runtime)
             pld.runTime = show.runtime;
-        if(show.premiered)
+        if (show.premiered)
             pld.releaseYear = new Date(show.premiered).getFullYear();
-        if(show.summary)
+        if (show.summary)
             pld.addOverview(new Overview(show.summary, 'en'));
         const mpr = new MultiProviderResult(pld);
         if (show.externals.thetvdb) {
@@ -51,7 +51,7 @@ export default class TVMazeConverter {
         return mpr;
     }
 
-    convertTypeToMediaType(type: Type): MediaType{
+    convertTypeToMediaType(type: Type): MediaType {
         switch (type) {
             case Type.Animation:
                 return MediaType.ANIME;

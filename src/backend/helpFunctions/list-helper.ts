@@ -111,9 +111,12 @@ class ListHelper {
     }
 
     async checkType(myArray: any[], type: any): Promise<boolean> {
-        return myArray.every(async (item) => {
-            return await this.is(item, type);
-        });
+        for (const iterator of myArray) {
+            if (!await this.is(iterator, type)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

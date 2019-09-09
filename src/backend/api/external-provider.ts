@@ -1,4 +1,3 @@
-import ProviderLocalData from '../controller/interfaces/provider-local-data';
 import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
 import { MediaType } from '../controller/objects/meta/media-type';
 import MultiProviderResult from './multi-provider-result';

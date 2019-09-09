@@ -4,10 +4,10 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import OMDbProvider from './omdb-provider';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import Cover from '../../controller/objects/meta/Cover';
 import { ImageSize } from '../../controller/objects/meta/image-size';
 import { IdRequestResult } from './models/id-request-result';
 import Overview from '../../controller/objects/meta/overview';
+import Cover from '../../controller/objects/meta/cover';
 
 export default class OMDbConverter {
 

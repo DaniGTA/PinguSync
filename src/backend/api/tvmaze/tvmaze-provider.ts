@@ -11,7 +11,7 @@ export default class TVMazeProvider implements InfoProvider {
     hasOAuthCode: boolean = false;
     public providerName: string = "tvmaze";
     hasUniqueIdForSeasons: boolean = false;
-    supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
+    supportedMediaTypes: MediaType[] = [MediaType.SERIES, MediaType.ANIME];
     version: number = 1;
     public static instance: TVMazeProvider;
     constructor() {
@@ -23,7 +23,7 @@ export default class TVMazeProvider implements InfoProvider {
         const results: MultiProviderResult[] = [];
         const converter = new TVMazeConverter();
         try {
-            const result = await this.webRequest<Search[]>("http://api.tvmaze.com/search/shows?q=" + searchTitle+"&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons");
+            const result = await this.webRequest<Search[]>("http://api.tvmaze.com/search/shows?q=" + encodeURI(searchTitle) + "&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons");
             for (const resultEntry of result) {
                 const convertedShow = converter.convertShowToResult(resultEntry.show);
                 convertedShow.mainProvider.fullInfo = false;
@@ -38,7 +38,7 @@ export default class TVMazeProvider implements InfoProvider {
     }
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const converter = new TVMazeConverter();
-        const result = await this.webRequest<Show>("http://api.tvmaze.com/shows/" + provider.id+"?embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons");
+        const result = await this.webRequest<Show>("http://api.tvmaze.com/shows/" + provider.id + "?embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons");
         return converter.convertShowToResult(result);
     }
 

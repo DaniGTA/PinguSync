@@ -48,16 +48,17 @@ export default class OMDbProvider implements InfoProvider {
         const results: MultiProviderResult[] = [];
         const converter = new OMDbConverter();
         try {
-            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.apikey + "&s=" + searchTitle);
-            for (const resultEntry of result.Search) {
-                results.push(converter.convertSearchResult(resultEntry));
+            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.apikey + "&s=" + encodeURI(searchTitle));
+            if (result.Search) {
+                for (const resultEntry of result.Search) {
+                    results.push(converter.convertSearchResult(resultEntry));
+                }
             }
-            return results;
 
         } catch (err) {
             console.log(err);
         }
-        throw new Error("Test");
+        return results;
     }
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const converter = new OMDbConverter();
