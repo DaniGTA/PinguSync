@@ -18,7 +18,7 @@ describe('OMDb Tests', () => {
         ProviderList['loadedInfoProvider'] = [omdbProvider];
     })
 
-    it('should get a series (1/5)', async () => {
+    it('should get a series (1/1)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -30,7 +30,7 @@ describe('OMDb Tests', () => {
         return;
     })
 
-    it('should get a series (2/5)', async () => {
+    it('should not crash', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -38,7 +38,7 @@ describe('OMDb Tests', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, omdbProvider);
-        strictEqual(result.getInfoProvidersInfos().length, 1);
+        strictEqual(result.getInfoProvidersInfos().length, 0);
         return;
     })
 

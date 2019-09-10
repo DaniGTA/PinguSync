@@ -177,14 +177,14 @@ describe('seriesTest | Relations', () => {
         assert.equal(result2.length, 5, "Id 2 failed");
         assert.equal(result3.length, 5, "Id 3 failed");
 
-        assert.equal(await listHelper.isSeriesInList(result1, series1), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series2), true);
-        assert.equal(await listHelper.isSeriesInList(result3, series6), false);
+        assert.equal(await listHelper.isSeriesInList(result1, series1), false, "Series1 shouldnt not be in the own relation list");
+        assert.equal(await listHelper.isSeriesInList(result2, series2), true, "Series3 should have Series2 as relation");
+        assert.equal(await listHelper.isSeriesInList(result3, series6), true, "Series4 should have Series6 as relation");
 
 
-        assert.equal(await listHelper.isSeriesInList(result1, series2), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series2), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series2), false);
+        assert.equal(await listHelper.isSeriesInList(result1, series2), true, "Series2 should be in result1");
+        assert.equal(await listHelper.isSeriesInList(result2, series2), true, "Series2 should be in result2");
+        assert.equal(await listHelper.isSeriesInList(result3, series2), true, "Series2 should be in result3");
     })
 
     function getFilledAnime(): Series {

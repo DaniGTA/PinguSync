@@ -264,8 +264,8 @@ describe('ListControllerTest | Combine', () => {
 
 
     it('shouldnt clean doubled entrys (1/2)', async () => {
-        const testListProvider1 = new TestProvider('TestA', false);
-        const testListProvider2 = new TestProvider('TestB', false);
+        const testListProvider1 = new TestProvider('TestA', false, true);
+        const testListProvider2 = new TestProvider('TestB', false, true);
         ProviderList['loadedListProvider'] = [];
         ProviderList['loadedListProvider'].push(testListProvider1, testListProvider2);
         var lpld = new ListProviderLocalData("TestA");
