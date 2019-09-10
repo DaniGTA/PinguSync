@@ -1,5 +1,8 @@
 import * as mongoose from "mongoose";
 export interface IProviderSearchResult extends mongoose.Document {
+    searchId: string,
+    trys: number,
+    results: number,
     provider: string;
     result: boolean;
     searchMediaType: string;
@@ -13,6 +16,9 @@ export interface IProviderSearchResult extends mongoose.Document {
 }
 
 export const ProviderSearchResultSchema = new mongoose.Schema({
+    searchId: {type: String, required: true },
+    trys: { type: Number, required: true },
+    results: {type:Number,required: true},
     provider: { type: String, required: true },
     result: { type: Boolean, required: true },
     searchString: { type: String, required: true },

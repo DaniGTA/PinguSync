@@ -162,11 +162,12 @@ export default class TraktProvider implements ListProvider {
                     body: body,
                 }, (error: any, response: any, body: any) => {
                     try {
-                        console.log('[Trakt] status code:', response.statusCode);
+                      
                         if (response.statusCode === 200 || response.statusCode === 201) {
                             var data: T = JSON.parse(body) as T;
                             resolve(data);
                         } else {
+                            console.log('[Trakt] status code:', response.statusCode);
                             reject();
                         }
                     } catch (err) {

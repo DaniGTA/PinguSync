@@ -24,7 +24,7 @@ export default class MainListLoader {
     }
 
     static async saveData(list: Series[]) {
-        console.log('Save list');
+        console.log('Save list: '+list.length);
         console.log(this.getPath());
         writeFileSync(this.getPath(), JSON.stringify(list));
     }

@@ -20,7 +20,9 @@ export default class TVDBProvider implements InfoProvider {
     private apiData: TVDBProviderData = new TVDBProviderData();
     public static Instance: TVDBProvider;
     constructor() {
-        TVDBProvider.Instance = this;
+        if (!TVDBProvider.Instance) {
+            TVDBProvider.Instance = this;
+        }
     }
 
     public async getMoreSeriesInfoByName(searchTitle: string): Promise<MultiProviderResult[]> {
@@ -90,11 +92,11 @@ export default class TVDBProvider implements InfoProvider {
                         timeout: 5000
                     }, (error: any, response: any, body: any) => {
                         try {
-                            console.log('[TVDB] status code: ' + response.statusCode);
                             if (response.statusCode === 200 || response.statusCode === 201) {
                                 var data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
+                                console.log('[TVDB] status code: ' + response.statusCode);
                                 reject();
                             }
                         } catch (err) {

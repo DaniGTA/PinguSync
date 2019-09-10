@@ -20,14 +20,18 @@ export default class MainListManager {
                         if (typeof series.merge != 'function') {
                             series = Object.assign(new Series(), series);
                         }
-                        series = await series.merge(entry);
+                        console.log('Duplicate found: merging...');
+                        series = await series.merge(entry,false);
                         await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                     } catch (err) {
                         console.log(err);
                     }
                 }
             }
-            
+            if (series.lastInfoUpdate === 0) {
+                console.log('[ERROR] Series no last info update! In MainList.')
+            }
+            console.log('[MainList] Series was added to MainList');
             MainListManager.mainList.push(series);
             
 
@@ -47,18 +51,14 @@ export default class MainListManager {
         console.log("Cleanup Mainlist");
         MainListManager.listMaintance = true;
         MainListManager.secondList = [...MainListManager.mainList];
+        console.log('Temp List created');
         MainListManager.mainList = [];
-        while (this.secondList.length != 0) {
-            const entry = MainListManager.secondList[0];
-            const oldLength = MainListManager.secondList.length;
+        for (let entry of this.secondList) {
             await entry.resetCache();
             await MainListManager.addSerieToMainList(entry);
-            if (oldLength === MainListManager.secondList.length) {
-                console.log("Force Remove Item | " + MainListManager.secondList.length + " left");
-                MainListManager.secondList.shift();
-            }
         }
         await MainListLoader.saveData(MainListManager.mainList);
+         console.log("Finish Cleanup Mainlist");
         MainListManager.listMaintance = false;
     }
 
@@ -96,6 +96,7 @@ export default class MainListManager {
             MainListManager.listLoaded = true;
         }
         if (this.listMaintance) {
+            console.log('TempList served: (size= '+MainListManager.secondList.length+')');
             return MainListManager.secondList;
         } else {
             return MainListManager.mainList;

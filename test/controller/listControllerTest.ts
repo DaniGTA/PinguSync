@@ -354,6 +354,21 @@ describe('ListControllerTest | Combine', () => {
 
         assert.equal(MainListManager['mainList'].length, 1);
     })
+
+    it('should contain last update date', async () => {
+        var x1 = await getFilledAnime("Test", 1);
+        x1.lastInfoUpdate = 10;
+        x1.lastUpdate = 10;
+        var x2 = await getFilledAnime("Test", 1);
+        x2.lastInfoUpdate = 0;
+        x2.lastUpdate = 0;
+
+        await lc.addSeriesToMainList(x1);
+        await lc.addSeriesToMainList(x2);
+
+        assert.notEqual(MainListManager['mainList'][0].lastInfoUpdate, 0);
+        assert.notEqual(MainListManager['mainList'][0].lastUpdate, 0);
+    })
 })
 
 async function getFilledAnime(providername: string = "Test", providerId: number = -1): Promise<Series> {

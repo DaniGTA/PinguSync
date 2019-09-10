@@ -56,12 +56,12 @@ export default class TVMazeProvider implements InfoProvider {
                         },
                         timeout: 5000
                     }, (error: any, response: any, body: any) => {
-                        try {
-                            console.log('[TVMaze] status code: ' + response.statusCode);
+                        try { 
                             if (response.statusCode === 200 || response.statusCode === 201) {
                                 var data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
+                                console.log('[TVMaze] status code: ' + response.statusCode);
                                 reject();
                             }
                         } catch (err) {

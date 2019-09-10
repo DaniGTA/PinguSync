@@ -119,13 +119,15 @@ export default class Series extends SeriesProviderExtension {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList?: readonly Series[] | Series[]): Promise<number | undefined> {
+    public async getSeason(searchInList?: readonly Series[] | Series[],allowAddNewEntry = true): Promise<number | undefined> {
         if (!this.cachedSeason || this.cachedSeason === -2) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
             if (result.season === -2) {
                 // UKNOWN SEASON
-                if (result.searchResultDetails && this.cachedSeason === undefined) {
-                    new ListController().addSeriesToMainList(...await seriesHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
+                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
+                    console.log('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
+                    await new ListController().addSeriesToMainList(...await seriesHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
+                    console.log('Temp Series Successfull added.');
                 }
                 this.cachedSeason = -2;
                 return undefined;
@@ -311,13 +313,13 @@ export default class Series extends SeriesProviderExtension {
      * Will be often used too update watchprogress.
      * @param anime 
      */
-    public async merge(anime: Series): Promise<Series> {
+    public async merge(anime: Series,allowAddNewEntry = true): Promise<Series> {
         const newAnime: Series = new Series();
 
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
 
-        await newAnime.getSeason();
+        await newAnime.getSeason(undefined,allowAddNewEntry);
 
         await newAnime.getCanSync();
 
@@ -325,6 +327,12 @@ export default class Series extends SeriesProviderExtension {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;
         } else {
             newAnime.lastInfoUpdate = this.lastInfoUpdate;
+        }
+
+        if (this.lastUpdate < anime.lastUpdate) {
+            newAnime.lastUpdate = anime.lastUpdate;
+        } else {
+            newAnime.lastUpdate = this.lastUpdate;
         }
 
         if ((await newAnime.getAllNames()).length > 25) {

@@ -20,7 +20,7 @@ export class TVDBProviderData {
     private async saveData() {
         try {
             const path = this.getPath();
-            console.warn('[IO] Write trakt user file.')
+            console.warn('[IO] Write tvdb user file.')
             fs.writeFileSync(path, JSON.stringify(this));
         } catch (err) { }
     }
@@ -28,7 +28,7 @@ export class TVDBProviderData {
     private loadData() {
         try {
             const path = this.getPath();
-            console.warn('[IO] Read trakt user file. ' + path)
+            console.warn('[IO] Read tvdb user file. ' + path)
             if (fs.existsSync(path)) {
                 const loadedString = fs.readFileSync(path, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;

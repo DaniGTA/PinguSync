@@ -45,7 +45,7 @@ export default class TVMazeConverter {
             pld.addOverview(new Overview(show.summary, 'en'));
         const mpr = new MultiProviderResult(pld);
         if (show.externals.thetvdb) {
-            const tvdbProvider = new InfoProviderLocalData(new TVDBProvider());
+            const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance);
             tvdbProvider.fullInfo = false;
             tvdbProvider.id = show.externals.thetvdb;
             mpr.subProviders.push(tvdbProvider);

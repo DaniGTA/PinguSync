@@ -3,8 +3,11 @@ import Name from '../../objects/meta/name';
 import { MediaType } from '../../objects/meta/media-type';
 
 export default class ProviderSearchResultManager {
-    static addNewSearchResult(provider: string, searchedName: Name, result: boolean, seriesMediaType: MediaType, providerId?: string) {
+    static addNewSearchResult(results:number,searchId:string, trys:number,provider: string, searchedName: Name, result: boolean, seriesMediaType: MediaType, providerId?: string) {
         const psr = new providerSearchResult();
+        psr.searchId = searchId;
+        psr.trys = trys;
+        psr.results = results;
         psr.provider = provider;
         psr.searchString = searchedName.name;
         psr.searchStringLang = searchedName.lang;

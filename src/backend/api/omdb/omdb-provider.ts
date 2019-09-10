@@ -68,7 +68,6 @@ export default class OMDbProvider implements InfoProvider {
 
 
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
-        console.log('[OMDb] Start WebRequest');
         return new Promise<any>((resolve, reject) => {
             (async () => {
                 try {
@@ -81,11 +80,12 @@ export default class OMDbProvider implements InfoProvider {
                         timeout: 5000
                     }, (error: any, response: any, body: any) => {
                         try {
-                            console.log('[OMDb] status code: ' + response.statusCode);
+                          
                             if (response.statusCode === 200 || response.statusCode === 201) {
                                 var data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
+                                console.log('[OMDb] status code: ' + response.statusCode);
                                 reject();
                             }
                         } catch (err) {
