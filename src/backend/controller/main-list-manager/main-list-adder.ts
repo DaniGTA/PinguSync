@@ -2,7 +2,7 @@ import Series from '../objects/series';
 import MainListManager from './main-list-manager';
 import providerHelper from '../../helpFunctions/provider/provider-helper';
 import stringHelper from '../../helpFunctions/string-helper';
-import listHelper from 'src/backend/helpFunctions/list-helper';
+import listHelper from '../../helpFunctions/list-helper';
 
 export default class MainListAdder {
 
