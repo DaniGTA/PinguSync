@@ -2,7 +2,7 @@ import Overview from '../controller/objects/meta/overview';
 import sortHelper from './sort-helper';
 import Series from '../controller/objects/series';
 import Name from '../controller/objects/meta/name';
-import Cover from '../controller/objects/meta/Cover';
+import Cover from '../controller/objects/meta/cover';
 
 class ListHelper {
     public async cleanArray<T>(actual: T[]): Promise<T[]> {
