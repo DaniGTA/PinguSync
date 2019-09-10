@@ -70,6 +70,7 @@ export default class AniDBProvider implements InfoProvider {
     }
 
     async checkTitles(name: string, titles: Title[] | Title) {
+        const converter = new AniDBConverter();
         const resultNames = [];
         let stringTitles = [];
         if (Array.isArray(titles)) {
@@ -81,16 +82,20 @@ export default class AniDBProvider implements InfoProvider {
             if (Array.isArray(titles)) {
                 for (const title of titles) {
                     if (title._text) {
-                        resultNames.push(new Name(title._text, title._attributes["xml:lang"]));
+                        const nameType = await converter.convertToNameType(title._attributes["type"]);
+                        resultNames.push(new Name(title._text, title._attributes["xml:lang"],nameType));
                     }
                 }
             } else {
-                resultNames.push(new Name(titles._text, titles._attributes["xml:lang"]));
+                const nameType = await converter.convertToNameType(titles._attributes["type"]);
+                resultNames.push(new Name(titles._text, titles._attributes["xml:lang"],nameType));
             }
             return resultNames;
         }
         return null;
     }
+
+    
 
     public InternalTesting() {
         return {

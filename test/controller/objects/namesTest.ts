@@ -37,4 +37,33 @@ describe('namesTest', () => {
         assert.equal(await Name.getRomajiName(names), 'test');
         return;
     });
+
+    it('should not sort out', async () => {
+        let names:Name[] = [];
+        names.push(new Name('A Viagem de Chihiro','en'));
+        names.push(new Name('Avanture male Chihiro','en'));
+        names.push(new Name('Cesta do fantazie','en'));
+        names.push(new Name('Cesta do fantázie','en'));
+        names.push(new Name('Chihiro Og Heksene','en'));
+        names.push(new Name('Chihiro Szellemországban','en'));
+        names.push(new Name('Chihiros Reise ins Zauberland','en'));
+        names.push(new Name('De reis van Chihiro','en'));
+        names.push(new Name('El Viaje de Chihiro','en'));
+        names.push(new Name('Henkien kätkemä','en'));
+        names.push(new Name('La Città Incantata','en'));
+        names.push(new Name('Le voyage de Chihiro','en'));
+        names.push(new Name('SA','en'));
+        names.push(new Name('Sen and Chihiro`s Spiriting Away','en'));
+        names.push(new Name('Sen and Chihiros Spiriting Away','en'));
+        names.push(new Name('Sen to Chihiro','en'));
+        names.push(new Name('Sen to Chihiro no Kamikakushi','en'));
+        names.push(new Name('Spirited Away','en'));
+        names.push(new Name('Spirited Away: W krainie bogów','en'));
+        names.push(new Name('Stebuklingi Šihiros nuotykiai Dvasių pasaulyje','en'));
+        names.push(new Name('Vaimudest viidud','en'));
+        names.push(new Name('Čudežno potovanje', 'en'));
+        names = names.sort((a, b) => Name.getSearchAbleScore(b) - Name.getSearchAbleScore(a)).slice(0, 9);
+        const result = names.findIndex(x => x.name === "Spirited Away");
+        assert.notStrictEqual(result, -1);
+    })
 });
