@@ -37,8 +37,8 @@ describe('OMDb Tests', () => {
         unkownProvider.addSeriesName(new Name("Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu", "en"));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, omdbProvider);
-        strictEqual(result.getInfoProvidersInfos().length, 0);
+        const result = await omdbProvider.getMoreSeriesInfoByName("Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu");
+        strictEqual(result.length, 0);
         return;
     })
 

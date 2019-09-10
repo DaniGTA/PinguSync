@@ -32,6 +32,7 @@ export default class TVDBConverter {
 
     async convertSearchResultToSeries(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
         const providerLocalData = await this.convertSearchResultToProviderLocalData(searchResult);
+        providerLocalData.rawEntry = searchResult;
         if (searchResult.firstAired) {
             providerLocalData.releaseYear = new Date(searchResult.firstAired).getFullYear();
         }

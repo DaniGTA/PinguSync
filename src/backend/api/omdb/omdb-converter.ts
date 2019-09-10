@@ -17,6 +17,7 @@ export default class OMDbConverter {
         pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
         pld.id = entry.imdbID;
         pld.fullInfo = false;
+        pld.rawEntry = entry;
 
         return new MultiProviderResult(pld);
     }
@@ -31,6 +32,8 @@ export default class OMDbConverter {
         pld.genre = entry.Genre.split(' ');
         pld.releaseYear = new Date(entry.Released).getFullYear();
         pld.addOverview(new Overview(entry.Plot, 'en'));
+        pld.rawEntry = entry;
+
 
         return new MultiProviderResult(pld);
     }

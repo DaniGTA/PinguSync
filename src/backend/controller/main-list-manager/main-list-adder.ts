@@ -2,7 +2,7 @@ import Series from '../objects/series';
 import MainListManager from './main-list-manager';
 import providerHelper from '../../helpFunctions/provider/provider-helper';
 
-export default class MainListAdder{
+export default class MainListAdder {
 
 
     /**
@@ -12,16 +12,16 @@ export default class MainListAdder{
      * @param series 
      */
     async addSeries(...series: Series[]) {
-     
+
         console.log("Start waitlist worker");
         await this.listWorker(series);
-        
+
         await MainListManager.finishListFilling();
     }
 
 
 
-    private async listWorker(list:Series[]) {
+    private async listWorker(list: Series[]) {
         console.log("Worker started to process " + list.length + ' Items.');
         let addCounter = 0;
         for (const series of list) {
@@ -37,7 +37,7 @@ export default class MainListAdder{
                     } catch (err) { }
                 }
                 addCounter++;
-                console.log('Adding Series to list. Progress: ' + list.length);
+                console.log('Adding Series to list. Progress: ' + addCounter);
             } catch (err) {
                 console.log(err);
             }

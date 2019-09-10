@@ -32,6 +32,8 @@ export default class TVMazeConverter {
         pld.genre = show.genres;
         pld.mediaType = this.convertTypeToMediaType(show.type);
         pld.id = show.id;
+        pld.rawEntry = show;
+
 
         if (show.rating.average)
             pld.score = show.rating.average;
