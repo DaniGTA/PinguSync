@@ -14,10 +14,11 @@ class FrontendController {
     }
 
     private static instance: FrontendController;
-
-    private path: string | null = null;
+    
     private communcation: ICommunication = new IPCBackgroundController({} as Electron.WebContents);;
     constructor(webcontents?: Electron.WebContents) {
+        console.log('Load list controller');
+        new ListController();
         if (webcontents) {
             this.mainInit(webcontents);
         }
@@ -60,7 +61,11 @@ class FrontendController {
         });
 
         this.communcation.on('request-info-refresh', (data: string) => {
-            new ListController().forceRefreshProviderInfo(data);
+            if (ListController.instance) {
+                ListController.instance.forceRefreshProviderInfo(data);
+            } else {
+                 console.log('Failed to request info: no provider instance');
+            }
         });
 
         this.communcation.on('get-all-providers', (data) => {
@@ -72,19 +77,23 @@ class FrontendController {
         });
 
         this.communcation.on('anime-update-watch-progress', async (data) => {
-            const lc = new ListController();
-            const anime: Series = Object.assign(new Series(), data.anime);
-            console.log(data);
-            anime.readdFunctions();
-            if (data.reduce) {
-                lc.removeWatchProgress(anime, await anime.getLastWatchProgress());
-            } else {
-                const watchProgress = await anime.getLastWatchProgress();
-                if (watchProgress) {
-                    lc.updateWatchProgressTo(anime, watchProgress.episode++);
+            if (ListController.instance) {
+                const lc = ListController.instance;
+                const anime: Series = Object.assign(new Series(), data.anime);
+                console.log(data);
+                anime.readdFunctions();
+                if (data.reduce) {
+                    lc.removeWatchProgress(anime, await anime.getLastWatchProgress());
                 } else {
-                    lc.updateWatchProgressTo(anime, 1);
+                    const watchProgress = await anime.getLastWatchProgress();
+                    if (watchProgress) {
+                        lc.updateWatchProgressTo(anime, watchProgress.episode++);
+                    } else {
+                        lc.updateWatchProgressTo(anime, 1);
+                    }
                 }
+            }else {
+                console.log('Failed to update watch progress: no provider instance');
             }
         });
     }
@@ -99,12 +108,16 @@ class FrontendController {
     }
 
     private async syncSeries(id: string | number) {
-        var lc = new ListController();
-        var anime = (await lc.getMainList()).find(x => x.id === id);
-        if (typeof anime != 'undefined') {
-            lc.syncProvider(anime);
+        if (ListController.instance) {
+            var lc = ListController.instance;
+            var anime = (await lc.getMainList()).find(x => x.id === id);
+            if (typeof anime != 'undefined') {
+                lc.syncProvider(anime);
+            } else {
+                console.log('Error');
+            }
         } else {
-            console.log('Error');
+            console.log('Failed sync series: no list provider instance');
         }
     }
 
@@ -114,8 +127,12 @@ class FrontendController {
 
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
-        var list = await new MainListPackageManager().getSeriesPackages(await new ListController().getMainList());
-        this.communcation.send('series-list', list);
+        if (ListController.instance) {
+            var list = await new MainListPackageManager().getSeriesPackages(await ListController.instance.getMainList());
+            this.communcation.send('series-list', list);
+        } else {
+            console.log('Failed to send list: no provider instance')
+        }
     }
 
     public getPath(): string {

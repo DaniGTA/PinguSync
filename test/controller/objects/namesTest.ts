@@ -57,12 +57,14 @@ describe('namesTest', () => {
         names.push(new Name('Sen and Chihiros Spiriting Away','en'));
         names.push(new Name('Sen to Chihiro','en'));
         names.push(new Name('Sen to Chihiro no Kamikakushi','en'));
+        names.push(new Name('Spirited Away', 'en'));
+        names.push(new Name('Spirited Away', 'en'));
         names.push(new Name('Spirited Away','en'));
         names.push(new Name('Spirited Away: W krainie bogów','en'));
         names.push(new Name('Stebuklingi Šihiros nuotykiai Dvasių pasaulyje','en'));
         names.push(new Name('Vaimudest viidud','en'));
         names.push(new Name('Čudežno potovanje', 'en'));
-        names = names.sort((a, b) => Name.getSearchAbleScore(b) - Name.getSearchAbleScore(a)).slice(0, 9);
+        names = names.sort((a, b) => Name.getSearchAbleScore(b,names) - Name.getSearchAbleScore(a,names)).slice(0, 9);
         const result = names.findIndex(x => x.name === "Spirited Away");
         assert.notStrictEqual(result, -1);
     })

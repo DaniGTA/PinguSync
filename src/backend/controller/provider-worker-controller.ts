@@ -54,8 +54,13 @@ class ProviderController {
                     that.sendSeriesList();
                     break;
                 case 'request-info-refresh':
-                    new ListController().forceRefreshProviderInfo(value.data);
+                    if (ListController.instance) {
+                        ListController.instance.forceRefreshProviderInfo(value.data);
+                    } else {
+                        console.log('Failed request info refresh: no list controller instance');
+                    }
                     break;
+                    
                 case 'sync-series':
                     this.syncSeries(value.data);
                     break;
@@ -102,19 +107,27 @@ class ProviderController {
     }
 
     private async syncSeries(id: string | number) {
-        var lc = new ListController();
-        var anime = (await lc.getMainList()).find(x => x.id === id);
-        if (typeof anime != 'undefined') {
-            lc.syncProvider(anime);
+        if (ListController.instance) {
+            var lc = ListController.instance;
+            var anime = (await lc.getMainList()).find(x => x.id === id);
+            if (typeof anime != 'undefined') {
+                lc.syncProvider(anime);
+            } else {
+                console.log('Error');
+            }
         } else {
-            console.log('Error');
+            console.log('Failed sync series: no list controller instance')
         }
     }
 
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
-        var list = new ListController().getMainList();
-        this.send('series-list', list);
+        if (ListController.instance) {
+            var list = ListController.instance.getMainList();
+            this.send('series-list', list);
+        } else {
+            console.log('Failed send list: no list controller instance')
+        }
     }
 
     public getPath(): string {

@@ -70,10 +70,14 @@ export default new class ProviderHelper {
         const requestId = stringHelper.randomString(5);
         let trys = 0;
         const seriesMediaType = await series.getMediaType();
-        if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
+
+        const allLocalProviders = series.getAllProviderLocalDatas();
+        const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
+        if (indexOfCurrentProvider === -1) {
+            if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
             let names = await series.getAllNames();
             const alreadySearchedNames: string[] = [];
-            names = names.sort((a, b) => Name.getSearchAbleScore(b) - Name.getSearchAbleScore(a));
+            names = names.sort((a, b) => Name.getSearchAbleScore(b,names) - Name.getSearchAbleScore(a,names));
             names = await listHelper.getLazyUniqueStringList(names);
 
             try {
@@ -81,51 +85,47 @@ export default new class ProviderHelper {
                 names.unshift(new Name(await stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType))
             } catch (err) { }
 
-            for (const name of names) {
-                const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
-                if (!alreadySearchedName) {
-                    if (trys > 10) {
-                        break;
-                    }
-                    let results: MultiProviderResult[] = [];
-                    trys++;
+
+                for (const name of names) {
+                    const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
+                    if (!alreadySearchedName && name.name) {
+                        if (trys > 10) {
+                            break;
+                        }
+                        let results: MultiProviderResult[] = [];
+                        trys++;
                     
-                    try {
-                       
-                        const allLocalProviders = series.getAllProviderLocalDatas();
-                        const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
-                        if (indexOfCurrentProvider === -1) {
-                            if (name.name) {
-                                console.log("[" + requestId + "][" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
-                                results = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
-                            }
-                        } else {
-                            const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
-                            console.log("[" + requestId + "][" + provider.providerName + "] ID Request success 🎉");
-                            ProviderSearchResultManager.addNewSearchResult(1,requestId,trys,provider.providerName, name, true, seriesMediaType, result.mainProvider.id.toString());
-                            await series.addProviderDatas(result.mainProvider, ...result.subProviders);
-                            return series;
-                        }
-                        if (results) {
-                            console.log("[" + requestId + "][" + provider.providerName + '] Results: ' + results.length)
-                            for (const result of results) {
-                                if (await this.checkIfProviderIsValid(series, result)) {
-                                    console.log("[" + requestId + "][" + provider.providerName + "] Request success 🎉");
-                                    ProviderSearchResultManager.addNewSearchResult(results.length,requestId,trys,provider.providerName, name, true, seriesMediaType, result.mainProvider.id.toString());
-                                    await series.addProviderDatas(result.mainProvider, ...result.subProviders);
-                                    return series;
+                        try {
+                            console.log("[" + requestId + "][" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
+                            results = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
+                            
+                            if (results) {
+                                console.log("[" + requestId + "][" + provider.providerName + '] Results: ' + results.length)
+                                for (const result of results) {
+                                    if (await this.checkIfProviderIsValid(series, result)) {
+                                        console.log("[" + requestId + "][" + provider.providerName + "] Request success 🎉");
+                                        ProviderSearchResultManager.addNewSearchResult(results.length, requestId, trys, provider.providerName, name, true, seriesMediaType, result.mainProvider.id.toString());
+                                        await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+                                        return series;
+                                    }
                                 }
+                            } else {
+                                console.log("no results");
                             }
-                        } else {
-                            console.log("no results");
+                        } catch (err) {
+                            console.log(err);
                         }
-                    } catch (err) {
-                        console.log(err);
+                        ProviderSearchResultManager.addNewSearchResult(results.length, requestId, trys, provider.providerName, name, false, seriesMediaType);
+                        alreadySearchedNames.push(name.name);
                     }
-                    ProviderSearchResultManager.addNewSearchResult(results.length,requestId,trys,provider.providerName, name, false, seriesMediaType);
-                    alreadySearchedNames.push(name.name);
                 }
             }
+        } else {
+            const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
+            console.log("[" + requestId + "][" + provider.providerName + "] ID Request success 🎉");
+            ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id','id'), true, seriesMediaType, result.mainProvider.id.toString());
+            await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+            return series;
         }
 
         console.log("[" + requestId + "][" + provider.providerName + "] Request failed ☹");
@@ -165,14 +165,18 @@ export default new class ProviderHelper {
             for (const provider of ProviderList.getListProviderList()) {
                 var result = undefined;
                 // Check if anime exist in main list and have already all providers in.
-                const mainListEntry = await new ListController().checkIfProviderExistInMainList(entry, provider);
-                if (mainListEntry) {
-                    const mainListResult = mainListEntry.getListProvidersInfos().find(x => x.provider === provider.providerName);
-                    if (mainListResult && mainListResult.version === provider.version) {
-                        continue;
-                    } else {
-                        entry = mainListEntry;
+                if (ListController.instance) {
+                    const mainListEntry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
+                    if (mainListEntry) {
+                        const mainListResult = mainListEntry.getListProvidersInfos().find(x => x.provider === provider.providerName);
+                        if (mainListResult && mainListResult.version === provider.version && mainListResult.fullInfo) {
+                            continue;
+                        } else {
+                            entry = mainListEntry;
+                        }
                     }
+                } else {
+                    console.log('Failed get main list entry: no list controller instance')
                 }
 
                 try {

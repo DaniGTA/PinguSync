@@ -12,11 +12,22 @@ export default class Name {
         this.nameType = nameType;
     }
 
-    public static getSearchAbleScore(name: Name): number {
+    public static getSearchAbleScore(name: Name, names: Name[] = []): number {
+        const namesList = Object.freeze([...names]);
         let score = 0;
-        if (name.lang.includes("en") || name.lang.includes("x-jap")) {
+        if (name.lang.includes("en")) {
             score += 50;
         }
+        if (name.lang.includes("x-jap")) {
+            score += 25;
+        }
+        if (name.lang.includes("jap")) {
+            score += 10;
+        }
+
+        var apperence = namesList.filter(function(item){ return item.name === name.name; }).length
+        score = score ** apperence;
+
         if (name.nameType === NameType.OFFICIAL || name.nameType === NameType.MAIN) {
             score += 20;
         } else if (name.nameType === NameType.UNKNOWN) {

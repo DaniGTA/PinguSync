@@ -124,9 +124,9 @@ export default class Series extends SeriesProviderExtension {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
             if (result.season === -2) {
                 // UKNOWN SEASON
-                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
+                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry &&  ListController.instance) {
                     console.log('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                    await new ListController().addSeriesToMainList(...await seriesHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
+                    await ListController.instance.addSeriesToMainList(...await seriesHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
                     console.log('Temp Series Successfull added.');
                 }
                 this.cachedSeason = -2;
@@ -386,15 +386,18 @@ export default class Series extends SeriesProviderExtension {
         if (await this.getSeason() === 1) {
             return this;
         }
-        if (!list) {
-            list = await new ListController().getMainList();
+        if (!list && ListController.instance) {
+            list = await ListController.instance.getMainList();
         }
-        const allRelations = await this.getAllRelations(list);
-        for (const relation of allRelations) {
-            if (await relation.getSeason() === 1) {
-                return relation;
+        if (list) {
+            const allRelations = await this.getAllRelations(list);
+            for (const relation of allRelations) {
+                if (await relation.getSeason() === 1) {
+                    return relation;
+                }
             }
         }
+        
         throw 'no first season found';
     }
 

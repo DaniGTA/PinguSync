@@ -87,9 +87,10 @@ class SeriesHelper {
     }
 
     async searchSeasonValue(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
-        if (!seriesList) {
-            seriesList = await new ListController().getMainList();
+        if (!seriesList && ListController.instance) {
+            seriesList = await ListController.instance.getMainList();
         }
+       
         for (const provider of series.getListProvidersInfos()) {
             if (provider.targetSeason) {
                 return new SearchSeasonValueResult(provider.targetSeason, "Provider: " + provider.provider);
@@ -101,7 +102,7 @@ class SeriesHelper {
             return new SearchSeasonValueResult(numberFromName, "Name");
         }
         let prequel: Series | null = null;
-        if (await series.isAnyPrequelPresent()) {
+        if (await series.isAnyPrequelPresent() && seriesList) {
 
             const searchResult = await series.getPrequel(seriesList);
             prequel = searchResult.foundedSeries;
