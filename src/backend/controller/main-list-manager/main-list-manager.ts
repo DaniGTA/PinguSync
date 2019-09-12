@@ -4,6 +4,7 @@ import seriesHelper from '../../helpFunctions/series-helper';
 import listHelper from '../../helpFunctions/list-helper';
 import MainListPackageManager from './main-list-package-manager';
 import MainListLoader from './main-list-loader';
+import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 
 export default class MainListManager {
     private static mainList: Series[] = [];
@@ -12,6 +13,7 @@ export default class MainListManager {
     private static secondList: Series[] = [];
 
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
+        const results = [];
         try {
             const results = await MainListManager.findSameSeriesInMainList(series);
             if (results.length != 0) {
@@ -21,19 +23,24 @@ export default class MainListManager {
                             series = Object.assign(new Series(), series);
                         }
                         console.log('Duplicate found: merging...');
-                        series = await series.merge(entry,false);
-                        await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
+                        const seasonResult = await SeasonComperator.compareSeasons(series, entry);
+                        series = await series.merge(entry, false);
+                        if (seasonResult.isAbsolute || (seasonResult.matchAble != 0 && seasonResult.matchAble === seasonResult.matches)) {
+                            await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
+                        }
                     } catch (err) {
                         console.log(err);
                     }
                 }
+            } else {
+                results.push(series);
             }
             if (series.lastInfoUpdate === 0) {
                 console.log('[ERROR] Series no last info update! In MainList.')
             }
             console.log('[MainList] Series was added to MainList');
-            MainListManager.mainList.push(series);
-            
+            MainListManager.mainList.push(...results);
+
 
             if (notfiyRenderer) {
                 const seriesPackage = await new MainListPackageManager().getSeriesPackage(series, await this.getMainList());
@@ -58,7 +65,7 @@ export default class MainListManager {
             await MainListManager.addSerieToMainList(entry);
         }
         await MainListLoader.saveData(MainListManager.mainList);
-         console.log("Finish Cleanup Mainlist");
+        console.log("Finish Cleanup Mainlist");
         MainListManager.listMaintance = false;
     }
 
@@ -96,7 +103,7 @@ export default class MainListManager {
             MainListManager.listLoaded = true;
         }
         if (this.listMaintance) {
-            console.log('TempList served: (size= '+MainListManager.secondList.length+')');
+            console.log('TempList served: (size= ' + MainListManager.secondList.length + ')');
             return MainListManager.secondList;
         } else {
             return MainListManager.mainList;

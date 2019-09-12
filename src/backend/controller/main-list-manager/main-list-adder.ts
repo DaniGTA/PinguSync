@@ -41,8 +41,8 @@ export default class MainListAdder {
                         console.log('[ERROR] Series no last info update!')
                     }
                     await MainListManager.addSerieToMainList(filledSeries);
-                    
-                } else if(entry.length == 1){
+
+                } else if (entry.length == 1) {
                     try {
                         console.log('Add existing Series.');
                         const tempSeries = await entry[0].merge(series);
@@ -54,7 +54,8 @@ export default class MainListAdder {
                     } catch (err) { }
                 } else {
                     const rdmProvider = series.getAllProviderLocalDatas()[0];
-                    console.log('[WARNING] Found more results from main list from one Series! '+rdmProvider.provider+': '+rdmProvider.id)
+                    console.log('[WARNING] Found more results from main list from one Series! ' + rdmProvider.provider + ': ' + rdmProvider.id)
+                    await MainListManager.addSerieToMainList(series);
                 }
                 addCounter++;
                 console.log('Adding Series to list. Progress: ' + addCounter);
