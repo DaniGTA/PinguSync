@@ -14,7 +14,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import stringHelper from '../string-helper';
 import MultiProviderResult from '../../api/multi-provider-result';
 import titleCheckHelper from '../title-check-helper';
-import ExternalProvider from 'src/backend/api/external-provider';
+import ExternalProvider from '../../api/external-provider';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {

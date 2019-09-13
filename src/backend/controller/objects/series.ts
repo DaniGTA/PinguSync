@@ -537,18 +537,29 @@ export default class Series extends SeriesProviderExtension {
         }
         return MediaType.UNKOWN;
     }
-
-    async getReleaseYear(): Promise<number | undefined> {
-        const collectedMediaTypes: number[] = [];
+    /**
+     * Get from all providers the release date.
+     * They can have difference.
+     */
+    async getAllReleaseYears(): Promise<number[]>{
+        const collectedReleaseYears: number[] = [];
         for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.releaseYear) {
-                collectedMediaTypes.push(localdata.releaseYear);
+                collectedReleaseYears.push(localdata.releaseYear);
             }
         }
-        if (collectedMediaTypes.length === 0) {
+        return collectedReleaseYears;
+    }
+
+    /**
+     * Get the release year that fit to this series at most.
+     */
+    async getReleaseYear(): Promise<number | undefined> {
+        const collectedReleaseYears: number[] = await this.getAllReleaseYears();
+        if (collectedReleaseYears.length === 0) {
             return;
         } else {
-            const result = await listHelper.findMostFrequent(collectedMediaTypes);
+            const result = await listHelper.findMostFrequent(collectedReleaseYears);
             if (result) {
                 return result;
             }

@@ -49,7 +49,9 @@ export default class TraktProvider implements ListProvider {
                 if (result.movie) {
                     endResult.push(await traktConverter.convertMovieToLocalData(result.movie));
                 }
-            } catch (err) { }
+            } catch (err) { 
+                console.log(err);
+            }
         }
         return endResult;
     }

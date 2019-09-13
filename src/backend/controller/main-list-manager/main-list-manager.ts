@@ -5,6 +5,7 @@ import listHelper from '../../helpFunctions/list-helper';
 import MainListPackageManager from './main-list-package-manager';
 import MainListLoader from './main-list-loader';
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
+import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 
 export default class MainListManager {
     private static mainList: Series[] = [];
@@ -12,21 +13,28 @@ export default class MainListManager {
     private static listMaintance = false;
     private static secondList: Series[] = [];
 
+    /**
+     * Adds a new Series to the mainlist.
+     * It checks if there is already a same entry and merge it.
+     * @param series 
+     * @param notfiyRenderer 
+     */
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
         const results = [];
         try {
-            const results = await MainListManager.findSameSeriesInMainList(series);
-            if (results.length != 0) {
-                for (const entry of results) {
+            const searchResults = await MainListManager.findSameSeriesInMainList(series);
+            if (searchResults.length != 0) {
+                for (const entry of searchResults) {
                     try {
                         if (typeof series.merge != 'function') {
                             series = Object.assign(new Series(), series);
                         }
                         console.log('Duplicate found: merging...');
                         const seasonResult = await SeasonComperator.compareSeasons(series, entry);
-                        if (seasonResult.isAbsolute || (seasonResult.matchAble != 0 && seasonResult.matchAble === seasonResult.matches)) {
+                        if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (seasonResult.matchAble != 0 && seasonResult.matchAble === seasonResult.matches)) {
                             series = await series.merge(entry, false);
                             await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
+                            results.push(series);
                         }
                     } catch (err) {
                         console.log(err);
@@ -54,15 +62,25 @@ export default class MainListManager {
         return true;
     }
 
+    /**
+     * Refresh cached data and clean up double entrys.
+     */
     public static async finishListFilling() {
         console.log("Cleanup Mainlist");
         MainListManager.listMaintance = true;
         MainListManager.secondList = [...MainListManager.mainList];
         console.log('Temp List created');
         MainListManager.mainList = [];
-        for (let entry of this.secondList) {
+        for (let index = 0; this.secondList.length != 0;) {
+            const entry = this.secondList[index];
+            /**
+             * Reset Cache and reload it
+             */
             await entry.resetCache();
+            await entry.getSeason();
+
             await MainListManager.addSerieToMainList(entry);
+            this.secondList.shift();
         }
         await MainListLoader.saveData(MainListManager.mainList);
         console.log("Finish Cleanup Mainlist");
@@ -101,19 +119,28 @@ export default class MainListManager {
         return false;
     }
 
+    /**
+     * Retunrs all series but in the maintaince phase it can return dublicated entrys.
+     */
     static async getMainList(): Promise<Series[]> {
         if (!MainListManager.listLoaded) {
             MainListManager.mainList = MainListLoader.loadData();
             MainListManager.listLoaded = true;
         }
         if (this.listMaintance) {
-            console.log('TempList served: (size= ' + MainListManager.secondList.length + ')');
-            return MainListManager.secondList;
+            const arr = [...MainListManager.secondList, ...MainListManager.mainList];
+            console.log('TempList served: (size= ' + arr.length + ')');
+            return arr;
         } else {
             return MainListManager.mainList;
         }
     }
 
+    /**
+     * Get the index number from the series in the mainlist.
+     * INFO: In the maintance phase the index number can be valid very shortly.
+     * @param anime 
+     */
     public static async getIndexFromSeries(anime: Series): Promise<number> {
         return (await MainListManager.getMainList()).findIndex(x => anime.id === x.id);
     }

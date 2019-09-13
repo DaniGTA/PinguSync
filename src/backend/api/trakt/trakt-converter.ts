@@ -51,10 +51,16 @@ export default new class TraktConverter {
         provider.id = show.ids.trakt;
         provider.rawEntry = show;
 
-        const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
-        tvdbProvider.id = show.ids.tvdb;
-        tvdbProvider.fullInfo = false;
-        return new MultiProviderResult(provider, tvdbProvider);
+        const result = new MultiProviderResult(provider);
+        try {
+            const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
+            tvdbProvider.id = show.ids.tvdb;
+            tvdbProvider.fullInfo = false;
+            result.subProviders.push(tvdbProvider);
+        } catch (err) {
+            console.log('no tvdb instance.');
+        }
+        return result;
     }
 
     async convertMovieToLocalData(traktMovie: Movie | WatchedShow): Promise<MultiProviderResult> {

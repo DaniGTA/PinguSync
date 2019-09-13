@@ -69,6 +69,19 @@ describe('Trakt Tests', () => {
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
+        })
+    
+    it('should get a series (6/6) same result but different year', async () => {
+
+        const series = new Series();
+        const unkownProvider = new ListProviderLocalData();
+        unkownProvider.addSeriesName(new Name("Yamada-kun and the Seven Witches", "en"));
+        unkownProvider.releaseYear = 2013;
+        series.addProviderDatas(unkownProvider);
+
+
+        const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
+        strictEqual(result.getListProvidersInfos().length, 2);
     })
 
 });

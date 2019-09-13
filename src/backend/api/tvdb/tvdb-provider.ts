@@ -19,6 +19,13 @@ export default class TVDBProvider implements InfoProvider {
     private baseUrl = 'https://api.thetvdb.com';
     private apiData: TVDBProviderData = new TVDBProviderData();
     public static Instance: TVDBProvider;
+    get Instance():TVDBProvider {
+        if (TVDBProvider.Instance) {
+            return TVDBProvider.Instance;
+        }
+        return new TVDBProvider();
+    }
+
     constructor() {
         if (!TVDBProvider.Instance) {
             TVDBProvider.Instance = this;
