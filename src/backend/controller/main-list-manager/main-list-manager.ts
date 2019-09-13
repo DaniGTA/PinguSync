@@ -24,8 +24,8 @@ export default class MainListManager {
                         }
                         console.log('Duplicate found: merging...');
                         const seasonResult = await SeasonComperator.compareSeasons(series, entry);
-                        series = await series.merge(entry, false);
                         if (seasonResult.isAbsolute || (seasonResult.matchAble != 0 && seasonResult.matchAble === seasonResult.matches)) {
+                            series = await series.merge(entry, false);
                             await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                         }
                     } catch (err) {
@@ -69,6 +69,10 @@ export default class MainListManager {
         MainListManager.listMaintance = false;
     }
 
+    /**
+     * Search with id and it will look on other meta data if it is a same series already in the mainlist
+     * @param entry2 
+     */
     public static async findSameSeriesInMainList(entry2: Series): Promise<Series[]> {
         const foundedSameSeries = [];
         for (let entry of await MainListManager.getMainList()) {

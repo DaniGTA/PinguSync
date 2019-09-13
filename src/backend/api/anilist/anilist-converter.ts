@@ -50,7 +50,7 @@ export default new class AniListConverter {
     public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<ListProviderLocalData> {
         const provider = new ListProviderLocalData(AniListProvider.getInstance());
         provider.addOverview(new Overview(info.Media.description, 'eng'));
-        
+
         provider.addSeriesName(new Name(info.Media.title.romaji, 'x-jap', NameType.OFFICIAL));
         provider.addSeriesName(new Name(info.Media.title.english, 'unknown', NameType.MAIN));
         provider.addSeriesName(new Name(info.Media.title.native, 'jap'));
@@ -78,7 +78,7 @@ export default new class AniListConverter {
         providerInfo.releaseYear = entry.media.startDate.year;
         providerInfo.releaseYear = entry.media.startDate.year;
         providerInfo.mediaType = await this.convertTypeToMediaType(entry.media.format);
-        providerInfo.targetSeason = await Name.getSeasonNumber(await series.getAllNames());
+        providerInfo.targetSeason = await Name.getSeasonNumber(await series.getAllNamesUnique());
 
         try {
             if (!providerInfo.targetSeason) {

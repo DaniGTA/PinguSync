@@ -36,14 +36,29 @@ export default class Series extends SeriesProviderExtension {
         this.seasonDetectionType = "";
     }
 
-    async getAllNames(): Promise<Name[]> {
+    /**
+     * It prevent double entrys from all names.
+     */
+    async getAllNamesUnique(): Promise<Name[]> {
+        const names = this.getAllNames();
+        return await listHelper.getUniqueNameList(names);
+    }
+    /**
+     * Get all names from all Providers.
+     * ! It can contain double entrys.
+     */
+    getAllNames(): Name[] {
         const names = [];
         for (const provider of this.getAllProviderLocalDatas()) {
             names.push(...provider.getAllNames());
         }
-        return await listHelper.getUniqueNameList(names);
+        return names;
     }
 
+    /**
+     * Get all overviews
+     * + It prevents double entrys.
+     */
     async getAllOverviews(): Promise<Overview[]> {
         const overviews = [];
         for (const provider of this.getAllProviderLocalDatas()) {
@@ -119,12 +134,12 @@ export default class Series extends SeriesProviderExtension {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList?: readonly Series[] | Series[],allowAddNewEntry = true): Promise<number | undefined> {
+    public async getSeason(searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<number | undefined> {
         if (!this.cachedSeason || this.cachedSeason === -2) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
             if (result.season === -2) {
                 // UKNOWN SEASON
-                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry &&  ListController.instance) {
+                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
                     console.log('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
                     await ListController.instance.addSeriesToMainList(...await seriesHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
                     console.log('Temp Series Successfull added.');
@@ -313,13 +328,14 @@ export default class Series extends SeriesProviderExtension {
      * Will be often used too update watchprogress.
      * @param anime 
      */
-    public async merge(anime: Series,allowAddNewEntry = true): Promise<Series> {
+    public async merge(anime: Series, allowAddNewEntry = true): Promise<Series> {
+        console.log('Merging Series');
         const newAnime: Series = new Series();
 
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
 
-        await newAnime.getSeason(undefined,allowAddNewEntry);
+        await newAnime.getSeason(undefined, allowAddNewEntry);
 
         await newAnime.getCanSync();
 
@@ -335,7 +351,7 @@ export default class Series extends SeriesProviderExtension {
             newAnime.lastUpdate = this.lastUpdate;
         }
 
-        if ((await newAnime.getAllNames()).length > 25) {
+        if ((await newAnime.getAllNamesUnique()).length > 25) {
             console.log(".");
         }
         return newAnime;
@@ -381,7 +397,10 @@ export default class Series extends SeriesProviderExtension {
             throw 'no watch progress';
         }
     }
-
+    /**
+     * Get the first season of this series.
+     * @param list 
+     */
     async getFirstSeason(list?: readonly Series[] | Series[]): Promise<Series> {
         if (await this.getSeason() === 1) {
             return this;
@@ -397,7 +416,7 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         }
-        
+
         throw 'no first season found';
     }
 

@@ -14,6 +14,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import stringHelper from '../string-helper';
 import MultiProviderResult from '../../api/multi-provider-result';
 import titleCheckHelper from '../title-check-helper';
+import ExternalProvider from 'src/backend/api/external-provider';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -75,47 +76,21 @@ export default new class ProviderHelper {
         const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
         if (indexOfCurrentProvider === -1) {
             if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
-            let names = await series.getAllNames();
-            const alreadySearchedNames: string[] = [];
-            names = names.sort((a, b) => Name.getSearchAbleScore(b,names) - Name.getSearchAbleScore(a,names));
-            names = await listHelper.getLazyUniqueStringList(names);
-
-            try {
-                //Test
-                names.unshift(new Name(await stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType))
-            } catch (err) { }
-
-
+                const alreadySearchedNames: string[] = [];
+                let names = await this.getNamesSortedBySearchAbleScore(series);
                 for (const name of names) {
                     const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
                     if (!alreadySearchedName && name.name) {
-                        if (trys > 10) {
+                        if (trys > 9) {
                             break;
                         }
-                        let results: MultiProviderResult[] = [];
                         trys++;
-                    
                         try {
-                            console.log("[" + requestId + "][" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
-                            results = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
-                            
-                            if (results) {
-                                console.log("[" + requestId + "][" + provider.providerName + '] Results: ' + results.length)
-                                for (const result of results) {
-                                    if (await this.checkIfProviderIsValid(series, result)) {
-                                        console.log("[" + requestId + "][" + provider.providerName + "] Request success 🎉");
-                                        ProviderSearchResultManager.addNewSearchResult(results.length, requestId, trys, provider.providerName, name, true, seriesMediaType, result.mainProvider.id.toString());
-                                        await series.addProviderDatas(result.mainProvider, ...result.subProviders);
-                                        return series;
-                                    }
-                                }
-                            } else {
-                                console.log("no results");
-                            }
+                            return await this.getSeriesByName(series, name, provider);
                         } catch (err) {
                             console.log(err);
                         }
-                        ProviderSearchResultManager.addNewSearchResult(results.length, requestId, trys, provider.providerName, name, false, seriesMediaType);
+
                         alreadySearchedNames.push(name.name);
                     }
                 }
@@ -123,13 +98,56 @@ export default new class ProviderHelper {
         } else {
             const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
             console.log("[" + requestId + "][" + provider.providerName + "] ID Request success 🎉");
-            ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id','id'), true, seriesMediaType, result.mainProvider.id.toString());
+            ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
             await series.addProviderDatas(result.mainProvider, ...result.subProviders);
             return series;
         }
 
         console.log("[" + requestId + "][" + provider.providerName + "] Request failed ☹");
         throw 'no series info found by name';
+    }
+
+    /**
+     * Get all names of a series sorted by a score and it is unique say all double entrys will be filtered out.
+     * @param series The series from which the names will be taken.
+     */
+    private async getNamesSortedBySearchAbleScore(series: Series): Promise<Name[]> {
+        let names = series.getAllNames();
+        names = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names));
+        try {
+            //Test
+            names.unshift(new Name(await stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType))
+        } catch (err) { }
+        return await listHelper.getLazyUniqueStringList(names);
+    }
+
+    /**
+     * Search provider update by the series name.
+     * It will also check other meta data if they match.
+     * @param series Series with valid meta data.
+     * @param name Searched name.
+     * @param provider In this provider the search will be performed.
+     */
+    private async getSeriesByName(series: Series, name: Name, provider: ExternalProvider): Promise<Series> {
+        let results: MultiProviderResult[] = [];
+        console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
+        results = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
+
+        if (results) {
+            console.log("[" + provider.providerName + '] Results: ' + results.length)
+            for (const result of results) {
+                if (await this.checkIfProviderIsValid(series, result)) {
+                    console.log("[" + provider.providerName + "] Request success 🎉");
+                    ProviderSearchResultManager.addNewSearchResult(results.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), result.mainProvider.id.toString());
+                    await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+                    return series;
+                }
+            }
+
+        } else {
+            console.log("no results");
+        }
+        throw new Error('No results found by "series get by name"')
     }
 
     public async checkIfProviderIsValid(series: Series, result: MultiProviderResult): Promise<boolean> {

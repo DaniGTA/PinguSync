@@ -12,9 +12,6 @@ import ProviderLocalData from '../controller/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
 import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
 import ProviderList from '../controller/provider-manager/provider-list';
-import ListProvider from '../api/list-provider';
-import InfoProvider from '../api/list-provider';
-
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
         return a.getSeason() === b.getSeason();
@@ -90,13 +87,13 @@ class SeriesHelper {
         if (!seriesList && ListController.instance) {
             seriesList = await ListController.instance.getMainList();
         }
-       
+
         for (const provider of series.getListProvidersInfos()) {
             if (provider.targetSeason) {
                 return new SearchSeasonValueResult(provider.targetSeason, "Provider: " + provider.provider);
             }
         }
-        const numberFromName = await Name.getSeasonNumber(await series.getAllNames());
+        const numberFromName = await Name.getSeasonNumber(await series.getAllNamesUnique());
 
         if (numberFromName) {
             return new SearchSeasonValueResult(numberFromName, "Name");
@@ -145,6 +142,7 @@ class SeriesHelper {
 
     async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
         const result: Series[] = [];
+        console.log('create temp series');
         for (const entry of localDatas) {
             for (const prequelId of entry.prequelIds) {
                 if (prequelId) {
@@ -169,6 +167,7 @@ class SeriesHelper {
                 }
             }
         }
+        console.log(result.length + ' created temp series');
         return result;
     }
 }

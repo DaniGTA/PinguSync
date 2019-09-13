@@ -6,8 +6,8 @@ export default new class TitleCheckHelper {
     private collator = new Intl.Collator("en-US", { sensitivity: "base" });
 
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
-        let aNameList: string[] = (await a.getAllNames()).flatMap(x => x.name);
-        let bNameList: string[] = (await b.getAllNames()).flatMap(x => x.name);
+        let aNameList: string[] = (await a.getAllNamesUnique()).flatMap(x => x.name);
+        let bNameList: string[] = (await b.getAllNamesUnique()).flatMap(x => x.name);
         return await this.checkNames(aNameList, bNameList);
     }
 
@@ -113,7 +113,7 @@ export default new class TitleCheckHelper {
     }
 
     private equalIgnoreCase(s1: string, s2: string) {
-        return s1.toUpperCase() ===  s2.toUpperCase();
+        return s1.toUpperCase() === s2.toUpperCase();
     }
 
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
