@@ -27,7 +27,7 @@ export default new class AniListConverter {
         provider.covers.push(new Cover(medium.coverImage.medium, ImageSize.MEDIUM));
         provider.releaseYear = medium.startDate.year;
         provider.banners.push(new Banner(medium.bannerImage, ImageSize.LARGE));
-
+        provider.rawEntry = medium;
         provider.fullInfo = false;
 
         provider.id = medium.id;
@@ -60,7 +60,7 @@ export default new class AniListConverter {
         provider.covers.push(new Cover(info.Media.coverImage.medium, ImageSize.MEDIUM));
         provider.releaseYear = info.Media.startDate.year;
         provider.banners.push(new Banner(info.Media.bannerImage, ImageSize.LARGE));
-
+        provider.rawEntry = info;
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;

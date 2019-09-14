@@ -15,6 +15,9 @@ import stringHelper from '../string-helper';
 import MultiProviderResult from '../../api/multi-provider-result';
 import titleCheckHelper from '../title-check-helper';
 import ExternalProvider from '../../api/external-provider';
+import SearchResultRatingContainer from './search-result-rating-container';
+import MultiProviderComperator from '../comperators/multi-provider-results-comperator';
+import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 
 export default new class ProviderHelper {
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -129,21 +132,26 @@ export default new class ProviderHelper {
      * @param provider In this provider the search will be performed.
      */
     private async getSeriesByName(series: Series, name: Name, provider: ExternalProvider): Promise<Series> {
-        let results: MultiProviderResult[] = [];
+        let searchResult: MultiProviderResult[] = [];
+        let resultContainer: SearchResultRatingContainer[] = [];
         console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
-        results = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
+        searchResult = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
 
-        if (results) {
-            console.log("[" + provider.providerName + '] Results: ' + results.length)
-            for (const result of results) {
-                if (await this.checkIfProviderIsValid(series, result)) {
+        if (searchResult) {
+            console.log("[" + provider.providerName + '] Results: ' + searchResult.length)
+            for (const result of searchResult) {
+                const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
+                resultContainer.push(new SearchResultRatingContainer(mpcr,result));
+            }
+            resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
+            for (const containerItem of resultContainer) {
+                if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                     console.log("[" + provider.providerName + "] Request success 🎉");
-                    ProviderSearchResultManager.addNewSearchResult(results.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), result.mainProvider.id.toString());
-                    await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+                    ProviderSearchResultManager.addNewSearchResult(searchResult.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
+                    await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
                     return series;
                 }
             }
-
         } else {
             console.log("no results");
         }

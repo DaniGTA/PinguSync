@@ -9,6 +9,7 @@ export default class AniDBConverter {
 
         const ipld = new InfoProviderLocalData(AniDBProvider.instance);
         ipld.id = anime._attributes.aid;
+        ipld.rawEntry = anime;
         ipld.version = AniDBProvider.instance.version;
         ipld.fullInfo = false;
         return new MultiProviderResult(ipld);

@@ -81,7 +81,8 @@ describe('Trakt Tests', () => {
 
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
+        strictEqual(result.getListProvidersInfos()[1].releaseYear, 2013);
+        strictEqual(result.getListProvidersInfos()[1].id, 72367);
     })
 
 });
