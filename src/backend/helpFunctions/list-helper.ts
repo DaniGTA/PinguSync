@@ -5,6 +5,15 @@ import Name from '../controller/objects/meta/name';
 import Cover from '../controller/objects/meta/cover';
 
 class ListHelper {
+
+    public async findAllIndexes<T>(arr: T[], filter: (item:T) => boolean):Promise<number[]> {
+        var indexes = [];
+        var i;
+        for(i = 0; i < arr.length; i++)
+            if (filter(arr[i]))
+                indexes.push(i);
+        return indexes;
+    }
     public async cleanArray<T>(actual: T[]): Promise<T[]> {
         const newArray: T[] = [];
         // tslint:disable-next-line: prefer-for-of

@@ -3,9 +3,6 @@ import stringHelper from './string-helper';
 import { MediaType } from '../controller/objects/meta/media-type';
 
 export default new class TitleCheckHelper {
-
-    private collator = new Intl.Collator("en-US", { sensitivity: "base" });
-
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
         let aNameList: string[] = (await a.getAllNamesUnique()).flatMap(x => x.name);
         let bNameList: string[] = (await b.getAllNamesUnique()).flatMap(x => x.name);
@@ -159,6 +156,11 @@ export default new class TitleCheckHelper {
         if(title.match(/(:|: | )Special(\W|$|\_)/)){
             return MediaType.SPECIAL;
         }
+
+        if(title.match(/(:|: | )OVA(\W|$|\_)/)){
+            return MediaType.SPECIAL;
+        }
+        
         return MediaType.UNKOWN;
     }
 

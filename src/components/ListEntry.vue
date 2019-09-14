@@ -5,7 +5,9 @@
     <button @click="clog(seriesPackage)">Log</button>
     <button @click="seriesDataRefresh(seriesPackage)">Data Refresh</button>
     <button @click="seriesDataRefresh(seriesPackage)">Delete Package</button>
+   
     <div v-for="item of seriesPackage.allRelations" v-bind:key="item.id">
+      <button @click="logNames(item)">Log names</button>
       <Promised
         :promise="getSeason(item)"
         v-slot:combined="{ isPending, isDelayOver, data, error }"
@@ -67,6 +69,13 @@ export default class ListEntry extends Vue {
   clog(a: any) {
     console.log(a);
   }
+
+  logNames(item:Series){
+     const animeObject = Object.assign(new Series(), item);
+     animeObject.readdFunctions();
+    console.log(animeObject.getAllNames());
+  }
+
   getObjectAsString(series: Series): string {
     return JSON.stringify(series);
   }

@@ -61,7 +61,13 @@ describe('stringHelperTest', () => {
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2,"Season marking with number");
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war'), 2,"Season marking with the word season");
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title AA'), 2,"Season marking with the a A");
-
+        try {
+            await stringHelper.getSeasonNumberFromTitle('C^3');
+        } catch (e) { }
+        try {
+            await stringHelper.getSeasonNumberFromTitle('C3');
+            assert.fail();
+        } catch (e) { }
         try {
             await stringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya');
             assert.fail();

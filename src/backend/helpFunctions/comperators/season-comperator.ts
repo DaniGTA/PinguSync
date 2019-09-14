@@ -8,9 +8,9 @@ export default class SeasonComperator {
         const aSeason = await a.getSeason();
         const bSeason = await b.getSeason();
         if (aSeason || bSeason) {
-            comperatorResult.matchAble += 2.5;
+            comperatorResult.matchAble += 3;
             if (aSeason === bSeason) {
-                comperatorResult.matches += 2.5;
+                comperatorResult.matches += 3;
                 if (bSeason != 1 && aSeason != 1) {
                     try {
                         if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {

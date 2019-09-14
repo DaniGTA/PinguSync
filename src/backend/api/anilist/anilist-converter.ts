@@ -12,6 +12,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import { MediaFormat } from './graphql/mediaFormat';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Banner from '../../controller/objects/meta/banner';
+import listHelper from '../../helpFunctions/list-helper';
 
 export default new class AniListConverter {
     public async convertMediaToLocalData(medium: Medium): Promise<ListProviderLocalData> {
@@ -100,6 +101,12 @@ export default new class AniListConverter {
             let sequel = entry.media.relations.edges.findIndex(x => x.relationType === MediaRelation.SEQUEL);
             if (sequel != -1) {
                 providerInfo.sequelIds.push(entry.media.relations.nodes[sequel].id);
+            }
+            let alternatives = await listHelper.findAllIndexes(entry.media.relations.edges, (item) => item.relationType === MediaRelation.ALTERNATIVE);
+            if (alternatives.length != 0) {
+                for (const index of alternatives) {
+                    providerInfo.alternativeIds.push(entry.media.relations.nodes[index].id);
+                }
             }
         } catch (err) {
             console.error(err);

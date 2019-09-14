@@ -1,6 +1,7 @@
 import Series from './series';
 import stringHelper from '../../helpFunctions/string-helper';
 import { PreferedSeriesNameHelper } from './settings/prefered-series-name';
+import Name from './meta/name';
 
 /**
  * Contains all Relations of a Series.
@@ -37,7 +38,12 @@ export default class SeriesPackage {
                 preferedName = await new PreferedSeriesNameHelper().getPreferedNameOfSeries(relation);
                 break;
             }
+            if (!preferedName) {
+                let names = relation.getAllNames();
+                preferedName = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names))[0].name;
+            }
         }
+     
         return preferedName;
     }
 }

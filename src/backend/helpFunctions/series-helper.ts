@@ -12,6 +12,7 @@ import { ListProviderLocalData } from '../controller/objects/list-provider-local
 import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
 import ReleaseYearComperator from './comperators/release-year-comperator';
 import MediaTypeComperator from './comperators/media-type-comperator';
+import RelationComperator from './comperators/relation-comperator';
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
         return a.getSeason() === b.getSeason();
@@ -36,6 +37,11 @@ class SeriesHelper {
         }
         matchAbleScore += listProviderResult.matchAble;
         matches += listProviderResult.matches;
+
+        const relationResult = await RelationComperator.isAlternativeSeries(a, b);
+        if (relationResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
+            return false;
+        }
 
         const mediaTypeResult = await MediaTypeComperator.compareMediaType(a, b);
         matchAbleScore += mediaTypeResult.matchAble;

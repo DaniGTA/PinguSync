@@ -16,7 +16,10 @@ export default class TVDBConverter {
         infoProviderLocalData.publicScore = series.data.siteRating;
         infoProviderLocalData.rawEntry = series;
         infoProviderLocalData.banners.push(new Cover(series.data.banner));
-
+        infoProviderLocalData.addSeriesName(new Name(series.data.slug, 'slug', NameType.SLUG));
+        infoProviderLocalData.addSeriesName(new Name(series.data.seriesName, 'eng', NameType.OFFICIAL));
+        if (series.data.firstAired)
+            infoProviderLocalData.releaseYear = new Date(series.data.firstAired).getFullYear();
         return infoProviderLocalData;
     }
 
@@ -26,6 +29,14 @@ export default class TVDBConverter {
             infoProviderLocalData.id = searchResult.id;
         }
         infoProviderLocalData.rawEntry = searchResult;
+        if(searchResult.slug)
+            infoProviderLocalData.addSeriesName(new Name(searchResult.slug, 'slug', NameType.SLUG));
+        if(searchResult.seriesName)
+            infoProviderLocalData.addSeriesName(new Name(searchResult.seriesName, 'eng', NameType.OFFICIAL));
+        if (searchResult.overview) 
+            infoProviderLocalData.addOverview(new Overview(searchResult.overview, 'en'));
+        if (searchResult.firstAired)
+            infoProviderLocalData.releaseYear = new Date(searchResult.firstAired).getFullYear();
 
         return infoProviderLocalData;
     }

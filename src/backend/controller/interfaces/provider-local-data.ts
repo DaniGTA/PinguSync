@@ -70,6 +70,12 @@ export default class ProviderLocalData {
      * Only fill this if provider give prequel ids and have different ids for every season.
      */
     public prequelIds: number[] = [];
+    /**
+     * 
+     * Alternative IDs from the same provider.
+     * This prevents merging alternatives together.
+     */
+    public alternativeIds: number[] = [];
 
     /**
     * Prevents too have double entrys for same name.

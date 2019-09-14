@@ -22,7 +22,7 @@ export default class MainListManager {
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
         const results = [];
         try {
-            const searchResults = await MainListManager.findSameSeriesInMainList(series);
+            const searchResults = await MainListManager.findSameSeriesInList(series,this.mainList);
             if (searchResults.length != 0) {
                 for (const entry of searchResults) {
                     try {
@@ -87,23 +87,28 @@ export default class MainListManager {
         MainListManager.listMaintance = false;
     }
 
-    /**
-     * Search with id and it will look on other meta data if it is a same series already in the mainlist
-     * @param entry2 
-     */
-    public static async findSameSeriesInMainList(entry2: Series): Promise<Series[]> {
+
+    private static async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]>{
         const foundedSameSeries = [];
-        for (let entry of await MainListManager.getMainList()) {
-            if (entry.id === entry2.id) {
-                foundedSameSeries.push(entry);
+        for (let listEntry of list) {
+            if (listEntry.id === entry.id) {
+                foundedSameSeries.push(listEntry);
             } else {
-                if (await seriesHelper.isSameSeries(entry, entry2)) {
-                    foundedSameSeries.push(entry);
+                if (await seriesHelper.isSameSeries(listEntry, entry)) {
+                    foundedSameSeries.push(listEntry);
                 }
 
             }
         }
         return foundedSameSeries;
+    }
+
+    /**
+     * Search with id and it will look on other meta data if it is a same series already in the mainlist
+     * @param entry 
+     */
+    public static async findSameSeriesInMainList(entry: Series): Promise<Series[]> {
+        return this.findSameSeriesInList(entry,await MainListManager.getMainList());
     }
 
     public static async removeSeriesFromMainList(anime: Series, notifyRenderer = false): Promise<boolean> {
