@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import titleCheckHelper from '../../src/backend/helpFunctions/title-check-helper';
+import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 describe('TitleCheckerTest', () => {
     it('should match', async () => {
         assert.equal(await titleCheckHelper.checkNames(['Title: Check, It`s a Test` but` its still a test!'],['Title ~Check, It’s a test but’ its still a test!~']),true)
@@ -51,6 +52,25 @@ describe('TitleCheckerTest', () => {
         assert.equal(await titleCheckHelper.removeSeasonMarkesFromTitle("Title 3nd Season"), "Title");
         assert.equal(await titleCheckHelper.removeSeasonMarkesFromTitle("この素晴らしい世界に祝福を！紅伝説"), "この素晴らしい世界に祝福を！紅伝説")
         return;
+    });
+
+    it('should remove MediaType from title', async () => {
+        assert.equal(await titleCheckHelper.removeMediaTypeFromTitle('Title: Movie'), 'Title');
+        assert.equal(await titleCheckHelper.removeMediaTypeFromTitle('Title Movie'), 'Title');
+        assert.equal(await titleCheckHelper.removeMediaTypeFromTitle('Title: Special'), 'Title');
+        assert.equal(await titleCheckHelper.removeMediaTypeFromTitle('Title Special'), 'Title');
+        assert.equal(await titleCheckHelper.removeMediaTypeFromTitle('Title: Specials'), 'Title');
+        assert.equal(await titleCheckHelper.removeMediaTypeFromTitle('Title Specials'), 'Title');
+    });
+
+    it('should detect MediaType from title', async () => {
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title: Movie'), MediaType.MOVIE);
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title Movie'),  MediaType.MOVIE);
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title: Special'),  MediaType.SPECIAL);
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title Special'),  MediaType.SPECIAL);
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title: Specials'),  MediaType.SPECIAL);
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title Specials'), MediaType.SPECIAL);
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title'),  MediaType.UNKOWN);
     });
 
 });

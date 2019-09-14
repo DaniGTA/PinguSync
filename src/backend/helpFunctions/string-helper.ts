@@ -26,14 +26,14 @@ class StringHelper {
      * titleA! vs titleA
      */
     public async cleanString(string: string): Promise<string> {
-        string = string.replace(':', '');
+        string = string.replace(/\:/, '');
         string = string.replace("！", "! ");
         string = string.replace("!", "!");
         if ((string.match(/!/g) || []).length == 1) {
-            string = string.replace('!', '');
+            string = string.replace(/\!/, '');
         }
         if ((string.match(/\?/g) || []).length == 1) {
-            string = string.replace('?', '');
+            string = string.replace(/\?/, '');
         }
         //title -AAA- => title AAA
         string = string.replace(' -', ' ');
@@ -81,12 +81,20 @@ class StringHelper {
                     countLastChar++;
                     reversedTitle = reversedTitle.substr(1);
                 }
+            }else if (['A'].includes(lastChar)) {
+                while (lastChar === reversedTitle.charAt(0)) {
+                    countLastChar++;
+                    reversedTitle = reversedTitle.substr(1);
+                }
+                if (countLastChar > 3) {
+                    countLastChar = 0;
+                }
             }
             if (countLastChar > 1) {
                 return countLastChar;
             }
         }
-        throw 'That name dont have a Season';
+        throw 'That title dont have a Season: '+title;
     }
     /**
      * Check if the string contains any japanese letters.

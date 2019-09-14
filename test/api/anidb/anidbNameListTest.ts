@@ -1,11 +1,12 @@
 
-import { deepEqual } from 'assert';
+import { deepEqual, fail } from 'assert';
 import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../src/backend/controller/objects/meta/name-type';
+import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
 
 describe('AniDB Tests', () => {
     it('should allow download (1/2)', async () => {
@@ -122,7 +123,7 @@ describe('AniDB Tests', () => {
         
         deepEqual(result[0].mainProvider.id,'3651');
     });
-        it('should find id 8550', async () => {
+    it('should find id 8550', async () => {
         var a = new AniDBProvider(false); 
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
@@ -136,5 +137,41 @@ describe('AniDB Tests', () => {
             const result = await a.getMoreSeriesInfoByName("Hunter x Hunter (2011)",1);
         
         deepEqual(result[0].mainProvider.id,'8550');
+    });
+
+    it('should find Danshi', async () => {
+        var a = new AniDBProvider(false); 
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.fullInfo = true;
+            
+        const series = new Series();
+        series['cachedSeason'] = 1;
+        lpdld.addSeriesName(new Name("Danshi Koukousei no Nichijou", NameType.MAIN));
+        lpdld.addSeriesName(new Name("Daily Lives of High School Boys", "jap", NameType.MAIN));
+        lpdld.addSeriesName(new Name("男子高校生の日常", "jap", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        const result = await providerHelper['getProviderSeriesInfo'](series, a);
+         deepEqual(result.getAllProviderLocalDatas()[0].id,'8729');
+    });
+
+    it('should find nothing', async () => {
+        var a = new AniDBProvider(false); 
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.fullInfo = true;
+            
+        const series = new Series();
+        series['cachedSeason'] = 1;
+        lpdld.addSeriesName(new Name("Danshi Koukousei no Nichijou Specials", NameType.MAIN));
+        lpdld.addSeriesName(new Name("Daily Lives of High School Boys Specials", "jap", NameType.MAIN));
+        lpdld.addSeriesName(new Name("男子高校生の日常", "jap", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        try {
+            const result = await providerHelper['getProviderSeriesInfo'](series, a);
+            fail();
+        } catch (err) {
+        }
+        
     });
 });

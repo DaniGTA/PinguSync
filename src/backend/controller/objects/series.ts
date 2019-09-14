@@ -13,6 +13,7 @@ import { ListProviderLocalData } from './list-provider-local-data';
 import { InfoProviderLocalData } from './info-provider-local-data';
 import ListController from '../list-controller';
 import RelationSearchResults from './transfer/relation-search-results';
+import titleCheckHelper from '../../helpFunctions/title-check-helper';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -365,6 +366,9 @@ export default class Series extends SeriesProviderExtension {
                 var collected: ProviderLocalData[] = [];
                 for (const provider2 of providers) {
                     if (provider2.provider == provider.provider) {
+                        if (provider2.id != provider.id) {
+                            console.warn("Merging two different ids");
+                        }
                         collected.push(provider2);
                         continue;
                     }
@@ -527,6 +531,9 @@ export default class Series extends SeriesProviderExtension {
                 collectedMediaTypes.push(localdata.mediaType);
             }
         }
+
+        collectedMediaTypes.push(...await this.getAllMediaTypesFromTitle());
+
         if (collectedMediaTypes.length === 0) {
             return MediaType.UNKOWN;
         } else {
@@ -535,8 +542,24 @@ export default class Series extends SeriesProviderExtension {
                 return result;
             }
         }
+        
         return MediaType.UNKOWN;
     }
+
+    /**
+     * Get all MediaTypes that it can find in the title.
+     */
+    private async getAllMediaTypesFromTitle(): Promise<MediaType[]> {
+        const collectedMediaTypes: MediaType[] = [];
+        for (const name of await this.getAllNamesUnique()) {
+            const result = await titleCheckHelper.getMediaTypeFromTitle(name.name);
+            if (result != MediaType.UNKOWN) {
+                collectedMediaTypes.push(result);
+            }
+        }
+        return collectedMediaTypes;
+    }
+
     /**
      * Get from all providers the release date.
      * They can have difference.

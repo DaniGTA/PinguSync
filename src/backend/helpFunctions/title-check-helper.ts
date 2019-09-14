@@ -1,5 +1,6 @@
 import Series from '../controller/objects/series';
 import stringHelper from './string-helper';
+import { MediaType } from '../controller/objects/meta/media-type';
 
 export default new class TitleCheckHelper {
 
@@ -144,5 +145,27 @@ export default new class TitleCheckHelper {
             return title;
         }
         throw 'NoName';
+    }
+
+    public async getMediaTypeFromTitle(title: string): Promise<MediaType>{
+        if(title.match(/(:|: | )Movie(\W|$|\_)/)){
+            return MediaType.MOVIE;
+        }
+
+        if(title.match(/(:|: | )Specials(\W|$|\_)/)){
+            return MediaType.SPECIAL;
+        }
+
+        if(title.match(/(:|: | )Special(\W|$|\_)/)){
+            return MediaType.SPECIAL;
+        }
+        return MediaType.UNKOWN;
+    }
+
+    public async removeMediaTypeFromTitle(title: string): Promise<string>{
+        title = title.replace(/Movie/g, '');
+        title = title.replace(/Specials/g, '');
+        title = title.replace(/Special/g, '');
+        return title;
     }
 }

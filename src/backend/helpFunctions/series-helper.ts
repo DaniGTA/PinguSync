@@ -7,11 +7,11 @@ import SeasonComperator from './comperators/season-comperator';
 import TitleComperator from './comperators/title-comperator';
 import EpisodeComperator from './comperators/episode-comperator';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
-import { MediaType } from '../controller/objects/meta/media-type';
 import ProviderLocalData from '../controller/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
 import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
 import ReleaseYearComperator from './comperators/release-year-comperator';
+import MediaTypeComperator from './comperators/media-type-comperator';
 class SeriesHelper {
     public async isSameSeason(a: Series, b: Series): Promise<boolean> {
         return a.getSeason() === b.getSeason();
@@ -37,14 +37,9 @@ class SeriesHelper {
         matchAbleScore += listProviderResult.matchAble;
         matches += listProviderResult.matches;
 
-        const aMediaType = await a.getMediaType();
-        const bMediaType = await b.getMediaType();
-        if (aMediaType !== MediaType.UNKOWN && bMediaType !== MediaType.UNKOWN) {
-            matchAbleScore++;
-            if (aMediaType === bMediaType) {
-                matches++;
-            }
-        }
+        const mediaTypeResult = await MediaTypeComperator.compareMediaType(a, b);
+        matchAbleScore += mediaTypeResult.matchAble;
+        matches += mediaTypeResult.matches;
 
         // Check releaseYear
         const releaseYearResult = await ReleaseYearComperator.compareReleaseYear(a, b);

@@ -4,6 +4,7 @@
     <img v-lazy.container="cover" class="series-cover" />
     <button @click="clog(seriesPackage)">Log</button>
     <button @click="seriesDataRefresh(seriesPackage)">Data Refresh</button>
+    <button @click="seriesDataRefresh(seriesPackage)">Delete Package</button>
     <div v-for="item of seriesPackage.allRelations" v-bind:key="item.id">
       <Promised
         :promise="getSeason(item)"
@@ -87,6 +88,10 @@ export default class ListEntry extends Vue {
     } else {
       return provider.episodes;
     }
+  }
+
+  removeSeriesPackage(seriesPackage:SeriesPackage):void{
+    App.workerController.send('delete-series-package',seriesPackage.id);
   }
 
   getProviderWatchProgress(provider: ListProviderLocalData): number {

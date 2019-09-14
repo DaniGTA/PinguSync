@@ -17,13 +17,15 @@ export default class ProviderComperator {
                             comperatorResult.matches += 2.0;
                             try {
                                 if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
-                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                                    return comperatorResult;
+                                    if (comperatorResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
+                                        comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                                    }
                                 } else if ((typeof aProvider.targetSeason == 'undefined') || (typeof bProvider.targetSeason == 'undefined')) {
                                     
                                 } else if (aProvider.targetSeason === bProvider.targetSeason) {
-                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                                    return comperatorResult;
+                                    if (comperatorResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
+                                        comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                                    }
                                 }
                                 comperatorResult.matches += 0.5;
                             } catch (err) {

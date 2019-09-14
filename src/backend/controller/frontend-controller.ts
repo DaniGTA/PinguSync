@@ -76,6 +76,15 @@ class FrontendController {
             this.syncSeries(data);
         });
 
+        this.communcation.on('delete-series-package', (data:string) => {
+            if (ListController.instance) {
+                ListController.instance.removeSeriesPackageFromMainList(data)
+            } else {
+                console.log('Failed to remove package: no provider instance')
+            }
+        });
+
+
         this.communcation.on('anime-update-watch-progress', async (data) => {
             if (ListController.instance) {
                 const lc = ListController.instance;

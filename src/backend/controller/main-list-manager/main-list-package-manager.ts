@@ -2,6 +2,7 @@ import SeriesPackage from '../objects/series-package';
 import listHelper from '../../helpFunctions/list-helper';
 import Series from '../objects/series';
 import seriesHelper from '../../helpFunctions/series-helper';
+import MainListManager from './main-list-manager';
 
 export default class MainListPackageManager {
     public async getIndexFromPackageId(packageId: string, list: readonly Series[]|Series[]): Promise<number> {
@@ -15,7 +16,7 @@ export default class MainListPackageManager {
 
         for (let entry of tempList) {
             try {
-                const tempPackage = await this.createPackage(entry, tempList);
+                const tempPackage = await this.createSeriesPackage(entry, tempList);
                 tempList = await listHelper.removeEntrys(tempList, ...tempPackage.allRelations);
                 for (const entry of tempPackage.allRelations) {
                     for (const entry2 of tempPackage.allRelations) {
@@ -31,7 +32,7 @@ export default class MainListPackageManager {
         return seriesPackageList;
     }
 
-    private async createPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
+    private async createSeriesPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
         try {
             series = Object.assign(new Series(), series);
             const relations = await series.getAllRelations(list, true);
@@ -59,7 +60,14 @@ export default class MainListPackageManager {
             seriesPackage.id = series.packageId;
             return seriesPackage;
         } else {
-            return this.createPackage(series, list);
+            return this.createSeriesPackage(series, list);
+        }
+    }
+
+    public async removeSeriesPackage(packageId: string,list:Series[]| readonly Series[]) {
+        const allSeriesInThePackage = list.filter(x => x.packageId === packageId);
+        for (const series of allSeriesInThePackage) {
+            MainListManager.removeSeriesFromMainList(series);
         }
     }
 }

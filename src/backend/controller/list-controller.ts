@@ -5,6 +5,7 @@ import ListProvider from '../api/list-provider';
 import MainListManager from './main-list-manager/main-list-manager';
 import providerHelper from '../helpFunctions/provider/provider-helper';
 import MainListAdder from './main-list-manager/main-list-adder';
+import MainListPackageManager from './main-list-manager/main-list-package-manager';
 export default class ListController {
 
     public static instance: ListController | null = null;
@@ -16,7 +17,6 @@ export default class ListController {
             }
             ListController.instance = this;
         }
-
     }
 
     private async syncWatcher() {
@@ -36,6 +36,10 @@ export default class ListController {
     public async syncProvider(anime: Series) {
         const watchProgress = await anime.getLastWatchProgress();
         this.updateWatchProgressTo(anime, watchProgress.episode);
+    }
+
+    public async removeSeriesPackageFromMainList(id: string) {
+        await new MainListPackageManager().removeSeriesPackage(id, await this.getMainList());
     }
 
     public async removeWatchProgress(anime: Series, watchProgress: WatchProgress) {
