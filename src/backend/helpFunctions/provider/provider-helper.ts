@@ -37,7 +37,11 @@ export default new class ProviderHelper {
         }
         return new SameIdAndUniqueId();
     }
-
+    /**
+     * Checks if the series have the same provider.
+     * @param a 
+     * @param b 
+     */
     public async hasSameListProvider(a: Series, b: Series): Promise<boolean> {
         try {
             for (let aProvider of a.getListProvidersInfos()) {
@@ -53,24 +57,8 @@ export default new class ProviderHelper {
         }
         return false;
     }
-
-    public async hasSameInfoProvider(a: InfoProviderLocalData[], b: InfoProviderLocalData[]): Promise<boolean> {
-        try {
-            for (let aProvider of a) {
-                for (const bProvider of b) {
-                    if (aProvider.provider === bProvider.provider) {
-                        return true;
-                    }
-                }
-            }
-
-        } catch (err) {
-            console.log(err);
-        }
-        return false;
-    }
-
-    public async getProviderSeriesInfo(series: Series, provider: ListProvider | InfoProvider): Promise<Series> {
+    
+    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
         const requestId = stringHelper.randomString(5);
         let trys = 0;
         const seriesMediaType = await series.getMediaType();
@@ -226,8 +214,19 @@ export default new class ProviderHelper {
         return entry;
     }
 
+    /**
+     * This will get info from all Providers that are avaible in this programm.
+     * There is a timelimit how long the data is valid.
+     * If the data isnt anymore valid they will be refresht.
+     * 
+     * If the Series have no names this function will prepare the Series for the full search.
+     * @param entry the Series that should be update with all provider.
+     * @param forceUpdate Ignore the timelimit and force a update.
+     * @param offlineOnly Dont attampt to request online providers and run only providers that work offline.
+     */
     public async fillMissingProvider(entry: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
         if (new Date().getTime() - entry.lastInfoUpdate > new Date(0).setHours(1920) || forceUpdate) {
+            entry = await this.prepareRequiermentsForFillMissingProvider(entry);
             entry = await this.updateInfoProviderData(entry);
             if (!offlineOnly) {
                 try {
@@ -236,6 +235,20 @@ export default new class ProviderHelper {
                     console.log(err);
                 }
                 entry.lastInfoUpdate = Date.now();
+            }
+        }
+        return entry;
+    }
+
+    /**
+     * If the Series have no names this function will request the avaible providers for names and 
+     * will return the updated provider with the series.
+     */
+    private async prepareRequiermentsForFillMissingProvider(entry:Series): Promise<Series> {
+        if (entry.getAllNames().length === 0) {
+            const entryProviders = [...entry.getAllProviderLocalDatas()];
+            for (const providerLocalData of entryProviders) {
+                entry = await this.getProviderSeriesInfo(entry, ProviderList.getExternalProviderInstance(providerLocalData));
             }
         }
         return entry;

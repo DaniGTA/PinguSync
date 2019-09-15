@@ -34,13 +34,15 @@ export default class MainListManager {
                         if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (seasonResult.matchAble != 0 && seasonResult.matchAble === seasonResult.matches)) {
                             series = await series.merge(entry, false);
                             await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
-                            results.push(series);
                         }
                     } catch (err) {
                         console.log(err);
                     }
                 }
             } else {
+                results.push(series);
+            }
+            if (results.length == 0) {
                 results.push(series);
             }
             if (series.lastInfoUpdate === 0) {
