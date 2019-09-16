@@ -6,6 +6,7 @@ import MainListManager from './main-list-manager/main-list-manager';
 import providerHelper from '../helpFunctions/provider/provider-helper';
 import MainListAdder from './main-list-manager/main-list-adder';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
+import { runInNewContext } from 'vm';
 export default class ListController {
 
     public static instance: ListController | null = null;
@@ -31,6 +32,15 @@ export default class ListController {
                 await this.syncProvider(item);
             }
         }
+    }
+
+    public async getSeriesById(id: string): Promise<Series|undefined> {
+        for (const entry of await this.getMainList()) {
+            if (entry.id == id) {
+                return entry;
+            }
+        }
+        return;
     }
 
     public async syncProvider(anime: Series) {

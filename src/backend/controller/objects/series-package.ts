@@ -33,14 +33,18 @@ export default class SeriesPackage {
     async getPreferedName(): Promise<string> {
         let preferedName = "";
         for (let relation of this.allRelations) {
-            relation = Object.assign(new Series(), relation);
-            if (await relation.getSeason() == 1 || this.allRelations.length === 1) {
-                preferedName = await new PreferedSeriesNameHelper().getPreferedNameOfSeries(relation);
-                break;
-            }
+            try {
+                relation = Object.assign(new Series(), relation);
+                if (await relation.getSeason() == 1 || this.allRelations.length === 1) {
+                    preferedName = await new PreferedSeriesNameHelper().getPreferedNameOfSeries(relation);
+                    break;
+                }
+            }catch(err){}
             if (!preferedName) {
                 let names = relation.getAllNames();
-                preferedName = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names))[0].name;
+                if (names.length != 0) {
+                    preferedName = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names))[0].name;
+                }
             }
         }
      

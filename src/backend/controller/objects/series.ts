@@ -24,8 +24,11 @@ export default class Series extends SeriesProviderExtension {
     public lastInfoUpdate: number = 0;
 
     private cachedSeason?: number;
+    private cachedMediaType?: MediaType;
     private seasonDetectionType: string = "";
     private canSync: boolean | null = null;
+
+    private firstSeasonSeriesId?: string;
     constructor() {
         super();
         // Generates randome string.
@@ -33,8 +36,10 @@ export default class Series extends SeriesProviderExtension {
     }
 
     async resetCache() {
+        this.cachedMediaType = undefined;
         this.cachedSeason = undefined;
         this.seasonDetectionType = "";
+        this.firstSeasonSeriesId = undefined;
     }
 
     /**
@@ -51,7 +56,9 @@ export default class Series extends SeriesProviderExtension {
     getAllNames(): Name[] {
         const names = [];
         for (const provider of this.getAllProviderLocalDatas()) {
-            names.push(...provider.getAllNames());
+            try {
+                names.push(...provider.getAllNames());
+            }catch(err){}
         }
         return names;
     }
@@ -161,11 +168,11 @@ export default class Series extends SeriesProviderExtension {
     public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
         const searchedProviders: ProviderLocalData[] = [];
         try {
-            for (const listProvider of this.getListProvidersInfos()) {
+            for (const listProvider of this.getAllProviderLocalDatas()) {
                 if (listProvider.prequelIds) {
                     searchedProviders.push(listProvider);
                     for (const entry of searchInList) {
-                        for (const entryListProvider of entry.getListProvidersInfos()) {
+                        for (const entryListProvider of entry.getAllProviderLocalDatas()) {
                             if (entryListProvider.provider === listProvider.provider && listProvider.prequelIds.findIndex(x => entryListProvider.id == x) !== -1) {
                                 return new RelationSearchResults(entry);
                             }
@@ -181,11 +188,11 @@ export default class Series extends SeriesProviderExtension {
     public async getSequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
         const searchedProviders: ProviderLocalData[] = [];
         try {
-            for (const listProvider of this.getListProvidersInfos()) {
+            for (const listProvider of this.getAllProviderLocalDatas()) {
                 searchedProviders.push(listProvider);
                 if (listProvider.sequelIds) {
                     for (const entry of searchInList) {
-                        for (const entryListProvider of entry.getListProvidersInfos()) {
+                        for (const entryListProvider of entry.getAllProviderLocalDatas()) {
                             if (entryListProvider.provider === listProvider.provider && listProvider.sequelIds.findIndex(x => entryListProvider.id === x) !== -1) {
                                 return new RelationSearchResults(entry);
                             }
@@ -206,6 +213,7 @@ export default class Series extends SeriesProviderExtension {
         }
         try {
             that.canSync = await that.getCanSyncStatus();
+            console.log('Calculated Sync status');
         } catch (err) {
             console.log(err);
             that.canSync = false;
@@ -335,11 +343,14 @@ export default class Series extends SeriesProviderExtension {
 
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
+        console.log('Merged Providers');
 
         await newAnime.getSeason(undefined, allowAddNewEntry);
-
+        console.log('Calculated Season');
         await newAnime.getCanSync();
 
+        await newAnime.getMediaType();
+       
         if (this.lastInfoUpdate < anime.lastInfoUpdate) {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;
         } else {
@@ -352,9 +363,6 @@ export default class Series extends SeriesProviderExtension {
             newAnime.lastUpdate = this.lastUpdate;
         }
 
-        if ((await newAnime.getAllNamesUnique()).length > 25) {
-            console.log(".");
-        }
         return newAnime;
     }
 
@@ -409,13 +417,25 @@ export default class Series extends SeriesProviderExtension {
         if (await this.getSeason() === 1) {
             return this;
         }
-        if (!list && ListController.instance) {
-            list = await ListController.instance.getMainList();
+        if (ListController.instance) {
+            if (!list) {
+                list = await ListController.instance.getMainList();
+            }
+            if (this.firstSeasonSeriesId) {
+                const result = await ListController.instance.getSeriesById(this.firstSeasonSeriesId);
+                if (result) {
+                    return result;
+                } else {
+                    this.firstSeasonSeriesId = undefined;
+                }
+            }
         }
+
         if (list) {
             const allRelations = await this.getAllRelations(list);
             for (const relation of allRelations) {
                 if (await relation.getSeason() === 1) {
+                    this.firstSeasonSeriesId = relation.id;
                     return relation;
                 }
             }
@@ -525,6 +545,9 @@ export default class Series extends SeriesProviderExtension {
     }
 
     async getMediaType(): Promise<MediaType> {
+        if (this.cachedMediaType) {
+            return this.cachedMediaType;
+        }
         const collectedMediaTypes: MediaType[] = [];
         for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.mediaType != MediaType.UNKOWN) {
@@ -535,14 +558,16 @@ export default class Series extends SeriesProviderExtension {
         collectedMediaTypes.push(...await this.getAllMediaTypesFromTitle());
 
         if (collectedMediaTypes.length === 0) {
+              this.cachedMediaType = MediaType.UNKOWN;
             return MediaType.UNKOWN;
         } else {
             const result = await listHelper.findMostFrequent(collectedMediaTypes);
             if (result) {
+                this.cachedMediaType = result;
                 return result;
             }
         }
-        
+        this.cachedMediaType = MediaType.UNKOWN;
         return MediaType.UNKOWN;
     }
 

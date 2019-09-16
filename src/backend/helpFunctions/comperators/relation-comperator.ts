@@ -1,13 +1,13 @@
 import Series from '../../controller/objects/series';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
-import providerHelper from '../provider/provider-helper';
 import { isNumber } from 'util';
+import ProviderComperator from './provider-comperator';
 
 export default class RelationComperator {
     static async isAlternativeSeries(a: Series, b: Series): Promise<ComperatorResult>{
         const comperatorResult = new ComperatorResult();
 
-        if (await providerHelper.hasSameListProvider(a, b)) {
+        if (await ProviderComperator.hasSameListProvider(a, b)) {
             for (const aProviderLocalData of a.getAllProviderLocalDatas()) {
                 for (const bProviderLocalData of b.getAllProviderLocalDatas()) {
                     if (aProviderLocalData.provider === bProviderLocalData.provider) {

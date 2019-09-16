@@ -103,8 +103,8 @@ class SeriesHelper {
                 return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible", searchResult);
             } else {
                 while (prequel) {
+                    searchCount++;
                     if (await prequel.getMediaType() === await series.getMediaType()) {
-                        searchCount++;
                         const prequelSeason = await prequel.getSeason(seriesList);
                         if (prequelSeason === 1 || prequelSeason === 0) {
                             return new SearchSeasonValueResult(prequelSeason + searchCount, "PrequelTrace");

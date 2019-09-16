@@ -149,6 +149,11 @@ export default new class TitleCheckHelper {
             return MediaType.MOVIE;
         }
 
+        if(title.match(/(:|: | )Gekijouban(\W|$|\_)/)){
+            return MediaType.MOVIE;
+        }
+
+
         if(title.match(/(:|: | )Specials(\W|$|\_)/)){
             return MediaType.SPECIAL;
         }
@@ -168,6 +173,7 @@ export default new class TitleCheckHelper {
         title = title.replace(/Movie/g, '');
         title = title.replace(/Specials/g, '');
         title = title.replace(/Special/g, '');
+        title = title.replace(/Gekijouban/g, '');
         return title;
     }
 }

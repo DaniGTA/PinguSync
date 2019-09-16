@@ -37,26 +37,6 @@ export default new class ProviderHelper {
         }
         return new SameIdAndUniqueId();
     }
-    /**
-     * Checks if the series have the same provider.
-     * @param a 
-     * @param b 
-     */
-    public async hasSameListProvider(a: Series, b: Series): Promise<boolean> {
-        try {
-            for (let aProvider of a.getListProvidersInfos()) {
-                for (const bProvider of b.getListProvidersInfos()) {
-                    if (aProvider.provider === bProvider.provider) {
-                        return true;
-                    }
-                }
-            }
-
-        } catch (err) {
-            console.log(err);
-        }
-        return false;
-    }
     
     public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
         const requestId = stringHelper.randomString(5);

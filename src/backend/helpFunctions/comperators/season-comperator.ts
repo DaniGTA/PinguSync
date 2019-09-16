@@ -1,6 +1,7 @@
 import Series from "../../controller/objects/series";
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
 import { AbsoluteResult } from './comperator-results.ts/comperator-result';
+import ProviderList from '../../controller/provider-manager/provider-list';
 
 export default class SeasonComperator {
     static async compareSeasons(a: Series, b: Series): Promise<SeasonComperatorResult> {
@@ -50,18 +51,12 @@ export default class SeasonComperator {
     }
 
     static async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean> {
-        let hasOnlyProviderWithSameId = true;
-        for (const providerlistinfo of series.getListProvidersInfos()) {
-            if (providerlistinfo.getProviderInstance().hasUniqueIdForSeasons) {
-                hasOnlyProviderWithSameId = false;
+        for (const provider of series.getAllProviderLocalDatas()) {
+            if (ProviderList.getExternalProviderInstance(provider).hasUniqueIdForSeasons) {
+                return false;
             }
         }
-        for (const providerlistinfo of series.getInfoProvidersInfos()) {
-            if (providerlistinfo.getProviderInstance().hasUniqueIdForSeasons) {
-                hasOnlyProviderWithSameId = false;
-            }
-        }
-        return hasOnlyProviderWithSameId;
+        return true;
     }
 
 }

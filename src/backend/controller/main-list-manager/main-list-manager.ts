@@ -6,6 +6,7 @@ import MainListPackageManager from './main-list-package-manager';
 import MainListLoader from './main-list-loader';
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
+import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 
 export default class MainListManager {
     private static mainList: Series[] = [];
@@ -29,9 +30,10 @@ export default class MainListManager {
                         if (typeof series.merge != 'function') {
                             series = Object.assign(new Series(), series);
                         }
-                        console.log('Duplicate found: merging...');
+                       
                         const seasonResult = await SeasonComperator.compareSeasons(series, entry);
-                        if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (seasonResult.matchAble != 0 && seasonResult.matchAble === seasonResult.matches)) {
+                        if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (seasonResult.matchAble === seasonResult.matches)) {
+                            console.log('Duplicate found: merging...');
                             series = await series.merge(entry, false);
                             await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                         }
@@ -89,8 +91,16 @@ export default class MainListManager {
         MainListManager.listMaintance = false;
     }
 
+    /**
+     * Search with id and it will look on other meta data if it is a same series already in the mainlist
+     * @param series 
+     */
+    public static async findSameSeriesInMainList(series: Series): Promise<Series[]> {
+        return await this.findSameSeriesInList(series,await MainListManager.getMainList());
+    }
 
     private static async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]>{
+        console.log('[Search] Find search series in list of size: ' + list.length);
         const foundedSameSeries = [];
         for (let listEntry of list) {
             if (listEntry.id === entry.id) {
@@ -99,24 +109,48 @@ export default class MainListManager {
                 if (await seriesHelper.isSameSeries(listEntry, entry)) {
                     foundedSameSeries.push(listEntry);
                 }
+            }   
+        }
+        console.log('Found: ' + foundedSameSeries.length);
+        return foundedSameSeries;
+    }
+    /**
+     * Search with id and it will look on other meta data if it is a same series already in the mainlist
+     * @param series 
+     */
+    public static async quickFindSameSeriesInMainList(series: Series): Promise<Series[]> {
+        return await this.quickFindSameSeriesInList(series,await MainListManager.getMainList());
+    }
 
+    private static async quickFindSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]>{
+        console.log('[Search] Quick find search series in list of size: ' + list.length);
+        const foundedSameSeries = [];
+        for (const listEntry of list) {
+             if (listEntry.id === entry.id) {
+                foundedSameSeries.push(listEntry);
+            }
+            if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheck(entry, listEntry)) {
+                  foundedSameSeries.push(listEntry);
             }
         }
+        console.log('Found: ' + foundedSameSeries.length);
         return foundedSameSeries;
     }
 
-    /**
-     * Search with id and it will look on other meta data if it is a same series already in the mainlist
-     * @param entry 
-     */
-    public static async findSameSeriesInMainList(entry: Series): Promise<Series[]> {
-        return this.findSameSeriesInList(entry,await MainListManager.getMainList());
+
+
+    public static async removeSeriesFromMainList(series: Series, notifyRenderer = false): Promise<boolean> {
+        return this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
     }
 
-    public static async removeSeriesFromMainList(anime: Series, notifyRenderer = false): Promise<boolean> {
-        const index = await MainListManager.getIndexFromSeries(anime);
+    public static async removeSeriesFromList(series: Series, notifyRenderer = false, list?: Series[]): Promise<boolean> {
+        if (!list) {
+            list = await this.getMainList();
+        }
+        console.log('[MainList] Remove Item in mainlist: ' + series.id);
+        const index = await MainListManager.getIndexFromSeries(series);
         if (index != -1) {
-            let ref = await MainListManager.getMainList();
+            let ref = list;
             ref = await listHelper.removeEntrys(ref, ref[index]);
             if (notifyRenderer) {
                 FrontendController.getInstance().removeEntryFromList(index);

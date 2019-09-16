@@ -33,7 +33,7 @@ export default class MainListAdder {
         let addCounter = 0;
         for (const series of list) {
             try {
-                const entry = await MainListManager.findSameSeriesInMainList(series);
+                const entry = await MainListManager.quickFindSameSeriesInMainList(series);
                 if (entry.length == 0) {
                     console.log('Add non existing Series.');
                     const filledSeries = await providerHelper.fillMissingProvider(series);
