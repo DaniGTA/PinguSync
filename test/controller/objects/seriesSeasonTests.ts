@@ -2,14 +2,22 @@ import { strictEqual } from "assert";
 import Name from "../../../src/backend/controller/objects/meta/name";
 import Series from "../../../src/backend/controller/objects/series";
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/list-provider-local-data";
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 
 describe('seriesTest | Season', () => {
+    before(() => {
+        MainListManager['listLoaded'] = true;
+        MainListLoader['loadData'] = () => { return [] };
+        MainListLoader['saveData'] = async () => { };
+    })
+    
     it('should return season 1', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData("TestA");
         provider.targetSeason = 1;
         series.addListProvider(provider);
-        strictEqual(await series.getSeason(), 1);
+        strictEqual((await series.getSeason()).seasonNumber, 1);
         return;
     });
 
@@ -18,7 +26,7 @@ describe('seriesTest | Season', () => {
         const provider = new ListProviderLocalData("TestA");
         provider.addSeriesName(new Name('Test 3', 'en'));
         series.addListProvider(provider);
-        strictEqual(await series.getSeason(), 3);
+        strictEqual((await series.getSeason()).seasonNumber, 3);
         return;
     });
 
@@ -27,7 +35,7 @@ describe('seriesTest | Season', () => {
             const provider = new ListProviderLocalData("TestA");
         provider.addSeriesName(new Name('Test III', 'en'));
         series.addListProvider(provider);
-        strictEqual(await series.getSeason(), 3);
+        strictEqual((await series.getSeason()).seasonNumber, 3);
         return;
     });
 
@@ -38,7 +46,7 @@ describe('seriesTest | Season', () => {
         lpld.addSeriesName(new Name('Test III', 'en'));
         series.addListProvider(lpld);
 
-        strictEqual(await series.getSeason([series]), 3);
+        strictEqual((await series.getSeason([series])).seasonNumber, 3);
         return;
     });
 
@@ -56,7 +64,7 @@ describe('seriesTest | Season', () => {
         lpld2.addSeriesName(new Name('Test II', 'en'));
         series2.addListProvider(lpld2);
 
-        strictEqual(await series.getSeason([series, series2]), 3);
+        strictEqual((await series.getSeason([series, series2])).seasonNumber, 3);
         return;
     });
 
@@ -74,7 +82,7 @@ describe('seriesTest | Season', () => {
         lpld2.addSeriesName(new Name('Test II', 'en'));
         series2.addListProvider(lpld2);
 
-        strictEqual(await series2.getSeason([series, series2]), 2);
+        strictEqual((await series2.getSeason([series, series2])).seasonNumber, 2);
         return;
     });
 
@@ -93,8 +101,8 @@ describe('seriesTest | Season', () => {
         lpld2.addSeriesName(new Name('Test Test', 'en'));
         series2.addListProvider(lpld2);
 
-        strictEqual(await series.getSeason([series, series2]), 2);
-        strictEqual(await series2.getSeason([series, series2]), 1);
+        strictEqual((await series.getSeason([series, series2])).seasonNumber, 2);
+        strictEqual((await series2.getSeason([series, series2])).seasonNumber, 1);
         return;
     });
 
@@ -121,9 +129,9 @@ describe('seriesTest | Season', () => {
         lpld3.addSeriesName(new Name('Test Testooo', 'en'));
         series3.addListProvider(lpld3);
 
-        strictEqual(await series.getSeason([series, series2, series3]), 1);
-        strictEqual(await series2.getSeason([series, series2, series3]), 2);
-        strictEqual(await series3.getSeason([series, series2, series3]), 3);
+        strictEqual((await series.getSeason([series, series2, series3])).seasonNumber, 1);
+        strictEqual((await series2.getSeason([series, series2, series3])).seasonNumber, 2);
+        strictEqual((await series3.getSeason([series, series2, series3])).seasonNumber, 3);
         return;
     });
 
@@ -134,7 +142,7 @@ describe('seriesTest | Season', () => {
         lpld.addSeriesName(new Name('Test', 'en'));
         series.addListProvider(lpld);
 
-        strictEqual(await series.getSeason([series]), 1);
+        strictEqual((await series.getSeason([series])).seasonNumber, 1);
         return;
     });
 
@@ -144,7 +152,7 @@ describe('seriesTest | Season', () => {
         lpld.addSeriesName(new Name('Title xx', 'eng'));
         lpld.addSeriesName(new Name('Title XX', 'eng'));
         series.addListProvider(lpld);
-        strictEqual(await series.getSeason(), 2);
+        strictEqual((await series.getSeason()).seasonNumber, 2);
         return;
     });
 
@@ -153,25 +161,37 @@ describe('seriesTest | Season', () => {
         const lpld = new ListProviderLocalData();
         lpld.addSeriesName(new Name('Test S3 part 2', 'en'));
         series.addListProvider(lpld);
-        strictEqual(await series.getSeason(), undefined);
+        strictEqual((await series.getSeason()).seasonNumber, undefined);
         return;
     });
 
-    it('should not return season (1/2)', async () => {
+    it('should not return season (1/3)', async () => {
         const series = new Series();
         const lpld = new ListProviderLocalData();
         lpld.addSeriesName(new Name('test-2017-127567', 'slug'));
         series.addListProvider(lpld);
-        strictEqual(await series.getSeason(), undefined);
+        strictEqual((await series.getSeason()).seasonNumber, undefined);
         return;
     });
 
-    it('should not return season (2/2)', async () => {
+    it('should not return season (2/3)', async () => {
         const series = new Series();
         const lpld = new ListProviderLocalData();
         lpld.addSeriesName(new Name('test-test-2013', 'slug'));
         series.addListProvider(lpld);
-        strictEqual(await series.getSeason(), undefined);
+        strictEqual((await series.getSeason()).seasonNumber, undefined);
+        return;
+    });
+
+    it('should return season 1 (3/3)', async () => {
+        const series = new Series();
+        const lpld = new ListProviderLocalData();
+        lpld.addSeriesName(new Name('test', 'eng'));
+        lpld.sequelIds.push(199);
+        series.addListProvider(lpld);
+        const result = await series.getSeason();
+        console.log(result);
+        strictEqual(result.seasonNumber, 1);
         return;
     });
 

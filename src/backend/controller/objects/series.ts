@@ -14,6 +14,9 @@ import { InfoProviderLocalData } from './info-provider-local-data';
 import ListController from '../list-controller';
 import RelationSearchResults from './transfer/relation-search-results';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
+import Season from './meta/season';
+import { SeasonError } from './transfer/season-error';
+import { NameType } from './meta/name-type';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -40,6 +43,17 @@ export default class Series extends SeriesProviderExtension {
         this.cachedSeason = undefined;
         this.seasonDetectionType = "";
         this.firstSeasonSeriesId = undefined;
+    }
+
+    async getSlugNames(): Promise<Name[]>{
+        const slugs = [];
+        const names = await this.getAllNames();
+        for (const name of names) {
+            if (name.nameType === NameType.SLUG) {
+                slugs.push(name);
+            }
+        }
+        return await listHelper.getUniqueNameList(slugs);
     }
 
     /**
@@ -83,6 +97,7 @@ export default class Series extends SeriesProviderExtension {
                 this.addInfoProvider(localdata as InfoProviderLocalData);
             }
         }
+        this.resetCache();
     }
 
     /**
@@ -142,10 +157,10 @@ export default class Series extends SeriesProviderExtension {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<number | undefined> {
+    public async getSeason(searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
         if (!this.cachedSeason || this.cachedSeason === -2) {
             const result = await seriesHelper.searchSeasonValue(this, searchInList);
-            if (result.season === -2) {
+            if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                 // UKNOWN SEASON
                 if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
                     console.log('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
@@ -153,16 +168,18 @@ export default class Series extends SeriesProviderExtension {
                     console.log('Temp Series Successfull added.');
                 }
                 this.cachedSeason = -2;
-                return undefined;
+                return new Season(undefined,SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+            } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
+                this.cachedSeason = -1;
             } else {
                 this.cachedSeason = result.season;
                 this.seasonDetectionType = result.foundType;
             }
         }
         if (this.cachedSeason == -1) {
-            return undefined;
+            return new Season(undefined,SeasonError.CANT_GET_SEASON);
         }
-        return this.cachedSeason;
+        return new Season(this.cachedSeason);
     }
 
     public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
@@ -414,7 +431,7 @@ export default class Series extends SeriesProviderExtension {
      * @param list 
      */
     async getFirstSeason(list?: readonly Series[] | Series[]): Promise<Series> {
-        if (await this.getSeason() === 1) {
+        if ((await this.getSeason()).seasonNumber === 1) {
             return this;
         }
         if (ListController.instance) {
@@ -434,7 +451,7 @@ export default class Series extends SeriesProviderExtension {
         if (list) {
             const allRelations = await this.getAllRelations(list);
             for (const relation of allRelations) {
-                if (await relation.getSeason() === 1) {
+                if ((await relation.getSeason()).seasonNumber === 1) {
                     this.firstSeasonSeriesId = relation.id;
                     return relation;
                 }

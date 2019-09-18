@@ -1,10 +1,23 @@
 
 import request from 'request';
-import assert from 'assert';
+import assert, { strictEqual } from 'assert';
 import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
+import Series from '../../../src/backend/controller/objects/series';
+import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
+import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
+import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 
 
 describe('AniListApi Tests', () => {
+    const anilistProvider = new AniListProvider();
+
+    
+    before(() => {
+        MainListManager['listLoaded'] = true;
+        MainListLoader['loadData'] = () => { return [] };
+        MainListLoader['saveData'] = async () => { };
+    })
     it('should return headers', async () => {
         var options: (request.UriOptions & request.CoreOptions) = {
             uri: 'https://graphql.anilist.co',
@@ -26,5 +39,9 @@ describe('AniListApi Tests', () => {
         assert.equal(options.method, result.method);
         assert.equal(options.uri, result.uri);
         return;
+    });
+    it('should get a series (1/1)', async () => {
+
     })
+    
 });

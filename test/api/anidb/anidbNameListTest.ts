@@ -1,5 +1,5 @@
 
-import { deepEqual, fail } from 'assert';
+import { deepEqual, fail, strictEqual } from 'assert';
 import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
@@ -168,10 +168,58 @@ describe('AniDB Tests', () => {
         lpdld.addSeriesName(new Name("男子高校生の日常", "jap", NameType.MAIN));
         await series.addListProvider(lpdld);
         try {
-            const result = await providerHelper['getProviderSeriesInfo'](series, a);
+            await providerHelper['getProviderSeriesInfo'](series, a);
             fail();
         } catch (err) {
-        }
-        
+        } 
     });
+
+    it('should find id 5975', async () => {
+        var a = new AniDBProvider(false); 
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.fullInfo = true;
+            
+        const series = new Series();
+        series['cachedSeason'] = 1;
+        lpdld.addSeriesName(new Name("Toaru Majutsu no Index", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        const result = await a.getMoreSeriesInfoByName("Toaru Majutsu no Index",1);
+        
+        deepEqual(result[0].mainProvider.id,'5975');
+    });
+
+    it('should find id 7599', async () => {
+        var a = new AniDBProvider(false); 
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.fullInfo = true;
+            
+        const series = new Series();
+        series['cachedSeason'] = 1;
+        lpdld.addSeriesName(new Name("Toaru Majutsu no Index", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        const result = await a.getMoreSeriesInfoByName("Toaru Majutsu no Index",2);
+        
+        deepEqual(result[0].mainProvider.id,'7599');
+    });
+
+    
+
+    it('should not hang', async () => {
+         var a = new AniDBProvider(false); 
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.fullInfo = true;
+            
+        const series = new Series();
+        series['cachedSeason'] = 1;
+        lpdld.addSeriesName(new Name("Tokyo Ghoulre", "jap", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        try {
+            await providerHelper['getProviderSeriesInfo'](series, a);
+            fail();
+        } catch (err) {
+        } 
+    })
 });

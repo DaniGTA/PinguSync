@@ -70,6 +70,7 @@ describe('TitleCheckerTest', () => {
         assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title Special'),  MediaType.SPECIAL);
         assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title: Specials'),  MediaType.SPECIAL);
         assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title Specials'), MediaType.SPECIAL);
+        assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title Test te test Specials'), MediaType.SPECIAL);
         assert.equal(await titleCheckHelper.getMediaTypeFromTitle('Title'),  MediaType.UNKOWN);
     });
 

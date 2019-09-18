@@ -103,9 +103,9 @@ export default new class ProviderHelper {
         let searchResult: MultiProviderResult[] = [];
         let resultContainer: SearchResultRatingContainer[] = [];
         console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
-        searchResult = await provider.getMoreSeriesInfoByName(name.name, await series.getSeason());
+        searchResult = await provider.getMoreSeriesInfoByName(name.name, (await series.getSeason()).seasonNumber);
 
-        if (searchResult) {
+        if (searchResult && searchResult.length != 0) {
             console.log("[" + provider.providerName + '] Results: ' + searchResult.length)
             for (const result of searchResult) {
                 const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
@@ -124,29 +124,6 @@ export default new class ProviderHelper {
             console.log("no results");
         }
         throw new Error('No results found by "series get by name"')
-    }
-
-    public async checkIfProviderIsValid(series: Series, result: MultiProviderResult): Promise<boolean> {
-        const tempSeries = new Series();
-        await tempSeries.addProviderDatas(result.mainProvider, ...result.subProviders);
-        const seasonA = await series.getSeason();
-        const seasonB = await tempSeries.getSeason();
-        if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
-            if (ProviderList.getExternalProviderInstance(result.mainProvider).hasUniqueIdForSeasons) {
-                if (seasonA) {
-                    if (seasonA === seasonB) {
-                        return true;
-                    } else if (!seasonB && seasonA === 1) {
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
-            } else {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

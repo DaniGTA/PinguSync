@@ -2,6 +2,7 @@ import Series from '../../controller/objects/series';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import ProviderList from '../../controller/provider-manager/provider-list';
+import { SeasonError } from '../../controller/objects/transfer/season-error';
 
 export default class ProviderComperator {
     static async compareAllProviders(a: Series, b: Series): Promise<ComperatorResult> {
@@ -61,7 +62,7 @@ export default class ProviderComperator {
                                 } else {
                                     const aSeason = await a.getSeason();
                                     const bSeason = await b.getSeason();
-                                    if (aSeason == bSeason && aSeason) {
+                                    if (aSeason.seasonNumber == bSeason.seasonNumber && aSeason.seasonError == SeasonError.NONE) {
                                         return true;
                                     }
                                 }

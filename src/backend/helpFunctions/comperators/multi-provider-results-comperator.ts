@@ -5,6 +5,7 @@ import titleCheckHelper from '../title-check-helper';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import ReleaseYearComperator from './release-year-comperator';
 import MediaTypeComperator from './media-type-comperator';
+import { SeasonError } from '../../controller/objects/transfer/season-error';
 
 export default class MultiProviderComperator {
     static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult>{
@@ -19,12 +20,12 @@ export default class MultiProviderComperator {
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
             finalResult.matches += 2;
             if (ProviderList.getExternalProviderInstance(result.mainProvider).hasUniqueIdForSeasons) {
-                if (seasonA) {
+                if (seasonA.seasonError != SeasonError.CANT_GET_SEASON ) {
                      finalResult.matchAble += 2;
-                    if (seasonA === seasonB) {
+                    if (seasonA.seasonNumber === seasonB.seasonNumber) {
                         finalResult.matches += 2;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if (!seasonB && seasonA === 1) {
+                    } else if ((seasonB.seasonError == SeasonError.CANT_GET_SEASON ||  seasonB.seasonError == SeasonError.NONE) && seasonA.seasonNumber === 1) {
                         finalResult.matches += 1;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     } else {
@@ -48,6 +49,16 @@ export default class MultiProviderComperator {
         const releaseYearResult = await ReleaseYearComperator.compareReleaseYear(series, tempSeries);
         finalResult.matchAble += releaseYearResult.matchAble;
         finalResult.matches += releaseYearResult.matches;
+
+        if (finalResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || finalResult.matchAble == finalResult.matches) {
+            for (const serie of await series.getSlugNames()) {
+                for (const tempserie of await tempSeries.getSlugNames()) {
+                    if (serie.name != tempserie.name) {
+                        console.log('Not same slug id');
+                    }
+                }
+            }
+        }
     return finalResult;
    }
 }

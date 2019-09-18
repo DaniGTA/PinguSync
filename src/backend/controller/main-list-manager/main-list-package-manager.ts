@@ -20,7 +20,7 @@ export default class MainListPackageManager {
                 tempList = await listHelper.removeEntrys(tempList, ...tempPackage.allRelations);
                 for (const entry of tempPackage.allRelations) {
                     for (const entry2 of tempPackage.allRelations) {
-                        if (await entry.getSeason() === await entry2.getSeason() && entry.id !== entry2.id) {
+                        if ((await entry.getSeason()).seasonNumber === (await entry2.getSeason()).seasonNumber  && entry.id !== entry2.id) {
                             const result = await seriesHelper.isSameSeries(entry, entry2)
                             console.log('Same season in package. Detected as same series:' + result);
                         }

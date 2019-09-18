@@ -2,17 +2,18 @@ import Series from "../../controller/objects/series";
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
 import { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import ProviderList from '../../controller/provider-manager/provider-list';
+import { SeasonError } from '../../controller/objects/transfer/season-error';
 
 export default class SeasonComperator {
     static async compareSeasons(a: Series, b: Series): Promise<SeasonComperatorResult> {
         const comperatorResult: SeasonComperatorResult = new SeasonComperatorResult();
         const aSeason = await a.getSeason();
         const bSeason = await b.getSeason();
-        if (aSeason || bSeason) {
+        if (aSeason.seasonError == SeasonError.NONE || bSeason.seasonError == SeasonError.NONE) {
             comperatorResult.matchAble += 3;
-            if (aSeason === bSeason) {
+            if (aSeason.seasonNumber === bSeason.seasonNumber) {
                 comperatorResult.matches += 3;
-                if (bSeason != 1 && aSeason != 1) {
+                if (bSeason.seasonNumber != 1 && aSeason.seasonNumber != 1) {
                     try {
                         if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
                             comperatorResult.bFirstSeason = await b.getFirstSeason();
@@ -41,9 +42,9 @@ export default class SeasonComperator {
                         }
                     }
                 }
-            } else if (!aSeason && bSeason === 1) {
+            } else if (aSeason.seasonError == SeasonError.NONE && bSeason.seasonNumber === 1) {
                 comperatorResult.matches += 1;
-            } else if (!bSeason && aSeason === 1) {
+            } else if (bSeason.seasonError == SeasonError.NONE  && aSeason.seasonNumber === 1) {
                 comperatorResult.matches += 1;
             }
         }

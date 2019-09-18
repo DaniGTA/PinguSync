@@ -259,7 +259,7 @@ describe('ListControllerTest | Combine', () => {
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(MainListManager['mainList'].length, 1);
+        assert.equal(MainListManager['mainList'].length, 2);
     })
 
 
@@ -317,16 +317,16 @@ describe('ListControllerTest | Combine', () => {
         var lpld = new ListProviderLocalData("Test");
         lpld.id = 2;
         lpld.episodes = 12;
+        lpld.targetSeason = undefined;
 
         var x1 = await getFilledAnime();
         x1['listProviderInfos'] = [];
         await x1.addListProvider(lpld);
-        x1.getListProvidersInfos()[0].targetSeason = undefined;
+
 
         var x2 = await getFilledAnime();
-        x1['listProviderInfos'] = [];
+        x2['listProviderInfos'] = [];
         await x2.addListProvider(lpld);
-        x2.getListProvidersInfos()[0].targetSeason = undefined;
         MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
@@ -352,7 +352,7 @@ describe('ListControllerTest | Combine', () => {
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(MainListManager['mainList'].length, 1);
+        assert.equal(MainListManager['mainList'].length, 2);
     })
 
     it('should contain last update date', async () => {

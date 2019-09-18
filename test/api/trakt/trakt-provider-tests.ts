@@ -18,13 +18,7 @@ describe('Trakt Tests', () => {
     
     it('should get a series (1/5)', async () => {
 
-        const series = new Series();
-        const unkownProvider = new ListProviderLocalData();
-        unkownProvider.addSeriesName(new Name("Sankarea", "en"));
-        series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
     })
 
     it('should get a series (2/5)', async () => {

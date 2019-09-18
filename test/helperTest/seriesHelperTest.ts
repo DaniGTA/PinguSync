@@ -10,6 +10,7 @@ import ProviderList from '../../src/backend/controller/provider-manager/provider
 import TestProvider from '../controller/objects/testClass/testProvider';
 import ListController from '../../src/backend/controller/list-controller';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
+import { SeasonError } from '../../src/backend/controller/objects/transfer/season-error';
 
 describe('seriesHelperTest', () => {
     var lc = new ListController(true);
@@ -142,11 +143,78 @@ describe('seriesHelperTest', () => {
         listProvider3.id = 3;
         listProvider3.mediaType = MediaType.ANIME;
         listProvider3.addSeriesName(new Name("Test 1", "x-jap"));
-        b.addListProvider(listProvider3);
+        c.addListProvider(listProvider3);
 
         MainListManager['mainList'] = [a, b,c];
         const result = await seriesHelper.searchSeasonValue(a);
         console.log(result.foundType);
         strictEqual(result.season,3);
+    });
+
+    it('should get the right season value: 4', async () => {
+        const a = new Series();
+        const listProvider = new ListProviderLocalData("test2");
+        listProvider.id = 1;
+        listProvider.mediaType = MediaType.ANIME;
+        listProvider.sequelIds.push(2);
+        listProvider.addSeriesName(new Name("Test", "x-jap"));
+        a.addListProvider(listProvider);
+
+        const b = new Series();  
+        const listProvider2 = new ListProviderLocalData("test2");
+        listProvider2.id = 2;
+        listProvider2.sequelIds.push(3);
+        listProvider2.mediaType = MediaType.ANIME;
+        listProvider2.addSeriesName(new Name("TestTwo", "x-jap"));
+        b.addListProvider(listProvider2);
+        
+        const c = new Series();  
+        const listProvider3 = new ListProviderLocalData("test2");
+        listProvider3.id = 3;
+        listProvider3.mediaType = MediaType.ANIME;
+        listProvider3.addSeriesName(new Name("Test 6", "x-jap"));
+        c.addListProvider(listProvider3);
+
+        MainListManager['mainList'] = [a, b,c];
+        const result = await seriesHelper.searchSeasonValue(a);
+        console.log(result.foundType);
+        strictEqual(result.season,4);
+    });
+
+    it('should get the right season value: 5', async () => {
+        const a = new Series();
+        const listProvider = new ListProviderLocalData("test2");
+        listProvider.id = 1;
+        listProvider.mediaType = MediaType.ANIME;
+        listProvider.sequelIds.push(2);
+        listProvider.addSeriesName(new Name("Test", "x-jap"));
+        a.addListProvider(listProvider);
+
+        const b = new Series();  
+        const listProvider2 = new ListProviderLocalData("test2");
+        listProvider2.id = 2;
+        listProvider2.sequelIds.push(3);
+        listProvider2.mediaType = MediaType.ANIME;
+        listProvider2.addSeriesName(new Name("Test 6", "x-jap"));
+        b.addListProvider(listProvider2);
+        
+        MainListManager['mainList'] = [a, b];
+        const result = await seriesHelper.searchSeasonValue(a);
+        console.log(result.foundType);
+        strictEqual(result.season,5);
+    });
+
+    it('should get none seasons', async () => {
+        const a = new Series();
+        const listProvider = new ListProviderLocalData("test2");
+        listProvider.id = 1;
+        listProvider.mediaType = MediaType.ANIME;
+        listProvider.addSeriesName(new Name("Test", "x-jap"));
+        a.addListProvider(listProvider);
+        
+        MainListManager['mainList'] = [a];
+        const result = await seriesHelper.searchSeasonValue(a);
+        console.log(result.foundType);
+        strictEqual(result.seasonError,SeasonError.CANT_GET_SEASON);
     });
 });

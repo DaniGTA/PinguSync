@@ -35,7 +35,7 @@ export default class SeriesPackage {
         for (let relation of this.allRelations) {
             try {
                 relation = Object.assign(new Series(), relation);
-                if (await relation.getSeason() == 1 || this.allRelations.length === 1) {
+                if ((await relation.getSeason()).seasonNumber == 1 || this.allRelations.length === 1) {
                     preferedName = await new PreferedSeriesNameHelper().getPreferedNameOfSeries(relation);
                     break;
                 }
