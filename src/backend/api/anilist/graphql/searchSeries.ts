@@ -1,4 +1,5 @@
 import { MediaFormat } from './mediaFormat';
+import { Relation } from './seriesList';
 
 export interface Title {
     romaji: string;
@@ -38,6 +39,7 @@ export interface Medium {
     isAdult: boolean;
     startDate: StartDate;
     endDate: EndDate;
+    relations: Relation;
 }
 
 export interface Page {

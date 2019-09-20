@@ -21,7 +21,8 @@
             "outFiles": [
                 "${workspaceFolder}/dist_electron/**/*.js"
             ],
-            "outputCapture": "std"
+            "outputCapture": "std",
+             "timeout": 45000,
         },
         {
             "name": "Electron: Renderer",

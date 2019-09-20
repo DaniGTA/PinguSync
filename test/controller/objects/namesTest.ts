@@ -16,6 +16,18 @@ describe('namesTest', () => {
         assert.equal(await stringHelper.getSeasonNumberFromTitle('Title 2nd Season'), 2, 'Title 2nd Season');
         assert.equal(await stringHelper.getSeasonNumberFromTitle('Title 3nd Season -Test-'), 3, 'Title 3nd Season -Test-');
         assert.equal(await stringHelper.getSeasonNumberFromTitle('Title Season 2 -Test-'), 2, 'Title Season 2 -Test-');
+        try {
+            await stringHelper.getSeasonNumberFromTitle('Gintama.: Shirogane no Tamashii-hen - Kouhan-sen');
+            assert.fail();
+        } catch (err) { }
+        try {
+            await stringHelper.getSeasonNumberFromTitle('Gintama.: Silver Soul Arc - Second Half War');
+            assert.fail();
+        } catch (err) { }
+        try {
+            await stringHelper.getSeasonNumberFromTitle('銀魂. 銀ノ魂篇2');
+            assert.fail();
+        }catch(err){}
         return;
     })
     it('should detect no romaji name', async () => {

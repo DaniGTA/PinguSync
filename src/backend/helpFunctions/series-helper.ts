@@ -178,6 +178,8 @@ class SeriesHelper {
                             break;
                         }
                         sequel = searchResult.foundedSeries;
+                    } else {
+                        sequel = null;
                     }
                 }
             }

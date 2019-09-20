@@ -69,7 +69,7 @@ class StringHelper {
                         return parseInt(match[2]);
                     }
                 }
-            } else if ('0123456789'.includes(lastChar) && !title.includes('part')) {
+            } else if ('0123456789'.includes(lastChar) && !title.includes('part') && !await this.hasKanji(title)) {
                 return parseInt(lastChar, 10);
             } else if (['I'].includes(lastChar)) {
                 while (lastChar === reversedTitle.charAt(0)) {

@@ -31,6 +31,14 @@ query ($query: String, $type: MediaType) {
         month
         day
       }
+      relations {
+        edges {
+          relationType
+        }
+        nodes{
+          id
+        }
+      }
     }
   }
 }`;

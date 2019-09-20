@@ -2,9 +2,6 @@
 import request from 'request';
 import assert, { strictEqual } from 'assert';
 import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
-import Series from '../../../src/backend/controller/objects/series';
-import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
-import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 

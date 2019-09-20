@@ -1,4 +1,5 @@
 import { MediaFormat } from './mediaFormat';
+import { Relation } from './seriesList';
 
 export interface Title {
     romaji: string;
@@ -44,6 +45,7 @@ export interface Media {
     genres: string[];
     synonyms: any[];
     nextAiringEpisode?: any;
+    relations: Relation;
 }
 
 export interface GetSeriesByID {

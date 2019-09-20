@@ -25,9 +25,11 @@ export default class MultiProviderComperator {
                     if (seasonA.seasonNumber === seasonB.seasonNumber) {
                         finalResult.matches += 2;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if ((seasonB.seasonError == SeasonError.CANT_GET_SEASON ||  seasonB.seasonError == SeasonError.NONE) && seasonA.seasonNumber === 1) {
+                    } else if ((seasonB.seasonError == SeasonError.CANT_GET_SEASON || seasonB.seasonError == SeasonError.NONE) && seasonA.seasonNumber === 1) {
                         finalResult.matches += 1;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                    } else if (!seasonA || !seasonB) {
+
                     } else {
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                     }
@@ -58,6 +60,8 @@ export default class MultiProviderComperator {
                     }
                 }
             }
+        } else {
+            console.warn('not the same series' + result.mainProvider.getAllNames()[0].name +'('+result.mainProvider.provider+')'+' &'+ series.getAllNames()[0].name );
         }
     return finalResult;
    }

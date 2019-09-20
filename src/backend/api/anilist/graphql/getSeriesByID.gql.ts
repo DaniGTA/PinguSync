@@ -40,5 +40,13 @@ query ($id: Int!, $type: MediaType) {
       timeUntilAiring
       episode
     }
+    relations {
+      edges {
+        relationType
+      }
+      nodes{
+        id
+      }
+    }
   }
 }`;

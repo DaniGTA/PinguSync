@@ -102,26 +102,31 @@ export default new class ProviderHelper {
     private async getSeriesByName(series: Series, name: Name, provider: ExternalProvider): Promise<Series> {
         let searchResult: MultiProviderResult[] = [];
         let resultContainer: SearchResultRatingContainer[] = [];
-        console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name);
-        searchResult = await provider.getMoreSeriesInfoByName(name.name, (await series.getSeason()).seasonNumber);
+        const season = await series.getSeason();
+        if (!season.seasonNumber || season.seasonNumber === 1 || provider.hasUniqueIdForSeasons) {
+            console.log("[" + provider.providerName + "] Request (Search series info by name) with value: " + name.name + ' | S' + season.seasonNumber);
+            searchResult = await provider.getMoreSeriesInfoByName(name.name, season.seasonNumber);
 
-        if (searchResult && searchResult.length != 0) {
-            console.log("[" + provider.providerName + '] Results: ' + searchResult.length)
-            for (const result of searchResult) {
-                const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
-                resultContainer.push(new SearchResultRatingContainer(mpcr,result));
-            }
-            resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
-            for (const containerItem of resultContainer) {
-                if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
-                    console.log("[" + provider.providerName + "] Request success 🎉");
-                    ProviderSearchResultManager.addNewSearchResult(searchResult.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
-                    await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
-                    return series;
+            if (searchResult && searchResult.length != 0) {
+                console.log("[" + provider.providerName + '] Results: ' + searchResult.length)
+                for (const result of searchResult) {
+                    const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
+                    resultContainer.push(new SearchResultRatingContainer(mpcr, result));
                 }
+                resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
+                for (const containerItem of resultContainer) {
+                    if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
+                        console.log("[" + provider.providerName + "] Request success 🎉");
+                        ProviderSearchResultManager.addNewSearchResult(searchResult.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
+                        await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
+                        return series;
+                    }
+                }
+            } else {
+                console.log("no results");
             }
         } else {
-            console.log("no results");
+            console.log("[" + provider.providerName + "] ");
         }
         throw new Error('No results found by "series get by name"')
     }
