@@ -17,6 +17,8 @@ import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import Season from './meta/season';
 import { SeasonError } from './transfer/season-error';
 import { NameType } from './meta/name-type';
+import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
+import seasonHelper from '../../helpFunctions/season-helper/season-helper';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -68,6 +70,7 @@ export default class Series extends SeriesProviderExtension {
      * ! It can contain double entrys.
      */
     getAllNames(): Name[] {
+        console.log('[Name] [Serve]: Get all names')
         const names = [];
         for (const provider of this.getAllProviderLocalDatas()) {
             try {
@@ -90,6 +93,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     addProviderDatas(...localdatas: ProviderLocalData[]) {
+        console.log('[Provider] [Add]: Add provider data')
         for (const localdata of localdatas) {
             if (localdata instanceof ListProviderLocalData) {
                 this.addListProvider(localdata as ListProviderLocalData)
@@ -110,6 +114,7 @@ export default class Series extends SeriesProviderExtension {
      * @param preferedSize default: LARGE
      */
     getCoverImage(preferedSize: ImageSize = ImageSize.LARGE): Cover | null {
+        console.log('[Cover] [Serve]: Serve Cover Image')
         let ressources: ProviderLocalData[] = [...this.getListProvidersInfos(), ...this.getInfoProvidersInfos()];
         let result: Cover | null = null;
         for (const listProvider of ressources) {
@@ -130,6 +135,7 @@ export default class Series extends SeriesProviderExtension {
      * It get the max number of that anime.
      */
     public getMaxEpisode(): number {
+        console.log('[Episode] [Serve]: Serve Max Episodes')
         const providers = this.getAllProviderLocalDatas();
         const array = (providers.flatMap(x => x.episodes) as number[]);
         const onlyNumbers = array.filter(v => Number.isInteger(v as number));
@@ -143,6 +149,7 @@ export default class Series extends SeriesProviderExtension {
      * Give an array of all episodes in numbers.
      */
     public async getAllEpisodes(): Promise<number[]> {
+        console.log('[Episode] [Serve]: Serve all Episodes')
         let result;
         try {
             result = await listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap(x => x.episodes))
@@ -157,14 +164,15 @@ export default class Series extends SeriesProviderExtension {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
+    public async getSeason(searchMode:SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
+        console.log('[Season] [Serve]: Serve Season')
         if (!this.cachedSeason || this.cachedSeason === -2) {
-            const result = await seriesHelper.searchSeasonValue(this, searchInList);
+            const result = await seasonHelper.searchSeasonValue(this,searchMode, searchInList);
             if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                 // UKNOWN SEASON
                 if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
                     console.log('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                    await ListController.instance.addSeriesToMainList(...await seriesHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
+                    await ListController.instance.addSeriesToMainList(...await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
                     console.log('Temp Series Successfull added.');
                 }
                 this.cachedSeason = -2;
@@ -183,6 +191,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+        console.log('[Season] [Serve]: Last Prequel')
         const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getAllProviderLocalDatas()) {
@@ -203,6 +212,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async getSequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+        console.log('[Season] [Serve]: Last Sequel')
         const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getAllProviderLocalDatas()) {
@@ -307,6 +317,7 @@ export default class Series extends SeriesProviderExtension {
      * @return the last updated provider with watchProgress !
      */
     private async getLastUpdatedProvider(exclude: ListProviderLocalData[] = []): Promise<ListProviderLocalData | null> {
+        console.log('[Provider] [Serve]: Last updated provider')
         let latestUpdatedProvider: ListProviderLocalData | null = null;
         if (typeof this.getListProvidersInfos() != 'undefined') {
             for (const provider of this.getListProvidersInfos()) {
@@ -362,7 +373,7 @@ export default class Series extends SeriesProviderExtension {
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
         console.log('Merged Providers');
 
-        await newAnime.getSeason(undefined, allowAddNewEntry);
+        await newAnime.getSeason(SeasonSearchMode.ALL,undefined, allowAddNewEntry);
         console.log('Calculated Season');
         await newAnime.getCanSync();
 
@@ -384,6 +395,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     private async mergeProviders(...providers: ProviderLocalData[]): Promise<ProviderLocalData[]> {
+        console.log('[Provider] [Merge]: Merging providers.')
         let mergedProviderInfos: ProviderLocalData[] = []
         for (const provider of providers) {
             var check = mergedProviderInfos.find(x => provider.provider === x.provider);
@@ -414,7 +426,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async getLastWatchProgress(): Promise<WatchProgress> {
-
+        console.log('[Episode] [Serve]: Last watch progress.')
         let latestUpdatedProvider = Object.assign(new ListProviderLocalData(), await this.getLastUpdatedProvider())
         if (latestUpdatedProvider === null) {
             throw 'no provider with valid sync status'
@@ -431,6 +443,7 @@ export default class Series extends SeriesProviderExtension {
      * @param list 
      */
     async getFirstSeason(list?: readonly Series[] | Series[]): Promise<Series> {
+        console.log('[Season] [Serve]: First Season.')
         if ((await this.getSeason()).seasonNumber === 1) {
             return this;
         }

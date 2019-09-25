@@ -189,6 +189,21 @@ describe('AniDB Tests', () => {
         deepEqual(result[0].mainProvider.id,'5975');
     });
 
+    it('should find id 5975', async () => {
+        var a = new AniDBProvider(false); 
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.fullInfo = true;
+            
+        const series = new Series();
+        series['cachedSeason'] = 1;
+        lpdld.addSeriesName(new Name("Toaru Majutsu no Index", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        const result = await a.getMoreSeriesInfoByName("Toaru Majutsu no Index",1);
+        
+        deepEqual(result[0].mainProvider.id,'5975');
+    });
+
     it('should find id 7599', async () => {
         var a = new AniDBProvider(false); 
         const lpdld = new ListProviderLocalData("AniList");
@@ -203,6 +218,21 @@ describe('AniDB Tests', () => {
         
         deepEqual(result[0].mainProvider.id,'7599');
     });
+
+    it('should find id 14416', async () => {
+        var a = new AniDBProvider(false); 
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.fullInfo = true;
+            
+        const series = new Series();
+        series['cachedSeason'] = 1;
+        lpdld.addSeriesName(new Name("Boku no Hero Academia 4", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        const result = await a.getMoreSeriesInfoByName("My Hero Academia Season 4",4);
+        
+        deepEqual(result[0].mainProvider.id,'14416');
+    })
 
     
 
