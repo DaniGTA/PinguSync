@@ -123,7 +123,7 @@ class SeasonHelper {
     }
 
     async searchSeasonValue(series: Series, searchMode:SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
-        console.log('[Season] [Search]: Season value.'+' ('+ series.id +')')
+        console.log('[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
         let prequelResult;
         let sequelResult;
 

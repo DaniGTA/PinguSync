@@ -57,6 +57,7 @@ describe('stringHelperTest', () => {
     });
 
     it('shoul get right season number from title', async () => {
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 3 Part 2'), 3);
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2,"Season marking with X");
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2,"Season marking with number");
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war'), 2,"Season marking with the word season");
