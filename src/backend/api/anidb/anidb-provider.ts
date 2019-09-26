@@ -11,6 +11,9 @@ import AniDBConverter from './anidb-converter';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import MultiProviderResult from '../multi-provider-result';
+import request from 'request';
+import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
+
 export default class AniDBProvider implements InfoProvider {
     public providerName: string = 'anidb';
     public version: number = 1;
@@ -58,8 +61,13 @@ export default class AniDBProvider implements InfoProvider {
         throw 'nothing found';
     }
 
-    getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        throw 'not implemented yet';
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+       if (provider.provider === this.providerName && provider.id) {
+            var fullInfo = await this.webRequest<AniDBAnimeFullInfo>("http://api.anidb.net:9001/httpapi?request=anime&client=animesynclist&clientver=2&protover=1&aid="+provider.id);
+           console.log("test");
+           throw "";
+        }
+        throw 'False provider - AniDB';
     }
 
     private async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {
@@ -171,5 +179,30 @@ export default class AniDBProvider implements InfoProvider {
                 rejects();
             });
         });
+    }
+
+    private async webRequest<T>(url: string): Promise<T> {
+        console.log('[AniDB] Start WebRequest');
+        return new Promise<T>((resolve, rejects) => {
+            try {
+            
+                request({method: 'GET', uri: url, gzip: true}, (error: any, response: any, body: any) => {
+
+                    console.log('[AniDB] statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                    if (response.statusCode == 200) {
+                        var json = xml2json(body, { compact: true, spaces: 0 });
+                        if (json) {
+                            resolve(JSON.parse(json) as T);
+                        }
+                    } else {
+                        rejects();
+                    }
+                }).on('error', (err) => {
+                    console.log(err);
+                })
+            } catch (err) {
+                console.log(err);
+            }
+        })
     }
 }
