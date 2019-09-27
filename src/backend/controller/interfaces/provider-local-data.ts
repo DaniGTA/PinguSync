@@ -7,6 +7,10 @@ import Genre from '../objects/meta/genre';
 import Episode from '../objects/meta/episode/episode';
 
 export default class ProviderLocalData {
+    // ------------------
+    //  Provider metadata stuff
+    // ------------------
+
     /**
      * The version number of the data object.
      * If this get raised the client knows it needs too update his own data.
@@ -41,11 +45,10 @@ export default class ProviderLocalData {
      */
     public lastExternalChange: Date = new Date(0);
 
-    /**
-     * ----------------------
-     ** Series metadata stuff
-     * ----------------------
-    */
+
+    // ----------------------
+    // Series metadata stuff
+    // ----------------------
 
     public detailEpisodeInfo: Episode[] = [];
     public score?: number;
@@ -77,6 +80,11 @@ export default class ProviderLocalData {
      * This prevents merging alternatives together.
      */
     public alternativeIds: number[] = [];
+
+
+    // ------------------
+    //  Function section
+    // ------------------
 
     /**
     * Prevents too have double entrys for same name.

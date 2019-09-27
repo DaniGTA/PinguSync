@@ -2,6 +2,10 @@ import { existsSync, writeFileSync, readFileSync } from 'fs';
 import Series from '../objects/series';
 import * as path from "path";
 export default class MainListLoader {
+    /**
+     * Load json data from file.
+     * The json file contains all series that got added to the mainlist.
+     */
     static loadData(): Series[] {
         console.log('Load list file...');
         try {
@@ -23,6 +27,10 @@ export default class MainListLoader {
         return [];
     }
 
+    /**
+     * Save the main list to a json file.
+     * @param list the main list.
+     */
     static async saveData(list: Series[]) {
         console.log('Save list: '+list.length);
         console.log(this.getPath());

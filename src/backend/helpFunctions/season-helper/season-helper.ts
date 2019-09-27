@@ -22,8 +22,8 @@ class SeasonHelper {
      *  |- Series B - ?     ↑
      *      |- Series A - ? ↑
      * 
-     * @param series 
-     * @param seriesList 
+     * @param series the series where the trace should be performed.
+     * @param seriesList a list where the relation should be.
      */
     async searchSeasonValuePrequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         console.log('[Season] [Search]: Prequel Trace.'+' ('+ series.id +')')
@@ -78,8 +78,8 @@ class SeasonHelper {
      *      |- Series C - S03   ←
      * 
      * 
-     * @param series 
-     * @param seriesList 
+     * @param series the series where the trace should be performed.
+     * @param seriesList a list where the relation should be.
      */
     async searchSeasonValueSequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         console.log('[Season] [Search]: Sequel Trace.'+' ('+ series.id +')')
@@ -122,6 +122,12 @@ class SeasonHelper {
         return new SearchSeasonValueResult(-1, "NoSequelAvaible",SeasonError.CANT_GET_SEASON);
     }
 
+    /**
+     * Controlls the search modes and will collect the result rate it and return it.
+     * @param series where the season number is missing.
+     * @param searchMode what search should be performed ? DEFAULT: `ALL`
+     * @param seriesList where the relation should be, this will be needed to perform relation tracing. DEFAULT: `main list`
+     */
     async searchSeasonValue(series: Series, searchMode:SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         console.log('[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
         let prequelResult;
@@ -179,6 +185,11 @@ class SeasonHelper {
         return new SearchSeasonValueResult(-1, "None",SeasonError.CANT_GET_SEASON);
     }
 
+    /**
+     * A prequel was found but it is not in the list.
+     * So a dummy will be created where all provider data can be filled in.
+     * @param localDatas 
+     */
     async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
         const result: Series[] = [];
         console.log('create temp series');

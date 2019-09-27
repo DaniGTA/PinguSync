@@ -4,6 +4,12 @@ import { isNumber } from 'util';
 import ProviderComperator from './provider-comperator';
 
 export default class RelationComperator {
+    /**
+     * Checks if `a` is a alternative to `b` and it
+     * checks if `b` is a alternative to `a`. 
+     * @param a series a
+     * @param b series b
+     */
     static async isAlternativeSeries(a: Series, b: Series): Promise<ComperatorResult>{
         const comperatorResult = new ComperatorResult();
 

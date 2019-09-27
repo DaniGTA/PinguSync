@@ -5,7 +5,14 @@ import stringHelper from '../../helpFunctions/string-helper';
 import listHelper from '../../helpFunctions/list-helper';
 
 export default class MainListAdder {
-
+    /**
+     * Stores all adding instances.
+     * 
+     * Side info: Every time a series will be add to the Series it will be added to a worker
+     *            and the worker will perform all details that are needed to add the series.
+     *            Every worker instance has its own instance id that will be tracked below.
+     *            Only when a worker finish his work and no other instance is open it is allowed to perform a clean up.
+     */
     static instanceTracker: string[] = [];
     /**
      * Use ListController to add Series too the MainList.
@@ -27,7 +34,15 @@ export default class MainListAdder {
     }
 
 
-
+    /**
+     * The list worker will add a array to the main list.
+     * 
+     *  Checks that will be performed:
+     *      Is Series already in list ?
+     *      All Provider are avaible ?
+     * 
+     * @param list a series list.
+     */
     private async listWorker(list: Series[]) {
         console.log("Worker started to process " + list.length + ' Items.');
         let addCounter = 0;

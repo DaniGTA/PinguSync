@@ -1,5 +1,6 @@
 /**
- * Difference between other and unkown is that on unkown you realy dont know what it is and on other you know that it isnt something of the others.
+ * Difference between other and unkown is that on unkown you realy dont know what it is and 
+ * on other you know that it isnt something of the others.
  */
 export enum EpisodeType{
     REGULAR_EPISODE,

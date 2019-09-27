@@ -7,8 +7,8 @@ export default class ReleaseYearComperator {
      * 
      * INFO: More DATA more POINTS.
      * INFO: This compare cant give a absolute match, release can be matched to easly for that.
-     * @param a 
-     * @param b 
+     * @param a series a
+     * @param b series b
      */
     static async compareReleaseYear(a: Series, b: Series): Promise<ComperatorResult>{
         const result = new ComperatorResult();

@@ -2,8 +2,6 @@ import Series from '../../controller/objects/series';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Name from '../../controller/objects/meta/name';
-import InfoProvider from '../../api/info-provider';
-import ListProvider from '../../api/list-provider';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import ListController from '../../controller/list-controller';
 import timeHelper from '../time-helper';
@@ -13,13 +11,19 @@ import ProviderSearchResultManager from '../../controller/stats-manager/models/p
 import { MediaType } from '../../controller/objects/meta/media-type';
 import stringHelper from '../string-helper';
 import MultiProviderResult from '../../api/multi-provider-result';
-import titleCheckHelper from '../title-check-helper';
 import ExternalProvider from '../../api/external-provider';
 import SearchResultRatingContainer from './search-result-rating-container';
 import MultiProviderComperator from '../comperators/multi-provider-results-comperator';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 
+/**
+ * Controlls provider request, text search, search result rating, data updates
+ */
 export default new class ProviderHelper {
+    // ---------------------------------------------------------
+    // ! This function below have a big impact on this program !
+    // ----------------------------------------------------------
+
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
         try {
             for (let aProvider of a.getListProvidersInfos()) {
