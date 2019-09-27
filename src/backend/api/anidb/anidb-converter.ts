@@ -3,7 +3,7 @@ import { Anime } from './objects/anidbNameListXML';
 import AniDBProvider from './anidb-provider';
 import MultiProviderResult from '../multi-provider-result';
 import { NameType } from '../../controller/objects/meta/name-type';
-import { AniDBAnimeFullInfo, AttributeInfo, ExternalentityElement, FluffyExternalentity, ResourceElement, AniDBAnimeAnime } from './objects/anidbFullInfoXML';
+import { AniDBAnimeFullInfo, AttributeInfo, ExternalentityElement, FluffyExternalentity, ResourceElement, AniDBAnimeAnime, EpisodeElement } from './objects/anidbFullInfoXML';
 import Name from '../../controller/objects/meta/name';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Overview from '../../controller/objects/meta/overview';
@@ -11,6 +11,9 @@ import Cover from '../../controller/objects/meta/cover';
 import ProviderLocalData from '../../controller/interfaces/provider-local-data';
 import { ImageSize } from '../../controller/objects/meta/image-size';
 import Genre from '../../controller/objects/meta/genre';
+import Episode from '../../controller/objects/meta/episode/episode';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
 
 export default class AniDBConverter {
     async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {
@@ -62,12 +65,59 @@ export default class AniDBConverter {
 
             ipld.genres = this.getGenres(fullInfo.anime);
             ipld.episodes = Number(fullInfo.anime.episodecount._text);
+            ipld.detailEpisodeInfo = await this.getDetailEpisodeInfo(fullInfo.anime);
             ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/'+fullInfo.anime.picture._text,ImageSize.ORIGINAL))
             const mpr = new MultiProviderResult(ipld);;
             mpr.subProviders = await this.getSubProviders(fullInfo.anime);
             return mpr;
         }
         throw 'no anime present';
+    }
+
+    async getDetailEpisodeInfo(anime: AniDBAnimeAnime): Promise<Episode[]> {
+        const episodes:Episode[] = [];
+        if (anime.episodes.episode && Array.isArray(anime.episodes.episode)) {
+            for (const episode of anime.episodes.episode) {
+                const tempEpisode = new Episode(Number(episode.epno._text));
+                if (episode.airdate) {
+                    tempEpisode.airDate = new Date(episode.airdate._text);
+                }
+                tempEpisode.duration = Number(episode.length._text);
+                tempEpisode.type = await this.getEpisodeType(episode);
+                tempEpisode.rating = episode.rating ? Number(episode.rating._text) : undefined;
+                tempEpisode.summery = episode.summary ? episode.summary._text : undefined;
+
+                tempEpisode.title = await this.getEpisodeTitles(episode);
+                tempEpisode.lastProviderUpdate = new Date(episode._attributes.update).getDate();
+                tempEpisode.providerEpisodeId = episode._attributes.id;
+            }
+        }
+        return episodes;
+    }
+
+    async getEpisodeTitles(episode: EpisodeElement): Promise<EpisodeTitle[]> {
+        const episodeTitles: EpisodeTitle[] = [];
+        if (Array.isArray(episode.title)) {
+            for (const episodeTile of episode.title) {
+                episodeTitles.push(new EpisodeTitle(episodeTile._text, episodeTile._attributes["xml:lang"]));
+            }
+        } else {
+            episodeTitles.push(new EpisodeTitle(episode.title._text, episode.title._attributes["xml:lang"]));
+        }
+        return episodeTitles
+    }
+
+    async getEpisodeType(episode: EpisodeElement): Promise<EpisodeType> {
+        switch (episode.epno._attributes.type) {
+            case '1':
+                return EpisodeType.REGULAR_EPISODE;
+            case '2':
+                return EpisodeType.OPENING_OR_ENDING;
+            case '3':
+                return EpisodeType.OTHER;
+            default:
+                return EpisodeType.UNKOWN;
+        }
     }
 
     async getSubProviders(anime: AniDBAnimeAnime): Promise<ProviderLocalData[]> {

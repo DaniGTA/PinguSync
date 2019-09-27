@@ -4,6 +4,7 @@ import { MediaType } from '../objects/meta/media-type';
 import Name from '../objects/meta/name';
 import Overview from '../objects/meta/overview';
 import Genre from '../objects/meta/genre';
+import Episode from '../objects/meta/episode/episode';
 
 export default class ProviderLocalData {
     /**
@@ -46,6 +47,7 @@ export default class ProviderLocalData {
      * ----------------------
     */
 
+    public detailEpisodeInfo: Episode[] = [];
     public score?: number;
     public episodes?: number;
     public publicScore?: number;

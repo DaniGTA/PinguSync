@@ -1,19 +1,12 @@
 import Series from "../controller/objects/series";
-import SearchSeasonValueResult from "../controller/objects/transfer/search-season-value-results";
-import Name from "../controller/objects/meta/name";
-import ListController from "../controller/list-controller";
 import ProviderComperator from './comperators/provider-comperator';
 import SeasonComperator from './comperators/season-comperator';
 import TitleComperator from './comperators/title-comperator';
 import EpisodeComperator from './comperators/episode-comperator';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
-import ProviderLocalData from '../controller/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
-import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
 import ReleaseYearComperator from './comperators/release-year-comperator';
 import MediaTypeComperator from './comperators/media-type-comperator';
 import RelationComperator from './comperators/relation-comperator';
-import { SeasonError } from '../controller/objects/transfer/season-error';
 class SeriesHelper {
     /**
      * Calculate the value
@@ -21,7 +14,6 @@ class SeriesHelper {
      * @param b 
      */
     public async isSameSeries(a: Series, b: Series): Promise<boolean> {
-        console.log('[Series] [Match]: Check if is same.')
         let matches: number = 0;
         let matchAbleScore: number = 0;
         a = Object.assign(new Series(), a);
