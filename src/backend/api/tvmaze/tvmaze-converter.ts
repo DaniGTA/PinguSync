@@ -9,6 +9,7 @@ import Overview from '../../controller/objects/meta/overview';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import TVMazeProvider from './tvmaze-provider';
 import { MediaType } from '../../controller/objects/meta/media-type';
+import Genre from '../../controller/objects/meta/genre';
 
 export default class TVMazeConverter {
 
@@ -28,8 +29,10 @@ export default class TVMazeConverter {
                 }
             }
         }
+        for (const genere of show.genres) {
+            pld.genres.push(new Genre(genere));
+        }
 
-        pld.genre = show.genres;
         pld.mediaType = this.convertTypeToMediaType(show.type);
         pld.id = show.id;
         pld.rawEntry = show;

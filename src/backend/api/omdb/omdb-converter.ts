@@ -8,6 +8,7 @@ import { ImageSize } from '../../controller/objects/meta/image-size';
 import { IdRequestResult } from './models/id-request-result';
 import Overview from '../../controller/objects/meta/overview';
 import Cover from '../../controller/objects/meta/cover';
+import Genre from '../../controller/objects/meta/genre';
 
 export default class OMDbConverter {
 
@@ -29,7 +30,9 @@ export default class OMDbConverter {
         pld.id = entry.imdbID;
         pld.fullInfo = true;
         pld.country = entry.Country;
-        pld.genre = entry.Genre.split(' ');
+        for (const genre of entry.Genre.split(' ')) {
+            pld.genres.push(new Genre(genre));
+        }
         pld.releaseYear = new Date(entry.Released).getFullYear();
         pld.addOverview(new Overview(entry.Plot, 'en'));
         pld.rawEntry = entry;

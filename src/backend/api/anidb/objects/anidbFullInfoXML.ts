@@ -1,7 +1,6 @@
 export interface AniDBAnimeFullInfo {
-    _declaration?: Declaration;
-    anime?:        AniDBAnimeAnime;
-    error?:        Error;
+    _declaration: Declaration;
+    anime:        AniDBAnimeAnime;
 }
 
 export interface Declaration {
@@ -14,16 +13,24 @@ export interface DeclarationAttributes {
 }
 
 export interface AniDBAnimeAnime {
-    _attributes:  PurpleAttributes;
-    type:         Error;
-    episodecount: Error;
-    startdate:    Error;
-    titles:       Titles;
-    relatedanime: Relatedanime;
-    picture:      Error;
-    resources:    Resources;
-    characters:   Characters;
-    tags?:        Tags;
+    _attributes:      PurpleAttributes;
+    type:             Description;
+    episodecount:     Description;
+    startdate:        Description;
+    enddate:          Description;
+    titles:           Titles;
+    relatedanime?:    Relatedanime;
+    recommendations?: Recommendations;
+    url?:             Description;
+    creators?:        Creators;
+    description?:     Description;
+    ratings:          Ratings;
+    picture:          Description;
+    resources:        AnimeResources;
+    tags?:            Tags;
+    characters?:      Characters;
+    episodes:         Episodes;
+    similaranime?:    Similaranime;
 }
 
 export interface PurpleAttributes {
@@ -37,13 +44,13 @@ export interface Characters {
 
 export interface Character {
     _attributes:   CharacterAttributes;
-    rating:        Rating;
-    name:          Error;
-    gender:        Error;
+    rating?:       Rating;
+    name:          Description;
+    gender:        Description;
     charactertype: Charactertype;
-    description?:  Error;
-    picture:       Error;
-    seiyuu?:       Seiyuu;
+    description?:  Description;
+    picture?:      Description;
+    seiyuu?:       SeiyuuElement[] | SeiyuuElement;
 }
 
 export interface CharacterAttributes {
@@ -69,10 +76,11 @@ export interface CharactertypeAttributes {
 
 export enum Text {
     Character = "Character",
+    Mecha = "Mecha",
     Organization = "Organization",
 }
 
-export interface Error {
+export interface Description {
     _text: string;
 }
 
@@ -85,7 +93,7 @@ export interface RatingAttributes {
     votes: string;
 }
 
-export interface Seiyuu {
+export interface SeiyuuElement {
     _attributes: SeiyuuAttributes;
     _text:       string;
 }
@@ -95,36 +103,168 @@ export interface SeiyuuAttributes {
     picture: string;
 }
 
-export interface Relatedanime {
-    anime: RelatedanimeAnime[];
+export interface Creators {
+    name: AttributeInfo[];
 }
 
-export interface RelatedanimeAnime {
+export interface AttributeInfo {
+    _attributes: NameAttributes;
+    _text:       string;
+}
+
+export interface NameAttributes {
+    id:   string;
+    type: string;
+}
+
+export interface Episodes {
+    episode: EpisodeElement[] | PurpleEpisode;
+}
+
+export interface EpisodeElement {
+    _attributes: EpisodeAttributes;
+    epno:        Epno;
+    length:      Description;
+    airdate?:    Description;
+    rating?:     Rating;
+    title:       TitleTitle[] | TitleTitle;
+    summary?:    Description;
+    resources?:  EpisodeResources;
+}
+
+export interface EpisodeAttributes {
+    id:     string;
+    update: Date;
+}
+
+export interface Epno {
+    _attributes: EpnoAttributes;
+    _text:       string;
+}
+
+export interface EpnoAttributes {
+    type: string;
+}
+
+export interface EpisodeResources {
+    resource: ResourcesResourceClass;
+}
+
+export interface ResourcesResourceClass {
+    _attributes:    EpnoAttributes;
+    externalentity: PurpleExternalentity;
+}
+
+export interface PurpleExternalentity {
+    identifier: Description[];
+}
+
+export interface TitleTitle {
     _attributes: FluffyAttributes;
     _text:       string;
 }
 
 export interface FluffyAttributes {
-    id:   string;
-    type: string;
+    "xml:lang": XMLLang;
 }
 
-export interface Resources {
-    resource: Resource[];
+export enum XMLLang {
+    Ar = "ar",
+    En = "en",
+    Fr = "fr",
+    Ja = "ja",
+    Th = "th",
+    XJat = "x-jat",
 }
 
-export interface Resource {
-    _attributes:    ResourceAttributes;
-    externalentity: Externalentity;
+export interface PurpleEpisode {
+    _attributes: EpisodeAttributes;
+    epno:        Epno;
+    length:      Description;
+    title:       TitleTitle;
+    airdate?:    Description;
 }
 
-export interface ResourceAttributes {
-    type: string;
+export interface Ratings {
+    permanent: Permanent;
+    temporary: Permanent;
+    review?:   Permanent;
 }
 
-export interface Externalentity {
-    identifier?: Error;
-    url?:        Error;
+export interface Permanent {
+    _attributes: PermanentAttributes;
+    _text:       string;
+}
+
+export interface PermanentAttributes {
+    count: string;
+}
+
+export interface Recommendations {
+    _attributes:    RecommendationsAttributes;
+    recommendation: RecommendationElement[] | RecommendationElement;
+}
+
+export interface RecommendationsAttributes {
+    total: string;
+}
+
+export interface RecommendationElement {
+    _attributes: RecommendationAttributes;
+    _text:       string;
+}
+
+export interface RecommendationAttributes {
+    type: FluffyType;
+    uid:  string;
+}
+
+export enum FluffyType {
+    ForFans = "For Fans",
+    MustSee = "Must See",
+    Recommended = "Recommended",
+}
+
+export interface Relatedanime {
+    anime: AttributeInfo[] | AttributeInfo;
+}
+
+export interface AnimeResources {
+    resource: ResourceElement[] | PurpleResource;
+}
+
+export interface ResourceElement {
+    _attributes:    EpnoAttributes;
+    externalentity: ExternalentityElement[] | FluffyExternalentity;
+}
+
+export interface ExternalentityElement {
+    identifier: Description;
+}
+
+export interface FluffyExternalentity {
+    identifier?: Description[] | Description;
+    url?:        Description;
+}
+
+export interface PurpleResource {
+    _attributes:    EpnoAttributes;
+    externalentity: ExternalentityElement;
+}
+
+export interface Similaranime {
+    anime: AnimeElement[];
+}
+
+export interface AnimeElement {
+    _attributes: TentacledAttributes;
+    _text:       string;
+}
+
+export interface TentacledAttributes {
+    id:       string;
+    approval: string;
+    total:    string;
 }
 
 export interface Tags {
@@ -133,38 +273,39 @@ export interface Tags {
 
 export interface Tag {
     _attributes:  TagAttributes;
-    name:         Error;
-    description?: Error;
-    picurl?:      Error;
+    name:         Description;
+    description?: Description;
+    picurl?:      Description;
 }
 
 export interface TagAttributes {
     id:            string;
+    parentid?:     string;
+    infobox?:      string;
     weight:        string;
     localspoiler:  string;
     globalspoiler: string;
     verified:      string;
     update:        Date;
-    parentid?:     string;
-    infobox?:      string;
 }
 
 export interface Titles {
-    title: Title[];
+    title: TitlesTitle[];
 }
 
-export interface Title {
-    _attributes: TitleAttributes;
+export interface TitlesTitle {
+    _attributes: StickyAttributes;
     _text:       string;
 }
 
-export interface TitleAttributes {
+export interface StickyAttributes {
     "xml:lang": string;
-    type:       FluffyType;
+    type:       TentacledType;
 }
 
-export enum FluffyType {
+export enum TentacledType {
     Main = "main",
     Official = "official",
+    Short = "short",
     Synonym = "synonym",
 }

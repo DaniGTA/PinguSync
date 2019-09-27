@@ -62,10 +62,10 @@ export default class AniDBProvider implements InfoProvider {
     }
 
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+         const converter = new AniDBConverter();
        if (provider.provider === this.providerName && provider.id) {
             var fullInfo = await this.webRequest<AniDBAnimeFullInfo>("http://api.anidb.net:9001/httpapi?request=anime&client=animesynclist&clientver=2&protover=1&aid="+provider.id);
-           console.log("test");
-           throw "";
+           return converter.convertFullInfoToProviderLocalData(fullInfo);
         }
         throw 'False provider - AniDB';
     }

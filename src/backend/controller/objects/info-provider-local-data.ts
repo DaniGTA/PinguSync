@@ -1,6 +1,5 @@
 import InfoProvider from '../../api/info-provider';
 import ProviderLocalData from '../interfaces/provider-local-data';
-import Name from './meta/name';
 import Cover from './meta/cover';
 import listHelper from '../../helpFunctions/list-helper';
 import Banner from './meta/banner';

@@ -3,8 +3,7 @@ import Banner from '../objects/meta/banner';
 import { MediaType } from '../objects/meta/media-type';
 import Name from '../objects/meta/name';
 import Overview from '../objects/meta/overview';
-import ExternalProvider from '../../api/external-provider';
-import ProviderList from '../provider-manager/provider-list';
+import Genre from '../objects/meta/genre';
 
 export default class ProviderLocalData {
     /**
@@ -60,7 +59,7 @@ export default class ProviderLocalData {
     public isNSFW = false;
     public targetSeason?: number;
     public country?: string;
-    public genre?: string[];
+    public genres: Genre[] = [];
 
     /**
      * Only fill this if provider give sequel ids and have different ids for every season.
