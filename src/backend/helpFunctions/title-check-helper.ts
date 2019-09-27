@@ -174,6 +174,8 @@ export default new class TitleCheckHelper {
         title = title.replace(/Specials/g, '');
         title = title.replace(/Special/g, '');
         title = title.replace(/Gekijouban/g, '');
-        return title;
+        title = title.replace(/Gekijouban/g, '');
+        title = title.replace(/:\s*$/gm, '');
+        return title.trim();
     }
 }

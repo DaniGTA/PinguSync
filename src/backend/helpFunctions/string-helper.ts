@@ -54,9 +54,16 @@ class StringHelper {
     }
     public async getSeasonNumberFromTitle(title: string): Promise<number> {
         if (title) {
-            var reversedTitle = await this.reverseString(title);
-            var lastChar = reversedTitle.charAt(0);
+            var reversedTitle = '';
             var countLastChar = 0;
+            if (title.match(/part.*\d{1,}/i)) {
+                title = title.replace(/part.*\d{1,}/i, '').trim();
+                reversedTitle = await this.reverseString(title);
+            } else {
+                reversedTitle = await this.reverseString(title);
+            }
+            var lastChar = reversedTitle.charAt(0);
+
             if (title.toLocaleLowerCase().includes('episode')) {
                 throw 'That name dont have a Season';
             }
@@ -69,7 +76,7 @@ class StringHelper {
                         return parseInt(match[2]);
                     }
                 }
-            } else if ('0123456789'.includes(lastChar) && !title.match(/part.*\d{1,}/i) && !await this.hasKanji(title)) {
+            } else if ('0123456789'.includes(lastChar) && !await this.hasKanji(title)) {
                 return parseInt(lastChar, 10);
             } else if (['I'].includes(lastChar)) {
                 while (lastChar === reversedTitle.charAt(0)) {
