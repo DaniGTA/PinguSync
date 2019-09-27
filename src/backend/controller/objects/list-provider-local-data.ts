@@ -119,6 +119,9 @@ export class ListProviderLocalData extends ProviderLocalData {
             mergedProvider.rawEntry = provider.rawEntry;
             mergedProvider.covers = provider.covers;
             mergedProvider.episodes = provider.episodes
+            if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length != 0) {
+                mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
+            }
             if (provider.covers) {
                 for (const cover of provider.covers) {
                     if (!await listHelper.isCoverInList(covers, cover)) {
@@ -208,6 +211,9 @@ export class ListProviderLocalData extends ProviderLocalData {
             }
             if (newestProvider.covers) {
                 mergedProvider.runTime = newestProvider.runTime;
+            }
+            if (newestProvider.detailEpisodeInfo) {
+                mergedProvider.detailEpisodeInfo = newestProvider.detailEpisodeInfo;
             }
             mergedProvider.fullInfo = newestProvider.fullInfo;
             if (newestProvider.targetSeason) {

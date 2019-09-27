@@ -27,6 +27,7 @@ export interface CoverImage {
 
 export interface Media {
     id: number;
+    idMal: number;
     title: Title;
     startDate: StartDate;
     endDate: EndDate;

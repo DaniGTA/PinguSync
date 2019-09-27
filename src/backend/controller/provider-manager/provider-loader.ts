@@ -7,6 +7,7 @@ import AniDBProvider from '../../api/anidb/anidb-provider';
 import TVDBProvider from '../../api/tvdb/tvdb-provider';
 import OMDbProvider from '../../api/omdb/omdb-provider';
 import TVMazeProvider from '../../api/tvmaze/tvmaze-provider';
+import SimklProvider from '../../api/simkl/simkl-provider';
 
 export default class ProviderLoader {
     /**
@@ -22,7 +23,8 @@ export default class ProviderLoader {
         return [
             new AniListProvider(),
             new TraktProvider(),
-            new KitsuProvider()
+            new KitsuProvider(),
+            new SimklProvider()
         ];
     }
 

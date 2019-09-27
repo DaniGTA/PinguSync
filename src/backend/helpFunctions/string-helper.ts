@@ -53,7 +53,7 @@ class StringHelper {
         return string.replace(/\ \ /g, ' ').trim();
     }
     public async getSeasonNumberFromTitle(title: string): Promise<number> {
-        if (title) {
+        if (title && isNaN(Number(title)) && title.length > 2) {
             var reversedTitle = '';
             var countLastChar = 0;
             if (title.match(/part.*\d{1,}/i)) {
@@ -76,7 +76,7 @@ class StringHelper {
                         return parseInt(match[2]);
                     }
                 }
-            } else if ('0123456789'.includes(lastChar) && !await this.hasKanji(title)) {
+            } else if ('0123456789'.includes(lastChar) && !await this.hasKanji(title) && reversedTitle.charAt(1) != '^' && !title.match(/\d{4,}$/gm)) {
                 return parseInt(lastChar, 10);
             } else if (['I'].includes(lastChar)) {
                 while (lastChar === reversedTitle.charAt(0)) {
@@ -93,7 +93,7 @@ class StringHelper {
                     countLastChar++;
                     reversedTitle = reversedTitle.substr(1);
                 }
-                if (countLastChar > 3) {
+                if (countLastChar > 2) {
                     countLastChar = 0;
                 }
             }

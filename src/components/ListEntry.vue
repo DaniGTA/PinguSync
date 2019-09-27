@@ -40,6 +40,7 @@ import { Promised } from "vue-promised";
 import SeriesPackage from '../backend/controller/objects/series-package';
 import WatchProgress from '../backend/controller/objects/meta/watch-progress';
 import { ListProviderLocalData } from '../backend/controller/objects/list-provider-local-data';
+import { SeasonSearchMode } from '../backend/helpFunctions/season-helper/season-search-mode';
 Vue.component("Promised", Promised);
 Vue.use(VueLazyload);
 
@@ -142,7 +143,7 @@ export default class ListEntry extends Vue {
 
   async getSeason(series: Series): Promise<number | undefined> {
     series = Object.assign(new Series(), series);
-    return series.getSeason([]);
+    return (await series.getSeason(SeasonSearchMode.NO_SEARCH,[])).seasonNumber;
   }
   async canSync(series: Series): Promise<boolean> {
     series = Object.assign(new Series(), series);

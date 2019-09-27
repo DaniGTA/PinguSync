@@ -2,6 +2,7 @@ export default `
 query ($id: Int!, $type: MediaType) {
   Media(id: $id, type: $type) {
     id
+    idMal
     title {
       romaji
       english

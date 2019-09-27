@@ -103,17 +103,6 @@ export default class AniDBProvider implements InfoProvider {
         return null;
     }
 
-    
-
-    public InternalTesting() {
-        return {
-            needDownload: this.allowDownload,
-            dateDiffInDays: this.dateDiffInDays,
-            downloadFile: this.downloadFile,
-            anidbNameManager: AniDBProvider.anidbNameManager
-        }
-    }
-
     private allowDownload(): boolean {
         if (typeof AniDBProvider.anidbNameManager.lastDownloadTime === 'undefined') {
             return true;

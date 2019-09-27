@@ -1,6 +1,6 @@
 import { Show, Movie } from './objects/search';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
-import { Show as SendEntryShow, Season, Episode, SendEntryUpdate } from './objects/sendEntryUpdate';
+import { Show as SendEntryShow, Season, TraktEpisode, SendEntryUpdate } from './objects/sendEntryUpdate';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import { FullShowInfo } from './objects/fullShowInfo';
@@ -12,6 +12,11 @@ import { NameType } from '../../controller/objects/meta/name-type';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import MultiProviderResult from '../multi-provider-result';
+import Genre from '../../controller/objects/meta/genre';
+import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
+import Episode from '../../controller/objects/meta/episode/episode';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
 export default new class TraktConverter {
     async convertSeasonsToSeries(watchedInfo: WatchedInfo): Promise<Series[]> {
         const result = [];
@@ -77,7 +82,7 @@ export default new class TraktConverter {
         return new MultiProviderResult(provider);
     }
 
-    async convertFullShowInfoToLocalData(fullShow: FullShowInfo): Promise<MultiProviderResult> {
+    async convertFullShowInfoToLocalData(fullShow: FullShowInfo, seasonInfo?: TraktShowSeasonInfo[]): Promise<MultiProviderResult> {
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
         provider.addSeriesName(new Name(fullShow.title, 'en', NameType.OFFICIAL));
         provider.addSeriesName(new Name(fullShow.ids.slug, 'slug', NameType.SLUG));
@@ -89,12 +94,30 @@ export default new class TraktConverter {
         provider.rawEntry = fullShow;
         provider.publicScore = fullShow.rating;
         provider.episodes = fullShow.aired_episodes;
-
-
+        for (const genre of fullShow.genres) {
+            provider.genres.push(new Genre(genre));
+        }
+        provider.fullInfo = true;
+        if (seasonInfo) {
+            provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
+        }
         const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
         tvdbProvider.id = fullShow.ids.tvdb;
         tvdbProvider.fullInfo = false;
         return new MultiProviderResult(provider, tvdbProvider);
+    }
+
+    async getDetailedEpisodeInfo(seasonInfos: TraktShowSeasonInfo[]): Promise<Episode[]> {
+        const detailedEpisodes:Episode[] = [];
+        for (const seasonInfo of seasonInfos) {
+            for (const episode of seasonInfo.episodes) {
+                const tempEpisode = new Episode(seasonInfo.number, episode.number);
+                tempEpisode.title = [new EpisodeTitle(episode.title)];
+                tempEpisode.providerEpisodeId = episode.ids.trakt;
+                detailedEpisodes.push(tempEpisode);
+            }
+        }
+        return detailedEpisodes; 
     }
 
     async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
@@ -102,7 +125,7 @@ export default new class TraktConverter {
         var seasonNumber = (await series.getSeason()).seasonNumber;
         if (typeof currentProvider != 'undefined' && seasonNumber) {
 
-            var episodes: Episode[] = [];
+            var episodes: TraktEpisode[] = [];
 
             episodes.push({ number: removeEpisode });
 
@@ -133,7 +156,7 @@ export default new class TraktConverter {
         var seasonNumber = (await series.getSeason()).seasonNumber;
         if (currentProvider && seasonNumber) {
 
-            var episodes: Episode[] = [];
+            var episodes: TraktEpisode[] = [];
             var maxEpisodes = currentProvider.episodes || newWatchprogress;
 
             let sendEntryShow: SendEntryShow = {

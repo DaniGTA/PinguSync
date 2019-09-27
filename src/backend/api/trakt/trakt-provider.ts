@@ -13,6 +13,7 @@ import WatchProgress from '../../controller/objects/meta/watch-progress';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import MultiProviderResult from '../multi-provider-result';
+import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 export default class TraktProvider implements ListProvider {
     supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
 
@@ -57,8 +58,15 @@ export default class TraktProvider implements ListProvider {
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
-        const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id);
-        return await (await traktConverter.convertFullShowInfoToLocalData(res));
+        if (provider.isMediaTypeMovie()) {
+            const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id);
+            return await (await traktConverter.convertFullShowInfoToLocalData(res));
+        } else {
+            const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id);
+            const seasonInfo = await this.traktRequest<TraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
+            return await (await traktConverter.convertFullShowInfoToLocalData(res,seasonInfo));
+        }
+        
     }
 
     public getTokenAuthUrl(): string {

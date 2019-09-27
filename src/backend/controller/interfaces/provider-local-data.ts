@@ -129,4 +129,11 @@ export default class ProviderLocalData {
     getAllOverviews(): readonly Overview[] {
         return Object.freeze([...this.overviews]);
     }
+
+    /**
+     * Simple function that checks if the provider data is from media type movie.
+     */
+    isMediaTypeMovie(): boolean{
+        return this.mediaType === MediaType.MOVIE;
+    }
 }

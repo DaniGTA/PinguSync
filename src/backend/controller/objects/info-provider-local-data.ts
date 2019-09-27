@@ -55,6 +55,9 @@ export class InfoProviderLocalData extends ProviderLocalData {
                     }
                 }
             }
+            if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length != 0) {
+                mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
+            }
             mergedProvider.id = provider.id;
             mergedProvider.rawEntry = provider.rawEntry;
             if (!newestProvider) {
@@ -99,6 +102,9 @@ export class InfoProviderLocalData extends ProviderLocalData {
             }
             if (newestProvider.covers) {
                 mergedProvider.runTime = newestProvider.runTime;
+            }
+            if (newestProvider.detailEpisodeInfo) {
+                mergedProvider.detailEpisodeInfo = newestProvider.detailEpisodeInfo;
             }
             mergedProvider.names = await listHelper.getUniqueNameList(mergedProvider.names);
             mergedProvider.overviews = await listHelper.getUniqueOverviewList(mergedProvider.overviews);

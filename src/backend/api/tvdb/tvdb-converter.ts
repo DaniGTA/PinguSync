@@ -10,7 +10,6 @@ import { NameType } from '../../controller/objects/meta/name-type';
 export default class TVDBConverter {
     async convertSeriesToProviderLocalData(series: TVDBSeries): Promise<InfoProviderLocalData> {
         const infoProviderLocalData = new InfoProviderLocalData(TVDBProvider.Instance);
-
         infoProviderLocalData.lastExternalChange = new Date(series.data.lastUpdated);
         infoProviderLocalData.id = series.data.id;
         infoProviderLocalData.publicScore = series.data.siteRating;

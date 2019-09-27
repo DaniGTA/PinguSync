@@ -1,6 +1,6 @@
 import EpisodeTitle from './episode-title';
-import ExternalProvider from 'src/backend/api/external-provider';
 import { EpisodeType } from './episode-type';
+import ExternalProvider from '../../../../api/external-provider';
 
 /**
  * Contains detail infos about a episode.

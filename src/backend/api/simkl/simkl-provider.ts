@@ -1,20 +1,18 @@
 import ListProvider from '../list-provider';
 import { SimklUserData } from './simkl-user-data';
-import Series from 'src/backend/controller/objects/series';
-import WatchProgress from 'src/backend/controller/objects/meta/watch-progress';
-import { ListProviderLocalData } from 'src/backend/controller/objects/list-provider-local-data';
+import Series from '../../controller/objects/series';
+import WatchProgress from '../../controller/objects/meta/watch-progress';
+import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import request from 'request';
 import CodeResponse from './objects/codeResponse';
 import { UserListResponse } from './objects/userListResonse';
 import { MediaType } from '../../controller/objects/meta/media-type';
+import MultiProviderResult from '../multi-provider-result';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { SimklTextSearchResults } from './objects/simklTextSearchResults';
+import SimklConverter from './simkl-converter';
 
 export default class SimklProvider implements ListProvider {
-    getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<import("../multi-provider-result").default[]> {
-        throw new Error("Method not implemented.");
-    }
-    getFullInfoById(provider: import("../../controller/objects/info-provider-local-data").InfoProviderLocalData): Promise<import("../multi-provider-result").default> {
-        throw new Error("Method not implemented.");
-    }
     static instance: SimklProvider;
     userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
@@ -27,9 +25,44 @@ export default class SimklProvider implements ListProvider {
     private clientID = "9fda12e10ec09721e9231e5323b150a77d4d095eb009097f452aafd76c3bd3d9";
     private redirectUri = "urn:ietf:wg:oauth:2.0:oob";
     private apiUrl = "https://api.simkl.com/";
-
+    private simklConverter = new SimklConverter();
     constructor() {
         SimklProvider.instance = this;
+    }
+
+    async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
+        const endResults: MultiProviderResult[] = [];
+        try {
+            endResults.push(...await this.animeTextSearch(seriesName));
+        } catch (err) { }
+         try {
+            endResults.push(...await this.tvTextSearch(seriesName));
+        } catch (err) { }
+         try {
+            endResults.push(...await this.movieTextSearch(seriesName));
+        } catch (err) { }
+        
+        
+        return endResults;
+    }
+
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+        throw 'not implemented yet';
+    }
+
+    private async animeTextSearch(text: string):Promise<MultiProviderResult[]> {
+        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/anime?q='+text+'&page=1&limit=50&extended=full&client_id='+this.clientID)
+        return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.ANIME);
+    }
+
+    private async tvTextSearch(text: string):Promise<MultiProviderResult[]> {
+        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/tv?q='+text+'&page=1&limit=50&extended=full&client_id='+this.clientID)
+        return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.SERIES);
+    }
+
+    private async movieTextSearch(text: string): Promise<MultiProviderResult[]> {
+        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/movie?q='+text+'&page=1&limit=50&extended=full&client_id='+this.clientID)
+        return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.MOVIE);
     }
 
 

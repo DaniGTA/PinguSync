@@ -20,13 +20,13 @@ export interface Ids2 {
     tmdb?: number;
 }
 
-export interface Episode {
+export interface TraktEpisode {
     number: number;
 }
 
 export interface Season {
     number: number;
-    episodes: Episode[];
+    episodes: TraktEpisode[];
 }
 
 export interface Show {

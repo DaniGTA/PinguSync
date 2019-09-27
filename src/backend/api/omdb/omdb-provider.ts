@@ -37,12 +37,6 @@ export default class OMDbProvider implements InfoProvider {
     getTokenAuthUrl(): string {
         throw new Error("Method not implemented.");
     }
-    async  updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        throw new Error("Method not implemented.");
-    }
-    async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        throw new Error("Method not implemented.");
-    }
 
     async getMoreSeriesInfoByName(searchTitle: string, season?: number | undefined): Promise<MultiProviderResult[]> {
         const results: MultiProviderResult[] = [];
