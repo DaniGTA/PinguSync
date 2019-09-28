@@ -19,6 +19,7 @@ import { SeasonError } from './transfer/season-error';
 import { NameType } from './meta/name-type';
 import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
+import Episode from './meta/episode/episode';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -143,6 +144,15 @@ export default class Series extends SeriesProviderExtension {
             throw 'no episode found';
         }
         return Math.max(...onlyNumbers);
+    }
+
+    /**
+     * 
+     */
+    public async getAllDetailedEpisodes(): Promise<Episode[]> {
+        const providers = this.getAllProviderLocalDatas();
+        const array = providers.flatMap(x => x.detailEpisodeInfo);
+        return array;
     }
 
     /**

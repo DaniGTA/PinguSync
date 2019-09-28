@@ -78,7 +78,7 @@ export default class AniDBConverter {
         const episodes:Episode[] = [];
         if (anime.episodes.episode && Array.isArray(anime.episodes.episode)) {
             for (const episode of anime.episodes.episode) {
-                const tempEpisode = new Episode(Number(episode.epno._text));
+                const tempEpisode = new Episode(parseInt(episode.epno._text));
                 if (episode.airdate) {
                     tempEpisode.airDate = new Date(episode.airdate._text);
                 }
@@ -108,6 +108,9 @@ export default class AniDBConverter {
     }
 
     async getEpisodeType(episode: EpisodeElement): Promise<EpisodeType> {
+        if (episode.epno._attributes.type === '2' && episode.epno._text.charAt(0) === 'S') {
+            return EpisodeType.SPECIAL;
+        }
         switch (episode.epno._attributes.type) {
             case '1':
                 return EpisodeType.REGULAR_EPISODE;

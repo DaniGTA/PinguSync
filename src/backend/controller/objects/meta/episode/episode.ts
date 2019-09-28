@@ -1,6 +1,8 @@
 import EpisodeTitle from './episode-title';
 import { EpisodeType } from './episode-type';
 import ExternalProvider from '../../../../api/external-provider';
+import stringHelper from '../../../../helpFunctions/string-helper';
+import EpisodeMapping from './episode-mapping';
 
 /**
  * Contains detail infos about a episode.
@@ -9,6 +11,7 @@ export default class Episode{
     public readonly season?: number;
     public readonly episodeNumber: number;
     public readonly lastUpdate: number;
+    public readonly id: string;
 
     /**
      * -- Optional --
@@ -25,12 +28,14 @@ export default class Episode{
     public airDate?: Date;
     public lastProviderUpdate?: number;
     public rating?: number;
-    public providerEpisodeId?:number |string;
+    public providerEpisodeId?: number | string;
+    public mappedTo: EpisodeMapping[] = [];
 
     constructor(episodeNumber: number, season?: number, title?: EpisodeTitle[]) {
         this.season = season;
         this.episodeNumber = episodeNumber;
         this.title = title;
         this.lastUpdate = new Date().getTime();
+        this.id = stringHelper.randomString(20);
     }
 }

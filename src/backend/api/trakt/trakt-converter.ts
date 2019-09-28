@@ -15,7 +15,6 @@ import MultiProviderResult from '../multi-provider-result';
 import Genre from '../../controller/objects/meta/genre';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import Episode from '../../controller/objects/meta/episode/episode';
-import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
 export default new class TraktConverter {
     async convertSeasonsToSeries(watchedInfo: WatchedInfo): Promise<Series[]> {

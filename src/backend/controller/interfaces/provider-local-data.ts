@@ -5,6 +5,7 @@ import Name from '../objects/meta/name';
 import Overview from '../objects/meta/overview';
 import Genre from '../objects/meta/genre';
 import Episode from '../objects/meta/episode/episode';
+import { EpisodeType } from '../objects/meta/episode/episode-type';
 
 export default class ProviderLocalData {
     // ------------------
@@ -81,6 +82,17 @@ export default class ProviderLocalData {
      */
     public alternativeIds: number[] = [];
 
+    public async getDetailedEpisodeLength(): Promise<number> {
+        let length = 0;
+
+        for (const episode of this.detailEpisodeInfo) {
+            if (episode.type == EpisodeType.REGULAR_EPISODE || episode.type ==EpisodeType.SPECIAL || episode.type ==EpisodeType.UNKOWN) {
+                length++;
+            }
+        }
+
+        return length;
+    }
 
     // ------------------
     //  Function section
