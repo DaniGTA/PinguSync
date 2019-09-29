@@ -76,10 +76,32 @@ export default class EpisodeComperator{
         return false;
     }
 
+    public static async isEpisodeSameAsDetailedEpisode(aEpisode:number, bEpisode:Episode,season?: number): Promise<boolean> {
+        if (await this.isDetailedEpisodeSameSeason(bEpisode,season)) {
+            if (aEpisode == bEpisode.episodeNumber) {
+                return true;
+            }
+        }        
+        return false;
+    }
+
     public static async isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, season?: number): Promise<boolean> {
         if (aEpisode.season == bEpisode.season) {
             return true;
         } else if (aEpisode.season == season && bEpisode.season == season) {
+            return true;
+        } else if (!aEpisode.season && bEpisode.season == season) {
+            return true;
+        } else if (!bEpisode.season && aEpisode.season == season) {
+            return true;
+        }
+        return false;
+    }
+
+    public static async isDetailedEpisodeSameSeason(bEpisode: Episode, season?: number) {
+        if (bEpisode.season == season) {
+            return true;
+        } else if (!bEpisode.season) {
             return true;
         }
         return false;

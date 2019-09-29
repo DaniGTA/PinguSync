@@ -28,9 +28,16 @@ export default class Episode{
     public airDate?: Date;
     public lastProviderUpdate?: number;
     public rating?: number;
+    public provider?: string;
     public providerEpisodeId?: number | string;
     public mappedTo: EpisodeMapping[] = [];
 
+    /**
+     * Only giv
+     * @param episodeNumber 
+     * @param season season is only needed if its not the same season as the series.
+     * @param title 
+     */
     constructor(episodeNumber: number, season?: number, title?: EpisodeTitle[]) {
         this.season = season;
         this.episodeNumber = episodeNumber;
