@@ -16,28 +16,59 @@ export default class EpisodeComperator{
                 }
             }
         } catch (err) { }
-        const detailedEpisodesResults = await this.compareDetailedEpisodes(a, b);
+        const detailedEpisodesResults = await this.compareDetailedEpisodesList(a, b);
         result.matchAble += detailedEpisodesResults.matchAble;
         result.matches += detailedEpisodesResults.matches;
         return result;
     }
 
-    private static async compareDetailedEpisodes(a: Series, b: Series) {
+    private static async compareDetailedEpisodesList(a: Series, b: Series) {
         const result = new ComperatorResult();
         const aAllADetailedEpisodes = await a.getAllDetailedEpisodes();
+        const aSeriesSeason = await a.getSeason();
         const bAllDetailedEpisodes = await b.getAllDetailedEpisodes();
+        const bSeriesSeason = await b.getSeason(); 
+        let season = undefined;
+        if (aSeriesSeason.seasonNumber == bSeriesSeason.seasonNumber) {
+            season = aSeriesSeason.seasonNumber;
+        }
         for (const aEpisode of aAllADetailedEpisodes) {
             result.matchAble += 0.15;
             for (const bEpsiode of bAllDetailedEpisodes) {
-                if (aEpisode.season == bEpsiode.season && aEpisode.episodeNumber == bEpsiode.episodeNumber) {
+                if (await this.isEpisodeSameSeason(aEpisode,bEpsiode,season) && aEpisode.episodeNumber == bEpsiode.episodeNumber) {
                     result.matches += 0.15;
 
                     const episodeTitleResult = await this.compareEpisodeTitle(aEpisode, bEpsiode);
                     result.matchAble += episodeTitleResult.matchAble;
                     result.matches += episodeTitleResult.matches;
                 }
+
             }
         }
+        return result;
+    }
+    /**
+     * 
+     * @param aEpisode 
+     * @param bEpsiode 
+     * @param season 
+     * @param upshift add the number to the episode number from episode a. This make ep number 1 and ep number 2 match able when upshift set to 1
+     */
+    public static async compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, season?: number,upshift:number = 0): Promise<ComperatorResult> {
+        const result = new ComperatorResult();
+        result.matchAble++;
+        if (aEpisode.episodeNumber + upshift == bEpsiode.episodeNumber) {
+            result.matches++;
+        }
+        result.matchAble += 2;
+        if (await this.isEpisodeSameSeason(aEpisode, bEpsiode, season)) {
+            result.matchAble += 2;
+        }
+
+        const episodeTitleResult = await this.compareEpisodeTitle(aEpisode, bEpsiode);
+        result.matchAble += episodeTitleResult.matchAble*3;
+        result.matches += episodeTitleResult.matches*3;
+
         return result;
     }
 
@@ -94,16 +125,45 @@ export default class EpisodeComperator{
             return true;
         } else if (!bEpisode.season && aEpisode.season == season) {
             return true;
+        } else if (!season && !aEpisode.season && bEpisode.season == 1) {
+            return true;
+        } else if (!season && !bEpisode.season && aEpisode.season == 1) {
+            return true;
         }
         return false;
     }
 
-    public static async isDetailedEpisodeSameSeason(bEpisode: Episode, season?: number) {
-        if (bEpisode.season == season) {
+    public static async isDetailedEpisodeSameSeason(episode: Episode, season?: number) {
+        if (episode.season == season) {
             return true;
-        } else if (!bEpisode.season) {
+        } else if (!episode.season && (!season || season == 1)) {
+            return true;
+        } else if (!season && episode.season == 1) {
             return true;
         }
+        return false;
+    }
+
+    public static async isEpisodeASeasonHigher(aEpisode: Episode, bEpisode:Episode, season?: number): Promise<boolean>  {
+        if (aEpisode.season && bEpisode.season) {
+            return aEpisode.season > bEpisode.season;
+        } else if (aEpisode.season) {
+            if (season) {
+                return aEpisode.season < season;
+            } else {
+                if (aEpisode.season == 1) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } else if(bEpisode.season){
+            if (season) {
+                return bEpisode.season < season;
+            } else {
+                return false;
+            }
+        } 
         return false;
     }
 }

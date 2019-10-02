@@ -5,6 +5,8 @@ import EpisodeMapping from '../../controller/objects/meta/episode/episode-mappin
 import EpisodeComperator from '../comperators/episode-comperator';
 import ListController from '../../controller/list-controller';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import listHelper from '../list-helper';
+import sortHelper from '../sort-helper';
 
 export default class EpisodeMappingHelper{
     
@@ -94,4 +96,29 @@ export default class EpisodeMappingHelper{
         }
         return episode;
     }
+
+    public async sortingEpisodeListByEpisodeNumber(episodes: Episode[],season?:number): Promise<Episode[]> {
+        return sortHelper.quickSort(episodes, async (a, b) => await this.sortingEpisodeComperator(a, b, season));
+    }
+
+    public async sortingEpisodeComperator(a: Episode, b: Episode, season?: number): Promise<number> {
+        if ((a.type == EpisodeType.SPECIAL && b.type != EpisodeType.SPECIAL)) {
+            return 1;
+        } else if (b.type == EpisodeType.SPECIAL && a.type != EpisodeType.SPECIAL) {
+            return -1;
+        }
+        if (await EpisodeComperator.isEpisodeSameSeason(a, b, season)) {
+            if (a.episodeNumber > b.episodeNumber) {
+                return 1
+            } else {
+                return -1
+            }
+        } else if (await EpisodeComperator.isEpisodeASeasonHigher(a, b, season)) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+
 }
