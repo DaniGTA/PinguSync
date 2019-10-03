@@ -66,8 +66,8 @@ export default class EpisodeComperator{
         }
 
         const episodeTitleResult = await this.compareEpisodeTitle(aEpisode, bEpsiode);
-        result.matchAble += episodeTitleResult.matchAble*3;
-        result.matches += episodeTitleResult.matches*3;
+        result.matchAble += episodeTitleResult.matchAble*4;
+        result.matches += episodeTitleResult.matches*4;
 
         return result;
     }
@@ -78,7 +78,7 @@ export default class EpisodeComperator{
             for (const aEpisodeTitle of aEpisode.title) {
                 result.matchAble++;
                 for (const bEpisodeTitle of bEpsiode.title) {
-                    if (aEpisodeTitle == bEpisodeTitle) {
+                    if (aEpisodeTitle.text == bEpisodeTitle.text) {
                        result.matches++;
                     }
                 }

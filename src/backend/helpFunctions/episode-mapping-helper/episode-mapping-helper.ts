@@ -5,39 +5,41 @@ import EpisodeMapping from '../../controller/objects/meta/episode/episode-mappin
 import EpisodeComperator from '../comperators/episode-comperator';
 import ListController from '../../controller/list-controller';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
-import listHelper from '../list-helper';
 import sortHelper from '../sort-helper';
+import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 
 export default class EpisodeMappingHelper{
     
     async generateEpisodeMapping(series: Series): Promise<Episode[]> {
         const providers = series.getAllProviderLocalDatas();
         const season = (await series.getSeason()).seasonNumber;
-
-        for (const providerA of providers) {
-            if (providerA.episodes) {
-                if (providerA.episodes > await providerA.getDetailedEpisodeLength()) {
-                    const generatedEpisodes = await this.generateMissingEpisodes(providerA,season);
-                    providerA.detailEpisodeInfo.push(...generatedEpisodes);
+        for (const provider of providers) {
+             if (provider.episodes) {
+                if (provider.episodes > await provider.getDetailedEpisodeLength()) {
+                    const generatedEpisodes = await this.generateMissingEpisodes(provider,season);
+                    provider.detailEpisodeInfo.push(...generatedEpisodes);
                 }
             }
+        }
+        for (const providerA of providers) {
+           
             let mappedCounter = 0;
             for (let detailedEpisodeA of providerA.detailEpisodeInfo) {
                 const mappingA = new EpisodeMapping(detailedEpisodeA, providerA);
                 for (const providerB of providers) {
-                   
-                    if (await this.episodeIsAlreadyMapped(detailedEpisodeA, providerB) || providerA.provider == providerB.provider) {
+                     if (await this.episodeIsAlreadyMapped(detailedEpisodeA, providerB) || providerA.provider == providerB.provider) {
                         continue;
                     }
-                    for (let detailedEpisodeB of providerB.detailEpisodeInfo) {
-                        const mappingB = new EpisodeMapping(detailedEpisodeB, providerB);
-                        if (await EpisodeComperator.isSameEpisode(detailedEpisodeA, detailedEpisodeB, season)) {
-                            detailedEpisodeA = await this.addMappingToEpisode(mappingB, detailedEpisodeA);
-                            detailedEpisodeB = await this.addMappingToEpisode(mappingA, detailedEpisodeB);
-                            mappedCounter++;
-                            break;
-                        }
+                    const ratedEquality:EpisodeRatedEqualityContainer[] = [];
+                    for (let detailedEpisodeB of providerB.detailEpisodeInfo) {                        
+                        const result = await EpisodeComperator.compareDetailedEpisode(detailedEpisodeA, detailedEpisodeB, season);
+                        const container = new EpisodeRatedEqualityContainer(result, detailedEpisodeB);
+                        ratedEquality.push(container);
                     }
+                    const episodeB = await this.getBestResultFromEpisodeRatedEqualityContainer(ratedEquality);
+                    const mappingB = new EpisodeMapping(episodeB, providerB);
+                    detailedEpisodeA.mappedTo.push(mappingB);
+                    episodeB.mappedTo.push(mappingA);
                 }
             }
             if (providerA.detailEpisodeInfo.length < mappedCounter && ListController.instance) {
@@ -47,6 +49,11 @@ export default class EpisodeMappingHelper{
         }
         const episodes = providers.flatMap(x => x.detailEpisodeInfo);
         return episodes;
+    }
+
+    private async getBestResultFromEpisodeRatedEqualityContainer(ratedEquality:EpisodeRatedEqualityContainer[]): Promise<Episode> {
+        const sorted = await sortHelper.quickSort(ratedEquality, (a, b) => b.result.matches - a.result.matches);
+        return sorted[0].episode;
     }
 
     private async generateMissingEpisodes(provider: ProviderLocalData, season?: number): Promise<Episode[]> {
