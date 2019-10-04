@@ -1,7 +1,7 @@
 import Episode from './episode';
 import ProviderLocalData from '../../../../controller/interfaces/provider-local-data';
 
-export default class EpisodeMapping{
+export default class EpisodeMapping {
     public static readonly currentMappingVersion = 1;
 
     public readonly id: string;

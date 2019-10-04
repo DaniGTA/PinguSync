@@ -7,7 +7,7 @@ import EpisodeMapping from './episode-mapping';
 /**
  * Contains detail infos about a episode.
  */
-export default class Episode{
+export default class Episode {
     public readonly season?: number;
     public readonly episodeNumber: number;
     public readonly lastUpdate: number;
@@ -44,5 +44,18 @@ export default class Episode{
         this.title = title;
         this.lastUpdate = new Date().getTime();
         this.id = stringHelper.randomString(20);
+    }
+
+    async addMapping(episodeMapping: EpisodeMapping) {
+        let canBeMapped = true;
+        for (const mapping of this.mappedTo) {
+            if (mapping.id == episodeMapping.id || episodeMapping.id == this.id) {
+                canBeMapped = false;
+                break;
+            }
+        }
+        if (canBeMapped) {
+            this.mappedTo.push(episodeMapping);
+        }
     }
 }
