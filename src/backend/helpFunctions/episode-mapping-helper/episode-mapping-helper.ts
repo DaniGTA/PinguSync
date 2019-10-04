@@ -58,16 +58,18 @@ export default class EpisodeMappingHelper {
                     tempRating.push(...uniqResults);
                 }
                 const combineRatings: EpisodeRatedEqualityContainer[] = [...ratings, ...tempRating];
-                const result = await this.getBestResultFromEpisodeRatedEqualityContainer(combineRatings);
-                if (await this.isSameEpisodeID(episode, result.episodeA)) {
-                    if (result.providerB) {
-                        const mappingB = new EpisodeMapping(result.episodeB, result.providerB);
-                        episode.addMapping(mappingB);
-                    }
-                } else if (await this.isSameEpisodeID(episode, result.episodeB)) {
-                    if (result.providerA) {
-                        const mappingB = new EpisodeMapping(result.episodeA, result.providerA);
-                        episode.addMapping(mappingB);
+                if (combineRatings.length != 0) {
+                    const result = await this.getBestResultFromEpisodeRatedEqualityContainer(combineRatings);
+                    if (await this.isSameEpisodeID(episode, result.episodeA)) {
+                        if (result.providerB) {
+                            const mappingB = new EpisodeMapping(result.episodeB, result.providerB);
+                            episode.addMapping(mappingB);
+                        }
+                    } else if (await this.isSameEpisodeID(episode, result.episodeB)) {
+                        if (result.providerA) {
+                            const mappingB = new EpisodeMapping(result.episodeA, result.providerA);
+                            episode.addMapping(mappingB);
+                        }
                     }
                 }
 
@@ -179,11 +181,13 @@ export default class EpisodeMappingHelper {
         const a = aEpisode.result.matches;
         const b = bEpisode.result.matches;
         if (a > b) {
-            return 1;
-        } else if (b > a) {
             return -1;
+        } else if (b > a) {
+            return 1;
         } else if (aEpisode.result.matchAble > bEpisode.result.matchAble) {
             return 1;
+        } else if (bEpisode.result.matchAble > aEpisode.result.matchAble) {
+            return -1;
         } else {
             return 0;
         }

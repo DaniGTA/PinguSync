@@ -374,9 +374,9 @@ describe('episode mapping helper tests', () => {
             strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
             strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
 
-            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo2.id);
-            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo3.id);
-            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo4.id);
+            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo2.id, `Episode A1 (${aEpisodeInfo1.id}) should have id mapped to Episode B2 (${bEpisodeInfo1.id})`);
+            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo3.id, `Episode A2 (${aEpisodeInfo1.id}) should have id mapped to Episode B3 (${bEpisodeInfo1.id})`);
+            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo4.id, `Episode A3 (${aEpisodeInfo1.id}) should have id mapped to Episode B4 (${bEpisodeInfo1.id})`);
 
             strictEqual(bEpisodeInfo1.mappedTo.length, 0, 'Episode B1 mapping length should be 0');
             strictEqual(bEpisodeInfo2.mappedTo.length, 1, 'Episode B2 mapping length should be 1');
