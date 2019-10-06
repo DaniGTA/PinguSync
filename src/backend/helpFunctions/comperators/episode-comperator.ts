@@ -59,10 +59,10 @@ export default class EpisodeComperator{
         result.matchAble++;
         if (aEpisode.episodeNumber + upshift == bEpsiode.episodeNumber) {
             result.matches++;
-        }
-        result.matchAble += 2;
-        if (await this.isEpisodeSameSeason(aEpisode, bEpsiode, season)) {
             result.matchAble += 2;
+            if (await this.isEpisodeSameSeason(aEpisode, bEpsiode, season)) {
+                result.matchAble += 2;
+            }
         }
 
         const episodeTitleResult = await this.compareEpisodeTitle(aEpisode, bEpsiode);

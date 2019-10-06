@@ -374,9 +374,9 @@ describe('episode mapping helper tests', () => {
             strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
             strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
 
-            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo2.id, `Episode A1 (${aEpisodeInfo1.id}) should have id mapped to Episode B2 (${bEpisodeInfo1.id})`);
-            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo3.id, `Episode A2 (${aEpisodeInfo1.id}) should have id mapped to Episode B3 (${bEpisodeInfo1.id})`);
-            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo4.id, `Episode A3 (${aEpisodeInfo1.id}) should have id mapped to Episode B4 (${bEpisodeInfo1.id})`);
+            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo2.id, `Episode A1 (${aEpisodeInfo1.id}) should have id mapped to Episode B2 (${bEpisodeInfo2.id})`);
+            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo3.id, `Episode A2 (${aEpisodeInfo2.id}) should have id mapped to Episode B3 (${bEpisodeInfo3.id})`);
+            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo4.id, `Episode A3 (${aEpisodeInfo3.id}) should have id mapped to Episode B4 (${bEpisodeInfo4.id})`);
 
             strictEqual(bEpisodeInfo1.mappedTo.length, 0, 'Episode B1 mapping length should be 0');
             strictEqual(bEpisodeInfo2.mappedTo.length, 1, 'Episode B2 mapping length should be 1');
@@ -396,9 +396,9 @@ describe('episode mapping helper tests', () => {
 
         const aProvider = new InfoProviderLocalData('testA');
         aProvider.targetSeason = 1;
-        aProvider.detailEpisodeInfo.push(new Episode(1));
+        aProvider.detailEpisodeInfo.push(new Episode(1, undefined, [new EpisodeTitle('First round')]));
         aProvider.detailEpisodeInfo.push(new Episode(2, undefined, [new EpisodeTitle('Special round')]));
-        aProvider.detailEpisodeInfo.push(new Episode(3));
+        aProvider.detailEpisodeInfo.push(new Episode(3,undefined, [new EpisodeTitle('Second round')]));
 
         aSeries.addProviderDatas(aProvider);
 
@@ -407,8 +407,8 @@ describe('episode mapping helper tests', () => {
         const bProvider = new ListProviderLocalData('testB');
         bProvider.targetSeason = 1;
         bProvider.detailEpisodeInfo.push(new Episode(1, 1, [new EpisodeTitle('Special round')]));
-        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(2, 1, [new EpisodeTitle('First round')]));
+        bProvider.detailEpisodeInfo.push(new Episode(3, 1, [new EpisodeTitle('Second round')]));
         bProvider.detailEpisodeInfo.push(new Episode(4, 1));
         aSeries.addProviderDatas(bProvider);
 
