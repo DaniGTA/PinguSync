@@ -27,7 +27,7 @@ describe('episode mapping helper tests', () => {
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     })
-    it('should map same episodes length from different providers', async () => {
+    it('should map same episodes length from 2 providers', async () => {
         const aSeries = new Series();
 
         // A Site
@@ -84,6 +84,77 @@ describe('episode mapping helper tests', () => {
             strictEqual(bEpisodeInfo1.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1');
             strictEqual(bEpisodeInfo2.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2');
             strictEqual(bEpisodeInfo3.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3');
+        }
+    });
+
+    it('should map same episodes length from 3 providers', async () => {
+        const aSeries = new Series();
+
+        // A Site
+
+        const aProvider = new InfoProviderLocalData('testA');
+        aProvider.targetSeason = 1;
+        aProvider.detailEpisodeInfo.push(new Episode(1));
+        aProvider.detailEpisodeInfo.push(new Episode(2));
+        aProvider.detailEpisodeInfo.push(new Episode(3));
+
+        aSeries.addProviderDatas(aProvider);
+
+        // B Site
+
+        const bProvider = new ListProviderLocalData('testB');
+        bProvider.targetSeason = 1;
+        bProvider.detailEpisodeInfo.push(new Episode(1, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
+
+        aSeries.addProviderDatas(bProvider);
+
+
+        // C Site
+
+        const cProvider = new ListProviderLocalData('testC');
+        cProvider.targetSeason = 1;
+        cProvider.detailEpisodeInfo.push(new Episode(1, 1));
+        cProvider.detailEpisodeInfo.push(new Episode(2, 1));
+        cProvider.detailEpisodeInfo.push(new Episode(3, 1));
+
+        aSeries.addProviderDatas(cProvider);
+
+        // Testing
+
+        const episodeMappingInstance = new EpisodeMappingHelper();
+        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+
+        // Extract results.
+
+        const aEpisodeInfo1 = result.find(x => x.id == aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find(x => x.id == aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find(x => x.id == aProvider.detailEpisodeInfo[2].id);
+
+        const bEpisodeInfo1 = result.find(x => x.id == bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find(x => x.id == bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find(x => x.id == bProvider.detailEpisodeInfo[2].id);
+
+        const cEpisodeInfo1 = result.find(x => x.id == cProvider.detailEpisodeInfo[0].id);
+        const cEpisodeInfo2 = result.find(x => x.id == cProvider.detailEpisodeInfo[1].id);
+        const cEpisodeInfo3 = result.find(x => x.id == cProvider.detailEpisodeInfo[2].id);
+
+        // Result checking
+        if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && cEpisodeInfo1 && cEpisodeInfo2 && cEpisodeInfo3)) {
+            fail('not all episodes found in the result');
+        } else {
+            strictEqual(aEpisodeInfo1.mappedTo.length, 2, 'Episode A1 mapping length should be 2');
+            strictEqual(aEpisodeInfo2.mappedTo.length, 2, 'Episode A2 mapping length should be 2');
+            strictEqual(aEpisodeInfo3.mappedTo.length, 2, 'Episode A3 mapping length should be 2');
+
+            strictEqual(bEpisodeInfo1.mappedTo.length, 2, 'Episode B1 mapping length should be 2');
+            strictEqual(bEpisodeInfo2.mappedTo.length, 2, 'Episode B2 mapping length should be 2');
+            strictEqual(bEpisodeInfo3.mappedTo.length, 2, 'Episode B3 mapping length should be 2');
+
+            strictEqual(cEpisodeInfo1.mappedTo.length, 2, 'Episode C1 mapping length should be 2');
+            strictEqual(cEpisodeInfo2.mappedTo.length, 2, 'Episode C2 mapping length should be 2');
+            strictEqual(cEpisodeInfo3.mappedTo.length, 2, 'Episode C3 mapping length should be 2');
         }
     });
 
@@ -164,6 +235,7 @@ describe('episode mapping helper tests', () => {
         const aProvider = new InfoProviderLocalData('testA');
         aProvider.targetSeason = 1;
         aProvider.episodes = 3;
+        aProvider.sequelIds.push(2);
 
         aSeries.addProviderDatas(aProvider);
 
@@ -186,6 +258,7 @@ describe('episode mapping helper tests', () => {
         const cProvider = new InfoProviderLocalData('testA');
         cProvider.targetSeason = 2;
         cProvider.episodes = 3;
+        cProvider.id = 2;
 
         sequelOfaSeries.addProviderDatas(cProvider);
 
@@ -196,6 +269,68 @@ describe('episode mapping helper tests', () => {
 
         // Result checking
         strictEqual(result.length, 6);
+        for (const episode of result) {
+            strictEqual(episode.mappedTo.length, 1);
+            strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);
+            notStrictEqual(episode.mappedTo[0].provider, episode.provider);
+        }
+    });
+
+        it('should map find unmapped episodes in the sequel of the sequel', async () => {
+        const aSeries = new Series();
+        const sequelOfaSeries = new Series();
+        const sequelOfSequelOfaSeries = new Series();
+
+        // A Site
+
+        const aProvider = new InfoProviderLocalData('testA');
+        aProvider.targetSeason = 1;
+        aProvider.episodes = 3;
+        aProvider.sequelIds.push(2);
+
+        aSeries.addProviderDatas(aProvider);
+
+        // B Site
+
+        const bProvider = new ListProviderLocalData('testB');
+        bProvider.targetSeason = 1;
+        bProvider.detailEpisodeInfo.push(new Episode(1));
+        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(4, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(5, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(6, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(7, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(8, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(9, 1));
+
+        aSeries.addProviderDatas(bProvider);
+
+        // Sequel
+
+        const cProvider = new InfoProviderLocalData('testA');
+        cProvider.targetSeason = 2;
+        cProvider.episodes = 3;
+        cProvider.id = 2;
+        cProvider.sequelIds.push(3);
+        sequelOfaSeries.addProviderDatas(cProvider);
+            
+        // Sequel 2
+        
+        const dProvider = new InfoProviderLocalData('testA');
+        dProvider.targetSeason = 3;
+        dProvider.episodes = 3;
+        dProvider.id = 3;
+
+        sequelOfSequelOfaSeries.addProviderDatas(dProvider);
+
+        // Testing
+        MainListManager['mainList'] = [sequelOfaSeries,sequelOfSequelOfaSeries]
+        const episodeMappingInstance = new EpisodeMappingHelper();
+        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+
+        // Result checking
+        strictEqual(result.length, 9);
         for (const episode of result) {
             strictEqual(episode.mappedTo.length, 1);
             strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);

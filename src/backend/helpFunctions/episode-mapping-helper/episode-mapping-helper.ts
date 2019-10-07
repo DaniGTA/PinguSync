@@ -11,7 +11,7 @@ import listHelper from '../list-helper';
 export default class EpisodeMappingHelper {
 
     async generateEpisodeMapping(series: Series): Promise<Episode[]> {
-        const providers = series.getAllProviderLocalDatas();
+        const providers = [...series.getAllProviderLocalDatas()];
         const season = (await series.getSeason()).seasonNumber;
         for (const provider of providers) {
             if (provider.episodes) {
@@ -24,6 +24,68 @@ export default class EpisodeMappingHelper {
 
         let ratedEquality: EpisodeRatedEqualityContainer[] = await this.getRatedEqulityOfEpisodes(providers,season);
 
+        await this.calculateMapping(providers, ratedEquality, season);
+        const number = await this.getNumberOfUnmappedEpisodesFromProviders(providers)
+        if (number != 0) {
+            let sequel:Series | null = (await series.getSequel()).foundedSeries;
+            if (sequel) {
+                do {
+                    const calcSequelProvider = [];
+                    for (const provider of providers) {
+                        if (await this.getNumberOfUnmappedEpisodesFromProvider(provider, await this.getProviderLength(providers)) == 0) {
+                            const sequelProvider = sequel.getAllProviderLocalDatas().find(x => x.provider == provider.provider);
+                            if (sequelProvider) {
+                                calcSequelProvider.push(sequelProvider);
+                                await this.calculateMapping([...providers,...calcSequelProvider], [], (await sequel.getSeason()).seasonNumber);
+                            }
+                        }
+                    }
+                    providers.push(...calcSequelProvider);
+                    const nextSequel:Series | null = (await sequel.getSequel()).foundedSeries;
+                    if (nextSequel) {
+                        sequel = nextSequel;
+                    } else {
+                        break;
+                    }
+                } while (await this.getNumberOfUnmappedEpisodesFromProviders(sequel.getAllProviderLocalDatas()) != 0)
+            }
+        }
+
+        const episodes = providers.flatMap(x => x.detailEpisodeInfo);
+        return episodes;
+    }
+
+    private async getNumberOfUnmappedEpisodesFromProviders(providers:ProviderLocalData[]):Promise<number> {
+        let unmappedEpisode: number = 0;
+        for (const provider of providers) {
+            unmappedEpisode += await this.getNumberOfUnmappedEpisodesFromProvider(provider,await this.getProviderLength(providers))
+        }
+        return unmappedEpisode;
+    }
+
+    private async getNumberOfUnmappedEpisodesFromProvider(provider: ProviderLocalData,providersLength=0):Promise<number>  {
+         let unmappedEpisode: number = 0; 
+        for (const detailEpisodeinfo of provider.detailEpisodeInfo) {
+                if (detailEpisodeinfo.mappedTo.length != providersLength -1) {
+                    unmappedEpisode++;
+                }
+        }
+        return unmappedEpisode;
+    }
+    
+
+    private async getProviderLength(providers: ProviderLocalData[]):Promise<number> {
+        const differentProviders = [...new Set(providers.map(x => x.provider))];
+        return differentProviders.length;
+    }
+
+    /**
+     * This function will create the mappings between same episodes from different providers.
+     * @param providers the providers that should get mapped.
+     * @param ratedEquality the first ratings.
+     * @param season the season of the series.
+     */
+    private async calculateMapping(providers: ProviderLocalData[], ratedEquality: EpisodeRatedEqualityContainer[],season?:number): Promise<ProviderLocalData[]> {
         for (const provider of providers) {
             let currentDiff = 0;
             for (const episode of provider.detailEpisodeInfo) {
@@ -33,64 +95,70 @@ export default class EpisodeMappingHelper {
                         continue;
                     }
                 }
-                const ratings: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
-                const tempRating: EpisodeRatedEqualityContainer[] = []
-                for (const rating of ratings) {
-                    let mappingCandidate = rating.episodeA;
-                    if (await this.isSameEpisodeID(rating.episodeA, episode)) {
-                        mappingCandidate = rating.episodeB;
-                    }
-                    const mappingCandidateRatings = await this.getAllEpisodeRelatedRating(mappingCandidate, ratedEquality);
-                    const uniqResults = mappingCandidateRatings.filter(a => this.filterOutRatingsThatAreAlreadyThere(ratings,a,provider.provider));
-                    tempRating.push(...uniqResults);
-                }
-                const combineRatings: EpisodeRatedEqualityContainer[] = [...ratings, ...tempRating];
+                const combineRatings = await this.getAllRelatedRatings(episode, provider, ratedEquality, season);
                 if (combineRatings.length != 0) {
-                    const result = await this.getBestResultFromEpisodeRatedEqualityContainer(combineRatings);
-                    if (await this.isSameEpisodeID(episode, result.episodeA)) {
-                        if (result.providerB) {
-                            const mappingB = new EpisodeMapping(result.episodeB, result.providerB);
-                            await episode.addMapping(mappingB);
+                    const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings,await this.getProviderLength(providers));
+                    for (const result of results) {
+                        
+                    
+                        if (await this.isSameEpisodeID(episode, result.episodeA)) {
+                            if (result.providerB) {
+                                const mappingB = new EpisodeMapping(result.episodeB, result.providerB);
+                                await episode.addMapping(mappingB);
 
-                            const mapping = new EpisodeMapping(episode, provider);
-                            await this.updateMappingInProvider(result.episodeB, result.providerB, mapping, providers);
-                            const diff = await this.getEpisodeNumberDifference(episode, result.episodeB);
-                            if (diff != currentDiff) {
-                                currentDiff = diff;
-                                ratedEquality = [];
-                            } else {
-                                const ratingsA: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
-                                const ratingsB: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(result.episodeB, ratedEquality);
-                                await listHelper.removeEntrys(ratedEquality, ...ratingsA,...ratingsB);
+                                const mapping = new EpisodeMapping(episode, provider);
+                                await this.updateMappingInProvider(result.episodeB, result.providerB, mapping, providers);
+                                const diff = await this.getEpisodeNumberDifference(episode, result.episodeB);
+                                if (diff != currentDiff) {
+                                    currentDiff = diff;
+                                    ratedEquality = [];
+                                } else {
+                                    const ratingsA: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
+                                    const ratingsB: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(result.episodeB, ratedEquality);
+                                    await listHelper.removeEntrys(ratedEquality, ...ratingsA, ...ratingsB);
+                                }
                             }
-                        }
-                    } else if (await this.isSameEpisodeID(episode, result.episodeB)) {
-                        if (result.providerA) {
-                            const mappingB = new EpisodeMapping(result.episodeA, result.providerA);
-                            await episode.addMapping(mappingB);
+                        } else if (await this.isSameEpisodeID(episode, result.episodeB)) {
+                            if (result.providerA) {
+                                const mappingB = new EpisodeMapping(result.episodeA, result.providerA);
+                                await episode.addMapping(mappingB);
 
-                            const mapping = new EpisodeMapping(episode, provider);
-                            await this.updateMappingInProvider(result.episodeB, result.providerA, mapping, providers);
-                            const diff = await this.getEpisodeNumberDifference(episode, result.episodeB);
-                            if (diff != currentDiff) {
-                                currentDiff = diff;
-                                ratedEquality = [];
-                            } else {
-                                const ratingsA: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
-                                const ratingsB: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(result.episodeA, ratedEquality);
-                                await listHelper.removeEntrys(ratedEquality, ...ratingsA,...ratingsB);
+                                const mapping = new EpisodeMapping(episode, provider);
+                                await this.updateMappingInProvider(result.episodeB, result.providerA, mapping, providers);
+                                const diff = await this.getEpisodeNumberDifference(episode, result.episodeB);
+                                if (diff != currentDiff) {
+                                    currentDiff = diff;
+                                    ratedEquality = [];
+                                } else {
+                                    const ratingsA: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
+                                    const ratingsB: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(result.episodeA, ratedEquality);
+                                    await listHelper.removeEntrys(ratedEquality, ...ratingsA, ...ratingsB);
+                                }
                             }
                         }
                     }
                 } else {
                     
                 }
-
             }
         }
+        return providers;
+    }
 
-        const episodes = providers.flatMap(x => x.detailEpisodeInfo);
-        return episodes;
+    private async getAllRelatedRatings(episode:Episode,provider: ProviderLocalData, ratedEquality:EpisodeRatedEqualityContainer[],season?:number): Promise<EpisodeRatedEqualityContainer[]> {
+
+        const ratings: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
+        const tempRating: EpisodeRatedEqualityContainer[] = []
+        for (const rating of ratings) {
+            let mappingCandidate = rating.episodeA;
+            if (await this.isSameEpisodeID(rating.episodeA, episode)) {
+                mappingCandidate = rating.episodeB;
+            }
+            const mappingCandidateRatings = await this.getAllEpisodeRelatedRating(mappingCandidate, ratedEquality);
+            const uniqResults = mappingCandidateRatings.filter(a => this.filterOutRatingsThatAreAlreadyThere(ratings,a,provider.provider));
+            tempRating.push(...uniqResults);
+        }
+        return [...ratings, ...tempRating];
     }
 
     private async getMaxEpisodeShiftingDifference(providerA: ProviderLocalData, providerB: ProviderLocalData):Promise<number>  {
@@ -214,12 +282,23 @@ export default class EpisodeMappingHelper {
         return difference;
     }
 
-    private async getBestResultFromEpisodeRatedEqualityContainer(ratedEquality: EpisodeRatedEqualityContainer[]): Promise<EpisodeRatedEqualityContainer> {
+    /**
+     * 
+     * @param ratedEquality 
+     * @param numberOfProviders default is 2
+     */
+    private async getBestResultsFromEpisodeRatedEqualityContainer(ratedEquality: EpisodeRatedEqualityContainer[],numberOfProviders = 2): Promise<EpisodeRatedEqualityContainer[]> {
         const sorted = await sortHelper.quickSort(ratedEquality, async (a, b) => await this.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
-        if (sorted[0]) {
-            if (sorted[0].result.matches != 0) {
-                return sorted[0];
+        const results = [];
+        for (let index = 0; index < numberOfProviders-1; index++) {
+           if (sorted[index]) {
+                if (sorted[index].result.matches != 0) {
+                    results.push(sorted[index]);
+                }
             }
+        }
+        if (results.length != 0) {
+            return results;
         }
         throw 'no results in rated equality container'
     }

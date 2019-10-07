@@ -32,6 +32,7 @@ export default class EpisodeComperator{
         if (aSeriesSeason.seasonNumber == bSeriesSeason.seasonNumber) {
             season = aSeriesSeason.seasonNumber;
         }
+        
         for (const aEpisode of aAllADetailedEpisodes) {
             result.matchAble += 0.15;
             for (const bEpsiode of bAllDetailedEpisodes) {

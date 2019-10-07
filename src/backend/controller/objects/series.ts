@@ -221,7 +221,13 @@ export default class Series extends SeriesProviderExtension {
         return new RelationSearchResults(null, ...searchedProviders);
     }
 
-    public async getSequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+    public async getSequel(searchInList?: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+        if (!searchInList && ListController.instance) {
+            searchInList = await ListController.instance.getMainList();
+        }
+        if (!searchInList) {
+            throw 'no searchList for sequel search';
+        }
         console.log('[Season] [Serve]: Last Sequel')
         const searchedProviders: ProviderLocalData[] = [];
         try {
