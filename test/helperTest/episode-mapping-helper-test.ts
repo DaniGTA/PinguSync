@@ -165,7 +165,7 @@ describe('episode mapping helper tests', () => {
 
         const aProvider = new InfoProviderLocalData('testA');
         aProvider.targetSeason = 1;
-        aProvider.episodes = 3;
+        aProvider.episodes = 500;
 
         aSeries.addProviderDatas(aProvider);
 
@@ -173,9 +173,17 @@ describe('episode mapping helper tests', () => {
 
         const bProvider = new ListProviderLocalData('testB');
         bProvider.targetSeason = 1;
-        bProvider.episodes = 3;
+        bProvider.episodes = 500;
 
         aSeries.addProviderDatas(bProvider);
+
+        // C Site
+
+        const cProvider = new ListProviderLocalData('testC');
+        cProvider.targetSeason = 1;
+        cProvider.episodes = 500;
+
+        aSeries.addProviderDatas(cProvider);
 
         // Testing
 
@@ -183,9 +191,9 @@ describe('episode mapping helper tests', () => {
         const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
 
         // Result checking
-        strictEqual(result.length, 6);
+        strictEqual(result.length, 1500);
         for (const episode of result) {
-            strictEqual(episode.mappedTo.length, 1, episode.episodeNumber + '');
+            strictEqual(episode.mappedTo.length, 2, episode.episodeNumber + '');
             strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);
             notStrictEqual(episode.mappedTo[0].provider, episode.provider);
         }

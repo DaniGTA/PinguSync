@@ -20,6 +20,7 @@ import { NameType } from './meta/name-type';
 import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
 import Episode from './meta/episode/episode';
+import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -48,7 +49,7 @@ export default class Series extends SeriesProviderExtension {
         this.firstSeasonSeriesId = undefined;
     }
 
-    async getSlugNames(): Promise<Name[]>{
+    async getSlugNames(): Promise<Name[]> {
         const slugs = [];
         const names = await this.getAllNames();
         for (const name of names) {
@@ -76,7 +77,7 @@ export default class Series extends SeriesProviderExtension {
         for (const provider of this.getAllProviderLocalDatas()) {
             try {
                 names.push(...provider.getAllNames());
-            }catch(err){}
+            } catch (err) { }
         }
         return names;
     }
@@ -174,10 +175,10 @@ export default class Series extends SeriesProviderExtension {
      * Returns the Season of the Anime based on Season entry or name.
      * @hasTest
      */
-    public async getSeason(searchMode:SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
+    public async getSeason(searchMode: SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
         console.log('[Season] [Serve]: Serve Season')
         if ((!this.cachedSeason || this.cachedSeason === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
-            const result = await seasonHelper.searchSeasonValue(this,searchMode, searchInList);
+            const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
             if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                 // UKNOWN SEASON
                 if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
@@ -186,7 +187,7 @@ export default class Series extends SeriesProviderExtension {
                     console.log('Temp Series Successfull added.');
                 }
                 this.cachedSeason = -2;
-                return new Season(undefined,SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+                return new Season(undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
             } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
                 this.cachedSeason = -1;
             } else {
@@ -195,7 +196,7 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         if (this.cachedSeason == -1) {
-            return new Season(undefined,SeasonError.CANT_GET_SEASON);
+            return new Season(undefined, SeasonError.CANT_GET_SEASON);
         }
         return new Season(this.cachedSeason);
     }
@@ -389,12 +390,14 @@ export default class Series extends SeriesProviderExtension {
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
         console.log('Merged Providers');
 
-        await newAnime.getSeason(SeasonSearchMode.ALL,undefined, allowAddNewEntry);
+        await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
         console.log('Calculated Season');
         await newAnime.getCanSync();
 
         await newAnime.getMediaType();
-       
+
+        await new EpisodeMappingHelper().generateEpisodeMapping(newAnime);
+
         if (this.lastInfoUpdate < anime.lastInfoUpdate) {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;
         } else {
@@ -604,7 +607,7 @@ export default class Series extends SeriesProviderExtension {
         collectedMediaTypes.push(...await this.getAllMediaTypesFromTitle());
 
         if (collectedMediaTypes.length === 0) {
-              this.cachedMediaType = MediaType.UNKOWN;
+            this.cachedMediaType = MediaType.UNKOWN;
             return MediaType.UNKOWN;
         } else {
             const result = await listHelper.findMostFrequent(collectedMediaTypes);
@@ -635,7 +638,7 @@ export default class Series extends SeriesProviderExtension {
      * Get from all providers the release date.
      * They can have difference.
      */
-    async getAllReleaseYears(): Promise<number[]>{
+    async getAllReleaseYears(): Promise<number[]> {
         const collectedReleaseYears: number[] = [];
         for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.releaseYear) {
