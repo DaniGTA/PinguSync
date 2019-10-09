@@ -4,7 +4,7 @@ import listHelper from '../../src/backend/helpFunctions/list-helper';
 import WatchProgress from '../../src/backend/controller/objects/meta/watch-progress';
 import Name from '../../src/backend/controller/objects/meta/name';
 
-describe('listHelperTest', () => {
+describe('List Helper', () => {
     it('should clean array', async () => {
         var arr = await listHelper.cleanArray([null, undefined, ''])
         assert.equal(arr.length, 0);

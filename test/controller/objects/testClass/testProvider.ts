@@ -21,6 +21,11 @@ export default class TestProvider implements ListProvider {
     removeEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }
+
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
+    }
+
     version = 1;
     hasUniqueIdForSeasons = false;
     providerName: string = "";
@@ -29,7 +34,7 @@ export default class TestProvider implements ListProvider {
     userData: UserData = {} as UserData;
     supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
 
-    constructor(providerName: string, loggedIn: boolean = true,hasUniqueIdForSeasons :boolean = false) {
+    constructor(providerName: string, loggedIn: boolean = true, hasUniqueIdForSeasons: boolean = false) {
         this.providerName = providerName;
         this.loggedIn = loggedIn;
         this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;

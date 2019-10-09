@@ -14,6 +14,7 @@ export default new class TitleCheckHelper {
             for (let name of aNameList) {
                 try {
                     var name2 = await stringHelper.cleanString(name);
+                    var name2 = await this.removeMediaTypeFromTitle(name2);
                     name2 = await this.removeSeasonMarkesFromTitle(name2);
                     if (name2 != name) {
                         aNameList.push(name2);
@@ -25,6 +26,7 @@ export default new class TitleCheckHelper {
             for (let name of bNameList) {
                 try {
                     var name2 = await stringHelper.cleanString(name);
+                    var name2 = await this.removeMediaTypeFromTitle(name2);
                     name2 = await this.removeSeasonMarkesFromTitle(name2);
                     if (name2 != name) {
                         bNameList.push(name2);
@@ -144,36 +146,37 @@ export default new class TitleCheckHelper {
         throw 'NoName';
     }
 
-    public async getMediaTypeFromTitle(title: string): Promise<MediaType>{
-        if(title.match(/(:|: | )Movie(\W|$|\_)/)){
+    public async getMediaTypeFromTitle(title: string): Promise<MediaType> {
+        if (title.match(/(:|: | )Movie(\W|$|\_)/)) {
             return MediaType.MOVIE;
         }
 
-        if(title.match(/(:|: | )Gekijouban(\W|$|\_)/)){
+        if (title.match(/(:|: | )Gekijouban(\W|$|\_)/)) {
             return MediaType.MOVIE;
         }
 
 
-        if(title.match(/(:|: | )Specials(\W|$|\_)/)){
+        if (title.match(/(:|: | )Specials(\W|$|\_)/)) {
             return MediaType.SPECIAL;
         }
 
-        if(title.match(/(:|: | )Special(\W|$|\_)/)){
+        if (title.match(/(:|: | )Special(\W|$|\_)/)) {
             return MediaType.SPECIAL;
         }
 
-        if(title.match(/(:|: | )OVA(\W|$|\_)/)){
+        if (title.match(/(:|: | )OVA(\W|$|\_)/)) {
             return MediaType.SPECIAL;
         }
-        
+
         return MediaType.UNKOWN;
     }
 
-    public async removeMediaTypeFromTitle(title: string): Promise<string>{
+    public async removeMediaTypeFromTitle(title: string): Promise<string> {
+        title = title.replace(/ Movie:/g, ':');
         title = title.replace(/Movie/g, '');
         title = title.replace(/Specials/g, '');
         title = title.replace(/Special/g, '');
-        title = title.replace(/Gekijouban/g, '');
+        title = title.replace(/ Gekijouban:/g, ':');
         title = title.replace(/Gekijouban/g, '');
         title = title.replace(/:\s*$/gm, '');
         return title.trim();

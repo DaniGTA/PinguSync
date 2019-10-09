@@ -8,14 +8,14 @@ import Name from '../../../src/backend/controller/objects/meta/name';
 import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 
-describe('Trakt Tests', () => {
+describe('Provider: Trakt | Tests runs', () => {
     const traktProvider = new TraktProvider();
 
     before(() => {
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
     })
-    
+
     it('should get a series (1/5)', async () => {
 
 
@@ -32,7 +32,7 @@ describe('Trakt Tests', () => {
         strictEqual(result.getListProvidersInfos().length, 2);
     })
 
-        it('should get a series (3/5)', async () => {
+    it('should get a series (3/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -41,9 +41,9 @@ describe('Trakt Tests', () => {
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
-        })
-    
-        it('should get a series (4/5)', async () => {
+    })
+
+    it('should get a series (4/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -52,9 +52,9 @@ describe('Trakt Tests', () => {
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
-        })
-    
-        it('should get a series (5/5)', async () => {
+    })
+
+    it('should get a series (5/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -63,8 +63,8 @@ describe('Trakt Tests', () => {
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
-        })
-    
+    })
+
     it('should get a series (6/6) same result but different year', async () => {
 
         const series = new Series();

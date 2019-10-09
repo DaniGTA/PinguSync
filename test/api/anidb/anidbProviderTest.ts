@@ -5,7 +5,7 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/objects/i
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 
-describe('AniDB Provider Tests', () => {
+describe('Provider: AniDB | Online Test runs', () => {
     before(() => {
         MainListManager['listLoaded'] = true;
         MainListLoader['loadData'] = () => { return [] };

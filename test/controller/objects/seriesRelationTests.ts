@@ -7,7 +7,7 @@ import { MediaType } from "../../../src/backend/controller/objects/meta/media-ty
 import { ListProviderLocalData } from "../../../src/backend/controller/objects/list-provider-local-data";
 import listHelper from "../../../src/backend/helpFunctions/list-helper";
 
-describe('seriesTest | Relations', () => {
+describe('Series | Relations', () => {
 
     before(() => {
         const testprovider = new TestProvider("Test");

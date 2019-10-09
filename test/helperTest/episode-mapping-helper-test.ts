@@ -14,7 +14,7 @@ import EpisodeTitle from '../../src/backend/controller/objects/meta/episode/epis
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 import { EpisodeType } from '../../src/backend/controller/objects/meta/episode/episode-type';
 
-describe('episode mapping helper tests', () => {
+describe('Episode mapping | Mapping Only', () => {
     var lc = new ListController(true);
 
     before(() => {

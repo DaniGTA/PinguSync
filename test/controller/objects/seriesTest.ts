@@ -3,7 +3,7 @@ import Series from '../../../src/backend/controller/objects/series';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 
-describe('series basic tests', () => {
+describe('Series | Basic', () => {
     it('should have a id', async () => {
         const series = new Series();
         assert.notEqual(series.id.length, 0);

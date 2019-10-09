@@ -6,13 +6,13 @@ import MainListManager from '../../../src/backend/controller/main-list-manager/m
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 
-describe('seriesTest | Season', () => {
+describe('Series | Season', () => {
     before(() => {
         MainListManager['listLoaded'] = true;
         MainListLoader['loadData'] = () => { return [] };
         MainListLoader['saveData'] = async () => { };
     })
-    
+
     it('should return season 1', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData("TestA");
@@ -33,7 +33,7 @@ describe('seriesTest | Season', () => {
 
     it('should return season 3', async () => {
         const series = new Series();
-            const provider = new ListProviderLocalData("TestA");
+        const provider = new ListProviderLocalData("TestA");
         provider.addSeriesName(new Name('Test III', 'en'));
         series.addListProvider(provider);
         strictEqual((await series.getSeason()).seasonNumber, 3);
@@ -47,7 +47,7 @@ describe('seriesTest | Season', () => {
         lpld.addSeriesName(new Name('Test III', 'en'));
         series.addListProvider(lpld);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL,[series])).seasonNumber, 3);
+        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series])).seasonNumber, 3);
         return;
     });
 
@@ -65,7 +65,7 @@ describe('seriesTest | Season', () => {
         lpld2.addSeriesName(new Name('Test II', 'en'));
         series2.addListProvider(lpld2);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL,[series, series2])).seasonNumber, 3);
+        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2])).seasonNumber, 3);
         return;
     });
 
@@ -83,7 +83,7 @@ describe('seriesTest | Season', () => {
         lpld2.addSeriesName(new Name('Test II', 'en'));
         series2.addListProvider(lpld2);
 
-        strictEqual((await series2.getSeason(SeasonSearchMode.ALL,[series, series2])).seasonNumber, 2);
+        strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2])).seasonNumber, 2);
         return;
     });
 
@@ -102,8 +102,8 @@ describe('seriesTest | Season', () => {
         lpld2.addSeriesName(new Name('Test Test', 'en'));
         series2.addListProvider(lpld2);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL,[series, series2])).seasonNumber, 2);
-        strictEqual((await series2.getSeason(SeasonSearchMode.ALL,[series, series2])).seasonNumber, 1);
+        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2])).seasonNumber, 2);
+        strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2])).seasonNumber, 1);
         return;
     });
 
@@ -130,9 +130,9 @@ describe('seriesTest | Season', () => {
         lpld3.addSeriesName(new Name('Test Testooo', 'en'));
         series3.addListProvider(lpld3);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL,[series, series2, series3])).seasonNumber, 1);
-        strictEqual((await series2.getSeason(SeasonSearchMode.ALL,[series, series2, series3])).seasonNumber, 2);
-        strictEqual((await series3.getSeason(SeasonSearchMode.ALL,[series, series2, series3])).seasonNumber, 3);
+        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 1);
+        strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 2);
+        strictEqual((await series3.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 3);
         return;
     });
 
@@ -143,7 +143,7 @@ describe('seriesTest | Season', () => {
         lpld.addSeriesName(new Name('Test', 'en'));
         series.addListProvider(lpld);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL,[series])).seasonNumber, 1);
+        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series])).seasonNumber, 1);
         return;
     });
 

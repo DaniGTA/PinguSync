@@ -10,4 +10,5 @@ export default interface ExternalProvider {
 
     getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]>;
     getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>;
+    isProviderAvailable(): Promise<boolean>;
 }

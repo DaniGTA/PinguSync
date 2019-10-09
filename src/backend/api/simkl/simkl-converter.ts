@@ -22,7 +22,7 @@ export default class SimklConverter {
         let aniDBListProvider = new InfoProviderLocalData(AniDBProvider.instance.providerName);
 
         aniDBListProvider.id = anime.show.ids.anidb;
-        aniDBListProvider.fullInfo = false;
+        aniDBListProvider.hasFullInfo = false;
 
         listProvider.addSeriesName(new Name(anime.show.title, "unkown", NameType.UNKNOWN))
 
@@ -51,7 +51,7 @@ export default class SimklConverter {
             provider.covers.push(new Cover('https://simkl.net/posters/' + searchResult.poster, ImageSize.MEDIUM));
             provider.publicScore = searchResult.ratings.simkl.rating;
             provider.mediaType = mediaType;
-            provider.fullInfo = false;
+            provider.hasFullInfo = false;
             mprList.push(new MultiProviderResult(provider));
         }
         return mprList;

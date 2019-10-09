@@ -5,7 +5,7 @@ import * as assert from 'assert';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
-describe('providerTest', () => {
+describe('Provider | Watchlist & Merge', () => {
     it('should add to watchlist', async () => {
         const providerInfo = new ListProviderLocalData();
         providerInfo.addOneWatchedEpisode(1);

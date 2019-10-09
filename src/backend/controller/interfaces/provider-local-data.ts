@@ -24,7 +24,7 @@ export default class ProviderLocalData {
     /**
      * Cant get more info from this provider. 
      */
-    public fullInfo: boolean = true;
+    public hasFullInfo: boolean = false;
     /**
      * The provider name
      */
@@ -86,7 +86,7 @@ export default class ProviderLocalData {
         let length = 0;
 
         for (const episode of this.detailEpisodeInfo) {
-            if (episode.type == EpisodeType.REGULAR_EPISODE || episode.type ==EpisodeType.SPECIAL || episode.type ==EpisodeType.UNKOWN) {
+            if (episode.type == EpisodeType.REGULAR_EPISODE || episode.type == EpisodeType.SPECIAL || episode.type == EpisodeType.UNKOWN) {
                 length++;
             }
         }
@@ -153,7 +153,7 @@ export default class ProviderLocalData {
     /**
      * Simple function that checks if the provider data is from media type movie.
      */
-    isMediaTypeMovie(): boolean{
+    isMediaTypeMovie(): boolean {
         return this.mediaType === MediaType.MOVIE;
     }
 }

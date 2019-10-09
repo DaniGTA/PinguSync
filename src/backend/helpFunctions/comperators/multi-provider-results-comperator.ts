@@ -6,9 +6,10 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import ReleaseYearComperator from './release-year-comperator';
 import MediaTypeComperator from './media-type-comperator';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
+import ProviderComperator from './provider-comperator';
 
 export default class MultiProviderComperator {
-    static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult>{
+    static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult> {
         const finalResult = new ComperatorResult();
 
         const tempSeries = new Series();
@@ -20,15 +21,15 @@ export default class MultiProviderComperator {
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
             finalResult.matches += 2;
             if (ProviderList.getExternalProviderInstance(result.mainProvider).hasUniqueIdForSeasons) {
-                if (seasonA.seasonError != SeasonError.CANT_GET_SEASON ) {
-                     finalResult.matchAble += 2;
+                if (seasonA.seasonError != SeasonError.CANT_GET_SEASON) {
+                    finalResult.matchAble += 2;
                     if (seasonA.seasonNumber === seasonB.seasonNumber) {
                         finalResult.matches += 2;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     } else if ((seasonB.seasonError == SeasonError.CANT_GET_SEASON || seasonB.seasonError == SeasonError.NONE) && seasonA.seasonNumber === 1) {
                         finalResult.matches += 1;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if (!seasonA || !seasonB) {
+                    } else if (!seasonA.seasonNumber || !seasonB.seasonNumber) {
 
                     } else {
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
@@ -52,6 +53,14 @@ export default class MultiProviderComperator {
         finalResult.matchAble += releaseYearResult.matchAble;
         finalResult.matches += releaseYearResult.matches;
 
+        const providerResult = await ProviderComperator.compareAllProviders(series, tempSeries)
+        finalResult.matchAble += providerResult.matchAble;
+        finalResult.matches += providerResult.matches;
+        if (providerResult.isAbsolute == AbsoluteResult.ABSOLUTE_TRUE) {
+            finalResult.isAbsolute = providerResult.isAbsolute;
+        }
+
+
         if (finalResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || finalResult.matchAble == finalResult.matches) {
             for (const serie of await series.getSlugNames()) {
                 for (const tempserie of await tempSeries.getSlugNames()) {
@@ -61,8 +70,8 @@ export default class MultiProviderComperator {
                 }
             }
         } else {
-            console.warn('not the same series' + result.mainProvider.getAllNames()[0].name +'('+result.mainProvider.provider+')'+' &'+ series.getAllNames()[0].name );
+            console.warn('not the same series' + result.mainProvider.getAllNames()[0].name + '(' + result.mainProvider.provider + ')' + ' &' + series.getAllNames()[0].name);
         }
-    return finalResult;
-   }
+        return finalResult;
+    }
 }

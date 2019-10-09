@@ -12,7 +12,7 @@ import ListController from '../../src/backend/controller/list-controller';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import { SeasonError } from '../../src/backend/controller/objects/transfer/season-error';
 
-describe('seriesHelperTest', () => {
+describe('Series Helper', () => {
     var lc = new ListController(true);
 
     before(() => {
@@ -21,7 +21,7 @@ describe('seriesHelperTest', () => {
         MainListLoader['saveData'] = async () => { };
     })
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider("test",true,false),new TestProvider("test2",true,true)];
+        ProviderList['loadedListProvider'] = [new TestProvider("test", true, false), new TestProvider("test2", true, true)];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
         new ListController(true);
@@ -37,7 +37,7 @@ describe('seriesHelperTest', () => {
         var listProvider = new ListProviderLocalData("test2");
         listProvider.id = 108632;
         listProvider.targetSeason = 2;
-        listProvider.fullInfo = true;
+        listProvider.hasFullInfo = true;
         listProvider.prequelIds.push(21355);
         listProvider.isNSFW = false;
         listProvider.addSeriesName(new Name("Test 2", "x-jap"));
@@ -47,13 +47,13 @@ describe('seriesHelperTest', () => {
         b['cachedSeason'] = 1;
         b['canSync'] = false;
         var infoProvider = new InfoProviderLocalData("test4");
-        infoProvider.fullInfo = true;
+        infoProvider.hasFullInfo = true;
         infoProvider.id = 260449;
         a.addInfoProvider(infoProvider);
         var listProvider = new ListProviderLocalData("test");
         listProvider.id = 43973;
         listProvider.targetSeason = 1;
-        listProvider.fullInfo = true;
+        listProvider.hasFullInfo = true;
         listProvider.releaseYear = 2013;
         listProvider.isNSFW = false;
         listProvider.addSeriesName(new Name("Test", "x-jap"));
@@ -66,11 +66,11 @@ describe('seriesHelperTest', () => {
         c['cachedSeason'] = 2;
         c['canSync'] = false;
         var listProvider =
-        new ListProviderLocalData("test");
+            new ListProviderLocalData("test");
         listProvider.isNSFW = false;
         listProvider.id = 43973;
         listProvider.targetSeason = 2;
-        listProvider.fullInfo = true;
+        listProvider.hasFullInfo = true;
         listProvider.addSeriesName(new Name("Series Test", "x-jap"));
         c.addListProvider(listProvider);
 

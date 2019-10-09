@@ -10,7 +10,7 @@ import providerHelper from '../../../src/backend/helpFunctions/provider/provider
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 
-describe('AniDB Tests', () => {
+describe('Provider: AniDB | Offline Test runs', () => {
     before(() => {
         MainListManager['listLoaded'] = true;
         MainListLoader['loadData'] = () => { return [] };
@@ -40,7 +40,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
         lpdld.targetSeason = 1;
         lpdld.watchStatus = WatchStatus.DROPPED;
 
@@ -65,7 +65,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
         lpdld.watchStatus = WatchStatus.DROPPED;
 
         const series = new Series();
@@ -87,7 +87,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
         lpdld.watchStatus = WatchStatus.DROPPED;
 
         const series = new Series();
@@ -103,7 +103,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 4;
@@ -118,7 +118,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;
@@ -134,7 +134,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;
@@ -150,7 +150,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;
@@ -166,7 +166,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;
@@ -185,7 +185,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;
@@ -200,7 +200,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;
@@ -215,7 +215,7 @@ describe('AniDB Tests', () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;
@@ -226,13 +226,29 @@ describe('AniDB Tests', () => {
         deepEqual(result[0].mainProvider.id, '14416');
     })
 
+    it('should find id 5544', async () => {
+        var a = new AniDBProvider(false);
+        const lpdld = new ListProviderLocalData("AniList");
+        lpdld.episodes = 12;
+        lpdld.hasFullInfo = true;
+
+        const series = new Series();
+        lpdld.addSeriesName(new Name("Persona -Trinity Soul-", NameType.MAIN));
+        lpdld.addSeriesName(new Name(" Persona -trinity soul-", NameType.MAIN));
+        lpdld.addSeriesName(new Name("ペルソナ 〜トリニティ・ソウル〜", NameType.MAIN));
+        await series.addListProvider(lpdld);
+        const result = await providerHelper['getSeriesByName'](series, new Name('Persona Trinity Soul', 'x-japclean'), a);
+
+        deepEqual(result.getInfoProvidersInfos()[0].id, '5544');
+    })
+
 
 
     it('should not hang', async () => {
         var a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData("AniList");
         lpdld.episodes = 12;
-        lpdld.fullInfo = true;
+        lpdld.hasFullInfo = true;
 
         const series = new Series();
         series['cachedSeason'] = 1;

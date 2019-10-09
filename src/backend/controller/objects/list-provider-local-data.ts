@@ -215,7 +215,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.detailEpisodeInfo) {
                 mergedProvider.detailEpisodeInfo = newestProvider.detailEpisodeInfo;
             }
-            mergedProvider.fullInfo = newestProvider.fullInfo;
+            mergedProvider.hasFullInfo = newestProvider.hasFullInfo;
             if (newestProvider.targetSeason) {
                 mergedProvider.targetSeason = newestProvider.targetSeason;
             }

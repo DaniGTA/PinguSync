@@ -22,7 +22,7 @@ export default class AniDBConverter {
         ipld.id = anime._attributes.aid;
         ipld.rawEntry = anime;
         ipld.version = AniDBProvider.instance.version;
-        ipld.fullInfo = false;
+        ipld.hasFullInfo = false;
         return new MultiProviderResult(ipld);
     }
 
@@ -33,7 +33,7 @@ export default class AniDBConverter {
                 ipld.addSeriesName(new Name(title._text, title._attributes["xml:lang"], await this.convertToNameType(title._attributes.type)))
             }
             ipld.id = fullInfo.anime._attributes.id;
-            ipld.fullInfo = true;
+            ipld.hasFullInfo = true;
             ipld.releaseYear = new Date(fullInfo.anime.startdate._text).getFullYear();
             ipld.rawEntry = fullInfo;
             ipld.mediaType = await this.convertToMediaType(fullInfo.anime.type._text);
@@ -66,7 +66,7 @@ export default class AniDBConverter {
             ipld.genres = this.getGenres(fullInfo.anime);
             ipld.episodes = Number(fullInfo.anime.episodecount._text);
             ipld.detailEpisodeInfo = await this.getDetailEpisodeInfo(fullInfo.anime);
-            ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/'+fullInfo.anime.picture._text,ImageSize.ORIGINAL))
+            ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/' + fullInfo.anime.picture._text, ImageSize.ORIGINAL))
             const mpr = new MultiProviderResult(ipld);;
             mpr.subProviders = await this.getSubProviders(fullInfo.anime);
             return mpr;
@@ -75,7 +75,7 @@ export default class AniDBConverter {
     }
 
     async getDetailEpisodeInfo(anime: AniDBAnimeAnime): Promise<Episode[]> {
-        const episodes:Episode[] = [];
+        const episodes: Episode[] = [];
         if (anime.episodes.episode && Array.isArray(anime.episodes.episode)) {
             for (const episode of anime.episodes.episode) {
                 const tempEpisode = new Episode(parseInt(episode.epno._text));
@@ -124,14 +124,14 @@ export default class AniDBConverter {
     }
 
     async getSubProviders(anime: AniDBAnimeAnime): Promise<ProviderLocalData[]> {
-         const subProviders = []
+        const subProviders = []
         if (Array.isArray(anime.resources.resource)) {
             for (const resource of anime.resources.resource) {
                 try {
                     subProviders.push(await this.getResourceInfoProvider(resource));
                 } catch (err) {
-                    console.log(err); 
-                }  
+                    console.log(err);
+                }
             }
         }
         return subProviders;
@@ -189,7 +189,7 @@ export default class AniDBConverter {
     // Type 28 is Crunchyroll
     //
     // Type 32 is Amazon
-    async getResourceInfoProvider(resource: ResourceElement):Promise<ProviderLocalData> {
+    async getResourceInfoProvider(resource: ResourceElement): Promise<ProviderLocalData> {
         let subipld = null;
         switch (resource._attributes.type) {
             case '1':
@@ -247,19 +247,19 @@ export default class AniDBConverter {
 
         if (subipld) {
             subipld.id = await this.getIDResourceFromEntity(resource.externalentity);
-            subipld.fullInfo = false;
+            subipld.hasFullInfo = false;
             return subipld;
         }
         throw 'no provider with that type found: ' + resource._attributes.type;
     }
 
-    async getIDResourceFromEntity(input: ExternalentityElement[] | FluffyExternalentity): Promise<number | string >{
+    async getIDResourceFromEntity(input: ExternalentityElement[] | FluffyExternalentity): Promise<number | string> {
         if (Array.isArray(input)) {
             return input[0].identifier._text;
         } else {
             if (input.identifier && Array.isArray(input.identifier)) {
                 return input.identifier[0]._text;
-            } else if(input.identifier && !Array.isArray(input.identifier)){
+            } else if (input.identifier && !Array.isArray(input.identifier)) {
                 return input.identifier._text;
             }
         }
@@ -267,7 +267,7 @@ export default class AniDBConverter {
     }
 
     async convertToMediaType(string: string): Promise<MediaType> {
-       switch (string) {
+        switch (string) {
             case "TV Series":
                 return MediaType.ANIME;
             case "Movie":
@@ -276,10 +276,10 @@ export default class AniDBConverter {
                 return MediaType.SPECIAL;
             default:
                 return MediaType.UNKOWN;
-        } 
+        }
     }
 
-    async convertToNameType(string:string){
+    async convertToNameType(string: string) {
         switch (string) {
             case "main":
                 return NameType.MAIN;

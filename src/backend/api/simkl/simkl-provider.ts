@@ -11,6 +11,8 @@ import MultiProviderResult from '../multi-provider-result';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import { SimklTextSearchResults } from './objects/simklTextSearchResults';
 import SimklConverter from './simkl-converter';
+import { SimklErrorResponse } from './objects/simklErrorResponse';
+import { Timestamp } from 'bson';
 
 export default class SimklProvider implements ListProvider {
     static instance: SimklProvider;
@@ -25,6 +27,7 @@ export default class SimklProvider implements ListProvider {
     private clientID = "9fda12e10ec09721e9231e5323b150a77d4d095eb009097f452aafd76c3bd3d9";
     private redirectUri = "urn:ietf:wg:oauth:2.0:oob";
     private apiUrl = "https://api.simkl.com/";
+    private timeout?: number;
     private simklConverter = new SimklConverter();
     constructor() {
         SimklProvider.instance = this;
@@ -35,33 +38,33 @@ export default class SimklProvider implements ListProvider {
         try {
             endResults.push(...await this.animeTextSearch(seriesName));
         } catch (err) { }
-         try {
+        try {
             endResults.push(...await this.tvTextSearch(seriesName));
         } catch (err) { }
-         try {
+        try {
             endResults.push(...await this.movieTextSearch(seriesName));
         } catch (err) { }
-        
-        
+
+
         return endResults;
     }
 
-    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         throw 'not implemented yet';
     }
 
-    private async animeTextSearch(text: string):Promise<MultiProviderResult[]> {
-        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/anime?q='+text+'&page=1&limit=50&extended=full&client_id='+this.clientID)
+    private async animeTextSearch(text: string): Promise<MultiProviderResult[]> {
+        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/anime?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.clientID)
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.ANIME);
     }
 
-    private async tvTextSearch(text: string):Promise<MultiProviderResult[]> {
-        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/tv?q='+text+'&page=1&limit=50&extended=full&client_id='+this.clientID)
+    private async tvTextSearch(text: string): Promise<MultiProviderResult[]> {
+        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/tv?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.clientID)
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.SERIES);
     }
 
     private async movieTextSearch(text: string): Promise<MultiProviderResult[]> {
-        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/movie?q='+text+'&page=1&limit=50&extended=full&client_id='+this.clientID)
+        const result = await this.simklRequest<SimklTextSearchResults[]>(this.apiUrl + 'search/movie?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.clientID)
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.MOVIE);
     }
 
@@ -103,9 +106,18 @@ export default class SimklProvider implements ListProvider {
         throw new Error("Method not implemented.");
     }
 
+    async isProviderAvailable(): Promise<boolean> {
+        if (this.timeout && this.timeout > Date.now()) {
+            return false;
+        }
+        return true;
+    }
 
-    private simklRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
-        console.log('[Trakt] Start WebRequest');
+    private async simklRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+        if (!await this.isProviderAvailable()) {
+            throw 'timeout active';
+        }
+        console.log('[Simkl] Start WebRequest');
         const that = this;
         return new Promise<T>((resolve, reject) => {
             try {
@@ -115,20 +127,28 @@ export default class SimklProvider implements ListProvider {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + that.userData.accessToken,
-                        'trakt-api-version': '2',
-                        'trakt-api-key': that.clientID,
                     },
                     body: body,
+                    timeout: 1000
                 }, (error: any, response: any, body: any) => {
                     try {
-                   
+
                         if (response.statusCode === 200 || response.statusCode === 201) {
                             var data: T = JSON.parse(body) as T;
                             resolve(data);
+                        } else if (response.statusCode === 412) {
+                            var e: SimklErrorResponse = (JSON.parse(body)) as SimklErrorResponse;
+                            if (e.message == 'Total Requests Limit Exceeded') {
+                                const date = new Date();
+                                date.setHours(date.getHours() + 24)
+                                this.timeout = date.getTime();
+                            }
+                            reject();
                         } else {
-                            console.log('[Trakt] status code:', response.statusCode);
+                            console.log('[Simkl] status code:', response.statusCode);
                             reject();
                         }
+
                     } catch (err) {
                         console.log(err);
                         reject();

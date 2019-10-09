@@ -50,23 +50,27 @@ export default class TraktProvider implements ListProvider {
                 if (result.movie) {
                     endResult.push(await traktConverter.convertMovieToLocalData(result.movie));
                 }
-            } catch (err) { 
+            } catch (err) {
                 console.log(err);
             }
         }
         return endResult;
     }
 
-    public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
+    }
+
+    public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.isMediaTypeMovie()) {
             const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id);
             return await (await traktConverter.convertFullShowInfoToLocalData(res));
         } else {
             const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id);
             const seasonInfo = await this.traktRequest<TraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
-            return await (await traktConverter.convertFullShowInfoToLocalData(res,seasonInfo));
+            return await (await traktConverter.convertFullShowInfoToLocalData(res, seasonInfo));
         }
-        
+
     }
 
     public getTokenAuthUrl(): string {
@@ -172,7 +176,7 @@ export default class TraktProvider implements ListProvider {
                     body: body,
                 }, (error: any, response: any, body: any) => {
                     try {
-                      
+
                         if (response.statusCode === 200 || response.statusCode === 201) {
                             var data: T = JSON.parse(body) as T;
                             resolve(data);

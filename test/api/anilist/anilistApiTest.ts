@@ -6,10 +6,10 @@ import MainListLoader from '../../../src/backend/controller/main-list-manager/ma
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 
 
-describe('AniListApi Tests', () => {
+describe('Provider: AniList | Test runs', () => {
     const anilistProvider = new AniListProvider();
 
-    
+
     before(() => {
         MainListManager['listLoaded'] = true;
         MainListLoader['loadData'] = () => { return [] };
@@ -40,5 +40,5 @@ describe('AniListApi Tests', () => {
     it('should get a series (1/1)', async () => {
 
     })
-    
+
 });

@@ -37,7 +37,7 @@ export default new class TraktConverter {
             providerInfo.targetSeason = season.number;
             providerInfo.watchStatus = WatchStatus.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
-            providerInfo.fullInfo = false;
+            providerInfo.hasFullInfo = false;
             series.addListProvider(providerInfo);
             result.push(series);
         }
@@ -59,7 +59,7 @@ export default new class TraktConverter {
         try {
             const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
             tvdbProvider.id = show.ids.tvdb;
-            tvdbProvider.fullInfo = false;
+            tvdbProvider.hasFullInfo = false;
             result.subProviders.push(tvdbProvider);
         } catch (err) {
             console.log('no tvdb instance.');
@@ -96,18 +96,17 @@ export default new class TraktConverter {
         for (const genre of fullShow.genres) {
             provider.genres.push(new Genre(genre));
         }
-        provider.fullInfo = true;
+        provider.hasFullInfo = true;
         if (seasonInfo) {
             provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
         }
         const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
         tvdbProvider.id = fullShow.ids.tvdb;
-        tvdbProvider.fullInfo = false;
         return new MultiProviderResult(provider, tvdbProvider);
     }
 
     async getDetailedEpisodeInfo(seasonInfos: TraktShowSeasonInfo[]): Promise<Episode[]> {
-        const detailedEpisodes:Episode[] = [];
+        const detailedEpisodes: Episode[] = [];
         for (const seasonInfo of seasonInfos) {
             for (const episode of seasonInfo.episodes) {
                 const tempEpisode = new Episode(seasonInfo.number, episode.number);
@@ -116,7 +115,7 @@ export default new class TraktConverter {
                 detailedEpisodes.push(tempEpisode);
             }
         }
-        return detailedEpisodes; 
+        return detailedEpisodes;
     }
 
     async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {

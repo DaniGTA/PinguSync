@@ -12,9 +12,9 @@ import { SeasonError } from '../../src/backend/controller/objects/transfer/seaso
 import seasonHelper from '../../src/backend/helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../src/backend/helpFunctions/season-helper/season-search-mode';
 
-describe('seasonHelperTests', () => {
+describe('Season Helper', () => {
 
-        var lc = new ListController(true);
+    var lc = new ListController(true);
 
     before(() => {
         MainListManager['listLoaded'] = true;
@@ -22,7 +22,7 @@ describe('seasonHelperTests', () => {
         MainListLoader['saveData'] = async () => { };
     })
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider("test",true,false),new TestProvider("test2",true,true)];
+        ProviderList['loadedListProvider'] = [new TestProvider("test", true, false), new TestProvider("test2", true, true)];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
         new ListController(true);
@@ -45,7 +45,7 @@ describe('seasonHelperTests', () => {
         b.addListProvider(listProvider2);
 
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.searchSeasonValue(a,SeasonSearchMode.ALL);
+        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
         console.log(result.foundType);
         strictEqual(result.season, 1);
     });
@@ -67,7 +67,7 @@ describe('seasonHelperTests', () => {
         b.addListProvider(listProvider2);
 
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.searchSeasonValue(a,SeasonSearchMode.ALL);
+        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
         console.log(result.foundType);
         strictEqual(result.season, 2);
     });
@@ -88,7 +88,7 @@ describe('seasonHelperTests', () => {
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name("TestTwo", "x-jap"));
         b.addListProvider(listProvider2);
-        
+
         const c = new Series();
         const listProvider3 = new ListProviderLocalData("test2");
         listProvider3.id = 3;
@@ -97,7 +97,7 @@ describe('seasonHelperTests', () => {
         c.addListProvider(listProvider3);
 
         MainListManager['mainList'] = [a, b, c];
-        const result = await seasonHelper.searchSeasonValue(a,SeasonSearchMode.ALL);
+        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
         console.log(result.foundType);
         strictEqual(result.season, 3);
     });
@@ -118,7 +118,7 @@ describe('seasonHelperTests', () => {
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name("TestTwo", "x-jap"));
         b.addListProvider(listProvider2);
-        
+
         const c = new Series();
         const listProvider3 = new ListProviderLocalData("test2");
         listProvider3.id = 3;
@@ -127,7 +127,7 @@ describe('seasonHelperTests', () => {
         c.addListProvider(listProvider3);
 
         MainListManager['mainList'] = [a, b, c];
-        const result = await seasonHelper.searchSeasonValue(a,SeasonSearchMode.ALL);
+        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
         console.log(result.foundType);
         strictEqual(result.season, 4);
     });
@@ -148,9 +148,9 @@ describe('seasonHelperTests', () => {
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name("Test 6", "x-jap"));
         b.addListProvider(listProvider2);
-        
+
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.searchSeasonValue(a,SeasonSearchMode.ALL);
+        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
         console.log(result.foundType);
         strictEqual(result.season, 5);
     });
@@ -162,9 +162,9 @@ describe('seasonHelperTests', () => {
         listProvider.mediaType = MediaType.ANIME;
         listProvider.addSeriesName(new Name("Test", "x-jap"));
         a.addListProvider(listProvider);
-        
+
         MainListManager['mainList'] = [a];
-        const result = await seasonHelper.searchSeasonValue(a,SeasonSearchMode.ALL);
+        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
         console.log(result.foundType);
         strictEqual(result.seasonError, SeasonError.CANT_GET_SEASON);
     });

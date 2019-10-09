@@ -17,7 +17,7 @@ export default class OMDbConverter {
         pld.addSeriesName(new Name(entry.Title, "en", NameType.OFFICIAL));
         pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
         pld.id = entry.imdbID;
-        pld.fullInfo = false;
+        pld.hasFullInfo = false;
         pld.rawEntry = entry;
 
         return new MultiProviderResult(pld);
@@ -28,7 +28,7 @@ export default class OMDbConverter {
         pld.addSeriesName(new Name(entry.Title, "en", NameType.OFFICIAL));
         pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
         pld.id = entry.imdbID;
-        pld.fullInfo = true;
+        pld.hasFullInfo = true;
         pld.country = entry.Country;
         for (const genre of entry.Genre.split(' ')) {
             pld.genres.push(new Genre(genre));

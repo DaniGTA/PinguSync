@@ -108,7 +108,7 @@ export class InfoProviderLocalData extends ProviderLocalData {
             }
             mergedProvider.names = await listHelper.getUniqueNameList(mergedProvider.names);
             mergedProvider.overviews = await listHelper.getUniqueOverviewList(mergedProvider.overviews);
-            mergedProvider.fullInfo = newestProvider.fullInfo;
+            mergedProvider.hasFullInfo = newestProvider.hasFullInfo;
             mergedProvider.lastUpdate = newestProvider.lastUpdate;
             mergedProvider.lastExternalChange = newestProvider.lastExternalChange;
         }

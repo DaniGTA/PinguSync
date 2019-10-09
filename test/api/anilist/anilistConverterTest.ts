@@ -7,7 +7,7 @@ import { MediaFormat } from '../../../src/backend/api/anilist/graphql/mediaForma
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 
 
-describe('AniListConverter Tests', () => {
+describe('Provider: AniList | Converter tests', () => {
     it('should convert', async () => {
         var rawdata = JSON.parse(readFileSync("./test/api/anilist/testResponse/anilistUserListResponse.json", { encoding: "UTF-8" }));
         var collection = rawdata.data.MediaListCollection as MediaListCollection;
@@ -27,8 +27,8 @@ describe('AniListConverter Tests', () => {
     })
 
     it('should convert format', async () => {
-        const movieResult = await anilistConverter['convertTypeToMediaType']( MediaFormat.MOVIE);
-        const tvResult = await anilistConverter['convertTypeToMediaType']( MediaFormat.TV);
+        const movieResult = await anilistConverter['convertTypeToMediaType'](MediaFormat.MOVIE);
+        const tvResult = await anilistConverter['convertTypeToMediaType'](MediaFormat.TV);
         const tvShortResult = await anilistConverter['convertTypeToMediaType'](MediaFormat.TV_SHORT);
         assert.strictEqual(movieResult, MediaType.MOVIE);
         assert.strictEqual(tvResult, MediaType.ANIME);

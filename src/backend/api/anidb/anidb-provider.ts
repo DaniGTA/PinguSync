@@ -62,10 +62,10 @@ export default class AniDBProvider implements InfoProvider {
     }
 
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-         const converter = new AniDBConverter();
-       if (provider.provider === this.providerName && provider.id) {
-            var fullInfo = await this.webRequest<AniDBAnimeFullInfo>("http://api.anidb.net:9001/httpapi?request=anime&client=animesynclist&clientver=2&protover=1&aid="+provider.id);
-           return converter.convertFullInfoToProviderLocalData(fullInfo);
+        const converter = new AniDBConverter();
+        if (provider.provider === this.providerName && provider.id) {
+            var fullInfo = await this.webRequest<AniDBAnimeFullInfo>("http://api.anidb.net:9001/httpapi?request=anime&client=animesynclist&clientver=2&protover=1&aid=" + provider.id);
+            return converter.convertFullInfoToProviderLocalData(fullInfo);
         }
         throw 'False provider - AniDB';
     }
@@ -91,12 +91,12 @@ export default class AniDBProvider implements InfoProvider {
                 for (const title of titles) {
                     if (title._text) {
                         const nameType = await converter.convertToNameType(title._attributes["type"]);
-                        resultNames.push(new Name(title._text, title._attributes["xml:lang"],nameType));
+                        resultNames.push(new Name(title._text, title._attributes["xml:lang"], nameType));
                     }
                 }
             } else {
                 const nameType = await converter.convertToNameType(titles._attributes["type"]);
-                resultNames.push(new Name(titles._text, titles._attributes["xml:lang"],nameType));
+                resultNames.push(new Name(titles._text, titles._attributes["xml:lang"], nameType));
             }
             return resultNames;
         }
@@ -110,6 +110,10 @@ export default class AniDBProvider implements InfoProvider {
             return true;
         }
         return false;
+    }
+
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
     }
 
     private dateDiffInDays(a: Date, b: Date): number {
@@ -174,8 +178,8 @@ export default class AniDBProvider implements InfoProvider {
         console.log('[AniDB] Start WebRequest');
         return new Promise<T>((resolve, rejects) => {
             try {
-            
-                request({method: 'GET', uri: url, gzip: true}, (error: any, response: any, body: any) => {
+
+                request({ method: 'GET', uri: url, gzip: true }, (error: any, response: any, body: any) => {
 
                     console.log('[AniDB] statusCode:', response && response.statusCode); // Print the response status code if a response was received
                     if (response.statusCode == 200) {

@@ -10,7 +10,7 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 
-describe('Kitsu Tests', () => {
+describe('Provider: Kitsu | Test runs', () => {
     const kitsuProvider = new KitsuProvider();
     before(() => {
         MainListManager['listLoaded'] = true;
@@ -30,7 +30,7 @@ describe('Kitsu Tests', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
+        strictEqual(result.getListProvidersInfos().length, 5);
     })
 
     it('should get a series (2/6)', async () => {
@@ -41,7 +41,7 @@ describe('Kitsu Tests', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
+        strictEqual(result.getListProvidersInfos().length, 5);
     })
 
     it('should get a series (3/6)', async () => {
@@ -52,7 +52,7 @@ describe('Kitsu Tests', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
+        strictEqual(result.getListProvidersInfos().length, 5);
     })
 
     it('should get a series (4/6)', async () => {
@@ -63,7 +63,7 @@ describe('Kitsu Tests', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
+        strictEqual(result.getListProvidersInfos().length, 5);
     })
 
     it('should get a series (5/6)', async () => {
@@ -74,7 +74,7 @@ describe('Kitsu Tests', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
+        strictEqual(result.getListProvidersInfos().length, 5);
     })
 
     it('should get a series (6/6)', async () => {
@@ -85,7 +85,7 @@ describe('Kitsu Tests', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 2);
+        strictEqual(result.getListProvidersInfos().length, 5);
     })
 
 });

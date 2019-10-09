@@ -26,7 +26,7 @@ export default new class AniListConverter {
         provider.releaseYear = medium.startDate.year;
         provider.banners.push(new Banner(medium.bannerImage, ImageSize.LARGE));
         provider.rawEntry = medium;
-        provider.fullInfo = false;
+        provider.hasFullInfo = false;
 
         provider.id = medium.id;
         provider.score = medium.averageScore;
@@ -63,6 +63,7 @@ export default new class AniListConverter {
         provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
+        provider.hasFullInfo = true;
         provider = await this.fillRelation(provider, info.Media.relations);
         return provider;
     }
@@ -93,7 +94,7 @@ export default new class AniListConverter {
                 }
             }
             providerInfo = await this.fillRelation(providerInfo, entry.media.relations);
-            
+
         } catch (err) {
             console.error(err);
         }
@@ -121,20 +122,20 @@ export default new class AniListConverter {
         return series;
     }
 
-    private async fillRelation(providerInfo:ListProviderLocalData, relations:Relation): Promise<ListProviderLocalData> {
+    private async fillRelation(providerInfo: ListProviderLocalData, relations: Relation): Promise<ListProviderLocalData> {
         let prequel = relations.edges.findIndex(x => x.relationType === MediaRelation.PREQUEL);
-            if (prequel != -1) {
-                providerInfo.prequelIds.push(relations.nodes[prequel].id);
+        if (prequel != -1) {
+            providerInfo.prequelIds.push(relations.nodes[prequel].id);
+        }
+        let sequel = relations.edges.findIndex(x => x.relationType === MediaRelation.SEQUEL);
+        if (sequel != -1) {
+            providerInfo.sequelIds.push(relations.nodes[sequel].id);
+        }
+        let alternatives = await listHelper.findAllIndexes(relations.edges, (item) => item.relationType === MediaRelation.ALTERNATIVE);
+        if (alternatives.length != 0) {
+            for (const index of alternatives) {
+                providerInfo.alternativeIds.push(relations.nodes[index].id);
             }
-            let sequel = relations.edges.findIndex(x => x.relationType === MediaRelation.SEQUEL);
-            if (sequel != -1) {
-                providerInfo.sequelIds.push(relations.nodes[sequel].id);
-            }
-            let alternatives = await listHelper.findAllIndexes(relations.edges, (item) => item.relationType === MediaRelation.ALTERNATIVE);
-            if (alternatives.length != 0) {
-                for (const index of alternatives) {
-                    providerInfo.alternativeIds.push(relations.nodes[index].id);
-                }
         }
         return providerInfo;
     }

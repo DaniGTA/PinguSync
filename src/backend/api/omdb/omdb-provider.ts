@@ -38,6 +38,10 @@ export default class OMDbProvider implements InfoProvider {
         throw new Error("Method not implemented.");
     }
 
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
+    }
+
     async getMoreSeriesInfoByName(searchTitle: string, season?: number | undefined): Promise<MultiProviderResult[]> {
         const results: MultiProviderResult[] = [];
         const converter = new OMDbConverter();
@@ -74,7 +78,7 @@ export default class OMDbProvider implements InfoProvider {
                         timeout: 5000
                     }, (error: any, response: any, body: any) => {
                         try {
-                          
+
                             if (response.statusCode === 200 || response.statusCode === 201) {
                                 var data: T = JSON.parse(body) as T;
                                 resolve(data);

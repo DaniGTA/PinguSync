@@ -9,7 +9,7 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import { InfoProviderLocalData } from '../../../src/backend/controller/objects/info-provider-local-data';
 import TVMazeProvider from '../../../src/backend/api/tvmaze/tvmaze-provider';
 
-describe('TVMaze Tests', () => {
+describe('Provider: TVMaze | Test runs', () => {
     const tvmazeProvider = new TVMazeProvider();
 
     beforeEach(() => {

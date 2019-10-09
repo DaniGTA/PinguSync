@@ -58,6 +58,10 @@ export default class AniListProvider implements ListProvider {
         return endResult;
     }
 
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
+    }
+
     async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName && provider.id) {
             var fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' })) as GetSeriesByID;

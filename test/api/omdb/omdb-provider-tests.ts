@@ -9,7 +9,7 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import OMDbProvider from '../../../src/backend/api/omdb/omdb-provider';
 import { InfoProviderLocalData } from '../../../src/backend/controller/objects/info-provider-local-data';
 
-describe('OMDb Tests', () => {
+describe('Provider: OMDb | Test runs', () => {
     const omdbProvider = new OMDbProvider();
 
     beforeEach(() => {

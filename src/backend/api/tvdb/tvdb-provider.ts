@@ -19,7 +19,7 @@ export default class TVDBProvider implements InfoProvider {
     private baseUrl = 'https://api.thetvdb.com';
     private apiData: TVDBProviderData = new TVDBProviderData();
     public static Instance: TVDBProvider;
-    get Instance():TVDBProvider {
+    get Instance(): TVDBProvider {
         if (TVDBProvider.Instance) {
             return TVDBProvider.Instance;
         }
@@ -80,6 +80,10 @@ export default class TVDBProvider implements InfoProvider {
             TVDBProvider.Instance.apiData.setTokens(token, new Date().getTime() + dayInms);
             return token;
         }
+    }
+
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
     }
 
     private async webRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {

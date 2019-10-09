@@ -32,6 +32,10 @@ export default class KitsuProvider implements ListProvider {
         this.userData = new KitsuUserData();
     }
 
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
+    }
+
     async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
         const endResults: MultiProviderResult[] = [];
         try {

@@ -2,7 +2,7 @@ import AniDBNameListXML from '../../../src/backend/api/anidb/objects/anidbNameLi
 import { deepEqual } from 'assert';
 import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 
-describe('AniDB Tests | convert', () => {
+describe('Provider: AniDB | Convert tests', () => {
     it('xml to json', async () => {
         const result: AniDBNameListXML = await new AniDBProvider(false)['getAniDBNameListXML']();
         deepEqual(result.animetitles.anime[0].title[0]._text, "CotS");

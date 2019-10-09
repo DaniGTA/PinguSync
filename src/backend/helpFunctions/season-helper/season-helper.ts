@@ -26,7 +26,7 @@ class SeasonHelper {
      * @param seriesList a list where the relation should be.
      */
     async searchSeasonValuePrequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
-        console.log('[Season] [Search]: Prequel Trace.'+' ('+ series.id +')')
+        console.log('[Season] [Search]: Prequel Trace.' + ' (' + series.id + ')')
         let prequel: Series | null = null;
         if (await series.isAnyPrequelPresent() && seriesList) {
             let error = SeasonError.NONE;
@@ -34,14 +34,14 @@ class SeasonHelper {
             prequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
-                return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible",SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible", SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
                 while (prequel) {
                     searchCount++;
                     if (await prequel.getMediaType() === await series.getMediaType()) {
-                        const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE,seriesList);
+                        const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE, seriesList);
                         if (prequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
-                             return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible",SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible", SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                         }
                         if (prequelSeason.seasonNumber === 1 || prequelSeason.seasonNumber === 0) {
                             return new SearchSeasonValueResult(prequelSeason.seasonNumber + searchCount, "PrequelTrace");
@@ -61,9 +61,9 @@ class SeasonHelper {
                     }
                 }
             }
-            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible",SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+            return new SearchSeasonValueResult(-2, "PrequelTraceNotAvaible", SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
         }
-          return new SearchSeasonValueResult(-1, "NoPrequelAvaible",SeasonError.CANT_GET_SEASON);
+        return new SearchSeasonValueResult(-1, "NoPrequelAvaible", SeasonError.CANT_GET_SEASON);
     }
 
     /**
@@ -82,7 +82,7 @@ class SeasonHelper {
      * @param seriesList a list where the relation should be.
      */
     async searchSeasonValueSequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
-        console.log('[Season] [Search]: Sequel Trace.'+' ('+ series.id +')')
+        console.log('[Season] [Search]: Sequel Trace.' + ' (' + series.id + ')')
         let sequel: Series | null = null;
         if (await series.isAnySequelPresent() && seriesList) {
             let error = SeasonError.NONE;
@@ -90,14 +90,14 @@ class SeasonHelper {
             sequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
-                return new SearchSeasonValueResult(-2, "SequelTraceNotAvaible",SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                return new SearchSeasonValueResult(-2, "SequelTraceNotAvaible", SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
                 while (sequel) {
                     searchCount++;
                     if (await sequel.getMediaType() === await series.getMediaType()) {
                         const sequelSeason = await sequel.getSeason(SeasonSearchMode.SEQUEL_TRACE_MODE, seriesList);
                         if (sequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
-                             return new SearchSeasonValueResult(-2, "SequelTraceNotAvaible",SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                            return new SearchSeasonValueResult(-2, "SequelTraceNotAvaible", SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                         }
                         if (sequelSeason.seasonNumber != undefined && sequelSeason.seasonError === SeasonError.NONE) {
                             return new SearchSeasonValueResult(sequelSeason.seasonNumber - searchCount, "SequelTrace");
@@ -117,9 +117,9 @@ class SeasonHelper {
                     }
                 }
             }
-            return new SearchSeasonValueResult(-2, "SequelTraceNotAvaible",SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+            return new SearchSeasonValueResult(-2, "SequelTraceNotAvaible", SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
         }
-        return new SearchSeasonValueResult(-1, "NoSequelAvaible",SeasonError.CANT_GET_SEASON);
+        return new SearchSeasonValueResult(-1, "NoSequelAvaible", SeasonError.CANT_GET_SEASON);
     }
 
     /**
@@ -128,7 +128,7 @@ class SeasonHelper {
      * @param searchMode what search should be performed ? DEFAULT: `ALL`
      * @param seriesList where the relation should be, this will be needed to perform relation tracing. DEFAULT: `main list`
      */
-    async searchSeasonValue(series: Series, searchMode:SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
+    async searchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         console.log('[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
         let prequelResult;
         let sequelResult;
@@ -151,14 +151,14 @@ class SeasonHelper {
             }
         }
 
-        
+
         if (SeasonSearchModeHelper.canPerformASequelTrace(searchMode)) {
             sequelResult = await this.searchSeasonValueSequelTrace(series, seriesList);
             if (sequelResult.seasonError === SeasonError.NONE) {
                 return sequelResult;
             }
         }
-        
+
         try {
             if (!await series.isAnyPrequelPresent() && await series.isAnySequelPresent()) {
                 return new SearchSeasonValueResult(1, "NoPrequelButSequel");
@@ -174,15 +174,15 @@ class SeasonHelper {
             }
         }
 
-        if (prequelResult && prequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) { 
+        if (prequelResult && prequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
             return prequelResult;
         }
 
-        if(sequelResult && sequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
+        if (sequelResult && sequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
             return sequelResult;
         }
 
-        return new SearchSeasonValueResult(-1, "None",SeasonError.CANT_GET_SEASON);
+        return new SearchSeasonValueResult(-1, "None", SeasonError.CANT_GET_SEASON);
     }
 
     /**
@@ -201,12 +201,12 @@ class SeasonHelper {
                     if (entry instanceof ListProviderLocalData) {
                         const newProvider = new ListProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
-                        newProvider.fullInfo = false;
+                        newProvider.hasFullInfo = false;
                         series.addProviderDatas(newProvider);
                     } else if (entry instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
-                        newProvider.fullInfo = false;
+                        newProvider.hasFullInfo = false;
                         series.addProviderDatas(newProvider);
                     } else {
                         continue;

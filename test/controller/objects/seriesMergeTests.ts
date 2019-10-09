@@ -4,7 +4,7 @@ import Overview from '../../../src/backend/controller/objects/meta/overview';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 
-describe('seriesTest | Merge', () => {
+describe('Series | Merge', () => {
     it('should merge episode', async () => {
         const seriesA = new Series();
         const lpld = new ListProviderLocalData();

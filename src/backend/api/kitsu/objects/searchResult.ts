@@ -285,7 +285,7 @@ export interface Media {
     ratingFrequencies: RatingFrequencies;
     userCount: number;
     favoritesCount: number;
-    startDate: string;
+    startDate?: string;
     endDate: string;
     nextRelease?: any;
     popularityRank: number;

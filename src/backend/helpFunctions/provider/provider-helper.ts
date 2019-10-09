@@ -41,45 +41,48 @@ export default new class ProviderHelper {
         }
         return new SameIdAndUniqueId();
     }
-    
+
     public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
-        const requestId = stringHelper.randomString(5);
-        let trys = 0;
-        const seriesMediaType = await series.getMediaType();
+        if (await provider.isProviderAvailable()) {
+            const requestId = stringHelper.randomString(5);
+            let trys = 0;
+            const seriesMediaType = await series.getMediaType();
 
-        const allLocalProviders = series.getAllProviderLocalDatas();
-        const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
-        if (indexOfCurrentProvider === -1) {
-            if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
-                const alreadySearchedNames: string[] = [];
-                let names = await this.getNamesSortedBySearchAbleScore(series);
-                for (const name of names) {
-                    const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
-                    if (!alreadySearchedName && name.name) {
-                        if (trys > 9) {
-                            break;
-                        }
-                        trys++;
-                        try {
-                            return await this.getSeriesByName(series, name, provider);
-                        } catch (err) {
-                            console.log(err);
-                        }
+            const allLocalProviders = series.getAllProviderLocalDatas();
+            const indexOfCurrentProvider = allLocalProviders.findIndex(x => x.provider === provider.providerName);
+            if (indexOfCurrentProvider === -1) {
+                if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
+                    const alreadySearchedNames: string[] = [];
+                    let names = await this.getNamesSortedBySearchAbleScore(series);
+                    for (const name of names) {
+                        const alreadySearchedName = alreadySearchedNames.findIndex(x => name.name === x) !== -1;
+                        if (!alreadySearchedName && name.name) {
+                            if (trys > 9) {
+                                break;
+                            }
+                            trys++;
+                            try {
+                                return await this.getSeriesByName(series, name, provider);
+                            } catch (err) {
+                                console.log(err);
+                            }
 
-                        alreadySearchedNames.push(name.name);
+                            alreadySearchedNames.push(name.name);
+                        }
                     }
                 }
+            } else {
+                const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
+                console.log("[" + requestId + "][" + provider.providerName + "] ID Request success 🎉");
+                ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
+                await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+                return series;
             }
-        } else {
-            const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
-            console.log("[" + requestId + "][" + provider.providerName + "] ID Request success 🎉");
-            ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
-            await series.addProviderDatas(result.mainProvider, ...result.subProviders);
-            return series;
-        }
 
-        console.log("[" + requestId + "][" + provider.providerName + "] Request failed ☹");
-        throw 'no series info found by name';
+            console.log("[" + requestId + "][" + provider.providerName + "] Request failed ☹");
+            throw 'no series info found by name';
+        }
+        throw 'provider is not available';
     }
 
     /**
@@ -117,13 +120,23 @@ export default new class ProviderHelper {
                     const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
                     resultContainer.push(new SearchResultRatingContainer(mpcr, result));
                 }
-                resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
-                for (const containerItem of resultContainer) {
-                    if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
-                        console.log("[" + provider.providerName + "] Request success 🎉");
-                        ProviderSearchResultManager.addNewSearchResult(searchResult.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
-                        await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
-                        return series;
+                if (resultContainer.length != 0) {
+                    resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
+                    for (const containerItem of resultContainer) {
+                        if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
+                            console.log("[" + provider.providerName + "] Request success 🎉");
+                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
+                            await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
+                            return series;
+                        }
+                    }
+                    for (const containerItem of resultContainer) {
+                        if (containerItem.resultRating.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
+                            console.log("[" + provider.providerName + "] Request success 🎉");
+                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, "requestId", 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
+                            await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
+                            return series;
+                        }
                     }
                 }
             } else {
@@ -149,7 +162,7 @@ export default new class ProviderHelper {
                     const mainListEntry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
                     if (mainListEntry) {
                         const mainListResult = mainListEntry.getListProvidersInfos().find(x => x.provider === provider.providerName);
-                        if (mainListResult && mainListResult.version === provider.version && mainListResult.fullInfo) {
+                        if (mainListResult && mainListResult.version === provider.version && mainListResult.hasFullInfo) {
                             continue;
                         } else {
                             entry = mainListEntry;
@@ -210,7 +223,7 @@ export default new class ProviderHelper {
      * If the Series have no names this function will request the avaible providers for names and 
      * will return the updated provider with the series.
      */
-    private async prepareRequiermentsForFillMissingProvider(entry:Series): Promise<Series> {
+    private async prepareRequiermentsForFillMissingProvider(entry: Series): Promise<Series> {
         if (entry.getAllNames().length === 0) {
             const entryProviders = [...entry.getAllProviderLocalDatas()];
             for (const providerLocalData of entryProviders) {

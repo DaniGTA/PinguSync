@@ -21,9 +21,9 @@ export default class ProviderLoader {
 
     protected static loadListProviderList(): ListProvider[] {
         return [
+            new KitsuProvider(),
             new AniListProvider(),
             new TraktProvider(),
-            new KitsuProvider(),
             new SimklProvider()
         ];
     }

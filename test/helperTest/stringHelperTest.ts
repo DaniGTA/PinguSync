@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
-describe('stringHelperTest', () => {
+describe('String Helper', () => {
     it('should generate a randome string', async () => {
         assert.notEqual(stringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
         assert.notEqual(stringHelper.randomString(), '');
@@ -58,21 +58,21 @@ describe('stringHelperTest', () => {
 
     it('shoul get right season number from title', async () => {
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 3 Part 2'), 3);
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2,"Season marking with X");
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2,"Season marking with number");
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war'), 2,"Season marking with the word season");
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title AA'), 2,"Season marking with the a A");
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2, "Season marking with X");
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2, "Season marking with number");
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war'), 2, "Season marking with the word season");
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title AA'), 2, "Season marking with the a A");
     })
 
     it('should not get a season number from title', async () => {
-        await assert.rejects(stringHelper.getSeasonNumberFromTitle('14'),'number is not a season.');
-        await assert.rejects(stringHelper.getSeasonNumberFromTitle('C3'),'2 values cant give a season');
-        await assert.rejects(stringHelper.getSeasonNumberFromTitle('C^3'),'high 3 is not a season number');
+        await assert.rejects(stringHelper.getSeasonNumberFromTitle('14'), 'number is not a season.');
+        await assert.rejects(stringHelper.getSeasonNumberFromTitle('C3'), '2 values cant give a season');
+        await assert.rejects(stringHelper.getSeasonNumberFromTitle('C^3'), 'high 3 is not a season number');
         await assert.rejects(stringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya'));
-        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title'),'there is no season');
-        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title 2006'),'a year is not a season');
-        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title AAA'),'triple a is not a season marker');
-        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title A'),'single a is not a season marker'); 
+        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title'), 'there is no season');
+        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title 2006'), 'a year is not a season');
+        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title AAA'), 'triple a is not a season marker');
+        await assert.rejects(stringHelper.getSeasonNumberFromTitle('Title A'), 'single a is not a season marker');
     });
 
 });

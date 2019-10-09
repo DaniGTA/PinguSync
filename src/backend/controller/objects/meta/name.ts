@@ -7,7 +7,7 @@ export default class Name {
     lang: string = '';
     nameType: NameType = NameType.UNKNOWN;
     constructor(name: string, lang: string, nameType: NameType = NameType.UNKNOWN) {
-        this.name = name;
+        this.name = name.trim();
         this.lang = lang;
         this.nameType = nameType;
     }
@@ -25,7 +25,7 @@ export default class Name {
             score += 10;
         }
 
-        var apperence = namesList.filter(function(item){ return item.name === name.name; }).length
+        var apperence = namesList.filter(function (item) { return item.name === name.name; }).length
         score = score ** apperence;
 
         if (name.nameType === NameType.OFFICIAL || name.nameType === NameType.MAIN) {

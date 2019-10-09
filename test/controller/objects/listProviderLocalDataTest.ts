@@ -18,7 +18,7 @@ describe('listProviderLocalData tests', () => {
         b.episodes = 14;
         b.publicScore = 20;
         b.score = 40;
-        b.fullInfo = false;
+        b.hasFullInfo = false;
         b.watchStatus = WatchStatus.COMPLETED;
         b.covers.push(new Cover(""));
 
@@ -27,7 +27,7 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.episodes, 14, "Episodes merge failed");
         strictEqual(merged.publicScore, 20, "Public score merge failed");
         strictEqual(merged.score, 40, "Score merge failed");
-        strictEqual(merged.fullInfo, false, "Should add latest hasFullInfo");
+        strictEqual(merged.hasFullInfo, false, "Should add latest hasFullInfo");
         strictEqual(merged.targetSeason, 5, "Should merge targetSeason");
         strictEqual(merged.watchStatus, WatchStatus.COMPLETED, "Should add latest watch status")
         return;

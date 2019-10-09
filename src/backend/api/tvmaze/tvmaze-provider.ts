@@ -7,6 +7,9 @@ import { Show, Search } from './models/tvmaze-model';
 import TVMazeConverter from './tvmaze-converter';
 
 export default class TVMazeProvider implements InfoProvider {
+    async isProviderAvailable(): Promise<boolean> {
+        return true;
+    }
     isOffline: boolean = false;
     hasOAuthCode: boolean = false;
     public providerName: string = "tvmaze";
@@ -26,7 +29,7 @@ export default class TVMazeProvider implements InfoProvider {
             const result = await this.webRequest<Search[]>("http://api.tvmaze.com/search/shows?q=" + encodeURI(searchTitle) + "&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons");
             for (const resultEntry of result) {
                 const convertedShow = converter.convertShowToResult(resultEntry.show);
-                convertedShow.mainProvider.fullInfo = false;
+                convertedShow.mainProvider.hasFullInfo = false;
                 results.push(convertedShow);
             }
             return results;
@@ -56,7 +59,7 @@ export default class TVMazeProvider implements InfoProvider {
                         },
                         timeout: 5000
                     }, (error: any, response: any, body: any) => {
-                        try { 
+                        try {
                             if (response.statusCode === 200 || response.statusCode === 201) {
                                 var data: T = JSON.parse(body) as T;
                                 resolve(data);

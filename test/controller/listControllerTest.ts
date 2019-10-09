@@ -15,7 +15,7 @@ import MainListLoader from '../../src/backend/controller/main-list-manager/main-
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import TestProvider from './objects/testClass/testProvider';
 
-describe('ListControllerTest | Combine', () => {
+describe('ListController | Combine', () => {
     var lc = new ListController(true);
 
     before(() => {
