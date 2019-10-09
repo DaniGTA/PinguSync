@@ -9,12 +9,18 @@ import { NameType } from '../../../src/backend/controller/objects/meta/name-type
 import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
+import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
 
 describe('Provider: AniDB | Offline Test runs', () => {
     before(() => {
         MainListManager['listLoaded'] = true;
         MainListLoader['loadData'] = () => { return [] };
         MainListLoader['saveData'] = async () => { };
+
+    })
+    beforeEach(() => {
+        ProviderList['loadedListProvider'] = [new AniListProvider()];
     })
     it('should allow download (1/2)', async () => {
         var x = new AniDBProvider(false);
