@@ -41,7 +41,7 @@ describe('Provider: Kitsu | Test runs', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 5);
+        strictEqual(result.getListProvidersInfos().length, 3);
     })
 
     it('should get a series (3/6)', async () => {

@@ -24,13 +24,21 @@ import TraktProvider from '../trakt/trakt-provider';
 export default new class KitsuConverter {
     async convertMediaToAnime(media: Media, fullInfo: boolean = true): Promise<MultiProviderResult> {
         const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
-
-        providerInfos.addSeriesName(new Name(media.titles.en, 'en'));
-        providerInfos.addSeriesName(new Name(media.titles.en_us, 'en_us', NameType.OFFICIAL));
-        providerInfos.addSeriesName(new Name(media.titles.ja_jp, 'jap'));
-
-        providerInfos.addSeriesName(new Name(media.slug, 'slug', NameType.SLUG));
-        providerInfos.addSeriesName(new Name(media.titles.en_us, 'en_us'));
+        if (media.titles.en) {
+            providerInfos.addSeriesName(new Name(media.titles.en, 'en'));
+        }
+        if (media.titles.en_us) {
+            providerInfos.addSeriesName(new Name(media.titles.en_us, 'en_us', NameType.OFFICIAL));
+        }
+        if (media.titles.ja_jp) {
+            providerInfos.addSeriesName(new Name(media.titles.ja_jp, 'jap'));
+        }
+        if (media.slug) {
+            providerInfos.addSeriesName(new Name(media.slug, 'slug', NameType.SLUG));
+        }
+        if (media.titles.en_us) {
+            providerInfos.addSeriesName(new Name(media.titles.en_us, 'en_us'));
+        }
         providerInfos.addSeriesName(new Name(media.canonicalTitle, 'canonicalTitle'));
 
         providerInfos.addOverview(new Overview(media.synopsis, 'eng'));

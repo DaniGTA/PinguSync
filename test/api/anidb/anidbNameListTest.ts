@@ -144,7 +144,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         series['cachedSeason'] = 1;
-        lpdld.addSeriesName(new Name("Hunter x Hunter (2011)", NameType.MAIN));
+        lpdld.addSeriesName(new Name("Hunter x Hunter (2011)","", NameType.MAIN));
         lpdld.addSeriesName(new Name("ハンター×ハンター (2011)", "jap", NameType.MAIN));
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName("Hunter x Hunter (2011)", 1);
