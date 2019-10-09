@@ -42,9 +42,7 @@ export default class KitsuProvider implements ListProvider {
             }
             for (const result of searchResults.data) {
                 try {
-                    const providerResult = await kitsuConverter.convertMediaToAnime(result);
-                    providerResult.fullInfo = false;
-                    endResults.push(new MultiProviderResult(providerResult));
+                    endResults.push(await kitsuConverter.convertMediaToAnime(result, false));
                 } catch (err) {
                     console.log(err);
                 }
@@ -52,23 +50,25 @@ export default class KitsuProvider implements ListProvider {
         } catch (err) {
             console.log(err);
         }
-        
+
         return endResults;
     }
 
     private async search(string: string): Promise<SearchResult> {
-             return ((await this.api.get('anime', {
-                filter: {
-                    text: string
-                }
-            })) as unknown) as SearchResult;
+        return ((this.api.get('anime', {
+            filter: {
+                text: string
+            },
+            include: 'mappings'
 
-      
+        })) as unknown) as SearchResult;
+
+
     }
 
-    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>{
-        const getResult = ((await this.api.get('anime/' + provider.id)) as unknown) as GetMediaResult;
-        return new MultiProviderResult(await (await kitsuConverter.convertMediaToAnime(getResult.data)));
+    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+        const getResult = ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
+        return await kitsuConverter.convertMediaToAnime(getResult.data);
     }
     getAllSeries(disableCache?: boolean | undefined): Promise<Series[]> {
         throw new Error("Method not implemented.");

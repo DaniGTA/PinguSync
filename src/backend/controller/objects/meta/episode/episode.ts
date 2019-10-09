@@ -3,6 +3,7 @@ import { EpisodeType } from './episode-type';
 import ExternalProvider from '../../../../api/external-provider';
 import stringHelper from '../../../../helpFunctions/string-helper';
 import EpisodeMapping from './episode-mapping';
+import EpisodeThumbnail from './episode-thumbnail';
 
 /**
  * Contains detail infos about a episode.
@@ -31,6 +32,7 @@ export default class Episode {
     public provider?: string;
     public providerEpisodeId?: number | string;
     public mappedTo: EpisodeMapping[] = [];
+    public thumbnails: EpisodeThumbnail[] = [];
 
     /**
      * Only giv

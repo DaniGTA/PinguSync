@@ -303,6 +303,44 @@ export interface Media {
     youtubeVideoId: string;
     showType: string;
     nsfw: boolean;
+    episodes?: KitsuEpisode[];
+    mappings?: KitsuMappings[];
+}
+
+export interface KitsuMappings {
+    externalId: string;
+    externalSite: string;
+    id: string;
+    type: string;
+    updatedAt?: string;
+    createdAt?: string;
+
+}
+
+export interface KitsuEpisode {
+    airdate: string;
+    cononicalTitle: string;
+    createdAt: string;
+    id: string;
+    length: number;
+    number: number;
+    relativeNumber: number;
+    seasonNumber: number;
+    synopsis: string;
+    thumbnail: KitsuEpisodeThumbnail[];
+    titles: KitsuEpisodeTitle[];
+    type: string;
+    updatedAt: string;
+}
+
+export interface KitsuEpisodeTitle {
+    en_jp?: string;
+    en_us?: string;
+    ja_jp?: string;
+}
+
+export interface KitsuEpisodeThumbnail {
+    original: string;
 }
 
 export interface Meta3 {

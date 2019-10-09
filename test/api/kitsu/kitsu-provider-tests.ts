@@ -7,16 +7,22 @@ import { ListProviderLocalData } from '../../../src/backend/controller/objects/l
 import Name from '../../../src/backend/controller/objects/meta/name';
 import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 
 describe('Kitsu Tests', () => {
     const kitsuProvider = new KitsuProvider();
-
+    before(() => {
+        MainListManager['listLoaded'] = true;
+        MainListLoader['loadData'] = () => { return [] };
+        MainListLoader['saveData'] = async () => { };
+    })
     beforeEach(() => {
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
     })
 
-    it('should get a series (1/5)', async () => {
+    it('should get a series (1/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -27,7 +33,7 @@ describe('Kitsu Tests', () => {
         strictEqual(result.getListProvidersInfos().length, 2);
     })
 
-    it('should get a series (2/5)', async () => {
+    it('should get a series (2/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -38,7 +44,7 @@ describe('Kitsu Tests', () => {
         strictEqual(result.getListProvidersInfos().length, 2);
     })
 
-        it('should get a series (3/5)', async () => {
+    it('should get a series (3/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -47,9 +53,9 @@ describe('Kitsu Tests', () => {
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
-        })
-    
-        it('should get a series (4/5)', async () => {
+    })
+
+    it('should get a series (4/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
@@ -58,13 +64,24 @@ describe('Kitsu Tests', () => {
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
-        })
-    
-        it('should get a series (5/5)', async () => {
+    })
+
+    it('should get a series (5/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("Avatar: The Last Airbender", "en"));
+        series.addProviderDatas(unkownProvider);
+
+        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
+        strictEqual(result.getListProvidersInfos().length, 2);
+    })
+
+    it('should get a series (6/6)', async () => {
+
+        const series = new Series();
+        const unkownProvider = new ListProviderLocalData();
+        unkownProvider.addSeriesName(new Name("Naruto: Shippuuden", "en"));
         series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
