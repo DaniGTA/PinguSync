@@ -17,7 +17,7 @@ export default class MainListManager {
      * @param notfiyRenderer
      */
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
-        await checkIfListIsLoaded();
+        await this.checkIfListIsLoaded();
         const results = [];
         try {
             const searchResults = await MainListManager.findSameSeriesInList(series, this.mainList);
@@ -110,6 +110,7 @@ export default class MainListManager {
     }
 
     public static async removeSeriesFromList(series: Series, notifyRenderer = false, list?: Series[]): Promise<boolean> {
+        await this.checkIfListIsLoaded();
         if (!list) {
             list = await this.getMainList();
         }
@@ -130,7 +131,7 @@ export default class MainListManager {
      * Retunrs all series but in the maintaince phase it can return dublicated entrys.
      */
     public static async getMainList(): Promise<Series[]> {
-        await checkIfListIsLoaded();
+        await this.checkIfListIsLoaded();
         if (this.listMaintance) {
             const arr = [...MainListManager.secondList, ...MainListManager.mainList];
             logger.log('info', 'TempList served: (size= ' + arr.length + ')');

@@ -108,10 +108,11 @@ export default class ListController {
     }
 
     public async getSeriesListAndUpdateMainList(): Promise<void> {
-       logger.log('info', '[calc] -> SeriesList');
-       const allSeries: Series[] = await this.getAllEntrysFromProviders(true);
+        logger.log('info', '[calc] -> SeriesList');
+        await this.getMainList();
+        const allSeries: Series[] = await this.getAllEntrysFromProviders(true);
 
-       await this.addSeriesToMainList(...allSeries);
+        await this.addSeriesToMainList(...allSeries);
     }
 
 
