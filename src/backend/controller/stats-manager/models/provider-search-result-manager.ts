@@ -1,9 +1,9 @@
-import providerSearchResult from "./provider-search-result";
-import Name from '../../objects/meta/name';
 import { MediaType } from '../../objects/meta/media-type';
+import Name from '../../objects/meta/name';
+import providerSearchResult from './provider-search-result';
 
 export default class ProviderSearchResultManager {
-    static addNewSearchResult(results:number,searchId:string, trys:number,provider: string, searchedName: Name, result: boolean, seriesMediaType: MediaType, providerId?: string) {
+    static addNewSearchResult(results: number, searchId: string, trys: number, provider: string, searchedName: Name, result: boolean, seriesMediaType: MediaType, providerId?: string) {
         const psr = new providerSearchResult();
         psr.searchId = searchId;
         psr.trys = trys;

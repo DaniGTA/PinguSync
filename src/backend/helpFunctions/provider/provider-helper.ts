@@ -44,7 +44,6 @@ export default new class ProviderHelper {
 
     public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
         if (await provider.isProviderAvailable()) {
-            console.group();
             const requestId = stringHelper.randomString(5);
             let trys = 0;
             const seriesMediaType = await series.getMediaType();
@@ -66,7 +65,6 @@ export default new class ProviderHelper {
                             const result = await this.getSeriesByName(series, name, provider);
                             if (result) {
                                 console.log('[' + requestId + '][' + provider.providerName + '] ByName Request success 🎉');
-                                console.groupEnd();
                                 return result;
                             }
                             console.log('[' + requestId + '][' + provider.providerName + '] ByName Request failed ❌');
@@ -80,12 +78,10 @@ export default new class ProviderHelper {
                 console.log('[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
                 ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
                 await series.addProviderDatas(result.mainProvider, ...result.subProviders);
-                console.groupEnd();
                 return series;
             }
 
             console.log('[' + requestId + '][' + provider.providerName + '] Request failed ❌❌❌❌❌❌');
-            console.groupEnd();
             throw new Error('no series info found by name');
         }
         throw new Error('provider is not available');
