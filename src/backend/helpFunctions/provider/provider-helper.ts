@@ -243,7 +243,7 @@ export default new class ProviderHelper {
                 }
             }
             try {
-                const index = series.getInfoProvidersInfos().findIndex((entry) => infoProvider.providerName == entry.provider);
+                const index = series.getInfoProvidersInfos().findIndex((entry) => infoProvider.providerName === entry.provider);
                 if (index !== -1) {
                     const provider = series.getInfoProvidersInfos()[index];
                     if (new Date().getTime() - new Date(provider.lastUpdate).getTime() < new Date(0).setHours(72) || forceUpdate) {

@@ -17,16 +17,23 @@ export default new class SortHelper {
         }
     }
 
-    private async  partition<T>(array: T[], comparator: ((a: T, b: T) => Promise<number>) | ((a: T, b: T) => number), low: number, high: number): Promise<number> {
+    /**
+     *
+     * @param array the array of items.
+     * @param comp comperator function
+     * @param low
+     * @param high
+     */
+    private async  partition<T>(array: T[], comp: ((a: T, b: T) => Promise<number>) | ((a: T, b: T) => number), low: number, high: number): Promise<number> {
         const pivot: T = array[high];
         let i: number = low - 1;
         for (let j = low; j <= high - 1; j++) {
-            if (await comparator(array[j], pivot) === -1) {
+            if (await comp(array[j], pivot) === -1) {
                 i = i + 1;
                 await this.swap(array, i, j);
             }
         }
-        if (await comparator(array[high], array[i + 1]) === -1) {
+        if (await comp(array[high], array[i + 1]) === -1) {
             await this.swap(array, i + 1, high);
         }
         return i + 1;

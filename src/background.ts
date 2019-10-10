@@ -17,13 +17,13 @@ try {
 
   mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
     if (err) {
-      console.log(err.message);
+      console.error(err.message);
     } else {
       console.log('Successfully Connected!');
     }
   });
 } catch (err) {
-  console.log(err);
+  console.error(err);
 }
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -65,7 +65,7 @@ function createWindow() {
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
   });
-  ipcMain.on('get-path', (event: Electron.IpcMainEvent, string: string) => {
+  ipcMain.on('get-path', (event: Electron.IpcMainEvent, s: string) => {
     if (win != null) {
       win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
     }

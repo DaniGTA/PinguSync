@@ -28,7 +28,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             mergedProvider.rawEntry = provider.rawEntry;
             mergedProvider.covers = provider.covers;
             mergedProvider.episodes = provider.episodes;
-            if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length != 0) {
+            if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length !== 0) {
                 mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
             }
             if (provider.covers) {
@@ -243,7 +243,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             this.watchProgress = [];
         }
         const index = this.watchProgress.findIndex((episode) => watchProgress.episode === episode.episode);
-        if (index == -1) {
+        if (index === -1) {
             return false;
         } else {
             this.watchProgress = await listHelper.removeEntrys(this.watchProgress, this.watchProgress[index]);

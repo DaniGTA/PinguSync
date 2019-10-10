@@ -41,7 +41,7 @@ export default class ListController {
     public async removeWatchProgress(anime: Series, watchProgress: WatchProgress) {
         for (const provider of anime.getListProvidersInfos()) {
             try {
-                const providerInstance = await provider.getProviderInstance();
+                const providerInstance = provider.getProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
                     const newProvider = await providerInstance.removeEntry(anime, watchProgress);
                     newProvider.lastUpdate = new Date(Date.now());

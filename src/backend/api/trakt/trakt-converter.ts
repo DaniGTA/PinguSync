@@ -26,7 +26,7 @@ export default new class TraktConverter {
             const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
             providerInfo.addSeriesName(new Name(watchedInfo.show.title, 'en', NameType.OFFICIAL));
             providerInfo.addSeriesName(new Name(watchedInfo.show.ids.slug, 'slug', NameType.SLUG));
-            if (season.number == 1) {
+            if (season.number === 1) {
                 providerInfo.releaseYear = watchedInfo.show.year;
             }
             providerInfo.id = watchedInfo.show.ids.trakt;
@@ -170,7 +170,7 @@ export default new class TraktConverter {
 
                 for (let index = 1; (index < newWatchprogress + 1 && index < maxEpisodes + 1 && i < newWatchprogress + 1); index++) {
                     if (currentProvider.watchProgress) {
-                        if (newWatchprogress == index || currentProvider.watchProgress.findIndex((x) => x.episode === index) === -1) {
+                        if (newWatchprogress === index || currentProvider.watchProgress.findIndex((x) => x.episode === index) === -1) {
                             episodes.push({ number: index });
                         }
                     } else {

@@ -82,7 +82,7 @@ export default class TraktProvider implements IListProvider {
     }
     public async getAllSeries(disableCache: boolean = false): Promise<Series[]> {
         console.log('[Request] -> Trakt -> AllSeries');
-        if (this.userData.list != null && this.userData.list.length != 0 && !disableCache) {
+        if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
             return this.userData.list;
         } else if (this.userData.userInfo != null) {
             const seriesList: Series[] = [];
@@ -106,8 +106,8 @@ export default class TraktProvider implements IListProvider {
     }
 
     public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        const providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName);
-        if (typeof providerInfo != 'undefined') {
+        const providerInfo = anime.getListProvidersInfos().find((x) => x.provider === this.providerName);
+        if (typeof providerInfo !== 'undefined') {
             providerInfo.addOneWatchProgress(watchProgress);
             const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress.episode);
             await this.traktRequest('https://api.trakt.tv/sync/history', 'POST', JSON.stringify(updatedEntry));
@@ -117,8 +117,8 @@ export default class TraktProvider implements IListProvider {
     }
 
     public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        var providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName);
-        if (typeof providerInfo != 'undefined') {
+        const providerInfo = anime.getListProvidersInfos().find((x) => x.provider === this.providerName);
+        if (typeof providerInfo !== 'undefined') {
             providerInfo.removeOneWatchProgress(watchProgress);
             const updatedEntry = await traktConverter.convertAnimeToSendRemoveEntryShow(anime, watchProgress.episode);
             await this.traktRequest('https://api.trakt.tv/sync/history/remove', 'POST', JSON.stringify(updatedEntry));
@@ -179,22 +179,22 @@ export default class TraktProvider implements IListProvider {
                     try {
 
                         if (response.statusCode === 200 || response.statusCode === 201) {
-                            var data: T = JSON.parse(body) as T;
+                            const data: T = JSON.parse(body) as T;
                             resolve(data);
                         } else {
-                            console.log('[Trakt] status code:', response.statusCode);
+                            console.error('[Trakt] status code:', response.statusCode);
                             reject();
                         }
                     } catch (err) {
-                        console.log(err);
+                        console.error(err);
                         reject();
                     }
                 }).on('error', (err) => {
-                    console.log(err);
+                    console.error(err);
                     reject();
                 });
             } catch (err) {
-                console.log(err);
+                console.error(err);
                 reject();
             }
         });

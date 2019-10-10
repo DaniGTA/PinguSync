@@ -97,19 +97,19 @@ export default class TVDBProvider implements IInfoProvider {
             (async () => {
                 try {
                     request({
-                        method: method,
+                        method,
                         url,
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Bearer ' + await TVDBProvider.Instance.getAccessKey(),
                         },
 
-                        body: body,
+                        body,
                         timeout: 5000,
                     }, (error: any, response: any, body: any) => {
                         try {
                             if (response.statusCode === 200 || response.statusCode === 201) {
-                                let data: T = JSON.parse(body) as T;
+                                const data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
                                 console.error('[TVDB] status code: ' + response.statusCode);

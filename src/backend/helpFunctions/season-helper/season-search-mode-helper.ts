@@ -3,7 +3,7 @@ import { SeasonSearchMode } from './season-search-mode';
 export default class SeasonSearchModeHelper {
     /**
      * Checks if the search mode is able to perform a title search.
-     * @param searchMode 
+     * @param searchMode
      */
     public static canPerformATitleSearch(searchMode: SeasonSearchMode): boolean {
         switch (searchMode) {
@@ -22,7 +22,7 @@ export default class SeasonSearchModeHelper {
 
     /**
      * Checks if the search mode is able to perform a prequel trace.
-     * @param searchMode 
+     * @param searchMode
      */
     public static canPerformAPrequelTrace(searchMode: SeasonSearchMode): boolean {
         switch (searchMode) {

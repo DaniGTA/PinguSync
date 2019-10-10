@@ -376,7 +376,7 @@ describe('ListController | Combine', () => {
 
 async function getFilledAnime(providername: string = 'Test', providerId: number = -1): Promise<Series> {
     const provider = new ListProviderLocalData(providername);
-    if (providerId != -1) {
+    if (providerId !== -1) {
         provider.id = providerId;
     } else {
         provider.id = Math.random() * (+0 - +10000) + +10000;

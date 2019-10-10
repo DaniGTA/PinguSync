@@ -1,7 +1,7 @@
 /**
  * Force a search mode.
  */
-export enum SeasonSearchMode{
+export enum SeasonSearchMode {
     /**
      * If no cached results are avaible it will perform all searches avaible to get the results.
      */
@@ -22,5 +22,5 @@ export enum SeasonSearchMode{
     /**
      * This will force the function to not perform any search just passthrough cached results.
      */
-    NO_SEARCH
+    NO_SEARCH,
 }

@@ -88,7 +88,7 @@ class ProviderController {
                     this.send(channel, data);
                     break;*/
                 case 'get-all-providers':
-                    this.send('all-providers', ProviderList.getListProviderList().flatMap(x => x.providerName));
+                    this.send('all-providers', ProviderList.getListProviderList().flatMap((x) => x.providerName));
                     break;
             }
         });
@@ -132,9 +132,9 @@ class ProviderController {
 
     private async syncSeries(id: string | number) {
         if (ListController.instance) {
-            var lc = ListController.instance;
-            var anime = (await lc.getMainList()).find(x => x.id === id);
-            if (typeof anime != 'undefined') {
+            const lc = ListController.instance;
+            const anime = (await lc.getMainList()).find((x) => x.id === id);
+            if (typeof anime !== 'undefined') {
                 lc.syncProvider(anime);
             } else {
                 console.error('Error');

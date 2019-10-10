@@ -11,25 +11,25 @@ export default new class TitleCheckHelper {
 
     public async checkNames(aNameList: string[], bNameList: string[]) {
         if (await this.fastMatch(aNameList, bNameList)) {
-            for (const name of aNameList) {
+            for (const aName of aNameList) {
                 try {
-                    var name2 = await stringHelper.cleanString(name);
-                    var name2 = await this.removeMediaTypeFromTitle(name2);
-                    name2 = await this.removeSeasonMarkesFromTitle(name2);
-                    if (name2 !== name) {
-                        aNameList.push(name2);
+                    let aName2 = await stringHelper.cleanString(aName);
+                    aName2 = await this.removeMediaTypeFromTitle(aName2);
+                    aName2 = await this.removeSeasonMarkesFromTitle(aName2);
+                    if (aName2 !== aName) {
+                        aNameList.push(aName2);
                     }
                 } catch (err) {
                     continue;
                 }
             }
-            for (const name of bNameList) {
+            for (const bName of bNameList) {
                 try {
-                    var name2 = await stringHelper.cleanString(name);
-                    var name2 = await this.removeMediaTypeFromTitle(name2);
-                    name2 = await this.removeSeasonMarkesFromTitle(name2);
-                    if (name2 !== name) {
-                        bNameList.push(name2);
+                    let bName2 = await stringHelper.cleanString(bName);
+                    bName2 = await this.removeMediaTypeFromTitle(bName2);
+                    bName2 = await this.removeSeasonMarkesFromTitle(bName2);
+                    if (bName2 !== bName) {
+                        bNameList.push(bName2);
                     }
                 } catch (err) {
                     continue;
@@ -73,8 +73,8 @@ export default new class TitleCheckHelper {
     public async fastMatch(aList: string[], bList: string[]): Promise<boolean> {
         const that = this;
         try {
-            var al = [...aList];
-            var bl = [...bList];
+            const al = [...aList];
+            const bl = [...bList];
             for (const a of al) {
                 if (a) {
                     for (const b of bl) {
@@ -82,20 +82,20 @@ export default new class TitleCheckHelper {
                             if (!that.equalIgnoreCase(a.substring(0, 3), b.substring(0, 3))) {
                                 continue;
                             }
-                            var shortestTextLength = 0;
+                            let shortestTextLength = 0;
                             if (a.length < b.length) {
                                 shortestTextLength = a.length;
                             } else {
                                 shortestTextLength = b.length;
                             }
-                            var shortScan = Math.ceil(shortestTextLength / 4);
+                            let shortScan = Math.ceil(shortestTextLength / 4);
                             if (shortScan < 3) {
                                 shortScan = Math.ceil(shortestTextLength / 1.25);
                             } else if (shortScan > 10) {
                                 shortScan = 5;
                             }
-                            var aResult = a.substring(0, shortScan);
-                            var bResult = b.substring(0, shortScan);
+                            const aResult = a.substring(0, shortScan);
+                            const bResult = b.substring(0, shortScan);
 
                             const result = that.equalIgnoreCase(aResult, bResult);
                             if (result) {
@@ -107,18 +107,18 @@ export default new class TitleCheckHelper {
             }
             return false;
         } catch (err) {
-            console.log(err);
+            console.error(err);
             return false;
         }
     }
 
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
         if (title != null && title !== '') {
-            var reversedTitle = await stringHelper.reverseString(title);
-            var lastChar = reversedTitle.charAt(0);
-            var countLastChar = 0;
+            let reversedTitle = await stringHelper.reverseString(title);
+            const lastChar = reversedTitle.charAt(0);
+            let countLastChar = 0;
             if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi)) {
-                var match = /Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi.exec(title);
+                const match = /Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi.exec(title);
                 if (match != null) {
                     return title.replace(match[0], '').replace('  ', ' ').trim();
                 }
@@ -133,13 +133,13 @@ export default new class TitleCheckHelper {
                     reversedTitle = reversedTitle.substr(1);
                 }
 
-                if (countLastChar != 1) {
+                if (countLastChar !== 1) {
                     return (await stringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
                 }
             }
             return title;
         }
-        throw 'NoName';
+        throw new Error('NoName');
     }
 
     public async getMediaTypeFromTitle(title: string): Promise<MediaType> {

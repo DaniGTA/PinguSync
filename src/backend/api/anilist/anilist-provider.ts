@@ -128,7 +128,7 @@ export default class AniListProvider implements IListProvider {
 
     public async getAllSeries(disableCache: boolean = false): Promise<Series[]> {
         console.log('[Request] -> AniList -> AllSeries');
-        if (this.userData.list != null && this.userData.list.length != 0 && !disableCache) {
+        if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
             console.log('[LoadCache] -> AniList -> AllSeries');
             return this.userData.list;
         } else {
@@ -163,7 +163,7 @@ export default class AniListProvider implements IListProvider {
     }
 
     public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        const aniListProvider = anime.getListProvidersInfos().find(x => x.provider == this.providerName);
+        const aniListProvider = anime.getListProvidersInfos().find((x) => x.provider === this.providerName);
         if (aniListProvider) {
             let watchStatus = '';
             if (watchProgress.episode === 0) {
@@ -188,7 +188,7 @@ export default class AniListProvider implements IListProvider {
     }
 
     public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        const providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName);
+        const providerInfo = anime.getListProvidersInfos().find((x) => x.provider === this.providerName);
         if (typeof providerInfo !== 'undefined') {
             providerInfo.removeOneWatchProgress(watchProgress);
             return providerInfo;
@@ -222,17 +222,17 @@ export default class AniListProvider implements IListProvider {
                 request(options, (error: any, response: any, body: any) => {
 
                     console.log('[AniList] statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                    if (response.statusCode == 200) {
+                    if (response.statusCode === 200) {
                         const rawdata = JSON.parse(body);
                         resolve(rawdata.data as T);
                     } else {
                         rejects();
                     }
                 }).on('error', (err) => {
-                    console.log(err);
+                    console.error(err);
                 });
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         });
     }
@@ -251,8 +251,8 @@ export default class AniListProvider implements IListProvider {
             }),
         };
 
-        if (this.userData.access_token != '' && typeof this.userData.access_token != 'undefined') {
-            if (typeof options.headers != 'undefined') {
+        if (this.userData.access_token !== '' && typeof this.userData.access_token !== 'undefined') {
+            if (typeof options.headers !== 'undefined') {
                 options.headers = {
                     'Authorization': 'Bearer ' + this.userData.access_token,
                     'Content-Type': 'application/json',

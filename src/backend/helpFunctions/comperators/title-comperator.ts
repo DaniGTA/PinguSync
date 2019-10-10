@@ -1,18 +1,18 @@
 import Series from '../../controller/objects/series';
-import ComperatorResult from './comperator-results.ts/comperator-result';
 import titleCheckHelper from '../title-check-helper';
+import ComperatorResult from './comperator-results.ts/comperator-result';
 
 export default class TitleComperator {
     /**
      * It compares Titles from a and b.
-     * 
+     *
      * For non season provider it can check the first season of both.
-     * @param a 
-     * @param b 
-     * @param aFirstSeason 
-     * @param bFirstSeason 
+     * @param a
+     * @param b
+     * @param aFirstSeason
+     * @param bFirstSeason
      */
-    static async compareTitle(a: Series, b: Series,aFirstSeason:Series|null,bFirstSeason:Series|null): Promise<ComperatorResult>{
+    public static async compareTitle(a: Series, b: Series, aFirstSeason: Series | null, bFirstSeason: Series | null): Promise<ComperatorResult> {
         const comperatorResult = new ComperatorResult();
         const aNames = a.getAllNames();
         const bNames = b.getAllNames();
@@ -34,5 +34,5 @@ export default class TitleComperator {
             }
         }
         return comperatorResult;
-   }
+    }
 }
