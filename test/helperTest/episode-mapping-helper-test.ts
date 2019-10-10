@@ -18,13 +18,19 @@ describe('Episode mapping | Mapping Only', () => {
     const lc = new ListController(true);
 
     before(() => {
+        // tslint:disable-next-line: no-string-literal
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return []; };
+        // tslint:disable-next-line: no-string-literal
+        MainListLoader['loadData'] = () => [];
+        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
         MainListLoader['saveData'] = async () => { };
     });
     beforeEach(() => {
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
     });
     it('should map same episodes length from 2 providers', async () => {

@@ -17,14 +17,21 @@ describe('Season Helper', () => {
     const lc = new ListController(true);
 
     before(() => {
+        // tslint:disable-next-line: no-string-literal
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return []; };
+        // tslint:disable-next-line: no-string-literal
+        MainListLoader['loadData'] = () => [];
+        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
         MainListLoader['saveData'] = async () => { };
     });
     beforeEach(() => {
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('test', true, false), new TestProvider('test2', true, true)];
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
+        // tslint:disable-next-line: no-unused-expression
         new ListController(true);
     });
 
@@ -43,10 +50,9 @@ describe('Season Helper', () => {
         listProvider2.mediaType = MediaType.SPECIAL;
         listProvider2.addSeriesName(new Name('Test', 'x-jap'));
         b.addListProvider(listProvider2);
-
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        console.log(result.foundType);
         strictEqual(result.season, 1);
     });
 
@@ -65,10 +71,9 @@ describe('Season Helper', () => {
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name('Test 1', 'x-jap'));
         b.addListProvider(listProvider2);
-
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        console.log(result.foundType);
         strictEqual(result.season, 2);
     });
 
@@ -95,10 +100,9 @@ describe('Season Helper', () => {
         listProvider3.mediaType = MediaType.ANIME;
         listProvider3.addSeriesName(new Name('Test 1', 'x-jap'));
         c.addListProvider(listProvider3);
-
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        console.log(result.foundType);
         strictEqual(result.season, 3);
     });
 
@@ -125,10 +129,9 @@ describe('Season Helper', () => {
         listProvider3.mediaType = MediaType.ANIME;
         listProvider3.addSeriesName(new Name('Test 6', 'x-jap'));
         c.addListProvider(listProvider3);
-
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        console.log(result.foundType);
         strictEqual(result.season, 4);
     });
 
@@ -148,10 +151,9 @@ describe('Season Helper', () => {
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name('Test 6', 'x-jap'));
         b.addListProvider(listProvider2);
-
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        console.log(result.foundType);
         strictEqual(result.season, 5);
     });
 
@@ -162,10 +164,9 @@ describe('Season Helper', () => {
         listProvider.mediaType = MediaType.ANIME;
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         a.addListProvider(listProvider);
-
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        console.log(result.foundType);
         strictEqual(result.seasonError, SeasonError.CANT_GET_SEASON);
     });
 });

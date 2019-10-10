@@ -11,6 +11,7 @@ import TVDBConverter from './tvdb-converter';
 import { TVDBProviderData } from './tvdb-provider-data';
 
 export default class TVDBProvider implements IInfoProvider {
+    public static Instance: TVDBProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.SPECIAL];
     public providerName = 'tvdb';
     public isOffline = false;
@@ -19,7 +20,7 @@ export default class TVDBProvider implements IInfoProvider {
     private apiKey = '790G98VXW5MZHGV0';
     private baseUrl = 'https://api.thetvdb.com';
     private apiData: TVDBProviderData = new TVDBProviderData();
-    public static Instance: TVDBProvider;
+
     get Instance(): TVDBProvider {
         if (TVDBProvider.Instance) {
             return TVDBProvider.Instance;
@@ -44,14 +45,21 @@ export default class TVDBProvider implements IInfoProvider {
                     result.push(new MultiProviderResult(await tvDbConverter.convertSearchResultToSeries(searchResult)));
                 }
             }
-        } catch (err) { }
+        } catch (err) {
+            console.error(err);
+        }
         return result;
     }
-    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+    public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const tvDbConverter = new TVDBConverter();
         const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + provider.id);
 
         return new MultiProviderResult(await tvDbConverter.convertSeriesToProviderLocalData(data));
+    }
+
+
+    public async isProviderAvailable(): Promise<boolean> {
+        return true;
     }
 
     private async getAccessKey(): Promise<string> {
@@ -73,7 +81,7 @@ export default class TVDBProvider implements IInfoProvider {
                         reject();
                     }
                 }).on('error', (err) => {
-                    console.log(err);
+                    console.error(err);
                     reject();
                 });
             });
@@ -81,10 +89,6 @@ export default class TVDBProvider implements IInfoProvider {
             TVDBProvider.Instance.apiData.setTokens(token, new Date().getTime() + dayInms);
             return token;
         }
-    }
-
-    async isProviderAvailable(): Promise<boolean> {
-        return true;
     }
 
     private async webRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
@@ -108,19 +112,19 @@ export default class TVDBProvider implements IInfoProvider {
                                 let data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
-                                console.log('[TVDB] status code: ' + response.statusCode);
+                                console.error('[TVDB] status code: ' + response.statusCode);
                                 reject();
                             }
                         } catch (err) {
-                            console.log(err);
+                            console.error(err);
                             reject();
                         }
                     }).on('error', (err) => {
-                        console.log(err);
+                        console.error(err);
                         reject();
                     });
                 } catch (err) {
-                    console.log(err);
+                    console.error(err);
                     reject();
                 }
             })();

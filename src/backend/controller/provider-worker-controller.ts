@@ -12,6 +12,15 @@ class ProviderController {
         return ProviderController.instance;
     }
 
+    public static getProviderInstance(providerString: string): IListProvider {
+        for (const provider of ProviderList.getListProviderList()) {
+            if (provider.providerName === providerString) {
+                return provider;
+            }
+        }
+        throw new Error('NoProviderFound');
+    }
+
     private static instance: ProviderController;
 
     private path: string | null = null;
@@ -29,7 +38,9 @@ class ProviderController {
                     try {
                         await pl.logInUser(code);
                         that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
-                    } catch (err) { }
+                    } catch (err) {
+                        console.error(err);
+                    }
                 });
                 this.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
                     that.send('open-url', pl.getTokenAuthUrl());
@@ -38,7 +49,9 @@ class ProviderController {
             this.on(pl.providerName.toLocaleLowerCase() + '-is-logged-in', async (code: string) => {
                 try {
                     that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
-                } catch (err) { }
+                } catch (err) {
+                    console.error(err);
+                }
             });
         }
         this.send('status');
@@ -82,51 +95,13 @@ class ProviderController {
 
     }
 
-    private send(channel: string, data?: any) {
-        let success = false;
-        while (!success) {
-            try {
-                ctx.postMessage(new WorkerTransfer(channel, JSON.stringify(data)));
-                console.log('worker send: ' + channel);
-                success = true;
-            } catch (err) {
-                ctx.postMessage(new WorkerTransfer(channel, ''));
-                console.log(err);
-            }
-        }
-
-    }
-
-    static getProviderInstance(providerString: string): IListProvider {
-        for (const provider of ProviderList.getListProviderList()) {
-            if (provider.providerName === providerString) {
-                return provider;
-            }
-        }
-        throw 'NoProviderFound';
-    }
-
-    private async syncSeries(id: string | number) {
-        if (ListController.instance) {
-            var lc = ListController.instance;
-            var anime = (await lc.getMainList()).find(x => x.id === id);
-            if (typeof anime != 'undefined') {
-                lc.syncProvider(anime);
-            } else {
-                console.log('Error');
-            }
-        } else {
-            console.log('Failed sync series: no list controller instance');
-        }
-    }
-
     public async sendSeriesList() {
         console.log('[Send] -> list -> anime');
         if (ListController.instance) {
-            var list = ListController.instance.getMainList();
+            const list = ListController.instance.getMainList();
             this.send('series-list', list);
         } else {
-            console.log('Failed send list: no list controller instance');
+            console.error('Failed send list: no list controller instance');
         }
     }
 
@@ -153,7 +128,38 @@ class ProviderController {
             }
         });
     }
+
+
+    private async syncSeries(id: string | number) {
+        if (ListController.instance) {
+            var lc = ListController.instance;
+            var anime = (await lc.getMainList()).find(x => x.id === id);
+            if (typeof anime != 'undefined') {
+                lc.syncProvider(anime);
+            } else {
+                console.error('Error');
+            }
+        } else {
+            console.error('Failed sync series: no list controller instance');
+        }
+    }
+
+    private send(channel: string, data?: any) {
+        let success = false;
+        while (!success) {
+            try {
+                ctx.postMessage(new WorkerTransfer(channel, JSON.stringify(data)));
+                console.log('worker send: ' + channel);
+                success = true;
+            } catch (err) {
+                ctx.postMessage(new WorkerTransfer(channel, ''));
+                console.error(err);
+            }
+        }
+
+    }
 }
+// tslint:disable-next-line: no-unused-expression
 new ProviderController();
 
 export default ProviderController;

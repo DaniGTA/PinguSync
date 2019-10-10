@@ -1,10 +1,13 @@
 'use strict';
 
+// tslint:disable-next-line: no-implicit-dependencies
 import { app, protocol, BrowserWindow, ipcMain, shell } from 'electron';
 import {
   createProtocol,
   installVueDevtools,
+  // tslint:disable-next-line: no-implicit-dependencies tslint:disable-next-line: no-submodule-imports
 } from 'vue-cli-plugin-electron-builder/lib';
+// tslint:disable-next-line: no-implicit-dependencies
 import * as electron from 'electron';
 import * as mongoose from 'mongoose';
 import FrontendController from './backend/controller/frontend-controller';

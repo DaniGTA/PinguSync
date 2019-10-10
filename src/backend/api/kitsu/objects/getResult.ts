@@ -1,5 +1,5 @@
-import { Media } from './searchResult';
+import { IMedia } from './searchResult';
 
 export interface GetMediaResult {
-    data: Media;
+    data: IMedia;
 }

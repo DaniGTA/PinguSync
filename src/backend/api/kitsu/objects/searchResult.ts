@@ -71,83 +71,83 @@ export interface Links9 {
     related: string;
 }
 
-export interface Characters {
+export interface ICharacters {
     links: Links9;
 }
 
-export interface Links10 {
+export interface ILinks10 {
     self: string;
     related: string;
 }
 
-export interface Staff {
-    links: Links10;
+export interface IStaff {
+    links: ILinks10;
 }
 
-export interface Links11 {
+export interface ILinks11 {
     self: string;
     related: string;
 }
 
-export interface Productions {
-    links: Links11;
+export interface IProductions {
+    links: ILinks11;
 }
 
-export interface Links12 {
+export interface ILinks12 {
     self: string;
     related: string;
 }
 
-export interface Quotes {
-    links: Links12;
+export interface IQuotes {
+    links: ILinks12;
 }
 
-export interface Links13 {
+export interface ILinks13 {
     self: string;
     related: string;
 }
 
-export interface Episodes {
-    links: Links13;
+export interface IEpisodes {
+    links: ILinks13;
 }
 
-export interface Links14 {
+export interface ILinks14 {
     self: string;
     related: string;
 }
 
-export interface StreamingLinks {
-    links: Links14;
+export interface IStreamingLinks {
+    links: ILinks14;
 }
 
-export interface Links15 {
+export interface ILinks15 {
     self: string;
     related: string;
 }
 
-export interface AnimeProductions {
-    links: Links15;
+export interface IAnimeProductions {
+    links: ILinks15;
 }
 
-export interface Links16 {
+export interface ILinks16 {
     self: string;
     related: string;
 }
 
-export interface AnimeCharacters {
-    links: Links16;
+export interface IAnimeCharacters {
+    links: ILinks16;
 }
 
-export interface Links17 {
+export interface ILinks17 {
     self: string;
     related: string;
 }
 
-export interface AnimeStaff {
-    links: Links17;
+export interface IAnimeStaff {
+    links: ILinks17;
 }
 
-export interface Relationships {
+export interface IRelationships {
     genres: Genres;
     categories: Categories;
     castings: Castings;
@@ -155,15 +155,15 @@ export interface Relationships {
     mappings: Mappings;
     reviews: Reviews;
     mediaRelationships: MediaRelationships;
-    characters: Characters;
-    staff: Staff;
-    productions: Productions;
-    quotes: Quotes;
-    episodes: Episodes;
-    streamingLinks: StreamingLinks;
-    animeProductions: AnimeProductions;
-    animeCharacters: AnimeCharacters;
-    animeStaff: AnimeStaff;
+    characters: ICharacters;
+    staff: IStaff;
+    productions: IProductions;
+    quotes: IQuotes;
+    episodes: IEpisodes;
+    streamingLinks: IStreamingLinks;
+    animeProductions: IAnimeProductions;
+    animeCharacters: IAnimeCharacters;
+    animeStaff: IAnimeStaff;
 }
 
 export interface Titles {
@@ -256,23 +256,23 @@ export interface Dimensions2 {
     large: Large2;
 }
 
-export interface Meta2 {
+export interface IMeta2 {
     dimensions: Dimensions2;
 }
 
-export interface CoverImage {
+export interface ICoverImage {
     tiny: string;
     small: string;
     large: string;
     original: string;
-    meta: Meta2;
+    meta: IMeta2;
 }
 
-export interface Media {
+export interface IMedia {
     id: string;
     type: string;
     links: Links;
-    relationships: Relationships;
+    relationships: IRelationships;
     createdAt: Date;
     updatedAt: Date;
     slug: string;
@@ -296,18 +296,18 @@ export interface Media {
     status: string;
     tba: string;
     posterImage: PosterImage;
-    coverImage: CoverImage;
+    coverImage: ICoverImage;
     episodeCount: number;
     episodeLength: number;
     totalLength: number;
     youtubeVideoId: string;
     showType: string;
     nsfw: boolean;
-    episodes?: KitsuEpisode[];
-    mappings?: KitsuMappings[];
+    episodes?: IKitsuEpisode[];
+    mappings?: IKitsuMappings[];
 }
 
-export interface KitsuMappings {
+export interface IKitsuMappings {
     externalId: string;
     externalSite: string;
     id: string;
@@ -317,7 +317,7 @@ export interface KitsuMappings {
 
 }
 
-export interface KitsuEpisode {
+export interface IKitsuEpisode {
     airdate: string;
     cononicalTitle: string;
     createdAt: string;
@@ -327,35 +327,35 @@ export interface KitsuEpisode {
     relativeNumber: number;
     seasonNumber: number;
     synopsis: string;
-    thumbnail: KitsuEpisodeThumbnail[];
-    titles: KitsuEpisodeTitle[];
+    thumbnail: IKitsuEpisodeThumbnail[];
+    titles: IKitsuEpisodeTitle[];
     type: string;
     updatedAt: string;
 }
 
-export interface KitsuEpisodeTitle {
+export interface IKitsuEpisodeTitle {
     en_jp?: string;
     en_us?: string;
     ja_jp?: string;
 }
 
-export interface KitsuEpisodeThumbnail {
+export interface IKitsuEpisodeThumbnail {
     original: string;
 }
 
-export interface Meta3 {
+export interface IMeta3 {
     count: number;
 }
 
-export interface Links18 {
+export interface ILinks18 {
     first: string;
     next: string;
     last: string;
 }
 
-export interface SearchResult {
-    data: Media[];
-    meta: Meta3;
-    links: Links18;
+export interface ISearchResult {
+    data: IMedia[];
+    meta: IMeta3;
+    links: ILinks18;
 }
 

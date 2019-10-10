@@ -37,4 +37,4 @@ export default new class SortHelper {
         array[i] = array[j];
         array[j] = newJ;
     }
-};
+}();

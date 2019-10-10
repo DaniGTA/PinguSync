@@ -1,6 +1,6 @@
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 import PathHelper from '../../helpFunctions/path-helper';
 
 export class TVDBProviderData {
@@ -19,23 +19,25 @@ export class TVDBProviderData {
 
     private async saveData() {
         try {
-            const path = this.getPath();
-            console.warn('[IO] Write tvdb user file.')
-            fs.writeFileSync(path, JSON.stringify(this));
-        } catch (err) { }
+            const dataPath = this.getPath();
+            console.warn('[IO] Write tvdb user file.');
+            fs.writeFileSync(dataPath, JSON.stringify(this));
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     private loadData() {
         try {
-            const path = this.getPath();
-            console.warn('[IO] Read tvdb user file. ' + path)
-            if (fs.existsSync(path)) {
-                const loadedString = fs.readFileSync(path, 'UTF-8');
+            const dataPath = this.getPath();
+            console.warn('[IO] Read tvdb user file. ' + dataPath);
+            if (fs.existsSync(dataPath)) {
+                const loadedString = fs.readFileSync(dataPath, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
         } catch (err) {
-
+            console.error(err);
         }
     }
 

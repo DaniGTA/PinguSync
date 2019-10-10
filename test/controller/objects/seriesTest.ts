@@ -20,6 +20,7 @@ describe('Series | Basic', () => {
         providerB.watchProgress = [];
         providerB.lastUpdate = new Date(50);
         await series.addListProvider(providerA, providerB);
+        // tslint:disable-next-line: no-string-literal
         assert.equal(await series['getLastUpdatedProvider'](), providerA);
         return;
     });
@@ -103,6 +104,7 @@ describe('Series | Basic', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData();
         providerB.episodes = 24;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 11;
         await series.addListProvider(providerA, providerB);
         assert.throws(series.getMaxEpisode);

@@ -1,13 +1,13 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 import AniDBNameListXML from './objects/anidbNameListXML';
 
 export default class AniDBNameManager {
+    public lastDownloadTime: Date | undefined;
+    public data: AniDBNameListXML | undefined;
     constructor() {
         this.loadData();
     }
-    lastDownloadTime: Date | undefined;
-    data: AniDBNameListXML | undefined;
 
     public updateData(time: Date, data?: AniDBNameListXML) {
         console.log('[update] -> anidb -> data');
@@ -20,7 +20,9 @@ export default class AniDBNameManager {
         try {
             console.log('[Save] -> AniDB -> Names');
             fs.writeFileSync(this.getPath(), JSON.stringify(this));
-        } catch (err) { }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     private loadData() {
@@ -34,7 +36,7 @@ export default class AniDBNameManager {
                 }
             }
         } catch (err) {
-
+            console.error(err);
         }
     }
     private getPath(): string {

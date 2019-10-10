@@ -1,52 +1,53 @@
-import { MediaType } from '../../controller/objects/meta/media-type';
-import WatchProgress from '../../controller/objects/meta/watch-progress';
-import MultiProviderResult from '../multi-provider-result';
-import Series from '../../controller/objects/series';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
-import IInfoProvider from '../info-provider';
+// tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import WatchProgress from '../../controller/objects/meta/watch-progress';
+import Series from '../../controller/objects/series';
+import IInfoProvider from '../info-provider';
+import MultiProviderResult from '../multi-provider-result';
+import { IdRequestResult } from './models/id-request-result';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
-import { IdRequestResult } from './models/id-request-result';
 
 export default class OMDbProvider implements IInfoProvider {
-    isOffline: boolean = false;
-    hasOAuthCode: boolean = false;
-    public providerName: string = "omdb";
-    hasUniqueIdForSeasons: boolean = false;
-    supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
-    version: number = 1;
-    apikey = "728e1e03";
     public static instance: OMDbProvider;
+    public isOffline: boolean = false;
+    public hasOAuthCode: boolean = false;
+    public providerName: string = 'omdb';
+    public hasUniqueIdForSeasons: boolean = false;
+    public supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
+    public version: number = 1;
+    public apikey = '728e1e03';
     constructor() {
         if (!OMDbProvider.instance) {
             OMDbProvider.instance = this;
         }
     }
 
-    async getAllSeries(disableCache?: boolean | undefined): Promise<import("../../controller/objects/series").default[]> {
-        throw new Error("Method not implemented.");
+    public async getAllSeries(disableCache?: boolean | undefined): Promise<Series[]> {
+        throw new Error('Method not implemented.');
     }
-    async logInUser(pass: string, username?: string | undefined): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    public async logInUser(pass: string, username?: string | undefined): Promise<boolean> {
+        throw new Error('Method not implemented.');
     }
-    isUserLoggedIn(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    public isUserLoggedIn(): Promise<boolean> {
+        throw new Error('Method not implemented.');
     }
-    getTokenAuthUrl(): string {
-        throw new Error("Method not implemented.");
+    public getTokenAuthUrl(): string {
+        throw new Error('Method not implemented.');
     }
 
-    async isProviderAvailable(): Promise<boolean> {
+    public async isProviderAvailable(): Promise<boolean> {
         return true;
     }
 
-    async getMoreSeriesInfoByName(searchTitle: string, season?: number | undefined): Promise<MultiProviderResult[]> {
+    public async getMoreSeriesInfoByName(searchTitle: string, season?: number | undefined): Promise<MultiProviderResult[]> {
         const results: MultiProviderResult[] = [];
         const converter = new OMDbConverter();
         try {
-            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.apikey + "&s=" + encodeURI(searchTitle));
+            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.apikey + '&s=' + encodeURI(searchTitle));
             if (result.Search) {
                 for (const resultEntry of result.Search) {
                     results.push(converter.convertSearchResult(resultEntry));
@@ -58,9 +59,9 @@ export default class OMDbProvider implements IInfoProvider {
         }
         return results;
     }
-    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+    public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const converter = new OMDbConverter();
-        const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + "&i=" + provider.id);
+        const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + '&i=' + provider.id);
         return converter.convertIdRequest(result);
     }
 
@@ -70,32 +71,32 @@ export default class OMDbProvider implements IInfoProvider {
             (async () => {
                 try {
                     request({
-                        method: method,
+                        method,
                         url,
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        timeout: 5000
+                        timeout: 5000,
                     }, (error: any, response: any, body: any) => {
                         try {
 
                             if (response.statusCode === 200 || response.statusCode === 201) {
-                                var data: T = JSON.parse(body) as T;
+                                const data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
-                                console.log('[OMDb] status code: ' + response.statusCode);
+                                console.error('[OMDb] status code: ' + response.statusCode);
                                 reject();
                             }
                         } catch (err) {
-                            console.log(err);
+                            console.error(err);
                             reject();
                         }
                     }).on('error', (err) => {
-                        console.log(err);
+                        console.error(err);
                         reject();
-                    })
+                    });
                 } catch (err) {
-                    console.log(err);
+                    console.error(err);
                     reject();
                 }
             })();

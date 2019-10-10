@@ -23,6 +23,7 @@ describe('Series | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
@@ -39,6 +40,7 @@ describe('Series | Sync', () => {
         ProviderList.getListProviderList().push(new TestProvider('CanSync22'));
         const providerB = new ListProviderLocalData('CanSync22');
         providerB.episodes = 24;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
@@ -55,6 +57,7 @@ describe('Series | Sync', () => {
         ProviderList.getListProviderList().push(new TestProvider('CanSync32'));
         const providerB = new ListProviderLocalData('CanSync32');
         providerB.episodes = 24;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
@@ -76,6 +79,7 @@ describe('Series | Sync', () => {
         }
         providerB.addOneWatchedEpisode(1);
         providerB.watchStatus = WatchStatus.COMPLETED;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
@@ -120,6 +124,7 @@ describe('Series | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
@@ -134,6 +139,7 @@ describe('Series | Sync', () => {
             providerA.addOneWatchedEpisode(index);
         }
         providerA.watchStatus = WatchStatus.CURRENT;
+        // tslint:disable-next-line: no-string-literal
         providerA['episodes'] = 24;
         anime.addListProvider(providerA);
         assert.equal(await anime.getCanSync(), false);
@@ -156,6 +162,7 @@ describe('Series | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.watchStatus = WatchStatus.COMPLETED;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
@@ -183,6 +190,7 @@ describe('Series | Sync', () => {
             providerC.addOneWatchedEpisode(index);
         }
         providerC.watchStatus = WatchStatus.COMPLETED;
+        // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         anime.addListProvider(providerA, providerB, providerC);
         assert.equal(await anime.getCanSync(), false);

@@ -44,6 +44,7 @@ export default new class ProviderHelper {
 
     public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
         if (await provider.isProviderAvailable()) {
+            console.group();
             const requestId = stringHelper.randomString(5);
             let trys = 0;
             const seriesMediaType = await series.getMediaType();
@@ -61,11 +62,14 @@ export default new class ProviderHelper {
                                 break;
                             }
                             trys++;
-                            try {
-                                return await this.getSeriesByName(series, name, provider);
-                            } catch (err) {
-                                console.log(err);
+
+                            const result = await this.getSeriesByName(series, name, provider);
+                            if (result) {
+                                console.log('[' + requestId + '][' + provider.providerName + '] ByName Request success 🎉');
+                                console.groupEnd();
+                                return result;
                             }
+                            console.log('[' + requestId + '][' + provider.providerName + '] ByName Request failed ❌');
 
                             alreadySearchedNames.push(name.name);
                         }
@@ -76,10 +80,12 @@ export default new class ProviderHelper {
                 console.log('[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
                 ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
                 await series.addProviderDatas(result.mainProvider, ...result.subProviders);
+                console.groupEnd();
                 return series;
             }
 
-            console.log('[' + requestId + '][' + provider.providerName + '] Request failed ☹');
+            console.log('[' + requestId + '][' + provider.providerName + '] Request failed ❌');
+            console.groupEnd();
             throw new Error('no series info found by name');
         }
         throw new Error('provider is not available');
@@ -119,7 +125,7 @@ export default new class ProviderHelper {
                     try {
                         entry = await this.getProviderSeriesInfo(entry, provider);
                     } catch (err) {
-                        console.log(err);
+                        console.error(err);
                     }
                     await timeHelper.delay(700);
                 } else {
@@ -148,7 +154,7 @@ export default new class ProviderHelper {
                 try {
                     entry = await this.fillListProvider(entry);
                 } catch (err) {
-                    console.log(err);
+                    console.error(err);
                 }
                 entry.lastInfoUpdate = Date.now();
             }
@@ -182,11 +188,11 @@ export default new class ProviderHelper {
         let resultContainer: SearchResultRatingContainer[] = [];
         const season = await series.getSeason();
         if (!season.seasonNumber || season.seasonNumber === 1 || provider.hasUniqueIdForSeasons) {
-            console.log('[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumber);
+            console.info('[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumber);
             searchResult = await provider.getMoreSeriesInfoByName(name.name, season.seasonNumber);
 
             if (searchResult && searchResult.length !== 0) {
-                console.log('[' + provider.providerName + '] Results: ' + searchResult.length);
+                console.info('[' + provider.providerName + '] Results: ' + searchResult.length);
                 for (const result of searchResult) {
                     const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
                     resultContainer.push(new SearchResultRatingContainer(mpcr, result));
@@ -195,7 +201,6 @@ export default new class ProviderHelper {
                     resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
                     for (const containerItem of resultContainer) {
                         if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
-                            console.log('[' + provider.providerName + '] Request success 🎉');
                             ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
                             await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
                             return series;
@@ -211,12 +216,12 @@ export default new class ProviderHelper {
                     }
                 }
             } else {
-                console.log('no results');
+                console.warn('no results');
             }
         } else {
-            console.log('[' + provider.providerName + '] ');
+            console.warn('[' + provider.providerName + '] ');
         }
-        throw new Error('No results found by "series get by name"');
+        throw null;
     }
 
     /**
@@ -253,10 +258,10 @@ export default new class ProviderHelper {
                     series = await series.merge(data);
                 }
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         }
         return series;
     }
-};
+}();
 

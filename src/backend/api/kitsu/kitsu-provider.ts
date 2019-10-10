@@ -1,42 +1,51 @@
-import IListProvider from '../list-provider';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
-import Series from '../../controller/objects/series';
-import { KitsuUserData } from './kitsu-user-data';
-import Kitsu from 'kitsu'
-import { SearchResult } from './objects/searchResult';
-import kitsuConverter from './kitsu-converter';
-import { GetMediaResult } from './objects/getResult';
-import WatchProgress from '../../controller/objects/meta/watch-progress';
-import { MediaType } from '../../controller/objects/meta/media-type';
+import Kitsu from 'kitsu';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import MultiProviderResult from '../multi-provider-result';
+import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import WatchProgress from '../../controller/objects/meta/watch-progress';
+import Series from '../../controller/objects/series';
 import timeHelper from '../../helpFunctions/time-helper';
+import IListProvider from '../list-provider';
+import MultiProviderResult from '../multi-provider-result';
+import kitsuConverter from './kitsu-converter';
+import { KitsuUserData } from './kitsu-user-data';
+import { GetMediaResult } from './objects/getResult';
+import { ISearchResult } from './objects/searchResult';
 
 export default class KitsuProvider implements IListProvider {
-    removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        throw new Error("Method not implemented.");
+
+    public static getInstance() {
+        if (!KitsuProvider.instance) {
+            KitsuProvider.instance = new KitsuProvider();
+            // ... any one time initialization goes here ...
+        }
+        return KitsuProvider.instance;
     }
-    updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        throw new Error("Method not implemented.");
-    }
+    private static instance: KitsuProvider;
     public version = 1;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
 
-    providerName: string = 'Kitsu';
-    hasOAuthCode: boolean = true;
-    hasUniqueIdForSeasons = true;
-    userData: KitsuUserData;
-    api: Kitsu;
+    public providerName: string = 'Kitsu';
+    public hasOAuthCode: boolean = true;
+    public hasUniqueIdForSeasons = true;
+    public userData: KitsuUserData;
+    public api: Kitsu;
     constructor() {
-        this.api = new Kitsu()
+        this.api = new Kitsu();
         this.userData = new KitsuUserData();
     }
+    public removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+        throw new Error('Method not implemented.');
+    }
+    public updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
+        throw new Error('Method not implemented.');
+    }
 
-    async isProviderAvailable(): Promise<boolean> {
+    public async isProviderAvailable(): Promise<boolean> {
         return true;
     }
 
-    async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
+    public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
         const endResults: MultiProviderResult[] = [];
         try {
             let searchResults = await this.search(seriesName);
@@ -48,51 +57,42 @@ export default class KitsuProvider implements IListProvider {
                 try {
                     endResults.push(await kitsuConverter.convertMediaToAnime(result, false));
                 } catch (err) {
-                    console.log(err);
+                    console.error(err);
                 }
             }
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
 
         return endResults;
     }
 
-    private async search(string: string): Promise<SearchResult> {
-        return ((this.api.get('anime', {
-            filter: {
-                text: string
-            },
-            include: 'mappings'
-
-        })) as unknown) as SearchResult;
-
-
-    }
-
-    async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+    public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const getResult = ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
-        return await kitsuConverter.convertMediaToAnime(getResult.data);
+        return kitsuConverter.convertMediaToAnime(getResult.data);
     }
-    getAllSeries(disableCache?: boolean | undefined): Promise<Series[]> {
-        throw new Error("Method not implemented.");
+    public getAllSeries(disableCache?: boolean | undefined): Promise<Series[]> {
+        throw new Error('Method not implemented.');
     }
-    logInUser(pass: string, username?: string | undefined): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    public logInUser(pass: string, username?: string | undefined): Promise<boolean> {
+        throw new Error('Method not implemented.');
     }
-    async isUserLoggedIn(): Promise<boolean> {
+    public async isUserLoggedIn(): Promise<boolean> {
         return false;
     }
-    getTokenAuthUrl(): string {
-        throw new Error("Method not implemented.");
+    public getTokenAuthUrl(): string {
+        throw new Error('Method not implemented.');
     }
 
-    public static getInstance() {
-        if (!KitsuProvider.instance) {
-            KitsuProvider.instance = new KitsuProvider();
-            // ... any one time initialization goes here ...
-        }
-        return KitsuProvider.instance;
+    private async search(s: string): Promise<ISearchResult> {
+        return ((this.api.get('anime', {
+            filter: {
+                text: s,
+            },
+            include: 'mappings',
+
+        })) as unknown) as ISearchResult;
+
+
     }
-    private static instance: KitsuProvider;
 }

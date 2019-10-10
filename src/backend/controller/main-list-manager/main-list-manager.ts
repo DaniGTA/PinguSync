@@ -156,7 +156,7 @@ export default class MainListManager {
     private static secondList: Series[] = [];
 
     private static async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
-        console.log('[Search] Find search series in list of size: ' + list.length);
+        console.info('[Search] Find search series in list of size: ' + list.length);
         const foundedSameSeries = [];
         for (const listEntry of list) {
             if (listEntry.id === entry.id) {
@@ -167,7 +167,7 @@ export default class MainListManager {
                 }
             }
         }
-        console.log('Found: ' + foundedSameSeries.length);
+        console.info('Found: ' + foundedSameSeries.length);
         return foundedSameSeries;
     }
 

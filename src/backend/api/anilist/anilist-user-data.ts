@@ -1,38 +1,38 @@
 import { Viewer } from './graphql/viewer';
 
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import * as path from 'path';
 import Series from '../../controller/objects/series';
-import { writeFileSync, existsSync, readFileSync } from 'fs';
 import PathHelper from '../../helpFunctions/path-helper';
-import * as path from "path";
 import { UserData } from '../user-data';
 
 export class AniListUserData implements UserData {
-    username: string = '';
-    access_token: string = "";
-    refresh_token: string = "";
-    created_token: Date = new Date();
-    expires_in: number = 0;
-    viewer: Viewer | undefined;
-    list: Series[] | undefined;
-    lastListUpdate: Date | undefined;
+    public username: string = '';
+    public access_token: string = '';
+    public refresh_token: string = '';
+    public created_token: Date = new Date();
+    public expires_in: number = 0;
+    public viewer: Viewer | undefined;
+    public list: Series[] | undefined;
+    public lastListUpdate: Date | undefined;
 
     constructor() {
         this.loadData();
     }
 
-    updateList(list: Series[]) {
+    public updateList(list: Series[]) {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();
     }
 
-    setViewer(viewer: Viewer) {
+    public setViewer(viewer: Viewer) {
         this.viewer = viewer;
         this.username = viewer.name;
         this.saveData();
     }
 
-    setTokens(accessToken: string, refreshToken: string, expiresIn: number) {
+    public setTokens(accessToken: string, refreshToken: string, expiresIn: number) {
         this.access_token = accessToken;
         this.refresh_token = refreshToken;
         this.expires_in = expiresIn;
@@ -42,18 +42,18 @@ export class AniListUserData implements UserData {
 
 
     private async saveData() {
-        console.warn('[IO] Write anilist user file.')
+        console.warn('[IO] Write anilist user file.');
         writeFileSync(await this.getPath(), JSON.stringify(this));
     }
 
     private loadData() {
         try {
-            console.warn('[IO] Read anilist user file.')
+            console.warn('[IO] Read anilist user file.');
             if (existsSync(this.getPath())) {
-                var loadedString = readFileSync(this.getPath(), "UTF-8");
+                const loadedString = readFileSync(this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
-                if (typeof this.list != 'undefined') {
+                if (typeof this.list !== 'undefined') {
                     for (let index = 0; index < this.list.length; index++) {
                         this.list[index] = Object.assign(new Series(), this.list[index]);
                     }
@@ -61,7 +61,7 @@ export class AniListUserData implements UserData {
                 this.lastListUpdate = loadedData.lastListUpdate;
             }
         } catch (err) {
-
+            console.error(err);
         }
     }
 

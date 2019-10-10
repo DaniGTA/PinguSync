@@ -1,17 +1,17 @@
+import { MediaType } from '../controller/objects/meta/media-type';
 import Series from '../controller/objects/series';
 import stringHelper from './string-helper';
-import { MediaType } from '../controller/objects/meta/media-type';
 
 export default new class TitleCheckHelper {
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
-        let aNameList: string[] = (await a.getAllNamesUnique()).flatMap(x => x.name);
-        let bNameList: string[] = (await b.getAllNamesUnique()).flatMap(x => x.name);
-        return await this.checkNames(aNameList, bNameList);
+        const aNameList: string[] = (await a.getAllNamesUnique()).flatMap((x) => x.name);
+        const bNameList: string[] = (await b.getAllNamesUnique()).flatMap((x) => x.name);
+        return this.checkNames(aNameList, bNameList);
     }
 
     public async checkNames(aNameList: string[], bNameList: string[]) {
         if (await this.fastMatch(aNameList, bNameList)) {
-            for (let name of aNameList) {
+            for (const name of aNameList) {
                 try {
                     var name2 = await stringHelper.cleanString(name);
                     var name2 = await this.removeMediaTypeFromTitle(name2);
@@ -23,7 +23,7 @@ export default new class TitleCheckHelper {
                     continue;
                 }
             }
-            for (let name of bNameList) {
+            for (const name of bNameList) {
                 try {
                     var name2 = await stringHelper.cleanString(name);
                     var name2 = await this.removeMediaTypeFromTitle(name2);
@@ -75,9 +75,9 @@ export default new class TitleCheckHelper {
         try {
             var al = [...aList];
             var bl = [...bList];
-            for (let a of al) {
+            for (const a of al) {
                 if (a) {
-                    for (let b of bl) {
+                    for (const b of bl) {
                         if (b) {
                             if (!that.equalIgnoreCase(a.substring(0, 3), b.substring(0, 3))) {
                                 continue;
@@ -112,10 +112,6 @@ export default new class TitleCheckHelper {
         }
     }
 
-    private equalIgnoreCase(s1: string, s2: string) {
-        return s1.toUpperCase() === s2.toUpperCase();
-    }
-
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
         if (title != null && title !== '') {
             var reversedTitle = await stringHelper.reverseString(title);
@@ -124,7 +120,7 @@ export default new class TitleCheckHelper {
             if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi)) {
                 var match = /Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi.exec(title);
                 if (match != null) {
-                    return title.replace(match[0], "").replace('  ', ' ').trim();
+                    return title.replace(match[0], '').replace('  ', ' ').trim();
                 }
             } else if (title.toLocaleLowerCase().includes('episode')) {
                 return title;
@@ -181,4 +177,8 @@ export default new class TitleCheckHelper {
         title = title.replace(/:\s*$/gm, '');
         return title.trim();
     }
-};
+
+    private equalIgnoreCase(s1: string, s2: string) {
+        return s1.toUpperCase() === s2.toUpperCase();
+    }
+}();

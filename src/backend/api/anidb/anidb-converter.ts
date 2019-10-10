@@ -1,22 +1,22 @@
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { Anime } from './objects/anidbNameListXML';
-import AniDBProvider from './anidb-provider';
-import MultiProviderResult from '../multi-provider-result';
-import { NameType } from '../../controller/objects/meta/name-type';
-import { AniDBAnimeFullInfo, AttributeInfo, ExternalentityElement, FluffyExternalentity, ResourceElement, AniDBAnimeAnime, EpisodeElement } from './objects/anidbFullInfoXML';
-import Name from '../../controller/objects/meta/name';
-import { MediaType } from '../../controller/objects/meta/media-type';
-import Overview from '../../controller/objects/meta/overview';
-import Cover from '../../controller/objects/meta/cover';
 import ProviderLocalData from '../../controller/interfaces/provider-local-data';
-import { ImageSize } from '../../controller/objects/meta/image-size';
-import Genre from '../../controller/objects/meta/genre';
+import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import Cover from '../../controller/objects/meta/cover';
 import Episode from '../../controller/objects/meta/episode/episode';
-import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import Genre from '../../controller/objects/meta/genre';
+import { ImageSize } from '../../controller/objects/meta/image-size';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import Name from '../../controller/objects/meta/name';
+import { NameType } from '../../controller/objects/meta/name-type';
+import Overview from '../../controller/objects/meta/overview';
+import MultiProviderResult from '../multi-provider-result';
+import AniDBProvider from './anidb-provider';
+import { AniDBAnimeAnime, AniDBAnimeFullInfo, AttributeInfo, EpisodeElement, ExternalentityElement, FluffyExternalentity, ResourceElement } from './objects/anidbFullInfoXML';
+import { Anime } from './objects/anidbNameListXML';
 
 export default class AniDBConverter {
-    async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {
+    public async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {
 
         const ipld = new InfoProviderLocalData(AniDBProvider.instance);
         ipld.id = anime._attributes.aid;
@@ -26,11 +26,11 @@ export default class AniDBConverter {
         return new MultiProviderResult(ipld);
     }
 
-    async convertFullInfoToProviderLocalData(fullInfo: AniDBAnimeFullInfo): Promise<MultiProviderResult> {
+    public async convertFullInfoToProviderLocalData(fullInfo: AniDBAnimeFullInfo): Promise<MultiProviderResult> {
         if (fullInfo.anime) {
             const ipld = new InfoProviderLocalData(AniDBProvider.instance);
             for (const title of fullInfo.anime.titles.title) {
-                ipld.addSeriesName(new Name(title._text, title._attributes["xml:lang"], await this.convertToNameType(title._attributes.type)))
+                ipld.addSeriesName(new Name(title._text, title._attributes['xml:lang'], await this.convertToNameType(title._attributes.type)));
             }
             ipld.id = fullInfo.anime._attributes.id;
             ipld.hasFullInfo = true;
@@ -38,7 +38,7 @@ export default class AniDBConverter {
             ipld.rawEntry = fullInfo;
             ipld.mediaType = await this.convertToMediaType(fullInfo.anime.type._text);
             if (fullInfo.anime.description) {
-                ipld.addOverview(new Overview(fullInfo.anime.description._text, "en"));
+                ipld.addOverview(new Overview(fullInfo.anime.description._text, 'en'));
             }
 
             if (fullInfo.anime.relatedanime) {
@@ -50,10 +50,10 @@ export default class AniDBConverter {
                 }
                 for (const relatedAnime of relatedanimeAnimeList) {
                     switch (relatedAnime._attributes.type) {
-                        case "Prequel":
+                        case 'Prequel':
                             ipld.sequelIds.push(Number(relatedAnime._attributes.id));
                             break;
-                        case "Sequel":
+                        case 'Sequel':
                             ipld.prequelIds.push(Number(relatedAnime._attributes.id));
                             break;
                         default:
@@ -66,15 +66,15 @@ export default class AniDBConverter {
             ipld.genres = this.getGenres(fullInfo.anime);
             ipld.episodes = Number(fullInfo.anime.episodecount._text);
             ipld.detailEpisodeInfo = await this.getDetailEpisodeInfo(fullInfo.anime);
-            ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/' + fullInfo.anime.picture._text, ImageSize.ORIGINAL))
-            const mpr = new MultiProviderResult(ipld);;
+            ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/' + fullInfo.anime.picture._text, ImageSize.ORIGINAL));
+            const mpr = new MultiProviderResult(ipld);
             mpr.subProviders = await this.getSubProviders(fullInfo.anime);
             return mpr;
         }
-        throw 'no anime present';
+        throw new Error('no anime present');
     }
 
-    async getDetailEpisodeInfo(anime: AniDBAnimeAnime): Promise<Episode[]> {
+    public async getDetailEpisodeInfo(anime: AniDBAnimeAnime): Promise<Episode[]> {
         const episodes: Episode[] = [];
         if (anime.episodes.episode && Array.isArray(anime.episodes.episode)) {
             for (const episode of anime.episodes.episode) {
@@ -95,19 +95,19 @@ export default class AniDBConverter {
         return episodes;
     }
 
-    async getEpisodeTitles(episode: EpisodeElement): Promise<EpisodeTitle[]> {
+    public async getEpisodeTitles(episode: EpisodeElement): Promise<EpisodeTitle[]> {
         const episodeTitles: EpisodeTitle[] = [];
         if (Array.isArray(episode.title)) {
             for (const episodeTile of episode.title) {
-                episodeTitles.push(new EpisodeTitle(episodeTile._text, episodeTile._attributes["xml:lang"]));
+                episodeTitles.push(new EpisodeTitle(episodeTile._text, episodeTile._attributes['xml:lang']));
             }
         } else {
-            episodeTitles.push(new EpisodeTitle(episode.title._text, episode.title._attributes["xml:lang"]));
+            episodeTitles.push(new EpisodeTitle(episode.title._text, episode.title._attributes['xml:lang']));
         }
-        return episodeTitles
+        return episodeTitles;
     }
 
-    async getEpisodeType(episode: EpisodeElement): Promise<EpisodeType> {
+    public async getEpisodeType(episode: EpisodeElement): Promise<EpisodeType> {
         if (episode.epno._attributes.type === '2' && episode.epno._text.charAt(0) === 'S') {
             return EpisodeType.SPECIAL;
         }
@@ -123,22 +123,22 @@ export default class AniDBConverter {
         }
     }
 
-    async getSubProviders(anime: AniDBAnimeAnime): Promise<ProviderLocalData[]> {
-        const subProviders = []
+    public async getSubProviders(anime: AniDBAnimeAnime): Promise<ProviderLocalData[]> {
+        const subProviders = [];
         if (Array.isArray(anime.resources.resource)) {
             for (const resource of anime.resources.resource) {
                 try {
                     subProviders.push(await this.getResourceInfoProvider(resource));
                 } catch (err) {
-                    console.log(err);
+                    console.error(err);
                 }
             }
         }
         return subProviders;
     }
 
-    getGenres(anime: AniDBAnimeAnime): Genre[] {
-        const genres = []
+    public getGenres(anime: AniDBAnimeAnime): Genre[] {
+        const genres = [];
         if (anime.tags && Array.isArray(anime.tags)) {
             for (const tag of anime.tags) {
                 genres.push(new Genre(tag.name));
@@ -183,65 +183,65 @@ export default class AniDBConverter {
     // Type 19 is the korean wikipedia page name.
     //
     // Type 20 is the chinese wikipedia page name.
-    // 
+    //
     // Type 23 is Twitter.
     //
     // Type 28 is Crunchyroll
     //
     // Type 32 is Amazon
-    async getResourceInfoProvider(resource: ResourceElement): Promise<ProviderLocalData> {
+    public async getResourceInfoProvider(resource: ResourceElement): Promise<ProviderLocalData> {
         let subipld = null;
         switch (resource._attributes.type) {
             case '1':
-                subipld = new InfoProviderLocalData("ANN");
+                subipld = new InfoProviderLocalData('ANN');
                 break;
             case '2':
-                subipld = new InfoProviderLocalData("MAL");
+                subipld = new InfoProviderLocalData('MAL');
                 break;
             case '3':
-                subipld = new InfoProviderLocalData("AnimeNfo");
+                subipld = new InfoProviderLocalData('AnimeNfo');
                 break;
             case '6':
-                subipld = new InfoProviderLocalData("WikiEnglish");
+                subipld = new InfoProviderLocalData('WikiEnglish');
                 break;
             case '7':
-                subipld = new InfoProviderLocalData("WikiJapanese");
+                subipld = new InfoProviderLocalData('WikiJapanese');
                 break;
             case '8':
-                subipld = new InfoProviderLocalData("Syoboi");
+                subipld = new InfoProviderLocalData('Syoboi');
                 break;
             case '9':
-                subipld = new InfoProviderLocalData("AllCinema");
+                subipld = new InfoProviderLocalData('AllCinema');
                 break;
             case '10':
-                subipld = new InfoProviderLocalData("Anison");
+                subipld = new InfoProviderLocalData('Anison');
                 break;
             case '11':
-                subipld = new InfoProviderLocalData("LainGrJp");
+                subipld = new InfoProviderLocalData('LainGrJp');
                 break;
             case '14':
-                subipld = new InfoProviderLocalData("VNDB");
+                subipld = new InfoProviderLocalData('VNDB');
                 break;
             case '15':
-                subipld = new InfoProviderLocalData("MaruMegane");
+                subipld = new InfoProviderLocalData('MaruMegane');
                 break;
             case '17':
-                subipld = new InfoProviderLocalData("TVAnimation");
+                subipld = new InfoProviderLocalData('TVAnimation');
                 break;
             case '19':
-                subipld = new InfoProviderLocalData("WikiKorean");
+                subipld = new InfoProviderLocalData('WikiKorean');
                 break;
             case '20':
-                subipld = new InfoProviderLocalData("WikiChinese");
+                subipld = new InfoProviderLocalData('WikiChinese');
                 break;
             case '23':
-                subipld = new InfoProviderLocalData("twitter");
+                subipld = new InfoProviderLocalData('twitter');
                 break;
             case '28':
-                subipld = new InfoProviderLocalData("crunchyroll");
+                subipld = new InfoProviderLocalData('crunchyroll');
                 break;
             case '32':
-                subipld = new InfoProviderLocalData("amazon");
+                subipld = new InfoProviderLocalData('amazon');
                 break;
         }
 
@@ -250,10 +250,10 @@ export default class AniDBConverter {
             subipld.hasFullInfo = false;
             return subipld;
         }
-        throw 'no provider with that type found: ' + resource._attributes.type;
+        throw new Error('no provider with that type found: ' + resource._attributes.type);
     }
 
-    async getIDResourceFromEntity(input: ExternalentityElement[] | FluffyExternalentity): Promise<number | string> {
+    public async getIDResourceFromEntity(input: ExternalentityElement[] | FluffyExternalentity): Promise<number | string> {
         if (Array.isArray(input)) {
             return input[0].identifier._text;
         } else {
@@ -263,31 +263,31 @@ export default class AniDBConverter {
                 return input.identifier._text;
             }
         }
-        throw 'no id';
+        throw new Error('no id');
     }
 
-    async convertToMediaType(string: string): Promise<MediaType> {
-        switch (string) {
-            case "TV Series":
+    public async convertToMediaType(s: string): Promise<MediaType> {
+        switch (s) {
+            case 'TV Series':
                 return MediaType.ANIME;
-            case "Movie":
+            case 'Movie':
                 return MediaType.MOVIE;
-            case "OVA":
+            case 'OVA':
                 return MediaType.SPECIAL;
             default:
                 return MediaType.UNKOWN;
         }
     }
 
-    async convertToNameType(string: string) {
-        switch (string) {
-            case "main":
+    public async convertToNameType(s: string) {
+        switch (s) {
+            case 'main':
                 return NameType.MAIN;
-            case "official":
+            case 'official':
                 return NameType.OFFICIAL;
-            case "short":
+            case 'short':
                 return NameType.SHORT;
-            case "syn":
+            case 'syn':
                 return NameType.SYN;
             default:
                 return NameType.UNKNOWN;

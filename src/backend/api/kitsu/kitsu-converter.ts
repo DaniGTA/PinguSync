@@ -1,28 +1,28 @@
-import { Media, KitsuEpisode, KitsuMappings } from './objects/searchResult';
+import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Name from '../../controller/objects/meta/name';
 import Overview from '../../controller/objects/meta/overview';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import KitsuProvider from './kitsu-provider';
+import { IKitsuEpisode, IKitsuMappings, IMedia } from './objects/searchResult';
 
-import Cover from '../../controller/objects/meta/cover';
-import { NameType } from '../../controller/objects/meta/name-type';
-import { MediaType } from '../../controller/objects/meta/media-type';
-import Banner from '../../controller/objects/meta/banner';
-import { ImageSize } from '../../controller/objects/meta/image-size';
-import Episode from '../../controller/objects/meta/episode/episode';
-import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
-import EpisodeThumbnail from '../../controller/objects/meta/episode/episode-thumbnail';
-import MultiProviderResult from '../multi-provider-result';
 import ProviderLocalData from '../../controller/interfaces/provider-local-data';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import Banner from '../../controller/objects/meta/banner';
+import Cover from '../../controller/objects/meta/cover';
+import Episode from '../../controller/objects/meta/episode/episode';
+import EpisodeThumbnail from '../../controller/objects/meta/episode/episode-thumbnail';
+import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
+import { ImageSize } from '../../controller/objects/meta/image-size';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import { NameType } from '../../controller/objects/meta/name-type';
+import { StreamingProviderLocalData } from '../../controller/objects/streaming-provider-local-data';
 import AniDBProvider from '../anidb/anidb-provider';
 import AniListProvider from '../anilist/anilist-provider';
-import { StreamingProviderLocalData } from '../../controller/objects/streaming-provider-local-data';
-import TVDBProvider from '../tvdb/tvdb-provider';
+import MultiProviderResult from '../multi-provider-result';
 import TraktProvider from '../trakt/trakt-provider';
+import TVDBProvider from '../tvdb/tvdb-provider';
 
 export default new class KitsuConverter {
-    async convertMediaToAnime(media: Media, fullInfo: boolean = true): Promise<MultiProviderResult> {
+    public async convertMediaToAnime(media: IMedia, fullInfo: boolean = true): Promise<MultiProviderResult> {
         const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
         if (media.titles.en) {
             providerInfos.addSeriesName(new Name(media.titles.en, 'en'));
@@ -74,7 +74,7 @@ export default new class KitsuConverter {
             providerInfos.detailEpisodeInfo.push(...await this.convertKitsuEpisodesToEpisodes(media.episodes));
         }
 
-        const mpr = new MultiProviderResult(providerInfos);;
+        const mpr = new MultiProviderResult(providerInfos);
         if (media.mappings) {
             const providers = await this.convertKitsuMappingsToProvider(media.mappings);
             mpr.subProviders.push(...providers);
@@ -82,7 +82,7 @@ export default new class KitsuConverter {
         return mpr;
     }
 
-    async convertKitsuMappingsToProvider(mappings: KitsuMappings[]): Promise<ProviderLocalData[]> {
+    public async convertKitsuMappingsToProvider(mappings: IKitsuMappings[]): Promise<ProviderLocalData[]> {
         const providerLocalData: ProviderLocalData[] = [];
         for (const mapping of mappings) {
             try {
@@ -127,7 +127,7 @@ export default new class KitsuConverter {
             }
         }
         try {
-            const result = mappings.find(x => x.externalSite.includes('thetvdb') && x.externalId.includes('/'));
+            const result = mappings.find((x) => x.externalSite.includes('thetvdb') && x.externalId.includes('/'));
             if (result) {
                 const localdata = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
                 const idSeason = result.externalId.split('/');
@@ -141,7 +141,7 @@ export default new class KitsuConverter {
         return providerLocalData;
     }
 
-    async convertKitsuEpisodesToEpisodes(episodes: KitsuEpisode[]): Promise<Episode[]> {
+    public async convertKitsuEpisodesToEpisodes(episodes: IKitsuEpisode[]): Promise<Episode[]> {
         const detailedEpisodes: Episode[] = [];
 
         for (const episode of episodes) {
@@ -181,20 +181,20 @@ export default new class KitsuConverter {
         return detailedEpisodes;
     }
 
-    convertShowTypeToMediaType(showType: string): MediaType {
-        if (showType == "ONA") {
+    public convertShowTypeToMediaType(showType: string): MediaType {
+        if (showType == 'ONA') {
             return MediaType.SPECIAL;
-        } else if (showType == "OVA") {
+        } else if (showType == 'OVA') {
             return MediaType.SPECIAL;
-        } else if (showType == "TV") {
+        } else if (showType == 'TV') {
             return MediaType.ANIME;
-        } else if (showType == "movie") {
+        } else if (showType == 'movie') {
             return MediaType.MOVIE;
-        } else if (showType == "music") {
+        } else if (showType == 'music') {
             return MediaType.SPECIAL;
-        } else if (showType == "special") {
+        } else if (showType == 'special') {
             return MediaType.SPECIAL;
         }
         return MediaType.UNKOWN;
     }
-}
+}();

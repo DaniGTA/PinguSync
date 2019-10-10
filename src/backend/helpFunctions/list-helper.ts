@@ -145,7 +145,9 @@ class ListHelper {
             try {
                 aName = await Name.getRomajiName(aNames);
                 bName = await Name.getRomajiName(bNames);
-            } catch (err) { }
+            } catch (err) {
+                console.error(err);
+            }
 
             aName = aName.toLocaleLowerCase();
             bName = bName.toLocaleLowerCase();

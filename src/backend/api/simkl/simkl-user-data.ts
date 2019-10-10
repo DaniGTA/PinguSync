@@ -1,11 +1,11 @@
 import { UserData } from '../user-data';
 
 export class SimklUserData implements UserData {
-    username: string = "";
-    accessToken: string = "";
+    public username: string = '';
+    public accessToken: string = '';
 
 
-    setAccessToken(accessToken: string) {
+    public setAccessToken(accessToken: string) {
         this.accessToken = accessToken;
     }
 }

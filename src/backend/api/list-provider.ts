@@ -1,8 +1,8 @@
-import Series from '../controller/objects/series';
 import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
 import WatchProgress from '../controller/objects/meta/watch-progress';
-import { UserData } from './user-data';
+import Series from '../controller/objects/series';
 import ExternalProvider from './external-provider';
+import { UserData } from './user-data';
 
 export default interface IListProvider extends ExternalProvider {
     hasOAuthCode: boolean;

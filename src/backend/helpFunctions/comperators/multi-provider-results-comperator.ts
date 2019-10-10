@@ -65,7 +65,7 @@ export default class MultiProviderComperator {
             for (const serie of await series.getSlugNames()) {
                 for (const tempserie of await tempSeries.getSlugNames()) {
                     if (serie.name !== tempserie.name) {
-                        console.log('Not same slug id');
+                        console.warn('Not same slug id');
                     }
                 }
             }

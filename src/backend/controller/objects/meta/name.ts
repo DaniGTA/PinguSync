@@ -63,7 +63,7 @@ export default class Name {
                                 seasonsDetected.push(nr);
                             }
                         } catch (err) {
-                            console.error(err);
+                            continue;
                         }
                     }
                 }

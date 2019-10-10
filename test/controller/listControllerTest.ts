@@ -19,8 +19,11 @@ describe('ListController | Combine', () => {
     const lc = new ListController(true);
 
     before(() => {
+        // tslint:disable-next-line: no-string-literal
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return []; };
+        // tslint:disable-next-line: no-string-literal
+        MainListLoader['loadData'] = () => [];
+        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
         MainListLoader['saveData'] = async () => { };
     });
     beforeEach(() => {

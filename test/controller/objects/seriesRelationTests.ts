@@ -11,7 +11,9 @@ describe('Series | Relations', () => {
     before(() => {
         const testprovider = new TestProvider('Test');
         testprovider.hasUniqueIdForSeasons = false;
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = ProviderList.getListProviderList();
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'].push(testprovider);
     });
 
@@ -191,6 +193,7 @@ describe('Series | Relations', () => {
         const anime = new Series();
         provider.addSeriesName(new Name('Test', 'en'));
         provider.targetSeason = 3;
+        // tslint:disable-next-line: no-string-literal
         provider['episodes'] = 10;
         provider.releaseYear = 2014;
         anime.addListProvider(provider);

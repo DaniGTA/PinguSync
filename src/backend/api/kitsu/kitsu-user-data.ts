@@ -1,7 +1,7 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import Series from "../../controller/objects/series";
+import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import { UserData } from '../user-data';
 
@@ -33,21 +33,23 @@ export class KitsuUserData implements UserData {
 
     private async saveData() {
         try {
-            console.warn('[IO] Write kitsu user file.')
-            fs.writeFileSync(await this.getPath(), JSON.stringify(this));
-        } catch (err) { }
+            console.warn('[IO] Write kitsu user file.');
+            fs.writeFileSync(this.getPath(), JSON.stringify(this));
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     private loadData() {
         try {
-            console.warn('[IO] Read kitsu user file.')
+            console.warn('[IO] Read kitsu user file.');
             if (fs.existsSync(this.getPath())) {
                 const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
         } catch (err) {
-
+            console.error(err);
         }
     }
 

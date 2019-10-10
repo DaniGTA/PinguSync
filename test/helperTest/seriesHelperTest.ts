@@ -15,19 +15,28 @@ describe('Series Helper', () => {
     before(() => {
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);
+        // tslint:disable-next-line: no-string-literal
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return []; };
+        // tslint:disable-next-line: no-string-literal
+        MainListLoader['loadData'] = () => [];
+        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
         MainListLoader['saveData'] = async () => { };
     });
     beforeEach(() => {
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('test', true, false), new TestProvider('test2', true, true)];
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
+        // tslint:disable-next-line: no-unused-expression
         new ListController(true);
     });
     it('should not detect as same series', async () => {
         const a = new Series();
+        // tslint:disable-next-line: no-string-literal
         a['cachedSeason'] = 2;
+        // tslint:disable-next-line: no-string-literal
         a['canSync'] = false;
         // A is should not match with any of them.
         const infoProviderA = new InfoProviderLocalData('test3');
@@ -43,7 +52,9 @@ describe('Series Helper', () => {
         a.addListProvider(listProviderA);
         // B is related too C
         const b = new Series();
+        // tslint:disable-next-line: no-string-literal
         b['cachedSeason'] = 1;
+        // tslint:disable-next-line: no-string-literal
         b['canSync'] = false;
         const infoProviderB = new InfoProviderLocalData('test4');
         infoProviderB.hasFullInfo = true;
@@ -58,11 +69,13 @@ describe('Series Helper', () => {
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         b.addListProvider(listProvider);
 
-
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
 
         const c = new Series();
+        // tslint:disable-next-line: no-string-literal
         c['cachedSeason'] = 2;
+        // tslint:disable-next-line: no-string-literal
         c['canSync'] = false;
         const listProviderB =
             new ListProviderLocalData('test');

@@ -8,8 +8,11 @@ import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-help
 
 describe('Series | Season', () => {
     before(() => {
+        // tslint:disable-next-line: no-string-literal
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return []; };
+        // tslint:disable-next-line: no-string-literal
+        MainListLoader['loadData'] = () => [];
+        // tslint:disable-next-line: no-string-literal
         MainListLoader['saveData'] = async () => { };
     });
 

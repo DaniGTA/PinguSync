@@ -16,14 +16,21 @@ import TestProvider from '../controller/objects/testClass/testProvider';
 
 describe('Multi-Provider-Comperator | Examples', () => {
     before(() => {
+        // tslint:disable-next-line: no-string-literal
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return []; };
+        // tslint:disable-next-line: no-string-literal
+        MainListLoader['loadData'] = () => [];
+        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
         MainListLoader['saveData'] = async () => { };
+        // tslint:disable-next-line: no-unused-expression
         new ListController(true);
     });
     beforeEach(() => {
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
+        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
+        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
     });
     it('should compare 2 entrys right', async () => {

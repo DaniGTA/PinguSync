@@ -1,21 +1,21 @@
-import IListProvider from '../list-provider';
-import { TraktUserInfo } from './objects/userInfo';
-import { WatchedInfo } from './objects/watchedInfo';
-import { TraktSearch } from './objects/search';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Series from '../../controller/objects/series';
+import IListProvider from '../list-provider';
+import { TraktSearch } from './objects/search';
+import { TraktUserInfo } from './objects/userInfo';
+import { WatchedInfo } from './objects/watchedInfo';
 import { TraktUserData } from './trakt-user-data';
 
+// tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import traktConverter from './trakt-converter';
-import { FullShowInfo } from './objects/fullShowInfo';
-import WatchProgress from '../../controller/objects/meta/watch-progress';
-import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import WatchProgress from '../../controller/objects/meta/watch-progress';
 import MultiProviderResult from '../multi-provider-result';
+import { FullShowInfo } from './objects/fullShowInfo';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
+import traktConverter from './trakt-converter';
 export default class TraktProvider implements IListProvider {
-    supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
 
     public static getInstance() {
         if (!TraktProvider.instance) {
@@ -25,6 +25,7 @@ export default class TraktProvider implements IListProvider {
         return TraktProvider.instance;
     }
     private static instance: TraktProvider;
+    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public hasUniqueIdForSeasons: boolean = false;
     public providerName: string = 'Trakt';
     public hasOAuthCode = true;
@@ -51,24 +52,24 @@ export default class TraktProvider implements IListProvider {
                     endResult.push(await traktConverter.convertMovieToLocalData(result.movie));
                 }
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         }
         return endResult;
     }
 
-    async isProviderAvailable(): Promise<boolean> {
+    public async isProviderAvailable(): Promise<boolean> {
         return true;
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.isMediaTypeMovie()) {
             const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id);
-            return await (await traktConverter.convertFullShowInfoToLocalData(res));
+            return (traktConverter.convertFullShowInfoToLocalData(res));
         } else {
             const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id);
             const seasonInfo = await this.traktRequest<TraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
-            return await (await traktConverter.convertFullShowInfoToLocalData(res, seasonInfo));
+            return (traktConverter.convertFullShowInfoToLocalData(res, seasonInfo));
         }
 
     }
@@ -105,14 +106,14 @@ export default class TraktProvider implements IListProvider {
     }
 
     public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        var providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName);
+        const providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName);
         if (typeof providerInfo != 'undefined') {
             providerInfo.addOneWatchProgress(watchProgress);
             const updatedEntry = await traktConverter.convertAnimeToSendEntryShow(anime, watchProgress.episode);
             await this.traktRequest('https://api.trakt.tv/sync/history', 'POST', JSON.stringify(updatedEntry));
             return providerInfo;
         }
-        throw 'err';
+        throw new Error('err');
     }
 
     public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
@@ -123,7 +124,7 @@ export default class TraktProvider implements IListProvider {
             await this.traktRequest('https://api.trakt.tv/sync/history/remove', 'POST', JSON.stringify(updatedEntry));
             return providerInfo;
         }
-        throw 'err';
+        throw new Error('err');
     }
 
     public logInUser(code: string) {
@@ -155,7 +156,7 @@ export default class TraktProvider implements IListProvider {
             }).on('error', (err) => {
                 console.log(err);
                 reject();
-            })
+            });
         });
     }
 
@@ -191,7 +192,7 @@ export default class TraktProvider implements IListProvider {
                 }).on('error', (err) => {
                     console.log(err);
                     reject();
-                })
+                });
             } catch (err) {
                 console.log(err);
                 reject();

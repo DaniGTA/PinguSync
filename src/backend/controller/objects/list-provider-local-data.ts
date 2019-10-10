@@ -11,98 +11,6 @@ import { WatchStatus } from './series';
  * Contains info about the series and the user watch progress and the list that series is in.
  */
 export class ListProviderLocalData extends ProviderLocalData {
-    public readonly provider: string;
-
-    public canUpdateWatchProgress = false;
-
-    public watchStatus?: WatchStatus;
-    public watchProgress?: WatchProgress[];
-
-    public customList: boolean = false;
-    public customListName = '';
-
-    constructor(lp?: IListProvider | string) {
-        super();
-        this.lastUpdate = new Date(Date.now());
-        if (typeof lp === 'string') {
-            this.provider = lp;
-        } else if (typeof lp != 'undefined') {
-            this.provider = lp.providerName;
-        } else {
-            this.provider = '';
-        }
-    }
-
-
-    public getProviderInstance(): IListProvider {
-        for (const provider of ProviderList.getListProviderList()) {
-            if (provider.providerName === this.provider) {
-                return provider;
-            }
-        }
-        throw new Error('NoProviderFound');
-    }
-
-    public getHighestWatchedEpisode(): WatchProgress | undefined {
-        if (typeof this.watchProgress != 'undefined') {
-            try {
-                this.watchProgress = [...this.watchProgress];
-                const maxEpisode = Math.max(...this.watchProgress.flatMap(x => x.episode));
-                const index = this.watchProgress.findIndex(x => x.episode === maxEpisode);
-                return this.watchProgress[index];
-            } catch (err) {
-                this.watchProgress = [];
-            }
-        }
-        return;
-    }
-
-    public addWatchedEpisodes(episodes: number, plays = 0) {
-        for (let index = 1; index < episodes + 1; index++) {
-            this.addOneWatchedEpisode(index, plays);
-
-        }
-    }
-
-    /**
-     * @hasTest
-     * @param episode
-     * @param date
-     * @param plays
-     */
-    public addOneWatchedEpisode(episode: number, plays = 1, date?: Date): void {
-        if (typeof this.watchProgress === 'undefined') {
-            this.watchProgress = [];
-        }
-        const currentWatchProgress = new WatchProgress(episode, plays, date);
-        this.watchProgress.push(currentWatchProgress);
-    }
-    /**
-     * @hasTest
-     * @param watchProgress
-     */
-    public addOneWatchProgress(watchProgress: WatchProgress) {
-        if (typeof this.watchProgress === 'undefined') {
-            this.watchProgress = [];
-        }
-        this.watchProgress.push(watchProgress);
-    }
-    /**
-     * @hasTest
-     * @param watchProgress
-     */
-    public async removeOneWatchProgress(watchProgress: WatchProgress): Promise<boolean> {
-        if (typeof this.watchProgress === 'undefined') {
-            this.watchProgress = [];
-        }
-        const index = this.watchProgress.findIndex(episode => watchProgress.episode === episode.episode);
-        if (index == -1) {
-            return false;
-        } else {
-            this.watchProgress = await listHelper.removeEntrys(this.watchProgress, this.watchProgress[index]);
-            return true;
-        }
-    }
 
     public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
         const mergedProvider = Object.assign(new ListProviderLocalData(), providers[0]);
@@ -152,16 +60,16 @@ export class ListProviderLocalData extends ProviderLocalData {
                 mergedProvider.targetSeason = provider.targetSeason;
             }
 
-            if (typeof provider.score != 'undefined') {
-                if (typeof mergedProvider.score != 'undefined') {
+            if (typeof provider.score !== 'undefined') {
+                if (typeof mergedProvider.score !== 'undefined') {
                     mergedProvider.score = (mergedProvider.score + provider.score) / 2;
                 } else {
                     mergedProvider.score = provider.score;
                 }
             }
 
-            if (typeof provider.watchProgress != 'undefined') {
-                if (typeof mergedProvider.watchProgress != 'undefined') {
+            if (typeof provider.watchProgress !== 'undefined') {
+                if (typeof mergedProvider.watchProgress !== 'undefined') {
                     if (mergedProvider.watchProgress < provider.watchProgress) {
                         mergedProvider.watchProgress = provider.watchProgress;
                     }
@@ -244,5 +152,97 @@ export class ListProviderLocalData extends ProviderLocalData {
             }
         }
         return false;
+    }
+    public readonly provider: string;
+
+    public canUpdateWatchProgress = false;
+
+    public watchStatus?: WatchStatus;
+    public watchProgress?: WatchProgress[];
+
+    public customList: boolean = false;
+    public customListName = '';
+
+    constructor(lp?: IListProvider | string) {
+        super();
+        this.lastUpdate = new Date(Date.now());
+        if (typeof lp === 'string') {
+            this.provider = lp;
+        } else if (typeof lp != 'undefined') {
+            this.provider = lp.providerName;
+        } else {
+            this.provider = '';
+        }
+    }
+
+
+    public getProviderInstance(): IListProvider {
+        for (const provider of ProviderList.getListProviderList()) {
+            if (provider.providerName === this.provider) {
+                return provider;
+            }
+        }
+        throw new Error('NoProviderFound');
+    }
+
+    public getHighestWatchedEpisode(): WatchProgress | undefined {
+        if (typeof this.watchProgress != 'undefined') {
+            try {
+                this.watchProgress = [...this.watchProgress];
+                const maxEpisode = Math.max(...this.watchProgress.flatMap((x) => x.episode));
+                const index = this.watchProgress.findIndex((x) => x.episode === maxEpisode);
+                return this.watchProgress[index];
+            } catch (err) {
+                this.watchProgress = [];
+            }
+        }
+        return;
+    }
+
+    public addWatchedEpisodes(episodes: number, plays = 0) {
+        for (let index = 1; index < episodes + 1; index++) {
+            this.addOneWatchedEpisode(index, plays);
+
+        }
+    }
+
+    /**
+     * @hasTest
+     * @param episode
+     * @param date
+     * @param plays
+     */
+    public addOneWatchedEpisode(episode: number, plays = 1, date?: Date): void {
+        if (typeof this.watchProgress === 'undefined') {
+            this.watchProgress = [];
+        }
+        const currentWatchProgress = new WatchProgress(episode, plays, date);
+        this.watchProgress.push(currentWatchProgress);
+    }
+    /**
+     * @hasTest
+     * @param watchProgress
+     */
+    public addOneWatchProgress(watchProgress: WatchProgress) {
+        if (typeof this.watchProgress === 'undefined') {
+            this.watchProgress = [];
+        }
+        this.watchProgress.push(watchProgress);
+    }
+    /**
+     * @hasTest
+     * @param watchProgress
+     */
+    public async removeOneWatchProgress(watchProgress: WatchProgress): Promise<boolean> {
+        if (typeof this.watchProgress === 'undefined') {
+            this.watchProgress = [];
+        }
+        const index = this.watchProgress.findIndex((episode) => watchProgress.episode === episode.episode);
+        if (index == -1) {
+            return false;
+        } else {
+            this.watchProgress = await listHelper.removeEntrys(this.watchProgress, this.watchProgress[index]);
+            return true;
+        }
     }
 }
