@@ -13,6 +13,9 @@ import { ISimklTextSearchResults } from './objects/simklTextSearchResults';
 import { UserListResponse } from './objects/userListResonse';
 import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
+import { ISimklFullInfoAnimeResponse } from './objects/simklFullInfoAnimeResponse';
+import { ISimklFullInfoMovieResponse } from './objects/simklFullInfoMovieResponse';
+import { ISimklFullInfoSeriesResponse } from './objects/simklFullInfoSeriesResponse';
 
 export default class SimklProvider implements IListProvider {
     public static instance: SimklProvider;
@@ -50,7 +53,28 @@ export default class SimklProvider implements IListProvider {
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        throw new Error('not implemented yet');
+        if (provider.mediaType === MediaType.ANIME) {
+            const url = this.apiUrl + 'anime/' + provider.id + '?extended=full&client_id=' + this.clientID;
+            const result = await this.simklRequest<ISimklFullInfoAnimeResponse>(url);
+            if (result) {
+                return this.simklConverter.convertFullAnimeInfoToProviderLocalData(result);
+            }
+        } else if (provider.mediaType === MediaType.MOVIE) {
+            const url = this.apiUrl + 'movie/' + provider.id + '?extended=full&client_id=' + this.clientID;
+            const result = await this.simklRequest<ISimklFullInfoMovieResponse>(url);
+            if (result) {
+                return this.simklConverter.convertFullMovieInfoToProviderLocalData(result);
+            }
+        } else if (provider.mediaType === MediaType.SERIES) {
+            const url = this.apiUrl + 'tv/' + provider.id + '?extended=full&client_id=' + this.clientID;
+            const result = await this.simklRequest<ISimklFullInfoSeriesResponse>(url);
+            if (result) {
+                return this.simklConverter.convertFullSeriesInfoToProviderLocalData(result);
+            }
+        } else {
+            throw new Error('no media type for simkl');
+        }
+        throw new Error('no result in simkl');
     }
 
 

@@ -4,4 +4,5 @@ export enum MediaType {
     ANIME = 'ANIME',
     MOVIE = 'MOVIE',
     SPECIAL = 'SPECIAL',
+    OVA = 'OVA',
 }

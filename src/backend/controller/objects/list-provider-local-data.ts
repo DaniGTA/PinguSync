@@ -14,10 +14,11 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
         const mergedProvider = Object.assign(new ListProviderLocalData(), providers[0]);
-        var newestProvider: ListProviderLocalData | undefined;
+        let newestProvider: ListProviderLocalData | undefined;
         const covers: Cover[] = [];
         const banners: Banner[] = [];
         for (const provider of providers) {
+            // tslint:disable-next-line: triple-equals
             if (mergedProvider.id != provider.id) {
                 continue;
             }
@@ -142,9 +143,9 @@ export class ListProviderLocalData extends ProviderLocalData {
      * @param b
      */
     private static async isValidWatchStatus(a?: WatchStatus, b?: WatchStatus): Promise<boolean> {
-        if (typeof a != 'undefined') {
-            if (typeof a != 'undefined' && b != a) {
-                if (a == WatchStatus.COMPLETED) {
+        if (typeof a !== 'undefined') {
+            if (typeof a !== 'undefined' && b !== a) {
+                if (a === WatchStatus.COMPLETED) {
                     return true;
                 }
             } else {
@@ -163,15 +164,19 @@ export class ListProviderLocalData extends ProviderLocalData {
     public customList: boolean = false;
     public customListName = '';
 
-    constructor(lp?: IListProvider | string) {
+    constructor(lp?: IListProvider | string, id?: string | number) {
         super();
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
             this.provider = lp;
-        } else if (typeof lp != 'undefined') {
+        } else if (typeof lp !== 'undefined') {
             this.provider = lp.providerName;
+            this.version = lp.version;
         } else {
             this.provider = '';
+        }
+        if (id) {
+            this.id = id;
         }
     }
 
@@ -186,7 +191,7 @@ export class ListProviderLocalData extends ProviderLocalData {
     }
 
     public getHighestWatchedEpisode(): WatchProgress | undefined {
-        if (typeof this.watchProgress != 'undefined') {
+        if (typeof this.watchProgress !== 'undefined') {
             try {
                 this.watchProgress = [...this.watchProgress];
                 const maxEpisode = Math.max(...this.watchProgress.flatMap((x) => x.episode));

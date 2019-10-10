@@ -84,7 +84,7 @@ export default new class ProviderHelper {
                 return series;
             }
 
-            console.log('[' + requestId + '][' + provider.providerName + '] Request failed ❌');
+            console.log('[' + requestId + '][' + provider.providerName + '] Request failed ❌❌❌❌❌❌');
             console.groupEnd();
             throw new Error('no series info found by name');
         }
@@ -99,37 +99,34 @@ export default new class ProviderHelper {
         entry = Object.assign(new Series(), entry);
         if (entry.getListProvidersInfos().length !== ProviderList.getListProviderList().length || forceUpdate) {
             for (const provider of ProviderList.getListProviderList()) {
-                let result;
-                // Check if anime exist in main list and have already all providers in.
-                if (ListController.instance) {
-                    const mainListEntry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
-                    if (mainListEntry) {
-                        const mainListResult = mainListEntry.getListProvidersInfos().find(x => x.provider === provider.providerName);
-                        if (mainListResult && mainListResult.version === provider.version && mainListResult.hasFullInfo) {
-                            continue;
-                        } else {
-                            entry = mainListEntry;
-                        }
-                    }
-                } else {
-                    console.log('Failed get main list entry: no list controller instance');
-                }
-
                 try {
-                    result = entry.getListProvidersInfos().find(x => x.provider === provider.providerName);
-                } catch (err) { }
-                if (result || forceUpdate) {
-                    if (!forceUpdate) {
+                    let result;
+                    // Check if anime exist in main list and have already all providers in.
+                    if (ListController.instance) {
+                        const mainListEntry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
+                        if (mainListEntry) {
+                            const mainListResult = mainListEntry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
+                            if (mainListResult && mainListResult.version === provider.version && mainListResult.hasFullInfo) {
+                                continue;
+                            } else {
+                                entry = mainListEntry;
+                            }
+                        }
+                    } else {
+                        console.log('Failed get main list entry: no list controller instance');
+                    }
 
-                    }
                     try {
+                        result = entry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
+                    } catch (err) { }
+                    if (result || forceUpdate) {
                         entry = await this.getProviderSeriesInfo(entry, provider);
-                    } catch (err) {
-                        console.error(err);
+                        await timeHelper.delay(700);
+                    } else {
+                        entry = await this.getProviderSeriesInfo(entry, provider);
                     }
-                    await timeHelper.delay(700);
-                } else {
-                    entry = await this.getProviderSeriesInfo(entry, provider);
+                } catch (err) {
+                    continue;
                 }
             }
         }

@@ -1,23 +1,23 @@
-import { Show, Movie } from './objects/search';
-import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
-import { Show as SendEntryShow, Season, TraktEpisode, SendEntryUpdate } from './objects/sendEntryUpdate';
-import Series, { WatchStatus } from '../../controller/objects/series';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
-import { FullShowInfo } from './objects/fullShowInfo';
-import Overview from '../../controller/objects/meta/overview';
-import TraktProvider from './trakt-provider';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import Name from '../../controller/objects/meta/name';
-import { NameType } from '../../controller/objects/meta/name-type';
-import { MediaType } from '../../controller/objects/meta/media-type';
-import TVDBProvider from '../tvdb/tvdb-provider';
-import MultiProviderResult from '../multi-provider-result';
-import Genre from '../../controller/objects/meta/genre';
-import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
+import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
+import Genre from '../../controller/objects/meta/genre';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import Name from '../../controller/objects/meta/name';
+import { NameType } from '../../controller/objects/meta/name-type';
+import Overview from '../../controller/objects/meta/overview';
+import Series, { WatchStatus } from '../../controller/objects/series';
+import MultiProviderResult from '../multi-provider-result';
+import TVDBProvider from '../tvdb/tvdb-provider';
+import { FullShowInfo } from './objects/fullShowInfo';
+import { Movie, Show } from './objects/search';
+import { Season, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './objects/sendEntryUpdate';
+import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
+import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
+import TraktProvider from './trakt-provider';
 export default new class TraktConverter {
-    async convertSeasonsToSeries(watchedInfo: WatchedInfo): Promise<Series[]> {
+    public async convertSeasonsToSeries(watchedInfo: WatchedInfo): Promise<Series[]> {
         const result = [];
         for (const season of watchedInfo.seasons) {
             const series: Series = new Series();
@@ -31,7 +31,7 @@ export default new class TraktConverter {
             }
             providerInfo.id = watchedInfo.show.ids.trakt;
             providerInfo.rawEntry = watchedInfo;
-            for (let episode of season.episodes) {
+            for (const episode of season.episodes) {
                 providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
             }
             providerInfo.targetSeason = season.number;
@@ -44,7 +44,7 @@ export default new class TraktConverter {
         return result;
     }
 
-    async convertShowToLocalData(show: Show | WatchedShow): Promise<MultiProviderResult> {
+    public async convertShowToLocalData(show: Show | WatchedShow): Promise<MultiProviderResult> {
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
         try {
             provider.addSeriesName(new Name(show.title, 'en', NameType.OFFICIAL));
@@ -67,7 +67,7 @@ export default new class TraktConverter {
         return result;
     }
 
-    async convertMovieToLocalData(traktMovie: Movie | WatchedShow): Promise<MultiProviderResult> {
+    public async convertMovieToLocalData(traktMovie: Movie | WatchedShow): Promise<MultiProviderResult> {
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
         try {
             provider.addSeriesName(new Name(traktMovie.title, 'en', NameType.OFFICIAL));
@@ -81,7 +81,7 @@ export default new class TraktConverter {
         return new MultiProviderResult(provider);
     }
 
-    async convertFullShowInfoToLocalData(fullShow: FullShowInfo, seasonInfo?: TraktShowSeasonInfo[]): Promise<MultiProviderResult> {
+    public async convertFullShowInfoToLocalData(fullShow: FullShowInfo, seasonInfo?: TraktShowSeasonInfo[]): Promise<MultiProviderResult> {
         const provider = new ListProviderLocalData(TraktProvider.getInstance());
         provider.addSeriesName(new Name(fullShow.title, 'en', NameType.OFFICIAL));
         provider.addSeriesName(new Name(fullShow.ids.slug, 'slug', NameType.SLUG));
@@ -93,8 +93,10 @@ export default new class TraktConverter {
         provider.rawEntry = fullShow;
         provider.publicScore = fullShow.rating;
         provider.episodes = fullShow.aired_episodes;
-        for (const genre of fullShow.genres) {
-            provider.genres.push(new Genre(genre));
+        if (fullShow.genres && Array.isArray(fullShow.genres)) {
+            for (const genre of fullShow.genres) {
+                provider.genres.push(new Genre(genre));
+            }
         }
         provider.hasFullInfo = true;
         if (seasonInfo) {
@@ -105,7 +107,7 @@ export default new class TraktConverter {
         return new MultiProviderResult(provider, tvdbProvider);
     }
 
-    async getDetailedEpisodeInfo(seasonInfos: TraktShowSeasonInfo[]): Promise<Episode[]> {
+    public async getDetailedEpisodeInfo(seasonInfos: TraktShowSeasonInfo[]): Promise<Episode[]> {
         const detailedEpisodes: Episode[] = [];
         for (const seasonInfo of seasonInfos) {
             for (const episode of seasonInfo.episodes) {
@@ -118,77 +120,77 @@ export default new class TraktConverter {
         return detailedEpisodes;
     }
 
-    async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
-        let currentProvider = series.getListProvidersInfos().find(x => x.provider === TraktProvider.getInstance().providerName);
-        var seasonNumber = (await series.getSeason()).seasonNumber;
-        if (typeof currentProvider != 'undefined' && seasonNumber) {
+    public async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
+        const currentProvider = series.getListProvidersInfos().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        const seasonNumber = (await series.getSeason()).seasonNumber;
+        if (typeof currentProvider !== 'undefined' && seasonNumber) {
 
-            var episodes: TraktEpisode[] = [];
+            const episodes: TraktEpisode[] = [];
 
             episodes.push({ number: removeEpisode });
 
-            let sendEntryShow: SendEntryShow = {
+            const sendEntryShow: SendEntryShow = {
                 ids: {
-                    trakt: currentProvider.id as number
+                    trakt: currentProvider.id as number,
                 },
-                seasons: []
+                seasons: [],
             };
 
-            var season: Season = {
+            const season: Season = {
                 number: seasonNumber,
-                episodes: episodes,
-            }
+                episodes,
+            };
 
             sendEntryShow.seasons.push(season);
 
             const sendEntryUpdate: SendEntryUpdate = {
-                shows: [sendEntryShow]
-            }
+                shows: [sendEntryShow],
+            };
             return sendEntryUpdate;
         }
-        throw 'failed convert';
+        throw new Error('failed convert');
     }
 
-    async convertAnimeToSendEntryShow(series: Series, newWatchprogress: number): Promise<SendEntryUpdate> {
-        let currentProvider = series.getListProvidersInfos().find(x => x.provider === TraktProvider.getInstance().providerName);
-        var seasonNumber = (await series.getSeason()).seasonNumber;
+    public async convertAnimeToSendEntryShow(series: Series, newWatchprogress: number): Promise<SendEntryUpdate> {
+        const currentProvider = series.getListProvidersInfos().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        let seasonNumber = (await series.getSeason()).seasonNumber;
         if (currentProvider && seasonNumber) {
 
-            var episodes: TraktEpisode[] = [];
-            var maxEpisodes = currentProvider.episodes || newWatchprogress;
+            const episodes: TraktEpisode[] = [];
+            const maxEpisodes = currentProvider.episodes || newWatchprogress;
 
-            let sendEntryShow: SendEntryShow = {
+            const sendEntryShow: SendEntryShow = {
                 ids: {
-                    trakt: currentProvider.id as number
+                    trakt: currentProvider.id as number,
                 },
-                seasons: []
+                seasons: [],
 
             };
             for (let i = 1; i < maxEpisodes; i++) {
 
-                for (var index = 1; (index < newWatchprogress + 1 && index < maxEpisodes + 1 && i < newWatchprogress + 1); index++) {
+                for (let index = 1; (index < newWatchprogress + 1 && index < maxEpisodes + 1 && i < newWatchprogress + 1); index++) {
                     if (currentProvider.watchProgress) {
-                        if (newWatchprogress == index || currentProvider.watchProgress.findIndex(x => x.episode === index) === -1) {
+                        if (newWatchprogress == index || currentProvider.watchProgress.findIndex((x) => x.episode === index) === -1) {
                             episodes.push({ number: index });
                         }
                     } else {
                         episodes.push({ number: index });
                     }
                 }
-                var season: Season = {
+                const season: Season = {
                     number: seasonNumber,
-                    episodes: episodes,
-                }
+                    episodes,
+                };
 
                 sendEntryShow.seasons.push(season);
 
                 seasonNumber++;
             }
             const sendEntryUpdate: SendEntryUpdate = {
-                shows: [sendEntryShow]
-            }
+                shows: [sendEntryShow],
+            };
             return sendEntryUpdate;
         }
-        throw 'failed convert';
+        throw new Error('failed convert');
     }
-}
+}();

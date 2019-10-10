@@ -98,15 +98,19 @@ export class InfoProviderLocalData extends ProviderLocalData {
         return mergedProvider;
     }
     public readonly provider: string;
-    constructor(lp?: IInfoProvider | string) {
+    constructor(lp?: IInfoProvider | string, id?: string | number) {
         super();
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
             this.provider = lp;
         } else if (typeof lp !== 'undefined') {
             this.provider = lp.providerName;
+            this.version = lp.version;
         } else {
             this.provider = '';
+        }
+        if (id) {
+            this.id = id;
         }
     }
 

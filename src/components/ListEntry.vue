@@ -5,7 +5,7 @@
     <button @click="clog(seriesPackage)">Log</button>
     <button @click="seriesDataRefresh(seriesPackage)">Data Refresh</button>
     <button @click="seriesDataRefresh(seriesPackage)">Delete Package</button>
-   
+
     <div v-for="item of seriesPackage.allRelations" v-bind:key="item.id">
       <button @click="logNames(item)">Log names</button>
       <Promised
@@ -37,10 +37,10 @@ import App from "../App.vue";
 import Series from "../backend/controller/objects/series";
 import VueLazyload from "vue-lazyload";
 import { Promised } from "vue-promised";
-import SeriesPackage from '../backend/controller/objects/series-package';
-import WatchProgress from '../backend/controller/objects/meta/watch-progress';
-import { ListProviderLocalData } from '../backend/controller/objects/list-provider-local-data';
-import { SeasonSearchMode } from '../backend/helpFunctions/season-helper/season-search-mode';
+import SeriesPackage from "../backend/controller/objects/series-package";
+import WatchProgress from "../backend/controller/objects/meta/watch-progress";
+import { ListProviderLocalData } from "../backend/controller/objects/list-provider-local-data";
+import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
 Vue.component("Promised", Promised);
 Vue.use(VueLazyload);
 
@@ -71,9 +71,9 @@ export default class ListEntry extends Vue {
     console.log(a);
   }
 
-  logNames(item:Series){
-     const animeObject = Object.assign(new Series(), item);
-     animeObject.readdFunctions();
+  logNames(item: Series) {
+    const animeObject = Object.assign(new Series(), item);
+    animeObject.readdFunctions();
     console.log(animeObject.getAllNames());
   }
 
@@ -100,8 +100,8 @@ export default class ListEntry extends Vue {
     }
   }
 
-  removeSeriesPackage(seriesPackage:SeriesPackage):void{
-    App.workerController.send('delete-series-package',seriesPackage.id);
+  removeSeriesPackage(seriesPackage: SeriesPackage): void {
+    App.workerController.send("delete-series-package", seriesPackage.id);
   }
 
   getProviderWatchProgress(provider: ListProviderLocalData): number {
@@ -143,7 +143,8 @@ export default class ListEntry extends Vue {
 
   async getSeason(series: Series): Promise<number | undefined> {
     series = Object.assign(new Series(), series);
-    return (await series.getSeason(SeasonSearchMode.NO_SEARCH,[])).seasonNumber;
+    return (await series.getSeason(SeasonSearchMode.NO_SEARCH, []))
+      .seasonNumber;
   }
   async canSync(series: Series): Promise<boolean> {
     series = Object.assign(new Series(), series);

@@ -86,15 +86,15 @@ export default new class KitsuConverter {
         const providerLocalData: ProviderLocalData[] = [];
         for (const mapping of mappings) {
             try {
-                if (mapping.externalSite == 'anidb') {
+                if (mapping.externalSite === 'anidb') {
                     const localdata = new InfoProviderLocalData(AniDBProvider.instance.providerName);
                     localdata.id = mapping.externalId;
                     providerLocalData.push(localdata);
-                } else if (mapping.externalSite == 'aotora') {
+                } else if (mapping.externalSite === 'aotora') {
                     const localdata = new InfoProviderLocalData('aotora');
                     localdata.id = mapping.externalId;
                     providerLocalData.push(localdata);
-                } else if (mapping.externalSite == 'anilist') {
+                } else if (mapping.externalSite === 'anilist') {
                     const localdata = new ListProviderLocalData(AniListProvider.getInstance().providerName);
                     const typeId = mapping.externalId.split('/');
                     localdata.id = typeId[1];
@@ -104,20 +104,20 @@ export default new class KitsuConverter {
                             break;
                     }
                     providerLocalData.push(localdata);
-                } else if (mapping.externalSite == 'hulu') {
+                } else if (mapping.externalSite === 'hulu') {
                     const localdata = new StreamingProviderLocalData('hulu');
                     localdata.id = mapping.externalId;
                     providerLocalData.push(localdata);
-                } else if (mapping.externalSite == 'myanimelist/anime') {
-                    const localdata = new ListProviderLocalData('myanimelist');
+                } else if (mapping.externalSite === 'myanimelist/anime') {
+                    const localdata = new ListProviderLocalData('mal');
                     localdata.mediaType = MediaType.ANIME;
                     localdata.id = mapping.externalId;
                     providerLocalData.push(localdata);
-                } else if (mapping.externalSite == 'myanimelist/manga') {
-                    const localdata = new ListProviderLocalData('myanimelist');
+                } else if (mapping.externalSite === 'myanimelist/manga') {
+                    const localdata = new ListProviderLocalData('mal');
                     localdata.id = mapping.externalId;
                     providerLocalData.push(localdata);
-                } else if (mapping.externalSite == 'trakt') {
+                } else if (mapping.externalSite === 'trakt') {
                     const localdata = new ListProviderLocalData(TraktProvider.getInstance().providerName);
                     localdata.id = mapping.externalId;
                     providerLocalData.push(localdata);
@@ -182,17 +182,17 @@ export default new class KitsuConverter {
     }
 
     public convertShowTypeToMediaType(showType: string): MediaType {
-        if (showType == 'ONA') {
+        if (showType === 'ONA') {
             return MediaType.SPECIAL;
-        } else if (showType == 'OVA') {
+        } else if (showType === 'OVA') {
             return MediaType.SPECIAL;
-        } else if (showType == 'TV') {
+        } else if (showType === 'TV') {
             return MediaType.ANIME;
-        } else if (showType == 'movie') {
+        } else if (showType === 'movie') {
             return MediaType.MOVIE;
-        } else if (showType == 'music') {
+        } else if (showType === 'music') {
             return MediaType.SPECIAL;
-        } else if (showType == 'special') {
+        } else if (showType === 'special') {
             return MediaType.SPECIAL;
         }
         return MediaType.UNKOWN;
