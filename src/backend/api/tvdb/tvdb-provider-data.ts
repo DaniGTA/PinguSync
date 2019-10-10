@@ -2,6 +2,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import PathHelper from '../../helpFunctions/path-helper';
+import logger from '../../logger/logger';
 
 export class TVDBProviderData {
 
@@ -20,24 +21,24 @@ export class TVDBProviderData {
     private async saveData() {
         try {
             const dataPath = this.getPath();
-            console.warn('[IO] Write tvdb user file.');
+            logger.warn('[IO] Write tvdb user file.');
             fs.writeFileSync(dataPath, JSON.stringify(this));
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     }
 
     private loadData() {
         try {
             const dataPath = this.getPath();
-            console.warn('[IO] Read tvdb user file. ' + dataPath);
+            logger.warn('[IO] Read tvdb user file. ' + dataPath);
             if (fs.existsSync(dataPath)) {
                 const loadedString = fs.readFileSync(dataPath, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     }
 

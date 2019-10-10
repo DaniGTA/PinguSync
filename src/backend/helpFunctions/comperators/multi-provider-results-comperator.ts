@@ -2,6 +2,7 @@ import MultiProviderResult from '../../api/multi-provider-result';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';
+import logger from '../../logger/logger';
 import titleCheckHelper from '../title-check-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
@@ -65,12 +66,12 @@ export default class MultiProviderComperator {
             for (const serie of await series.getSlugNames()) {
                 for (const tempserie of await tempSeries.getSlugNames()) {
                     if (serie.name !== tempserie.name) {
-                        console.warn('Not same slug id');
+                       logger.warn('Not same slug id');
                     }
                 }
             }
         } else {
-            console.warn('not the same series' + result.mainProvider.getAllNames()[0].name + '(' + result.mainProvider.provider + ')' + ' &' + series.getAllNames()[0].name);
+            logger.warn('not the same series' + result.mainProvider.getAllNames()[0].name + '(' + result.mainProvider.provider + ')' + ' &' + series.getAllNames()[0].name);
         }
         return finalResult;
     }

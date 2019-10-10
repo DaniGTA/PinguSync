@@ -1,3 +1,4 @@
+import logger from '../../logger/logger';
 import Banner from '../objects/meta/banner';
 import Cover from '../objects/meta/cover';
 import Episode from '../objects/meta/episode/episode';
@@ -115,7 +116,7 @@ export default class ProviderLocalData {
             }
         }
         if (names.length > 25) {
-            console.log('.');
+           logger.log('info', '.');
         }
     }
 

@@ -8,6 +8,7 @@ import { InfoProviderLocalData } from '../../controller/objects/info-provider-lo
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
+import logger from '../../logger/logger';
 import IInfoProvider from '../info-provider';
 import MultiProviderResult from '../multi-provider-result';
 import AniDBConverter from './anidb-converter';
@@ -52,7 +53,7 @@ export default class AniDBProvider implements IInfoProvider {
                         }
                     }
                 } catch (err) {
-                    console.error(err);
+                   logger.error(err);
                 }
             }
             if (lastResult && lastSeriesDB) {
@@ -131,14 +132,14 @@ export default class AniDBProvider implements IInfoProvider {
     }
 
     private getData() {
-        console.warn('[ANIDB] Download anime names.');
-        this.downloadFile('http://anidb.net/api/anime-titles.xml.gz').then(async (value) => {
+       logger.warn('[ANIDB] Download anime names.');
+       this.downloadFile('http://anidb.net/api/anime-titles.xml.gz').then(async (value) => {
 
             AniDBProvider.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML());
 
         }).catch((err) => {
             AniDBProvider.anidbNameManager.updateData(new Date(Date.now()));
-            console.error(err);
+            logger.error(err);
         });
     }
 
@@ -170,21 +171,21 @@ export default class AniDBProvider implements IInfoProvider {
                     resolve(readFileSync(path, 'UTF-8'));
                 });
             }).on('error', (e) => {
-                console.error(e);
-                rejects();
+               logger.error(e);
+               rejects();
             });
         });
     }
 
     private async webRequest<T>(url: string): Promise<T> {
-        console.log('[AniDB] Start WebRequest');
-        return new Promise<T>((resolve, rejects) => {
+       logger.log('info', '[AniDB] Start WebRequest');
+       return new Promise<T>((resolve, rejects) => {
             try {
 
                 request({ method: 'GET', uri: url, gzip: true }, (error: any, response: any, body: any) => {
 
-                    console.log('[AniDB] statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                    if (response.statusCode === 200) {
+                   logger.log('info', '[AniDB] statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                   if (response.statusCode === 200) {
                         const json = xml2json(body, { compact: true, spaces: 0 });
                         if (json) {
                             resolve(JSON.parse(json) as T);
@@ -193,10 +194,10 @@ export default class AniDBProvider implements IInfoProvider {
                         rejects();
                     }
                 }).on('error', (err) => {
-                    console.error(err);
+                   logger.error(err);
                 });
             } catch (err) {
-                console.error(err);
+               logger.error(err);
             }
         });
     }

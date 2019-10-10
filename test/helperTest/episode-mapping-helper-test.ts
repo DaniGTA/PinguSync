@@ -627,8 +627,6 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Result checking
 
-        console.info(result);
-
         strictEqual(result[0], episode1, '0 should be EP01S01');
         strictEqual(result[1], episode2s1, '1 should be EP02S01');
         strictEqual(result[2], episode3, '2 should be EP03S01');

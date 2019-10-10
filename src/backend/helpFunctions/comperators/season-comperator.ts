@@ -1,6 +1,7 @@
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';
+import logger from '../../logger/logger';
 import { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
 
@@ -21,7 +22,7 @@ export default class SeasonComperator {
                             comperatorResult.aFirstSeason = await a.getFirstSeason();
                         }
                     } catch (err) {
-                        console.error(err);
+                       logger.error(err);
                     }
                     if (comperatorResult.aFirstSeason) {
                         for (const listProviderInfos of comperatorResult.aFirstSeason.getListProvidersInfos()) {

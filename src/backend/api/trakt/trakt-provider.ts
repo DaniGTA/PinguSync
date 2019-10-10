@@ -11,6 +11,7 @@ import request from 'request';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
+import logger from '../../logger/logger';
 import MultiProviderResult from '../multi-provider-result';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
@@ -52,7 +53,7 @@ export default class TraktProvider implements IListProvider {
                     endResult.push(await traktConverter.convertMovieToLocalData(result.movie));
                 }
             } catch (err) {
-                console.error(err);
+               logger.error(err);
             }
         }
         return endResult;
@@ -81,7 +82,7 @@ export default class TraktProvider implements IListProvider {
         return this.userData.accessToken !== '';
     }
     public async getAllSeries(disableCache: boolean = false): Promise<Series[]> {
-        console.log('[Request] -> Trakt -> AllSeries');
+        logger.log('info', '[Request] -> Trakt -> AllSeries');
         if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
             return this.userData.list;
         } else if (this.userData.userInfo != null) {
@@ -91,7 +92,7 @@ export default class TraktProvider implements IListProvider {
                 try {
                     seriesList.push(...await traktConverter.convertSeasonsToSeries(entry));
                 } catch (e) {
-                    console.error(e);
+                   logger.error(e);
                 }
             }
             this.userData.updateList(seriesList);
@@ -154,14 +155,14 @@ export default class TraktProvider implements IListProvider {
                     reject();
                 }
             }).on('error', (err) => {
-                console.log(err);
+                logger.error(err);
                 reject();
             });
         });
     }
 
     private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
-        console.log('[Trakt] Start WebRequest');
+        logger.log('info','[Trakt] Start WebRequest');
         const that = this;
         return new Promise<T>((resolve, reject) => {
             try {
@@ -182,19 +183,19 @@ export default class TraktProvider implements IListProvider {
                             const data: T = JSON.parse(body) as T;
                             resolve(data);
                         } else {
-                            console.error('[Trakt] status code:', response.statusCode);
+                            logger.error('[Trakt] status code:', response.statusCode);
                             reject();
                         }
                     } catch (err) {
-                        console.error(err);
+                        logger.error(err);
                         reject();
                     }
                 }).on('error', (err) => {
-                    console.error(err);
+                    logger.error(err);
                     reject();
                 });
             } catch (err) {
-                console.error(err);
+                logger.error(err);
                 reject();
             }
         });

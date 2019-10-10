@@ -12,18 +12,19 @@ import * as electron from 'electron';
 import * as mongoose from 'mongoose';
 import FrontendController from './backend/controller/frontend-controller';
 import DatabaseLoader from './backend/controller/stats-manager/database-loader';
+import logger from './backend/logger/logger';
 
 try {
 
   mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
     if (err) {
-      console.error(err.message);
+     logger.error(err.message);
     } else {
-      console.log('Successfully Connected!');
+     logger.log('info', 'Successfully Connected!');
     }
   });
 } catch (err) {
-  console.error(err);
+ logger.error(err);
 }
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -98,7 +99,7 @@ app.on('ready', async () => {
     try {
       await installVueDevtools();
     } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString());
+     logger.error('Vue Devtools failed to install:', e.toString());
     }
   }
   createWindow();

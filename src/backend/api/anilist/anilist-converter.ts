@@ -8,6 +8,7 @@ import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import listHelper from '../../helpFunctions/list-helper';
+import logger from '../../logger/logger';
 import AniListProvider from './anilist-provider';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import { MediaFormat } from './graphql/mediaFormat';
@@ -100,7 +101,7 @@ export default new class AniListConverter {
             providerInfo = await this.fillRelation(providerInfo, entry.media.relations);
 
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
         providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;

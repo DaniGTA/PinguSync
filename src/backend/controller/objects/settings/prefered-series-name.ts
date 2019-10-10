@@ -1,3 +1,4 @@
+import logger from '../../../logger/logger';
 import Name from '../meta/name';
 import Series from '../series';
 import UserSettings from './user-settings';
@@ -17,7 +18,7 @@ export class PreferedSeriesNameHelper {
         try {
             return Name.getRomajiName(seriesNames);
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
 
         return seriesNames[0].name;

@@ -1,6 +1,7 @@
 import IListProvider from '../api/list-provider';
 import ICommunication from '../communication/icommunication';
 import IPCBackgroundController from '../communication/ipc-background-controller';
+import logger from '../logger/logger';
 import ListController from './list-controller';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
 import Series from './objects/series';
@@ -25,7 +26,7 @@ class FrontendController {
     private static instance: FrontendController;
 
     private communcation: ICommunication = new IPCBackgroundController({} as Electron.WebContents); constructor(webcontents?: Electron.WebContents) {
-        console.log('Load list controller');
+        logger.log('info', 'Load list controller');
         // tslint:disable-next-line: no-unused-expression
         new ListController();
         if (webcontents) {
@@ -50,7 +51,7 @@ class FrontendController {
                             await pl.logInUser(code);
                             that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                         } catch (err) {
-                            console.error(err);
+                           logger.error(err);
                         }
                     });
                     this.communcation.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
@@ -61,7 +62,7 @@ class FrontendController {
                     try {
                         that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                     } catch (err) {
-                        console.error(err);
+                       logger.error(err);
                     }
                 });
             }
@@ -79,7 +80,7 @@ class FrontendController {
             if (ListController.instance) {
                 ListController.instance.forceRefreshProviderInfo(data);
             } else {
-                console.log('Failed to request info: no provider instance');
+                logger.log('info', 'Failed to request info: no provider instance');
             }
         });
 
@@ -95,7 +96,7 @@ class FrontendController {
             if (ListController.instance) {
                 ListController.instance.removeSeriesPackageFromMainList(data);
             } else {
-                console.log('Failed to remove package: no provider instance');
+                logger.error('Failed to remove package: no provider instance');
             }
         });
 
@@ -104,7 +105,7 @@ class FrontendController {
             if (ListController.instance) {
                 const lc = ListController.instance;
                 const anime: Series = Object.assign(new Series(), data.anime);
-                console.log(data);
+                logger.log('info', data);
                 anime.readdFunctions();
                 if (data.reduce) {
                     lc.removeWatchProgress(anime, await anime.getLastWatchProgress());
@@ -117,7 +118,7 @@ class FrontendController {
                     }
                 }
             } else {
-                console.log('Failed to update watch progress: no provider instance');
+                logger.log('info', 'Failed to update watch progress: no provider instance');
             }
         });
     }
@@ -127,12 +128,12 @@ class FrontendController {
     }
 
     public async sendSeriesList() {
-        console.log('[Send] -> list -> anime');
+        logger.log('info', '[Send] -> list -> anime');
         if (ListController.instance) {
             const list = await new MainListPackageManager().getSeriesPackages(await ListController.instance.getMainList());
             this.communcation.send('series-list', list);
         } else {
-            console.log('Failed to send list: no provider instance');
+            logger.log('info', 'Failed to send list: no provider instance');
         }
     }
 
@@ -142,7 +143,7 @@ class FrontendController {
     }
 
     public async updateClientList(targetIndex: number, updatedEntry: SeriesPackage) {
-        console.log('[Send] -> update -> anime');
+        logger.log('info', '[Send] -> update -> anime');
         this.communcation.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }
 
@@ -153,10 +154,10 @@ class FrontendController {
             if (anime) {
                 lc.syncProvider(anime);
             } else {
-                console.error('Error on sync series');
+                logger.error('Error on sync series');
             }
         } else {
-            console.error('Failed sync series: no list provider instance');
+            logger.error('Failed sync series: no list provider instance');
         }
     }
 }

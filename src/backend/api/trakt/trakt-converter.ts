@@ -8,6 +8,7 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series, { WatchStatus } from '../../controller/objects/series';
+import logger from '../../logger/logger';
 import MultiProviderResult from '../multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { FullShowInfo } from './objects/fullShowInfo';
@@ -62,7 +63,7 @@ export default new class TraktConverter {
             tvdbProvider.hasFullInfo = false;
             result.subProviders.push(tvdbProvider);
         } catch (err) {
-            console.log('no tvdb instance.');
+           logger.log('info', 'no tvdb instance.');
         }
         return result;
     }

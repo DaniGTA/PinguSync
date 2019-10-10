@@ -11,6 +11,7 @@ import { NameType } from '../../../src/backend/controller/objects/meta/name-type
 import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
+import logger from '../../../src/backend/logger/logger';
 
 describe('Provider: AniDB | Offline Test runs', () => {
     before(() => {
@@ -207,7 +208,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             await providerHelper['getProviderSeriesInfo'](series, a);
             fail();
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     });
 
@@ -294,7 +295,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             await providerHelper['getProviderSeriesInfo'](series, a);
             fail();
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     });
 });

@@ -4,6 +4,7 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
+import logger from '../../logger/logger';
 import { UserData } from '../user-data';
 
 export class AniListUserData implements UserData {
@@ -42,14 +43,14 @@ export class AniListUserData implements UserData {
 
 
     private async saveData() {
-        console.warn('[IO] Write anilist user file.');
-        writeFileSync(await this.getPath(), JSON.stringify(this));
+       logger.warn('[IO] Write anilist user file.');
+       writeFileSync(await this.getPath(), JSON.stringify(this));
     }
 
     private loadData() {
         try {
-            console.warn('[IO] Read anilist user file.');
-            if (existsSync(this.getPath())) {
+           logger.warn('[IO] Read anilist user file.');
+           if (existsSync(this.getPath())) {
                 const loadedString = readFileSync(this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
@@ -61,7 +62,7 @@ export class AniListUserData implements UserData {
                 this.lastListUpdate = loadedData.lastListUpdate;
             }
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     }
 

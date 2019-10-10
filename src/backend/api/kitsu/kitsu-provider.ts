@@ -5,13 +5,13 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
 import timeHelper from '../../helpFunctions/time-helper';
+import logger from '../../logger/logger';
 import IListProvider from '../list-provider';
 import MultiProviderResult from '../multi-provider-result';
 import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
-
 export default class KitsuProvider implements IListProvider {
 
     public static getInstance() {
@@ -57,11 +57,11 @@ export default class KitsuProvider implements IListProvider {
                 try {
                     endResults.push(await kitsuConverter.convertMediaToAnime(result, false));
                 } catch (err) {
-                    console.error(err);
+                    logger.error(err);
                 }
             }
         } catch (err) {
-            console.error(err);
+            logger.error(err);
         }
 
         return endResults;

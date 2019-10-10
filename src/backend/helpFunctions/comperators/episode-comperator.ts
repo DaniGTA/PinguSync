@@ -1,5 +1,6 @@
 import Episode from '../../controller/objects/meta/episode/episode';
 import Series from '../../controller/objects/series';
+import logger from '../../logger/logger';
 import ComperatorResult from './comperator-results.ts/comperator-result';
 
 export default class EpisodeComperator {
@@ -16,7 +17,7 @@ export default class EpisodeComperator {
                 }
             }
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
         const detailedEpisodesResults = await this.compareDetailedEpisodesList(a, b);
         result.matchAble += detailedEpisodesResults.matchAble;

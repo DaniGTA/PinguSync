@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
+import logger from '../../logger/logger';
 import { UserData } from '../user-data';
 
 export class KitsuUserData implements UserData {
@@ -33,23 +34,23 @@ export class KitsuUserData implements UserData {
 
     private async saveData() {
         try {
-            console.warn('[IO] Write kitsu user file.');
-            fs.writeFileSync(this.getPath(), JSON.stringify(this));
+           logger.warn('[IO] Write kitsu user file.');
+           fs.writeFileSync(this.getPath(), JSON.stringify(this));
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     }
 
     private loadData() {
         try {
-            console.warn('[IO] Read kitsu user file.');
-            if (fs.existsSync(this.getPath())) {
+           logger.warn('[IO] Read kitsu user file.');
+           if (fs.existsSync(this.getPath())) {
                 const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     }
 

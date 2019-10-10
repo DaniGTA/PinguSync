@@ -1,9 +1,9 @@
 import listHelper from '../../helpFunctions/list-helper';
 import seriesHelper from '../../helpFunctions/series-helper';
+import logger from '../../logger/logger';
 import Series from '../objects/series';
 import SeriesPackage from '../objects/series-package';
 import MainListManager from './main-list-manager';
-
 export default class MainListPackageManager {
     public async getIndexFromPackageId(packageId: string, list: readonly Series[] | Series[]): Promise<number> {
         return list.findIndex((x) => packageId === x.id);
@@ -22,13 +22,13 @@ export default class MainListPackageManager {
                     for (const entry2 of tempPackage.allRelations) {
                         if ((await entry.getSeason()).seasonNumber === (await entry2.getSeason()).seasonNumber && entry.id !== entry2.id) {
                             const result = await seriesHelper.isSameSeries(entry, entry2);
-                            console.log('Same season in package. Detected as same series:' + result);
+                            logger.log('info', 'Same season in package. Detected as same series:' + result);
                         }
                     }
                 }
                 seriesPackageList.push(tempPackage);
             } catch (err) {
-                console.error(err);
+               logger.error(err);
             }
         }
         return seriesPackageList;
@@ -67,9 +67,9 @@ export default class MainListPackageManager {
             }
             return tempPackage;
         } catch (err) {
-            console.error('Cant create package for: ');
-            console.error(series);
-            throw new Error('cant create package');
+           logger.error('Cant create package for: ');
+           logger.error(series);
+           throw new Error('cant create package');
         }
     }
 }

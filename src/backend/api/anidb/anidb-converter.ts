@@ -10,6 +10,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
+import logger from '../../logger/logger';
 import MultiProviderResult from '../multi-provider-result';
 import AniDBProvider from './anidb-provider';
 import { AniDBAnimeAnime, AniDBAnimeFullInfo, AttributeInfo, EpisodeElement, ExternalentityElement, FluffyExternalentity, ResourceElement } from './objects/anidbFullInfoXML';
@@ -130,7 +131,7 @@ export default class AniDBConverter {
                 try {
                     subProviders.push(await this.getResourceInfoProvider(resource));
                 } catch (err) {
-                    console.error(err);
+                   logger.error(err);
                 }
             }
         }

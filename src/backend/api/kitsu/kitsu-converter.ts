@@ -15,6 +15,7 @@ import { ImageSize } from '../../controller/objects/meta/image-size';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { NameType } from '../../controller/objects/meta/name-type';
 import { StreamingProviderLocalData } from '../../controller/objects/streaming-provider-local-data';
+import logger from '../../logger/logger';
 import AniDBProvider from '../anidb/anidb-provider';
 import AniListProvider from '../anilist/anilist-provider';
 import MultiProviderResult from '../multi-provider-result';
@@ -123,7 +124,7 @@ export default new class KitsuConverter {
                     providerLocalData.push(localdata);
                 }
             } catch (err) {
-                console.log(err);
+               logger.log('info', err);
             }
         }
         try {
@@ -136,7 +137,7 @@ export default new class KitsuConverter {
                 providerLocalData.push(localdata);
             }
         } catch (err) {
-            console.log(err);
+           logger.log('info', err);
         }
         return providerLocalData;
     }

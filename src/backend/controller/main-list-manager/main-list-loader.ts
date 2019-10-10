@@ -1,29 +1,32 @@
-import { existsSync, writeFileSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import * as path from 'path';
+import logger from '../../logger/logger';
 import Series from '../objects/series';
-import * as path from "path";
 export default class MainListLoader {
     /**
      * Load json data from file.
      * The json file contains all series that got added to the mainlist.
      */
-    static loadData(): Series[] {
-        console.log('Load list file...');
+    public static loadData(): Series[] {
+        logger.log('info', 'Load list file...');
         try {
             if (existsSync(this.getPath())) {
-                const loadedString = readFileSync(this.getPath(), 'UTF-8');
+                const dataPath = this.getPath();
+                const loadedString = readFileSync(dataPath, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as Series[];
-                console.log('Items loaded: ' + loadedData.length)
+                logger.log('info', 'Items loaded: ' + loadedData.length);
                 for (let index = 0; index < loadedData.length; index++) {
                     loadedData[index] = Object.assign(new Series(), loadedData[index]);
                     loadedData[index].readdFunctions();
                 }
                 return loadedData;
+            } else {
+                logger.error('File not exist');
             }
         } catch (err) {
-            console.log(err);
+            logger.error(err);
             return [];
         }
-        console.log('File not exist');
         return [];
     }
 
@@ -31,9 +34,9 @@ export default class MainListLoader {
      * Save the main list to a json file.
      * @param list the main list.
      */
-    static async saveData(list: Series[]) {
-        console.log('Save list: '+list.length);
-        console.log(this.getPath());
+    public static async saveData(list: Series[]) {
+        logger.log('info', 'Save list: ' + list.length);
+        logger.log('info', this.getPath());
         writeFileSync(this.getPath(), JSON.stringify(list));
     }
 

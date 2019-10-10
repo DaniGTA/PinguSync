@@ -1,16 +1,14 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
-import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
+import logger from '../../logger/logger';
 import IInfoProvider from '../info-provider';
 import MultiProviderResult from '../multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
-
 export default class OMDbProvider implements IInfoProvider {
     public static instance: OMDbProvider;
     public isOffline: boolean = false;
@@ -55,7 +53,7 @@ export default class OMDbProvider implements IInfoProvider {
             }
 
         } catch (err) {
-            console.log(err);
+            logger.log('info', err);
         }
         return results;
     }
@@ -84,20 +82,20 @@ export default class OMDbProvider implements IInfoProvider {
                                 const data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
-                                console.error('[OMDb] status code: ' + response.statusCode);
-                                reject();
+                               logger.error('[OMDb] status code: ' + response.statusCode);
+                               reject();
                             }
                         } catch (err) {
-                            console.error(err);
-                            reject();
+                           logger.error(err);
+                           reject();
                         }
                     }).on('error', (err) => {
-                        console.error(err);
-                        reject();
+                       logger.error(err);
+                       reject();
                     });
                 } catch (err) {
-                    console.error(err);
-                    reject();
+                   logger.error(err);
+                   reject();
                 }
             })();
         });

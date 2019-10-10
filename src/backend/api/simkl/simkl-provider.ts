@@ -5,17 +5,18 @@ import { ListProviderLocalData } from '../../controller/objects/list-provider-lo
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
+import logger from '../../logger/logger';
 import IListProvider from '../list-provider';
 import MultiProviderResult from '../multi-provider-result';
 import CodeResponse from './objects/codeResponse';
 import { SimklErrorResponse } from './objects/simklErrorResponse';
+import { ISimklFullInfoAnimeResponse } from './objects/simklFullInfoAnimeResponse';
+import { ISimklFullInfoMovieResponse } from './objects/simklFullInfoMovieResponse';
+import { ISimklFullInfoSeriesResponse } from './objects/simklFullInfoSeriesResponse';
 import { ISimklTextSearchResults } from './objects/simklTextSearchResults';
 import { UserListResponse } from './objects/userListResonse';
 import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
-import { ISimklFullInfoAnimeResponse } from './objects/simklFullInfoAnimeResponse';
-import { ISimklFullInfoMovieResponse } from './objects/simklFullInfoMovieResponse';
-import { ISimklFullInfoSeriesResponse } from './objects/simklFullInfoSeriesResponse';
 
 export default class SimklProvider implements IListProvider {
     public static instance: SimklProvider;
@@ -141,7 +142,7 @@ export default class SimklProvider implements IListProvider {
         if (!await this.isProviderAvailable()) {
             throw new Error('timeout active');
         }
-        console.log('[Simkl] Start WebRequest');
+        logger.log('info', '[Simkl] Start WebRequest');
         const that = this;
         return new Promise<T>((resolve, reject) => {
             try {
@@ -169,21 +170,21 @@ export default class SimklProvider implements IListProvider {
                             }
                             reject();
                         } else {
-                            console.error('[Simkl] status code:', response.statusCode);
-                            reject();
+                           logger.error('[Simkl] status code:', response.statusCode);
+                           reject();
                         }
 
                     } catch (err) {
-                        console.error(err);
-                        reject();
+                       logger.error(err);
+                       reject();
                     }
                 }).on('error', (err) => {
-                    console.error(err);
-                    reject();
+                   logger.error(err);
+                   reject();
                 });
             } catch (err) {
-                console.error(err);
-                reject();
+               logger.error(err);
+               reject();
             }
         });
     }

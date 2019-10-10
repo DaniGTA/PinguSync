@@ -1,5 +1,6 @@
 import { MediaType } from '../controller/objects/meta/media-type';
 import Series from '../controller/objects/series';
+import logger from '../logger/logger';
 import stringHelper from './string-helper';
 
 export default new class TitleCheckHelper {
@@ -107,7 +108,7 @@ export default new class TitleCheckHelper {
             }
             return false;
         } catch (err) {
-            console.error(err);
+            logger.error(err);
             return false;
         }
     }

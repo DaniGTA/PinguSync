@@ -2,6 +2,7 @@
 import request from 'request';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
+import logger from '../../logger/logger';
 import IInfoProvider from '../info-provider';
 import MultiProviderResult from '../multi-provider-result';
 import { Search, Show } from './models/tvmaze-model';
@@ -36,7 +37,7 @@ export default class TVMazeProvider implements IInfoProvider {
             return results;
 
         } catch (err) {
-            console.log(err);
+           logger.log('info', err);
         }
         throw new Error('Test');
     }
@@ -48,8 +49,8 @@ export default class TVMazeProvider implements IInfoProvider {
 
 
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
-        console.log('[TVMaze] Start WebRequest');
-        return new Promise<any>((resolve, reject) => {
+       logger.log('info', '[TVMaze] Start WebRequest');
+       return new Promise<any>((resolve, reject) => {
             (async () => {
                 try {
                     request({
@@ -65,20 +66,20 @@ export default class TVMazeProvider implements IInfoProvider {
                                 var data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
-                                console.log('[TVMaze] status code: ' + response.statusCode);
-                                reject();
+                               logger.log('info', '[TVMaze] status code: ' + response.statusCode);
+                               reject();
                             }
                         } catch (err) {
-                            console.log(err);
-                            reject();
+                           logger.error(err);
+                           reject();
                         }
                     }).on('error', (err) => {
-                        console.log(err);
-                        reject();
+                       logger.error(err);
+                       reject();
                     });
                 } catch (err) {
-                    console.log(err);
-                    reject();
+                   logger.error(err);
+                   reject();
                 }
             })();
         });

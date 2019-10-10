@@ -2,6 +2,7 @@ import { ListProviderLocalData } from '../../controller/objects/list-provider-lo
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';
+import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 
 export default class ProviderComperator {
@@ -74,7 +75,7 @@ export default class ProviderComperator {
             }
 
         } catch (err) {
-            console.error(err);
+            logger.error(err);
         }
         return false;
     }
@@ -96,7 +97,7 @@ export default class ProviderComperator {
             }
 
         } catch (err) {
-            console.error(err);
+            logger.error(err);
         }
         return false;
     }

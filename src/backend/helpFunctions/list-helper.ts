@@ -2,6 +2,7 @@ import Cover from '../controller/objects/meta/cover';
 import Name from '../controller/objects/meta/name';
 import Overview from '../controller/objects/meta/overview';
 import Series from '../controller/objects/series';
+import logger from '../logger/logger';
 import sortHelper from './sort-helper';
 
 class ListHelper {
@@ -146,7 +147,7 @@ class ListHelper {
                 aName = await Name.getRomajiName(aNames);
                 bName = await Name.getRomajiName(bNames);
             } catch (err) {
-                console.error(err);
+               logger.error(err);
             }
 
             aName = aName.toLocaleLowerCase();

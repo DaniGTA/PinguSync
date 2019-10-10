@@ -1,4 +1,5 @@
 import IListProvider from '../api/list-provider';
+import logger from '../logger/logger';
 import ListController from './list-controller';
 import SeriesPackage from './objects/series-package';
 import IUpdateList from './objects/update-list';
@@ -39,7 +40,7 @@ class ProviderController {
                         await pl.logInUser(code);
                         that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                     } catch (err) {
-                        console.error(err);
+                       logger.error(err);
                     }
                 });
                 this.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
@@ -50,7 +51,7 @@ class ProviderController {
                 try {
                     that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                 } catch (err) {
-                    console.error(err);
+                   logger.error(err);
                 }
             });
         }
@@ -70,7 +71,7 @@ class ProviderController {
                     if (ListController.instance) {
                         ListController.instance.forceRefreshProviderInfo(value.data);
                     } else {
-                        console.log('Failed request info refresh: no list controller instance');
+                        logger.log('info', 'Failed request info refresh: no list controller instance');
                     }
                     break;
 
@@ -96,12 +97,12 @@ class ProviderController {
     }
 
     public async sendSeriesList() {
-        console.log('[Send] -> list -> anime');
+        logger.log('info', '[Send] -> list -> anime');
         if (ListController.instance) {
             const list = ListController.instance.getMainList();
             this.send('series-list', list);
         } else {
-            console.error('Failed send list: no list controller instance');
+            logger.error('Failed send list: no list controller instance');
         }
     }
 
@@ -111,7 +112,7 @@ class ProviderController {
     }
 
     public async updateClientList(targetIndex: number, updatedEntry: SeriesPackage) {
-        console.log('[Send] -> update -> anime');
+        logger.log('info', '[Send] -> update -> anime');
         this.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }
     public async on(channel: string, f: (data: any) => void) {
@@ -119,7 +120,7 @@ class ProviderController {
             const transfer = ev.data as WorkerTransfer;
 
             if (transfer.channel === channel) {
-                console.log('worker: ' + channel);
+                logger.log('info', 'worker: ' + channel);
                 try {
                     f(JSON.parse(transfer.data));
                 } catch (err) {
@@ -137,10 +138,10 @@ class ProviderController {
             if (typeof anime !== 'undefined') {
                 lc.syncProvider(anime);
             } else {
-                console.error('Error');
+               logger.error('Error');
             }
         } else {
-            console.error('Failed sync series: no list controller instance');
+           logger.error('Failed sync series: no list controller instance');
         }
     }
 
@@ -149,11 +150,11 @@ class ProviderController {
         while (!success) {
             try {
                 ctx.postMessage(new WorkerTransfer(channel, JSON.stringify(data)));
-                console.log('worker send: ' + channel);
+                logger.log('info', 'worker send: ' + channel);
                 success = true;
             } catch (err) {
                 ctx.postMessage(new WorkerTransfer(channel, ''));
-                console.error(err);
+               logger.error(err);
             }
         }
 

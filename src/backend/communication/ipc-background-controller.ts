@@ -1,4 +1,5 @@
 import { ipcMain } from 'electron';
+import logger from '../logger/logger';
 import ICommunication from './icommunication';
 
 export default class IPCBackgroundController implements ICommunication {
@@ -13,23 +14,23 @@ export default class IPCBackgroundController implements ICommunication {
         while (!success) {
             try {
                 this.webcontents.send(channel, data);
-                console.log("worker send: " + channel);
+                logger.log('info', 'worker send: ' + channel);
                 success = true;
             } catch (err) {
                 this.webcontents.send(channel);
-                console.log(err);
+                logger.log('info', err);
             }
         }
     }
 
     public async on(channel: string, f: (data: any) => void) {
         ipcMain.on(channel, (event: Electron.IpcMainEvent, data: any) => {
-            console.log('recieved: ' + channel)
-            try {
+           logger.log('info', 'recieved: ' + channel);
+           try {
                 f(JSON.parse(data));
             } catch (err) {
                 f(data);
             }
-        })
+        });
     }
 }

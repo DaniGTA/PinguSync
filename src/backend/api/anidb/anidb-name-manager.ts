@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import logger from '../../logger/logger';
 import AniDBNameListXML from './objects/anidbNameListXML';
 
 export default class AniDBNameManager {
@@ -10,18 +11,18 @@ export default class AniDBNameManager {
     }
 
     public updateData(time: Date, data?: AniDBNameListXML) {
-        console.log('[update] -> anidb -> data');
-        this.lastDownloadTime = time;
-        this.data = data;
-        this.saveData();
+       logger.log('info', '[update] -> anidb -> data');
+       this.lastDownloadTime = time;
+       this.data = data;
+       this.saveData();
     }
 
     private async saveData() {
         try {
-            console.log('[Save] -> AniDB -> Names');
-            fs.writeFileSync(this.getPath(), JSON.stringify(this));
+           logger.log('info', '[Save] -> AniDB -> Names');
+           fs.writeFileSync(this.getPath(), JSON.stringify(this));
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     }
 
@@ -36,7 +37,7 @@ export default class AniDBNameManager {
                 }
             }
         } catch (err) {
-            console.error(err);
+           logger.error(err);
         }
     }
     private getPath(): string {

@@ -1,4 +1,5 @@
 import stringHelper from '../../helpFunctions/string-helper';
+import logger from '../../logger/logger';
 import Name from './meta/name';
 import Series from './series';
 import { PreferedSeriesNameHelper } from './settings/prefered-series-name';
@@ -40,7 +41,7 @@ export default class SeriesPackage {
                     break;
                 }
             } catch (err) {
-                console.error(err);
+               logger.error(err);
             }
             if (!preferedName) {
                 const names = relation.getAllNames();

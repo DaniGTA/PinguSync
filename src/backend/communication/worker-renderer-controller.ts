@@ -1,6 +1,7 @@
-import { shell, IpcRenderer } from "electron";
-import Worker from "worker-loader!./providerController";
+import { IpcRenderer, shell } from 'electron';
+import Worker from 'worker-loader!./providerController';
 import { WorkerTransfer } from '../controller/objects/worker-transfer';
+import logger from '../logger/logger';
 
 export default class WorkerController {
     worker: Worker;
@@ -17,22 +18,18 @@ export default class WorkerController {
         });
     }
 
-    private processData(data: WorkerTransfer) {
-        this.webcontent.send(data.channel, data.data);
-    }
-
     public send(channel: string, data?: any) {
         this.worker.postMessage(new WorkerTransfer(channel, data));
-        console.log("frontend send: " + channel);
+        logger.log('info', 'frontend send: ' + channel);
     }
 
     public async on(channel: string, f: (data: any) => void) {
         this.worker.addEventListener('message', (ev: MessageEvent) => {
             const transfer = ev.data as WorkerTransfer;
 
-            if (transfer.channel == channel) {
-                console.log("frontend: " + channel);
-                if (typeof transfer.data != 'undefined') {
+            if (transfer.channel === channel) {
+               logger.log('info', 'frontend: ' + channel);
+               if (typeof transfer.data !== 'undefined') {
                     try {
                         f(JSON.parse(transfer.data));
                     } catch (err) {
@@ -40,6 +37,10 @@ export default class WorkerController {
                     }
                 }
             }
-        })
+        });
+    }
+
+    private processData(data: WorkerTransfer) {
+        this.webcontent.send(data.channel, data.data);
     }
 }
