@@ -1,21 +1,21 @@
-import { strictEqual } from "assert";
-import Name from "../../../src/backend/controller/objects/meta/name";
-import Series from "../../../src/backend/controller/objects/series";
-import { ListProviderLocalData } from "../../../src/backend/controller/objects/list-provider-local-data";
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import { strictEqual } from 'assert';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
+import Name from '../../../src/backend/controller/objects/meta/name';
+import Series from '../../../src/backend/controller/objects/series';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 
 describe('Series | Season', () => {
     before(() => {
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return [] };
+        MainListLoader['loadData'] = () => { return []; };
         MainListLoader['saveData'] = async () => { };
-    })
+    });
 
     it('should return season 1', async () => {
         const series = new Series();
-        const provider = new ListProviderLocalData("TestA");
+        const provider = new ListProviderLocalData('TestA');
         provider.targetSeason = 1;
         series.addListProvider(provider);
         strictEqual((await series.getSeason()).seasonNumber, 1);
@@ -24,7 +24,7 @@ describe('Series | Season', () => {
 
     it('should return season 2', async () => {
         const series = new Series();
-        const provider = new ListProviderLocalData("TestA");
+        const provider = new ListProviderLocalData('TestA');
         provider.addSeriesName(new Name('Test 3', 'en'));
         series.addListProvider(provider);
         strictEqual((await series.getSeason()).seasonNumber, 3);
@@ -33,7 +33,7 @@ describe('Series | Season', () => {
 
     it('should return season 3', async () => {
         const series = new Series();
-        const provider = new ListProviderLocalData("TestA");
+        const provider = new ListProviderLocalData('TestA');
         provider.addSeriesName(new Name('Test III', 'en'));
         series.addListProvider(provider);
         strictEqual((await series.getSeason()).seasonNumber, 3);
@@ -89,14 +89,14 @@ describe('Series | Season', () => {
 
     it('should return season 7', async () => {
         const series = new Series();
-        const lpld = new ListProviderLocalData("Test");
+        const lpld = new ListProviderLocalData('Test');
         lpld.prequelIds.push(5);
         lpld.id = 6;
         lpld.addSeriesName(new Name('Test Cool', 'en'));
         series.addListProvider(lpld);
 
         const series2 = new Series();
-        const lpld2 = new ListProviderLocalData("Test");
+        const lpld2 = new ListProviderLocalData('Test');
         lpld2.sequelIds.push(6);
         lpld2.id = 5;
         lpld2.addSeriesName(new Name('Test Test', 'en'));
@@ -191,7 +191,6 @@ describe('Series | Season', () => {
         lpld.sequelIds.push(199);
         series.addListProvider(lpld);
         const result = await series.getSeason();
-        console.log(result);
         strictEqual(result.seasonNumber, 1);
         return;
     });

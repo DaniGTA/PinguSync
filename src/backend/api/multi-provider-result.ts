@@ -1,8 +1,8 @@
-import ProviderLocalData from '../controller/interfaces/provider-local-data'
+import ProviderLocalData from '../controller/interfaces/provider-local-data';
 
-export default class MultiProviderResult{
-    mainProvider: ProviderLocalData;
-    subProviders: ProviderLocalData[];
+export default class MultiProviderResult {
+    public mainProvider: ProviderLocalData;
+    public subProviders: ProviderLocalData[];
     constructor(mainProvider: ProviderLocalData, ...subProviders: ProviderLocalData[]) {
         this.mainProvider = mainProvider;
         if (subProviders) {

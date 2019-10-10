@@ -1,27 +1,27 @@
 import * as assert from 'assert';
+import Name from '../../src/backend/controller/objects/meta/name';
+import WatchProgress from '../../src/backend/controller/objects/meta/watch-progress';
 import Series from '../../src/backend/controller/objects/series';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
-import WatchProgress from '../../src/backend/controller/objects/meta/watch-progress';
-import Name from '../../src/backend/controller/objects/meta/name';
 
 describe('List Helper', () => {
     it('should clean array', async () => {
-        var arr = await listHelper.cleanArray([null, undefined, ''])
+        const arr = await listHelper.cleanArray([null, undefined, '']);
         assert.equal(arr.length, 0);
         return;
     });
     it('should get most frequency occur (1/2)', async () => {
-        var arr = await listHelper.findMostFrequent([1, 1, 0, 1, 1, 0])
+        const arr = await listHelper.findMostFrequent([1, 1, 0, 1, 1, 0]);
         assert.equal(arr, 1);
         return;
     });
     it('should get most frequency occur (2/2)', async () => {
-        var arr = await listHelper.findMostFrequent(await listHelper.cleanArray([1]))
+        const arr = await listHelper.findMostFrequent(await listHelper.cleanArray([1]));
         assert.equal(arr, 1);
         return;
     });
     it('should return undefined', async () => {
-        var arr = await listHelper.findMostFrequent([])
+        const arr = await listHelper.findMostFrequent([]);
         assert.equal(typeof arr, 'undefined');
         return;
     });
@@ -54,13 +54,13 @@ describe('List Helper', () => {
     });
 
     it('it should look if item is in list', async () => {
-        const array = ["Test", "Test2", "Test3"];
-        assert.strictEqual(await listHelper.isItemInList(array, "Test"), true);
-        assert.strictEqual(await listHelper.isItemInList(array, "xTestx"), false);
+        const array = ['Test', 'Test2', 'Test3'];
+        assert.strictEqual(await listHelper.isItemInList(array, 'Test'), true);
+        assert.strictEqual(await listHelper.isItemInList(array, 'xTestx'), false);
     });
 
     it('get lazy uniqe string list', async () => {
-        const array = [new Name("Test", "en"), new Name("test", "en"), new Name("tesT", "en"), new Name("Test2", "en")];
+        const array = [new Name('Test', 'en'), new Name('test', 'en'), new Name('tesT', 'en'), new Name('Test2', 'en')];
         assert.strictEqual((await listHelper.getLazyUniqueStringList(array)).length, 2);
     });
 
@@ -70,9 +70,9 @@ describe('List Helper', () => {
         const numberList = [1, 2, 3];
         const watchprogressList = [new WatchProgress(1), new WatchProgress(2), new WatchProgress(3)];
 
-        assert.strictEqual(await listHelper.checkType(numberList, Number), true, "numberList is type of number");
-        assert.strictEqual(await listHelper.checkType(watchprogressList, WatchProgress), true, "watchprogressList is type of WatchProgress");
-        assert.strictEqual(await listHelper.checkType(numberList, WatchProgress), false, "numberList is not type of WatchProgress");
-        assert.strictEqual(await listHelper.checkType(watchprogressList, Number), false, "watchprogressList is not type of Number");
+        assert.strictEqual(await listHelper.checkType(numberList, Number), true, 'numberList is type of number');
+        assert.strictEqual(await listHelper.checkType(watchprogressList, WatchProgress), true, 'watchprogressList is type of WatchProgress');
+        assert.strictEqual(await listHelper.checkType(numberList, WatchProgress), false, 'numberList is not type of WatchProgress');
+        assert.strictEqual(await listHelper.checkType(watchprogressList, Number), false, 'watchprogressList is not type of Number');
     });
 });

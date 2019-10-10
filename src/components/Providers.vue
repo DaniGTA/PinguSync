@@ -17,7 +17,7 @@
     </ul>
     <div v-if="currentSelectedProvider != ''">
       <!-- Modal content -->
-      <AuthModal v-bind:currentSelectedProvider="currentSelectedProvider"></AuthModal>
+      <AuthModal v-bind:currentSelectedProvider.sync="currentSelectedProvider"></AuthModal>
     </div>
   </div>
 </template>
@@ -51,6 +51,9 @@ export default class Providers extends Vue {
       App.workerController.send("get-series-list");
     });
     App.workerController.send("get-all-providers");
+    App.workerController.on("open-url", (url: string) => {
+      ipcRenderer.send("open-url", url);
+    });
     console.log("Request Providers");
   }
 
@@ -63,6 +66,7 @@ export default class Providers extends Vue {
   }
 
   openAuth(provider: string) {
+    App.workerController.send(provider.toLocaleLowerCase() + "-open-code-url");
     this.currentSelectedProvider = provider;
   }
 
@@ -70,8 +74,7 @@ export default class Providers extends Vue {
     const that = this;
     App.workerController.on(
       providerName.toLocaleLowerCase() + "-auth-status",
-      (status:boolean) => {
-      
+      (status: boolean) => {
         const button = (that.$refs as any)[
           providerName + "-button"
         ][0] as HTMLElement;

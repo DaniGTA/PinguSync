@@ -1,31 +1,31 @@
 
-import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
-import Series from '../../src/backend/controller/objects/series';
-import { strictEqual, fail, notStrictEqual, equal } from 'assert';
+import { equal, fail, notStrictEqual, strictEqual } from 'assert';
+import MultiProviderResult from '../../src/backend/api/multi-provider-result';
 import ListController from '../../src/backend/controller/list-controller';
-import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-import TestProvider from '../controller/objects/testClass/testProvider';
+import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
+import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
+import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
-import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
-import MultiProviderComperator from '../../src/backend/helpFunctions/comperators/multi-provider-results-comperator';
-import MultiProviderResult from '../../src/backend/api/multi-provider-result';
+import Series from '../../src/backend/controller/objects/series';
+import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import { AbsoluteResult } from '../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
+import MultiProviderComperator from '../../src/backend/helpFunctions/comperators/multi-provider-results-comperator';
+import TestProvider from '../controller/objects/testClass/testProvider';
 
 describe('Multi-Provider-Comperator | Examples', () => {
     before(() => {
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return [] };
+        MainListLoader['loadData'] = () => { return []; };
         MainListLoader['saveData'] = async () => { };
         new ListController(true);
-    })
+    });
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider("testA"), new TestProvider("testB")];
+        ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
-    })
+    });
     it('should compare 2 entrys right', async () => {
 
         // PART A
@@ -42,10 +42,10 @@ describe('Multi-Provider-Comperator | Examples', () => {
         // PART B
 
         const bProvider = new ListProviderLocalData('testB');
-        bProvider.addSeriesName(new Name("Demon Slayer Movie: InfinityTrain", 'en', NameType.UNKNOWN));
-        bProvider.addSeriesName(new Name("kimetsu-no-yaiba-movie-mugen-ressha-hen", 'unknown', NameType.MAIN));
-        bProvider.addSeriesName(new Name("劇場版 鬼滅の刃 無限列車編", 'jap', NameType.UNKNOWN));
-        bProvider.addSeriesName(new Name("Kimetsu no Yaiba Movie: Mugen Ressha-hen", NameType.UNKNOWN))
+        bProvider.addSeriesName(new Name('Demon Slayer Movie: InfinityTrain', 'en', NameType.UNKNOWN));
+        bProvider.addSeriesName(new Name('kimetsu-no-yaiba-movie-mugen-ressha-hen', 'unknown', NameType.MAIN));
+        bProvider.addSeriesName(new Name('劇場版 鬼滅の刃 無限列車編', 'jap', NameType.UNKNOWN));
+        bProvider.addSeriesName(new Name('Kimetsu no Yaiba Movie: Mugen Ressha-hen', NameType.UNKNOWN));
         bProvider.mediaType = MediaType.MOVIE;
         bProvider.releaseYear = 1970;
 

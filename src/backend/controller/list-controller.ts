@@ -1,17 +1,17 @@
-import Series from './objects/series';
-import ProviderList from './provider-manager/provider-list';
-import WatchProgress from './objects/meta/watch-progress';
 import ListProvider from '../api/list-provider';
-import MainListManager from './main-list-manager/main-list-manager';
 import providerHelper from '../helpFunctions/provider/provider-helper';
 import MainListAdder from './main-list-manager/main-list-adder';
+import MainListManager from './main-list-manager/main-list-manager';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
+import WatchProgress from './objects/meta/watch-progress';
+import Series from './objects/series';
+import ProviderList from './provider-manager/provider-list';
 export default class ListController {
 
     public static instance: ListController | null = null;
     constructor(disableOnlineMode = false) {
         if (!ListController.instance) {
-            console.log('Start ListController.')
+            console.info('Start ListController.');
             if (!disableOnlineMode) {
                 this.getSeriesListAndUpdateMainList();
             }
@@ -19,22 +19,9 @@ export default class ListController {
         }
     }
 
-    private async syncWatcher() {
-        var needToSync: Series[] = [];
-        for (const item of await MainListManager.getMainList()) {
-            if (await item.getCanSync()) {
-                needToSync.push(item);
-            }
-        }
-        if (typeof needToSync != 'undefined') {
-            for (const item of needToSync) {
-                await this.syncProvider(item);
-            }
-        }
-    }
-
-    public async getSeriesById(id: string): Promise<Series|undefined> {
+    public async getSeriesById(id: string): Promise<Series | undefined> {
         for (const entry of await this.getMainList()) {
+            // tslint:disable-next-line: triple-equals
             if (entry.id == id) {
                 return entry;
             }
@@ -58,11 +45,11 @@ export default class ListController {
                 if (await providerInstance.isUserLoggedIn()) {
                     const newProvider = await providerInstance.removeEntry(anime, watchProgress);
                     newProvider.lastUpdate = new Date(Date.now());
-                    var index = anime.getListProvidersInfos().findIndex(x => x.provider === provider.provider);
+                    const index = anime.getListProvidersInfos().findIndex((x) => x.provider === provider.provider);
                     anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
-
+                console.error('Failed remove watch progress');
             }
         }
     }
@@ -70,26 +57,28 @@ export default class ListController {
         if (anime.getListProvidersInfos().length < ProviderList.getListProviderList().length / 2) {
             try {
                 await providerHelper.fillMissingProvider(anime);
-            } catch (err) { }
+            } catch (err) {
+                console.error('Update watch progress');
+            }
         }
         for (const provider of anime.getListProvidersInfos()) {
             try {
                 const providerInstance = await provider.getProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
-                    const newProvider = await providerInstance.updateEntry(anime, new WatchProgress(watchProgess))
+                    const newProvider = await providerInstance.updateEntry(anime, new WatchProgress(watchProgess));
                     newProvider.lastUpdate = new Date(Date.now());
-                    var index = anime.getListProvidersInfos().findIndex(x => x.provider === provider.provider);
+                    const index = anime.getListProvidersInfos().findIndex((x) => x.provider === provider.provider);
                     anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         }
         await this.addSeriesToMainList(anime);
     }
 
     public async addSeriesToMainList(...animes: Series[]) {
-        console.log('Add ' + animes.length + ' to mainList');
+        console.info('Add ' + animes.length + ' to mainList');
         await new MainListAdder().addSeries(...animes);
     }
 
@@ -99,15 +88,16 @@ export default class ListController {
 
     /**
      * Download the info from all providers.
-     * @param anime 
+     * @param anime
      */
     public async forceRefreshProviderInfo(packageId: string) {
-        const allSeriesInThePackage = (await MainListManager.getMainList()).filter(x => x.packageId === packageId);
+        const allSeriesInThePackage = (await MainListManager.getMainList()).filter((x) => x.packageId === packageId);
         for (const series of allSeriesInThePackage) {
             const index = await MainListManager.getIndexFromSeries(series);
-            if (index != -1) {
+            if (index !== -1) {
                 try {
-                    var result = await providerHelper.fillMissingProvider((await MainListManager.getMainList())[index], true);
+                    const mainList = await MainListManager.getMainList();
+                    const result = await providerHelper.fillMissingProvider((mainList)[index], true);
                     this.addSeriesToMainList(result);
                 } catch (err) {
                     console.log(err);
@@ -118,7 +108,7 @@ export default class ListController {
 
     public async getSeriesListAndUpdateMainList(): Promise<void> {
         console.log('[calc] -> SeriesList');
-        let allSeries: Series[] = await this.getAllEntrysFromProviders(true);
+        const allSeries: Series[] = await this.getAllEntrysFromProviders(true);
 
         await this.addSeriesToMainList(...allSeries);
     }
@@ -146,20 +136,37 @@ export default class ListController {
 
 
     public async checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Promise<Series> {
-        var validProvider = entry.getListProvidersInfos().find(x => (x.provider == provider.providerName));
+        const validProvider = entry.getListProvidersInfos().find((x) => (x.provider === provider.providerName));
         try {
             if (validProvider) {
                 for (const seriesMainListEntry of await this.getMainList()) {
                     for (const oldprovider of seriesMainListEntry.getListProvidersInfos()) {
+                        // tslint:disable-next-line: triple-equals
                         if (oldprovider.provider == validProvider.provider && oldprovider.id == validProvider.id) {
                             return seriesMainListEntry;
                         }
                     }
                 }
             }
-        } catch (err) { }
+        } catch (err) {
+            console.error(err);
+        }
         return entry;
     }
 
+
+    private async syncWatcher() {
+        const needToSync: Series[] = [];
+        for (const item of await MainListManager.getMainList()) {
+            if (await item.getCanSync()) {
+                needToSync.push(item);
+            }
+        }
+        if (typeof needToSync !== 'undefined') {
+            for (const item of needToSync) {
+                await this.syncProvider(item);
+            }
+        }
+    }
 
 }

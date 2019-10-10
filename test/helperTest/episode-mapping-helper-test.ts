@@ -1,32 +1,32 @@
 
+import { fail, notStrictEqual, strictEqual } from 'assert';
+import ListController from '../../src/backend/controller/list-controller';
+import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
+import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { InfoProviderLocalData } from '../../src/backend/controller/objects/info-provider-local-data';
 import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
 import Episode from '../../src/backend/controller/objects/meta/episode/episode';
-import Series from '../../src/backend/controller/objects/series';
-import EpisodeMappingHelper from '../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
-import { strictEqual, fail, notStrictEqual, equal } from 'assert';
-import ListController from '../../src/backend/controller/list-controller';
-import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-import TestProvider from '../controller/objects/testClass/testProvider';
 import EpisodeTitle from '../../src/backend/controller/objects/meta/episode/episode-title';
-import listHelper from '../../src/backend/helpFunctions/list-helper';
 import { EpisodeType } from '../../src/backend/controller/objects/meta/episode/episode-type';
+import Series from '../../src/backend/controller/objects/series';
+import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import EpisodeMappingHelper from '../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
+import listHelper from '../../src/backend/helpFunctions/list-helper';
+import TestProvider from '../controller/objects/testClass/testProvider';
 
 describe('Episode mapping | Mapping Only', () => {
     var lc = new ListController(true);
 
     before(() => {
         MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => { return [] };
+        MainListLoader['loadData'] = () => { return []; };
         MainListLoader['saveData'] = async () => { };
-    })
+    });
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider("Test"), new TestProvider("")];
+        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
-    })
+    });
     it('should map same episodes length from 2 providers', async () => {
         const aSeries = new Series();
 
@@ -57,13 +57,13 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find(x => x.id == aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find(x => x.id == aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find(x => x.id == aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
 
-        const bEpisodeInfo1 = result.find(x => x.id == bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find(x => x.id == bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find(x => x.id == bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3)) {
@@ -128,17 +128,17 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find(x => x.id == aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find(x => x.id == aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find(x => x.id == aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
 
-        const bEpisodeInfo1 = result.find(x => x.id == bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find(x => x.id == bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find(x => x.id == bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
 
-        const cEpisodeInfo1 = result.find(x => x.id == cProvider.detailEpisodeInfo[0].id);
-        const cEpisodeInfo2 = result.find(x => x.id == cProvider.detailEpisodeInfo[1].id);
-        const cEpisodeInfo3 = result.find(x => x.id == cProvider.detailEpisodeInfo[2].id);
+        const cEpisodeInfo1 = result.find((x) => x.id === cProvider.detailEpisodeInfo[0].id);
+        const cEpisodeInfo2 = result.find((x) => x.id === cProvider.detailEpisodeInfo[1].id);
+        const cEpisodeInfo3 = result.find((x) => x.id === cProvider.detailEpisodeInfo[2].id);
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && cEpisodeInfo1 && cEpisodeInfo2 && cEpisodeInfo3)) {
@@ -271,7 +271,8 @@ describe('Episode mapping | Mapping Only', () => {
         sequelOfaSeries.addProviderDatas(cProvider);
 
         // Testing
-        MainListManager['mainList'] = [sequelOfaSeries]
+        // tslint:disable-next-line: no-string-literal
+        MainListManager['mainList'] = [sequelOfaSeries];
         const episodeMappingInstance = new EpisodeMappingHelper();
         const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
 
@@ -332,7 +333,8 @@ describe('Episode mapping | Mapping Only', () => {
         sequelOfSequelOfaSeries.addProviderDatas(dProvider);
 
         // Testing
-        MainListManager['mainList'] = [sequelOfaSeries, sequelOfSequelOfaSeries]
+        // tslint:disable-next-line: no-string-literal
+        MainListManager['mainList'] = [sequelOfaSeries, sequelOfSequelOfaSeries];
         const episodeMappingInstance = new EpisodeMappingHelper();
         const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
 
@@ -374,14 +376,14 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find(x => x.id == aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find(x => x.id == aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find(x => x.id == aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
 
-        const bEpisodeInfo1 = result.find(x => x.id == bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find(x => x.id == bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find(x => x.id == bProvider.detailEpisodeInfo[2].id);
-        const bEpisodeInfo4 = result.find(x => x.id == bProvider.detailEpisodeInfo[3].id);
+        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo4 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo4)) {
@@ -436,14 +438,14 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find(x => x.id == aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find(x => x.id == aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find(x => x.id == aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
 
-        const bEpisodeInfo1 = result.find(x => x.id == bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find(x => x.id == bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find(x => x.id == bProvider.detailEpisodeInfo[2].id);
-        const bEpisodeInfo4 = result.find(x => x.id == bProvider.detailEpisodeInfo[3].id);
+        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo4 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo4)) {
@@ -498,14 +500,14 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find(x => x.id == aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find(x => x.id == aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find(x => x.id == aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
 
-        const bEpisodeInfo1 = result.find(x => x.id == bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find(x => x.id == bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find(x => x.id == bProvider.detailEpisodeInfo[2].id);
-        const bEpisodeInfo4 = result.find(x => x.id == bProvider.detailEpisodeInfo[3].id);
+        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo4 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo4)) {
@@ -560,14 +562,14 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find(x => x.id == aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find(x => x.id == aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find(x => x.id == aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
 
-        const bEpisodeInfo1 = result.find(x => x.id == bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find(x => x.id == bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find(x => x.id == bProvider.detailEpisodeInfo[2].id);
-        const bEpisodeInfo4 = result.find(x => x.id == bProvider.detailEpisodeInfo[3].id);
+        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo4 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo4)) {
@@ -619,7 +621,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Result checking
 
-        console.log(result);
+        console.info(result);
 
         strictEqual(result[0], episode1, '0 should be EP01S01');
         strictEqual(result[1], episode2s1, '1 should be EP02S01');

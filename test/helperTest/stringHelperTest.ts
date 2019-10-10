@@ -9,23 +9,23 @@ describe('String Helper', () => {
         return;
     });
     it('should clean string', async () => {
-        assert.strictEqual(await stringHelper.cleanString("Title ~Title!~"), "Title Title");
-        assert.strictEqual(await stringHelper.cleanString("Test."), "Test");
-        assert.strictEqual(await stringHelper.cleanString("Title -test-"), "Title test");
-        assert.strictEqual(await stringHelper.cleanString("Title-test"), "Title test");
-        assert.strictEqual(await stringHelper.cleanString("Title 'test'"), "Title test");
-        assert.strictEqual(await stringHelper.cleanString("Title!"), "Title");
-        assert.strictEqual(await stringHelper.cleanString("Title!!"), "Title!!");
-        assert.strictEqual(await stringHelper.cleanString("Title: test"), "Title test");
-        assert.strictEqual(await stringHelper.cleanString("Title  test"), "Title test");
-        assert.strictEqual(await stringHelper.cleanString("Title`Title`"), "TitleTitle");
+        assert.strictEqual(await stringHelper.cleanString('Title ~Title!~'), 'Title Title');
+        assert.strictEqual(await stringHelper.cleanString('Test.'), 'Test');
+        assert.strictEqual(await stringHelper.cleanString('Title -test-'), 'Title test');
+        assert.strictEqual(await stringHelper.cleanString('Title-test'), 'Title test');
+        assert.strictEqual(await stringHelper.cleanString('Title \'test\''), 'Title test');
+        assert.strictEqual(await stringHelper.cleanString('Title!'), 'Title');
+        assert.strictEqual(await stringHelper.cleanString('Title!!'), 'Title!!');
+        assert.strictEqual(await stringHelper.cleanString('Title: test'), 'Title test');
+        assert.strictEqual(await stringHelper.cleanString('Title  test'), 'Title test');
+        assert.strictEqual(await stringHelper.cleanString('Title`Title`'), 'TitleTitle');
         return;
     });
 
     it('should clean string of other characters', async () => {
-        assert.strictEqual(await stringHelper.cleanString("この素晴らしい世界に祝福を！紅伝説"), "この素晴らしい世界に祝福を 紅伝説")
-        assert.strictEqual(await stringHelper.cleanString("この素晴らしい世界に祝福を! 紅伝説"), "この素晴らしい世界に祝福を 紅伝説")
-    })
+        assert.strictEqual(await stringHelper.cleanString('この素晴らしい世界に祝福を！紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
+        assert.strictEqual(await stringHelper.cleanString('この素晴らしい世界に祝福を! 紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
+    });
     it('should not crash on check kanij', async () => {
         assert.strictEqual(await stringHelper.hasKanji(null as unknown as string), false);
     });
@@ -33,22 +33,22 @@ describe('String Helper', () => {
     it('should detect cryillic', async () => {
         assert.strictEqual(await stringHelper.hasCyrillic('Привіт'), true);
         return;
-    })
+    });
 
     it('should not detect cryillic', async () => {
         assert.strictEqual(await stringHelper.hasCyrillic('Hello'), false);
         return;
-    })
+    });
 
     it('should detect hangul letters', async () => {
         assert.strictEqual(await stringHelper.hasHangul('안녕'), true);
         return;
-    })
+    });
 
     it('should not detect hangul letters', async () => {
         assert.strictEqual(await stringHelper.hasHangul('Hello'), false);
         return;
-    })
+    });
 
     it('should make test to tset', async () => {
         const result = await stringHelper.reverseString('test');
@@ -58,11 +58,11 @@ describe('String Helper', () => {
 
     it('shoul get right season number from title', async () => {
         assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 3 Part 2'), 3);
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2, "Season marking with X");
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2, "Season marking with number");
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war'), 2, "Season marking with the word season");
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title AA'), 2, "Season marking with the a A");
-    })
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2, 'Season marking with X');
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2, 'Season marking with number');
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war'), 2, 'Season marking with the word season');
+        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title AA'), 2, 'Season marking with the a A');
+    });
 
     it('should not get a season number from title', async () => {
         await assert.rejects(stringHelper.getSeasonNumberFromTitle('14'), 'number is not a season.');

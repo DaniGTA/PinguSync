@@ -13,10 +13,10 @@ describe('Series | Basic', () => {
 
     it('should return last provider', async () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData("A");
+        const providerA = new ListProviderLocalData('A');
         providerA.lastUpdate = new Date(100);
         providerA.watchProgress = [];
-        const providerB = new ListProviderLocalData("B");
+        const providerB = new ListProviderLocalData('B');
         providerB.watchProgress = [];
         providerB.lastUpdate = new Date(50);
         await series.addListProvider(providerA, providerB);
@@ -26,10 +26,10 @@ describe('Series | Basic', () => {
 
     it('should return last watchprogress', async () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData("A");
+        const providerA = new ListProviderLocalData('A');
         providerA.lastUpdate = new Date(2);
         providerA.addOneWatchedEpisode(5);
-        const providerB = new ListProviderLocalData("B");
+        const providerB = new ListProviderLocalData('B');
         providerB.lastUpdate = new Date(1);
         providerB.addOneWatchedEpisode(4);
         await series.addListProvider(providerA, providerB);
@@ -43,9 +43,9 @@ describe('Series | Basic', () => {
 
     it('should all episodes (1/3)', async () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData("TestA");
+        const providerA = new ListProviderLocalData('TestA');
         providerA.episodes = 10;
-        const providerB = new ListProviderLocalData("TestB");
+        const providerB = new ListProviderLocalData('TestB');
         providerB.episodes = 11;
         await series.addListProvider(providerA, providerB);
         const allEpisodes = await series.getAllEpisodes();
@@ -57,9 +57,9 @@ describe('Series | Basic', () => {
 
     it('should all episodes (2/3)', async () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData("A");
+        const providerA = new ListProviderLocalData('A');
         providerA.episodes = 10;
-        const providerB = new ListProviderLocalData("B");
+        const providerB = new ListProviderLocalData('B');
         providerB.episodes = 11;
         await series.addListProvider(providerA, providerB);
         assert.deepEqual(await series.getAllEpisodes(), [10, 11]);
@@ -77,9 +77,9 @@ describe('Series | Basic', () => {
 
     it('should max episode (1/3)', async () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData("TestA");
+        const providerA = new ListProviderLocalData('TestA');
         providerA.episodes = 12;
-        const providerB = new ListProviderLocalData("TestB");
+        const providerB = new ListProviderLocalData('TestB');
         providerB.episodes = 11;
         series.addListProvider(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 12);
@@ -88,9 +88,9 @@ describe('Series | Basic', () => {
 
     it('should max episode (2/3)', async () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData("TestA");
+        const providerA = new ListProviderLocalData('TestA');
         providerA.episodes = 12;
-        const providerB = new ListProviderLocalData("TestB");
+        const providerB = new ListProviderLocalData('TestB');
         providerB.episodes = 24;
         series.addListProvider(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 24);

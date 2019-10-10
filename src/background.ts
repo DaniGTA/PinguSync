@@ -1,64 +1,64 @@
-'use strict'
+'use strict';
 
-import { app, protocol, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, shell } from 'electron';
 import {
   createProtocol,
-  installVueDevtools
+  installVueDevtools,
 } from 'vue-cli-plugin-electron-builder/lib';
 import * as electron from 'electron';
-import * as mongoose from "mongoose";
+import * as mongoose from 'mongoose';
 import FrontendController from './backend/controller/frontend-controller';
 import DatabaseLoader from './backend/controller/stats-manager/database-loader';
 
 try {
-  
-    mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
-        if (err) {
-            console.log(err.message);
-        } else {
-            console.log("Successfully Connected!");
-        }
-    });
+
+  mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
+    if (err) {
+      console.log(err.message);
+    } else {
+      console.log('Successfully Connected!');
+    }
+  });
 } catch (err) {
-    console.log(err);
+  console.log(err);
 }
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
-app.removeAllListeners('ready')
+app.removeAllListeners('ready');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }, { scheme: 'background', privileges: { secure: true, standard: true } }])
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }, { scheme: 'background', privileges: { secure: true, standard: true } }]);
 
-const fc = new FrontendController()
+const fc = new FrontendController();
 
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800, height: 600, webPreferences: {
-      nodeIntegration: true
-    }
-  })
+      nodeIntegration: true,
+    },
+  });
   fc.mainInit(win.webContents);
 
 
-  //new WorkerController(win.webContents);
-  //new ProviderController(win.webContents).initController();
+  // new WorkerController(win.webContents);
+  // new ProviderController(win.webContents).initController();
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+    if (!process.env.IS_TEST) { win.webContents.openDevTools(); }
   } else {
-    createProtocol('app')
+    createProtocol('app');
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    win.loadURL('app://./index.html');
   }
 
   win.on('closed', () => {
-    win = null
-  })
+    win = null;
+  });
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
   });
@@ -74,17 +74,17 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -93,25 +93,25 @@ app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
-      await installVueDevtools()
+      await installVueDevtools();
     } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
+      console.error('Vue Devtools failed to install:', e.toString());
     }
   }
-  createWindow()
-})
+  createWindow();
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
-    process.on('message', data => {
+    process.on('message', (data) => {
       if (data === 'graceful-exit') {
-        app.quit()
+        app.quit();
       }
-    })
+    });
   } else {
     process.on('SIGTERM', () => {
-      app.quit()
-    })
+      app.quit();
+    });
   }
 }

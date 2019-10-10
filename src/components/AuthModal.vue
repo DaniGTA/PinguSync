@@ -1,15 +1,15 @@
 <template>
-    <div class="modal">
-      <!-- Modal content -->
-      <div class="modal-content">
-        <span v-on:click="closeModal()" class="close">&times;</span>
-        <h2>Enter the {{currentSelectedProvider}} Code</h2>
-        <form>
-          <input v-model="code" placeholder="code" />
-          <button v-on:click="sendCode(currentSelectedProvider,code)" type="reset">Confirm</button>
-        </form>
-      </div>
+  <div class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span v-on:click="closeModal()" class="close">&times;</span>
+      <h2>Enter the {{currentSelectedProvider}} Code</h2>
+      <form>
+        <input v-model="code" placeholder="code" />
+        <button v-on:click="sendCode(code)" type="reset">Confirm</button>
+      </form>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -18,10 +18,10 @@ import { ipcRenderer } from "electron";
 import MainList from "./MainList.vue";
 import App from "../App.vue";
 
-
 @Component
 export default class Providers extends Vue {
-@PropSync("currentSelectedProvider", { type: String }) cSelectedProvider!: string;
+  @PropSync("currentSelectedProvider", { type: String })
+  cSelectedProvider!: string;
   code: string = "";
   $refs!: {
     authModal: HTMLElement;
@@ -32,23 +32,26 @@ export default class Providers extends Vue {
   }
 
   closeModal() {
-    
     this.cSelectedProvider = "";
     this.code = "";
   }
 
   sendCode(code: string) {
-    App.workerController.send(
-      this.cSelectedProvider.toLocaleLowerCase() + "-auth-code",
-      code
-    );
-    this.closeModal()
+    if (code) {
+      const providerAuthName =
+        this.cSelectedProvider.toLocaleLowerCase() + "-auth-code";
+      console.log("Auth Provider:" + providerAuthName + " with code: " + code);
+      App.workerController.send(providerAuthName, code);
+      this.closeModal();
+    }
   }
-
 }
 </script>
 
 <style>
+input {
+  color: black;
+}
 .logged-in {
   filter: grayscale(0);
 }
@@ -92,7 +95,7 @@ export default class Providers extends Vue {
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #fefefe;
+  background-color: black;
   margin: 15% auto;
   /* 15% from the top and centered */
   padding: 20px;
