@@ -1,4 +1,4 @@
-import ListProvider from '../list-provider';
+import IListProvider from '../list-provider';
 import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
 import { TraktSearch } from './objects/search';
@@ -14,7 +14,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import MultiProviderResult from '../multi-provider-result';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
-export default class TraktProvider implements ListProvider {
+export default class TraktProvider implements IListProvider {
     supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
 
     public static getInstance() {

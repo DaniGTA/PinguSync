@@ -1,22 +1,24 @@
+import Name from '../meta/name';
 import Series from '../series';
 import UserSettings from './user-settings';
-import Name from '../meta/name';
 
 export enum PreferedSeriesName {
     NONE,
     ROMANJI,
     JAPANESE,
-    ENGLISH
+    ENGLISH,
 }
 
 export class PreferedSeriesNameHelper {
-    async getPreferedNameOfSeries(series: Series): Promise<string> {
+    public async getPreferedNameOfSeries(series: Series): Promise<string> {
         const userSettings = new UserSettings();
         const seriesNames = await series.getAllNamesUnique();
 
         try {
             return Name.getRomajiName(seriesNames);
-        } catch (err) { }
+        } catch (err) {
+            console.error(err);
+        }
 
         return seriesNames[0].name;
     }

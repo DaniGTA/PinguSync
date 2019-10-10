@@ -1,4 +1,4 @@
-import ListProvider from '../list-provider';
+import IListProvider from '../list-provider';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Series from '../../controller/objects/series';
 import { KitsuUserData } from './kitsu-user-data';
@@ -12,7 +12,7 @@ import { InfoProviderLocalData } from '../../controller/objects/info-provider-lo
 import MultiProviderResult from '../multi-provider-result';
 import timeHelper from '../../helpFunctions/time-helper';
 
-export default class KitsuProvider implements ListProvider {
+export default class KitsuProvider implements IListProvider {
     removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error("Method not implemented.");
     }

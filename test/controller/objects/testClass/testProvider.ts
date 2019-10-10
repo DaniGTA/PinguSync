@@ -1,13 +1,13 @@
 
 import Series from "../../../../src/backend/controller/objects/series";
-import ListProvider from "../../../../src/backend/api/list-provider";
+import IListProvider from "../../../../src/backend/api/list-provider";
 import { ListProviderLocalData } from "../../../../src/backend/controller/objects/list-provider-local-data";
 import { UserData } from "../../../../src/backend/api/user-data";
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../../../src/backend/controller/objects/info-provider-local-data';
 import MultiProviderResult from '../../../../src/backend/api/multi-provider-result';
 
-export default class TestProvider implements ListProvider {
+export default class TestProvider implements IListProvider {
     getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
         throw new Error("Method not implemented.");
     }

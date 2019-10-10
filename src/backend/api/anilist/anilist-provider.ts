@@ -4,7 +4,7 @@ import { Viewer } from "./graphql/viewer";
 import getViewerGql from "./graphql/getViewer.gql";
 import GetUserSeriesListGql from "./graphql/getUserSeriesList.gql";
 import { MediaListCollection } from "./graphql/seriesList";
-import ListProvider from "../list-provider";
+import IListProvider from "../list-provider";
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import searchSeriesGql from './graphql/searchSeries.gql';
@@ -20,7 +20,7 @@ import { MediaType } from './graphql/basics/mediaType';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import MultiProviderResult from '../multi-provider-result';
 
-export default class AniListProvider implements ListProvider {
+export default class AniListProvider implements IListProvider {
     public hasUniqueIdForSeasons: boolean = true;
     public providerName: string = "AniList";
     public version = 1;

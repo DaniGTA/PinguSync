@@ -1,11 +1,11 @@
-import Cover from '../objects/meta/cover';
 import Banner from '../objects/meta/banner';
+import Cover from '../objects/meta/cover';
+import Episode from '../objects/meta/episode/episode';
+import { EpisodeType } from '../objects/meta/episode/episode-type';
+import Genre from '../objects/meta/genre';
 import { MediaType } from '../objects/meta/media-type';
 import Name from '../objects/meta/name';
 import Overview from '../objects/meta/overview';
-import Genre from '../objects/meta/genre';
-import Episode from '../objects/meta/episode/episode';
-import { EpisodeType } from '../objects/meta/episode/episode-type';
 
 export default class ProviderLocalData {
     // ------------------
@@ -22,7 +22,7 @@ export default class ProviderLocalData {
      */
     public id: number | string = -1;
     /**
-     * Cant get more info from this provider. 
+     * Cant get more info from this provider.
      */
     public hasFullInfo: boolean = false;
     /**
@@ -31,9 +31,9 @@ export default class ProviderLocalData {
     public readonly provider: string = '';
     /**
      * Saves the raw response from the provider
-     * 
+     *
      * This data can be very usefull in debug sessions.
-     * 
+     *
      * Info: This var has no logic its just data that sits here.
      */
     public rawEntry: any;
@@ -60,8 +60,6 @@ export default class ProviderLocalData {
     public mediaType: MediaType = MediaType.UNKOWN;
     public releaseYear?: number;
     public runTime?: number;
-    protected names: Name[] = [];
-    protected overviews: Overview[] = [];
     public isNSFW = false;
     public targetSeason?: number;
     public country?: string;
@@ -76,17 +74,23 @@ export default class ProviderLocalData {
      */
     public prequelIds: number[] = [];
     /**
-     * 
+     *
      * Alternative IDs from the same provider.
      * This prevents merging alternatives together.
      */
     public alternativeIds: number[] = [];
 
+    /**
+     * Protected
+     */
+    protected names: Name[] = [];
+    protected overviews: Overview[] = [];
+
     public async getDetailedEpisodeLength(): Promise<number> {
         let length = 0;
 
         for (const episode of this.detailEpisodeInfo) {
-            if (episode.type == EpisodeType.REGULAR_EPISODE || episode.type == EpisodeType.SPECIAL || episode.type == EpisodeType.UNKOWN) {
+            if (episode.type === EpisodeType.REGULAR_EPISODE || episode.type === EpisodeType.SPECIAL || episode.type === EpisodeType.UNKOWN) {
                 length++;
             }
         }
@@ -99,32 +103,32 @@ export default class ProviderLocalData {
     // ------------------
 
     /**
-    * Prevents too have double entrys for same name.
-    * @param infoProvider 
-    */
+     * Prevents too have double entrys for same name.
+     * @param infoProvider
+     */
     public addSeriesName(...names: Name[]) {
         for (const name of names) {
-            if (name && name.name && name.name != 'null') {
-                if (this.names.findIndex(x => x.name === name.name && x.lang === x.lang) === -1) {
+            if (name && name.name && name.name !== 'null') {
+                if (this.names.findIndex((x) => x.name === name.name && x.lang === x.lang) === -1) {
                     this.names.push(name);
                 }
             }
         }
         if (names.length > 25) {
-            console.log(".");
+            console.log('.');
         }
     }
 
     /**
      * Adds an Overview too the Anime and prevents adding if overview is already present.
-     * @param newOverview 
+     * @param newOverview
      */
     public addOverview(...newOverviews: Overview[]): boolean {
         this.overviews = [...this.overviews];
         for (const newOverview of newOverviews) {
 
 
-            if (this.overviews.findIndex(x => x == newOverview) == -1) {
+            if (this.overviews.findIndex((x) => x === newOverview) === -1) {
                 this.overviews.push(newOverview);
                 return true;
             }
@@ -134,26 +138,26 @@ export default class ProviderLocalData {
 
     /**
      * Returns all names that this provider have.
-     * 
+     *
      * DIRECT ACCESS IS FORBIDDEN TO PREVENT DOUBLE ENTRYS.
      */
-    getAllNames(): readonly Name[] {
+    public getAllNames(): readonly Name[] {
         return Object.freeze([...this.names]);
     }
 
     /**
      * Returns all overviews that this provider have.
-     * 
+     *
      * DIRECT ACCESS IS FORBIDDEN TO PREVENT DOUBLE ENTRYS.
      */
-    getAllOverviews(): readonly Overview[] {
+    public getAllOverviews(): readonly Overview[] {
         return Object.freeze([...this.overviews]);
     }
 
     /**
      * Simple function that checks if the provider data is from media type movie.
      */
-    isMediaTypeMovie(): boolean {
+    public isMediaTypeMovie(): boolean {
         return this.mediaType === MediaType.MOVIE;
     }
 }

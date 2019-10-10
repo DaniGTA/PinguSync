@@ -1,7 +1,7 @@
 import * as assert from 'assert';
-import Series from '../../../src/backend/controller/objects/series';
-import Name from '../../../src/backend/controller/objects/meta/name';
 import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
+import Name from '../../../src/backend/controller/objects/meta/name';
+import Series from '../../../src/backend/controller/objects/series';
 
 describe('Series | Basic', () => {
     it('should have a id', async () => {
@@ -33,8 +33,8 @@ describe('Series | Basic', () => {
         providerB.lastUpdate = new Date(1);
         providerB.addOneWatchedEpisode(4);
         await series.addListProvider(providerA, providerB);
-        const result = await series.getLastWatchProgress()
-        if (typeof result != 'undefined') {
+        const result = await series.getLastWatchProgress();
+        if (result) {
             assert.equal(result.episode, 5);
         }
         assert.notEqual(typeof result, 'undefined');

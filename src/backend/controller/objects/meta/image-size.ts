@@ -6,5 +6,5 @@ export enum ImageSize {
     SMALL,
     TINY,
     VERYTINY,
-    UNKNOWN
+    UNKNOWN,
 }

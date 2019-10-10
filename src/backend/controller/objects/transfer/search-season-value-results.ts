@@ -5,10 +5,10 @@ import { SeasonError } from './season-error';
  * On a error the season number will be always undefined.
  */
 export default class SearchSeasonValueResult {
-    season?: number;
-    seasonError: SeasonError;
-    foundType: string = 'NONE';
-    searchResultDetails?: RelationSearchResults;
+    public season?: number;
+    public seasonError: SeasonError;
+    public foundType: string = 'NONE';
+    public searchResultDetails?: RelationSearchResults;
     constructor(seasonNumber: number, foundType: string, seasonError: SeasonError = SeasonError.NONE, searchResultDetails?: RelationSearchResults) {
         if (seasonError === SeasonError.NONE) {
             this.season = seasonNumber;

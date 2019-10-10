@@ -1,4 +1,4 @@
-import ListProvider from '../list-provider';
+import IListProvider from '../list-provider';
 import { SimklUserData } from './simkl-user-data';
 import Series from '../../controller/objects/series';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
@@ -14,7 +14,7 @@ import SimklConverter from './simkl-converter';
 import { SimklErrorResponse } from './objects/simklErrorResponse';
 import { Timestamp } from 'bson';
 
-export default class SimklProvider implements ListProvider {
+export default class SimklProvider implements IListProvider {
     static instance: SimklProvider;
     userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];

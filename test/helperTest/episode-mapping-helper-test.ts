@@ -15,7 +15,7 @@ import listHelper from '../../src/backend/helpFunctions/list-helper';
 import TestProvider from '../controller/objects/testClass/testProvider';
 
 describe('Episode mapping | Mapping Only', () => {
-    var lc = new ListController(true);
+    const lc = new ListController(true);
 
     before(() => {
         MainListManager['listLoaded'] = true;

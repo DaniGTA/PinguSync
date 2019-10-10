@@ -14,7 +14,7 @@ import TestProvider from '../controller/objects/testClass/testProvider';
 
 describe('Season Helper', () => {
 
-    var lc = new ListController(true);
+    const lc = new ListController(true);
 
     before(() => {
         MainListManager['listLoaded'] = true;

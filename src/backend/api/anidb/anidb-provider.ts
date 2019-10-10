@@ -4,7 +4,7 @@ import { xml2json } from 'xml-js';
 import { createGunzip } from 'zlib';
 import Name from '../../controller/objects/meta/name';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
-import InfoProvider from '../info-provider';
+import IInfoProvider from '../info-provider';
 import AniDBNameManager from './anidb-name-manager';
 import AniDBNameListXML, { Title, Anime } from './objects/anidbNameListXML';
 import AniDBConverter from './anidb-converter';
@@ -14,7 +14,7 @@ import MultiProviderResult from '../multi-provider-result';
 import request from 'request';
 import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
 
-export default class AniDBProvider implements InfoProvider {
+export default class AniDBProvider implements IInfoProvider {
     public providerName: string = 'anidb';
     public version: number = 1;
     public isOffline = true;

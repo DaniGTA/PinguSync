@@ -1,36 +1,32 @@
-import Series from "../objects/series";
-import FrontendController from '../frontend-controller';
-import seriesHelper from '../../helpFunctions/series-helper';
-import listHelper from '../../helpFunctions/list-helper';
-import MainListPackageManager from './main-list-package-manager';
-import MainListLoader from './main-list-loader';
-import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
+import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
+import listHelper from '../../helpFunctions/list-helper';
+import seriesHelper from '../../helpFunctions/series-helper';
+import FrontendController from '../frontend-controller';
+import Series from '../objects/series';
+import MainListLoader from './main-list-loader';
+import MainListPackageManager from './main-list-package-manager';
 
 export default class MainListManager {
-    private static mainList: Series[] = [];
-    private static listLoaded = false;
-    private static listMaintance = false;
-    private static secondList: Series[] = [];
 
     /**
      * Adds a new Series to the mainlist.
      * It checks if there is already a same entry and merge it.
-     * @param series 
-     * @param notfiyRenderer 
+     * @param series
+     * @param notfiyRenderer
      */
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
         const results = [];
         try {
-            const searchResults = await MainListManager.findSameSeriesInList(series,this.mainList);
-            if (searchResults.length != 0) {
+            const searchResults = await MainListManager.findSameSeriesInList(series, this.mainList);
+            if (searchResults.length !== 0) {
                 for (const entry of searchResults) {
                     try {
-                        if (typeof series.merge != 'function') {
+                        if (typeof series.merge !== 'function') {
                             series = Object.assign(new Series(), series);
                         }
-                       
+
                         const seasonResult = await SeasonComperator.compareSeasons(series, entry);
                         if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (seasonResult.matchAble === seasonResult.matches)) {
                             console.log('Duplicate found: merging...');
@@ -44,11 +40,11 @@ export default class MainListManager {
             } else {
                 results.push(series);
             }
-            if (results.length == 0) {
+            if (results.length === 0) {
                 results.push(series);
             }
             if (series.lastInfoUpdate === 0) {
-                console.log('[ERROR] Series no last info update! In MainList.')
+                console.log('[ERROR] Series no last info update! In MainList.');
             }
             console.log('[MainList] Series was added to MainList');
             MainListManager.mainList.push(...results);
@@ -70,12 +66,12 @@ export default class MainListManager {
      * Refresh cached data and clean up double entrys.
      */
     public static async finishListFilling() {
-        console.log("Cleanup Mainlist");
+        console.log('Cleanup Mainlist');
         MainListManager.listMaintance = true;
         MainListManager.secondList = [...MainListManager.mainList];
         console.log('Temp List created');
         MainListManager.mainList = [];
-        for (let index = 0; this.secondList.length != 0;) {
+        for (const index = 0; this.secondList.length !== 0;) {
             const entry = this.secondList[index];
             /**
              * Reset Cache and reload it
@@ -87,54 +83,23 @@ export default class MainListManager {
             this.secondList.shift();
         }
         await MainListLoader.saveData(MainListManager.mainList);
-        console.log("Finish Cleanup Mainlist");
+        console.log('Finish Cleanup Mainlist');
         MainListManager.listMaintance = false;
     }
 
     /**
      * Search with id and it will look on other meta data if it is a same series already in the mainlist
-     * @param series 
+     * @param series
      */
     public static async findSameSeriesInMainList(series: Series): Promise<Series[]> {
-        return await this.findSameSeriesInList(series,await MainListManager.getMainList());
-    }
-
-    private static async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]>{
-        console.log('[Search] Find search series in list of size: ' + list.length);
-        const foundedSameSeries = [];
-        for (let listEntry of list) {
-            if (listEntry.id === entry.id) {
-                foundedSameSeries.push(listEntry);
-            } else {
-                if (await seriesHelper.isSameSeries(listEntry, entry)) {
-                    foundedSameSeries.push(listEntry);
-                }
-            }   
-        }
-        console.log('Found: ' + foundedSameSeries.length);
-        return foundedSameSeries;
+        return this.findSameSeriesInList(series, await MainListManager.getMainList());
     }
     /**
      * Search with id and it will look on other meta data if it is a same series already in the mainlist
-     * @param series 
+     * @param series
      */
     public static async quickFindSameSeriesInMainList(series: Series): Promise<Series[]> {
-        return await this.quickFindSameSeriesInList(series,await MainListManager.getMainList());
-    }
-
-    private static async quickFindSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]>{
-        console.log('[Search] Quick find search series in list of size: ' + list.length);
-        const foundedSameSeries = [];
-        for (const listEntry of list) {
-             if (listEntry.id === entry.id) {
-                foundedSameSeries.push(listEntry);
-            }
-            if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheck(entry, listEntry)) {
-                  foundedSameSeries.push(listEntry);
-            }
-        }
-        console.log('Found: ' + foundedSameSeries.length);
-        return foundedSameSeries;
+        return this.quickFindSameSeriesInList(series, await MainListManager.getMainList());
     }
 
 
@@ -149,7 +114,7 @@ export default class MainListManager {
         }
         console.log('[MainList] Remove Item in mainlist: ' + series.id);
         const index = await MainListManager.getIndexFromSeries(series);
-        if (index != -1) {
+        if (index !== -1) {
             let ref = list;
             ref = await listHelper.removeEntrys(ref, ref[index]);
             if (notifyRenderer) {
@@ -163,7 +128,7 @@ export default class MainListManager {
     /**
      * Retunrs all series but in the maintaince phase it can return dublicated entrys.
      */
-    static async getMainList(): Promise<Series[]> {
+    public static async getMainList(): Promise<Series[]> {
         if (!MainListManager.listLoaded) {
             MainListManager.mainList = MainListLoader.loadData();
             MainListManager.listLoaded = true;
@@ -180,10 +145,45 @@ export default class MainListManager {
     /**
      * Get the index number from the series in the mainlist.
      * INFO: In the maintance phase the index number can be valid very shortly.
-     * @param anime 
+     * @param anime
      */
     public static async getIndexFromSeries(anime: Series): Promise<number> {
-        return (await MainListManager.getMainList()).findIndex(x => anime.id === x.id);
+        return (await MainListManager.getMainList()).findIndex((x) => anime.id === x.id);
+    }
+    private static mainList: Series[] = [];
+    private static listLoaded = false;
+    private static listMaintance = false;
+    private static secondList: Series[] = [];
+
+    private static async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
+        console.log('[Search] Find search series in list of size: ' + list.length);
+        const foundedSameSeries = [];
+        for (const listEntry of list) {
+            if (listEntry.id === entry.id) {
+                foundedSameSeries.push(listEntry);
+            } else {
+                if (await seriesHelper.isSameSeries(listEntry, entry)) {
+                    foundedSameSeries.push(listEntry);
+                }
+            }
+        }
+        console.log('Found: ' + foundedSameSeries.length);
+        return foundedSameSeries;
+    }
+
+    private static async quickFindSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
+        console.log('[Search] Quick find search series in list of size: ' + list.length);
+        const foundedSameSeries = [];
+        for (const listEntry of list) {
+            if (listEntry.id === entry.id) {
+                foundedSameSeries.push(listEntry);
+            }
+            if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheck(entry, listEntry)) {
+                foundedSameSeries.push(listEntry);
+            }
+        }
+        console.log('Found: ' + foundedSameSeries.length);
+        return foundedSameSeries;
     }
 
 

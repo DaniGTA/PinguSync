@@ -16,7 +16,7 @@ export default new class TitleCheckHelper {
                     var name2 = await stringHelper.cleanString(name);
                     var name2 = await this.removeMediaTypeFromTitle(name2);
                     name2 = await this.removeSeasonMarkesFromTitle(name2);
-                    if (name2 != name) {
+                    if (name2 !== name) {
                         aNameList.push(name2);
                     }
                 } catch (err) {
@@ -28,7 +28,7 @@ export default new class TitleCheckHelper {
                     var name2 = await stringHelper.cleanString(name);
                     var name2 = await this.removeMediaTypeFromTitle(name2);
                     name2 = await this.removeSeasonMarkesFromTitle(name2);
-                    if (name2 != name) {
+                    if (name2 !== name) {
                         bNameList.push(name2);
                     }
                 } catch (err) {
@@ -53,8 +53,8 @@ export default new class TitleCheckHelper {
                         if (aName === bName) {
                             return true;
                         }
-                        aName = await stringHelper.cleanString(aName)
-                        bName = await stringHelper.cleanString(bName)
+                        aName = await stringHelper.cleanString(aName);
+                        bName = await stringHelper.cleanString(bName);
                         if (aName === bName) {
                             return true;
                         }
@@ -90,7 +90,7 @@ export default new class TitleCheckHelper {
                             }
                             var shortScan = Math.ceil(shortestTextLength / 4);
                             if (shortScan < 3) {
-                                shortScan = Math.ceil(shortestTextLength / 1.25)
+                                shortScan = Math.ceil(shortestTextLength / 1.25);
                             } else if (shortScan > 10) {
                                 shortScan = 5;
                             }
@@ -181,4 +181,4 @@ export default new class TitleCheckHelper {
         title = title.replace(/:\s*$/gm, '');
         return title.trim();
     }
-}
+};

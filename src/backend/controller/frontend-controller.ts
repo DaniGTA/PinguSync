@@ -1,4 +1,4 @@
-import ListProvider from '../api/list-provider';
+import IListProvider from '../api/list-provider';
 import ICommunication from '../communication/icommunication';
 import IPCBackgroundController from '../communication/ipc-background-controller';
 import ListController from './list-controller';
@@ -13,7 +13,7 @@ class FrontendController {
     public static getInstance(): FrontendController {
         return FrontendController.instance;
     }
-    public static getProviderInstance(providerString: string): ListProvider {
+    public static getProviderInstance(providerString: string): IListProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === providerString) {
                 return provider;

@@ -21,12 +21,12 @@ export default new class SortHelper {
         const pivot: T = array[high];
         let i: number = low - 1;
         for (let j = low; j <= high - 1; j++) {
-            if (await comparator(array[j], pivot) == -1) {
+            if (await comparator(array[j], pivot) === -1) {
                 i = i + 1;
-                await this.swap(array, i, j)
+                await this.swap(array, i, j);
             }
         }
-        if (await comparator(array[high], array[i + 1]) == -1) {
+        if (await comparator(array[high], array[i + 1]) === -1) {
             await this.swap(array, i + 1, high);
         }
         return i + 1;
@@ -37,4 +37,4 @@ export default new class SortHelper {
         array[i] = array[j];
         array[j] = newJ;
     }
-}
+};

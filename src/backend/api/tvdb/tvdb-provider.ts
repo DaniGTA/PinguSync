@@ -1,17 +1,18 @@
-import InfoProvider from '../info-provider';
+// tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { TVDBLogin } from './models/login';
-import TVDBConverter from './tvdb-converter';
-import { TVDBSeries } from './models/getSeries';
-import SeriesSearchResults from './models/searchResults';
-import { TVDBProviderData } from './tvdb-provider-data';
-import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import IInfoProvider from '../info-provider';
 import MultiProviderResult from '../multi-provider-result';
+import { TVDBSeries } from './models/getSeries';
+import { TVDBLogin } from './models/login';
+import SeriesSearchResults from './models/searchResults';
+import TVDBConverter from './tvdb-converter';
+import { TVDBProviderData } from './tvdb-provider-data';
 
-export default class TVDBProvider implements InfoProvider {
+export default class TVDBProvider implements IInfoProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.SPECIAL];
-    public providerName = 'tvdb'
+    public providerName = 'tvdb';
     public isOffline = false;
     public hasUniqueIdForSeasons = false;
     public version = 1;
@@ -63,8 +64,8 @@ export default class TVDBProvider implements InfoProvider {
                     url: TVDBProvider.Instance.baseUrl + '/login',
                     headers: { 'Content-Type': 'application/json' },
                     body: `{
-                        "apikey": "`+ TVDBProvider.Instance.apiKey + `"
-                    }`
+                        "apikey": "` + TVDBProvider.Instance.apiKey + `"
+                    }`,
                 }, (error: any, response: any, body: string) => {
                     if (response.statusCode === 200 || response.statusCode === 201) {
                         resolve((JSON.parse(body) as TVDBLogin).token);
@@ -74,8 +75,8 @@ export default class TVDBProvider implements InfoProvider {
                 }).on('error', (err) => {
                     console.log(err);
                     reject();
-                })
-            })
+                });
+            });
             const dayInms = 86400000;
             TVDBProvider.Instance.apiData.setTokens(token, new Date().getTime() + dayInms);
             return token;
@@ -100,11 +101,11 @@ export default class TVDBProvider implements InfoProvider {
                         },
 
                         body: body,
-                        timeout: 5000
+                        timeout: 5000,
                     }, (error: any, response: any, body: any) => {
                         try {
                             if (response.statusCode === 200 || response.statusCode === 201) {
-                                var data: T = JSON.parse(body) as T;
+                                let data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
                                 console.log('[TVDB] status code: ' + response.statusCode);
@@ -117,7 +118,7 @@ export default class TVDBProvider implements InfoProvider {
                     }).on('error', (err) => {
                         console.log(err);
                         reject();
-                    })
+                    });
                 } catch (err) {
                     console.log(err);
                     reject();

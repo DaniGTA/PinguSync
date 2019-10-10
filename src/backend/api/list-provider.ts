@@ -4,10 +4,9 @@ import WatchProgress from '../controller/objects/meta/watch-progress';
 import { UserData } from './user-data';
 import ExternalProvider from './external-provider';
 
-export default interface ListProvider extends ExternalProvider{
+export default interface IListProvider extends ExternalProvider {
     hasOAuthCode: boolean;
     userData: UserData;
-    
     getAllSeries(disableCache?: boolean): Promise<Series[]>;
     logInUser(pass: string, username?: string): Promise<boolean>;
     isUserLoggedIn(): Promise<boolean>;

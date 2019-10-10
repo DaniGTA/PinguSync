@@ -1,9 +1,9 @@
-import ListProvider from '../api/list-provider';
+import IListProvider from '../api/list-provider';
 import ListController from './list-controller';
-import IUpdateList from './objects/update-list';
-import ProviderList from './provider-manager/provider-list';
-import { WorkerTransfer } from './objects/worker-transfer';
 import SeriesPackage from './objects/series-package';
+import IUpdateList from './objects/update-list';
+import { WorkerTransfer } from './objects/worker-transfer';
+import ProviderList from './provider-manager/provider-list';
 
 const ctx: Worker = self as any;
 
@@ -20,7 +20,7 @@ class ProviderController {
         const that = this;
 
         if (typeof ProviderController.instance === 'undefined') {
-            this.initController()
+            this.initController();
         }
         ProviderController.instance = that;
         for (const pl of ProviderList.getListProviderList()) {
@@ -60,7 +60,7 @@ class ProviderController {
                         console.log('Failed request info refresh: no list controller instance');
                     }
                     break;
-                    
+
                 case 'sync-series':
                     this.syncSeries(value.data);
                     break;
@@ -87,7 +87,7 @@ class ProviderController {
         while (!success) {
             try {
                 ctx.postMessage(new WorkerTransfer(channel, JSON.stringify(data)));
-                console.log("worker send: " + channel);
+                console.log('worker send: ' + channel);
                 success = true;
             } catch (err) {
                 ctx.postMessage(new WorkerTransfer(channel, ''));
@@ -97,7 +97,7 @@ class ProviderController {
 
     }
 
-    static getProviderInstance(providerString: string): ListProvider {
+    static getProviderInstance(providerString: string): IListProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === providerString) {
                 return provider;
@@ -116,7 +116,7 @@ class ProviderController {
                 console.log('Error');
             }
         } else {
-            console.log('Failed sync series: no list controller instance')
+            console.log('Failed sync series: no list controller instance');
         }
     }
 
@@ -126,12 +126,12 @@ class ProviderController {
             var list = ListController.instance.getMainList();
             this.send('series-list', list);
         } else {
-            console.log('Failed send list: no list controller instance')
+            console.log('Failed send list: no list controller instance');
         }
     }
 
     public getPath(): string {
-        return (process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + "/.local/share")) + '/list-manager/'
+        return (process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + '/.local/share')) + '/list-manager/';
 
     }
 
@@ -143,15 +143,15 @@ class ProviderController {
         ctx.addEventListener('message', (ev: MessageEvent) => {
             const transfer = ev.data as WorkerTransfer;
 
-            if (transfer.channel == channel) {
-                console.log("worker: " + channel);
+            if (transfer.channel === channel) {
+                console.log('worker: ' + channel);
                 try {
                     f(JSON.parse(transfer.data));
                 } catch (err) {
                     f(transfer.data);
                 }
             }
-        })
+        });
     }
 }
 new ProviderController();

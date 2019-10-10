@@ -1,11 +1,11 @@
 export default class WatchProgress {
-    episode: number = -1;
-    played?: Date;
-    playCount: number = 1;
+    public episode: number = -1;
+    public played?: Date;
+    public playCount: number = 1;
     constructor(episode: number, playCount?: number, played?: Date) {
         this.episode = episode;
         this.played = played;
-        if (typeof playCount != 'undefined') {
+        if (playCount) {
             this.playCount = playCount;
         }
     }

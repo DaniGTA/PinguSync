@@ -1,11 +1,11 @@
-import ListProvider from "../../api/list-provider";
-import InfoProvider from '../../api/info-provider';
-import ProviderLoader from './provider-loader';
 import ExternalProvider from '../../api/external-provider';
+import IInfoProvider from '../../api/info-provider';
+import IListProvider from '../../api/list-provider';
 import ProviderLocalData from '../interfaces/provider-local-data';
+import ProviderLoader from './provider-loader';
 
 export default class ProviderList extends ProviderLoader {
-    public static getListProviderList(): ListProvider[] {
+    public static getListProviderList(): IListProvider[] {
         if (!this.loadedListProvider) {
             this.loadedListProvider = this.loadListProviderList();
             return this.loadedListProvider;
@@ -14,8 +14,8 @@ export default class ProviderList extends ProviderLoader {
         }
     }
 
-    public static getInfoProviderList(): InfoProvider[] {
-         if (!this.loadedInfoProvider) {
+    public static getInfoProviderList(): IInfoProvider[] {
+        if (!this.loadedInfoProvider) {
             this.loadedInfoProvider = this.loadInfoProviderList();
             return this.loadedInfoProvider;
         } else {
@@ -23,7 +23,7 @@ export default class ProviderList extends ProviderLoader {
         }
     }
 
-    public static getExternalProviderInstance(localdata:ProviderLocalData): ExternalProvider {
+    public static getExternalProviderInstance(localdata: ProviderLocalData): ExternalProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === localdata.provider) {
                 return provider;
@@ -34,7 +34,7 @@ export default class ProviderList extends ProviderLoader {
                 return provider;
             }
         }
-        throw 'NoProviderFound';
+        throw new Error('NoProviderFound');
     }
-    
+
 }

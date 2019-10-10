@@ -1,11 +1,11 @@
-import ListProvider from '../../api/list-provider';
-import { WatchStatus } from './series';
-import ProviderList from '../provider-manager/provider-list';
-import WatchProgress from './meta/watch-progress';
+import IListProvider from '../../api/list-provider';
 import listHelper from '../../helpFunctions/list-helper';
 import ProviderLocalData from '../interfaces/provider-local-data';
-import Cover from './meta/cover';
+import ProviderList from '../provider-manager/provider-list';
 import Banner from './meta/banner';
+import Cover from './meta/cover';
+import WatchProgress from './meta/watch-progress';
+import { WatchStatus } from './series';
 
 /**
  * Contains info about the series and the user watch progress and the list that series is in.
@@ -21,7 +21,7 @@ export class ListProviderLocalData extends ProviderLocalData {
     public customList: boolean = false;
     public customListName = '';
 
-    constructor(lp?: ListProvider | string) {
+    constructor(lp?: IListProvider | string) {
         super();
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
@@ -34,13 +34,13 @@ export class ListProviderLocalData extends ProviderLocalData {
     }
 
 
-    public getProviderInstance(): ListProvider {
+    public getProviderInstance(): IListProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === this.provider) {
                 return provider;
             }
         }
-        throw 'NoProviderFound';
+        throw new Error('NoProviderFound');
     }
 
     public getHighestWatchedEpisode(): WatchProgress | undefined {
@@ -66,34 +66,34 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     /**
      * @hasTest
-     * @param episode 
-     * @param date 
-     * @param plays 
+     * @param episode
+     * @param date
+     * @param plays
      */
     public addOneWatchedEpisode(episode: number, plays = 1, date?: Date): void {
         if (typeof this.watchProgress === 'undefined') {
-            this.watchProgress = []
+            this.watchProgress = [];
         }
         const currentWatchProgress = new WatchProgress(episode, plays, date);
         this.watchProgress.push(currentWatchProgress);
     }
     /**
      * @hasTest
-     * @param watchProgress 
+     * @param watchProgress
      */
     public addOneWatchProgress(watchProgress: WatchProgress) {
         if (typeof this.watchProgress === 'undefined') {
-            this.watchProgress = []
+            this.watchProgress = [];
         }
         this.watchProgress.push(watchProgress);
     }
     /**
      * @hasTest
-     * @param watchProgress 
+     * @param watchProgress
      */
     public async removeOneWatchProgress(watchProgress: WatchProgress): Promise<boolean> {
         if (typeof this.watchProgress === 'undefined') {
-            this.watchProgress = []
+            this.watchProgress = [];
         }
         const index = this.watchProgress.findIndex(episode => watchProgress.episode === episode.episode);
         if (index == -1) {
@@ -108,7 +108,7 @@ export class ListProviderLocalData extends ProviderLocalData {
         const mergedProvider = Object.assign(new ListProviderLocalData(), providers[0]);
         var newestProvider: ListProviderLocalData | undefined;
         const covers: Cover[] = [];
-        const banners: Banner[] = []
+        const banners: Banner[] = [];
         for (const provider of providers) {
             if (mergedProvider.id != provider.id) {
                 continue;
@@ -118,7 +118,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             mergedProvider.id = provider.id;
             mergedProvider.rawEntry = provider.rawEntry;
             mergedProvider.covers = provider.covers;
-            mergedProvider.episodes = provider.episodes
+            mergedProvider.episodes = provider.episodes;
             if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length != 0) {
                 mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
             }
@@ -230,8 +230,8 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     /**
      * Check if [a] can be safly importet in [b]
-     * @param a 
-     * @param b 
+     * @param a
+     * @param b
      */
     private static async isValidWatchStatus(a?: WatchStatus, b?: WatchStatus): Promise<boolean> {
         if (typeof a != 'undefined') {

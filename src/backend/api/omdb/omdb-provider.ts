@@ -3,14 +3,14 @@ import WatchProgress from '../../controller/objects/meta/watch-progress';
 import MultiProviderResult from '../multi-provider-result';
 import Series from '../../controller/objects/series';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
-import InfoProvider from '../info-provider';
+import IInfoProvider from '../info-provider';
 import request from 'request';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
 import { IdRequestResult } from './models/id-request-result';
 
-export default class OMDbProvider implements InfoProvider {
+export default class OMDbProvider implements IInfoProvider {
     isOffline: boolean = false;
     hasOAuthCode: boolean = false;
     public providerName: string = "omdb";

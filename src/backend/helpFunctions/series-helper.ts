@@ -1,17 +1,17 @@
-import Series from "../controller/objects/series";
+import Series from '../controller/objects/series';
+import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+import EpisodeComperator from './comperators/episode-comperator';
+import MediaTypeComperator from './comperators/media-type-comperator';
 import ProviderComperator from './comperators/provider-comperator';
+import RelationComperator from './comperators/relation-comperator';
+import ReleaseYearComperator from './comperators/release-year-comperator';
 import SeasonComperator from './comperators/season-comperator';
 import TitleComperator from './comperators/title-comperator';
-import EpisodeComperator from './comperators/episode-comperator';
-import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
-import ReleaseYearComperator from './comperators/release-year-comperator';
-import MediaTypeComperator from './comperators/media-type-comperator';
-import RelationComperator from './comperators/relation-comperator';
 class SeriesHelper {
     /**
      * Calculate the value
-     * @param a 
-     * @param b 
+     * @param a
+     * @param b
      */
     public async isSameSeries(a: Series, b: Series): Promise<boolean> {
         let matches: number = 0;
@@ -49,8 +49,8 @@ class SeriesHelper {
         }
         matchAbleScore += seasonResult.matchAble;
         matches += seasonResult.matches;
-        let aFirstSeason = seasonResult.aFirstSeason;
-        let bFirstSeason = seasonResult.bFirstSeason;
+        const aFirstSeason = seasonResult.aFirstSeason;
+        const bFirstSeason = seasonResult.bFirstSeason;
 
         const episodeResult = await EpisodeComperator.compareEpisodes(a, b);
         if (episodeResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {

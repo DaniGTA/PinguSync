@@ -1,12 +1,12 @@
 import { MediaType } from '../../controller/objects/meta/media-type';
 import MultiProviderResult from '../multi-provider-result';
-import InfoProvider from '../info-provider';
+import IInfoProvider from '../info-provider';
 import request from 'request';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import { Show, Search } from './models/tvmaze-model';
 import TVMazeConverter from './tvmaze-converter';
 
-export default class TVMazeProvider implements InfoProvider {
+export default class TVMazeProvider implements IInfoProvider {
     async isProviderAvailable(): Promise<boolean> {
         return true;
     }

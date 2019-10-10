@@ -82,7 +82,7 @@ describe('Provider: Kitsu | Test runs', () => {
         unkownProvider.addSeriesName(new Name('Avatar: The Last Airbender', 'en'));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper.getProviderSeriesInfo(series, kitsuProvider);
+        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 5);
     });
 
@@ -93,7 +93,7 @@ describe('Provider: Kitsu | Test runs', () => {
         unkownProvider.addSeriesName(new Name('Naruto: Shippuuden', 'en'));
         series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper.getProviderSeriesInfo(series, kitsuProvider);
+        const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 5);
     });
 
