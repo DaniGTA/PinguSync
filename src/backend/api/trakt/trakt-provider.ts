@@ -53,7 +53,7 @@ export default class TraktProvider implements IListProvider {
                     endResult.push(await traktConverter.convertMovieToLocalData(result.movie));
                 }
             } catch (err) {
-               logger.error(err);
+                logger.error(err);
             }
         }
         return endResult;
@@ -81,18 +81,18 @@ export default class TraktProvider implements IListProvider {
     public async isUserLoggedIn(): Promise<boolean> {
         return this.userData.accessToken !== '';
     }
-    public async getAllSeries(disableCache: boolean = false): Promise<Series[]> {
+    public async getAllSeries(disableCache: boolean = false): Promise<MultiProviderResult[]> {
         logger.log('info', '[Request] -> Trakt -> AllSeries');
         if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
             return this.userData.list;
         } else if (this.userData.userInfo != null) {
-            const seriesList: Series[] = [];
+            const seriesList: MultiProviderResult[] = [];
             const data = await this.traktRequest<WatchedInfo[]>('https://api.trakt.tv/users/' + this.userData.userInfo.user.ids.slug + '/watched/shows');
             for (const entry of data) {
                 try {
-                    seriesList.push(...await traktConverter.convertSeasonsToSeries(entry));
+                    seriesList.push(...await traktConverter.convertSeasonsToMultiProviderResult(entry));
                 } catch (e) {
-                   logger.error(e);
+                    logger.error(e);
                 }
             }
             this.userData.updateList(seriesList);
@@ -162,7 +162,7 @@ export default class TraktProvider implements IListProvider {
     }
 
     private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
-        logger.log('info','[Trakt] Start WebRequest');
+        logger.log('info', '[Trakt] Start WebRequest');
         const that = this;
         return new Promise<T>((resolve, reject) => {
             try {

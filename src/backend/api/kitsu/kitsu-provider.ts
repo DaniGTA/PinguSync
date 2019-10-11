@@ -71,7 +71,7 @@ export default class KitsuProvider implements IListProvider {
         const getResult = ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
         return kitsuConverter.convertMediaToAnime(getResult.data);
     }
-    public getAllSeries(disableCache?: boolean | undefined): Promise<Series[]> {
+    public getAllSeries(disableCache?: boolean | undefined): Promise<MultiProviderResult[]> {
         throw new Error('Method not implemented.');
     }
     public logInUser(pass: string, username?: string | undefined): Promise<boolean> {

@@ -7,16 +7,17 @@ import MainListPackageManager from './main-list-manager/main-list-package-manage
 import WatchProgress from './objects/meta/watch-progress';
 import Series from './objects/series';
 import ProviderList from './provider-manager/provider-list';
+import MultiProviderResult from '../api/multi-provider-result';
 export default class ListController {
 
     public static instance: ListController | null = null;
     constructor(disableOnlineMode = false) {
         if (!ListController.instance) {
-           logger.log('info', 'Start ListController.');
-           if (!disableOnlineMode) {
+            logger.log('info', 'Start ListController.');
+            if (!disableOnlineMode) {
                 this.getSeriesListAndUpdateMainList();
             }
-           ListController.instance = this;
+            ListController.instance = this;
         }
     }
 
@@ -50,7 +51,7 @@ export default class ListController {
                     anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
-               logger.error('Failed remove watch progress');
+                logger.error('Failed remove watch progress');
             }
         }
     }
@@ -59,7 +60,7 @@ export default class ListController {
             try {
                 await providerHelper.fillMissingProvider(anime);
             } catch (err) {
-               logger.error('Update watch progress');
+                logger.error('Update watch progress');
             }
         }
         for (const provider of anime.getListProvidersInfos()) {
@@ -72,15 +73,15 @@ export default class ListController {
                     anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
-               logger.error(err);
+                logger.error(err);
             }
         }
         await this.addSeriesToMainList(anime);
     }
 
     public async addSeriesToMainList(...animes: Series[]) {
-       logger.log('info', 'Add ' + animes.length + ' to mainList');
-       await new MainListAdder().addSeries(...animes);
+        logger.log('info', 'Add ' + animes.length + ' to mainList');
+        await new MainListAdder().addSeries(...animes);
     }
 
     public async getMainList(): Promise<readonly Series[]> {
@@ -101,7 +102,7 @@ export default class ListController {
                     const result = await providerHelper.fillMissingProvider((mainList)[index], true);
                     this.addSeriesToMainList(result);
                 } catch (err) {
-                   logger.log('info', err);
+                    logger.log('info', err);
                 }
             }
         }
@@ -110,30 +111,30 @@ export default class ListController {
     public async getSeriesListAndUpdateMainList(): Promise<void> {
         logger.log('info', '[calc] -> SeriesList');
         await this.getMainList();
-        const allSeries: Series[] = await this.getAllEntrysFromProviders(true);
+        const allSeries: MultiProviderResult[] = await this.getAllEntrysFromProviders(true);
 
-        await this.addSeriesToMainList(...allSeries);
+        //await this.addSeriesToMainList(...allSeries);
     }
 
 
-    public async getAllEntrysFromProviders(forceDownload: boolean = false): Promise<Series[]> {
-        const anime: Series[] = [];
+    public async getAllEntrysFromProviders(forceDownload: boolean = false): Promise<MultiProviderResult[]> {
+        const multiProviderResults: MultiProviderResult[] = [];
         for (const provider of ProviderList.getListProviderList()) {
             try {
                 if (await provider.isUserLoggedIn()) {
-                   logger.log('info', '[Request] -> ' + provider.providerName + ' -> AllSeries');
-                   const allSeries = await provider.getAllSeries(forceDownload);
-                   for (const iterator of allSeries) {
-                        anime.push(Object.assign(new Series(), iterator));
+                    logger.log('info', '[Request] -> ' + provider.providerName + ' -> AllSeries');
+                    const allSeries = await provider.getAllSeries(forceDownload);
+                    for (const iterator of allSeries) {
+                        multiProviderResults.push(iterator);
                     }
-                   logger.log('info', '[Request] -> result: ' + allSeries.length + ' items');
+                    logger.log('info', '[Request] -> result: ' + allSeries.length + ' items');
 
                 }
             } catch (err) {
-               logger.log('info', '[Error] -> ' + provider.providerName + ' -> AllSeries');
+                logger.error('[Error] -> ' + provider.providerName + ' -> AllSeries');
             }
         }
-        return anime;
+        return multiProviderResults;
     }
 
 
@@ -151,7 +152,7 @@ export default class ListController {
                 }
             }
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
         return entry;
     }

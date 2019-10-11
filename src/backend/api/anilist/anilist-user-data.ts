@@ -6,6 +6,7 @@ import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
 import { UserData } from '../user-data';
+import MultiProviderResult from '../multi-provider-result';
 
 export class AniListUserData implements UserData {
     public username: string = '';
@@ -13,15 +14,15 @@ export class AniListUserData implements UserData {
     public refresh_token: string = '';
     public created_token: Date = new Date();
     public expires_in: number = 0;
-    public viewer: Viewer | undefined;
-    public list: Series[] | undefined;
-    public lastListUpdate: Date | undefined;
+    public viewer?: Viewer;
+    public list?: MultiProviderResult[];
+    public lastListUpdate?: Date;
 
     constructor() {
         this.loadData();
     }
 
-    public updateList(list: Series[]) {
+    public updateList(list: MultiProviderResult[]) {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();
@@ -43,14 +44,14 @@ export class AniListUserData implements UserData {
 
 
     private async saveData() {
-       logger.warn('[IO] Write anilist user file.');
-       writeFileSync(await this.getPath(), JSON.stringify(this));
+        logger.warn('[IO] Write anilist user file.');
+        writeFileSync(await this.getPath(), JSON.stringify(this));
     }
 
     private loadData() {
         try {
-           logger.warn('[IO] Read anilist user file.');
-           if (existsSync(this.getPath())) {
+            logger.warn('[IO] Read anilist user file.');
+            if (existsSync(this.getPath())) {
                 const loadedString = readFileSync(this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
@@ -62,7 +63,7 @@ export class AniListUserData implements UserData {
                 this.lastListUpdate = loadedData.lastListUpdate;
             }
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
     }
 

@@ -1,4 +1,4 @@
-import ExternalProvider from '../../api/external-provider';
+import IExternalProvider from '../../api/external-provider';
 import IInfoProvider from '../../api/info-provider';
 import IListProvider from '../../api/list-provider';
 import ProviderLocalData from '../interfaces/provider-local-data';
@@ -23,7 +23,7 @@ export default class ProviderList extends ProviderLoader {
         }
     }
 
-    public static getExternalProviderInstance(localdata: ProviderLocalData): ExternalProvider {
+    public static getExternalProviderInstance(localdata: ProviderLocalData): IExternalProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === localdata.provider) {
                 return provider;

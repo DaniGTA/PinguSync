@@ -5,6 +5,7 @@ import { TraktUserInfo } from './objects/userInfo';
 import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
+import MultiProviderResult from '../multi-provider-result';
 import { UserData } from '../user-data';
 
 export class TraktUserData implements UserData {
@@ -14,14 +15,14 @@ export class TraktUserData implements UserData {
     public expiresIn: number = 0;
     public username: string = '';
     public userInfo: TraktUserInfo | null = null;
-    public list: Series[] | undefined;
+    public list: MultiProviderResult[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
         this.loadData();
     }
 
 
-    public updateList(list: Series[]) {
+    public updateList(list: MultiProviderResult[]) {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();

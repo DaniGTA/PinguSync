@@ -68,7 +68,7 @@ export default class AniListProvider implements IListProvider {
         if (provider.provider === this.providerName && provider.id) {
             const fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' })) as GetSeriesByID;
 
-            return new MultiProviderResult(await (await aniListConverter.convertExtendedInfoToAnime(fullInfo)));
+            return new MultiProviderResult(await aniListConverter.convertExtendedInfoToAnime(fullInfo));
         }
         throw new Error('False provider - AniList');
     }
@@ -100,10 +100,10 @@ export default class AniListProvider implements IListProvider {
         };
         return new Promise<boolean>((resolve, reject) => {
             request(options, (error: any, response: any, body: any) => {
-               logger.log('info', 'error:', error); // Print the error if one occurred
-               logger.log('info', 'statusCode:', response && response.statusCode); // Print the response status code if a response was received
-               logger.log('info', 'body:', body); // Print the HTML for the Google homepage.
-               if (body.access_token) {
+                logger.log('info', 'error:', error); // Print the error if one occurred
+                logger.log('info', 'statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                logger.log('info', 'body:', body); // Print the HTML for the Google homepage.
+                if (body.access_token) {
                     that.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
                     that.userData.created_token = new Date();
                     that.getUserInfo();
@@ -116,24 +116,24 @@ export default class AniListProvider implements IListProvider {
     }
 
     public getUserInfo() {
-        const _this = this;
+        const that = this;
         // Here we define our query as a multi-line string
         // Storing it in a separate .graphql/.gql file is also possible
         const query = getViewerGql;
         const options = this.getGraphQLOptions(query);
         this.webRequest<any>(options).then((value) => {
             const data = value.Viewer as Viewer;
-            _this.userData.setViewer(data);
+            that.userData.setViewer(data);
         });
     }
 
-    public async getAllSeries(disableCache: boolean = false): Promise<Series[]> {
-       logger.log('info', '[Request] -> AniList -> AllSeries');
-       if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
-           logger.log('info', '[LoadCache] -> AniList -> AllSeries');
-           return this.userData.list;
+    public async getAllSeries(disableCache: boolean = false): Promise<MultiProviderResult[]> {
+        logger.log('info', '[Request] -> AniList -> AllSeries');
+        if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
+            logger.log('info', '[LoadCache] -> AniList -> AllSeries');
+            return this.userData.list;
         } else {
-            const seriesList: Series[] = [];
+            const seriesList: MultiProviderResult[] = [];
             const data = await this.getUserSeriesList();
             for (const list of data.lists) {
                 const watchStatus = await this.convertListNameToWatchStatus(list.name);
@@ -217,23 +217,23 @@ export default class AniListProvider implements IListProvider {
     }
 
     private async webRequest<T>(options: (request.UriOptions & request.CoreOptions)): Promise<T> {
-       logger.log('info', '[AniList] Start WebRequest');
-       return new Promise<T>((resolve, rejects) => {
+        logger.log('info', '[AniList] Start WebRequest');
+        return new Promise<T>((resolve, rejects) => {
             try {
                 request(options, (error: any, response: any, body: any) => {
 
-                   logger.log('info', '[AniList] statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                   if (response.statusCode === 200) {
+                    logger.log('info', '[AniList] statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                    if (response.statusCode === 200) {
                         const rawdata = JSON.parse(body);
                         resolve(rawdata.data as T);
                     } else {
                         rejects();
                     }
                 }).on('error', (err) => {
-                   logger.error(err);
+                    logger.error(err);
                 });
             } catch (err) {
-               logger.error(err);
+                logger.error(err);
             }
         });
     }

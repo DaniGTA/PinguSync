@@ -79,9 +79,9 @@ export default class SimklProvider implements IListProvider {
     }
 
 
-    public async getAllSeries(disableCache?: boolean | undefined): Promise<Series[]> {
+    public async getAllSeries(disableCache?: boolean | undefined): Promise<MultiProviderResult[]> {
         const result = await this.simklRequest<UserListResponse>(this.apiUrl + 'sync/all-items/anime/?extended=full');
-        const resultList: Series[] = [];
+        const resultList: MultiProviderResult[] = [];
         for (const anime of result.anime) {
 
         }
@@ -170,21 +170,21 @@ export default class SimklProvider implements IListProvider {
                             }
                             reject();
                         } else {
-                           logger.error('[Simkl] status code:', response.statusCode);
-                           reject();
+                            logger.error('[Simkl] status code:', response.statusCode);
+                            reject();
                         }
 
                     } catch (err) {
-                       logger.error(err);
-                       reject();
+                        logger.error(err);
+                        reject();
                     }
                 }).on('error', (err) => {
-                   logger.error(err);
-                   reject();
+                    logger.error(err);
+                    reject();
                 });
             } catch (err) {
-               logger.error(err);
-               reject();
+                logger.error(err);
+                reject();
             }
         });
     }

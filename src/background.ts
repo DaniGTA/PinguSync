@@ -18,13 +18,13 @@ try {
 
   mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
     if (err) {
-     logger.error(err.message);
+      logger.error(err.message);
     } else {
-     logger.log('info', 'Successfully Connected!');
+      logger.log('info', 'Successfully Connected!');
     }
   });
 } catch (err) {
- logger.error(err);
+  logger.error(err);
 }
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -68,7 +68,11 @@ function createWindow() {
   });
   ipcMain.on('get-path', (event: Electron.IpcMainEvent, s: string) => {
     if (win != null) {
-      win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
+      try {
+        win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
+      } catch (err) {
+        logger.error(err);
+      }
     }
   });
 }
@@ -99,7 +103,7 @@ app.on('ready', async () => {
     try {
       await installVueDevtools();
     } catch (e) {
-     logger.error('Vue Devtools failed to install:', e.toString());
+      logger.error('Vue Devtools failed to install:', e.toString());
     }
   }
   createWindow();

@@ -18,12 +18,9 @@ import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
 export default new class TraktConverter {
-    public async convertSeasonsToSeries(watchedInfo: WatchedInfo): Promise<Series[]> {
+    public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
         for (const season of watchedInfo.seasons) {
-            const series: Series = new Series();
-
-
             const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
             providerInfo.addSeriesName(new Name(watchedInfo.show.title, 'en', NameType.OFFICIAL));
             providerInfo.addSeriesName(new Name(watchedInfo.show.ids.slug, 'slug', NameType.SLUG));
@@ -39,8 +36,7 @@ export default new class TraktConverter {
             providerInfo.watchStatus = WatchStatus.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
             providerInfo.hasFullInfo = false;
-            series.addListProvider(providerInfo);
-            result.push(series);
+            result.push(new MultiProviderResult(providerInfo));
         }
         return result;
     }

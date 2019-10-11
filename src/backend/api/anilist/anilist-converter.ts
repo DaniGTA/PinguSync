@@ -9,6 +9,7 @@ import Overview from '../../controller/objects/meta/overview';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
+import MultiProviderResult from '../multi-provider-result';
 import AniListProvider from './anilist-provider';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import { MediaFormat } from './graphql/mediaFormat';
@@ -71,8 +72,8 @@ export default new class AniListConverter {
         return provider;
     }
 
-    public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<Series> {
-        const series: Series = new Series();
+    public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<MultiProviderResult> {
+
         let providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
         if (entry.media.title.romaji) {
             providerInfo.addSeriesName(new Name(entry.media.title.romaji, 'x-jap', NameType.OFFICIAL));
@@ -86,12 +87,11 @@ export default new class AniListConverter {
         providerInfo.releaseYear = entry.media.startDate.year;
         providerInfo.releaseYear = entry.media.startDate.year;
         providerInfo.mediaType = await this.convertTypeToMediaType(entry.media.format);
-        providerInfo.targetSeason = await Name.getSeasonNumber(await series.getAllNamesUnique());
 
         try {
             if (!providerInfo.targetSeason) {
                 if (entry.media.relations.edges.findIndex((x) => x.relationType === MediaRelation.PREQUEL) === -1) {
-                    if (await series.getMediaType() === MediaType.SPECIAL) {
+                    if (providerInfo.mediaType === MediaType.SPECIAL) {
                         providerInfo.targetSeason = 0;
                     } else {
                         providerInfo.targetSeason = 1;
@@ -101,7 +101,7 @@ export default new class AniListConverter {
             providerInfo = await this.fillRelation(providerInfo, entry.media.relations);
 
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
         providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;
@@ -122,9 +122,7 @@ export default new class AniListConverter {
         if (typeof entry.media.episodes !== 'undefined') {
             providerInfo.episodes = entry.media.episodes;
         }
-
-        await series.addListProvider(providerInfo);
-        return series;
+        return new MultiProviderResult(providerInfo);
     }
 
     private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {

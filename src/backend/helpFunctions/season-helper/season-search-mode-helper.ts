@@ -41,7 +41,7 @@ export default class SeasonSearchModeHelper {
 
     /**
      * Checks if the search mode is able to perform a sequel trace.
-     * @param searchMode 
+     * @param searchMode
      */
     public static canPerformASequelTrace(searchMode: SeasonSearchMode): boolean {
         switch (searchMode) {
@@ -60,7 +60,7 @@ export default class SeasonSearchModeHelper {
 
     /**
      * Checks if the search mode is able to perform a seaon value search.
-     * @param searchMode 
+     * @param searchMode
      */
     public static canPerformAProviderSeasonValueSearch(searchMode: SeasonSearchMode): boolean {
         switch (searchMode) {

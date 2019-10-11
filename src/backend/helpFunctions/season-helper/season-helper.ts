@@ -30,7 +30,6 @@ class SeasonHelper {
         logger.log('info', '[Season] [Search]: Prequel Trace.' + ' (' + series.id + ')');
         let prequel: Series | null = null;
         if (await series.isAnyPrequelPresent() && seriesList) {
-            let error = SeasonError.NONE;
             const searchResult = await series.getPrequel(seriesList);
             prequel = searchResult.foundedSeries;
             let searchCount = 0;
@@ -53,7 +52,6 @@ class SeasonHelper {
                         const searchResult = await prequel.getPrequel(seriesList);
                         if (searchResult.relationExistButNotFounded) {
                             prequel = null;
-                            error = SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER;
                             break;
                         }
                         prequel = searchResult.foundedSeries;
@@ -86,7 +84,6 @@ class SeasonHelper {
         logger.log('info', '[Season] [Search]: Sequel Trace.' + ' (' + series.id + ')');
         let sequel: Series | null = null;
         if (await series.isAnySequelPresent() && seriesList) {
-            let error = SeasonError.NONE;
             const searchResult = await series.getSequel(seriesList);
             sequel = searchResult.foundedSeries;
             let searchCount = 0;
@@ -109,7 +106,6 @@ class SeasonHelper {
                         const searchResult = await sequel.getSequel(seriesList);
                         if (searchResult.relationExistButNotFounded) {
                             sequel = null;
-                            error = SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER;
                             break;
                         }
                         sequel = searchResult.foundedSeries;
@@ -131,8 +127,8 @@ class SeasonHelper {
      */
     public async searchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.log('info', '[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
-        let prequelResult;
-        let sequelResult;
+        let prequelResult: SearchSeasonValueResult;
+        let sequelResult: SearchSeasonValueResult;
 
         if (!seriesList && ListController.instance) {
             seriesList = await ListController.instance.getMainList();
@@ -198,7 +194,6 @@ class SeasonHelper {
             for (const prequelId of entry.prequelIds) {
                 if (prequelId) {
                     const series = new Series();
-                    // TODO FIX THIS instanceof.
                     if (entry instanceof ListProviderLocalData) {
                         const newProvider = new ListProviderLocalData(entry.provider);
                         newProvider.id = prequelId;

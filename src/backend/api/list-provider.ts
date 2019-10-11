@@ -1,13 +1,14 @@
 import { ListProviderLocalData } from '../controller/objects/list-provider-local-data';
 import WatchProgress from '../controller/objects/meta/watch-progress';
 import Series from '../controller/objects/series';
-import ExternalProvider from './external-provider';
+import IExternalProvider from './external-provider';
+import MultiProviderResult from './multi-provider-result';
 import { UserData } from './user-data';
 
-export default interface IListProvider extends ExternalProvider {
+export default interface IListProvider extends IExternalProvider {
     hasOAuthCode: boolean;
     userData: UserData;
-    getAllSeries(disableCache?: boolean): Promise<Series[]>;
+    getAllSeries(disableCache?: boolean): Promise<MultiProviderResult[]>;
     logInUser(pass: string, username?: string): Promise<boolean>;
     isUserLoggedIn(): Promise<boolean>;
     getTokenAuthUrl(): string;

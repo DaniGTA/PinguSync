@@ -1,4 +1,4 @@
-import ExternalProvider from '../../api/external-provider';
+import IExternalProvider from '../../api/external-provider';
 import MultiProviderResult from '../../api/multi-provider-result';
 import ListController from '../../controller/list-controller';
 import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
@@ -42,7 +42,7 @@ export default new class ProviderHelper {
         return new SameIdAndUniqueId();
     }
 
-    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
+    public async getProviderSeriesInfo(series: Series, provider: IExternalProvider): Promise<Series> {
         if (await provider.isProviderAvailable()) {
             const requestId = stringHelper.randomString(5);
             let trys = 0;
@@ -176,21 +176,21 @@ export default new class ProviderHelper {
      * @param name Searched name.
      * @param provider In this provider the search will be performed.
      */
-    private async getSeriesByName(series: Series, name: Name, provider: ExternalProvider): Promise<Series> {
+    private async getSeriesByName(series: Series, name: Name, provider: IExternalProvider): Promise<Series> {
         let searchResult: MultiProviderResult[] = [];
         let resultContainer: SearchResultRatingContainer[] = [];
         const season = await series.getSeason();
         if (!season.seasonNumber || season.seasonNumber === 1 || provider.hasUniqueIdForSeasons) {
-           logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumber);
-           searchResult = await provider.getMoreSeriesInfoByName(name.name, season.seasonNumber);
+            logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumber);
+            searchResult = await provider.getMoreSeriesInfoByName(name.name, season.seasonNumber);
 
-           if (searchResult && searchResult.length !== 0) {
-               logger.log('info', '[' + provider.providerName + '] Results: ' + searchResult.length);
-               for (const result of searchResult) {
+            if (searchResult && searchResult.length !== 0) {
+                logger.log('info', '[' + provider.providerName + '] Results: ' + searchResult.length);
+                for (const result of searchResult) {
                     const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
                     resultContainer.push(new SearchResultRatingContainer(mpcr, result));
                 }
-               if (resultContainer.length !== 0) {
+                if (resultContainer.length !== 0) {
                     resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
                     for (const containerItem of resultContainer) {
                         if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
