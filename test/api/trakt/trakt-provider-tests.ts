@@ -26,7 +26,7 @@ describe('Provider: Trakt | Tests runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("Seitokai Yakuindomo＊", "en"));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
@@ -37,7 +37,7 @@ describe('Provider: Trakt | Tests runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("The Asterisk War: The Academy City on the Water", "en"));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
@@ -48,7 +48,7 @@ describe('Provider: Trakt | Tests runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("Little Witch Academia", "en"));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
@@ -59,7 +59,7 @@ describe('Provider: Trakt | Tests runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("Avatar: The Last Airbender", "en"));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getListProvidersInfos().length, 2);
@@ -71,7 +71,7 @@ describe('Provider: Trakt | Tests runs', () => {
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("Yamada-kun and the Seven Witches", "en"));
         unkownProvider.releaseYear = 2013;
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
 
         const result = await providerHelper['getProviderSeriesInfo'](series, traktProvider);

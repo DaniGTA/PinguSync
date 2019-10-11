@@ -1,0 +1,62 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
+import Series from '../../controller/objects/series';
+import PathHelper from '../../helpFunctions/path-helper';
+import logger from '../../logger/logger';
+import { UserData } from '../user-data';
+import { LoginData } from 'node-myanimelist/typings/methods/poly/noApiLogin';
+
+export class MalUserData implements UserData {
+
+    public loginData?: LoginData;
+    public username: string = '';
+    public list: Series[] | undefined;
+    public lastListUpdate: Date | undefined;
+    constructor() {
+        this.loadData();
+    }
+
+
+    public updateList(list: Series[]) {
+        this.list = list;
+        this.lastListUpdate = new Date(Date.now());
+        this.saveData();
+    }
+
+    public setLoginData(loginData: LoginData) {
+        this.loginData = loginData;
+        this.saveData();
+    }
+
+    private async saveData() {
+        try {
+           logger.debug('[IO] Write mal user file.');
+           fs.writeFileSync(this.getPath(), JSON.stringify(this));
+        } catch (err) {
+           logger.error(err);
+        }
+    }
+
+    private loadData() {
+        try {
+           logger.debug('[IO] Read mal user file.');
+           if (fs.existsSync(this.getPath())) {
+                const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
+                const loadedData = JSON.parse(loadedString) as this;
+                Object.assign(this, loadedData);
+            }
+        } catch (err) {
+           logger.error(err);
+        }
+    }
+
+    private getPath(): string {
+        try {
+            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+            return path.join(new PathHelper().getAppPath(), 'kitsu_config.json');
+        } catch (err) {
+            throw err;
+        }
+    }
+}

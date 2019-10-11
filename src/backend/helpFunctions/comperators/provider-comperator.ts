@@ -1,4 +1,6 @@
+import ProviderLocalData from '../../controller/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
+import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';
@@ -50,29 +52,14 @@ export default class ProviderComperator {
      * @param a will be compared with b
      * @param b will be compared with a
      */
-    public static async simpleProviderSameIdAndSameSeasonCheck(a: Series, b: Series): Promise<boolean> {
+    public static async simpleProviderSameIdAndSameSeasonCheckOnSeries(a: Series, b: Series): Promise<boolean> {
         try {
-            for (const aProvider of a.getListProvidersInfos()) {
-                for (const bProvider of b.getListProvidersInfos()) {
-                    if (aProvider.provider === bProvider.provider) {
-                        if (aProvider.id === bProvider.id) {
-                            if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
-                                return true;
-                            } else {
-                                if (aProvider.targetSeason === bProvider.targetSeason) {
-                                    return true;
-                                } else {
-                                    const aSeason = await a.getSeason();
-                                    const bSeason = await b.getSeason();
-                                    if (aSeason.seasonNumber === bSeason.seasonNumber && aSeason.seasonError === SeasonError.NONE) {
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            const aSeason: Season = await a.getSeason();
+            const bSeason: Season = await b.getSeason();
+            const aProviders = a.getListProvidersInfos();
+            const bProviders = b.getListProvidersInfos();
+
+            return this.simpleProviderSameIdAndSameSeasonCheck(aProviders, bProviders, aSeason, bSeason);
 
         } catch (err) {
             logger.error(err);
@@ -80,6 +67,34 @@ export default class ProviderComperator {
         return false;
     }
 
+    public static async simpleProviderSameIdAndSameSeasonCheck(a: ProviderLocalData[], b: ProviderLocalData[], aSeason?: Season, bSeason?: Season): Promise<boolean> {
+        for (const aProvider of a) {
+                for (const bProvider of b) {
+                    if (aProvider.provider === bProvider.provider) {
+                        if (aProvider.id === bProvider.id) {
+                            try {
+                                if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
+                                    return true;
+                                } else {
+                                    if (aProvider.targetSeason === bProvider.targetSeason) {
+                                        return true;
+                                    } else {
+                                        if (aSeason && bSeason) {
+                                            if (aSeason.seasonNumber === bSeason.seasonNumber && aSeason.seasonError === SeasonError.NONE) {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                logger.warn(err);
+                            }
+                        }
+                    }
+                }
+        }
+        return false;
+    }
 
     /**
      * Checks if the series have the same provider.

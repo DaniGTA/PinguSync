@@ -44,7 +44,7 @@ describe('Multi-Provider-Comperator | Examples', () => {
         aProvider.addSeriesName(new Name('鬼滅の刃無限列車編', '"jap"', NameType.UNKNOWN));
         aProvider.mediaType = MediaType.MOVIE;
         aProvider.targetSeason = 1;
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // PART B
 

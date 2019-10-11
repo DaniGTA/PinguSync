@@ -1,4 +1,5 @@
 import IListProvider from '../api/list-provider';
+import MultiProviderResult from '../api/multi-provider-result';
 import providerHelper from '../helpFunctions/provider/provider-helper';
 import logger from '../logger/logger';
 import MainListAdder from './main-list-manager/main-list-adder';
@@ -7,7 +8,6 @@ import MainListPackageManager from './main-list-manager/main-list-package-manage
 import WatchProgress from './objects/meta/watch-progress';
 import Series from './objects/series';
 import ProviderList from './provider-manager/provider-list';
-import MultiProviderResult from '../api/multi-provider-result';
 export default class ListController {
 
     public static instance: ListController | null = null;
@@ -113,7 +113,7 @@ export default class ListController {
         await this.getMainList();
         const allSeries: MultiProviderResult[] = await this.getAllEntrysFromProviders(true);
 
-        //await this.addSeriesToMainList(...allSeries);
+        // await this.addSeriesToMainList(...allSeries);
     }
 
 

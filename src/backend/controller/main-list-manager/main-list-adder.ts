@@ -4,6 +4,7 @@ import stringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import MainListManager from './main-list-manager';
+import MainListSearcher from './main-list-searcher';
 export default class MainListAdder {
     /**
      * Stores all adding instances.
@@ -39,16 +40,17 @@ export default class MainListAdder {
      *
      *  Checks that will be performed:
      *      Is Series already in list ?
-     *      All Provider are avaible ?
+     *      All Provider are available ?
      *
      * @param list a series list.
      */
     private async listWorker(list: Series[]) {
+        const searcher = new MainListSearcher();
         logger.log('info', 'Worker started to process ' + list.length + ' Items.');
         let addCounter = 0;
         for (const series of list) {
             try {
-                const entry = await MainListManager.quickFindSameSeriesInMainList(series);
+                const entry = await searcher.quickFindSameSeriesInMainList(series);
                 if (entry.length === 0) {
                     logger.log('info', 'Add non existing Series.');
                     const filledSeries = await providerHelper.fillMissingProvider(series);
@@ -66,7 +68,9 @@ export default class MainListAdder {
                            logger.error('[ERROR] Series no last info update!');
                         }
                         await MainListManager.addSerieToMainList(filledSeries);
-                    } catch (err) { }
+                    } catch (err) {
+                        logger.warn(err);
+                    }
                 } else {
                     const rdmProvider = series.getAllProviderLocalDatas()[0];
                     logger.warn('[WARNING] Found more results from main list from one Series! ' + rdmProvider.provider + ': ' + rdmProvider.id);

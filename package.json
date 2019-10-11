@@ -28,6 +28,7 @@
     "microjob": "^0.5.2",
     "mongodb": "^3.3.2",
     "mongoose": "^5.7.4",
+    "node-myanimelist": "^2.0.0",
     "resolve": "^1.12.0",
     "rewire": "^4.0.1",
     "sinon": "^7.5.0",

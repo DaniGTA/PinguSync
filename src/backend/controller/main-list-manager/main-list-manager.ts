@@ -1,13 +1,12 @@
 import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
-import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import listHelper from '../../helpFunctions/list-helper';
-import seriesHelper from '../../helpFunctions/series-helper';
 import logger from '../../logger/logger';
 import FrontendController from '../frontend-controller';
 import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
 import MainListPackageManager from './main-list-package-manager';
+import MainListSearcher from './main-list-searcher';
 export default class MainListManager {
 
     /**
@@ -18,9 +17,10 @@ export default class MainListManager {
      */
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
         await this.checkIfListIsLoaded();
+        const searcher = new MainListSearcher();
         const results = [];
         try {
-            const searchResults = await MainListManager.findSameSeriesInList(series, this.mainList);
+            const searchResults = await searcher.findSameSeriesInList(series, this.mainList);
             if (searchResults.length !== 0) {
                 for (const entry of searchResults) {
                     try {
@@ -45,7 +45,7 @@ export default class MainListManager {
                 results.push(series);
             }
             if (series.lastInfoUpdate === 0) {
-                logger.log('info', '[ERROR] Series no last info update! In MainList.');
+                logger.error('[ERROR] Series no last info update! In MainList.');
             }
             logger.log('info', '[MainList] Series was added to MainList');
             MainListManager.mainList.push(...results);
@@ -57,10 +57,20 @@ export default class MainListManager {
             }
 
         } catch (err) {
-            logger.log('info', err);
+            logger.error(err);
             return false;
         }
         return true;
+    }
+
+    public static async updateSerieInList(series: Series) {
+        logger.info('info', 'Update series in mainlist',series.id);
+        const index = await this.getIndexFromSeries(series);
+        if (!MainListManager.listMaintance) {
+            MainListManager.mainList[index] = series;
+        } else {
+            MainListManager.secondList[index] = series;
+        }
     }
 
     /**
@@ -87,22 +97,6 @@ export default class MainListManager {
         logger.log('info', 'Finish Cleanup Mainlist');
         MainListManager.listMaintance = false;
     }
-
-    /**
-     * Search with id and it will look on other meta data if it is a same series already in the mainlist
-     * @param series
-     */
-    public static async findSameSeriesInMainList(series: Series): Promise<Series[]> {
-        return this.findSameSeriesInList(series, await MainListManager.getMainList());
-    }
-    /**
-     * Search with id and it will look on other meta data if it is a same series already in the mainlist
-     * @param series
-     */
-    public static async quickFindSameSeriesInMainList(series: Series): Promise<Series[]> {
-        return this.quickFindSameSeriesInList(series, await MainListManager.getMainList());
-    }
-
 
 
     public static async removeSeriesFromMainList(series: Series, notifyRenderer = false): Promise<boolean> {
@@ -149,48 +143,20 @@ export default class MainListManager {
     public static async getIndexFromSeries(anime: Series): Promise<number> {
         return (await MainListManager.getMainList()).findIndex((x) => anime.id === x.id);
     }
+
+    public static async requestSaveMainList() {
+        MainListLoader.saveData(await this.getMainList());
+    }
+
     private static mainList: Series[] = [];
     private static listLoaded = false;
     private static listMaintance = false;
     private static secondList: Series[] = [];
 
-    private static async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
-       logger.log('info', '[Search] Find search series in list of size: ' + list.length);
-       const foundedSameSeries = [];
-       for (const listEntry of list) {
-            if (listEntry.id === entry.id) {
-                foundedSameSeries.push(listEntry);
-            } else {
-                if (await seriesHelper.isSameSeries(listEntry, entry)) {
-                    foundedSameSeries.push(listEntry);
-                }
-            }
-        }
-       logger.log('info', 'Found: ' + foundedSameSeries.length);
-       return foundedSameSeries;
-    }
-
-    private static async quickFindSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
-        logger.log('info', '[Search] Quick find search series in list of size: ' + list.length);
-        const foundedSameSeries = [];
-        for (const listEntry of list) {
-            if (listEntry.id === entry.id) {
-                foundedSameSeries.push(listEntry);
-            }
-            if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheck(entry, listEntry)) {
-                foundedSameSeries.push(listEntry);
-            }
-        }
-        logger.log('info', 'Found: ' + foundedSameSeries.length);
-        return foundedSameSeries;
-    }
-
-    private static async checkIfListIsLoaded(){
+    private static async checkIfListIsLoaded() {
         if (!MainListManager.listLoaded) {
             MainListManager.mainList = MainListLoader.loadData();
             MainListManager.listLoaded = true;
         }
     }
-
-
 }

@@ -95,15 +95,15 @@ export default class Series extends SeriesProviderExtension {
         return listHelper.getUniqueOverviewList(overviews);
     }
 
-    public addProviderDatas(...localdatas: ProviderLocalData[]) {
+    public async addProviderDatas(...localdatas: ProviderLocalData[]) {
         for (const localdata of localdatas) {
             if (localdata instanceof ListProviderLocalData) {
-                this.addListProvider(localdata as ListProviderLocalData);
+                await this.addListProvider(localdata as ListProviderLocalData);
             } else if (localdata instanceof InfoProviderLocalData) {
-                this.addInfoProvider(localdata as InfoProviderLocalData);
+                await this.addInfoProvider(localdata as InfoProviderLocalData);
             }
         }
-        this.resetCache();
+        await this.resetCache();
     }
 
     /**

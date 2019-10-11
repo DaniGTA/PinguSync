@@ -11,4 +11,8 @@ export default class MultiProviderResult {
             this.subProviders = [];
         }
     }
+
+    public getAllProviders(): ProviderLocalData[] {
+        return [this.mainProvider, ...this.subProviders];
+    }
 }

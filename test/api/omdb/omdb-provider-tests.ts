@@ -23,7 +23,7 @@ describe('Provider: OMDb | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("Sankarea: Undying Love", "en"));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         const result = await providerHelper['getProviderSeriesInfo'](series, omdbProvider);
         strictEqual(result.getInfoProvidersInfos().length, 1);
@@ -35,7 +35,7 @@ describe('Provider: OMDb | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name("Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu", "en"));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         const result = await omdbProvider.getMoreSeriesInfoByName("Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu");
         strictEqual(result.length, 0);

@@ -44,7 +44,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.detailEpisodeInfo.push(new Episode(2));
         aProvider.detailEpisodeInfo.push(new Episode(3));
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -54,7 +54,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(2, 1));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1));
 
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // Testing
 
@@ -104,7 +104,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.detailEpisodeInfo.push(new Episode(2));
         aProvider.detailEpisodeInfo.push(new Episode(3));
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -114,7 +114,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(2, 1));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1));
 
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
 
         // C Site
@@ -125,7 +125,7 @@ describe('Episode mapping | Mapping Only', () => {
         cProvider.detailEpisodeInfo.push(new Episode(2, 1));
         cProvider.detailEpisodeInfo.push(new Episode(3, 1));
 
-        aSeries.addProviderDatas(cProvider);
+        await aSeries.addProviderDatas(cProvider);
 
         // Testing
 
@@ -173,7 +173,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.targetSeason = 1;
         aProvider.episodes = 200;
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -181,7 +181,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.targetSeason = 1;
         bProvider.episodes = 200;
 
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // C Site
 
@@ -189,7 +189,7 @@ describe('Episode mapping | Mapping Only', () => {
         cProvider.targetSeason = 1;
         cProvider.episodes = 200;
 
-        aSeries.addProviderDatas(cProvider);
+        await aSeries.addProviderDatas(cProvider);
 
         // Testing
 
@@ -214,7 +214,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.targetSeason = 1;
         aProvider.episodes = 3;
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -224,7 +224,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(2, 1));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1));
 
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // Testing
 
@@ -251,7 +251,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.episodes = 3;
         aProvider.sequelIds.push(2);
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -264,7 +264,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(5, 1));
         bProvider.detailEpisodeInfo.push(new Episode(6, 1));
 
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
 
         // Sequel
@@ -274,7 +274,7 @@ describe('Episode mapping | Mapping Only', () => {
         cProvider.episodes = 3;
         cProvider.id = 2;
 
-        sequelOfaSeries.addProviderDatas(cProvider);
+        await sequelOfaSeries.addProviderDatas(cProvider);
 
         // Testing
         // tslint:disable-next-line: no-string-literal
@@ -302,7 +302,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.episodes = 3;
         aProvider.sequelIds.push(2);
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -318,7 +318,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(8, 1));
         bProvider.detailEpisodeInfo.push(new Episode(9, 1));
 
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // Sequel
 
@@ -327,7 +327,7 @@ describe('Episode mapping | Mapping Only', () => {
         cProvider.episodes = 3;
         cProvider.id = 2;
         cProvider.sequelIds.push(3);
-        sequelOfaSeries.addProviderDatas(cProvider);
+        await sequelOfaSeries.addProviderDatas(cProvider);
 
         // Sequel 2
 
@@ -336,7 +336,7 @@ describe('Episode mapping | Mapping Only', () => {
         dProvider.episodes = 3;
         dProvider.id = 3;
 
-        sequelOfSequelOfaSeries.addProviderDatas(dProvider);
+        await sequelOfSequelOfaSeries.addProviderDatas(dProvider);
 
         // Testing
         // tslint:disable-next-line: no-string-literal
@@ -363,7 +363,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.detailEpisodeInfo.push(new Episode(2, undefined, [new EpisodeTitle('Second round')]));
         aProvider.detailEpisodeInfo.push(new Episode(3, undefined, [new EpisodeTitle('Third round')]));
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -373,7 +373,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(2, 1, [new EpisodeTitle('First round')]));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1, [new EpisodeTitle('Second round')]));
         bProvider.detailEpisodeInfo.push(new Episode(4, 1, [new EpisodeTitle('Third round')]));
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // Testing
 
@@ -425,7 +425,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.detailEpisodeInfo.push(new Episode(2, undefined, [new EpisodeTitle('Second round')]));
         aProvider.detailEpisodeInfo.push(new Episode(3, undefined, [new EpisodeTitle('Third round')]));
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -435,7 +435,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(2, 1, [new EpisodeTitle('First round')]));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1, [new EpisodeTitle('Second round')]));
         bProvider.detailEpisodeInfo.push(new Episode(4, 1, [new EpisodeTitle('Thrid round')]));
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // Testing
 
@@ -487,7 +487,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.detailEpisodeInfo.push(new Episode(2));
         aProvider.detailEpisodeInfo.push(new Episode(3));
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -497,7 +497,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(2, 1, [new EpisodeTitle('First round')]));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1));
         bProvider.detailEpisodeInfo.push(new Episode(4, 1));
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // Testing
 
@@ -549,7 +549,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.detailEpisodeInfo.push(new Episode(2, undefined, [new EpisodeTitle('Special round')]));
         aProvider.detailEpisodeInfo.push(new Episode(3, undefined, [new EpisodeTitle('Second round')]));
 
-        aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -559,7 +559,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.detailEpisodeInfo.push(new Episode(2, 1, [new EpisodeTitle('First round')]));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1, [new EpisodeTitle('Second round')]));
         bProvider.detailEpisodeInfo.push(new Episode(4, 1));
-        aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatas(bProvider);
 
         // Testing
 

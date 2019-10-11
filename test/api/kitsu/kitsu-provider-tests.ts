@@ -32,7 +32,7 @@ describe('Provider: Kitsu | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name('Sankarea', 'en'));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
@@ -44,7 +44,7 @@ describe('Provider: Kitsu | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name('Seitokai Yakuindomo＊', 'en'));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
@@ -56,7 +56,7 @@ describe('Provider: Kitsu | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name('The Asterisk War: The Academy City on the Water', 'en'));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
@@ -68,7 +68,7 @@ describe('Provider: Kitsu | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name('Little Witch Academia', 'en'));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
@@ -80,8 +80,9 @@ describe('Provider: Kitsu | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name('Avatar: The Last Airbender', 'en'));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
+        // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 5);
     });
@@ -91,8 +92,9 @@ describe('Provider: Kitsu | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData();
         unkownProvider.addSeriesName(new Name('Naruto: Shippuuden', 'en'));
-        series.addProviderDatas(unkownProvider);
+        await series.addProviderDatas(unkownProvider);
 
+        // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 5);
     });

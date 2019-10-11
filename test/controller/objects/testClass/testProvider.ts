@@ -40,7 +40,7 @@ export default class TestProvider implements IListProvider {
     public async isProviderAvailable(): Promise<boolean> {
         return true;
     }
-    public getAllSeries(disableCache?: boolean): Promise<Series[]> {
+    public getAllSeries(disableCache?: boolean): Promise<MultiProviderResult[]> {
         throw new Error('Method not implemented.');
     }
     public logInUser(pass: string, username?: string): Promise<boolean> {

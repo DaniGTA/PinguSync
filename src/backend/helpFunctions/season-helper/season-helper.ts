@@ -49,12 +49,12 @@ class SeasonHelper {
                     }
                     if (await prequel.isAnyPrequelPresent()) {
 
-                        const searchResult = await prequel.getPrequel(seriesList);
-                        if (searchResult.relationExistButNotFounded) {
+                        const prequelSearchResult = await prequel.getPrequel(seriesList);
+                        if (prequelSearchResult.relationExistButNotFounded) {
                             prequel = null;
                             break;
                         }
-                        prequel = searchResult.foundedSeries;
+                        prequel = prequelSearchResult.foundedSeries;
                     } else {
                         return new SearchSeasonValueResult(searchCount, 'PrequelTrace - nomore prequel present');
                     }
@@ -103,12 +103,12 @@ class SeasonHelper {
                     }
                     if (await sequel.isAnySequelPresent()) {
 
-                        const searchResult = await sequel.getSequel(seriesList);
-                        if (searchResult.relationExistButNotFounded) {
+                        const sequelSearchResult = await sequel.getSequel(seriesList);
+                        if (sequelSearchResult.relationExistButNotFounded) {
                             sequel = null;
                             break;
                         }
-                        sequel = searchResult.foundedSeries;
+                        sequel = sequelSearchResult.foundedSeries;
                     } else {
                         sequel = null;
                     }
@@ -127,8 +127,8 @@ class SeasonHelper {
      */
     public async searchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.log('info', '[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
-        let prequelResult: SearchSeasonValueResult;
-        let sequelResult: SearchSeasonValueResult;
+        let prequelResult: SearchSeasonValueResult | undefined;
+        let sequelResult: SearchSeasonValueResult | undefined;
 
         if (!seriesList && ListController.instance) {
             seriesList = await ListController.instance.getMainList();
@@ -161,6 +161,7 @@ class SeasonHelper {
                 return new SearchSeasonValueResult(1, 'NoPrequelButSequel');
             }
         } catch (err) {
+            logger.warn(err);
         }
 
         if (SeasonSearchModeHelper.canPerformAProviderSeasonValueSearch(searchMode)) {
@@ -198,12 +199,12 @@ class SeasonHelper {
                         const newProvider = new ListProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
                         newProvider.hasFullInfo = false;
-                        series.addProviderDatas(newProvider);
+                        await series.addProviderDatas(newProvider);
                     } else if (entry instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(entry.provider);
                         newProvider.id = prequelId;
                         newProvider.hasFullInfo = false;
-                        series.addProviderDatas(newProvider);
+                        await series.addProviderDatas(newProvider);
                     } else {
                         continue;
 
