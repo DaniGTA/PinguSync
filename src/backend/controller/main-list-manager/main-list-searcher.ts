@@ -16,15 +16,20 @@ export default class MainListSearcher {
      * Technicly it only checks: is same season ? is same id ? is same provider ?
      */
     public async findSeriesWithMultiProviderResult(providerResults: MultiProviderResult): Promise<Series | null> {
+        logger.debug('serch series with multiprovider result');
         const series = await MainListManager.getMainList();
         for (const serie of series) {
-            const allProviders = serie.getAllProviderLocalDatas();
-            for (const localProvider of allProviders) {
-                if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheck([localProvider], providerResults.getAllProviders())) {
+             try {
+                const allProviders = serie.getAllProviderLocalDatas();
+                if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheck(allProviders, providerResults.getAllProviders())) {
+                    logger.debug('serch series with multiprovider result: FOUND');
                     return serie;
                 }
+            } catch (err) {
+                logger.warn(err);
             }
         }
+        logger.debug('serch series with multiprovider result: NOT FOUND');
         return null;
     }
 

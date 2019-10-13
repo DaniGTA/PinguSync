@@ -64,7 +64,7 @@ export default class MainListManager {
     }
 
     public static async updateSerieInList(series: Series) {
-        logger.info('info', 'Update series in mainlist',series.id);
+        logger.info('Update series in mainlist ' + series.id);
         const index = await this.getIndexFromSeries(series);
         if (!MainListManager.listMaintance) {
             MainListManager.mainList[index] = series;

@@ -222,7 +222,7 @@ export default class AniListProvider implements IListProvider {
             try {
                 request(options, (error: any, response: any, body: any) => {
 
-                    logger.log('info', '[AniList] statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                    logger.log('info', '[AniList] statusCode: {0}', response && response.statusCode); // Print the response status code if a response was received
                     if (response.statusCode === 200) {
                         const rawdata = JSON.parse(body);
                         resolve(rawdata.data as T);

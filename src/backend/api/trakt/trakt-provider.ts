@@ -131,19 +131,19 @@ export default class TraktProvider implements IListProvider {
     public logInUser(code: string) {
         const that = this;
         const options = {
-            uri: 'https://api.trakt.tv/oauth/token',
-            method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
+            method: 'POST',
             json: {
-                grant_type: 'authorization_code',
                 client_id: this.clientId,
                 client_secret: this.clientSecret,
+                code,  // The Authorization Code received previously
+                grant_type: 'authorization_code',
                 redirect_uri: this.redirectUri,
-                code, // The Authorization Code received previously
             },
+            uri: 'https://api.trakt.tv/oauth/token',
         };
         return new Promise<boolean>((resolve, reject) => {
             request(options, (error: any, response: any, body: any) => {
@@ -163,31 +163,37 @@ export default class TraktProvider implements IListProvider {
 
     private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
         logger.log('info', '[Trakt] Start WebRequest');
-        const that = this;
         return new Promise<T>((resolve, reject) => {
             try {
                 request({
-                    method: method,
-                    url,
+                    body,
                     headers: {
+                        'Authorization': 'Bearer ' + this.userData.accessToken,
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + that.userData.accessToken,
+                        'trakt-api-key': this.clientId,
                         'trakt-api-version': '2',
-                        'trakt-api-key': that.clientId,
                     },
-                    body: body,
-                }, (error: any, response: any, body: any) => {
+                    method,
+                    url,
+                }, (error: any, response: any, responseBody: any) => {
                     try {
 
                         if (response.statusCode === 200 || response.statusCode === 201) {
-                            const data: T = JSON.parse(body) as T;
+                            const data: T = JSON.parse(responseBody) as T;
                             resolve(data);
+                        } else if (response.statusMessage === 'Unauthorized' && response.statusCode === 401) {
+                            this.userData.removeTokens();
+                            logger.error('[Trakt] User is no longer logged in');
                         } else {
-                            logger.error('[Trakt] status code:', response.statusCode);
+                            logger.error('[Trakt] status code:' + response.statusCode);
+                            logger.error(error);
+                            logger.error(responseBody);
                             reject();
                         }
                     } catch (err) {
                         logger.error(err);
+                        logger.error(error);
+                        logger.error(responseBody);
                         reject();
                     }
                 }).on('error', (err) => {

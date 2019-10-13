@@ -71,7 +71,8 @@ export default class ProviderComperator {
         for (const aProvider of a) {
                 for (const bProvider of b) {
                     if (aProvider.provider === bProvider.provider) {
-                        if (aProvider.id === bProvider.id) {
+                        // tslint:disable-next-line: triple-equals
+                        if (aProvider.id == bProvider.id) {
                             try {
                                 if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
                                     return true;

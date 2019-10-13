@@ -387,7 +387,7 @@ export default class Series extends SeriesProviderExtension {
                     try {
                         relations.push(await this.searchInProviderForRelations(entry, entry2));
                     } catch (err) {
-                       logger.error(err);
+                       logger.debug(err);
                     }
                 }
             }
@@ -525,14 +525,16 @@ export default class Series extends SeriesProviderExtension {
     }
 
     private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {
-        if (await a.getMediaType() === await b.getMediaType()) {
+        const aMediaType = await a.getMediaType();
+        const bMediaType = await b.getMediaType();
+        if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
             for (const providerA of a.listProviderInfos) {
                 for (let providerB of b.listProviderInfos) {
                     if (providerA.provider === providerB.provider) {
                         providerB = Object.assign(new ListProviderLocalData(), providerB);
                         try {
                             if (providerA.id === providerB.id && providerB.getProviderInstance().hasUniqueIdForSeasons) {
-                                break;
+                                throw new Error('no relations found in the providers');
                             } else if (providerA.id === providerB.id && providerA.targetSeason !== providerB.targetSeason) {
                                 return a;
                             }

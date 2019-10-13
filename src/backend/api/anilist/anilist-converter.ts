@@ -78,10 +78,10 @@ export default new class AniListConverter {
         if (entry.media.title.romaji) {
             providerInfo.addSeriesName(new Name(entry.media.title.romaji, 'x-jap', NameType.OFFICIAL));
         }
-        if (entry.media.title.romaji) {
+        if (entry.media.title.english) {
             providerInfo.addSeriesName(new Name(entry.media.title.english, 'unknown', NameType.MAIN));
         }
-        if (entry.media.title.romaji) {
+        if (entry.media.title.native) {
             providerInfo.addSeriesName(new Name(entry.media.title.native, 'jap'));
         }
         providerInfo.releaseYear = entry.media.startDate.year;

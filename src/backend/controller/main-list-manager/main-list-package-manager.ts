@@ -22,13 +22,13 @@ export default class MainListPackageManager {
                     for (const entry2 of tempPackage.allRelations) {
                         if ((await entry.getSeason()).seasonNumber === (await entry2.getSeason()).seasonNumber && entry.id !== entry2.id) {
                             const result = await seriesHelper.isSameSeries(entry, entry2);
-                            logger.log('info', 'Same season in package. Detected as same series:' + result);
+                            logger.warn('Same season in package. Detected as same series:' + result);
                         }
                     }
                 }
                 seriesPackageList.push(tempPackage);
             } catch (err) {
-               logger.error(err);
+               logger.debug(err);
             }
         }
         return seriesPackageList;

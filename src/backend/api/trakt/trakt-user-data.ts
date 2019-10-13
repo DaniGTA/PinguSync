@@ -28,6 +28,13 @@ export class TraktUserData implements UserData {
         this.saveData();
     }
 
+    public removeTokens() {
+        this.accessToken = '';
+        this.refreshToken = '';
+        this.expiresIn = 0;
+        this.saveData();
+    }
+
     public setTokens(accessToken: string, refreshToken: string, expiresIn: number) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

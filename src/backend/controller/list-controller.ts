@@ -8,6 +8,7 @@ import MainListPackageManager from './main-list-manager/main-list-package-manage
 import WatchProgress from './objects/meta/watch-progress';
 import Series from './objects/series';
 import ProviderList from './provider-manager/provider-list';
+import MainListEntryUpdater from './main-list-manager/main-list-updater';
 export default class ListController {
 
     public static instance: ListController | null = null;
@@ -112,8 +113,7 @@ export default class ListController {
         logger.log('info', '[calc] -> SeriesList');
         await this.getMainList();
         const allSeries: MultiProviderResult[] = await this.getAllEntrysFromProviders(true);
-
-        // await this.addSeriesToMainList(...allSeries);
+        await new MainListEntryUpdater().updateProviders(...allSeries);
     }
 
 
@@ -132,6 +132,7 @@ export default class ListController {
                 }
             } catch (err) {
                 logger.error('[Error] -> ' + provider.providerName + ' -> AllSeries');
+                logger.error(err);
             }
         }
         return multiProviderResults;
