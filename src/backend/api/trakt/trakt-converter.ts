@@ -1,5 +1,4 @@
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
+
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
 import Genre from '../../controller/objects/meta/genre';
@@ -8,8 +7,10 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series, { WatchStatus } from '../../controller/objects/series';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
-import MultiProviderResult from '../multi-provider-result';
+import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { Movie, Show } from './objects/search';
@@ -21,13 +22,12 @@ export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
         for (const season of watchedInfo.seasons) {
-            const providerInfo: ListProviderLocalData = new ListProviderLocalData(TraktProvider.getInstance());
+            const providerInfo: ListProviderLocalData = new ListProviderLocalData(watchedInfo.show.ids.trakt, TraktProvider.getInstance());
             providerInfo.addSeriesName(new Name(watchedInfo.show.title, 'en', NameType.OFFICIAL));
             providerInfo.addSeriesName(new Name(watchedInfo.show.ids.slug, 'slug', NameType.SLUG));
             if (season.number === 1) {
                 providerInfo.releaseYear = watchedInfo.show.year;
             }
-            providerInfo.id = watchedInfo.show.ids.trakt;
             providerInfo.rawEntry = watchedInfo;
             for (const episode of season.episodes) {
                 providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
@@ -42,36 +42,33 @@ export default new class TraktConverter {
     }
 
     public async convertShowToLocalData(show: Show | WatchedShow): Promise<MultiProviderResult> {
-        const provider = new ListProviderLocalData(TraktProvider.getInstance());
+        const provider = new ListProviderLocalData(show.ids.trakt, TraktProvider.getInstance());
         try {
             provider.addSeriesName(new Name(show.title, 'en', NameType.OFFICIAL));
         } catch (err) { }
 
         provider.addSeriesName(new Name(show.ids.slug, 'slug', NameType.SLUG));
         provider.releaseYear = show.year;
-        provider.id = show.ids.trakt;
         provider.rawEntry = show;
 
         const result = new MultiProviderResult(provider);
         try {
-            const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
-            tvdbProvider.id = show.ids.tvdb;
+            const tvdbProvider = new InfoProviderLocalData(show.ids.tvdb, TVDBProvider.Instance);
             tvdbProvider.hasFullInfo = false;
             result.subProviders.push(tvdbProvider);
         } catch (err) {
-           logger.log('info', 'no tvdb instance.');
+            logger.log('info', 'no tvdb instance.');
         }
         return result;
     }
 
     public async convertMovieToLocalData(traktMovie: Movie | WatchedShow): Promise<MultiProviderResult> {
-        const provider = new ListProviderLocalData(TraktProvider.getInstance());
+        const provider = new ListProviderLocalData(traktMovie.ids.trakt, TraktProvider.getInstance());
         try {
             provider.addSeriesName(new Name(traktMovie.title, 'en', NameType.OFFICIAL));
         } catch (err) { }
         provider.addSeriesName(new Name(traktMovie.ids.slug, 'slug', NameType.SLUG));
         provider.releaseYear = traktMovie.year;
-        provider.id = traktMovie.ids.trakt;
         provider.rawEntry = traktMovie;
         provider.mediaType = MediaType.MOVIE;
 
@@ -79,14 +76,13 @@ export default new class TraktConverter {
     }
 
     public async convertFullShowInfoToLocalData(fullShow: FullShowInfo, seasonInfo?: TraktShowSeasonInfo[]): Promise<MultiProviderResult> {
-        const provider = new ListProviderLocalData(TraktProvider.getInstance());
+        const provider = new ListProviderLocalData(fullShow.ids.trakt, TraktProvider.getInstance());
         provider.addSeriesName(new Name(fullShow.title, 'en', NameType.OFFICIAL));
         provider.addSeriesName(new Name(fullShow.ids.slug, 'slug', NameType.SLUG));
 
         provider.addOverview(new Overview(fullShow.overview, 'eng'));
         provider.runTime = fullShow.runtime;
         provider.releaseYear = fullShow.year;
-        provider.id = fullShow.ids.trakt;
         provider.rawEntry = fullShow;
         provider.publicScore = fullShow.rating;
         provider.episodes = fullShow.aired_episodes;
@@ -99,8 +95,7 @@ export default new class TraktConverter {
         if (seasonInfo) {
             provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
         }
-        const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
-        tvdbProvider.id = fullShow.ids.tvdb;
+        const tvdbProvider = new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider.Instance);
         return new MultiProviderResult(provider, tvdbProvider);
     }
 

@@ -1,4 +1,3 @@
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Banner from '../../controller/objects/meta/banner';
 import Cover from '../../controller/objects/meta/cover';
 import { ImageSize } from '../../controller/objects/meta/image-size';
@@ -7,9 +6,10 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series, { WatchStatus } from '../../controller/objects/series';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
-import MultiProviderResult from '../multi-provider-result';
+import MultiProviderResult from '../provider/multi-provider-result';
 import AniListProvider from './anilist-provider';
 import { GetSeriesByID } from './graphql/getSeriesByID';
 import { MediaFormat } from './graphql/mediaFormat';
@@ -18,7 +18,7 @@ import { Entry, MediaRelation, Relation } from './graphql/seriesList';
 
 export default new class AniListConverter {
     public async convertMediaToLocalData(medium: Medium): Promise<ListProviderLocalData> {
-        let provider = new ListProviderLocalData(AniListProvider.getInstance());
+        let provider = new ListProviderLocalData(medium.id, AniListProvider.getInstance());
 
         if (medium.title.romaji) {
             provider.addSeriesName(new Name(medium.title.romaji, 'x-jap', NameType.OFFICIAL));
@@ -37,7 +37,6 @@ export default new class AniListConverter {
         provider.rawEntry = medium;
         provider.hasFullInfo = false;
 
-        provider.id = medium.id;
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
         provider = await this.fillRelation(provider, medium.relations);
@@ -45,7 +44,7 @@ export default new class AniListConverter {
     }
 
     public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<ListProviderLocalData> {
-        let provider = new ListProviderLocalData(AniListProvider.getInstance());
+        let provider = new ListProviderLocalData(info.Media.id, AniListProvider.getInstance());
         provider.addOverview(new Overview(info.Media.description, 'eng'));
 
         if (info.Media.title.romaji) {
@@ -64,7 +63,6 @@ export default new class AniListConverter {
         provider.releaseYear = info.Media.startDate.year;
         provider.banners.push(new Banner(info.Media.bannerImage, ImageSize.LARGE));
         provider.rawEntry = info;
-        provider.id = info.Media.id;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
         provider.hasFullInfo = true;
@@ -74,7 +72,7 @@ export default new class AniListConverter {
 
     public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<MultiProviderResult> {
 
-        let providerInfo: ListProviderLocalData = new ListProviderLocalData(AniListProvider.getInstance());
+        let providerInfo: ListProviderLocalData = new ListProviderLocalData(entry.media.id, AniListProvider.getInstance());
         if (entry.media.title.romaji) {
             providerInfo.addSeriesName(new Name(entry.media.title.romaji, 'x-jap', NameType.OFFICIAL));
         }
@@ -103,7 +101,6 @@ export default new class AniListConverter {
         } catch (err) {
             logger.error(err);
         }
-        providerInfo.id = entry.media.id;
         providerInfo.score = entry.score;
         providerInfo.rawEntry = entry;
         providerInfo.covers.push(new Cover(entry.media.coverImage.large, ImageSize.LARGE));

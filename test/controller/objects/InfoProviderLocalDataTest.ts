@@ -1,17 +1,16 @@
 
 import { strictEqual } from 'assert';
-import { InfoProviderLocalData } from '../../../src/backend/controller/objects/info-provider-local-data';
-import Cover from '../../../src/backend/controller/objects/meta/Cover';
+import Cover from '../../../src/backend/controller/objects/meta/cover';
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+
 
 describe('infoProviderLocalData tests', () => {
     it('should merge two', async () => {
-        const a = new InfoProviderLocalData();
-        a.id = 1;
+        const a = new InfoProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
         a.lastUpdate = new Date(0);
-        const b = new InfoProviderLocalData();
-        b.id = 1;
+        const b = new InfoProviderLocalData(1);
         b.episodes = 14;
         b.publicScore = 20;
         b.score = 40;
@@ -26,19 +25,16 @@ describe('infoProviderLocalData tests', () => {
     });
 
     it('should merge three', async () => {
-        const a = new InfoProviderLocalData();
-        a.id = 1;
+        const a = new InfoProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
         a.lastUpdate = new Date(0);
         a.covers.push(new Cover('c'));
-        const b = new InfoProviderLocalData();
-        b.id = 1;
+        const b = new InfoProviderLocalData(1);
         b.episodes = 14;
         b.publicScore = 20;
         b.lastUpdate = new Date(1);
-        const c = new InfoProviderLocalData();
-        c.id = 1;
+        const c = new InfoProviderLocalData(1);
         c.episodes = 15;
         c.publicScore = 20;
         c.lastUpdate = new Date(20000);
@@ -54,19 +50,16 @@ describe('infoProviderLocalData tests', () => {
     });
 
     it('should not merge same cover', async () => {
-        const a = new InfoProviderLocalData();
-        a.id = 1;
+        const a = new InfoProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
         a.lastUpdate = new Date(0);
         a.covers.push(new Cover('c'));
-        const b = new InfoProviderLocalData();
-        b.id = 1;
+        const b = new InfoProviderLocalData(1);
         b.episodes = 14;
         b.publicScore = 20;
         b.lastUpdate = new Date(1);
-        const c = new InfoProviderLocalData();
-        c.id = 1;
+        const c = new InfoProviderLocalData(1);
         c.episodes = 15;
         c.publicScore = 20;
         c.score = 40;

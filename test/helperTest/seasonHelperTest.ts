@@ -1,12 +1,13 @@
 import { strictEqual } from 'assert';
+
 import ListController from '../../src/backend/controller/list-controller';
 import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import Name from '../../src/backend/controller/objects/meta/name';
 import Series from '../../src/backend/controller/objects/series';
 import { SeasonError } from '../../src/backend/controller/objects/transfer/season-error';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import seasonHelper from '../../src/backend/helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../src/backend/helpFunctions/season-helper/season-search-mode';
@@ -37,16 +38,14 @@ describe('Season Helper', () => {
 
     it('should get the right season value: 1', async () => {
         const a = new Series();
-        const listProvider = new ListProviderLocalData('test2');
-        listProvider.id = 1;
+        const listProvider = new ListProviderLocalData(1, 'test2');
         listProvider.mediaType = MediaType.ANIME;
         listProvider.prequelIds.push(2);
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         a.addListProvider(listProvider);
 
         const b = new Series();
-        const listProvider2 = new ListProviderLocalData('test2');
-        listProvider2.id = 2;
+        const listProvider2 = new ListProviderLocalData(2, 'test2');
         listProvider2.mediaType = MediaType.SPECIAL;
         listProvider2.addSeriesName(new Name('Test', 'x-jap'));
         b.addListProvider(listProvider2);
@@ -58,16 +57,14 @@ describe('Season Helper', () => {
 
     it('should get the right season value: 2', async () => {
         const a = new Series();
-        const listProvider = new ListProviderLocalData('test2');
-        listProvider.id = 1;
+        const listProvider = new ListProviderLocalData(1, 'test2');
         listProvider.mediaType = MediaType.ANIME;
         listProvider.prequelIds.push(2);
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         a.addListProvider(listProvider);
 
         const b = new Series();
-        const listProvider2 = new ListProviderLocalData('test2');
-        listProvider2.id = 2;
+        const listProvider2 = new ListProviderLocalData(2, 'test2');
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name('Test 1', 'x-jap'));
         b.addListProvider(listProvider2);
@@ -79,24 +76,21 @@ describe('Season Helper', () => {
 
     it('should get the right season value: 3', async () => {
         const a = new Series();
-        const listProvider = new ListProviderLocalData('test2');
-        listProvider.id = 1;
+        const listProvider = new ListProviderLocalData(1, 'test2');
         listProvider.mediaType = MediaType.ANIME;
         listProvider.prequelIds.push(2);
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         a.addListProvider(listProvider);
 
         const b = new Series();
-        const listProvider2 = new ListProviderLocalData('test2');
-        listProvider2.id = 2;
+        const listProvider2 = new ListProviderLocalData(2, 'test2');
         listProvider2.prequelIds.push(3);
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name('TestTwo', 'x-jap'));
         b.addListProvider(listProvider2);
 
         const c = new Series();
-        const listProvider3 = new ListProviderLocalData('test2');
-        listProvider3.id = 3;
+        const listProvider3 = new ListProviderLocalData(3, 'test2');
         listProvider3.mediaType = MediaType.ANIME;
         listProvider3.addSeriesName(new Name('Test 1', 'x-jap'));
         c.addListProvider(listProvider3);
@@ -108,24 +102,21 @@ describe('Season Helper', () => {
 
     it('should get the right season value: 4', async () => {
         const a = new Series();
-        const listProvider = new ListProviderLocalData('test2');
-        listProvider.id = 1;
+        const listProvider = new ListProviderLocalData(1, 'test2');
         listProvider.mediaType = MediaType.ANIME;
         listProvider.sequelIds.push(2);
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         a.addListProvider(listProvider);
 
         const b = new Series();
-        const listProvider2 = new ListProviderLocalData('test2');
-        listProvider2.id = 2;
+        const listProvider2 = new ListProviderLocalData(2, 'test2');
         listProvider2.sequelIds.push(3);
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name('TestTwo', 'x-jap'));
         b.addListProvider(listProvider2);
 
         const c = new Series();
-        const listProvider3 = new ListProviderLocalData('test2');
-        listProvider3.id = 3;
+        const listProvider3 = new ListProviderLocalData(3, 'test2');
         listProvider3.mediaType = MediaType.ANIME;
         listProvider3.addSeriesName(new Name('Test 6', 'x-jap'));
         c.addListProvider(listProvider3);
@@ -137,16 +128,14 @@ describe('Season Helper', () => {
 
     it('should get the right season value: 5', async () => {
         const a = new Series();
-        const listProvider = new ListProviderLocalData('test2');
-        listProvider.id = 1;
+        const listProvider = new ListProviderLocalData(1, 'test2');
         listProvider.mediaType = MediaType.ANIME;
         listProvider.sequelIds.push(2);
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         a.addListProvider(listProvider);
 
         const b = new Series();
-        const listProvider2 = new ListProviderLocalData('test2');
-        listProvider2.id = 2;
+        const listProvider2 = new ListProviderLocalData(2, 'test2');
         listProvider2.sequelIds.push(3);
         listProvider2.mediaType = MediaType.ANIME;
         listProvider2.addSeriesName(new Name('Test 6', 'x-jap'));
@@ -159,8 +148,7 @@ describe('Season Helper', () => {
 
     it('should get none seasons', async () => {
         const a = new Series();
-        const listProvider = new ListProviderLocalData('test2');
-        listProvider.id = 1;
+        const listProvider = new ListProviderLocalData(1, 'test2');
         listProvider.mediaType = MediaType.ANIME;
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
         a.addListProvider(listProvider);

@@ -1,10 +1,10 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import logger from '../../logger/logger';
-import IInfoProvider from '../info-provider';
-import MultiProviderResult from '../multi-provider-result';
+import IInfoProvider from '../provider/info-provider';
+import MultiProviderResult from '../provider/multi-provider-result';
 import { TVDBSeries } from './models/getSeries';
 import { TVDBLogin } from './models/login';
 import SeriesSearchResults from './models/searchResults';
@@ -47,7 +47,7 @@ export default class TVDBProvider implements IInfoProvider {
                 }
             }
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
         return result;
     }
@@ -82,8 +82,8 @@ export default class TVDBProvider implements IInfoProvider {
                         reject();
                     }
                 }).on('error', (err) => {
-                   logger.error(err);
-                   reject();
+                    logger.error(err);
+                    reject();
                 });
             });
             const dayInms = 86400000;
@@ -93,8 +93,8 @@ export default class TVDBProvider implements IInfoProvider {
     }
 
     private async webRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
-       logger.log('info', '[TVDB] Start WebRequest');
-       return new Promise<any>((resolve, reject) => {
+        logger.log('info', '[TVDB] Start WebRequest');
+        return new Promise<any>((resolve, reject) => {
             (async () => {
                 try {
                     request({
@@ -113,20 +113,20 @@ export default class TVDBProvider implements IInfoProvider {
                                 const data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
-                               logger.error('[TVDB] status code: ' + response.statusCode);
-                               reject();
+                                logger.error('[TVDB] status code: ' + response.statusCode);
+                                reject();
                             }
                         } catch (err) {
-                           logger.error(err);
-                           reject();
+                            logger.error(err);
+                            reject();
                         }
                     }).on('error', (err) => {
-                       logger.error(err);
-                       reject();
+                        logger.error(err);
+                        reject();
                     });
                 } catch (err) {
-                   logger.error(err);
-                   reject();
+                    logger.error(err);
+                    reject();
                 }
             })();
         });

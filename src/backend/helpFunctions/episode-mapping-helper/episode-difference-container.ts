@@ -1,4 +1,4 @@
-import ProviderLocalData from '../../controller/interfaces/provider-local-data';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 
 export default class EpisodeDifferenceContainer {
     public readonly diff: number = 0;

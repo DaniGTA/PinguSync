@@ -1,4 +1,4 @@
-import MultiProviderResult from '../../api/multi-provider-result';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';

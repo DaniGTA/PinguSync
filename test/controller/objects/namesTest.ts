@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import stringHelper from '../../../src/backend/helpFunctions/string-helper';
 
+
 describe('Name | Season + lang detection', () => {
     it('should detect kanji', async () => {
         assert.equal(await stringHelper.hasKanji('テスト'), true);
@@ -29,7 +30,7 @@ describe('Name | Season + lang detection', () => {
             assert.fail();
         } catch (err) { }
         return;
-    })
+    });
     it('should detect no romaji name', async () => {
         const names = [];
         names.push(new Name('テスト', 'jap'));
@@ -77,7 +78,7 @@ describe('Name | Season + lang detection', () => {
         names.push(new Name('Vaimudest viidud', 'en'));
         names.push(new Name('Čudežno potovanje', 'en'));
         names = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names)).slice(0, 9);
-        const result = names.findIndex(x => x.name === "Spirited Away");
+        const result = names.findIndex((x) => x.name === 'Spirited Away');
         assert.notStrictEqual(result, -1);
-    })
+    });
 });

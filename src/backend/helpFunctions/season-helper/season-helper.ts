@@ -1,11 +1,12 @@
-import ProviderLocalData from '../../controller/interfaces/provider-local-data';
 import ListController from '../../controller/list-controller';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+
 import Name from '../../controller/objects/meta/name';
 import Series from '../../controller/objects/series';
 import SearchSeasonValueResult from '../../controller/objects/transfer/search-season-value-results';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
 import { SeasonSearchMode } from './season-search-mode';
 import SeasonSearchModeHelper from './season-search-mode-helper';
@@ -196,13 +197,11 @@ class SeasonHelper {
                 if (prequelId) {
                     const series = new Series();
                     if (entry instanceof ListProviderLocalData) {
-                        const newProvider = new ListProviderLocalData(entry.provider);
-                        newProvider.id = prequelId;
+                        const newProvider = new ListProviderLocalData(prequelId, entry.provider);
                         newProvider.hasFullInfo = false;
                         await series.addProviderDatas(newProvider);
                     } else if (entry instanceof InfoProviderLocalData) {
-                        const newProvider = new InfoProviderLocalData(entry.provider);
-                        newProvider.id = prequelId;
+                        const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
                         newProvider.hasFullInfo = false;
                         await series.addProviderDatas(newProvider);
                     } else {

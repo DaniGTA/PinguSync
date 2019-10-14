@@ -1,11 +1,11 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import IInfoProvider from '../info-provider';
-import MultiProviderResult from '../multi-provider-result';
+import IInfoProvider from '../provider/info-provider';
+import MultiProviderResult from '../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
@@ -82,20 +82,20 @@ export default class OMDbProvider implements IInfoProvider {
                                 const data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
-                               logger.error('[OMDb] status code: ' + response.statusCode);
-                               reject();
+                                logger.error('[OMDb] status code: ' + response.statusCode);
+                                reject();
                             }
                         } catch (err) {
-                           logger.error(err);
-                           reject();
+                            logger.error(err);
+                            reject();
                         }
                     }).on('error', (err) => {
-                       logger.error(err);
-                       reject();
+                        logger.error(err);
+                        reject();
                     });
                 } catch (err) {
-                   logger.error(err);
-                   reject();
+                    logger.error(err);
+                    reject();
                 }
             })();
         });

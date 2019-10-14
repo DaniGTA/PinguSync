@@ -69,7 +69,7 @@ function createWindow() {
   ipcMain.on('get-path', (event: Electron.IpcMainEvent, s: string) => {
     if (win != null) {
       try {
-        win.webContents.send('path', (electron.app || electron.remote.app).getPath('userData'));
+        win.webContents.send('path', (electron.app || electron.remote.app));
       } catch (err) {
         logger.error(err);
       }

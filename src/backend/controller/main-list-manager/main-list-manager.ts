@@ -30,7 +30,7 @@ export default class MainListManager {
 
                         const seasonResult = await SeasonComperator.compareSeasons(series, entry);
                         if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (seasonResult.matchAble === seasonResult.matches)) {
-                            logger.log('info', 'Duplicate found: merging...');
+                            logger.log('info', '[MainList] Duplicate found: merging...');
                             series = await series.merge(entry, false);
                             await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                         }
@@ -64,7 +64,7 @@ export default class MainListManager {
     }
 
     public static async updateSerieInList(series: Series) {
-        logger.info('Update series in mainlist ' + series.id);
+        logger.info('[MainList] Update series in mainlist ' + series.id);
         const index = await this.getIndexFromSeries(series);
         if (!MainListManager.listMaintance) {
             MainListManager.mainList[index] = series;
@@ -77,10 +77,10 @@ export default class MainListManager {
      * Refresh cached data and clean up double entrys.
      */
     public static async finishListFilling() {
-        logger.log('info', 'Cleanup Mainlist');
+        logger.log('info', '[MainList] Cleanup Mainlist');
         MainListManager.listMaintance = true;
         MainListManager.secondList = [...MainListManager.mainList];
-        logger.log('info', 'Temp List created');
+        logger.log('info', '[MainList] Temp List created');
         MainListManager.mainList = [];
         for (const index = 0; this.secondList.length !== 0;) {
             const entry = this.secondList[index];
@@ -94,7 +94,7 @@ export default class MainListManager {
             this.secondList.shift();
         }
         await MainListLoader.saveData(MainListManager.mainList);
-        logger.log('info', 'Finish Cleanup Mainlist');
+        logger.log('info', '[MainList] Finish Cleanup Mainlist');
         MainListManager.listMaintance = false;
     }
 
@@ -128,7 +128,7 @@ export default class MainListManager {
         await this.checkIfListIsLoaded();
         if (this.listMaintance) {
             const arr = [...MainListManager.secondList, ...MainListManager.mainList];
-            logger.log('info', 'TempList served: (size= ' + arr.length + ')');
+            logger.log('info', '[MainList] TempList served: (size= ' + arr.length + ')');
             return arr;
         } else {
             return MainListManager.mainList;

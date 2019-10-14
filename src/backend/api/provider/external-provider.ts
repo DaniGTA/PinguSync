@@ -1,5 +1,6 @@
-import { InfoProviderLocalData } from '../controller/objects/info-provider-local-data';
-import { MediaType } from '../controller/objects/meta/media-type';
+
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { MediaType } from '../../controller/objects/meta/media-type';
 import MultiProviderResult from './multi-provider-result';
 
 export default interface IExternalProvider {

@@ -1,11 +1,11 @@
-
-import IListProvider from '../../../../src/backend/api/list-provider';
-import MultiProviderResult from '../../../../src/backend/api/multi-provider-result';
+import IListProvider from '../../../../src/backend/api/provider/list-provider';
+import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { UserData } from '../../../../src/backend/api/user-data';
-import { InfoProviderLocalData } from '../../../../src/backend/controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../../../src/backend/controller/objects/list-provider-local-data';
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
 import Series from '../../../../src/backend/controller/objects/series';
+import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+
 
 export default class TestProvider implements IListProvider {
 

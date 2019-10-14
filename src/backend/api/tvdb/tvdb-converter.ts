@@ -1,47 +1,53 @@
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import TVDBProvider from './tvdb-provider';
-import { TVDBSeries } from './models/getSeries';
+
 import Cover from '../../controller/objects/meta/cover';
-import { SeriesSearchResult } from './models/searchResults';
 import Name from '../../controller/objects/meta/name';
-import Overview from '../../controller/objects/meta/overview';
 import { NameType } from '../../controller/objects/meta/name-type';
+import Overview from '../../controller/objects/meta/overview';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { TVDBSeries } from './models/getSeries';
+import { SeriesSearchResult } from './models/searchResults';
+import TVDBProvider from './tvdb-provider';
 
 export default class TVDBConverter {
-    async convertSeriesToProviderLocalData(series: TVDBSeries): Promise<InfoProviderLocalData> {
-        const infoProviderLocalData = new InfoProviderLocalData(TVDBProvider.Instance);
+    public async convertSeriesToProviderLocalData(series: TVDBSeries): Promise<InfoProviderLocalData> {
+        const infoProviderLocalData = new InfoProviderLocalData(series.data.id, TVDBProvider.Instance);
         infoProviderLocalData.lastExternalChange = new Date(series.data.lastUpdated);
-        infoProviderLocalData.id = series.data.id;
         infoProviderLocalData.publicScore = series.data.siteRating;
         infoProviderLocalData.rawEntry = series;
         infoProviderLocalData.banners.push(new Cover(series.data.banner));
         infoProviderLocalData.addSeriesName(new Name(series.data.slug, 'slug', NameType.SLUG));
         infoProviderLocalData.addSeriesName(new Name(series.data.seriesName, 'eng', NameType.OFFICIAL));
         infoProviderLocalData.hasFullInfo = true;
-        if (series.data.firstAired)
+        if (series.data.firstAired) {
             infoProviderLocalData.releaseYear = new Date(series.data.firstAired).getFullYear();
-        return infoProviderLocalData;
-    }
-
-    async convertSearchResultToProviderLocalData(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
-        const infoProviderLocalData = new InfoProviderLocalData(TVDBProvider.Instance);
-        if (searchResult.id) {
-            infoProviderLocalData.id = searchResult.id;
         }
-        infoProviderLocalData.rawEntry = searchResult;
-        if (searchResult.slug)
-            infoProviderLocalData.addSeriesName(new Name(searchResult.slug, 'slug', NameType.SLUG));
-        if (searchResult.seriesName)
-            infoProviderLocalData.addSeriesName(new Name(searchResult.seriesName, 'eng', NameType.OFFICIAL));
-        if (searchResult.overview)
-            infoProviderLocalData.addOverview(new Overview(searchResult.overview, 'en'));
-        if (searchResult.firstAired)
-            infoProviderLocalData.releaseYear = new Date(searchResult.firstAired).getFullYear();
-
         return infoProviderLocalData;
     }
 
-    async convertSearchResultToSeries(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
+    public async convertSearchResultToProviderLocalData(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
+        if (searchResult.id) {
+            const infoProviderLocalData = new InfoProviderLocalData(searchResult.id, TVDBProvider.Instance);
+
+            infoProviderLocalData.rawEntry = searchResult;
+            if (searchResult.slug) {
+                infoProviderLocalData.addSeriesName(new Name(searchResult.slug, 'slug', NameType.SLUG));
+            }
+            if (searchResult.seriesName) {
+                infoProviderLocalData.addSeriesName(new Name(searchResult.seriesName, 'eng', NameType.OFFICIAL));
+            }
+            if (searchResult.overview) {
+                infoProviderLocalData.addOverview(new Overview(searchResult.overview, 'en'));
+            }
+            if (searchResult.firstAired) {
+                infoProviderLocalData.releaseYear = new Date(searchResult.firstAired).getFullYear();
+            }
+
+            return infoProviderLocalData;
+        }
+        throw new Error('[TVDBConverter] no id');
+    }
+
+    public async convertSearchResultToSeries(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
         const providerLocalData = await this.convertSearchResultToProviderLocalData(searchResult);
         providerLocalData.rawEntry = searchResult;
         if (searchResult.firstAired) {

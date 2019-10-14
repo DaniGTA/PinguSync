@@ -1,4 +1,4 @@
-import MultiProviderResult from '../multi-provider-result';
+import MultiProviderResult from '../provider/multi-provider-result';
 
 
 

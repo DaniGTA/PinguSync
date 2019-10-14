@@ -1,12 +1,12 @@
-import logger from '../../logger/logger';
-import Banner from '../objects/meta/banner';
-import Cover from '../objects/meta/cover';
-import Episode from '../objects/meta/episode/episode';
-import { EpisodeType } from '../objects/meta/episode/episode-type';
-import Genre from '../objects/meta/genre';
-import { MediaType } from '../objects/meta/media-type';
-import Name from '../objects/meta/name';
-import Overview from '../objects/meta/overview';
+import logger from '../../../../logger/logger';
+import Banner from '../../../objects/meta/banner';
+import Cover from '../../../objects/meta/cover';
+import Episode from '../../../objects/meta/episode/episode';
+import { EpisodeType } from '../../../objects/meta/episode/episode-type';
+import Genre from '../../../objects/meta/genre';
+import { MediaType } from '../../../objects/meta/media-type';
+import Name from '../../../objects/meta/name';
+import Overview from '../../../objects/meta/overview';
 
 export default class ProviderLocalData {
     // ------------------
@@ -21,7 +21,7 @@ export default class ProviderLocalData {
     /**
      * Provider series id.
      */
-    public id: number | string = -1;
+    public readonly id: number | string;
     /**
      * Cant get more info from this provider.
      */
@@ -87,6 +87,10 @@ export default class ProviderLocalData {
     protected names: Name[] = [];
     protected overviews: Overview[] = [];
 
+    constructor(id: string | number) {
+        this.id = id;
+    }
+
     public async getDetailedEpisodeLength(): Promise<number> {
         let length = 0;
 
@@ -116,7 +120,7 @@ export default class ProviderLocalData {
             }
         }
         if (names.length > 25) {
-           logger.log('info', '.');
+            logger.log('info', '.');
         }
     }
 

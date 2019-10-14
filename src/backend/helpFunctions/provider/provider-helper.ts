@@ -1,16 +1,17 @@
-import IExternalProvider from '../../api/external-provider';
-import MultiProviderResult from '../../api/multi-provider-result';
+import IExternalProvider from '../../api/provider/external-provider';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import ListController from '../../controller/list-controller';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import Series from '../../controller/objects/series';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import ProviderSearchResultManager from '../../controller/stats-manager/models/provider-search-result-manager';
 import logger from '../../logger/logger';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import MultiProviderComperator from '../comperators/multi-provider-results-comperator';
+import ProviderComperator from '../comperators/provider-comperator';
 import listHelper from '../list-helper';
 import stringHelper from '../string-helper';
 import timeHelper from '../time-helper';
@@ -28,11 +29,9 @@ export default new class ProviderHelper {
         try {
             for (let aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {
-                    if (aProvider.provider === bProvider.provider && aProvider.id === bProvider.id) {
-                        if (aProvider.targetSeason === bProvider.targetSeason) {
-                            aProvider = Object.assign(new ListProviderLocalData(), aProvider);
-                            return new SameIdAndUniqueId(true, aProvider.getProviderInstance().hasUniqueIdForSeasons);
-                        }
+                    if (ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeries([aProvider], [bProvider])) {
+                        aProvider = Object.assign(new ListProviderLocalData(aProvider.id), aProvider);
+                        return new SameIdAndUniqueId(true, aProvider.getProviderInstance().hasUniqueIdForSeasons);
                     }
                 }
             }

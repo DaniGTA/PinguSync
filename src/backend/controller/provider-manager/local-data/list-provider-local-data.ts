@@ -1,11 +1,11 @@
-import IListProvider from '../../api/list-provider';
-import listHelper from '../../helpFunctions/list-helper';
-import ProviderLocalData from '../interfaces/provider-local-data';
-import ProviderList from '../provider-manager/provider-list';
-import Banner from './meta/banner';
-import Cover from './meta/cover';
-import WatchProgress from './meta/watch-progress';
-import { WatchStatus } from './series';
+import IListProvider from '../../../api/provider/list-provider';
+import listHelper from '../../../helpFunctions/list-helper';
+import Banner from '../../objects/meta/banner';
+import Cover from '../../objects/meta/cover';
+import WatchProgress from '../../objects/meta/watch-progress';
+import { WatchStatus } from '../../objects/series';
+import ProviderList from '../provider-list';
+import ProviderLocalData from './interfaces/provider-local-data';
 
 /**
  * Contains info about the series and the user watch progress and the list that series is in.
@@ -13,7 +13,7 @@ import { WatchStatus } from './series';
 export class ListProviderLocalData extends ProviderLocalData {
 
     public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
-        const mergedProvider = Object.assign(new ListProviderLocalData(), providers[0]);
+        const mergedProvider = Object.assign(new ListProviderLocalData(providers[0].id), providers[0]);
         let newestProvider: ListProviderLocalData | undefined;
         const covers: Cover[] = [];
         const banners: Banner[] = [];
@@ -24,7 +24,6 @@ export class ListProviderLocalData extends ProviderLocalData {
             }
             mergedProvider.addSeriesName(...provider.names);
             mergedProvider.addOverview(...provider.overviews);
-            mergedProvider.id = provider.id;
             mergedProvider.rawEntry = provider.rawEntry;
             mergedProvider.covers = provider.covers;
             mergedProvider.episodes = provider.episodes;
@@ -164,8 +163,8 @@ export class ListProviderLocalData extends ProviderLocalData {
     public customList: boolean = false;
     public customListName = '';
 
-    constructor(lp?: IListProvider | string, id?: string | number) {
-        super();
+    constructor(id: string | number, lp?: IListProvider | string) {
+        super(id);
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
             this.provider = lp;
@@ -174,9 +173,6 @@ export class ListProviderLocalData extends ProviderLocalData {
             this.version = lp.version;
         } else {
             this.provider = '';
-        }
-        if (id) {
-            this.id = id;
         }
     }
 

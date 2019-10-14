@@ -2,13 +2,14 @@ import { strictEqual } from 'assert';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-import { InfoProviderLocalData } from '../../src/backend/controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
 import Name from '../../src/backend/controller/objects/meta/name';
 import Series from '../../src/backend/controller/objects/series';
+import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import TestProvider from '../controller/objects/testClass/testProvider';
+
 
 describe('Series Helper', () => {
 
@@ -39,11 +40,9 @@ describe('Series Helper', () => {
         // tslint:disable-next-line: no-string-literal
         a['canSync'] = false;
         // A is should not match with any of them.
-        const infoProviderA = new InfoProviderLocalData('test3');
-        infoProviderA.id = '14792';
+        const infoProviderA = new InfoProviderLocalData('14792', 'test3');
         a.addInfoProvider(infoProviderA);
-        const listProviderA = new ListProviderLocalData('test2');
-        listProviderA.id = 108632;
+        const listProviderA = new ListProviderLocalData(108632, 'test2');
         listProviderA.targetSeason = 2;
         listProviderA.hasFullInfo = true;
         listProviderA.prequelIds.push(21355);
@@ -56,12 +55,10 @@ describe('Series Helper', () => {
         b['cachedSeason'] = 1;
         // tslint:disable-next-line: no-string-literal
         b['canSync'] = false;
-        const infoProviderB = new InfoProviderLocalData('test4');
+        const infoProviderB = new InfoProviderLocalData(260449, 'test4');
         infoProviderB.hasFullInfo = true;
-        infoProviderB.id = 260449;
         a.addInfoProvider(infoProviderB);
-        const listProvider = new ListProviderLocalData('test');
-        listProvider.id = 43973;
+        const listProvider = new ListProviderLocalData(43973, 'test');
         listProvider.targetSeason = 1;
         listProvider.hasFullInfo = true;
         listProvider.releaseYear = 2013;
@@ -77,10 +74,8 @@ describe('Series Helper', () => {
         c['cachedSeason'] = 2;
         // tslint:disable-next-line: no-string-literal
         c['canSync'] = false;
-        const listProviderB =
-            new ListProviderLocalData('test');
+        const listProviderB = new ListProviderLocalData(43973, 'test');
         listProviderB.isNSFW = false;
-        listProviderB.id = 43973;
         listProviderB.targetSeason = 2;
         listProviderB.hasFullInfo = true;
         listProviderB.addSeriesName(new Name('Series Test', 'x-jap'));

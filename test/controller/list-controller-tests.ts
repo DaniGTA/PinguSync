@@ -3,18 +3,19 @@
 
 import * as assert from 'assert';
 
+
 import ListController from '../../src/backend/controller/list-controller';
 import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-import { ListProviderLocalData } from '../../src/backend/controller/objects/list-provider-local-data';
 import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import Series from '../../src/backend/controller/objects/series';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
 import TestProvider from './objects/testClass/testProvider';
-
+// tslint:disable: no-string-literal
 describe('ListController | Combine', () => {
     const lc = new ListController(true);
 
@@ -159,9 +160,8 @@ describe('ListController | Combine', () => {
         ProviderList['loadedListProvider'] = [];
         ProviderList['loadedListProvider'].push(testListProvider1, testListProvider2);
 
-        const lplc = new ListProviderLocalData('test');
+        const lplc = new ListProviderLocalData(2, 'test');
         lplc.prequelIds.push(1);
-        lplc.id = 2;
         const x = new Series();
         x['cachedSeason'] = 2;
         lplc.releaseYear = 2017;
@@ -170,18 +170,16 @@ describe('ListController | Combine', () => {
         lplc.addSeriesName(new Name('Test', 'unkown', NameType.UNKNOWN));
         await x.addListProvider(lplc);
 
-        const lplcs1 = new ListProviderLocalData('test');
+        const lplcs1 = new ListProviderLocalData(1, 'test');
         lplcs1.sequelIds.push(2);
-        lplcs1.id = 1;
         const xs1 = new Series();
         xs1['cachedSeason'] = 1;
         xs1.lastInfoUpdate = Date.now();
         lplcs1.addSeriesName(new Name('Rewrite', 'en', NameType.OFFICIAL));
         await xs1.addListProvider(lplcs1);
 
-        const lplc2 = new ListProviderLocalData('test2');
+        const lplc2 = new ListProviderLocalData(1, 'test2');
         lplc2.targetSeason = 2;
-        lplc2.id = 1;
         const x2 = new Series();
         x2.lastInfoUpdate = Date.now();
         lplc2.addSeriesName(new Name('Rewrite', 'en', NameType.OFFICIAL));
@@ -226,8 +224,7 @@ describe('ListController | Combine', () => {
     });
 
     it('should clean doubled entrys (1/2)', async () => {
-        const lpld = new ListProviderLocalData();
-        lpld.id = 2;
+        const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
         lpld.targetSeason = 1;
         const x1 = await getFilledAnime();
@@ -247,8 +244,7 @@ describe('ListController | Combine', () => {
         assert.equal(MainListManager['mainList'].length, 1);
     });
     it('should clean doubled entrys (3/3)', async () => {
-        const lpld = new ListProviderLocalData();
-        lpld.id = 2;
+        const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
         lpld.targetSeason = 1;
         const x1 = await getFilledAnime('', 1);
@@ -271,11 +267,9 @@ describe('ListController | Combine', () => {
         const testListProvider2 = new TestProvider('TestB', false, true);
         ProviderList['loadedListProvider'] = [];
         ProviderList['loadedListProvider'].push(testListProvider1, testListProvider2);
-        const lpld = new ListProviderLocalData('TestA');
-        lpld.id = 2;
+        const lpld = new ListProviderLocalData(2, 'TestA');
         lpld.episodes = 12;
-        const lpld2 = new ListProviderLocalData('TestB');
-        lpld2.id = 3;
+        const lpld2 = new ListProviderLocalData(3, 'TestB');
         lpld2.episodes = 12;
 
         const x1 = await getFilledAnime();
@@ -292,11 +286,9 @@ describe('ListController | Combine', () => {
     });
 
     it('shouldnt clean doubled entrys (2/2)', async () => {
-        const lpld = new ListProviderLocalData('Test');
-        lpld.id = 2;
+        const lpld = new ListProviderLocalData(2, 'Test');
         lpld.episodes = 12;
-        const lpld2 = new ListProviderLocalData('Test');
-        lpld2.id = 3;
+        const lpld2 = new ListProviderLocalData(3, 'Test');
         lpld2.episodes = 12;
 
         const x1 = await getFilledAnime();
@@ -317,8 +309,7 @@ describe('ListController | Combine', () => {
     });
 
     it('should clean doubled entrys (2/2)', async () => {
-        const lpld = new ListProviderLocalData('Test');
-        lpld.id = 2;
+        const lpld = new ListProviderLocalData(2, 'Test');
         lpld.episodes = 12;
         lpld.targetSeason = undefined;
 
@@ -338,8 +329,7 @@ describe('ListController | Combine', () => {
     });
 
     it('should clean doubled entrys (2/3)', async () => {
-        const lpld = new ListProviderLocalData();
-        lpld.id = 2;
+        const lpld = new ListProviderLocalData(2);
         lpld.episodes = 10;
 
         const x1 = await getFilledAnime('Test', 1);
@@ -375,12 +365,14 @@ describe('ListController | Combine', () => {
 });
 
 async function getFilledAnime(providername: string = 'Test', providerId: number = -1): Promise<Series> {
-    const provider = new ListProviderLocalData(providername);
+    let id = Math.random() * (+0 - +10000) + +10000;
     if (providerId !== -1) {
-        provider.id = providerId;
+        id = providerId;
     } else {
-        provider.id = Math.random() * (+0 - +10000) + +10000;
+        id = Math.random() * (+0 - +10000) + +10000;
     }
+    const provider = new ListProviderLocalData(id, providername);
+
     const anime = new Series();
     provider.episodes = 10;
     provider.releaseYear = 2014;
@@ -391,12 +383,13 @@ async function getFilledAnime(providername: string = 'Test', providerId: number 
 }
 
 async function getRandomeFilledAnime(): Promise<Series> {
-    const provider = new ListProviderLocalData(stringHelper.randomString());
+    const id = Math.random() * (+0 - +10000) + +10000;
+    const provider = new ListProviderLocalData(id, stringHelper.randomString());
     const anime: Series = new Series();
     provider.episodes = Math.random() * (+13 - +0) + +0;
     provider.releaseYear = Math.random() * (+2019 - +1989) + +1989;
     provider.targetSeason = Math.random() * (+3 - +0) + +0;
-    provider.id = Math.random() * (+0 - +10000) + +10000;
+
     provider.addSeriesName(new Name(stringHelper.randomString(), 'en'));
     await anime.addListProvider(provider);
     return anime;

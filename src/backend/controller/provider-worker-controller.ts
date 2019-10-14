@@ -1,4 +1,4 @@
-import IListProvider from '../api/list-provider';
+import IListProvider from '../api/provider/list-provider';
 import logger from '../logger/logger';
 import ListController from './list-controller';
 import SeriesPackage from './objects/series-package';
@@ -40,7 +40,7 @@ class ProviderController {
                         await pl.logInUser(code);
                         that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                     } catch (err) {
-                       logger.error(err);
+                        logger.error(err);
                     }
                 });
                 this.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
@@ -51,7 +51,7 @@ class ProviderController {
                 try {
                     that.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                 } catch (err) {
-                   logger.error(err);
+                    logger.error(err);
                 }
             });
         }
@@ -138,10 +138,10 @@ class ProviderController {
             if (typeof anime !== 'undefined') {
                 lc.syncProvider(anime);
             } else {
-               logger.error('Error');
+                logger.error('Error');
             }
         } else {
-           logger.error('Failed sync series: no list controller instance');
+            logger.error('Failed sync series: no list controller instance');
         }
     }
 
@@ -154,7 +154,7 @@ class ProviderController {
                 success = true;
             } catch (err) {
                 ctx.postMessage(new WorkerTransfer(channel, ''));
-               logger.error(err);
+                logger.error(err);
             }
         }
 

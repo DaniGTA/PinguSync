@@ -5,7 +5,7 @@ import { TraktUserInfo } from './objects/userInfo';
 import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
-import MultiProviderResult from '../multi-provider-result';
+import MultiProviderResult from '../provider/multi-provider-result';
 import { UserData } from '../user-data';
 
 export class TraktUserData implements UserData {

@@ -4,6 +4,7 @@ import WatchProgress from '../../src/backend/controller/objects/meta/watch-progr
 import Series from '../../src/backend/controller/objects/series';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 
+
 describe('List Helper', () => {
     it('should clean array', async () => {
         const arr = await listHelper.cleanArray([null, undefined, '']);

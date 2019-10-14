@@ -1,18 +1,15 @@
+import { rejects, strictEqual, throws } from 'assert';
+import MultiProviderResult from '../../../src/backend/api/provider/multi-provider-result';
 import ListController from '../../../src/backend/controller/list-controller';
-
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
-
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-
-import { strictEqual, throws, rejects } from 'assert';
-import MultiProviderResult from '../../../src/backend/api/multi-provider-result';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListEntryUpdater from '../../../src/backend/controller/main-list-manager/main-list-updater';
-import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
-import Series from '../../../src/backend/controller/objects/series';
-import TestProvider from '../objects/testClass/testProvider';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
+import Series from '../../../src/backend/controller/objects/series';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import TestProvider from '../objects/testClass/testProvider';
+
 
 describe('MainList | Entry update tests', () => {
     const lc = new ListController(true);
@@ -36,15 +33,13 @@ describe('MainList | Entry update tests', () => {
 
     it('should update provider', async () => {
         const seriesA = new Series();
-        const providerA = new ListProviderLocalData('Test');
-        providerA.id = 'test';
+        const providerA = new ListProviderLocalData('test', 'Test');
         await seriesA.addProviderDatas(providerA);
 
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [seriesA];
 
-        const providerB = new ListProviderLocalData('Test');
-        providerB.id = 'test';
+        const providerB = new ListProviderLocalData('test', 'Test');
         providerB.episodes = 10;
         const mpr = new MultiProviderResult(providerB);
 
@@ -59,8 +54,7 @@ describe('MainList | Entry update tests', () => {
 
     it('should update provider and replace old data', async () => {
         const seriesA = new Series();
-        const providerA = new ListProviderLocalData('Test');
-        providerA.id = 'test';
+        const providerA = new ListProviderLocalData('test', 'Test');
         providerA.lastUpdate = new Date(200);
         providerA.addOneWatchProgress(new WatchProgress(1));
         await seriesA.addProviderDatas(providerA);
@@ -68,8 +62,7 @@ describe('MainList | Entry update tests', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [seriesA];
 
-        const providerB = new ListProviderLocalData('Test');
-        providerB.id = 'test';
+        const providerB = new ListProviderLocalData('test', 'Test');
         providerB.episodes = 10;
         providerB.addOneWatchProgress(new WatchProgress(1));
         providerB.addOneWatchProgress(new WatchProgress(2));
@@ -89,16 +82,14 @@ describe('MainList | Entry update tests', () => {
 
     it('should not update provider', async () => {
         const seriesA = new Series();
-        const providerA = new ListProviderLocalData('Test');
-        providerA.id = 'test';
+        const providerA = new ListProviderLocalData('test', 'Test');
         providerA.addOneWatchProgress(new WatchProgress(1));
         await seriesA.addProviderDatas(providerA);
 
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [seriesA];
 
-        const providerB = new ListProviderLocalData('Test');
-        providerB.id = 'test2';
+        const providerB = new ListProviderLocalData('test2', 'Test');
         providerB.episodes = 10;
         providerB.addOneWatchProgress(new WatchProgress(1));
         providerB.addOneWatchProgress(new WatchProgress(2));
@@ -117,20 +108,17 @@ describe('MainList | Entry update tests', () => {
 
     it('should not affect other provider', async () => {
         const seriesA = new Series();
-        const providerA = new ListProviderLocalData('Test');
-        providerA.id = 2093;
+        const providerA = new ListProviderLocalData(2093, 'Test');
         providerA.lastUpdate = new Date(200);
         providerA.addOneWatchProgress(new WatchProgress(1));
-        const providerC = new ListProviderLocalData('Test2');
-        providerC.id = '0';
+        const providerC = new ListProviderLocalData('0', 'Test2');
         providerC.addOneWatchProgress(new WatchProgress(1));
         await seriesA.addProviderDatas(providerA, providerC);
 
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [seriesA];
 
-        const providerB = new ListProviderLocalData('Test');
-        providerB.id = '2093';
+        const providerB = new ListProviderLocalData('2093', 'Test');
         providerB.episodes = 10;
         providerB.addOneWatchProgress(new WatchProgress(1));
         providerB.addOneWatchProgress(new WatchProgress(2));

@@ -4,6 +4,7 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
+import ProviderComperator from './provider-comperator';
 
 export default class SeasonComperator {
     public static async compareSeasons(a: Series, b: Series): Promise<SeasonComperatorResult> {
@@ -22,12 +23,13 @@ export default class SeasonComperator {
                             comperatorResult.aFirstSeason = await a.getFirstSeason();
                         }
                     } catch (err) {
-                       logger.error(err);
+                        logger.error(err);
                     }
                     if (comperatorResult.aFirstSeason) {
                         for (const listProviderInfos of comperatorResult.aFirstSeason.getListProvidersInfos()) {
                             for (const lpi of b.getListProvidersInfos()) {
-                                if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await comperatorResult.aFirstSeason.getSeason()) {
+                                const comperatorSeason = await comperatorResult.aFirstSeason.getSeason();
+                                if (ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeason([listProviderInfos], [lpi], aSeason, comperatorSeason)) {
                                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                                     return comperatorResult;
                                 }
@@ -37,7 +39,8 @@ export default class SeasonComperator {
                     } else if (comperatorResult.bFirstSeason) {
                         for (const listProviderInfos of comperatorResult.bFirstSeason.getListProvidersInfos()) {
                             for (const lpi of a.getListProvidersInfos()) {
-                                if (listProviderInfos.provider === lpi.provider && listProviderInfos.id === lpi.id && aSeason !== await comperatorResult.bFirstSeason.getSeason()) {
+                                const comperatorSeason = await comperatorResult.bFirstSeason.getSeason();
+                                if (ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeason([listProviderInfos], [lpi], aSeason, comperatorSeason)) {
                                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                                     return comperatorResult;
                                 }

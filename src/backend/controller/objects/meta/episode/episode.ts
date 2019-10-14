@@ -1,4 +1,4 @@
-import IExternalProvider from '../../../../api/external-provider';
+import IExternalProvider from '../../../../api/provider/external-provider';
 import stringHelper from '../../../../helpFunctions/string-helper';
 import EpisodeMapping from './episode-mapping';
 import EpisodeThumbnail from './episode-thumbnail';

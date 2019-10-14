@@ -1,8 +1,8 @@
-import ProviderLocalData from '../../controller/interfaces/provider-local-data';
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Series from '../../controller/objects/series';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import EpisodeComperator from '../comperators/episode-comperator';
 import listHelper from '../list-helper';
 import sortHelper from '../sort-helper';

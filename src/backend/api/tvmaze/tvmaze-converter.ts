@@ -1,21 +1,21 @@
-import MultiProviderResult from '../multi-provider-result';
-import { Show, Type } from './models/tvmaze-model';
+import Cover from '../../controller/objects/meta/cover';
+import Genre from '../../controller/objects/meta/genre';
+import { ImageSize } from '../../controller/objects/meta/image-size';
+import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import Cover from '../../controller/objects/meta/cover';
-import { ImageSize } from '../../controller/objects/meta/image-size';
 import Overview from '../../controller/objects/meta/overview';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
+import { Show, Type } from './models/tvmaze-model';
 import TVMazeProvider from './tvmaze-provider';
-import { MediaType } from '../../controller/objects/meta/media-type';
-import Genre from '../../controller/objects/meta/genre';
 
 export default class TVMazeConverter {
 
-    convertShowToResult(show: Show): MultiProviderResult {
-        const pld = new InfoProviderLocalData(TVMazeProvider.instance);
-        pld.addSeriesName(new Name(show.name, "en", NameType.OFFICIAL));
+    public convertShowToResult(show: Show): MultiProviderResult {
+        const pld = new InfoProviderLocalData(show.id, TVMazeProvider.instance);
+        pld.addSeriesName(new Name(show.name, 'en', NameType.OFFICIAL));
         if (show.image) {
             pld.covers.push(new Cover(show.image.original, ImageSize.ORIGINAL));
             pld.covers.push(new Cover(show.image.medium, ImageSize.MEDIUM));
@@ -25,7 +25,7 @@ export default class TVMazeConverter {
                 if (aka.country) {
                     pld.addSeriesName(new Name(aka.name, aka.country.name, NameType.OFFICIAL));
                 } else {
-                    pld.addSeriesName(new Name(aka.name, "", NameType.UNKNOWN));
+                    pld.addSeriesName(new Name(aka.name, '', NameType.UNKNOWN));
                 }
             }
         }
@@ -34,29 +34,30 @@ export default class TVMazeConverter {
         }
 
         pld.mediaType = this.convertTypeToMediaType(show.type);
-        pld.id = show.id;
         pld.rawEntry = show;
 
 
-        if (show.rating.average)
+        if (show.rating.average) {
             pld.score = show.rating.average;
-        if (show.runtime)
+        }
+        if (show.runtime) {
             pld.runTime = show.runtime;
-        if (show.premiered)
+        }
+        if (show.premiered) {
             pld.releaseYear = new Date(show.premiered).getFullYear();
-        if (show.summary)
+        }
+        if (show.summary) {
             pld.addOverview(new Overview(show.summary, 'en'));
+        }
         const mpr = new MultiProviderResult(pld);
         if (show.externals.thetvdb) {
-            const tvdbProvider = new InfoProviderLocalData(TVDBProvider.Instance);
-            tvdbProvider.hasFullInfo = false;
-            tvdbProvider.id = show.externals.thetvdb;
+            const tvdbProvider = new InfoProviderLocalData(show.externals.thetvdb, TVDBProvider.Instance);
             mpr.subProviders.push(tvdbProvider);
         }
         return mpr;
     }
 
-    convertTypeToMediaType(type: Type): MediaType {
+    public convertTypeToMediaType(type: Type): MediaType {
         switch (type) {
             case Type.Animation:
                 return MediaType.ANIME;
@@ -65,4 +66,4 @@ export default class TVMazeConverter {
         }
         return MediaType.UNKOWN;
     }
-} 
+}

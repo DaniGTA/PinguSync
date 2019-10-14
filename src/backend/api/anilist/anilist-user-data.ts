@@ -6,7 +6,7 @@ import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
 import { UserData } from '../user-data';
-import MultiProviderResult from '../multi-provider-result';
+import MultiProviderResult from '../provider/multi-provider-result';
 
 export class AniListUserData implements UserData {
     public username: string = '';

@@ -4,14 +4,15 @@ import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../src/backend/controller/objects/meta/name-type';
 import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
 import logger from '../../../src/backend/logger/logger';
+
 
 describe('Provider: AniDB | Offline Test runs', () => {
     before(() => {
@@ -55,7 +56,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 9579', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
         lpdld.targetSeason = 1;
@@ -83,7 +84,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 13310', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
         lpdld.watchStatus = WatchStatus.DROPPED;
@@ -107,7 +108,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 13493', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
         lpdld.watchStatus = WatchStatus.DROPPED;
@@ -124,7 +125,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 14977', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -140,7 +141,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 3651', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -157,7 +158,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
     });
     it('should find id 8550', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -174,7 +175,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find Danshi', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -192,7 +193,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find nothing', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -208,13 +209,13 @@ describe('Provider: AniDB | Offline Test runs', () => {
             await providerHelper['getProviderSeriesInfo'](series, a);
             fail();
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
     });
 
     it('should find id 5975', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -230,7 +231,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 7599', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -246,7 +247,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 14416', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -262,7 +263,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should find id 5544', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -281,7 +282,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
     it('should not hang', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new ListProviderLocalData('AniList');
+        const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
         lpdld.hasFullInfo = true;
 
@@ -295,7 +296,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             await providerHelper['getProviderSeriesInfo'](series, a);
             fail();
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
     });
 });

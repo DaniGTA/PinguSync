@@ -1,10 +1,10 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import logger from '../../logger/logger';
-import IInfoProvider from '../info-provider';
-import MultiProviderResult from '../multi-provider-result';
+import IInfoProvider from '../provider/info-provider';
+import MultiProviderResult from '../provider/multi-provider-result';
 import { Search, Show } from './models/tvmaze-model';
 import TVMazeConverter from './tvmaze-converter';
 
@@ -37,7 +37,7 @@ export default class TVMazeProvider implements IInfoProvider {
             return results;
 
         } catch (err) {
-           logger.log('info', err);
+            logger.log('info', err);
         }
         throw new Error('Test');
     }
@@ -49,8 +49,8 @@ export default class TVMazeProvider implements IInfoProvider {
 
 
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
-       logger.log('info', '[TVMaze] Start WebRequest');
-       return new Promise<any>((resolve, reject) => {
+        logger.log('info', '[TVMaze] Start WebRequest');
+        return new Promise<any>((resolve, reject) => {
             (async () => {
                 try {
                     request({
@@ -66,20 +66,20 @@ export default class TVMazeProvider implements IInfoProvider {
                                 var data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
-                               logger.log('info', '[TVMaze] status code: ' + response.statusCode);
-                               reject();
+                                logger.log('info', '[TVMaze] status code: ' + response.statusCode);
+                                reject();
                             }
                         } catch (err) {
-                           logger.error(err);
-                           reject();
+                            logger.error(err);
+                            reject();
                         }
                     }).on('error', (err) => {
-                       logger.error(err);
-                       reject();
+                        logger.error(err);
+                        reject();
                     });
                 } catch (err) {
-                   logger.error(err);
-                   reject();
+                    logger.error(err);
+                    reject();
                 }
             })();
         });

@@ -4,12 +4,13 @@ import { strictEqual } from 'assert';
 import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import { ListProviderLocalData } from '../../../src/backend/controller/objects/list-provider-local-data';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
 
+// tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {
     const kitsuProvider = new KitsuProvider();
     before(() => {
@@ -30,7 +31,7 @@ describe('Provider: Kitsu | Test runs', () => {
     it('should get a series (1/6)', async () => {
 
         const series = new Series();
-        const unkownProvider = new ListProviderLocalData();
+        const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Sankarea', 'en'));
         await series.addProviderDatas(unkownProvider);
 
@@ -42,7 +43,7 @@ describe('Provider: Kitsu | Test runs', () => {
     it('should get a series (2/6)', async () => {
 
         const series = new Series();
-        const unkownProvider = new ListProviderLocalData();
+        const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Seitokai Yakuindomo＊', 'en'));
         await series.addProviderDatas(unkownProvider);
 
@@ -54,7 +55,7 @@ describe('Provider: Kitsu | Test runs', () => {
     it('should get a series (3/6)', async () => {
 
         const series = new Series();
-        const unkownProvider = new ListProviderLocalData();
+        const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('The Asterisk War: The Academy City on the Water', 'en'));
         await series.addProviderDatas(unkownProvider);
 
@@ -66,7 +67,7 @@ describe('Provider: Kitsu | Test runs', () => {
     it('should get a series (4/6)', async () => {
 
         const series = new Series();
-        const unkownProvider = new ListProviderLocalData();
+        const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Little Witch Academia', 'en'));
         await series.addProviderDatas(unkownProvider);
 
@@ -78,7 +79,7 @@ describe('Provider: Kitsu | Test runs', () => {
     it('should get a series (5/6)', async () => {
 
         const series = new Series();
-        const unkownProvider = new ListProviderLocalData();
+        const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Avatar: The Last Airbender', 'en'));
         await series.addProviderDatas(unkownProvider);
 
@@ -90,7 +91,7 @@ describe('Provider: Kitsu | Test runs', () => {
     it('should get a series (6/6)', async () => {
 
         const series = new Series();
-        const unkownProvider = new ListProviderLocalData();
+        const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Naruto: Shippuuden', 'en'));
         await series.addProviderDatas(unkownProvider);
 

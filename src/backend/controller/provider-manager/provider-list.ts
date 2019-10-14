@@ -1,7 +1,7 @@
-import IExternalProvider from '../../api/external-provider';
-import IInfoProvider from '../../api/info-provider';
-import IListProvider from '../../api/list-provider';
-import ProviderLocalData from '../interfaces/provider-local-data';
+import IExternalProvider from '../../api/provider/external-provider';
+import IInfoProvider from '../../api/provider/info-provider';
+import IListProvider from '../../api/provider/list-provider';
+import ProviderLocalData from './local-data/interfaces/provider-local-data';
 import ProviderLoader from './provider-loader';
 
 export default class ProviderList extends ProviderLoader {

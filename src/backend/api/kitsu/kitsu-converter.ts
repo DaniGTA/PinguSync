@@ -1,11 +1,9 @@
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Name from '../../controller/objects/meta/name';
 import Overview from '../../controller/objects/meta/overview';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import KitsuProvider from './kitsu-provider';
 import { IKitsuEpisode, IKitsuMappings, IMedia } from './objects/searchResult';
 
-import ProviderLocalData from '../../controller/interfaces/provider-local-data';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import Banner from '../../controller/objects/meta/banner';
 import Cover from '../../controller/objects/meta/cover';
 import Episode from '../../controller/objects/meta/episode/episode';
@@ -14,17 +12,20 @@ import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
 import { ImageSize } from '../../controller/objects/meta/image-size';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { NameType } from '../../controller/objects/meta/name-type';
-import { StreamingProviderLocalData } from '../../controller/objects/streaming-provider-local-data';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import { StreamingProviderLocalData } from '../../controller/provider-manager/local-data/streaming-provider-local-data';
 import logger from '../../logger/logger';
 import AniDBProvider from '../anidb/anidb-provider';
 import AniListProvider from '../anilist/anilist-provider';
-import MultiProviderResult from '../multi-provider-result';
+import MalProvider from '../mal/mal-provider';
+import MultiProviderResult from '../provider/multi-provider-result';
 import TraktProvider from '../trakt/trakt-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
 
 export default new class KitsuConverter {
     public async convertMediaToAnime(media: IMedia, fullInfo: boolean = true): Promise<MultiProviderResult> {
-        const providerInfos = new ListProviderLocalData(KitsuProvider.getInstance());
+        const providerInfos = new ListProviderLocalData(media.id, KitsuProvider.getInstance());
         if (media.titles.en) {
             providerInfos.addSeriesName(new Name(media.titles.en, 'en'));
         }
@@ -65,7 +66,6 @@ export default new class KitsuConverter {
 
 
         providerInfos.hasFullInfo = fullInfo;
-        providerInfos.id = media.id;
         providerInfos.publicScore = media.ratingRank;
         providerInfos.rawEntry = media;
         providerInfos.episodes = media.episodeCount;
@@ -88,56 +88,54 @@ export default new class KitsuConverter {
         for (const mapping of mappings) {
             try {
                 if (mapping.externalSite === 'anidb') {
-                    const localdata = new InfoProviderLocalData(AniDBProvider.instance.providerName);
-                    localdata.id = mapping.externalId;
+                    const localdata = new InfoProviderLocalData(mapping.externalId, AniDBProvider.instance);
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'aotora') {
-                    const localdata = new InfoProviderLocalData('aotora');
-                    localdata.id = mapping.externalId;
+                    const localdata = new InfoProviderLocalData(mapping.externalId, 'aotora');
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'anilist') {
-                    const localdata = new ListProviderLocalData(AniListProvider.getInstance().providerName);
                     const typeId = mapping.externalId.split('/');
-                    localdata.id = typeId[1];
+                    const id = typeId[1];
+                    let mediaType = MediaType.UNKOWN;
                     switch (typeId[0]) {
                         case 'anime':
-                            localdata.mediaType = MediaType.ANIME;
+                            mediaType = MediaType.ANIME;
+                            break;
+                        default:
+                            logger.warn('[KitsuConverter] Missing MediaType: ' + mediaType);
                             break;
                     }
+                    const localdata = new ListProviderLocalData(id, AniListProvider.getInstance());
+                    localdata.mediaType = mediaType;
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'hulu') {
-                    const localdata = new StreamingProviderLocalData('hulu');
-                    localdata.id = mapping.externalId;
+                    const localdata = new StreamingProviderLocalData(mapping.externalId, 'hulu');
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'myanimelist/anime') {
-                    const localdata = new ListProviderLocalData('mal');
+                    const localdata = new ListProviderLocalData(mapping.externalId, MalProvider.getInstance());
                     localdata.mediaType = MediaType.ANIME;
-                    localdata.id = mapping.externalId;
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'myanimelist/manga') {
-                    const localdata = new ListProviderLocalData('mal');
-                    localdata.id = mapping.externalId;
+                    const localdata = new ListProviderLocalData(mapping.externalId, MalProvider.getInstance());
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'trakt') {
-                    const localdata = new ListProviderLocalData(TraktProvider.getInstance().providerName);
-                    localdata.id = mapping.externalId;
+                    const localdata = new ListProviderLocalData(mapping.externalId, TraktProvider.getInstance());
                     providerLocalData.push(localdata);
                 }
             } catch (err) {
-               logger.log('info', err);
+                logger.log('info', err);
             }
         }
         try {
             const result = mappings.find((x) => x.externalSite.includes('thetvdb') && x.externalId.includes('/'));
             if (result) {
-                const localdata = new InfoProviderLocalData(TVDBProvider.Instance.providerName);
                 const idSeason = result.externalId.split('/');
-                localdata.id = idSeason[0];
+                const localdata = new InfoProviderLocalData(idSeason[0], TVDBProvider.Instance);
                 localdata.targetSeason = Number(idSeason[1]);
                 providerLocalData.push(localdata);
             }
         } catch (err) {
-           logger.log('info', err);
+            logger.log('info', err);
         }
         return providerLocalData;
     }

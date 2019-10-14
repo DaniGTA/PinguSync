@@ -1,6 +1,6 @@
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Series from '../../controller/objects/series';
-import IListProvider from '../list-provider';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
+import IListProvider from '../provider/list-provider';
 import { TraktSearch } from './objects/search';
 import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
@@ -8,11 +8,11 @@ import { TraktUserData } from './trakt-user-data';
 
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import logger from '../../logger/logger';
-import MultiProviderResult from '../multi-provider-result';
+import MultiProviderResult from '../provider/multi-provider-result';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import traktConverter from './trakt-converter';

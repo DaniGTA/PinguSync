@@ -1,4 +1,4 @@
-import MultiProviderResult from '../../api/multi-provider-result';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import MainListAdder from './main-list-adder';

@@ -1,9 +1,9 @@
-import ProviderLocalData from '../interfaces/provider-local-data';
+import ProviderLocalData from './interfaces/provider-local-data';
 
 export class StreamingProviderLocalData extends ProviderLocalData {
     public readonly provider: string;
-    constructor(lp: string, id?: string | number) {
-        super();
+    constructor(id: string | number, lp?: string) {
+        super(id);
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
             this.provider = lp;
@@ -13,9 +13,6 @@ export class StreamingProviderLocalData extends ProviderLocalData {
             this.provider = '';
         } else {
             this.provider = '';
-        }
-        if (id) {
-            this.id = id;
         }
     }
 }

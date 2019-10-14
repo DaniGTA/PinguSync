@@ -1,19 +1,19 @@
-import IInfoProvider from '../../api/info-provider';
-import listHelper from '../../helpFunctions/list-helper';
-import ProviderLocalData from '../interfaces/provider-local-data';
-import ProviderList from '../provider-manager/provider-list';
-import Banner from './meta/banner';
-import Cover from './meta/cover';
+import IInfoProvider from '../../../api/provider/info-provider';
+import listHelper from '../../../helpFunctions/list-helper';
+import Banner from '../../objects/meta/banner';
+import Cover from '../../objects/meta/cover';
+import ProviderList from '../provider-list';
+import ProviderLocalData from './interfaces/provider-local-data';
 /**
  * Only contains infos about the series.
  */
 export class InfoProviderLocalData extends ProviderLocalData {
-
     public static async mergeProviderInfos(...providers: InfoProviderLocalData[]): Promise<InfoProviderLocalData> {
-        const mergedProvider = Object.assign(new InfoProviderLocalData(), providers[0]);
+        const mergedProvider = Object.assign(new InfoProviderLocalData(providers[0].id), providers[0]);
         let newestProvider: InfoProviderLocalData | undefined;
         const covers: Cover[] = [];
         const banners: Banner[] = [];
+
         for (const provider of providers) {
             // tslint:disable-next-line: triple-equals
             if (mergedProvider.id != provider.id) {
@@ -38,7 +38,6 @@ export class InfoProviderLocalData extends ProviderLocalData {
             if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length !== 0) {
                 mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
             }
-            mergedProvider.id = provider.id;
             mergedProvider.rawEntry = provider.rawEntry;
             if (!newestProvider) {
                 newestProvider = provider;
@@ -98,8 +97,8 @@ export class InfoProviderLocalData extends ProviderLocalData {
         return mergedProvider;
     }
     public readonly provider: string;
-    constructor(lp?: IInfoProvider | string, id?: string | number) {
-        super();
+    constructor(id: string | number, lp?: IInfoProvider | string) {
+        super(id);
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
             this.provider = lp;
@@ -108,9 +107,6 @@ export class InfoProviderLocalData extends ProviderLocalData {
             this.version = lp.version;
         } else {
             this.provider = '';
-        }
-        if (id) {
-            this.id = id;
         }
     }
 

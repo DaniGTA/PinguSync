@@ -1,33 +1,31 @@
-import MultiProviderResult from '../multi-provider-result';
-import { Search } from './models/search-results';
-import Name from '../../controller/objects/meta/name';
-import { NameType } from '../../controller/objects/meta/name-type';
-import OMDbProvider from './omdb-provider';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ImageSize } from '../../controller/objects/meta/image-size';
-import { IdRequestResult } from './models/id-request-result';
-import Overview from '../../controller/objects/meta/overview';
 import Cover from '../../controller/objects/meta/cover';
 import Genre from '../../controller/objects/meta/genre';
+import { ImageSize } from '../../controller/objects/meta/image-size';
+import Name from '../../controller/objects/meta/name';
+import { NameType } from '../../controller/objects/meta/name-type';
+import Overview from '../../controller/objects/meta/overview';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import MultiProviderResult from '../provider/multi-provider-result';
+import { IdRequestResult } from './models/id-request-result';
+import { Search } from './models/search-results';
+import OMDbProvider from './omdb-provider';
 
 export default class OMDbConverter {
 
-    convertSearchResult(entry: Search): MultiProviderResult {
-        const pld = new InfoProviderLocalData(OMDbProvider.instance);
-        pld.addSeriesName(new Name(entry.Title, "en", NameType.OFFICIAL));
+    public convertSearchResult(entry: Search): MultiProviderResult {
+        const pld = new InfoProviderLocalData(entry.imdbID, OMDbProvider.instance);
+        pld.addSeriesName(new Name(entry.Title, 'en', NameType.OFFICIAL));
         pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
-        pld.id = entry.imdbID;
         pld.hasFullInfo = false;
         pld.rawEntry = entry;
 
         return new MultiProviderResult(pld);
     }
 
-    convertIdRequest(entry: IdRequestResult): MultiProviderResult {
-        const pld = new InfoProviderLocalData(OMDbProvider.instance);
-        pld.addSeriesName(new Name(entry.Title, "en", NameType.OFFICIAL));
+    public convertIdRequest(entry: IdRequestResult): MultiProviderResult {
+        const pld = new InfoProviderLocalData(entry.imdbID, OMDbProvider.instance);
+        pld.addSeriesName(new Name(entry.Title, 'en', NameType.OFFICIAL));
         pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
-        pld.id = entry.imdbID;
         pld.hasFullInfo = true;
         pld.country = entry.Country;
         for (const genre of entry.Genre.split(' ')) {
@@ -40,4 +38,4 @@ export default class OMDbConverter {
 
         return new MultiProviderResult(pld);
     }
-} 
+}

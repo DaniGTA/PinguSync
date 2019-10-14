@@ -1,14 +1,15 @@
-import IListProvider from '../api/list-provider';
-import MultiProviderResult from '../api/multi-provider-result';
+import IListProvider from '../api/provider/list-provider';
+import MultiProviderResult from '../api/provider/multi-provider-result';
+import ProviderComperator from '../helpFunctions/comperators/provider-comperator';
 import providerHelper from '../helpFunctions/provider/provider-helper';
 import logger from '../logger/logger';
 import MainListAdder from './main-list-manager/main-list-adder';
 import MainListManager from './main-list-manager/main-list-manager';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
+import MainListEntryUpdater from './main-list-manager/main-list-updater';
 import WatchProgress from './objects/meta/watch-progress';
 import Series from './objects/series';
 import ProviderList from './provider-manager/provider-list';
-import MainListEntryUpdater from './main-list-manager/main-list-updater';
 export default class ListController {
 
     public static instance: ListController | null = null;
@@ -81,7 +82,7 @@ export default class ListController {
     }
 
     public async addSeriesToMainList(...animes: Series[]) {
-        logger.log('info', 'Add ' + animes.length + ' to mainList');
+        logger.log('debug', 'Add ' + animes.length + ' to mainList');
         await new MainListAdder().addSeries(...animes);
     }
 
@@ -146,7 +147,7 @@ export default class ListController {
                 for (const seriesMainListEntry of await this.getMainList()) {
                     for (const oldprovider of seriesMainListEntry.getListProvidersInfos()) {
                         // tslint:disable-next-line: triple-equals
-                        if (oldprovider.provider == validProvider.provider && oldprovider.id == validProvider.id) {
+                        if (oldprovider.provider == validProvider.provider && ProviderComperator.simpleProviderIdCheck(oldprovider.id, validProvider.id)) {
                             return seriesMainListEntry;
                         }
                     }

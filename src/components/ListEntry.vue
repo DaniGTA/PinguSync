@@ -39,8 +39,8 @@ import VueLazyload from "vue-lazyload";
 import { Promised } from "vue-promised";
 import SeriesPackage from "../backend/controller/objects/series-package";
 import WatchProgress from "../backend/controller/objects/meta/watch-progress";
-import { ListProviderLocalData } from "../backend/controller/objects/list-provider-local-data";
 import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
+import { ListProviderLocalData } from "../backend/controller/provider-manager/local-data/list-provider-local-data";
 Vue.component("Promised", Promised);
 Vue.use(VueLazyload);
 
@@ -105,7 +105,7 @@ export default class ListEntry extends Vue {
   }
 
   getProviderWatchProgress(provider: ListProviderLocalData): number {
-    provider = Object.assign(new ListProviderLocalData(), provider);
+    provider = Object.assign(new ListProviderLocalData(provider.id), provider);
     const result = provider.getHighestWatchedEpisode();
     if (typeof result === "undefined") {
       return -1;

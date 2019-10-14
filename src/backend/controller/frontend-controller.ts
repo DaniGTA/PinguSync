@@ -1,4 +1,4 @@
-import IListProvider from '../api/list-provider';
+import IListProvider from '../api/provider/list-provider';
 import ICommunication from '../communication/icommunication';
 import IPCBackgroundController from '../communication/ipc-background-controller';
 import logger from '../logger/logger';
@@ -51,7 +51,7 @@ class FrontendController {
                             await pl.logInUser(code);
                             that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                         } catch (err) {
-                           logger.error(err);
+                            logger.error(err);
                         }
                     });
                     this.communcation.on(pl.providerName.toLocaleLowerCase() + '-open-code-url', async (code: string) => {
@@ -62,7 +62,7 @@ class FrontendController {
                     try {
                         that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                     } catch (err) {
-                       logger.error(err);
+                        logger.error(err);
                     }
                 });
             }

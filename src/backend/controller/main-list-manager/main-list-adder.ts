@@ -23,7 +23,7 @@ export default class MainListAdder {
      */
     public async addSeries(...series: Series[]) {
         const trackId = stringHelper.randomString(50);
-        logger.log('info', 'Start adding');
+        logger.log('info', '[MainListAdder] Start adding');
         MainListAdder.instanceTracker.push(trackId);
         await this.listWorker(series);
 
@@ -31,7 +31,7 @@ export default class MainListAdder {
             await MainListManager.finishListFilling();
         }
         MainListAdder.instanceTracker = await listHelper.removeEntrys(MainListAdder.instanceTracker, trackId);
-        logger.log('info', 'End adding');
+        logger.log('info', '[MainListAdder] End adding');
     }
 
 
@@ -46,28 +46,24 @@ export default class MainListAdder {
      */
     private async listWorker(list: Series[]) {
         const searcher = new MainListSearcher();
-        logger.log('info', 'Worker started to process ' + list.length + ' Items.');
+        logger.log('debug', '[MainListAdder] Worker started to process ' + list.length + ' Items.');
         let addCounter = 0;
         for (const series of list) {
             try {
                 const entry = await searcher.quickFindSameSeriesInMainList(series);
                 if (entry.length === 0) {
-                    logger.log('info', 'Add non existing Series.');
+                    logger.log('info', '[MainListAdder] Add non existing Series.');
                     const filledSeries = await providerHelper.fillMissingProvider(series);
                     if (filledSeries.lastInfoUpdate === 0) {
-                       logger.error('[ERROR] Series no last info update!');
+                        logger.error('[ERROR] Series no last info update!');
                     }
                     await MainListManager.addSerieToMainList(filledSeries);
 
                 } else if (entry.length === 1) {
                     try {
-                        logger.log('info', 'Add existing Series.');
-                        const tempSeries = await entry[0].merge(series);
-                        const filledSeries = await providerHelper.fillMissingProvider(tempSeries);
-                        if (filledSeries.lastInfoUpdate === 0) {
-                           logger.error('[ERROR] Series no last info update!');
-                        }
-                        await MainListManager.addSerieToMainList(filledSeries);
+                        logger.log('info', '[MainListAdder] Add existing Series.');
+                        series.id = entry[0].id;
+                        await MainListManager.updateSerieInList(series);
                     } catch (err) {
                         logger.warn(err);
                     }
@@ -77,9 +73,9 @@ export default class MainListAdder {
                     await MainListManager.addSerieToMainList(series);
                 }
                 addCounter++;
-                logger.log('info', 'Adding Series to list. Progress: ' + addCounter);
+                logger.log('info', '[MainListAdder] Adding Series to list. Progress: ' + addCounter);
             } catch (err) {
-               logger.error(err);
+                logger.error(err);
             }
         }
 

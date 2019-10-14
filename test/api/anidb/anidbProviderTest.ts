@@ -3,7 +3,8 @@ import { deepEqual } from 'assert';
 import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import { InfoProviderLocalData } from '../../../src/backend/controller/objects/info-provider-local-data';
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+
 
 describe('Provider: AniDB | Online Test runs', () => {
     before(() => {
@@ -16,8 +17,7 @@ describe('Provider: AniDB | Online Test runs', () => {
     });
     it('should get id 14444', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new InfoProviderLocalData(a.providerName);
-        lpdld.id = 14444;
+        const lpdld = new InfoProviderLocalData(14444, a.providerName);
 
         const result = await a.getFullInfoById(lpdld);
 

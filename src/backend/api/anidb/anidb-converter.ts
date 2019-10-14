@@ -1,5 +1,5 @@
-import ProviderLocalData from '../../controller/interfaces/provider-local-data';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+
 import Cover from '../../controller/objects/meta/cover';
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
@@ -10,8 +10,9 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import logger from '../../logger/logger';
-import MultiProviderResult from '../multi-provider-result';
+import MultiProviderResult from '../provider/multi-provider-result';
 import AniDBProvider from './anidb-provider';
 import { AniDBAnimeAnime, AniDBAnimeFullInfo, AttributeInfo, EpisodeElement, ExternalentityElement, FluffyExternalentity, ResourceElement } from './objects/anidbFullInfoXML';
 import { Anime } from './objects/anidbNameListXML';
@@ -19,8 +20,7 @@ import { Anime } from './objects/anidbNameListXML';
 export default class AniDBConverter {
     public async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {
 
-        const ipld = new InfoProviderLocalData(AniDBProvider.instance);
-        ipld.id = anime._attributes.aid;
+        const ipld = new InfoProviderLocalData(anime._attributes.aid, AniDBProvider.instance);
         ipld.rawEntry = anime;
         ipld.version = AniDBProvider.instance.version;
         ipld.hasFullInfo = false;
@@ -29,11 +29,10 @@ export default class AniDBConverter {
 
     public async convertFullInfoToProviderLocalData(fullInfo: AniDBAnimeFullInfo): Promise<MultiProviderResult> {
         if (fullInfo.anime) {
-            const ipld = new InfoProviderLocalData(AniDBProvider.instance);
+            const ipld = new InfoProviderLocalData(fullInfo.anime._attributes.id, AniDBProvider.instance);
             for (const title of fullInfo.anime.titles.title) {
                 ipld.addSeriesName(new Name(title._text, title._attributes['xml:lang'], await this.convertToNameType(title._attributes.type)));
             }
-            ipld.id = fullInfo.anime._attributes.id;
             ipld.hasFullInfo = true;
             ipld.releaseYear = new Date(fullInfo.anime.startdate._text).getFullYear();
             ipld.rawEntry = fullInfo;
@@ -131,7 +130,7 @@ export default class AniDBConverter {
                 try {
                     subProviders.push(await this.getResourceInfoProvider(resource));
                 } catch (err) {
-                   logger.error(err);
+                    logger.error(err);
                 }
             }
         }
@@ -192,64 +191,66 @@ export default class AniDBConverter {
     // Type 32 is Amazon
     public async getResourceInfoProvider(resource: ResourceElement): Promise<ProviderLocalData> {
         let subipld = null;
-        switch (resource._attributes.type) {
-            case '1':
-                subipld = new InfoProviderLocalData('ANN');
-                break;
-            case '2':
-                subipld = new InfoProviderLocalData('MAL');
-                break;
-            case '3':
-                subipld = new InfoProviderLocalData('AnimeNfo');
-                break;
-            case '6':
-                subipld = new InfoProviderLocalData('WikiEnglish');
-                break;
-            case '7':
-                subipld = new InfoProviderLocalData('WikiJapanese');
-                break;
-            case '8':
-                subipld = new InfoProviderLocalData('Syoboi');
-                break;
-            case '9':
-                subipld = new InfoProviderLocalData('AllCinema');
-                break;
-            case '10':
-                subipld = new InfoProviderLocalData('Anison');
-                break;
-            case '11':
-                subipld = new InfoProviderLocalData('LainGrJp');
-                break;
-            case '14':
-                subipld = new InfoProviderLocalData('VNDB');
-                break;
-            case '15':
-                subipld = new InfoProviderLocalData('MaruMegane');
-                break;
-            case '17':
-                subipld = new InfoProviderLocalData('TVAnimation');
-                break;
-            case '19':
-                subipld = new InfoProviderLocalData('WikiKorean');
-                break;
-            case '20':
-                subipld = new InfoProviderLocalData('WikiChinese');
-                break;
-            case '23':
-                subipld = new InfoProviderLocalData('twitter');
-                break;
-            case '28':
-                subipld = new InfoProviderLocalData('crunchyroll');
-                break;
-            case '32':
-                subipld = new InfoProviderLocalData('amazon');
-                break;
-        }
+        const id = await this.getIDResourceFromEntity(resource.externalentity);
+        if (id) {
+            switch (resource._attributes.type) {
+                case '1':
+                    subipld = new InfoProviderLocalData(id, 'ANN');
+                    break;
+                case '2':
+                    subipld = new InfoProviderLocalData(id, 'MAL');
+                    break;
+                case '3':
+                    subipld = new InfoProviderLocalData(id, 'AnimeNfo');
+                    break;
+                case '6':
+                    subipld = new InfoProviderLocalData(id, 'WikiEnglish');
+                    break;
+                case '7':
+                    subipld = new InfoProviderLocalData(id, 'WikiJapanese');
+                    break;
+                case '8':
+                    subipld = new InfoProviderLocalData(id, 'Syoboi');
+                    break;
+                case '9':
+                    subipld = new InfoProviderLocalData(id, 'AllCinema');
+                    break;
+                case '10':
+                    subipld = new InfoProviderLocalData(id, 'Anison');
+                    break;
+                case '11':
+                    subipld = new InfoProviderLocalData(id, 'LainGrJp');
+                    break;
+                case '14':
+                    subipld = new InfoProviderLocalData(id, 'VNDB');
+                    break;
+                case '15':
+                    subipld = new InfoProviderLocalData(id, 'MaruMegane');
+                    break;
+                case '17':
+                    subipld = new InfoProviderLocalData(id, 'TVAnimation');
+                    break;
+                case '19':
+                    subipld = new InfoProviderLocalData(id, 'WikiKorean');
+                    break;
+                case '20':
+                    subipld = new InfoProviderLocalData(id, 'WikiChinese');
+                    break;
+                case '23':
+                    subipld = new InfoProviderLocalData(id, 'twitter');
+                    break;
+                case '28':
+                    subipld = new InfoProviderLocalData(id, 'crunchyroll');
+                    break;
+                case '32':
+                    subipld = new InfoProviderLocalData(id, 'amazon');
+                    break;
+            }
 
-        if (subipld) {
-            subipld.id = await this.getIDResourceFromEntity(resource.externalentity);
-            subipld.hasFullInfo = false;
-            return subipld;
+            if (subipld) {
+                subipld.hasFullInfo = false;
+                return subipld;
+            }
         }
         throw new Error('no provider with that type found: ' + resource._attributes.type);
     }

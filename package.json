@@ -22,7 +22,7 @@
     "@types/request": "^2.48.3",
     "@types/resolve": "0.0.8",
     "@types/sinon": "^7.5.0",
-    "core-js": "^2.6.5",
+    "core-js": "^2.6.10",
     "deasync": "^0.1.15",
     "kitsu": "^7.0.4",
     "microjob": "^0.5.2",

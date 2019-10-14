@@ -1,4 +1,4 @@
-import MultiProviderResult from '../../api/multi-provider-result';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 import seriesHelper from '../../helpFunctions/series-helper';
 import logger from '../../logger/logger';
@@ -19,9 +19,9 @@ export default class MainListSearcher {
         logger.debug('serch series with multiprovider result');
         const series = await MainListManager.getMainList();
         for (const serie of series) {
-             try {
+            try {
                 const allProviders = serie.getAllProviderLocalDatas();
-                if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheck(allProviders, providerResults.getAllProviders())) {
+                if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeries(allProviders, providerResults.getAllProviders(), serie)) {
                     logger.debug('serch series with multiprovider result: FOUND');
                     return serie;
                 }
@@ -40,7 +40,7 @@ export default class MainListSearcher {
      *
      * @param id the series id.
      */
-    public async findSeriesBySeriesId(id: string): Promise<Series | null>  {
+    public async findSeriesBySeriesId(id: string): Promise<Series | null> {
         const series = await MainListManager.getMainList();
         for (const serie of series) {
             if (serie.id === id) {
@@ -66,9 +66,9 @@ export default class MainListSearcher {
     }
 
     public async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
-       logger.log('info', '[Search] Find search series in list of size: ' + list.length);
-       const foundedSameSeries = [];
-       for (const listEntry of list) {
+        logger.log('info', '[Search] Find search series in list of size: ' + list.length);
+        const foundedSameSeries = [];
+        for (const listEntry of list) {
             if (listEntry.id === entry.id) {
                 foundedSameSeries.push(listEntry);
             } else {
@@ -77,12 +77,12 @@ export default class MainListSearcher {
                 }
             }
         }
-       logger.log('info', 'Found: ' + foundedSameSeries.length);
-       return foundedSameSeries;
+        logger.log('info', 'Found: ' + foundedSameSeries.length);
+        return foundedSameSeries;
     }
 
     private async quickFindSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
-        logger.log('info', '[Search] Quick find search series in list of size: ' + list.length);
+        logger.log('debug', '[Search] Quick find search series in list of size: ' + list.length);
         const foundedSameSeries = [];
         for (const listEntry of list) {
             if (listEntry.id === entry.id) {
@@ -92,7 +92,7 @@ export default class MainListSearcher {
                 foundedSameSeries.push(listEntry);
             }
         }
-        logger.log('info', 'Found: ' + foundedSameSeries.length);
+        logger.log('debug', 'Found: ' + foundedSameSeries.length);
         return foundedSameSeries;
     }
 }

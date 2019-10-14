@@ -1,5 +1,6 @@
-import { InfoProviderLocalData } from '../info-provider-local-data';
-import { ListProviderLocalData } from '../list-provider-local-data';
+import { InfoProviderLocalData } from '../../provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../provider-manager/local-data/list-provider-local-data';
+
 
 export default class SeriesProviderExtension {
     protected listProviderInfos: ListProviderLocalData[] = [];
@@ -33,11 +34,11 @@ export default class SeriesProviderExtension {
         }
     }
 
-    public getListProvidersInfos() {
+    public getListProvidersInfos(): ListProviderLocalData[] {
         return this.listProviderInfos;
     }
 
-    public getInfoProvidersInfos() {
+    public getInfoProvidersInfos(): InfoProviderLocalData[] {
         return this.infoProviderInfos;
     }
 

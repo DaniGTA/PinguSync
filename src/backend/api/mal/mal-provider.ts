@@ -1,12 +1,12 @@
 
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import IListProvider from '../list-provider';
-import MultiProviderResult from '../multi-provider-result';
+import IListProvider from '../provider/list-provider';
+import MultiProviderResult from '../provider/multi-provider-result';
 import { MalUserData } from './mal-user-data';
 import Mal, { ScraperClient } from 'node-myanimelist';
 import malConverter from './mal-converter';
@@ -72,9 +72,9 @@ export default class MalProvider implements IListProvider {
     public async getAllSeries(disableCache?: boolean | undefined): Promise<MultiProviderResult[]> {
         if (this.userData.loginData) {
             const userInfo = await this.api.notifications(this.userData.loginData);
-            
+
         }
-         throw new Error('Method not implemented.');
+        throw new Error('Method not implemented.');
     }
     public async logInUser(pass: string, username?: string | undefined): Promise<boolean> {
         try {

@@ -1,6 +1,3 @@
-import ProviderLocalData from '../../controller/interfaces/provider-local-data';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
 import Cover from '../../controller/objects/meta/cover';
 import Genre from '../../controller/objects/meta/genre';
 import { ImageSize } from '../../controller/objects/meta/image-size';
@@ -9,9 +6,13 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series from '../../controller/objects/series';
-import { StreamingProviderLocalData } from '../../controller/objects/streaming-provider-local-data';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
+import { StreamingProviderLocalData } from '../../controller/provider-manager/local-data/streaming-provider-local-data';
 import AniDBProvider from '../anidb/anidb-provider';
-import MultiProviderResult from '../multi-provider-result';
+import MalProvider from '../mal/mal-provider';
+import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { ISimklFullInfoAnimeResponse, ISimklFullInfoIDS } from './objects/simklFullInfoAnimeResponse';
 import { IMovieIDS, ISimklFullInfoMovieResponse } from './objects/simklFullInfoMovieResponse';
@@ -23,19 +24,15 @@ import SimklProvider from './simkl-provider';
 export default class SimklConverter {
     public async convertAnimeToSeries(anime: Anime): Promise<Series> {
         const series = new Series();
-        const listProvider = new ListProviderLocalData(SimklProvider.instance);
+        const listProvider = new ListProviderLocalData(anime.show.ids.simkl, SimklProvider.instance);
         // - BEGINN - FILL META DATA
-        listProvider.id = anime.show.ids.simkl;
-
-        const aniDBListProvider = new InfoProviderLocalData(AniDBProvider.instance.providerName);
-
-        aniDBListProvider.id = anime.show.ids.anidb;
-        aniDBListProvider.hasFullInfo = false;
+        const aniDBListProvider = new InfoProviderLocalData(anime.show.ids.anidb, AniDBProvider.instance);
 
         listProvider.addSeriesName(new Name(anime.show.title, 'unkown', NameType.UNKNOWN));
 
 
         // - END -
+        series.addProviderDatas(aniDBListProvider);
         series.addListProvider(listProvider);
         return series;
     }
@@ -51,8 +48,7 @@ export default class SimklConverter {
     public async convertSimklTextSearchResultsToMultiProviderResults(searchResults: ISimklTextSearchResults[], type: MediaType): Promise<MultiProviderResult[]> {
         const mprList: MultiProviderResult[] = [];
         for (const searchResult of searchResults) {
-            const provider = new ListProviderLocalData(SimklProvider.instance);
-            provider.id = searchResult.ids.simkl_id;
+            const provider = new ListProviderLocalData(searchResult.ids.simkl_id, SimklProvider.instance);
             provider.addSeriesName(new Name(searchResult.ids.slug, 'slug', NameType.SLUG));
             provider.addSeriesName(new Name(searchResult.title, 'en', NameType.MAIN));
             provider.releaseYear = searchResult.year;
@@ -68,9 +64,8 @@ export default class SimklConverter {
 
     public async convertFullAnimeInfoToProviderLocalData(response: ISimklFullInfoAnimeResponse): Promise<MultiProviderResult> {
 
-        const provider = new ListProviderLocalData(SimklProvider.instance);
+        const provider = new ListProviderLocalData(response.ids.simkl, SimklProvider.instance);
         provider.mediaType = await this.convertAnimeTypeToMediaType(response.anime_type);
-        provider.id = response.ids.simkl;
         provider.hasFullInfo = true;
         provider.country = response.country;
         provider.covers = await this.convertPosterIdToCover(response.poster);
@@ -89,9 +84,8 @@ export default class SimklConverter {
     }
 
     public async convertFullMovieInfoToProviderLocalData(response: ISimklFullInfoMovieResponse): Promise<MultiProviderResult> {
-        const provider = new ListProviderLocalData(SimklProvider.instance);
+        const provider = new ListProviderLocalData(response.ids.simkl, SimklProvider.instance);
         provider.mediaType = MediaType.MOVIE;
-        provider.id = response.ids.simkl;
         provider.country = response.country;
         provider.hasFullInfo = true;
         provider.covers = await this.convertPosterIdToCover(response.poster);
@@ -106,9 +100,8 @@ export default class SimklConverter {
     }
     public async convertFullSeriesInfoToProviderLocalData(response: ISimklFullInfoSeriesResponse): Promise<MultiProviderResult> {
 
-        const provider = new ListProviderLocalData(SimklProvider.instance);
+        const provider = new ListProviderLocalData(response.ids.simkl, SimklProvider.instance);
         provider.mediaType = MediaType.SERIES;
-        provider.id = response.ids.simkl;
         provider.country = response.country;
         provider.hasFullInfo = true;
         provider.covers = await this.convertPosterIdToCover(response.poster);
@@ -126,13 +119,13 @@ export default class SimklConverter {
     private async convertSerieIdsToProviders(serieIds: ISeriesIDS): Promise<ProviderLocalData[]> {
         const providers: ProviderLocalData[] = [];
         if (serieIds.imdb) {
-            providers.push(new InfoProviderLocalData('imdb', serieIds.imdb));
+            providers.push(new InfoProviderLocalData(serieIds.imdb, 'imdb'));
         }
         if (serieIds.tvdb) {
             providers.push(new InfoProviderLocalData(TVDBProvider.Instance.providerName, serieIds.tvdb));
         }
         if (serieIds.zap2it) {
-            providers.push(new InfoProviderLocalData('zap2it', serieIds.tvdb));
+            providers.push(new InfoProviderLocalData(serieIds.tvdb, 'zap2it'));
         }
 
         return providers;
@@ -146,28 +139,28 @@ export default class SimklConverter {
     private async convertAnimeIdsToProviders(animeIds: ISimklFullInfoIDS): Promise<ProviderLocalData[]> {
         const providers: ProviderLocalData[] = [];
         if (animeIds.allcin) {
-            providers.push(new InfoProviderLocalData('allcin', animeIds.allcin));
+            providers.push(new InfoProviderLocalData(animeIds.allcin, 'allcin'));
         }
         if (animeIds.anfo) {
-            providers.push(new InfoProviderLocalData('anfo', animeIds.anfo));
+            providers.push(new InfoProviderLocalData(animeIds.anfo, 'anfo'));
         }
         if (animeIds.anidb) {
-            providers.push(new InfoProviderLocalData(AniDBProvider.instance.providerName, animeIds.anidb));
+            providers.push(new InfoProviderLocalData(animeIds.anidb, AniDBProvider.instance));
         }
         if (animeIds.ann) {
-            providers.push(new InfoProviderLocalData('ann', animeIds.ann));
+            providers.push(new InfoProviderLocalData(animeIds.ann, 'ann'));
         }
         if (animeIds.mal) {
-            providers.push(new ListProviderLocalData('mal', animeIds.mal));
+            providers.push(new ListProviderLocalData(animeIds.mal, MalProvider.getInstance()));
         }
         if (animeIds.crunchyroll) {
-            providers.push(new StreamingProviderLocalData('crunchyroll', animeIds.crunchyroll));
+            providers.push(new StreamingProviderLocalData(animeIds.crunchyroll, 'crunchyroll'));
         }
         if (animeIds.imdb) {
-            providers.push(new InfoProviderLocalData('imdb', animeIds.imdb));
+            providers.push(new InfoProviderLocalData(animeIds.imdb, 'imdb'));
         }
         if (animeIds.wikien) {
-            providers.push(new InfoProviderLocalData('wikien', animeIds.wikien));
+            providers.push(new InfoProviderLocalData(animeIds.wikien, 'wikien'));
         }
         return providers;
     }

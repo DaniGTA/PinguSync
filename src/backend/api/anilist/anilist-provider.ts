@@ -1,14 +1,14 @@
 
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/objects/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/objects/list-provider-local-data';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import * as meta from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import IListProvider from '../list-provider';
-import MultiProviderResult from '../multi-provider-result';
+import IListProvider from '../provider/list-provider';
+import MultiProviderResult from '../provider/multi-provider-result';
 import aniListConverter from './anilist-converter';
 import { AniListUserData } from './anilist-user-data';
 import { MediaType } from './graphql/basics/mediaType';

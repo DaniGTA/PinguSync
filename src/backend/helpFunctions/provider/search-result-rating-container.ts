@@ -1,4 +1,4 @@
-import MultiProviderResult from '../../api/multi-provider-result';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import ComperatorResult from '../comperators/comperator-results.ts/comperator-result';
 
 export default class SearchResultRatingContainer {
