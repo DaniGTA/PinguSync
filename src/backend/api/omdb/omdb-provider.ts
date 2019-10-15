@@ -4,12 +4,12 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import IInfoProvider from '../provider/info-provider';
+import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
-export default class OMDbProvider implements IInfoProvider {
+export default class OMDbProvider extends InfoProvider {
     public static instance: OMDbProvider;
     public isOffline: boolean = false;
     public hasOAuthCode: boolean = false;
@@ -19,6 +19,7 @@ export default class OMDbProvider implements IInfoProvider {
     public version: number = 1;
     public apikey = '728e1e03';
     constructor() {
+        super();
         if (!OMDbProvider.instance) {
             OMDbProvider.instance = this;
         }

@@ -5,12 +5,12 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import IListProvider from '../provider/list-provider';
+import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { MalUserData } from './mal-user-data';
 import Mal, { ScraperClient } from 'node-myanimelist';
 import malConverter from './mal-converter';
-export default class MalProvider implements IListProvider {
+export default class MalProvider extends ListProvider {
 
     public static getInstance() {
         if (!MalProvider.instance) {
@@ -30,6 +30,7 @@ export default class MalProvider implements IListProvider {
     private api = new ScraperClient();
 
     constructor() {
+        super();
         this.userData = new MalUserData();
     }
 

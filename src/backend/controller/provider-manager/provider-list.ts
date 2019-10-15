@@ -1,11 +1,11 @@
-import IExternalProvider from '../../api/provider/external-provider';
-import IInfoProvider from '../../api/provider/info-provider';
-import IListProvider from '../../api/provider/list-provider';
+import ExternalProvider from '../../api/provider/external-provider';
+import InfoProvider from '../../api/provider/info-provider';
+import ListProvider from '../../api/provider/list-provider';
 import ProviderLocalData from './local-data/interfaces/provider-local-data';
 import ProviderLoader from './provider-loader';
 
 export default class ProviderList extends ProviderLoader {
-    public static getListProviderList(): IListProvider[] {
+    public static getListProviderList(): ListProvider[] {
         if (!this.loadedListProvider) {
             this.loadedListProvider = this.loadListProviderList();
             return this.loadedListProvider;
@@ -14,7 +14,7 @@ export default class ProviderList extends ProviderLoader {
         }
     }
 
-    public static getInfoProviderList(): IInfoProvider[] {
+    public static getInfoProviderList(): InfoProvider[] {
         if (!this.loadedInfoProvider) {
             this.loadedInfoProvider = this.loadInfoProviderList();
             return this.loadedInfoProvider;
@@ -23,7 +23,7 @@ export default class ProviderList extends ProviderLoader {
         }
     }
 
-    public static getExternalProviderInstance(localdata: ProviderLocalData): IExternalProvider {
+    public static getExternalProviderInstance(localdata: ProviderLocalData): ExternalProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === localdata.provider) {
                 return provider;

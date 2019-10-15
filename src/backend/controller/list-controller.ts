@@ -1,4 +1,4 @@
-import IListProvider from '../api/provider/list-provider';
+import ListProvider from '../api/provider/list-provider';
 import MultiProviderResult from '../api/provider/multi-provider-result';
 import ProviderComperator from '../helpFunctions/comperators/provider-comperator';
 import providerHelper from '../helpFunctions/provider/provider-helper';
@@ -140,7 +140,7 @@ export default class ListController {
     }
 
 
-    public async checkIfProviderExistInMainList(entry: Series, provider: IListProvider): Promise<Series> {
+    public async checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Promise<Series> {
         const validProvider = entry.getListProvidersInfos().find((x) => (x.provider === provider.providerName));
         try {
             if (validProvider) {

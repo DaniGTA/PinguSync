@@ -1,4 +1,4 @@
-import IListProvider from '../api/provider/list-provider';
+import ListProvider from '../api/provider/list-provider';
 import logger from '../logger/logger';
 import ListController from './list-controller';
 import SeriesPackage from './objects/series-package';
@@ -13,7 +13,7 @@ class ProviderController {
         return ProviderController.instance;
     }
 
-    public static getProviderInstance(providerString: string): IListProvider {
+    public static getProviderInstance(providerString: string): ListProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === providerString) {
                 return provider;

@@ -1,4 +1,4 @@
-import IExternalProvider from '../../../../api/provider/external-provider';
+import ExternalProvider from '../../../../api/provider/external-provider';
 import stringHelper from '../../../../helpFunctions/string-helper';
 import EpisodeMapping from './episode-mapping';
 import EpisodeThumbnail from './episode-thumbnail';
@@ -22,7 +22,7 @@ export default class Episode {
      * The type of the episode like regular, special etc.
      */
     public type: EpisodeType = EpisodeType.UNKOWN;
-    public streamingProviders: IExternalProvider[] = [];
+    public streamingProviders: ExternalProvider[] = [];
     public summery?: string;
     public title?: EpisodeTitle[];
     public duration?: number;

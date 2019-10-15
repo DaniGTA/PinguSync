@@ -1,4 +1,4 @@
-import IListProvider from '../../../api/provider/list-provider';
+import ListProvider from '../../../api/provider/list-provider';
 import listHelper from '../../../helpFunctions/list-helper';
 import Banner from '../../objects/meta/banner';
 import Cover from '../../objects/meta/cover';
@@ -162,8 +162,9 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     public customList: boolean = false;
     public customListName = '';
+    public version = 1;
 
-    constructor(id: string | number, lp?: IListProvider | string) {
+    constructor(id: string | number, lp?: ListProvider | string) {
         super(id);
         this.lastUpdate = new Date(Date.now());
         if (typeof lp === 'string') {
@@ -177,7 +178,7 @@ export class ListProviderLocalData extends ProviderLocalData {
     }
 
 
-    public getProviderInstance(): IListProvider {
+    public getProviderInstance(): ListProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === this.provider) {
                 return provider;

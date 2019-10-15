@@ -26,7 +26,7 @@ export default class SimklConverter {
         const series = new Series();
         const listProvider = new ListProviderLocalData(anime.show.ids.simkl, SimklProvider.instance);
         // - BEGINN - FILL META DATA
-        const aniDBListProvider = new InfoProviderLocalData(anime.show.ids.anidb, AniDBProvider.instance);
+        const aniDBListProvider = new InfoProviderLocalData(anime.show.ids.anidb, AniDBProvider);
 
         listProvider.addSeriesName(new Name(anime.show.title, 'unkown', NameType.UNKNOWN));
 

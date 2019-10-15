@@ -1,4 +1,4 @@
-import IListProvider from '../../../../src/backend/api/provider/list-provider';
+import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { UserData } from '../../../../src/backend/api/user-data';
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
@@ -7,7 +7,7 @@ import { InfoProviderLocalData } from '../../../../src/backend/controller/provid
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 
 
-export default class TestProvider implements IListProvider {
+export default class TestProvider extends ListProvider {
 
     public version = 1;
     public hasUniqueIdForSeasons = false;
@@ -19,6 +19,7 @@ export default class TestProvider implements IListProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
 
     constructor(providerName: string, loggedIn: boolean = true, hasUniqueIdForSeasons: boolean = false) {
+        super();
         this.providerName = providerName;
         this.loggedIn = loggedIn;
         this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;

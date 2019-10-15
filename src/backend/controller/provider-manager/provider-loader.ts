@@ -1,8 +1,8 @@
 import AniDBProvider from '../../api/anidb/anidb-provider';
 import AniListProvider from '../../api/anilist/anilist-provider';
-import IInfoProvider from '../../api/provider/info-provider';
+import InfoProvider from '../../api/provider/info-provider';
 import KitsuProvider from '../../api/kitsu/kitsu-provider';
-import IListProvider from '../../api/provider/list-provider';
+import ListProvider from '../../api/provider/list-provider';
 import OMDbProvider from '../../api/omdb/omdb-provider';
 import SimklProvider from '../../api/simkl/simkl-provider';
 import TraktProvider from '../../api/trakt/trakt-provider';
@@ -16,10 +16,10 @@ export default class ProviderLoader {
      * in order to avoid circular-dependency problems.
      */
 
-    protected static loadedListProvider: IListProvider[] | undefined;
-    protected static loadedInfoProvider: IInfoProvider[] | undefined;
+    protected static loadedListProvider: ListProvider[] | undefined;
+    protected static loadedInfoProvider: InfoProvider[] | undefined;
 
-    protected static loadListProviderList(): IListProvider[] {
+    protected static loadListProviderList(): ListProvider[] {
         return [
             new KitsuProvider(),
             new AniListProvider(),
@@ -28,7 +28,7 @@ export default class ProviderLoader {
         ];
     }
 
-    protected static loadInfoProviderList(): IInfoProvider[] {
+    protected static loadInfoProviderList(): InfoProvider[] {
         return [
             new AniDBProvider(),
             new TVMazeProvider(),

@@ -1,4 +1,4 @@
-import IExternalProvider from '../../api/provider/external-provider';
+import ExternalProvider from '../../api/provider/external-provider';
 import MultiProviderResult from '../../api/provider/multi-provider-result';
 import ListController from '../../controller/list-controller';
 import { MediaType } from '../../controller/objects/meta/media-type';
@@ -41,7 +41,7 @@ export default new class ProviderHelper {
         return new SameIdAndUniqueId();
     }
 
-    public async getProviderSeriesInfo(series: Series, provider: IExternalProvider): Promise<Series> {
+    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
         if (await provider.isProviderAvailable()) {
             const requestId = stringHelper.randomString(5);
             let trys = 0;
@@ -175,7 +175,7 @@ export default new class ProviderHelper {
      * @param name Searched name.
      * @param provider In this provider the search will be performed.
      */
-    private async getSeriesByName(series: Series, name: Name, provider: IExternalProvider): Promise<Series> {
+    private async getSeriesByName(series: Series, name: Name, provider: ExternalProvider): Promise<Series> {
         let searchResult: MultiProviderResult[] = [];
         let resultContainer: SearchResultRatingContainer[] = [];
         const season = await series.getSeason();

@@ -7,13 +7,13 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import timeHelper from '../../helpFunctions/time-helper';
 import logger from '../../logger/logger';
-import IListProvider from '../provider/list-provider';
+import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
-export default class KitsuProvider implements IListProvider {
+export default class KitsuProvider extends ListProvider {
 
     public static getInstance() {
         if (!KitsuProvider.instance) {
@@ -32,6 +32,7 @@ export default class KitsuProvider implements IListProvider {
     public userData: KitsuUserData;
     public api: Kitsu;
     constructor() {
+        super();
         this.api = new Kitsu();
         this.userData = new KitsuUserData();
     }

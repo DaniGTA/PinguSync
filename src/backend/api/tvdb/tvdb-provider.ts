@@ -3,7 +3,7 @@ import request from 'request';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import logger from '../../logger/logger';
-import IInfoProvider from '../provider/info-provider';
+import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { TVDBSeries } from './models/getSeries';
 import { TVDBLogin } from './models/login';
@@ -11,7 +11,7 @@ import SeriesSearchResults from './models/searchResults';
 import TVDBConverter from './tvdb-converter';
 import { TVDBProviderData } from './tvdb-provider-data';
 
-export default class TVDBProvider implements IInfoProvider {
+export default class TVDBProvider extends InfoProvider {
     public static Instance: TVDBProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.SPECIAL];
     public providerName = 'tvdb';
@@ -30,6 +30,7 @@ export default class TVDBProvider implements IInfoProvider {
     }
 
     constructor() {
+        super();
         if (!TVDBProvider.Instance) {
             TVDBProvider.Instance = this;
         }

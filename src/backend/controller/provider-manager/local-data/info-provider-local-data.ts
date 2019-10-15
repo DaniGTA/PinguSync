@@ -1,9 +1,10 @@
-import IInfoProvider from '../../../api/provider/info-provider';
+import InfoProvider from '../../../api/provider/info-provider';
 import listHelper from '../../../helpFunctions/list-helper';
 import Banner from '../../objects/meta/banner';
 import Cover from '../../objects/meta/cover';
 import ProviderList from '../provider-list';
 import ProviderLocalData from './interfaces/provider-local-data';
+import ProviderNameManager from '../provider-name-manager';
 /**
  * Only contains infos about the series.
  */
@@ -97,20 +98,25 @@ export class InfoProviderLocalData extends ProviderLocalData {
         return mergedProvider;
     }
     public readonly provider: string;
-    constructor(id: string | number, lp?: IInfoProvider | string) {
+    public version = 1;
+    constructor(id: string | number, lp?: InfoProvider | string | (new () => InfoProvider)) {
         super(id);
         this.lastUpdate = new Date(Date.now());
-        if (typeof lp === 'string') {
-            this.provider = lp;
-        } else if (typeof lp !== 'undefined') {
-            this.provider = lp.providerName;
-            this.version = lp.version;
+        if (lp) {
+            if (typeof lp === 'string') {
+                this.provider = lp;
+            } else if (lp instanceof InfoProvider) {
+                this.provider = lp.providerName;
+                this.version = lp.version;
+            } else {
+                this.provider = new ProviderNameManager().getProviderName(lp);
+            }
         } else {
             this.provider = '';
         }
     }
 
-    public getProviderInstance(): IInfoProvider {
+    public getProviderInstance(): InfoProvider {
         for (const provider of ProviderList.getInfoProviderList()) {
             if (provider.providerName === this.provider) {
                 return provider;

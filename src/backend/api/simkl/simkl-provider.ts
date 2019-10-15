@@ -6,7 +6,7 @@ import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
-import IListProvider from '../provider/list-provider';
+import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import CodeResponse from './objects/codeResponse';
 import { SimklErrorResponse } from './objects/simklErrorResponse';
@@ -18,7 +18,7 @@ import { UserListResponse } from './objects/userListResonse';
 import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
 
-export default class SimklProvider implements IListProvider {
+export default class SimklProvider extends ListProvider {
     public static instance: SimklProvider;
     public userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
@@ -34,6 +34,7 @@ export default class SimklProvider implements IListProvider {
     private timeout?: number;
     private simklConverter = new SimklConverter();
     constructor() {
+        super();
         SimklProvider.instance = this;
     }
 

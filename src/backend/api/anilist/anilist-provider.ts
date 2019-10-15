@@ -7,7 +7,7 @@ import * as meta from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import IListProvider from '../provider/list-provider';
+import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import aniListConverter from './anilist-converter';
 import { AniListUserData } from './anilist-user-data';
@@ -22,7 +22,7 @@ import searchSeriesGql from './graphql/searchSeries.gql';
 import { MediaListCollection } from './graphql/seriesList';
 import { Viewer } from './graphql/viewer';
 
-export default class AniListProvider implements IListProvider {
+export default class AniListProvider extends ListProvider {
 
     public static getInstance() {
         if (!AniListProvider.instance) {
@@ -43,6 +43,7 @@ export default class AniListProvider implements IListProvider {
     private redirectUri = 'https://anilist.co/api/v2/oauth/pin';
 
     constructor() {
+        super();
         this.userData = new AniListUserData();
         AniListProvider.instance = this;
     }

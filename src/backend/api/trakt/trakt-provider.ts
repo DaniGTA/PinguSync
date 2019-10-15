@@ -1,6 +1,6 @@
 import Series from '../../controller/objects/series';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
-import IListProvider from '../provider/list-provider';
+import ListProvider from '../provider/list-provider';
 import { TraktSearch } from './objects/search';
 import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
@@ -16,7 +16,7 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import traktConverter from './trakt-converter';
-export default class TraktProvider implements IListProvider {
+export default class TraktProvider extends ListProvider {
 
     public static getInstance() {
         if (!TraktProvider.instance) {
@@ -37,6 +37,7 @@ export default class TraktProvider implements IListProvider {
     private clientId = '94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd';
     private redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
     constructor() {
+        super();
         TraktProvider.instance = this;
         this.userData = new TraktUserData();
     }

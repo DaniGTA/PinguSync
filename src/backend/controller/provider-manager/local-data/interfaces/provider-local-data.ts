@@ -8,7 +8,7 @@ import { MediaType } from '../../../objects/meta/media-type';
 import Name from '../../../objects/meta/name';
 import Overview from '../../../objects/meta/overview';
 
-export default class ProviderLocalData {
+export default abstract class ProviderLocalData {
     // ------------------
     //  Provider metadata stuff
     // ------------------
@@ -17,7 +17,7 @@ export default class ProviderLocalData {
      * The version number of the data object.
      * If this get raised the client knows it needs too update his own data.
      */
-    public version: number = 1;
+    public abstract version: number = 1;
     /**
      * Provider series id.
      */
@@ -29,7 +29,7 @@ export default class ProviderLocalData {
     /**
      * The provider name
      */
-    public readonly provider: string = '';
+    public abstract readonly provider: string = '';
     /**
      * Saves the raw response from the provider
      *
@@ -119,9 +119,6 @@ export default class ProviderLocalData {
                 }
             }
         }
-        if (names.length > 25) {
-            logger.log('info', '.');
-        }
     }
 
     /**
@@ -144,7 +141,6 @@ export default class ProviderLocalData {
     /**
      * Returns all names that this provider have.
      *
-     * DIRECT ACCESS IS FORBIDDEN TO PREVENT DOUBLE ENTRYS.
      */
     public getAllNames(): readonly Name[] {
         return Object.freeze([...this.names]);
@@ -153,7 +149,6 @@ export default class ProviderLocalData {
     /**
      * Returns all overviews that this provider have.
      *
-     * DIRECT ACCESS IS FORBIDDEN TO PREVENT DOUBLE ENTRYS.
      */
     public getAllOverviews(): readonly Overview[] {
         return Object.freeze([...this.overviews]);
