@@ -122,10 +122,10 @@ export default class SimklConverter {
             providers.push(new InfoProviderLocalData(serieIds.imdb, 'imdb'));
         }
         if (serieIds.tvdb) {
-            providers.push(new InfoProviderLocalData(TVDBProvider.Instance.providerName, serieIds.tvdb));
+            providers.push(new InfoProviderLocalData(serieIds.tvdb, TVDBProvider));
         }
         if (serieIds.zap2it) {
-            providers.push(new InfoProviderLocalData(serieIds.tvdb, 'zap2it'));
+            providers.push(new InfoProviderLocalData(serieIds.zap2it, 'zap2it'));
         }
 
         return providers;
@@ -145,13 +145,13 @@ export default class SimklConverter {
             providers.push(new InfoProviderLocalData(animeIds.anfo, 'anfo'));
         }
         if (animeIds.anidb) {
-            providers.push(new InfoProviderLocalData(animeIds.anidb, AniDBProvider.instance));
+            providers.push(new InfoProviderLocalData(animeIds.anidb, AniDBProvider));
         }
         if (animeIds.ann) {
             providers.push(new InfoProviderLocalData(animeIds.ann, 'ann'));
         }
         if (animeIds.mal) {
-            providers.push(new ListProviderLocalData(animeIds.mal, MalProvider.getInstance()));
+            providers.push(new ListProviderLocalData(animeIds.mal, MalProvider));
         }
         if (animeIds.crunchyroll) {
             providers.push(new StreamingProviderLocalData(animeIds.crunchyroll, 'crunchyroll'));

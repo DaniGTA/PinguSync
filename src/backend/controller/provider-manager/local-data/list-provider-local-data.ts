@@ -6,6 +6,7 @@ import WatchProgress from '../../objects/meta/watch-progress';
 import { WatchStatus } from '../../objects/series';
 import ProviderList from '../provider-list';
 import ProviderLocalData from './interfaces/provider-local-data';
+import ProviderNameManager from '../provider-name-manager';
 
 /**
  * Contains info about the series and the user watch progress and the list that series is in.
@@ -164,14 +165,18 @@ export class ListProviderLocalData extends ProviderLocalData {
     public customListName = '';
     public version = 1;
 
-    constructor(id: string | number, lp?: ListProvider | string) {
+    constructor(id: string | number, lp?: ListProvider | string | (new () => ListProvider)) {
         super(id);
         this.lastUpdate = new Date(Date.now());
-        if (typeof lp === 'string') {
-            this.provider = lp;
-        } else if (typeof lp !== 'undefined') {
-            this.provider = lp.providerName;
-            this.version = lp.version;
+        if (lp) {
+            if (typeof lp === 'string') {
+                this.provider = lp;
+            } else if (lp instanceof ListProvider) {
+                this.provider = lp.providerName;
+                this.version = lp.version;
+            } else {
+                this.provider = ProviderNameManager.getProviderName(lp);
+            }
         } else {
             this.provider = '';
         }

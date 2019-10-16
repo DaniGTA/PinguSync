@@ -109,7 +109,7 @@ export class InfoProviderLocalData extends ProviderLocalData {
                 this.provider = lp.providerName;
                 this.version = lp.version;
             } else {
-                this.provider = new ProviderNameManager().getProviderName(lp);
+                this.provider = ProviderNameManager.getProviderName(lp);
             }
         } else {
             this.provider = '';

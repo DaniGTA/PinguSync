@@ -15,6 +15,8 @@ export default class SeasonSearchModeHelper {
                 return true;
             case SeasonSearchMode.TITLE_ONLY:
                 return true;
+            case SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS:
+                return true;
             default:
                 return false;
         }
@@ -33,6 +35,8 @@ export default class SeasonSearchModeHelper {
             case SeasonSearchMode.PREQUEL_TRACE_ONLY:
                 return true;
             case SeasonSearchMode.TRACE_ONLY:
+                return true;
+            case SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS:
                 return true;
             default:
                 return false;
@@ -53,6 +57,8 @@ export default class SeasonSearchModeHelper {
                 return true;
             case SeasonSearchMode.TRACE_ONLY:
                 return true;
+            case SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS:
+                return true;
             default:
                 return false;
         }
@@ -71,6 +77,8 @@ export default class SeasonSearchModeHelper {
             case SeasonSearchMode.PREQUEL_TRACE_MODE:
                 return true;
             case SeasonSearchMode.PROVIDER_SEASON_VALUE_ONLY:
+                return true;
+            case SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS:
                 return true;
             default:
                 return false;

@@ -1,15 +1,15 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Series from '../../controller/objects/series';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import logger from '../../logger/logger';
+import ExternalProvider from '../provider/external-provider';
 import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
-import ExternalProvider from '../provider/external-provider';
 export default class OMDbProvider extends InfoProvider {
     public static instance: OMDbProvider;
     public isOffline: boolean = false;

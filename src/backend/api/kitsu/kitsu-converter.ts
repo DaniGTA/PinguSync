@@ -22,6 +22,7 @@ import MalProvider from '../mal/mal-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TraktProvider from '../trakt/trakt-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 
 export default new class KitsuConverter {
     public async convertMediaToAnime(media: IMedia, fullInfo: boolean = true): Promise<MultiProviderResult> {
@@ -171,7 +172,7 @@ export default new class KitsuConverter {
             detailedEpisode.duration = episode.length;
             detailedEpisode.lastProviderUpdate = new Date(episode.updatedAt).getTime();
             detailedEpisode.providerEpisodeId = episode.id;
-            detailedEpisode.provider = KitsuProvider.getInstance().providerName;
+            detailedEpisode.provider = ProviderNameManager.getProviderName(KitsuProvider);
             detailedEpisode.summery = episode.synopsis;
             detailedEpisode.thumbnails.push(...episodeThumbnails);
             detailedEpisodes.push(detailedEpisode);

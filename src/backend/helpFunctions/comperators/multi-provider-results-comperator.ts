@@ -8,6 +8,7 @@ import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comper
 import MediaTypeComperator from './media-type-comperator';
 import ProviderComperator from './provider-comperator';
 import ReleaseYearComperator from './release-year-comperator';
+import { SeasonSearchMode } from '../season-helper/season-search-mode';
 
 export default class MultiProviderComperator {
     public static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult> {
@@ -16,7 +17,7 @@ export default class MultiProviderComperator {
         const tempSeries = new Series();
         await tempSeries.addProviderDatas(result.mainProvider, ...result.subProviders);
         const seasonA = await series.getSeason();
-        const seasonB = await tempSeries.getSeason();
+        const seasonB = await tempSeries.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);
 
         finalResult.matchAble += 2;
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
@@ -66,7 +67,7 @@ export default class MultiProviderComperator {
             for (const serie of await series.getSlugNames()) {
                 for (const tempserie of await tempSeries.getSlugNames()) {
                     if (serie.name !== tempserie.name) {
-                       logger.warn('Not same slug id');
+                        logger.warn('Not same slug id');
                     }
                 }
             }

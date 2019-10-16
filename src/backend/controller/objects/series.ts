@@ -182,7 +182,7 @@ export default class Series extends SeriesProviderExtension {
         logger.log('info', '[Season] [Serve]: Serve Season');
         if ((!this.cachedSeason || this.cachedSeason === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
             const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
-            if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
+            if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
                 // UKNOWN SEASON
                 if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
                     logger.log('info', 'Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);

@@ -1,16 +1,16 @@
 
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
+import Mal, { ScraperClient } from 'node-myanimelist';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
+import ExternalProvider from '../provider/external-provider';
 import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
-import { MalUserData } from './mal-user-data';
-import Mal, { ScraperClient } from 'node-myanimelist';
 import malConverter from './mal-converter';
-import ExternalProvider from '../provider/external-provider';
+import { MalUserData } from './mal-user-data';
 export default class MalProvider extends ListProvider {
 
     public static getInstance() {

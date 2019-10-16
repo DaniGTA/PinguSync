@@ -23,4 +23,8 @@ export enum SeasonSearchMode {
      * This will force the function to not perform any search just passthrough cached results.
      */
     NO_SEARCH,
+    /**
+     * This prevents the prequels/sequels to generate extra query requests.
+     */
+    NO_EXTRA_TRACE_REQUESTS,
 }

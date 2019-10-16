@@ -18,6 +18,7 @@ import { Season, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
@@ -113,7 +114,7 @@ export default new class TraktConverter {
     }
 
     public async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
-        const currentProvider = series.getListProvidersInfos().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        const currentProvider = series.getListProvidersInfos().find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
         const seasonNumber = (await series.getSeason()).seasonNumber;
         if (typeof currentProvider !== 'undefined' && seasonNumber) {
 
@@ -144,7 +145,7 @@ export default new class TraktConverter {
     }
 
     public async convertAnimeToSendEntryShow(series: Series, newWatchprogress: number): Promise<SendEntryUpdate> {
-        const currentProvider = series.getListProvidersInfos().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        const currentProvider = series.getListProvidersInfos().find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
         let seasonNumber = (await series.getSeason()).seasonNumber;
         if (currentProvider && seasonNumber) {
 

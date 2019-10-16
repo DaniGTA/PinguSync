@@ -1,13 +1,13 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import logger from '../../logger/logger';
+import ExternalProvider from '../provider/external-provider';
 import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { Search, Show } from './models/tvmaze-model';
 import TVMazeConverter from './tvmaze-converter';
-import ExternalProvider from '../provider/external-provider';
 
 export default class TVMazeProvider extends InfoProvider {
     public static instance: TVMazeProvider;

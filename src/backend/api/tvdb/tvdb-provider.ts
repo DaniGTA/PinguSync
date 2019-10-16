@@ -1,8 +1,9 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import logger from '../../logger/logger';
+import ExternalProvider from '../provider/external-provider';
 import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { TVDBSeries } from './models/getSeries';
@@ -10,7 +11,6 @@ import { TVDBLogin } from './models/login';
 import SeriesSearchResults from './models/searchResults';
 import TVDBConverter from './tvdb-converter';
 import { TVDBProviderData } from './tvdb-provider-data';
-import ExternalProvider from '../provider/external-provider';
 
 export default class TVDBProvider extends InfoProvider {
     public static Instance: TVDBProvider;

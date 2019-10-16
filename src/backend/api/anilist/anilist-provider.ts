@@ -1,12 +1,13 @@
 
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import * as meta from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series, { WatchStatus } from '../../controller/objects/series';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
+import ExternalProvider from '../provider/external-provider';
 import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import aniListConverter from './anilist-converter';
@@ -21,7 +22,6 @@ import { SearchSeries } from './graphql/searchSeries';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import { MediaListCollection } from './graphql/seriesList';
 import { Viewer } from './graphql/viewer';
-import ExternalProvider from '../provider/external-provider';
 
 export default class AniListProvider extends ListProvider {
 
