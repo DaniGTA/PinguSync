@@ -13,6 +13,7 @@ import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
+import ExternalProvider from '../provider/external-provider';
 export default class KitsuProvider extends ListProvider {
 
     public static getInstance() {
@@ -25,7 +26,7 @@ export default class KitsuProvider extends ListProvider {
     private static instance: KitsuProvider;
     public version = 1;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
-
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public providerName: string = 'Kitsu';
     public hasOAuthCode: boolean = true;
     public hasUniqueIdForSeasons = true;

@@ -15,6 +15,7 @@ import AniDBConverter from './anidb-converter';
 import AniDBNameManager from './anidb-name-manager';
 import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
 import AniDBNameListXML, { Anime, Title } from './objects/anidbNameListXML';
+import ExternalProvider from '../provider/external-provider';
 
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
@@ -25,6 +26,7 @@ export default class AniDBProvider extends InfoProvider {
     public isOffline = true;
     public hasUniqueIdForSeasons = true;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
 
     constructor(download: boolean = true) {
         super();

@@ -7,6 +7,7 @@ import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { Search, Show } from './models/tvmaze-model';
 import TVMazeConverter from './tvmaze-converter';
+import ExternalProvider from '../provider/external-provider';
 
 export default class TVMazeProvider extends InfoProvider {
     public static instance: TVMazeProvider;
@@ -15,6 +16,7 @@ export default class TVMazeProvider extends InfoProvider {
     public providerName: string = 'tvmaze';
     public hasUniqueIdForSeasons: boolean = false;
     public supportedMediaTypes: MediaType[] = [MediaType.SERIES, MediaType.ANIME];
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public version: number = 1;
     constructor() {
         super();

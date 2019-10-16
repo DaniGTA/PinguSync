@@ -10,6 +10,7 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import { MalUserData } from './mal-user-data';
 import Mal, { ScraperClient } from 'node-myanimelist';
 import malConverter from './mal-converter';
+import ExternalProvider from '../provider/external-provider';
 export default class MalProvider extends ListProvider {
 
     public static getInstance() {
@@ -22,7 +23,7 @@ export default class MalProvider extends ListProvider {
     private static instance: MalProvider;
     public version = 1;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
-
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public providerName: string = 'Mal';
     public hasOAuthCode: boolean = false;
     public hasUniqueIdForSeasons = true;

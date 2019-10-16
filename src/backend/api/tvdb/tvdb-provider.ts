@@ -10,10 +10,12 @@ import { TVDBLogin } from './models/login';
 import SeriesSearchResults from './models/searchResults';
 import TVDBConverter from './tvdb-converter';
 import { TVDBProviderData } from './tvdb-provider-data';
+import ExternalProvider from '../provider/external-provider';
 
 export default class TVDBProvider extends InfoProvider {
     public static Instance: TVDBProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.SPECIAL];
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public providerName = 'tvdb';
     public isOffline = false;
     public hasUniqueIdForSeasons = false;

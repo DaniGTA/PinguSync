@@ -21,6 +21,7 @@ import { SearchSeries } from './graphql/searchSeries';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import { MediaListCollection } from './graphql/seriesList';
 import { Viewer } from './graphql/viewer';
+import ExternalProvider from '../provider/external-provider';
 
 export default class AniListProvider extends ListProvider {
 
@@ -37,6 +38,7 @@ export default class AniListProvider extends ListProvider {
     public version = 1;
     public hasOAuthCode = true;
     public supportedMediaTypes: meta.MediaType[] = [meta.MediaType.MOVIE, meta.MediaType.ANIME, meta.MediaType.SPECIAL];
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public userData: AniListUserData;
     private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';
     private clientId = '389';

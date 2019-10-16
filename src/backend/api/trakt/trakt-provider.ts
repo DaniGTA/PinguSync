@@ -16,6 +16,7 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import traktConverter from './trakt-converter';
+import ExternalProvider from '../provider/external-provider';
 export default class TraktProvider extends ListProvider {
 
     public static getInstance() {
@@ -27,6 +28,7 @@ export default class TraktProvider extends ListProvider {
     }
     private static instance: TraktProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public hasUniqueIdForSeasons: boolean = false;
     public providerName: string = 'Trakt';
     public hasOAuthCode = true;

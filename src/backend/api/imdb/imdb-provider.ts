@@ -1,29 +1,28 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import request from 'request';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Series from '../../controller/objects/series';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import logger from '../../logger/logger';
-import InfoProvider from '../provider/info-provider';
+
 import MultiProviderResult from '../provider/multi-provider-result';
-import { IdRequestResult } from './models/id-request-result';
-import { SearchResults } from './models/search-results';
-import OMDbConverter from './omdb-converter';
+import InfoProvider from '../provider/info-provider';
 import ExternalProvider from '../provider/external-provider';
-export default class OMDbProvider extends InfoProvider {
-    public static instance: OMDbProvider;
+
+
+export default class ImdbProvider implements InfoProvider {
+    public static Instance: ImdbProvider;
     public isOffline: boolean = false;
     public hasOAuthCode: boolean = false;
-    public providerName: string = 'omdb';
+    public providerName: string = 'imdb';
     public hasUniqueIdForSeasons: boolean = false;
-    public supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
+    public supportedMediaTypes: MediaType[] = [MediaType.MOVIE];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public version: number = 1;
     public apikey = '728e1e03';
     constructor() {
-        super();
-        if (!OMDbProvider.instance) {
-            OMDbProvider.instance = this;
+        if (!ImdbProvider.Instance) {
+            ImdbProvider.Instance = this;
         }
     }
 
@@ -45,27 +44,11 @@ export default class OMDbProvider extends InfoProvider {
     }
 
     public async getMoreSeriesInfoByName(searchTitle: string, season?: number | undefined): Promise<MultiProviderResult[]> {
-        const results: MultiProviderResult[] = [];
-        const converter = new OMDbConverter();
-        try {
-            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.apikey + '&s=' + encodeURI(searchTitle));
-            if (result.Search) {
-                for (const resultEntry of result.Search) {
-                    results.push(converter.convertSearchResult(resultEntry));
-                }
-            }
-
-        } catch (err) {
-            logger.log('info', err);
-        }
-        return results;
+        throw new Error('Method not implemented.');
     }
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        const converter = new OMDbConverter();
-        const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + '&i=' + provider.id);
-        return converter.convertIdRequest(result);
+        throw new Error('Method not implemented.');
     }
-
 
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
         return new Promise<any>((resolve, reject) => {
