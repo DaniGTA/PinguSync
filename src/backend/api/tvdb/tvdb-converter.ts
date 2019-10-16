@@ -10,7 +10,7 @@ import TVDBProvider from './tvdb-provider';
 
 export default class TVDBConverter {
     public async convertSeriesToProviderLocalData(series: TVDBSeries): Promise<InfoProviderLocalData> {
-        const infoProviderLocalData = new InfoProviderLocalData(series.data.id, TVDBProvider.Instance);
+        const infoProviderLocalData = new InfoProviderLocalData(series.data.id, TVDBProvider);
         infoProviderLocalData.lastExternalChange = new Date(series.data.lastUpdated);
         infoProviderLocalData.publicScore = series.data.siteRating;
         infoProviderLocalData.rawEntry = series;
@@ -26,7 +26,7 @@ export default class TVDBConverter {
 
     public async convertSearchResultToProviderLocalData(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
         if (searchResult.id) {
-            const infoProviderLocalData = new InfoProviderLocalData(searchResult.id, TVDBProvider.Instance);
+            const infoProviderLocalData = new InfoProviderLocalData(searchResult.id, TVDBProvider);
 
             infoProviderLocalData.rawEntry = searchResult;
             if (searchResult.slug) {

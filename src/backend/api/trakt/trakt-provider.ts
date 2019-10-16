@@ -12,11 +12,11 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import logger from '../../logger/logger';
+import ExternalProvider from '../provider/external-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import traktConverter from './trakt-converter';
-import ExternalProvider from '../provider/external-provider';
 export default class TraktProvider extends ListProvider {
 
     public static getInstance() {
