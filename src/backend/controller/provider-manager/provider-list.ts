@@ -34,7 +34,7 @@ export default class ProviderList extends ProviderLoader {
                 return provider;
             }
         }
-        throw new Error('NoProviderFound');
+        throw new Error('[ProviderList] NoProviderFound: '+localdata.provider);
     }
 
 }

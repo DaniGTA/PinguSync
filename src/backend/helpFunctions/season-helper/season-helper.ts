@@ -28,7 +28,7 @@ class SeasonHelper {
      * @param seriesList a list where the relation should be.
      */
     public async searchSeasonValuePrequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
-        logger.log('info', '[Season] [Search]: Prequel Trace.' + ' (' + series.id + ')');
+        logger.debug('[Season] [Search]: Prequel Trace.' + ' (' + series.id + ')');
         let prequel: Series | null = null;
         if (await series.isAnyPrequelPresent() && seriesList) {
             const searchResult = await series.getPrequel(seriesList);
@@ -82,7 +82,7 @@ class SeasonHelper {
      * @param seriesList a list where the relation should be.
      */
     public async searchSeasonValueSequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
-        logger.log('info', '[Season] [Search]: Sequel Trace.' + ' (' + series.id + ')');
+        logger.debug('[Season] [Search]: Sequel Trace.' + ' (' + series.id + ')');
         let sequel: Series | null = null;
         if (await series.isAnySequelPresent() && seriesList) {
             const searchResult = await series.getSequel(seriesList);
@@ -127,7 +127,7 @@ class SeasonHelper {
      * @param seriesList where the relation should be, this will be needed to perform relation tracing. DEFAULT: `main list`
      */
     public async searchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
-        logger.log('info', '[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
+        logger.debug('[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
         let prequelResult: SearchSeasonValueResult | undefined;
         let sequelResult: SearchSeasonValueResult | undefined;
 
@@ -191,7 +191,7 @@ class SeasonHelper {
      */
     public async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
         const result: Series[] = [];
-        logger.log('info', 'create temp series');
+        logger.log('info', '[SeasonHelper] create temp series');
         for (const entry of localDatas) {
             for (const prequelId of entry.prequelIds) {
                 if (prequelId) {
@@ -212,7 +212,7 @@ class SeasonHelper {
                 }
             }
         }
-        logger.log('info', result.length + ' created temp series');
+        logger.log('[SeasonHelper] info', result.length + ' created temp series');
         return result;
     }
 }

@@ -19,7 +19,7 @@ class ProviderController {
                 return provider;
             }
         }
-        throw new Error('NoProviderFound');
+        throw new Error('[ProviderController] NoProviderFound: '+providerString);
     }
 
     private static instance: ProviderController;

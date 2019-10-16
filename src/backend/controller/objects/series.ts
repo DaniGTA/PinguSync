@@ -78,7 +78,7 @@ export default class Series extends SeriesProviderExtension {
             try {
                 names.push(...provider.getAllNames());
             } catch (err) {
-                logger.error('[NAME] [GET]: Failed to add Name on name request.');
+                logger.error('[NAME] [GET]: Failed to add Name on name request. SeriesID: '+this.id);
             }
         }
         return names;
@@ -117,7 +117,7 @@ export default class Series extends SeriesProviderExtension {
      * @param preferedSize default: LARGE
      */
     public getCoverImage(preferedSize: ImageSize = ImageSize.LARGE): Cover | null {
-        logger.log('info', '[Cover] [Serve]: Serve Cover Image');
+        logger.debug('[Cover] [Serve]: Serve Cover Image');
         const ressources: ProviderLocalData[] = [...this.getListProvidersInfos(), ...this.getInfoProvidersInfos()];
         let result: Cover | null = null;
         for (const listProvider of ressources) {
@@ -138,12 +138,12 @@ export default class Series extends SeriesProviderExtension {
      * It get the max number of that anime.
      */
     public getMaxEpisode(): number {
-        logger.log('info', '[Episode] [Serve]: Serve Max Episodes');
+        logger.debug('[Episode] [Serve]: Serve Max Episodes');
         const providers = this.getAllProviderLocalDatas();
         const array = (providers.flatMap((x) => x.episodes) as number[]);
         const onlyNumbers = array.filter((v) => Number.isInteger(v as number));
         if (onlyNumbers.length === 0) {
-            throw new Error('no episode found');
+            throw new Error('[Series] no episode found SeriesID: '+this.id);
         }
         return Math.max(...onlyNumbers);
     }
@@ -161,7 +161,7 @@ export default class Series extends SeriesProviderExtension {
      * Give an array of all episodes in numbers.
      */
     public async getAllEpisodes(): Promise<number[]> {
-        logger.log('info', '[Episode] [Serve]: Serve all Episodes');
+        logger.debug('[Episode] [Serve]: Serve all Episodes');
         let result;
         try {
             result = await listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap((x) => x.episodes));
@@ -171,7 +171,7 @@ export default class Series extends SeriesProviderExtension {
         if (result) {
             return listHelper.getUniqueList(result as number[]);
         }
-        throw new Error('no episode found');
+        throw new Error('no episode found SeriesID: '+this.id);
     }
 
     /**
@@ -179,15 +179,16 @@ export default class Series extends SeriesProviderExtension {
      * @hasTest
      */
     public async getSeason(searchMode: SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
-        logger.log('info', '[Season] [Serve]: Serve Season');
+        logger.debug('[Season] [Serve]: Serve Season');
         if ((!this.cachedSeason || this.cachedSeason === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
             const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
             if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
                 // UKNOWN SEASON
                 if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
-                    logger.log('info', 'Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                    await ListController.instance.addSeriesToMainList(...await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders));
-                    logger.log('info', 'Temp Series Successfull added.');
+                    logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
+                    const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
+                    await ListController.instance.addSeriesToMainList(...list);
+                    logger.info('Temp Series Successfull added.');
                 }
                 this.cachedSeason = -2;
                 return new Season(undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
@@ -205,7 +206,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
-        logger.log('info', '[Season] [Serve]: Last Prequel');
+        logger.debug('[Season] [Serve]: Last Prequel');
         const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getAllProviderLocalDatas()) {
@@ -234,9 +235,9 @@ export default class Series extends SeriesProviderExtension {
             searchInList = await ListController.instance.getMainList();
         }
         if (!searchInList) {
-            throw new Error('no searchList for sequel search');
+            throw new Error('no searchList for sequel search ');
         }
-        logger.log('info', '[Season] [Serve]: Last Sequel');
+        logger.debug('[Season] [Serve]: Last Sequel');
         const searchedProviders: ProviderLocalData[] = [];
         try {
             for (const listProvider of this.getAllProviderLocalDatas()) {
@@ -266,7 +267,7 @@ export default class Series extends SeriesProviderExtension {
         }
         try {
             this.canSync = await this.getCanSyncStatus();
-            logger.log('info', 'Calculated Sync status');
+            logger.debug('Calculated Sync status');
         } catch (err) {
             logger.error(err);
             this.canSync = false;
@@ -299,15 +300,15 @@ export default class Series extends SeriesProviderExtension {
      * @param anime
      */
     public async merge(anime: Series, allowAddNewEntry = true): Promise<Series> {
-        logger.log('info', 'Merging Series');
+        logger.debug('[Series ] Merging Series   | SeriesID: ' + this.id);
         const newAnime: Series = new Series();
 
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
-        logger.log('info', 'Merged Providers');
+        logger.debug('[Series] Merged Providers  | SeriesID: ' + this.id);
 
         await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
-        logger.log('info', 'Calculated Season');
+        logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
         await newAnime.getCanSync();
 
         await newAnime.getMediaType();
@@ -330,22 +331,22 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async getLastWatchProgress(): Promise<WatchProgress> {
-        logger.log('info', '[Episode] [Serve]: Last watch progress.');
+        logger.debug('[Episode] [Serve]: Last watch progress. SeriesID: ' + this.id);
         const provider = await this.getLastUpdatedProvider();
         if (provider) {
             const latestUpdatedProvider = Object.assign(new ListProviderLocalData(provider.id), provider);
             if (latestUpdatedProvider === null) {
-                throw new Error('no provider with valid sync status');
+                throw new Error('[Series] no provider with valid sync status SeriesID: ' + this.id);
             }
 
             const watchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
             if (watchProgress) {
                 return watchProgress;
             } else {
-                throw new Error('no watch progress');
+                throw new Error('[Series] no watch progress SeriesID: ' + this.id);
             }
         } else {
-            throw new Error('no provider with valid sync status');
+            throw new Error('[Series] no provider with valid sync status SeriesID: ' + this.id);
         }
     }
     /**
@@ -353,7 +354,7 @@ export default class Series extends SeriesProviderExtension {
      * @param list
      */
     public async getFirstSeason(list?: readonly Series[] | Series[]): Promise<Series> {
-        logger.log('info', '[Season] [Serve]: First Season.');
+        logger.debug('[Season] [Serve]: First Season. SeriesID: ' + this.id);
         if ((await this.getSeason()).seasonNumber === 1) {
             return this;
         }
@@ -381,7 +382,7 @@ export default class Series extends SeriesProviderExtension {
             }
         }
 
-        throw new Error('no first season found');
+        throw new Error('[Series] no first season found SeriesID: ' + this.id);
     }
 
     /**
@@ -504,7 +505,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     private async mergeProviders(...providers: ProviderLocalData[]): Promise<ProviderLocalData[]> {
-        logger.log('info', '[Provider] [Merge]: Merging providers.');
+        logger.debug('[Series] [MergeProviders]: Merging providers. SeriesID: '+this.id);
         const mergedProviderInfos: ProviderLocalData[] = [];
         for (const provider of providers) {
             const check = mergedProviderInfos.find((x) => provider.provider === x.provider);
@@ -514,7 +515,8 @@ export default class Series extends SeriesProviderExtension {
                     if (provider2.provider === provider.provider) {
                         // tslint:disable-next-line: triple-equals
                         if (!ProviderComperator.simpleProviderIdCheck(provider2.id, provider.id)) {
-                            logger.warn('Merging two different ids');
+                            const log = 'ID1: ' + provider.id + ' | ID2: ' + provider.id;
+                            logger.warn('[Series] [MergeProviders]: Merging two different ids! Provider: ' + provider2.provider + ' | ' + log);
                         }
                         collected.push(provider2);
                         continue;
@@ -544,9 +546,10 @@ export default class Series extends SeriesProviderExtension {
                     if (providerA.provider === providerB.provider) {
                         providerB = Object.assign(new ListProviderLocalData(providerB.id), providerB);
                         try {
-                            if (ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id) && providerB.getProviderInstance().hasUniqueIdForSeasons) {
-                                throw new Error('no relations found in the providers');
-                            } else if (ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id) && providerA.targetSeason !== providerB.targetSeason) {
+                            const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
+                            if (simpleProviderCheckResult && providerB.getProviderInstance().hasUniqueIdForSeasons) {
+                                throw new Error('[Series] Not the relation was found but the Series himself. SKIPPING SEARCH. SeriesID: ' + this.id);
+                            } else if (simpleProviderCheckResult && providerA.targetSeason !== providerB.targetSeason) {
                                 return a;
                             }
                         } catch (err) {
@@ -576,7 +579,7 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         }
-        throw new Error('no relations found in the providers');
+        throw new Error('[Series] no relations found in the providers SeriesID: ' + this.id);
     }
 
     /**
@@ -607,10 +610,11 @@ export default class Series extends SeriesProviderExtension {
         try {
             latestUpdatedProvider = await this.getLastUpdatedProvider();
         } catch (err) {
-            logger.log('info', err);
+            logger.error('[ERROR] [Series] [getCanSyncStatus]:');
+            logger.error(err);
         }
         if (!latestUpdatedProvider) {
-            throw new Error('no provider with valid sync status');
+            throw new Error('[Series] no provider with valid sync status SeriesID: ' + this.id);
         }
         latestUpdatedProvider = Object.assign(new ListProviderLocalData(latestUpdatedProvider.id), latestUpdatedProvider);
         if (!await latestUpdatedProvider.getProviderInstance().isUserLoggedIn()) {
@@ -662,7 +666,7 @@ export default class Series extends SeriesProviderExtension {
      * @return the last updated provider with watchProgress !
      */
     private async getLastUpdatedProvider(exclude: ListProviderLocalData[] = []): Promise<ListProviderLocalData | null> {
-        logger.log('info', '[Provider] [Serve]: Last updated provider');
+        logger.debug('[Provider] [Serve]: Last updated provider');
         let latestUpdatedProvider: ListProviderLocalData | null = null;
         const providerInfos = this.getListProvidersInfos();
         if (providerInfos) {

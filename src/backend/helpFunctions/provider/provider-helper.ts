@@ -36,7 +36,8 @@ export default new class ProviderHelper {
                 }
             }
         } catch (err) {
-            logger.log('info', err);
+            logger.error('[ERROR] [ProviderHelper] [checkListProviderId]:');
+            logger.error(err);
         }
         return new SameIdAndUniqueId();
     }
@@ -66,10 +67,11 @@ export default new class ProviderHelper {
                                 logger.log('info', '[' + requestId + '][' + provider.providerName + '] ByName Request success 🎉');
                                 return result;
                             }
-                            logger.log('info', '[' + requestId + '][' + provider.providerName + '] ByName Request failed ❌');
+                            logger.warn('[' + requestId + '][' + provider.providerName + '] ByName Request failed. try next...');
 
                             alreadySearchedNames.push(name.name);
                         }
+                        logger.warn('info', '[' + requestId + '][' + provider.providerName + '] ByName Request failed. ❌');
                     }
                 }
             } else {
@@ -80,10 +82,10 @@ export default new class ProviderHelper {
                 return series;
             }
 
-            logger.log('info', '[' + requestId + '][' + provider.providerName + '] Request failed ❌❌❌❌❌❌');
-            throw new Error('no series info found by name');
+            logger.warn('[' + requestId + '][' + provider.providerName + '] Request failed ❌❌❌❌❌❌');
+            throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'No series info found by names.');
         }
-        throw new Error('provider is not available');
+        throw new Error('[' + provider.providerName + '] Provider is not available!');
     }
 
     /**
@@ -108,12 +110,15 @@ export default new class ProviderHelper {
                             }
                         }
                     } else {
-                        logger.log('info', 'Failed get main list entry: no list controller instance');
+                        logger.warn('[ProviderHelper] [fillListProvider]: Failed get main list entry: no list controller instance');
                     }
 
                     try {
                         result = entry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
-                    } catch (err) { }
+                    } catch (err) {
+                        logger.error('[ERROR] [ProviderHelper] [fillListProvider]:');
+                        logger.error(err);
+                    }
                     if (result || forceUpdate) {
                         entry = await this.getProviderSeriesInfo(entry, provider);
                         await timeHelper.delay(700);
@@ -146,6 +151,7 @@ export default new class ProviderHelper {
                 try {
                     entry = await this.fillListProvider(entry);
                 } catch (err) {
+                    logger.error('[ERROR] [ProviderHelper] [fillMissingProvider]:');
                     logger.error(err);
                 }
                 entry.lastInfoUpdate = Date.now();
@@ -164,7 +170,10 @@ export default new class ProviderHelper {
         try {
             // Test
             names.unshift(new Name(await stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
-        } catch (err) { }
+        } catch (err) {
+            logger.error('[ERROR] [ProviderHelper] [getNamesSortedBySearchAbleScore]:');
+            logger.debug(err);
+        }
         return listHelper.getLazyUniqueStringList(names);
     }
 
@@ -184,7 +193,7 @@ export default new class ProviderHelper {
             searchResult = await provider.getMoreSeriesInfoByName(name.name, season.seasonNumber);
 
             if (searchResult && searchResult.length !== 0) {
-                logger.log('info', '[' + provider.providerName + '] Results: ' + searchResult.length);
+                logger.debug('[' + provider.providerName + '] Results: ' + searchResult.length);
                 for (const result of searchResult) {
                     const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
                     resultContainer.push(new SearchResultRatingContainer(mpcr, result));
@@ -208,11 +217,12 @@ export default new class ProviderHelper {
                     }
                 }
             } else {
-                logger.warn('no results');
+                logger.warn('[' + provider.providerName + '] No results to name: ' + name);
             }
         } else {
-            logger.warn('[' + provider.providerName + '] ');
+            logger.warn('[' + provider.providerName + '] Season number problem.');
         }
+        logger.warn('[' + provider.providerName + '] [getSeriesByName]: Returns NULL!');
         throw null;
     }
 
@@ -250,6 +260,7 @@ export default new class ProviderHelper {
                     series = await series.merge(data);
                 }
             } catch (err) {
+                logger.error('[ERROR] [ProviderHelper] [updateInfoProviderData]:');
                 logger.error(err);
             }
         }

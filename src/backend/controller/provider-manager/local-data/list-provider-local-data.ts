@@ -189,7 +189,7 @@ export class ListProviderLocalData extends ProviderLocalData {
                 return provider;
             }
         }
-        throw new Error('NoProviderFound');
+        throw new Error('[ListProviderLocalData] NoProviderFound: '+this.provider);
     }
 
     public getHighestWatchedEpisode(): WatchProgress | undefined {
