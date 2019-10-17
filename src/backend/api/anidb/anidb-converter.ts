@@ -20,7 +20,7 @@ import { Anime } from './objects/anidbNameListXML';
 export default class AniDBConverter {
     public async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {
 
-        const ipld = new InfoProviderLocalData(anime._attributes.aid, AniDBProvider.instance);
+        const ipld = new InfoProviderLocalData(anime._attributes.aid, AniDBProvider);
         ipld.rawEntry = anime;
         ipld.version = AniDBProvider.instance.version;
         ipld.hasFullInfo = false;
@@ -29,7 +29,7 @@ export default class AniDBConverter {
 
     public async convertFullInfoToProviderLocalData(fullInfo: AniDBAnimeFullInfo): Promise<MultiProviderResult> {
         if (fullInfo.anime) {
-            const ipld = new InfoProviderLocalData(fullInfo.anime._attributes.id, AniDBProvider.instance);
+            const ipld = new InfoProviderLocalData(fullInfo.anime._attributes.id, AniDBProvider);
             for (const title of fullInfo.anime.titles.title) {
                 ipld.addSeriesName(new Name(title._text, title._attributes['xml:lang'], await this.convertToNameType(title._attributes.type)));
             }

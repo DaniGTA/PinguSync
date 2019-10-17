@@ -17,6 +17,7 @@ export default class TVMazeProvider extends InfoProvider {
     public hasUniqueIdForSeasons: boolean = false;
     public supportedMediaTypes: MediaType[] = [MediaType.SERIES, MediaType.ANIME];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
     public version: number = 1;
     constructor() {
         super();
@@ -66,7 +67,7 @@ export default class TVMazeProvider extends InfoProvider {
                     }, (error: any, response: any, body: any) => {
                         try {
                             if (response.statusCode === 200 || response.statusCode === 201) {
-                                var data: T = JSON.parse(body) as T;
+                                const data: T = JSON.parse(body) as T;
                                 resolve(data);
                             } else {
                                 logger.log('info', '[TVMaze] status code: ' + response.statusCode);

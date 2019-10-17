@@ -106,21 +106,21 @@ export default new class KitsuConverter {
                             logger.warn('[KitsuConverter] Missing MediaType: ' + mediaType);
                             break;
                     }
-                    const localdata = new ListProviderLocalData(id, AniListProvider.getInstance());
+                    const localdata = new ListProviderLocalData(id, AniListProvider);
                     localdata.mediaType = mediaType;
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'hulu') {
                     const localdata = new StreamingProviderLocalData(mapping.externalId, 'hulu');
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'myanimelist/anime') {
-                    const localdata = new ListProviderLocalData(mapping.externalId, MalProvider.getInstance());
+                    const localdata = new ListProviderLocalData(mapping.externalId, MalProvider);
                     localdata.mediaType = MediaType.ANIME;
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'myanimelist/manga') {
-                    const localdata = new ListProviderLocalData(mapping.externalId, MalProvider.getInstance());
+                    const localdata = new ListProviderLocalData(mapping.externalId, MalProvider);
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'trakt') {
-                    const localdata = new ListProviderLocalData(mapping.externalId, TraktProvider.getInstance());
+                    const localdata = new ListProviderLocalData(mapping.externalId, TraktProvider);
                     providerLocalData.push(localdata);
                 }
             } catch (err) {
@@ -131,7 +131,7 @@ export default new class KitsuConverter {
             const result = mappings.find((x) => x.externalSite.includes('thetvdb') && x.externalId.includes('/'));
             if (result) {
                 const idSeason = result.externalId.split('/');
-                const localdata = new InfoProviderLocalData(idSeason[0], TVDBProvider.Instance);
+                const localdata = new InfoProviderLocalData(idSeason[0], TVDBProvider);
                 localdata.targetSeason = Number(idSeason[1]);
                 providerLocalData.push(localdata);
             }

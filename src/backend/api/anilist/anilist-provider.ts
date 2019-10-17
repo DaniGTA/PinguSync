@@ -39,6 +39,7 @@ export default class AniListProvider extends ListProvider {
     public hasOAuthCode = true;
     public supportedMediaTypes: meta.MediaType[] = [meta.MediaType.MOVIE, meta.MediaType.ANIME, meta.MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
     public userData: AniListUserData;
     private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';
     private clientId = '389';
@@ -46,8 +47,13 @@ export default class AniListProvider extends ListProvider {
 
     constructor() {
         super();
-        this.userData = new AniListUserData();
-        AniListProvider.instance = this;
+
+        if (AniListProvider.instance) {
+            this.userData = AniListProvider.instance.userData;
+        } else {
+            AniListProvider.instance = this;
+            this.userData = new AniListUserData();
+        }
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {

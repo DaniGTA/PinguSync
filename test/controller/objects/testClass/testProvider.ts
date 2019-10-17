@@ -8,6 +8,7 @@ import { ListProviderLocalData } from '../../../../src/backend/controller/provid
 
 
 export default class TestProvider extends ListProvider {
+    public potentialSubProviders: Array<new () => import('../../../../src/backend/api/provider/external-provider').default>;
     public supportedOtherProvider: Array<new () => import('../../../../src/backend/api/provider/external-provider').default> = [];
 
     public version = 1;

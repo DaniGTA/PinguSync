@@ -73,6 +73,8 @@ export default new class ProviderHelper {
                         }
                         logger.warn('info', '[' + requestId + '][' + provider.providerName + '] ByName Request failed. ❌');
                     }
+                } else {
+                    throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'MediaType not supported: .' + seriesMediaType);
                 }
             } else {
                 const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);

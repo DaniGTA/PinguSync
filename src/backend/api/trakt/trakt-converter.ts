@@ -58,7 +58,7 @@ export default new class TraktConverter {
             tvdbProvider.hasFullInfo = false;
             result.subProviders.push(tvdbProvider);
         } catch (err) {
-            logger.log('info', 'no tvdb instance.');
+            logger.error('[TVDBConverter] No tvdb instance.');
         }
         return result;
     }

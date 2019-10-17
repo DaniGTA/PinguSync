@@ -14,6 +14,10 @@ import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
+import MalProvider from '../mal/mal-provider';
+import TraktProvider from '../trakt/trakt-provider';
+import AniDBProvider from '../anidb/anidb-provider';
+import AniListProvider from '../anilist/anilist-provider';
 export default class KitsuProvider extends ListProvider {
 
     public static getInstance() {
@@ -27,6 +31,7 @@ export default class KitsuProvider extends ListProvider {
     public version = 1;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [MalProvider, TraktProvider, AniDBProvider, AniListProvider];
     public providerName: string = 'Kitsu';
     public hasOAuthCode: boolean = true;
     public hasUniqueIdForSeasons = true;
