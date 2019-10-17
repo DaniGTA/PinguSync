@@ -16,6 +16,7 @@ export default class TVDBProvider extends InfoProvider {
     public static Instance: TVDBProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
     public providerName = 'tvdb';
     public isOffline = false;
     public hasUniqueIdForSeasons = false;
@@ -33,10 +34,10 @@ export default class TVDBProvider extends InfoProvider {
 
     constructor() {
         super();
-        if (!TVDBProvider.Instance) {
-            TVDBProvider.Instance = this;
+        if (TVDBProvider.Instance) {
             this.apiData = TVDBProvider.Instance.apiData;
         } else {
+            TVDBProvider.Instance = this;
             this.apiData = new TVDBProviderData();
         }
     }
@@ -108,7 +109,7 @@ export default class TVDBProvider extends InfoProvider {
                         url,
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + await TVDBProvider.Instance.getAccessKey(),
+                            'Authorization': 'Bearer ' + await this.getAccessKey(),
                         },
 
                         body,

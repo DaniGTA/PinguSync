@@ -18,12 +18,16 @@ import { UserListResponse } from './objects/userListResonse';
 import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
 import ExternalProvider from '../provider/external-provider';
+import AniDBProvider from '../anidb/anidb-provider';
+import MalProvider from '../mal/mal-provider';
+import TVDBProvider from '../tvdb/tvdb-provider';
 
 export default class SimklProvider extends ListProvider {
     public static instance: SimklProvider;
     public userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [TVDBProvider, AniDBProvider, MalProvider];
     public providerName = 'Simkl';
     public version = 1;
     public hasOAuthCode = true;

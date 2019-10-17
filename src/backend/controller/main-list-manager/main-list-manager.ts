@@ -67,9 +67,13 @@ export default class MainListManager {
         logger.info('[MainList] Update series in mainlist ' + series.id);
         const index = await this.getIndexFromSeries(series);
         if (!MainListManager.listMaintance) {
-            MainListManager.mainList[index] = series;
+            const tempSeries = await MainListManager.mainList[index].merge(series);
+            tempSeries.id = series.id;
+            MainListManager.mainList[index] = tempSeries;
         } else {
-            MainListManager.secondList[index] = series;
+            const tempSeries = await MainListManager.secondList[index].merge(series);
+            tempSeries.id = series.id;
+            MainListManager.secondList[index] = tempSeries;
         }
     }
 

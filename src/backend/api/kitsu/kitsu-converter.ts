@@ -135,7 +135,7 @@ export default new class KitsuConverter {
             const result = mappings.find((x) => x.externalSite.includes('thetvdb') && x.externalId.includes('/'));
             if (result) {
                 const idSeason = result.externalId.split('/');
-                const localdata = new InfoProviderLocalData(idSeason[0], TVDBProvider.Instance);
+                const localdata = new InfoProviderLocalData(idSeason[0], TVDBProvider);
                 localdata.targetSeason = Number(idSeason[1]);
                 providerLocalData.push(localdata);
             }

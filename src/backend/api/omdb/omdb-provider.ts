@@ -18,6 +18,7 @@ export default class OMDbProvider extends InfoProvider {
     public hasUniqueIdForSeasons: boolean = false;
     public supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
     public version: number = 1;
     public apikey = '728e1e03';
     constructor() {

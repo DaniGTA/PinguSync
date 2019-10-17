@@ -8,6 +8,7 @@ export default abstract class ExternalProvider {
     public abstract hasUniqueIdForSeasons: boolean;
     public abstract supportedMediaTypes: MediaType[];
     public abstract supportedOtherProvider: Array<(new () => ExternalProvider)>;
+    public abstract potentialSubProviders: Array<(new () => ExternalProvider)>;
     public abstract version: number;
 
     public abstract getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]>;

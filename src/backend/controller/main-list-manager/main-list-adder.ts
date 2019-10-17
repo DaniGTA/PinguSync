@@ -46,13 +46,13 @@ export default class MainListAdder {
      */
     private async listWorker(list: Series[]) {
         const searcher = new MainListSearcher();
-        logger.log('debug', '[MainListAdder] Worker started to process ' + list.length + ' Items.');
+        logger.debug('[MainListAdder] Worker started to process ' + list.length + ' Items.');
         let addCounter = 0;
         for (const series of list) {
             try {
                 const entry = await searcher.quickFindSameSeriesInMainList(series);
                 if (entry.length === 0) {
-                    logger.log('info', '[MainListAdder] Add non existing Series.');
+                    logger.debug('[MainListAdder] Add non existing Series.');
                     const filledSeries = await providerHelper.fillMissingProvider(series);
                     if (filledSeries.lastInfoUpdate === 0) {
                         logger.error('[ERROR] Series no last info update!');
@@ -75,6 +75,7 @@ export default class MainListAdder {
                 addCounter++;
                 logger.log('info', '[MainListAdder] Adding Series to list. Progress: ' + addCounter);
             } catch (err) {
+                logger.error('[MainListAdder] [listWorker]: (error below)');
                 logger.error(err);
             }
         }

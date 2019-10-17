@@ -24,6 +24,7 @@ export default class MalProvider extends ListProvider {
     public version = 1;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
     public providerName: string = 'Mal';
     public hasOAuthCode: boolean = false;
     public hasUniqueIdForSeasons = true;

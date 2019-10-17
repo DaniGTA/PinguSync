@@ -29,6 +29,7 @@ export default class TraktProvider extends ListProvider {
     private static instance: TraktProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
     public hasUniqueIdForSeasons: boolean = false;
     public providerName: string = 'Trakt';
     public hasOAuthCode = true;
@@ -169,7 +170,7 @@ export default class TraktProvider extends ListProvider {
     }
 
     private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
-        logger.log('info', '[Trakt] Start WebRequest');
+        logger.log('info', '[Trakt] Start WebRequest ♗');
         return new Promise<T>((resolve, reject) => {
             try {
                 request({
