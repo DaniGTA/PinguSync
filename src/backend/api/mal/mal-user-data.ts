@@ -7,13 +7,14 @@ import logger from '../../logger/logger';
 import { UserData } from '../user-data';
 import { LoginData } from 'node-myanimelist/typings/methods/poly/noApiLogin';
 
-export class MalUserData implements UserData {
+export class MalUserData extends UserData {
 
     public loginData?: LoginData;
     public username: string = '';
     public list: Series[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
+        super();
         this.loadData();
     }
 
@@ -38,7 +39,7 @@ export class MalUserData implements UserData {
         }
     }
 
-    private loadData() {
+    protected loadData() {
         try {
            logger.debug('[IO] Read mal user file.');
            if (fs.existsSync(this.getPath())) {
@@ -54,7 +55,7 @@ export class MalUserData implements UserData {
     private getPath(): string {
         try {
             // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(new PathHelper().getAppPath(), 'kitsu_config.json');
+            return path.join(new PathHelper().getAppPath(), 'mal_config.json');
         } catch (err) {
             throw err;
         }

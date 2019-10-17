@@ -40,8 +40,12 @@ export default class TraktProvider extends ListProvider {
     private redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
     constructor() {
         super();
-        TraktProvider.instance = this;
-        this.userData = new TraktUserData();
+        if (TraktProvider.instance) {
+            this.userData = TraktProvider.instance.userData;
+        } else {
+            TraktProvider.instance = this;
+            this.userData = new TraktUserData();
+        }
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {

@@ -67,12 +67,12 @@ export default class MultiProviderComperator {
             for (const serie of await series.getSlugNames()) {
                 for (const tempserie of await tempSeries.getSlugNames()) {
                     if (serie.name !== tempserie.name) {
-                        logger.warn('Not same slug id');
+                        logger.warn('[MultiProviderComperator] Not same slug id | ' + serie.name + ' != ' + tempserie.name);
                     }
                 }
             }
         } else {
-            logger.warn('not the same series' + result.mainProvider.getAllNames()[0].name + '(' + result.mainProvider.provider + ')' + ' &' + series.getAllNames()[0].name);
+            logger.debug('[MultiProviderComperator] not the same series' + result.mainProvider.getAllNames()[0].name + '(' + result.mainProvider.provider + ')' + ' &' + series.getAllNames()[0].name);
         }
         return finalResult;
     }

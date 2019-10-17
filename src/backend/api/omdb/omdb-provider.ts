@@ -16,7 +16,7 @@ export default class OMDbProvider extends InfoProvider {
     public hasOAuthCode: boolean = false;
     public providerName: string = 'omdb';
     public hasUniqueIdForSeasons: boolean = false;
-    public supportedMediaTypes: MediaType[] = [MediaType.MOVIE];
+    public supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public version: number = 1;
     public apikey = '728e1e03';
@@ -56,14 +56,19 @@ export default class OMDbProvider extends InfoProvider {
             }
 
         } catch (err) {
-            logger.log('info', err);
+            logger.error(err);
         }
         return results;
     }
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        const converter = new OMDbConverter();
-        const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + '&i=' + provider.id);
-        return converter.convertIdRequest(result);
+        try {
+            const converter = new OMDbConverter();
+            const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + '&i=' + provider.id);
+            return converter.convertIdRequest(result);
+        } catch (err) {
+            logger.error(err);
+            throw new Error(err);
+        }
     }
 
 

@@ -8,7 +8,7 @@ import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { UserData } from '../user-data';
 
-export class TraktUserData implements UserData {
+export class TraktUserData extends UserData {
 
     public accessToken: string = '';
     public refreshToken: string = '';
@@ -18,6 +18,7 @@ export class TraktUserData implements UserData {
     public list: MultiProviderResult[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
+        super();
         this.loadData();
     }
 
@@ -59,7 +60,7 @@ export class TraktUserData implements UserData {
         } catch (err) { }
     }
 
-    private loadData() {
+    protected loadData() {
         try {
             const path = this.getPath();
             logger.warn('[IO] Read trakt user file. ' + path);

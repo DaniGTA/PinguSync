@@ -73,6 +73,8 @@ export default new class ProviderHelper {
                         }
                         logger.warn('info', '[' + requestId + '][' + provider.providerName + '] ByName Request failed. ❌');
                     }
+                } else {
+                     throw new Error('[' + provider.providerName + '] Provider didnt support search on this MediaType! Not Supported MediaType: '+ seriesMediaType.toString());
                 }
             } else {
                 const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
@@ -217,13 +219,12 @@ export default new class ProviderHelper {
                     }
                 }
             } else {
-                logger.warn('[' + provider.providerName + '] No results to name: ' + name);
+                logger.warn('[' + provider.providerName + '] No results to name: ' + name.name);
             }
         } else {
-            logger.warn('[' + provider.providerName + '] Season number problem.');
+            logger.warn('[' + provider.providerName + '] Season number problem. On name: ' + name.name + ' SeasonNumber: ' + season.seasonNumber);
         }
-        logger.warn('[' + provider.providerName + '] [getSeriesByName]: Returns NULL!');
-        throw null;
+        throw new Error('[' + provider.providerName + '] [getSeriesByName]: No result with the name: ' + name.name);
     }
 
     /**
@@ -260,7 +261,7 @@ export default new class ProviderHelper {
                     series = await series.merge(data);
                 }
             } catch (err) {
-                logger.error('[ERROR] [ProviderHelper] [updateInfoProviderData]:');
+                logger.error('[ERROR] [ProviderHelper] [updateInfoProviderData]: (see below)');
                 logger.error(err);
             }
         }

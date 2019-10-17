@@ -9,7 +9,11 @@ export class TVDBProviderData {
     public accessToken?: string;
     public expiresIn?: number;
     constructor() {
-        this.loadData();
+        try {
+            this.loadData();
+        } catch (err) {
+            logger.error('[TVDBProviderData] ' + err);
+        }
     }
 
     public setTokens(accessToken: string, expiresIn: number) {

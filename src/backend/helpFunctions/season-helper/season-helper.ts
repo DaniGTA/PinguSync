@@ -191,7 +191,7 @@ class SeasonHelper {
      */
     public async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
         const result: Series[] = [];
-        logger.log('info', '[SeasonHelper] create temp series');
+        logger.info('[SeasonHelper] create temp series');
         for (const entry of localDatas) {
             for (const prequelId of entry.prequelIds) {
                 if (prequelId) {
@@ -212,7 +212,7 @@ class SeasonHelper {
                 }
             }
         }
-        logger.log('[SeasonHelper] info', result.length + ' created temp series');
+        logger.info('[SeasonHelper] info'+ result.length + ' created temp series');
         return result;
     }
 }

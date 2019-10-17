@@ -46,7 +46,11 @@ export default class AniListProvider extends ListProvider {
 
     constructor() {
         super();
-        this.userData = new AniListUserData();
+        if (AniListProvider.instance) {
+            this.userData = AniListProvider.instance.userData;
+        } else {
+            this.userData = new AniListUserData();
+        }
         AniListProvider.instance = this;
     }
 

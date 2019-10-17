@@ -9,15 +9,20 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { Search } from './models/search-results';
 import OMDbProvider from './omdb-provider';
+import { MediaType } from '../../controller/objects/meta/media-type';
 
 export default class OMDbConverter {
 
     public convertSearchResult(entry: Search): MultiProviderResult {
         const pld = new InfoProviderLocalData(entry.imdbID, OMDbProvider.instance);
         pld.addSeriesName(new Name(entry.Title, 'en', NameType.OFFICIAL));
-        pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
+        if (entry.Poster !== 'N/A') {
+            pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
+        }
         pld.hasFullInfo = false;
         pld.rawEntry = entry;
+        pld.releaseYear = Number(entry.Year);
+        pld.mediaType = this.convertStringToType(entry.Type);
 
         return new MultiProviderResult(pld);
     }
@@ -37,5 +42,18 @@ export default class OMDbConverter {
 
 
         return new MultiProviderResult(pld);
+    }
+
+    private convertStringToType(mediaType: string): MediaType {
+        switch (mediaType) {
+            case 'movie':
+                return MediaType.MOVIE;
+            case 'series':
+                return MediaType.SERIES;
+            case 'game':
+                return MediaType.UNKOWN;
+            default:
+                return MediaType.UNKOWN;
+        }
     }
 }

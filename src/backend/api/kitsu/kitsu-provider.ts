@@ -35,7 +35,11 @@ export default class KitsuProvider extends ListProvider {
     constructor() {
         super();
         this.api = new Kitsu();
-        this.userData = new KitsuUserData();
+        if (KitsuProvider.instance) {
+            this.userData = KitsuProvider.instance.userData;
+        } else {
+            this.userData = new KitsuUserData();
+        }
     }
     public removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error('Method not implemented.');

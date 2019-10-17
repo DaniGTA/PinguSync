@@ -22,7 +22,7 @@ export default class TVDBProvider extends InfoProvider {
     public version = 1;
     private apiKey = '790G98VXW5MZHGV0';
     private baseUrl = 'https://api.thetvdb.com';
-    private apiData: TVDBProviderData = new TVDBProviderData();
+    private apiData: TVDBProviderData;
 
     get Instance(): TVDBProvider {
         if (TVDBProvider.Instance) {
@@ -35,6 +35,9 @@ export default class TVDBProvider extends InfoProvider {
         super();
         if (!TVDBProvider.Instance) {
             TVDBProvider.Instance = this;
+            this.apiData = TVDBProvider.Instance.apiData;
+        } else {
+            this.apiData = new TVDBProviderData();
         }
     }
 

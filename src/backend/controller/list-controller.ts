@@ -53,7 +53,7 @@ export default class ListController {
                     anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
-                logger.error('Failed remove watch progress');
+                logger.error('[ListController] [removeWatchProgress]: Failed remove watch progress');
             }
         }
     }
@@ -62,7 +62,8 @@ export default class ListController {
             try {
                 await providerHelper.fillMissingProvider(anime);
             } catch (err) {
-                logger.error('Update watch progress');
+                logger.error('[ListController] [updateWatchProgressTo]: (see error next line)');
+                logger.error('[ListController] [updateWatchProgressTo]: Update watch progress');
             }
         }
         for (const provider of anime.getListProvidersInfos()) {
@@ -75,6 +76,7 @@ export default class ListController {
                     anime.getListProvidersInfos()[index] = newProvider;
                 }
             } catch (err) {
+                logger.error('[ListController] [updateWatchProgressTo]: (see error next line)');
                 logger.error(err);
             }
         }
@@ -82,7 +84,7 @@ export default class ListController {
     }
 
     public async addSeriesToMainList(...animes: Series[]) {
-        logger.log('debug', 'Add ' + animes.length + ' to mainList');
+        logger.debug('Add ' + animes.length + ' to mainList');
         await new MainListAdder().addSeries(...animes);
     }
 
@@ -104,7 +106,8 @@ export default class ListController {
                     const result = await providerHelper.fillMissingProvider((mainList)[index], true);
                     this.addSeriesToMainList(result);
                 } catch (err) {
-                    logger.log('info', err);
+                    logger.error('[ListController] [forceRefreshProviderInfo]: (see error next line)');
+                    logger.error(err);
                 }
             }
         }
@@ -146,14 +149,14 @@ export default class ListController {
             if (validProvider) {
                 for (const seriesMainListEntry of await this.getMainList()) {
                     for (const oldprovider of seriesMainListEntry.getListProvidersInfos()) {
-                        // tslint:disable-next-line: triple-equals
-                        if (oldprovider.provider == validProvider.provider && ProviderComperator.simpleProviderIdCheck(oldprovider.id, validProvider.id)) {
+                        if (oldprovider.provider === validProvider.provider && ProviderComperator.simpleProviderIdCheck(oldprovider.id, validProvider.id)) {
                             return seriesMainListEntry;
                         }
                     }
                 }
             }
         } catch (err) {
+            logger.error('[ListController] [checkIfProviderExistInMainList]: (see error next line)');
             logger.error(err);
         }
         return entry;

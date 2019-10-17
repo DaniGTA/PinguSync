@@ -88,7 +88,13 @@ export default abstract class ProviderLocalData {
     protected overviews: Overview[] = [];
 
     constructor(id: string | number) {
-        this.id = id;
+        if (id) {
+            this.id = id;
+        } else {
+            const errorMsg = '[LOCALDATA] ERROR: INVALID ID. UNABLE TO CREATE LOCALDATA INSTANCE ! ID: ' + id;
+            logger.error(errorMsg);
+            throw new Error(errorMsg);
+        }
     }
 
     public async getDetailedEpisodeLength(): Promise<number> {

@@ -8,7 +8,7 @@ import logger from '../../logger/logger';
 import { UserData } from '../user-data';
 import MultiProviderResult from '../provider/multi-provider-result';
 
-export class AniListUserData implements UserData {
+export class AniListUserData extends UserData {
     public username: string = '';
     public access_token: string = '';
     public refresh_token: string = '';
@@ -19,7 +19,12 @@ export class AniListUserData implements UserData {
     public lastListUpdate?: Date;
 
     constructor() {
-        this.loadData();
+        super();
+        try {
+            this.loadData();
+        } catch (err) {
+            logger.error('[AniListUserData] '+err);
+        }
     }
 
     public updateList(list: MultiProviderResult[]) {
@@ -48,7 +53,7 @@ export class AniListUserData implements UserData {
         writeFileSync(await this.getPath(), JSON.stringify(this));
     }
 
-    private loadData() {
+    protected loadData() {
         try {
             logger.warn('[IO] Read anilist user file.');
             if (existsSync(this.getPath())) {
@@ -63,6 +68,7 @@ export class AniListUserData implements UserData {
                 this.lastListUpdate = loadedData.lastListUpdate;
             }
         } catch (err) {
+            logger.error('[AniListUserData] Error on next line.');
             logger.error(err);
         }
     }

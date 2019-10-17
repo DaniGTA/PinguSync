@@ -6,7 +6,7 @@ import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
 import { UserData } from '../user-data';
 
-export class KitsuUserData implements UserData {
+export class KitsuUserData extends UserData {
 
     public accessToken: string = '';
     public refreshToken: string = '';
@@ -15,7 +15,12 @@ export class KitsuUserData implements UserData {
     public list: Series[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
-        this.loadData();
+        super();
+        try {
+            this.loadData();
+        } catch (err) {
+            logger.error('[KitsuUserData] ' + err);
+        }
     }
 
 
@@ -41,7 +46,7 @@ export class KitsuUserData implements UserData {
         }
     }
 
-    private loadData() {
+    protected loadData() {
         try {
            logger.warn('[IO] Read kitsu user file.');
            if (fs.existsSync(this.getPath())) {
