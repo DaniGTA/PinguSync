@@ -166,7 +166,7 @@ export default class EpisodeMappingHelper {
                     const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings, await this.getProviderLength(providers));
                     for (const result of results) {
                         for (const episodeBind of result.episodeBinds) {
-                            if (!await this.isSameEpisodeID(episode, episodeBind.episode)) {
+                            if (!this.isSameEpisodeID(episode, episodeBind.episode)) {
                                 const mappingB = new EpisodeMapping(episodeBind.episode, episodeBind.provider);
                                 await episode.addMapping(mappingB);
 
@@ -195,7 +195,7 @@ export default class EpisodeMappingHelper {
         const tempRating: EpisodeRatedEqualityContainer[] = [];
         for (const rating of ratings) {
             for (const ratingEpisodeBind of rating.episodeBinds) {
-                if (await this.isSameEpisodeID(ratingEpisodeBind.episode, ep)) {
+                if (this.isSameEpisodeID(ratingEpisodeBind.episode, ep)) {
                     continue;
                 }
 
@@ -321,7 +321,7 @@ export default class EpisodeMappingHelper {
         for (const rateing of ratedEqualityList) {
             let result = true;
             for (const episodeBind of rateing.episodeBinds) {
-                if (!(await this.isSameEpisodeID(episodeA, episodeBind.episode) || await this.isSameEpisodeID(episodeB, episodeBind.episode))) {
+                if (!(this.isSameEpisodeID(episodeA, episodeBind.episode) ||this.isSameEpisodeID(episodeB, episodeBind.episode))) {
                     result = false;
                 }
             }
@@ -336,7 +336,7 @@ export default class EpisodeMappingHelper {
         for (const episodeBind of episodeBinds) {
             let result = true;
             for (const episode of episodes) {
-                if (await this.isSameEpisodeID(episode, episodeBind.episode)) {
+                if (this.isSameEpisodeID(episode, episodeBind.episode)) {
                     result = true;
                     break;
                 } else {
@@ -366,7 +366,7 @@ export default class EpisodeMappingHelper {
      * @param a episode a will be compared with b
      * @param b episode b will be compared with a
      */
-    private async isSameEpisodeID(a: Episode, b: Episode): Promise<boolean> {
+    private isSameEpisodeID(a: Episode, b: Episode): boolean {
         return a.id === b.id;
     }
 

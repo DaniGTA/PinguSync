@@ -24,7 +24,7 @@ export default class Episode {
     public type: EpisodeType = EpisodeType.UNKOWN;
     public streamingProviders: ExternalProvider[] = [];
     public summery?: string;
-    public title?: EpisodeTitle[];
+    public title: EpisodeTitle[] = [];
     public duration?: number;
     public airDate?: Date;
     public lastProviderUpdate?: number;
@@ -43,7 +43,9 @@ export default class Episode {
     constructor(episodeNumber: number, season?: number, title?: EpisodeTitle[]) {
         this.season = season;
         this.episodeNumber = episodeNumber;
-        this.title = title;
+        if (title) {
+            this.title = title;
+        }
         this.lastUpdate = new Date().getTime();
         this.id = stringHelper.randomString(20);
     }

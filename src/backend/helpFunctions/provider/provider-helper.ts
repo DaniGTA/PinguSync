@@ -29,7 +29,7 @@ export default new class ProviderHelper {
         try {
             for (let aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {
-                    if (ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeries([aProvider], [bProvider])) {
+                    if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeries([aProvider], [bProvider])) {
                         aProvider = Object.assign(new ListProviderLocalData(aProvider.id), aProvider);
                         return new SameIdAndUniqueId(true, aProvider.getProviderInstance().hasUniqueIdForSeasons);
                     }
@@ -79,6 +79,7 @@ export default new class ProviderHelper {
             } else {
                 const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
                 logger.log('info', '[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
+                // tslint:disable-next-line: max-line-length
                 ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
                 await series.addProviderDatas(result.mainProvider, ...result.subProviders);
                 return series;
@@ -204,6 +205,7 @@ export default new class ProviderHelper {
                     resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
                     for (const containerItem of resultContainer) {
                         if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
+                            // tslint:disable-next-line: max-line-length
                             ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
                             await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
                             return series;
@@ -212,6 +214,7 @@ export default new class ProviderHelper {
                     for (const containerItem of resultContainer) {
                         if (containerItem.resultRating.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
                             logger.log('info', '[' + provider.providerName + '] Request success 🎉');
+                            // tslint:disable-next-line: max-line-length
                             ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
                             await series.addProviderDatas(containerItem.result.mainProvider, ...containerItem.result.subProviders);
                             return series;

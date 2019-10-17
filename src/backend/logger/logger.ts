@@ -1,17 +1,19 @@
 import winston from 'winston';
-
-let date = new Date().toISOString();
+let logger = winston.createLogger();
 const logFormat = winston.format.printf((info) => {
-  return `${date}-${info.level}: ${JSON.stringify(info.message, null, 4)}\n`;
+  return new Date().toISOString() + `-${info.level}: ${JSON.stringify(info.message, null, 4)}\n`;
 });
-const errorsFormat = winston.format.errors({ stack: true })
-const logger: winston.Logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(winston.format.combine(winston.format.colorize(), logFormat, errorsFormat)),
-  transports: [
-        new winston.transports.Console({ level: 'info' }),
-    ],
-    
-});
+let errorsFormat;
+try {
+  errorsFormat = winston.format.errors({ stack: true })
+  logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(winston.format.combine(winston.format.colorize(), logFormat, errorsFormat)),
+    transports: [
+          new winston.transports.Console({ level: 'info' }),
+      ],
+      
+  });
+}catch(err){}
 
 export default logger;
