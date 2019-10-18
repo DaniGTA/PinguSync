@@ -62,14 +62,18 @@ export default class OMDbProvider extends InfoProvider {
         return results;
     }
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        try {
-            const converter = new OMDbConverter();
-            const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + '&i=' + provider.id);
-            return converter.convertIdRequest(result);
-        } catch (err) {
-            logger.error(err);
-            throw new Error(err);
+        if (provider.provider === this.providerName) {
+
+            try {
+                const converter = new OMDbConverter();
+                const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + '&i=' + provider.id);
+                return converter.convertIdRequest(result);
+            } catch (err) {
+                logger.error(err);
+                throw new Error(err);
+            }
         }
+        throw new Error('[Omdb] Cant handle this provider id');
     }
 
 

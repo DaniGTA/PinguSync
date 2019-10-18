@@ -170,5 +170,6 @@ export default class ListEntry extends Vue {
 
 .series-cover {
   height: 15vh;
+  min-width: 5vw;
 }
 </style>

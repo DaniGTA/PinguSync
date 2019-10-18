@@ -59,10 +59,13 @@ export default class TVDBProvider extends InfoProvider {
         return result;
     }
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        const tvDbConverter = new TVDBConverter();
-        const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + provider.id);
+        if (provider.provider === this.providerName) {
+            const tvDbConverter = new TVDBConverter();
+            const data = await this.webRequest<TVDBSeries>(this.baseUrl + '/series/' + provider.id);
 
-        return new MultiProviderResult(await tvDbConverter.convertSeriesToProviderLocalData(data));
+            return new MultiProviderResult(await tvDbConverter.convertSeriesToProviderLocalData(data));
+        }
+        throw new Error('[TVDB] Didnt support this provider id');
     }
 
 

@@ -33,7 +33,7 @@ class SeriesHelper {
             return false;
         }
 
-        const mediaTypeResult = await MediaTypeComperator.compareMediaType(a, b);
+        const mediaTypeResult = await MediaTypeComperator.compareMediaTypeWithSeries(a, b);
         matchAbleScore += mediaTypeResult.matchAble;
         matches += mediaTypeResult.matches;
 

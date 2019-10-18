@@ -6,6 +6,8 @@ import { ListProviderLocalData } from '../../controller/provider-manager/local-d
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
+import { MediaType } from 'src/backend/controller/objects/meta/media-type';
+import MediaTypeComperator from './media-type-comperator';
 
 export default class ProviderComperator {
     public static async compareAllProviders(a: Series, b: Series): Promise<ComperatorResult> {
@@ -56,8 +58,11 @@ export default class ProviderComperator {
         try {
             const aProviders = a.getListProvidersInfos();
             const bProviders = b.getListProvidersInfos();
-
-            return this.simpleProviderSameIdAndSameSeasonCheckWithSeries(aProviders, bProviders, a, b);
+            const aMediaType = await a.getMediaType();
+            const bMediaType = await b.getMediaType();
+            if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
+                return this.simpleProviderSameIdAndSameSeasonCheckWithSeries(aProviders, bProviders, a, b);
+            }
 
         } catch (err) {
             logger.error(err);
@@ -70,13 +75,23 @@ export default class ProviderComperator {
         let aSeason: Season | null = null;
         let bSeason: Season | null = null;
         for (const aProvider of a) {
+            let aMediaType = aProvider.mediaType;
+            if (aMediaType === MediaType.UNKOWN && aSeries) {
+                aMediaType = await aSeries.getMediaType();
+            }
             for (const bProvider of b) {
                 if (aProvider.provider === bProvider.provider) {
+                    let bMediaType = bProvider.mediaType;
+                    if (bMediaType === MediaType.UNKOWN && bSeries) {
+                        bMediaType = await bSeries.getMediaType();
+                    }
+
                     try {
                         if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
                             return ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id);
                         } else {
-                            if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id)) {
+                            const mediaTypeResult = await MediaTypeComperator.comperaMediaType(aMediaType, bMediaType);
+                            if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id) && mediaTypeResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
                                 if (aSeries && !aSeason) {
                                     aSeason = (await aSeries.getSeason());
                                 }

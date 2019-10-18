@@ -98,9 +98,8 @@ export default new class KitsuConverter {
                     const typeId = mapping.externalId.split('/');
                     let id = typeId[0];
                     let mediaType = MediaType.UNKOWN;
-                    if (typeId.length != 1) {
-                        id = typeId[1]; 
-                        
+                    if (typeId.length !== 1) {
+                        id = typeId[1];
                         switch (typeId[0]) {
                             case 'anime':
                                 mediaType = MediaType.ANIME;

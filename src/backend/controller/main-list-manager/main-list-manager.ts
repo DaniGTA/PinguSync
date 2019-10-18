@@ -7,6 +7,7 @@ import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
 import MainListPackageManager from './main-list-package-manager';
 import MainListSearcher from './main-list-searcher';
+import { MergeTypes } from '../objects/merge-types';
 export default class MainListManager {
 
     /**
@@ -67,11 +68,11 @@ export default class MainListManager {
         logger.info('[MainList] Update series in mainlist ' + series.id);
         const index = await this.getIndexFromSeries(series);
         if (!MainListManager.listMaintance) {
-            const tempSeries = await MainListManager.mainList[index].merge(series);
+            const tempSeries = await MainListManager.mainList[index].merge(series, true, MergeTypes.UPDATE);
             tempSeries.id = series.id;
             MainListManager.mainList[index] = tempSeries;
         } else {
-            const tempSeries = await MainListManager.secondList[index].merge(series);
+            const tempSeries = await MainListManager.secondList[index].merge(series, true, MergeTypes.UPDATE);
             tempSeries.id = series.id;
             MainListManager.secondList[index] = tempSeries;
         }

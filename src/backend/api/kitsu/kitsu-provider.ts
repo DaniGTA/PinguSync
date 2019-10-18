@@ -80,8 +80,11 @@ export default class KitsuProvider extends ListProvider {
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        const getResult = ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
-        return kitsuConverter.convertMediaToAnime(getResult.data);
+        if (provider.provider === this.providerName) {
+            const getResult = ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
+            return kitsuConverter.convertMediaToAnime(getResult.data);
+        }
+        throw new Error('[Kitsu] Cant handle this provider id');
     }
     public getAllSeries(disableCache?: boolean | undefined): Promise<MultiProviderResult[]> {
         throw new Error('Method not implemented.');

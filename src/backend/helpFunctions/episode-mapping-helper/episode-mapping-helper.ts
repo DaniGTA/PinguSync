@@ -154,7 +154,7 @@ export default class EpisodeMappingHelper {
     private async calculateMapping(providers: ProviderLocalData[], ratedEquality: EpisodeRatedEqualityContainer[], season?: number, cDiff = 0): Promise<ProviderLocalData[]> {
         for (const provider of providers) {
             let currentDiff = cDiff;
-            for (const episode of provider.detailEpisodeInfo) {
+            for (let episode of provider.detailEpisodeInfo) {
                 if (ratedEquality.length === 0) {
                     ratedEquality = await this.getRatedEqulityOfEpisodes(providers, season, currentDiff);
                     if (ratedEquality.length === 0) {
@@ -168,6 +168,9 @@ export default class EpisodeMappingHelper {
                         for (const episodeBind of result.episodeBinds) {
                             if (!this.isSameEpisodeID(episode, episodeBind.episode)) {
                                 const mappingB = new EpisodeMapping(episodeBind.episode, episodeBind.provider);
+                                if (!episode.addMapping) {
+                                    episode = Object.assign(new Episode(episode.episodeNumber), episode);
+                                }
                                 await episode.addMapping(mappingB);
 
                                 const mapping = new EpisodeMapping(episode, provider);
@@ -321,7 +324,7 @@ export default class EpisodeMappingHelper {
         for (const rateing of ratedEqualityList) {
             let result = true;
             for (const episodeBind of rateing.episodeBinds) {
-                if (!(this.isSameEpisodeID(episodeA, episodeBind.episode) ||this.isSameEpisodeID(episodeB, episodeBind.episode))) {
+                if (!(this.isSameEpisodeID(episodeA, episodeBind.episode) || this.isSameEpisodeID(episodeB, episodeBind.episode))) {
                     result = false;
                 }
             }

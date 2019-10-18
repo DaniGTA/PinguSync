@@ -22,6 +22,7 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+import { MergeTypes } from './merge-types';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -78,7 +79,7 @@ export default class Series extends SeriesProviderExtension {
             try {
                 names.push(...provider.getAllNames());
             } catch (err) {
-                logger.error('[NAME] [GET]: Failed to add Name on name request. SeriesID: '+this.id);
+                logger.error('[NAME] [GET]: Failed to add Name on name request. SeriesID: ' + this.id);
             }
         }
         return names;
@@ -143,7 +144,7 @@ export default class Series extends SeriesProviderExtension {
         const array = (providers.flatMap((x) => x.episodes) as number[]);
         const onlyNumbers = array.filter((v) => Number.isInteger(v as number));
         if (onlyNumbers.length === 0) {
-            throw new Error('[Series] no episode found SeriesID: '+this.id);
+            throw new Error('[Series] no episode found SeriesID: ' + this.id);
         }
         return Math.max(...onlyNumbers);
     }
@@ -171,7 +172,7 @@ export default class Series extends SeriesProviderExtension {
         if (result) {
             return listHelper.getUniqueList(result as number[]);
         }
-        throw new Error('no episode found SeriesID: '+this.id);
+        throw new Error('no episode found SeriesID: ' + this.id);
     }
 
     /**
@@ -299,21 +300,25 @@ export default class Series extends SeriesProviderExtension {
      * Will be often used too update watchprogress.
      * @param anime
      */
-    public async merge(anime: Series, allowAddNewEntry = true): Promise<Series> {
+    public async merge(anime: Series, allowAddNewEntry = true, mergeType = MergeTypes.UPGRADE): Promise<Series> {
         logger.debug('[Series ] Merging Series   | SeriesID: ' + this.id);
         const newAnime: Series = new Series();
 
         newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
         newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
         logger.debug('[Series] Merged Providers  | SeriesID: ' + this.id);
+        if (mergeType === MergeTypes.UPGRADE) {
+            await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
+            await newAnime.getMediaType();
+            await new EpisodeMappingHelper().generateEpisodeMapping(newAnime);
+        }
 
-        await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
         logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
         await newAnime.getCanSync();
 
-        await newAnime.getMediaType();
 
-        await new EpisodeMappingHelper().generateEpisodeMapping(newAnime);
+
+
 
         if (this.lastInfoUpdate < anime.lastInfoUpdate) {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;
@@ -505,7 +510,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     private async mergeProviders(...providers: ProviderLocalData[]): Promise<ProviderLocalData[]> {
-        logger.debug('[Series] [MergeProviders]: Merging providers. SeriesID: '+this.id);
+        logger.debug('[Series] [MergeProviders]: Merging providers. SeriesID: ' + this.id);
         const mergedProviderInfos: ProviderLocalData[] = [];
         for (const provider of providers) {
             const check = mergedProviderInfos.find((x) => provider.provider === x.provider);
@@ -545,15 +550,11 @@ export default class Series extends SeriesProviderExtension {
                 for (let providerB of b.listProviderInfos) {
                     if (providerA.provider === providerB.provider) {
                         providerB = Object.assign(new ListProviderLocalData(providerB.id), providerB);
-                        try {
-                            const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
-                            if (simpleProviderCheckResult && providerB.getProviderInstance().hasUniqueIdForSeasons) {
-                                throw new Error('[Series] Not the relation was found but the Series himself. SKIPPING SEARCH. SeriesID: ' + this.id);
-                            } else if (simpleProviderCheckResult && providerA.targetSeason !== providerB.targetSeason) {
-                                return a;
-                            }
-                        } catch (err) {
-                            logger.error(err);
+                        const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
+                        if (simpleProviderCheckResult && providerB.getProviderInstance().hasUniqueIdForSeasons) {
+                            throw new Error('[Series] Not the relation was found but the Series himself. SKIPPING SEARCH. SeriesID: ' + this.id);
+                        } else if (simpleProviderCheckResult && providerA.targetSeason !== providerB.targetSeason) {
+                            return a;
                         }
                         for (const prequelIdB of providerB.prequelIds) {
                             if (ProviderComperator.simpleProviderIdCheck(prequelIdB, providerA.id)) {
