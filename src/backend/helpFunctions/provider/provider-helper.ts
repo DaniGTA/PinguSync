@@ -5,8 +5,11 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 import ProviderSearchResultManager from '../../controller/stats-manager/models/provider-search-result-manager';
 import logger from '../../logger/logger';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
@@ -42,7 +45,7 @@ export default new class ProviderHelper {
         return new SameIdAndUniqueId();
     }
 
-    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<Series> {
+    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider, target: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<Series> {
         if (await provider.isProviderAvailable()) {
             const requestId = stringHelper.randomString(5);
             let trys = 0;
@@ -95,42 +98,48 @@ export default new class ProviderHelper {
      * Fill missing providers in a Series.
      * It wold not update a provider
      */
-    public async fillListProvider(entry: Series, forceUpdate = false): Promise<Series> {
+    public async fillListProvider(entry: Series, forceUpdate = false, target: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<Series> {
         entry = Object.assign(new Series(), entry);
-        if (entry.getListProvidersInfos().length !== ProviderList.getListProviderList().length || forceUpdate) {
-            for (const provider of ProviderList.getListProviderList()) {
-                try {
-                    let result;
-                    // Check if anime exist in main list and have already all providers in.
-                    if (ListController.instance) {
-                        const mainListEntry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
-                        if (mainListEntry) {
-                            const mainListResult = mainListEntry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
-                            if (mainListResult && mainListResult.version === provider.version && mainListResult.hasFullInfo) {
-                                continue;
-                            } else {
-                                entry = mainListEntry;
-                            }
+        const providerList = ProviderList.getListProviderList();
+        for (const provider of providerList) {
+            try {
+                let result;
+                // Check if anime exist in main list and have already all providers in.
+                if (ListController.instance) {
+                    const mainListEntry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
+                    if (mainListEntry) {
+                        const mainListResult = mainListEntry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
+                        if (mainListResult && mainListResult.version === provider.version && this.shouldUpdateProvider(mainListResult.infoStatus)) {
+                            continue;
+                        } else if (!mainListResult) { 
+                            const subProviderProvider = await this.getSubProviderProvider(provider, mainListEntry);
+                            try {
+                                entry = await this.getProviderSeriesInfo(mainListEntry, subProviderProvider);
+                            } catch (err) { }
+                        } else {
+                            entry = mainListEntry;
                         }
-                    } else {
-                        logger.warn('[ProviderHelper] [fillListProvider]: Failed get main list entry: no list controller instance');
                     }
+                } else {
+                    logger.warn('[ProviderHelper] [fillListProvider]: Failed get main list entry: no list controller instance');
+                }
 
-                    try {
-                        result = entry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
-                    } catch (err) {
-                        logger.error('[ERROR] [ProviderHelper] [fillListProvider]:');
-                        logger.error(err);
-                    }
-                    if (result || forceUpdate) {
+                try {
+                    result = entry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
+                } catch (err) {
+                    logger.error('[ERROR] [ProviderHelper] [fillListProvider]:');
+                    logger.error(err);
+                }
+                if (result) {
+                    if (target > result.infoStatus || forceUpdate) {
                         entry = await this.getProviderSeriesInfo(entry, provider);
                         await timeHelper.delay(700);
-                    } else {
-                        entry = await this.getProviderSeriesInfo(entry, provider);
                     }
-                } catch (err) {
-                    continue;
+                } else {
+                    entry = await this.getProviderSeriesInfo(entry, provider);
                 }
+            } catch (err) {
+                continue;
             }
         }
         return entry;
@@ -146,13 +155,13 @@ export default new class ProviderHelper {
      * @param forceUpdate Ignore the timelimit and force a update.
      * @param offlineOnly Dont attampt to request online providers and run only providers that work offline.
      */
-    public async fillMissingProvider(entry: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
+    public async fillMissingProvider(entry: Series, forceUpdate = false, offlineOnly = false, target: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<Series> {
         if (new Date().getTime() - entry.lastInfoUpdate > new Date(0).setHours(1920) || forceUpdate) {
             entry = await this.prepareRequiermentsForFillMissingProvider(entry);
             entry = await this.updateInfoProviderData(entry);
             if (!offlineOnly) {
                 try {
-                    entry = await this.fillListProvider(entry);
+                    entry = await this.fillListProvider(entry, forceUpdate, target);
                 } catch (err) {
                     logger.error('[ERROR] [ProviderHelper] [fillMissingProvider]:');
                     logger.error(err);
@@ -161,6 +170,43 @@ export default new class ProviderHelper {
             }
         }
         return entry;
+    }
+
+    private async getSubProviderProvider(searchedProvider: ExternalProvider, series: Series): Promise<ExternalProvider> {
+        const providerList = ProviderList.getListProviderList();
+        for (const provider2 of providerList) {
+            if (provider2.providerName !== searchedProvider.providerName) {
+                for (const subProvider of provider2.potentialSubProviders) {
+                    const subProviderName = ProviderNameManager.getProviderName(subProvider);
+                    if (subProviderName === searchedProvider.providerName) {
+                        const checkCurrentResult = series.getListProvidersInfos().find((x) => x.provider === searchedProvider.providerName);
+                        if (checkCurrentResult && checkCurrentResult.infoStatus !== ProviderInfoStatus.FULL_INFO) {
+                            const result = providerList.find(x => x.providerName === checkCurrentResult.provider);
+                            if (result) {
+                                return result;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        throw new Error('No SubProviderAvaible');
+    }
+
+    /** Checks if it should update.
+     *  We only need to update when we have no info about the provider.
+     */
+    private shouldUpdateProvider(infoStatus: ProviderInfoStatus): boolean {
+        switch (infoStatus) {
+            case ProviderInfoStatus.BASIC_INFO:
+                return false;
+            case ProviderInfoStatus.FULL_INFO:
+                return false;
+            case ProviderInfoStatus.ONLY_ID:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -245,7 +291,8 @@ export default new class ProviderHelper {
     }
 
     private async updateInfoProviderData(series: Series, forceUpdate = false, offlineOnly = false): Promise<Series> {
-        for (const infoProvider of ProviderList.getInfoProviderList()) {
+        const infoProviderList = ProviderList.getInfoProviderList();
+        for (const infoProvider of infoProviderList) {
             if (offlineOnly) {
                 if (!infoProvider.isOffline) {
                     continue;

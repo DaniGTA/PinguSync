@@ -8,7 +8,9 @@ import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
@@ -18,7 +20,6 @@ import { Season, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './
 import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
-import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
@@ -36,7 +37,7 @@ export default new class TraktConverter {
             providerInfo.targetSeason = season.number;
             providerInfo.watchStatus = WatchStatus.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
-            providerInfo.hasFullInfo = false;
+            providerInfo.infoStatus = ProviderInfoStatus.BASIC_INFO;
             result.push(new MultiProviderResult(providerInfo));
         }
         return result;
@@ -55,7 +56,7 @@ export default new class TraktConverter {
         const result = new MultiProviderResult(provider);
         try {
             const tvdbProvider = new InfoProviderLocalData(show.ids.tvdb, TVDBProvider.Instance);
-            tvdbProvider.hasFullInfo = false;
+            tvdbProvider.infoStatus = ProviderInfoStatus.BASIC_INFO;
             result.subProviders.push(tvdbProvider);
         } catch (err) {
             logger.error('[TVDBConverter] No tvdb instance.');
@@ -92,7 +93,7 @@ export default new class TraktConverter {
                 provider.genres.push(new Genre(genre));
             }
         }
-        provider.hasFullInfo = true;
+        provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         if (seasonInfo) {
             provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
         }

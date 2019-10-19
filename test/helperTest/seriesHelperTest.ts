@@ -44,7 +44,7 @@ describe('Series Helper', () => {
         a.addInfoProvider(infoProviderA);
         const listProviderA = new ListProviderLocalData(108632, 'test2');
         listProviderA.targetSeason = 2;
-        listProviderA.hasFullInfo = true;
+        listProviderA.infoStatus = true;
         listProviderA.prequelIds.push(21355);
         listProviderA.isNSFW = false;
         listProviderA.addSeriesName(new Name('Test 2', 'x-jap'));
@@ -56,11 +56,11 @@ describe('Series Helper', () => {
         // tslint:disable-next-line: no-string-literal
         b['canSync'] = false;
         const infoProviderB = new InfoProviderLocalData(260449, 'test4');
-        infoProviderB.hasFullInfo = true;
+        infoProviderB.infoStatus = true;
         a.addInfoProvider(infoProviderB);
         const listProvider = new ListProviderLocalData(43973, 'test');
         listProvider.targetSeason = 1;
-        listProvider.hasFullInfo = true;
+        listProvider.infoStatus = true;
         listProvider.releaseYear = 2013;
         listProvider.isNSFW = false;
         listProvider.addSeriesName(new Name('Test', 'x-jap'));
@@ -77,7 +77,7 @@ describe('Series Helper', () => {
         const listProviderB = new ListProviderLocalData(43973, 'test');
         listProviderB.isNSFW = false;
         listProviderB.targetSeason = 2;
-        listProviderB.hasFullInfo = true;
+        listProviderB.infoStatus = true;
         listProviderB.addSeriesName(new Name('Series Test', 'x-jap'));
         c.addListProvider(listProviderB);
 

@@ -13,8 +13,10 @@ import { ImageSize } from '../../controller/objects/meta/image-size';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { NameType } from '../../controller/objects/meta/name-type';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { StreamingProviderLocalData } from '../../controller/provider-manager/local-data/streaming-provider-local-data';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 import logger from '../../logger/logger';
 import AniDBProvider from '../anidb/anidb-provider';
 import AniListProvider from '../anilist/anilist-provider';
@@ -22,10 +24,9 @@ import MalProvider from '../mal/mal-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TraktProvider from '../trakt/trakt-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
-import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 
 export default new class KitsuConverter {
-    public async convertMediaToAnime(media: IMedia, fullInfo: boolean = true): Promise<MultiProviderResult> {
+    public async convertMediaToAnime(media: IMedia, fullInfo: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<MultiProviderResult> {
         const providerInfos = new ListProviderLocalData(media.id, KitsuProvider.getInstance());
         if (media.titles.en) {
             providerInfos.addSeriesName(new Name(media.titles.en, 'en'));
@@ -66,7 +67,7 @@ export default new class KitsuConverter {
         } catch (err) { }
 
 
-        providerInfos.hasFullInfo = fullInfo;
+        providerInfos.infoStatus = fullInfo;
         providerInfos.publicScore = media.ratingRank;
         providerInfos.rawEntry = media;
         providerInfos.episodes = media.episodeCount;

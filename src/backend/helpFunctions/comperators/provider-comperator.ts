@@ -6,7 +6,7 @@ import { ListProviderLocalData } from '../../controller/provider-manager/local-d
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
-import { MediaType } from 'src/backend/controller/objects/meta/media-type';
+import { MediaType } from '../../controller/objects/meta/media-type';
 import MediaTypeComperator from './media-type-comperator';
 
 export default class ProviderComperator {

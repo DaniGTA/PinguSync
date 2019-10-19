@@ -28,6 +28,17 @@ class ListHelper {
         return newArray;
     }
 
+    public async isAnyListEntryInList<T>(array: T[], array2: T[]): Promise<boolean>  {
+        for (const entry of array) {
+            for (const entry2 of array2) {
+                if (this.objectEquals(entry, entry2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public async removeEntrys<T>(array: T[], ...entrys: T[] | readonly T[]): Promise<T[]> {
         for (const entry of entrys) {
             const i = array.indexOf(entry);
@@ -167,6 +178,32 @@ class ListHelper {
     public async isCoverInList(list: Cover[], item: Cover): Promise<boolean> {
         return list.findIndex((x) => x.url === item.url) !== -1;
     }
+
+    private objectEquals(x: any, y: any): boolean {
+    'use strict';
+
+    if (x === null || x === undefined || y === null || y === undefined) { return x === y; }
+    // after this just checking type of one would be enough
+    if (x.constructor !== y.constructor) { return false; }
+    // if they are functions, they should exactly refer to same one (because of closures)
+    if (x instanceof Function) { return x === y; }
+    // if they are regexps, they should exactly refer to same one (it is hard to better equality check on current ES)
+    if (x instanceof RegExp) { return x === y; }
+    if (x === y || x.valueOf() === y.valueOf()) { return true; }
+    if (Array.isArray(x) && x.length !== y.length) { return false; }
+
+    // if they are dates, they must had equal valueOf
+    if (x instanceof Date) { return false; }
+
+    // if they are strictly equal, they both need to be object at least
+    if (!(x instanceof Object)) { return false; }
+    if (!(y instanceof Object)) { return false; }
+
+    // recursive object equality check
+    const p = Object.keys(x);
+    return Object.keys(y).every((i) => p.indexOf(i) !== -1) &&
+        p.every((i) => this.objectEquals(x[i], y[i]));
+}
 }
 
 export default new ListHelper();

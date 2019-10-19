@@ -15,9 +15,9 @@ export default class MediaTypeComperator {
             if ((aMediaType === MediaType.ANIME && bMediaType === MediaType.SERIES) || (bMediaType === MediaType.ANIME && aMediaType === MediaType.SERIES)) {
                 comperatorResult.matchAble += 2;
             } else {
-                comperatorResult.matchAble += 5;
+                comperatorResult.matchAble += 4;
                 if (aMediaType === bMediaType) {
-                    comperatorResult.matches += 5;
+                    comperatorResult.matches += 4;
                 } else {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                 }

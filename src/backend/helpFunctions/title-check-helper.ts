@@ -140,7 +140,7 @@ export default new class TitleCheckHelper {
             }
             return title;
         }
-        throw new Error('NoName');
+        throw new Error('[TitleCheckerHelper] No name to remove season');
     }
 
     public async getMediaTypeFromTitle(title: string): Promise<MediaType> {

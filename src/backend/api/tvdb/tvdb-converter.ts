@@ -4,6 +4,7 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { TVDBSeries } from './models/getSeries';
 import { SeriesSearchResult } from './models/searchResults';
 import TVDBProvider from './tvdb-provider';
@@ -17,7 +18,7 @@ export default class TVDBConverter {
         infoProviderLocalData.banners.push(new Cover(series.data.banner));
         infoProviderLocalData.addSeriesName(new Name(series.data.slug, 'slug', NameType.SLUG));
         infoProviderLocalData.addSeriesName(new Name(series.data.seriesName, 'eng', NameType.OFFICIAL));
-        infoProviderLocalData.hasFullInfo = true;
+        infoProviderLocalData.infoStatus = ProviderInfoStatus.BASIC_INFO;
         if (series.data.firstAired) {
             infoProviderLocalData.releaseYear = new Date(series.data.firstAired).getFullYear();
         }

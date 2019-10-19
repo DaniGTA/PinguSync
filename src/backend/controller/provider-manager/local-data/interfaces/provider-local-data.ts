@@ -7,6 +7,7 @@ import Genre from '../../../objects/meta/genre';
 import { MediaType } from '../../../objects/meta/media-type';
 import Name from '../../../objects/meta/name';
 import Overview from '../../../objects/meta/overview';
+import { ProviderInfoStatus } from './provider-info-status';
 
 export default abstract class ProviderLocalData {
     // ------------------
@@ -25,7 +26,7 @@ export default abstract class ProviderLocalData {
     /**
      * Cant get more info from this provider.
      */
-    public hasFullInfo: boolean = false;
+    public infoStatus: ProviderInfoStatus = ProviderInfoStatus.ONLY_ID;
     /**
      * The provider name
      */

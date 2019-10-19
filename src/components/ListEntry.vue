@@ -24,6 +24,8 @@
         {{getProviderWatchProgress(listProvider)}}
         /
         {{getProviderEpisodesCount(listProvider)}}
+
+        (id: {{listProvider.id}} )
       </div>
     </div>
   </div>

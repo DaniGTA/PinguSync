@@ -203,7 +203,7 @@ describe('Episode mapping | Mapping Only', () => {
             strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);
             notStrictEqual(episode.mappedTo[0].provider, episode.provider);
         }
-    });
+    }).timeout(3000);
 
     it('should map episodes length with detailedEpisodes', async () => {
         const aSeries = new Series();

@@ -73,7 +73,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 5);
+        strictEqual(result.getListProvidersInfos().length, 4);
     });
 
     it('should get a series (5/6)', async () => {

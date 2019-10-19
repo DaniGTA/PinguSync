@@ -1,15 +1,16 @@
 import Cover from '../../controller/objects/meta/cover';
 import Genre from '../../controller/objects/meta/genre';
 import { ImageSize } from '../../controller/objects/meta/image-size';
+import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { Search } from './models/search-results';
 import OMDbProvider from './omdb-provider';
-import { MediaType } from '../../controller/objects/meta/media-type';
 
 export default class OMDbConverter {
 
@@ -19,7 +20,7 @@ export default class OMDbConverter {
         if (entry.Poster !== 'N/A') {
             pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
         }
-        pld.hasFullInfo = false;
+        pld.infoStatus = ProviderInfoStatus.BASIC_INFO;
         pld.rawEntry = entry;
         pld.releaseYear = Number(entry.Year);
         pld.mediaType = this.convertStringToType(entry.Type);
@@ -31,7 +32,7 @@ export default class OMDbConverter {
         const pld = new InfoProviderLocalData(entry.imdbID, OMDbProvider.instance);
         pld.addSeriesName(new Name(entry.Title, 'en', NameType.OFFICIAL));
         pld.covers.push(new Cover(entry.Poster, ImageSize.ORIGINAL));
-        pld.hasFullInfo = true;
+        pld.infoStatus = ProviderInfoStatus.FULL_INFO;
         pld.country = entry.Country;
         for (const genre of entry.Genre.split(' ')) {
             pld.genres.push(new Genre(genre));

@@ -11,6 +11,7 @@ import { InfoProviderLocalData } from '../provider-manager/local-data/info-provi
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
 import SeriesProviderExtension from './extension/series-provider-extension';
+import { MergeTypes } from './merge-types';
 import Cover from './meta/cover';
 import Episode from './meta/episode/episode';
 import { ImageSize } from './meta/image-size';
@@ -22,7 +23,6 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
-import { MergeTypes } from './merge-types';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -41,7 +41,7 @@ export default class Series extends SeriesProviderExtension {
     constructor() {
         super();
         // Generates randome string.
-        this.id = stringHelper.randomString(30);
+        this.id = stringHelper.randomString(35);
     }
 
     public async resetCache() {
@@ -186,10 +186,12 @@ export default class Series extends SeriesProviderExtension {
             if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
                 // UKNOWN SEASON
                 if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
-                    logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                    const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
-                    await ListController.instance.addSeriesToMainList(...list);
-                    logger.info('Temp Series Successfull added.');
+                    if (result.searchResultDetails.searchedProviders.length !== 0) {
+                        logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
+                        const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
+                        await ListController.instance.addSeriesToMainList(...list);
+                        logger.info('Temp Series Successfull added.');
+                    }
                 }
                 this.cachedSeason = -2;
                 return new Season(undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);

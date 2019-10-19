@@ -6,6 +6,7 @@ import Series from '../../controller/objects/series';
 import SearchSeasonValueResult from '../../controller/objects/transfer/search-season-value-results';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
 import { SeasonSearchMode } from './season-search-mode';
@@ -198,11 +199,11 @@ class SeasonHelper {
                     const series = new Series();
                     if (entry instanceof ListProviderLocalData) {
                         const newProvider = new ListProviderLocalData(prequelId, entry.provider);
-                        newProvider.hasFullInfo = false;
+                        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
                         await series.addProviderDatas(newProvider);
                     } else if (entry instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
-                        newProvider.hasFullInfo = false;
+                        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
                         await series.addProviderDatas(newProvider);
                     } else {
                         continue;
@@ -212,7 +213,7 @@ class SeasonHelper {
                 }
             }
         }
-        logger.info('[SeasonHelper] info'+ result.length + ' created temp series');
+        logger.info('[SeasonHelper] info' + result.length + ' created temp series');
         return result;
     }
 }

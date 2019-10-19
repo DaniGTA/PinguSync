@@ -6,6 +6,7 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series, { WatchStatus } from '../../controller/objects/series';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
@@ -35,7 +36,7 @@ export default new class AniListConverter {
         provider.releaseYear = medium.startDate.year;
         provider.banners.push(new Banner(medium.bannerImage, ImageSize.LARGE));
         provider.rawEntry = medium;
-        provider.hasFullInfo = false;
+        provider.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
@@ -65,7 +66,7 @@ export default new class AniListConverter {
         provider.rawEntry = info;
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
-        provider.hasFullInfo = true;
+        provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         provider = await this.fillRelation(provider, info.Media.relations);
         return provider;
     }

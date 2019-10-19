@@ -11,6 +11,7 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import AniDBProvider from './anidb-provider';
@@ -23,7 +24,7 @@ export default class AniDBConverter {
         const ipld = new InfoProviderLocalData(anime._attributes.aid, AniDBProvider);
         ipld.rawEntry = anime;
         ipld.version = AniDBProvider.instance.version;
-        ipld.hasFullInfo = false;
+        ipld.infoStatus = ProviderInfoStatus.BASIC_INFO;
         return new MultiProviderResult(ipld);
     }
 
@@ -33,7 +34,7 @@ export default class AniDBConverter {
             for (const title of fullInfo.anime.titles.title) {
                 ipld.addSeriesName(new Name(title._text, title._attributes['xml:lang'], await this.convertToNameType(title._attributes.type)));
             }
-            ipld.hasFullInfo = true;
+            ipld.infoStatus = ProviderInfoStatus.FULL_INFO;
             ipld.releaseYear = new Date(fullInfo.anime.startdate._text).getFullYear();
             ipld.rawEntry = fullInfo;
             ipld.mediaType = await this.convertToMediaType(fullInfo.anime.type._text);
@@ -248,7 +249,7 @@ export default class AniDBConverter {
             }
 
             if (subipld) {
-                subipld.hasFullInfo = false;
+                subipld.infoStatus = ProviderInfoStatus.ONLY_ID;
                 return subipld;
             }
         }

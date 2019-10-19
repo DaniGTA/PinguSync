@@ -39,7 +39,6 @@ describe('Season Search Mode Helper Test | Examples', () => {
         equal(SeasonSearchModeHelper.canPerformATitleSearch(SeasonSearchMode.SEQUEL_TRACE_ONLY), false);
         equal(SeasonSearchModeHelper.canPerformATitleSearch(SeasonSearchMode.TRACE_ONLY), false);
         equal(SeasonSearchModeHelper.canPerformATitleSearch(SeasonSearchMode.PROVIDER_SEASON_VALUE_ONLY), false);
-        equal(SeasonSearchModeHelper.canPerformATitleSearch(SeasonSearchMode.TITLE_ONLY), false);
         equal(SeasonSearchModeHelper.canPerformATitleSearch(SeasonSearchMode.SEQUEL_TRACE_ONLY), false);
     });
 });

@@ -7,6 +7,7 @@ import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import { StreamingProviderLocalData } from '../../controller/provider-manager/local-data/streaming-provider-local-data';
@@ -55,7 +56,7 @@ export default class SimklConverter {
             provider.covers.push(new Cover('https://simkl.net/posters/' + searchResult.poster, ImageSize.MEDIUM));
             provider.publicScore = searchResult.ratings.simkl.rating;
             provider.mediaType = type;
-            provider.hasFullInfo = false;
+            provider.infoStatus = ProviderInfoStatus.BASIC_INFO;
             provider.rawEntry = searchResult;
             mprList.push(new MultiProviderResult(provider));
         }
@@ -66,7 +67,7 @@ export default class SimklConverter {
 
         const provider = new ListProviderLocalData(response.ids.simkl, SimklProvider.instance);
         provider.mediaType = await this.convertAnimeTypeToMediaType(response.anime_type);
-        provider.hasFullInfo = true;
+        provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         provider.country = response.country;
         provider.covers = await this.convertPosterIdToCover(response.poster);
         provider.genres = await this.convertSimklGenresToGenres(response.genres);
@@ -87,7 +88,7 @@ export default class SimklConverter {
         const provider = new ListProviderLocalData(response.ids.simkl, SimklProvider.instance);
         provider.mediaType = MediaType.MOVIE;
         provider.country = response.country;
-        provider.hasFullInfo = true;
+        provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         provider.covers = await this.convertPosterIdToCover(response.poster);
         provider.genres = await this.convertSimklGenresToGenres(response.genres);
         provider.publicScore = response.ratings.simkl.rating;
@@ -103,7 +104,7 @@ export default class SimklConverter {
         const provider = new ListProviderLocalData(response.ids.simkl, SimklProvider.instance);
         provider.mediaType = MediaType.SERIES;
         provider.country = response.country;
-        provider.hasFullInfo = true;
+        provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         provider.covers = await this.convertPosterIdToCover(response.poster);
         provider.genres = await this.convertSimklGenresToGenres(response.genres);
         provider.episodes = response.total_episodes;

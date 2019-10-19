@@ -72,18 +72,23 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        if (provider.provider === this.providerName) {
-            if (provider.mediaType === MediaType.UNKOWN) {
-                throw new Error('[Trakt] Unkown Media Type');
+        try {
+            if (provider.provider === this.providerName) {
+                if (provider.mediaType === MediaType.UNKOWN) {
+                    throw new Error('[Trakt] Unkown Media Type');
+                }
+                else if (provider.isMediaTypeMovie()) {
+                    const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id);
+                    return (traktConverter.convertFullShowInfoToLocalData(res));
+                } else {
+                    const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id);
+                    const seasonInfo = await this.traktRequest<TraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
+                    return (traktConverter.convertFullShowInfoToLocalData(res, seasonInfo));
+                }
             }
-            else if (provider.isMediaTypeMovie()) {
-                const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id);
-                return (traktConverter.convertFullShowInfoToLocalData(res));
-            } else {
-                const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id);
-                const seasonInfo = await this.traktRequest<TraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
-                return (traktConverter.convertFullShowInfoToLocalData(res, seasonInfo));
-            }
+        } catch (err) {
+            logger.error('[TRAKT] ID REQUEST FAILED');
+            logger.error(err);
         }
         throw new Error('[Trakt] Cant handle this Provider id');
     }

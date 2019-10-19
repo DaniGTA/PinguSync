@@ -76,4 +76,32 @@ describe('List Helper', () => {
         assert.strictEqual(await listHelper.checkType(numberList, WatchProgress), false, 'numberList is not type of WatchProgress');
         assert.strictEqual(await listHelper.checkType(watchprogressList, Number), false, 'watchprogressList is not type of Number');
     });
+
+    it('should find entry (list in list)', async () => {
+        const array = ['A', 'B', 'C'];
+        const array2 = ['X', 'Y', 'C'];
+        const result = await listHelper.isAnyListEntryInList(array, array2);
+        assert.strictEqual(result, true);
+    });
+
+    it('should not find entry (list in list)', async () => {
+        const array = ['A', 'B', 'C'];
+        const array2 = ['X', 'Y', 'Z'];
+        const result = await listHelper.isAnyListEntryInList(array, array2);
+        assert.strictEqual(result, false);
+    });
+
+    it('should find entry object (list in list)', async () => {
+        const array = [new Name('tesT', 'en'), new Name('tesT2', 'en')];
+        const array2 = [new Name('tesT1', 'en'), new Name('tesT2', 'en'), new Name('tesT3', 'en')];
+        const result = await listHelper.isAnyListEntryInList(array, array2);
+        assert.strictEqual(result, true);
+    });
+
+    it('should not find entry object (list in list)', async () => {
+        const array = [new Name('tesT', 'en'), new Name('tesT2', 'en')];
+        const array2 = [new Name('tesT1', 'en'), new Name('tesT4', 'en'), new Name('tesT3', 'en')];
+        const result = await listHelper.isAnyListEntryInList(array, array2);
+        assert.strictEqual(result, false);
+    });
 });

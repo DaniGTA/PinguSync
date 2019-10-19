@@ -3,11 +3,11 @@ import SeasonComperator from '../../helpFunctions/comperators/season-comperator'
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
 import FrontendController from '../frontend-controller';
+import { MergeTypes } from '../objects/merge-types';
 import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
 import MainListPackageManager from './main-list-package-manager';
 import MainListSearcher from './main-list-searcher';
-import { MergeTypes } from '../objects/merge-types';
 export default class MainListManager {
 
     /**
@@ -25,6 +25,10 @@ export default class MainListManager {
             if (searchResults.length !== 0) {
                 for (const entry of searchResults) {
                     try {
+                        if (series.id === entry.id) {
+                            await this.updateSerieInList(series);
+                            return true;
+                        }
                         if (typeof series.merge !== 'function') {
                             series = Object.assign(new Series(), series);
                         }
@@ -88,14 +92,18 @@ export default class MainListManager {
         logger.log('info', '[MainList] Temp List created');
         MainListManager.mainList = [];
         for (const index = 0; this.secondList.length !== 0;) {
-            const entry = this.secondList[index];
-            /**
-             * Reset Cache and reload it
-             */
-            await entry.resetCache();
-            await entry.getSeason();
+            try {
+                const entry = this.secondList[index];
+                /**
+                 * Reset Cache and reload it
+                 */
+                await entry.resetCache();
+                await entry.getSeason();
 
-            await MainListManager.addSerieToMainList(entry);
+                await MainListManager.addSerieToMainList(entry);
+            } catch (err) {
+                logger.error(err);
+            }
             this.secondList.shift();
         }
         await MainListLoader.saveData(MainListManager.mainList);
