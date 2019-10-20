@@ -112,8 +112,8 @@ export default new class ProviderHelper {
                         if (mainListResult && mainListResult.version === provider.version && this.shouldUpdateProvider(mainListResult.infoStatus)) {
                             continue;
                         } else if (!mainListResult) { 
-                            const subProviderProvider = await this.getSubProviderProvider(provider, mainListEntry);
                             try {
+                                const subProviderProvider = await this.getSubProviderProvider(provider, mainListEntry);
                                 entry = await this.getProviderSeriesInfo(mainListEntry, subProviderProvider);
                             } catch (err) { }
                         } else {

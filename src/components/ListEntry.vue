@@ -85,6 +85,7 @@ export default class ListEntry extends Vue {
   async getWatchProgress(series: Series): Promise<number> {
     if (series) {
       const animeObject = Object.assign(new Series(), series);
+      const namen = animeObject.getAllNames();
       animeObject.readdFunctions();
       try {
         var number = await animeObject.getLastWatchProgress();

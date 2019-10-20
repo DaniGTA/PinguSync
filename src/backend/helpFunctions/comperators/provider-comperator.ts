@@ -1,12 +1,13 @@
+import { MediaType } from '../../controller/objects/meta/media-type';
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
-import { MediaType } from '../../controller/objects/meta/media-type';
 import MediaTypeComperator from './media-type-comperator';
 
 export default class ProviderComperator {
@@ -38,7 +39,9 @@ export default class ProviderComperator {
                                 continue;
                             }
                         } else {
-                            comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+                            if (aProvider.infoStatus !== ProviderInfoStatus.ONLY_ID && bProvider.infoStatus !== ProviderInfoStatus.ONLY_ID) {
+                                comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+                            }
                         }
                     }
                 }
