@@ -62,7 +62,7 @@ describe('Provider: Kitsu | Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 5);
-    });
+    }).timeout(4000);
 
     it('should get a series (4/6)', async () => {
 
@@ -73,8 +73,8 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 4);
-    });
+        strictEqual(result.getListProvidersInfos().length, 5);
+    }).timeout(4000);
 
     it('should get a series (5/6)', async () => {
 
@@ -86,7 +86,7 @@ describe('Provider: Kitsu | Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 5);
-    });
+    }).timeout(4000);
 
     it('should get a series (6/6)', async () => {
 
@@ -98,6 +98,6 @@ describe('Provider: Kitsu | Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.getListProvidersInfos().length, 5);
-    });
+    }).timeout(4000);
 
 });

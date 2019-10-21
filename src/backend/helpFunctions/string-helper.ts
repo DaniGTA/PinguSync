@@ -75,11 +75,11 @@ class StringHelper {
                 const match = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s\d{1,}($|\s))/gmi.exec(title);
                 if (match != null) {
                     if (typeof match[1] !== 'undefined') {
-                        response.seasonNumber = parseInt(match[1]);
+                        response.seasonNumber = parseInt(match[1], 10);
                         response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
                         return response;
                     } else if (typeof match[2] !== 'undefined') {
-                        response.seasonNumber = parseInt(match[1]);
+                        response.seasonNumber = parseInt(match[2], 10);
                         response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
                         return response;
                     }

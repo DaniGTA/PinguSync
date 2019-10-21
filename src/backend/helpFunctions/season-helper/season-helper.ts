@@ -177,6 +177,10 @@ class SeasonHelper {
                 }
             }
         }
+        
+        if (numberFromName && numberFromName.seasonNumber) {
+            return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
+        }
 
         if (prequelResult && prequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
             return prequelResult;
@@ -184,10 +188,6 @@ class SeasonHelper {
 
         if (sequelResult && sequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
             return sequelResult;
-        }
-
-        if (numberFromName && numberFromName.seasonNumber) {
-            return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
         }
 
         return new SearchSeasonValueResult(-1, 'None', SeasonError.CANT_GET_SEASON);

@@ -11,12 +11,12 @@ describe('Name | Season + lang detection', () => {
     });
     it('should extract season number from title', async () => {
 
-        assert.equal(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2, 'Title 2');
-        assert.equal(await stringHelper.getSeasonNumberFromTitle('Title II'), 2, 'Title II');
-        assert.equal(await stringHelper.getSeasonNumberFromTitle('Title III'), 3, 'Title III');
-        assert.equal(await stringHelper.getSeasonNumberFromTitle('Title 2nd Season'), 2, 'Title 2nd Season');
-        assert.equal(await stringHelper.getSeasonNumberFromTitle('Title 3nd Season -Test-'), 3, 'Title 3nd Season -Test-');
-        assert.equal(await stringHelper.getSeasonNumberFromTitle('Title Season 2 -Test-'), 2, 'Title Season 2 -Test-');
+        assert.equal((await stringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber, 2, 'Title 2');
+        assert.equal((await stringHelper.getSeasonNumberFromTitle('Title III')).seasonNumber, 3, 'Title III');
+        assert.equal((await stringHelper.getSeasonNumberFromTitle('Title 2nd Season')).seasonNumber, 2, 'Title 2nd Season');
+        assert.equal((await stringHelper.getSeasonNumberFromTitle('Title II')).seasonNumber, 2, 'Title II');
+        assert.equal((await stringHelper.getSeasonNumberFromTitle('Title 3nd Season -Test-')).seasonNumber, 3, 'Title 3nd Season -Test-');
+        assert.equal((await stringHelper.getSeasonNumberFromTitle('Title Season 2 -Test-')).seasonNumber, 2, 'Title Season 2 -Test-');
         try {
             await stringHelper.getSeasonNumberFromTitle('Gintama.: Shirogane no Tamashii-hen - Kouhan-sen');
             assert.fail();

@@ -57,11 +57,11 @@ describe('String Helper', () => {
     });
 
     it('shoul get right season number from title', async () => {
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 3 Part 2'), 3);
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title XX'), 2, 'Season marking with X');
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title 2'), 2, 'Season marking with number');
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war'), 2, 'Season marking with the word season');
-        assert.strictEqual(await stringHelper.getSeasonNumberFromTitle('Title AA'), 2, 'Season marking with the a A');
+        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title 3 Part 2')).seasonNumber, 3);
+        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title XX')).seasonNumber, 2, 'Season marking with X');
+        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber, 2, 'Season marking with number');
+        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war')).seasonNumber, 2, 'Season marking with the word season');
+        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
     });
 
     it('should not get a season number from title', async () => {

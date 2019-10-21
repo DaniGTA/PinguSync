@@ -27,7 +27,7 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.episodes, 14, 'Episodes merge failed');
         strictEqual(merged.publicScore, 20, 'Public score merge failed');
         strictEqual(merged.score, 40, 'Score merge failed');
-        strictEqual(merged.infoStatus, false, 'Should add latest hasFullInfo');
+        strictEqual(merged.infoStatus, ProviderInfoStatus.FULL_INFO, 'Should add latest hasFullInfo');
         strictEqual(merged.targetSeason, 5, 'Should merge targetSeason');
         strictEqual(merged.watchStatus, WatchStatus.COMPLETED, 'Should add latest watch status');
         return;
