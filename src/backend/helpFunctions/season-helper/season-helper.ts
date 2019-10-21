@@ -2,6 +2,7 @@ import ListController from '../../controller/list-controller';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 
 import Name from '../../controller/objects/meta/name';
+import SeasonNumberResponse from '../../controller/objects/meta/response-object/season-number-response';
 import Series from '../../controller/objects/series';
 import SearchSeasonValueResult from '../../controller/objects/transfer/search-season-value-results';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
@@ -9,6 +10,7 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
+import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import { SeasonSearchMode } from './season-search-mode';
 import SeasonSearchModeHelper from './season-search-mode-helper';
 
@@ -129,17 +131,19 @@ class SeasonHelper {
      */
     public async searchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.debug('[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
+
         let prequelResult: SearchSeasonValueResult | undefined;
         let sequelResult: SearchSeasonValueResult | undefined;
+        let numberFromName: SeasonNumberResponse | undefined;
 
         if (!seriesList && ListController.instance) {
             seriesList = await ListController.instance.getMainList();
         }
         if (SeasonSearchModeHelper.canPerformATitleSearch(searchMode)) {
-            const numberFromName = await Name.getSeasonNumber(await series.getAllNamesUnique());
+            numberFromName = await Name.getSeasonNumber(await series.getAllNamesUnique());
 
-            if (numberFromName) {
-                return new SearchSeasonValueResult(numberFromName, 'Name');
+            if (numberFromName && numberFromName.seasonNumber && numberFromName.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
+                return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
             }
         }
 
@@ -180,6 +184,10 @@ class SeasonHelper {
 
         if (sequelResult && sequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
             return sequelResult;
+        }
+
+        if (numberFromName && numberFromName.seasonNumber) {
+            return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
         }
 
         return new SearchSeasonValueResult(-1, 'None', SeasonError.CANT_GET_SEASON);

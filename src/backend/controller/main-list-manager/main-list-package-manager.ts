@@ -22,13 +22,15 @@ export default class MainListPackageManager {
                     for (const entry2 of tempPackage.allRelations) {
                         if ((await entry.getSeason()).seasonNumber === (await entry2.getSeason()).seasonNumber && entry.id !== entry2.id) {
                             const result = await seriesHelper.isSameSeries(entry, entry2);
-                            logger.warn('Same season in package. Detected as same series:' + result);
+                            if (result) {
+                                logger.warn('Same season in package. Detected as same series:' + result);
+                            }
                         }
                     }
                 }
                 seriesPackageList.push(tempPackage);
             } catch (err) {
-               logger.debug(err);
+                logger.debug(err);
             }
         }
         return seriesPackageList;
@@ -67,9 +69,9 @@ export default class MainListPackageManager {
             }
             return tempPackage;
         } catch (err) {
-           logger.error('Cant create package for: ');
-           logger.error(series);
-           throw new Error('cant create package');
+            logger.error('Cant create package for: ');
+            logger.error(series);
+            throw new Error('cant create package');
         }
     }
 }

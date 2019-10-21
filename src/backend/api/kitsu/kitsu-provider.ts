@@ -7,17 +7,18 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import timeHelper from '../../helpFunctions/time-helper';
 import logger from '../../logger/logger';
+import AniDBProvider from '../anidb/anidb-provider';
+import AniListProvider from '../anilist/anilist-provider';
+import MalProvider from '../mal/mal-provider';
 import ExternalProvider from '../provider/external-provider';
 import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
+import TraktProvider from '../trakt/trakt-provider';
 import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
-import MalProvider from '../mal/mal-provider';
-import TraktProvider from '../trakt/trakt-provider';
-import AniDBProvider from '../anidb/anidb-provider';
-import AniListProvider from '../anilist/anilist-provider';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 export default class KitsuProvider extends ListProvider {
 
     public static getInstance() {
@@ -67,7 +68,7 @@ export default class KitsuProvider extends ListProvider {
             }
             for (const result of searchResults.data) {
                 try {
-                    endResults.push(await kitsuConverter.convertMediaToAnime(result, false));
+                    endResults.push(await kitsuConverter.convertMediaToAnime(result, ProviderInfoStatus.BASIC_INFO));
                 } catch (err) {
                     logger.error(err);
                 }

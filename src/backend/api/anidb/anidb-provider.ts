@@ -51,11 +51,11 @@ export default class AniDBProvider extends InfoProvider {
 
                     if (result) {
                         const seasonOfTitle = await Name.getSeasonNumber(result);
-                        if (!seasonOfTitle) {
+                        if (!seasonOfTitle.seasonNumber) {
                             lastResult = result;
                             lastSeriesDB = seriesDB;
                         }
-                        if (seasonOfTitle === season || !season) {
+                        if (seasonOfTitle.seasonNumber === season || !season) {
                             return [await this.fillSeries(seriesDB, result)];
                         }
                     }

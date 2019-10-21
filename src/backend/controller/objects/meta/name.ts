@@ -1,6 +1,8 @@
 import listHelper from '../../../helpFunctions/list-helper';
 import stringHelper from '../../../helpFunctions/string-helper';
 import { NameType } from './name-type';
+import SeasonNumberResponse from './response-object/season-number-response';
+import { AbsoluteResult } from '../../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 
 export default class Name {
 
@@ -51,28 +53,34 @@ export default class Name {
         throw new Error(names + 'HasNoRomajiName');
     }
 
-    public static async getSeasonNumber(names: Name[]): Promise<number | undefined> {
-        const seasonsDetected: number[] = [];
+    public static async getSeasonNumber(names: Name[]): Promise<SeasonNumberResponse> {
+        const response = new SeasonNumberResponse();
+        const seasonsDetected: SeasonNumberResponse[] = [];
         for (const name of names) {
-            if (name && name.name) {
-                if (name.lang !== 'slug') {
-                    if (name.nameType !== NameType.SLUG) {
-                        try {
+            try {
+                if (name && name.name) {
+                    if (name.lang !== 'slug') {
+                        if (name.nameType !== NameType.SLUG) {
                             const nr = await stringHelper.getSeasonNumberFromTitle(name.name);
-                            if (nr > (seasonsDetected ? seasonsDetected : 0)) {
+                            if (nr.seasonNumber) {
+                                if (nr.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
+                                    return nr;
+                                }
                                 seasonsDetected.push(nr);
                             }
-                        } catch (err) {
-                            continue;
                         }
                     }
                 }
+            } catch (err) {
+                continue;
             }
         }
         if (seasonsDetected.length === 0) {
-            return undefined;
+            return response;
         }
-        return listHelper.findMostFrequent(seasonsDetected);
+        const onlyNumbers = seasonsDetected.filter(x => x.seasonNumber).map(x => x.seasonNumber);
+        response.seasonNumber = await listHelper.findMostFrequent(onlyNumbers);
+        return response;
     }
     public name: string = '';
     public lang: string = '';

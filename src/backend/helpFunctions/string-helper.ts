@@ -1,3 +1,6 @@
+import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
+import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+
 class StringHelper {
     /**
      * It reverse a string.
@@ -52,7 +55,8 @@ class StringHelper {
         s = s.replace(/＊/g, '');
         return s.replace(/\ \ /g, ' ').trim();
     }
-    public async getSeasonNumberFromTitle(title: string): Promise<number> {
+    public async getSeasonNumberFromTitle(title: string): Promise<SeasonNumberResponse> {
+        const response = new SeasonNumberResponse();
         if (title && isNaN(Number(title)) && title.length > 2) {
             let reversedTitle = '';
             let countLastChar = 0;
@@ -71,13 +75,18 @@ class StringHelper {
                 const match = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s\d{1,}($|\s))/gmi.exec(title);
                 if (match != null) {
                     if (typeof match[1] !== 'undefined') {
-                        return parseInt(match[1]);
+                        response.seasonNumber = parseInt(match[1]);
+                        response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                        return response;
                     } else if (typeof match[2] !== 'undefined') {
-                        return parseInt(match[2]);
+                        response.seasonNumber = parseInt(match[1]);
+                        response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                        return response;
                     }
                 }
             } else if ('0123456789'.includes(lastChar) && !await this.hasKanji(title) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
-                return parseInt(lastChar, 10);
+                response.seasonNumber = parseInt(lastChar, 10);
+                return response;
             } else if (['I'].includes(lastChar)) {
                 while (lastChar === reversedTitle.charAt(0)) {
                     countLastChar++;
@@ -98,7 +107,8 @@ class StringHelper {
                 }
             }
             if (countLastChar > 1) {
-                return countLastChar;
+                response.seasonNumber = countLastChar;
+                return response;
             }
         }
         throw new Error('That title dont have a Season: ' + title);

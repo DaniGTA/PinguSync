@@ -4,6 +4,7 @@ import { strictEqual } from 'assert';
 import Cover from '../../../src/backend/controller/objects/meta/cover';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 
 describe('listProviderLocalData tests', () => {
     it('should merge two', async () => {
@@ -17,7 +18,7 @@ describe('listProviderLocalData tests', () => {
         b.episodes = 14;
         b.publicScore = 20;
         b.score = 40;
-        b.infoStatus = false;
+        b.infoStatus = ProviderInfoStatus.FULL_INFO;
         b.watchStatus = WatchStatus.COMPLETED;
         b.covers.push(new Cover(''));
 
