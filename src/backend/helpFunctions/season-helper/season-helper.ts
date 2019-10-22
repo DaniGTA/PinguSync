@@ -162,6 +162,12 @@ class SeasonHelper {
             }
         }
 
+
+
+        if (numberFromName && numberFromName.seasonNumber) {
+            return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
+        }
+
         try {
             if (!await series.isAnyPrequelPresent() && await series.isAnySequelPresent()) {
                 return new SearchSeasonValueResult(1, 'NoPrequelButSequel');
@@ -176,10 +182,6 @@ class SeasonHelper {
                     return new SearchSeasonValueResult(provider.targetSeason, 'Provider: ' + provider.provider);
                 }
             }
-        }
-        
-        if (numberFromName && numberFromName.seasonNumber) {
-            return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
         }
 
         if (prequelResult && prequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {

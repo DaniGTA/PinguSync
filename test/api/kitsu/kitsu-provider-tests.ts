@@ -1,6 +1,6 @@
 
 
-import { strictEqual } from 'assert';
+import { strictEqual, fail } from 'assert';
 import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
 import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
@@ -73,7 +73,13 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getListProvidersInfos().length, 5);
+        const kitsuResult = result.getListProvidersInfos().find((x) => x.provider === kitsuProvider.providerName);
+        if (kitsuResult) {
+            strictEqual(kitsuResult.provider, kitsuProvider.providerName);
+            strictEqual(kitsuResult.id, '12272');
+        } else {
+            fail('No kitsu result');
+        }
     }).timeout(4000);
 
     it('should get a series (5/6)', async () => {
