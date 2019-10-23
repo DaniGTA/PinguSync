@@ -55,13 +55,26 @@ describe('String Helper', () => {
         assert.equal(result, 'tset');
         return;
     });
+    describe('shoul get right season number from title', () => {
+        it('should detect parts', async () => {
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title 3 Part 2')).seasonNumber, 3);
+        });
+        it('Season marking with X', async () => {
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title XX')).seasonNumber, 2, 'Season marking with X');
+        });
+        it('Season marking with number', async () => {
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber, 2, 'Season marking with number');
+        });
+        it('Season marking with the letter s', async () => {
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title S2')).seasonNumber, 2, 'Season marking with the letter s');
+        });
+        it('Season marking with the word season', async () => {
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war')).seasonNumber, 2, 'Season marking with the word season');
+        });
+        it('Season marking with the a A', async () => {
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
+        });
 
-    it('shoul get right season number from title', async () => {
-        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title 3 Part 2')).seasonNumber, 3);
-        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title XX')).seasonNumber, 2, 'Season marking with X');
-        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber, 2, 'Season marking with number');
-        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title Season 2 - The war')).seasonNumber, 2, 'Season marking with the word season');
-        assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
     });
 
     it('should not get a season number from title', async () => {

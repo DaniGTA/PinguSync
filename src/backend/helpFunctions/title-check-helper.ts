@@ -2,6 +2,8 @@ import { MediaType } from '../controller/objects/meta/media-type';
 import Series from '../controller/objects/series';
 import logger from '../logger/logger';
 import stringHelper from './string-helper';
+import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
+import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
 
 export default new class TitleCheckHelper {
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
@@ -142,6 +144,32 @@ export default new class TitleCheckHelper {
         }
         throw new Error('[TitleCheckerHelper] No name to remove season');
     }
+
+    public async getSeasonNumberBySeasonMarkerInTitle(title: string): Promise<SeasonNumberResponse> {
+        const response = new SeasonNumberResponse();
+        const regex = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s(\d{1,})($|\s))/gmi;
+        const isNumber = /^\d+$/;
+        const match = regex.exec(title);
+        if (match) {
+            if (match != null) {
+                if (isNumber.test(match[1])) {
+                    response.seasonNumber = parseInt(match[1], 10);
+                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                    return response;
+                } else if (isNumber.test(match[2])) {
+                    response.seasonNumber = parseInt(match[2], 10);
+                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                    return response;
+                } else if (isNumber.test(match[4])) {
+                    response.seasonNumber = parseInt(match[4], 10);
+                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                    return response;
+                }
+            }
+        }
+        response.absoluteResult = AbsoluteResult.ABSOLUTE_NONE;
+        return response;
+     }
 
     public async getMediaTypeFromTitle(title: string): Promise<MediaType> {
         if (title.match(/(:|: | )Movie(\W|$|\_)/)) {

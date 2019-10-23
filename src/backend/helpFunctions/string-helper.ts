@@ -1,5 +1,6 @@
 import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+import titleCheckHelper from './title-check-helper';
 
 class StringHelper {
     /**
@@ -71,20 +72,11 @@ class StringHelper {
             if (title.toLocaleLowerCase().includes('episode')) {
                 throw new Error('That name dont have a Season');
             }
-            if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s\d{1,}($|\s))/gmi)) {
-                const match = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s\d{1,}($|\s))/gmi.exec(title);
-                if (match != null) {
-                    if (typeof match[1] !== 'undefined') {
-                        response.seasonNumber = parseInt(match[1], 10);
-                        response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                        return response;
-                    } else if (typeof match[2] !== 'undefined') {
-                        response.seasonNumber = parseInt(match[2], 10);
-                        response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                        return response;
-                    }
-                }
-            } else if ('0123456789'.includes(lastChar) && !await this.hasKanji(title) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
+            const seasonMarkerResult = await titleCheckHelper.getSeasonNumberBySeasonMarkerInTitle(title);
+            if (seasonMarkerResult.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
+                return seasonMarkerResult;
+            }
+            if ('0123456789'.includes(lastChar) && !await this.hasKanji(title) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
                 response.seasonNumber = parseInt(lastChar, 10);
                 return response;
             } else if (['I'].includes(lastChar)) {
@@ -113,6 +105,7 @@ class StringHelper {
         }
         throw new Error('That title dont have a Season: ' + title);
     }
+
     /**
      * Check if the string contains any japanese letters.
      * @param s
