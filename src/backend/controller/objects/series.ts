@@ -23,6 +23,7 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -509,6 +510,13 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         return;
+    }
+
+    public async getAverageProviderInfoStatus(): Promise<ProviderInfoStatus> {
+        const providers = this.getAllProviderLocalDatas();
+        const providerInfoStatusCollection = providers.flatMap((provider) => provider.infoStatus);
+        const average = await listHelper.getAverageNumberFromList(providerInfoStatusCollection);
+        return average;
     }
 
     private async mergeProviders(...providers: ProviderLocalData[]): Promise<ProviderLocalData[]> {

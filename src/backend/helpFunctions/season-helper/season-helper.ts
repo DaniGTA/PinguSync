@@ -41,8 +41,8 @@ class SeasonHelper {
                 return new SearchSeasonValueResult(-2, 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
                 while (prequel) {
-                    searchCount++;
                     if (await prequel.getMediaType() === await series.getMediaType()) {
+                        searchCount++;
                         const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE, seriesList);
                         if (prequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                             return new SearchSeasonValueResult(-2, 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
@@ -59,8 +59,11 @@ class SeasonHelper {
                             break;
                         }
                         prequel = prequelSearchResult.foundedSeries;
-                    } else {
+                    } else if (await prequel.getAverageProviderInfoStatus() === ProviderInfoStatus.FULL_INFO) {
+
                         return new SearchSeasonValueResult(searchCount, 'PrequelTrace - nomore prequel present');
+                    } else {
+                        prequel = null;
                     }
                 }
             }
@@ -95,8 +98,8 @@ class SeasonHelper {
                 return new SearchSeasonValueResult(-2, 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
                 while (sequel) {
-                    searchCount++;
                     if (await sequel.getMediaType() === await series.getMediaType()) {
+                        searchCount++;
                         const sequelSeason = await sequel.getSeason(SeasonSearchMode.SEQUEL_TRACE_MODE, seriesList);
                         if (sequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                             return new SearchSeasonValueResult(-2, 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
