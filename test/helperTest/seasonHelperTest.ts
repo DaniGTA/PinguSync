@@ -52,7 +52,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season, 1);
+        strictEqual(result.season, undefined);
     });
 
     it('should get the right season value: 2', async () => {

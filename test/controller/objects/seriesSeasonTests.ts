@@ -109,31 +109,47 @@ describe('Series | Season', () => {
         strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2])).seasonNumber, 1);
         return;
     });
+    describe('should return season 8', () => {
+        let series: Series = new Series();
 
-    it('should return season 8', async () => {
-        const series = new Series();
-        const lpld = new ListProviderLocalData(5);
-        lpld.sequelIds.push(6);
-        lpld.addSeriesName(new Name('Test Cool', 'en'));
-        series.addListProvider(lpld);
+        let series2: Series = new Series();
 
-        const series2 = new Series();
-        const lpld2 = new ListProviderLocalData(6);
-        lpld2.sequelIds.push(7);
-        lpld2.prequelIds.push(5);
-        lpld2.addSeriesName(new Name('Test Test', 'en'));
-        series2.addListProvider(lpld2);
+        let series3: Series = new Series();
 
-        const series3 = new Series();
-        const lpld3 = new ListProviderLocalData(7);
-        lpld3.prequelIds.push(6);
-        lpld3.addSeriesName(new Name('Test Testooo', 'en'));
-        series3.addListProvider(lpld3);
+        beforeEach(() => {
+            series = new Series();
+            const lpld = new ListProviderLocalData(5);
+            lpld.sequelIds.push(6);
+            lpld.addSeriesName(new Name('Test Cool', 'en'));
+            series.addListProvider(lpld);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 1);
-        strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 2);
-        strictEqual((await series3.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 3);
-        return;
+            series2 = new Series();
+            const lpld2 = new ListProviderLocalData(6);
+            lpld2.sequelIds.push(7);
+            lpld2.prequelIds.push(5);
+            lpld2.addSeriesName(new Name('Test Test', 'en'));
+            series2.addListProvider(lpld2);
+
+            series3 = new Series();
+            const lpld3 = new ListProviderLocalData(7);
+            lpld3.prequelIds.push(6);
+            lpld3.addSeriesName(new Name('Test Testooo', 'en'));
+            series3.addListProvider(lpld3);
+        });
+        it('at season 1', async () => {
+            strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 1);
+            return;
+        });
+
+        it('at season 2', async () => {
+            strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 2);
+            return;
+        });
+
+        it('at season 3', async () => {
+            strictEqual((await series3.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).seasonNumber, 3);
+            return;
+        });
     });
 
     it('should return season 9', async () => {
@@ -162,7 +178,7 @@ describe('Series | Season', () => {
         const lpld = new ListProviderLocalData(1);
         lpld.addSeriesName(new Name('Test S3 part 2', 'en'));
         series.addListProvider(lpld);
-        strictEqual((await series.getSeason()).seasonNumber, undefined);
+        strictEqual((await series.getSeason()).seasonNumber, 3);
         return;
     });
 

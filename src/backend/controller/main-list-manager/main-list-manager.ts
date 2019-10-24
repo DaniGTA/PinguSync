@@ -37,7 +37,7 @@ export default class MainListManager {
                         series = await series.merge(entry, false);
                         await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                     } catch (err) {
-                        logger.log('info', err);
+                        logger.error(err);
                     }
                 }
             } else {
@@ -67,15 +67,27 @@ export default class MainListManager {
 
     public static async updateSerieInList(series: Series) {
         logger.info('[MainList] Update series in mainlist ' + series.id);
-        const index = await this.getIndexFromSeries(series);
-        if (!MainListManager.listMaintance) {
-            const tempSeries = await MainListManager.mainList[index].merge(series, true, MergeTypes.UPDATE);
+        const mainIndex = await this.getIndexFromSeries(series, MainListManager.mainList);
+        if (mainIndex !== -1) {
+            let outdatedSeries = MainListManager.mainList[mainIndex];
+            if (typeof outdatedSeries.merge !== 'function') {
+                outdatedSeries = Object.assign(new Series(), outdatedSeries);
+            }
+            const tempSeries = await outdatedSeries.merge(series, true, MergeTypes.UPDATE);
             tempSeries.id = series.id;
-            MainListManager.mainList[index] = tempSeries;
-        } else {
-            const tempSeries = await MainListManager.secondList[index].merge(series, true, MergeTypes.UPDATE);
-            tempSeries.id = series.id;
-            MainListManager.secondList[index] = tempSeries;
+            MainListManager.mainList[mainIndex] = tempSeries;
+        }
+        if (MainListManager.listMaintance) {
+            const seconListIndex = await this.getIndexFromSeries(series, MainListManager.secondList);
+            if (seconListIndex !== -1) {
+                let outdatedSecondListSeries = MainListManager.secondList[seconListIndex];
+                if (typeof outdatedSecondListSeries.merge !== 'function') {
+                    outdatedSecondListSeries = Object.assign(new Series(), outdatedSecondListSeries);
+                }
+                const tempSecondListSeries = await outdatedSecondListSeries.merge(series, true, MergeTypes.UPDATE);
+                tempSecondListSeries.id = series.id;
+                MainListManager.secondList[seconListIndex] = tempSecondListSeries;
+            }
         }
     }
 
@@ -158,8 +170,12 @@ export default class MainListManager {
      * INFO: In the maintance phase the index number can be valid very shortly.
      * @param anime
      */
-    public static async getIndexFromSeries(anime: Series): Promise<number> {
-        return (await MainListManager.getMainList()).findIndex((x) => anime.id === x.id);
+    public static async getIndexFromSeries(anime: Series, seriesList?: Series[] | readonly Series[]): Promise<number> {
+        if (seriesList) {
+            return (seriesList).findIndex((x) => anime.id === x.id);
+        } else {
+            return (await MainListManager.getMainList()).findIndex((x) => anime.id === x.id);
+        }
     }
 
     public static async requestSaveMainList() {

@@ -47,7 +47,7 @@ class SeasonHelper {
                         if (prequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                             return new SearchSeasonValueResult(-2, 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                         }
-                        if (prequelSeason.seasonNumber === 1 || prequelSeason.seasonNumber === 0) {
+                        if (prequelSeason.seasonNumber && prequelSeason.seasonError === SeasonError.NONE) {
                             return new SearchSeasonValueResult(prequelSeason.seasonNumber + searchCount, 'PrequelTrace');
                         }
                     }
@@ -104,7 +104,7 @@ class SeasonHelper {
                         if (sequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                             return new SearchSeasonValueResult(-2, 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                         }
-                        if (sequelSeason.seasonNumber !== undefined && sequelSeason.seasonError === SeasonError.NONE) {
+                        if (sequelSeason.seasonNumber && sequelSeason.seasonError === SeasonError.NONE) {
                             return new SearchSeasonValueResult(sequelSeason.seasonNumber - searchCount, 'SequelTrace');
                         }
                     }
