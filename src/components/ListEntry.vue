@@ -137,6 +137,10 @@ export default class ListEntry extends Vue {
     App.workerController.send("sync-series", id);
   }
 
+  delelteData(seriesPackage: SeriesPackage) {
+    App.workerController.send("delete-series-package", seriesPackage.id);
+  }
+
   /**
    * Collect information about the series.
    */

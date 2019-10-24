@@ -33,6 +33,7 @@ export default class TVMazeProvider extends InfoProvider {
         const results: MultiProviderResult[] = [];
         const converter = new TVMazeConverter();
         try {
+            searchTitle = searchTitle.replace('&', 'and');
             const result = await this.webRequest<Search[]>('http://api.tvmaze.com/search/shows?q=' + encodeURI(searchTitle) + '&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons');
             for (const resultEntry of result) {
                 const convertedShow = converter.convertShowToResult(resultEntry.show);

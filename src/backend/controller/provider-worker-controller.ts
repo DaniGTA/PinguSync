@@ -19,7 +19,7 @@ class ProviderController {
                 return provider;
             }
         }
-        throw new Error('[ProviderController] NoProviderFound: '+providerString);
+        throw new Error('[ProviderController] NoProviderFound: ' + providerString);
     }
 
     private static instance: ProviderController;
@@ -90,6 +90,13 @@ class ProviderController {
                     break;*/
                 case 'get-all-providers':
                     this.send('all-providers', ProviderList.getListProviderList().flatMap((x) => x.providerName));
+                    break;
+                case 'delete-series-package':
+                    if (ListController.instance) {
+                        ListController.instance.removeSeriesPackageFromMainList(value.data);
+                    } else {
+                        logger.log('info', 'Failed request info refresh: no list controller instance');
+                    }
                     break;
             }
         });

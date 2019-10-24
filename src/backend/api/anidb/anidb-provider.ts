@@ -73,8 +73,12 @@ export default class AniDBProvider extends InfoProvider {
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const converter = new AniDBConverter();
         if (provider.provider === this.providerName && provider.id) {
-            const fullInfo = await this.webRequest<AniDBAnimeFullInfo>('http://api.anidb.net:9001/httpapi?request=anime&client=animesynclist&clientver=2&protover=1&aid=' + provider.id);
-            return converter.convertFullInfoToProviderLocalData(fullInfo);
+            try {
+                const fullInfo = await this.webRequest<AniDBAnimeFullInfo>('http://api.anidb.net:9001/httpapi?request=anime&client=animesynclist&clientver=2&protover=1&aid=' + provider.id);
+                return converter.convertFullInfoToProviderLocalData(fullInfo);
+            } catch (err) {
+                throw new Error(err);
+            }
         }
         throw new Error('False provider - AniDB');
     }
@@ -196,15 +200,19 @@ export default class AniDBProvider extends InfoProvider {
                         const json = xml2json(body, { compact: true, spaces: 0 });
                         if (json) {
                             resolve(JSON.parse(json) as T);
+                        } else {
+                            rejects();
                         }
                     } else {
                         rejects();
                     }
                 }).on('error', (err) => {
                     logger.error(err);
+                    rejects();
                 });
             } catch (err) {
                 logger.error(err);
+                rejects();
             }
         });
     }

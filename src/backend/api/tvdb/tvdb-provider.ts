@@ -46,6 +46,7 @@ export default class TVDBProvider extends InfoProvider {
         const result = [];
         try {
             const tvDbConverter = new TVDBConverter();
+            searchTitle = searchTitle.replace('&', 'and');
             const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + encodeURI(searchTitle));
 
             if (data.data) {
@@ -127,6 +128,7 @@ export default class TVDBProvider extends InfoProvider {
                                 reject();
                             }
                         } catch (err) {
+                            logger.error(error);
                             logger.error(err);
                             reject();
                         }

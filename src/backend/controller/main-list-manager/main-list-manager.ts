@@ -33,12 +33,9 @@ export default class MainListManager {
                             series = Object.assign(new Series(), series);
                         }
 
-                        const seasonResult = await SeasonComperator.compareSeasons(series, entry);
-                        if (seasonResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (seasonResult.matchAble === seasonResult.matches)) {
-                            logger.log('info', '[MainList] Duplicate found: merging...');
-                            series = await series.merge(entry, false);
-                            await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
-                        }
+                        logger.log('info', '[MainList] Duplicate found: merging...');
+                        series = await series.merge(entry, false);
+                        await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                     } catch (err) {
                         logger.log('info', err);
                     }
@@ -113,7 +110,15 @@ export default class MainListManager {
 
 
     public static async removeSeriesFromMainList(series: Series, notifyRenderer = false): Promise<boolean> {
-        return this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
+        let result = false;
+        if (this.listMaintance) {
+            await this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
+            await this.removeSeriesFromList(series, notifyRenderer, MainListManager.secondList);
+            return true;
+        } else {
+            result = await this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
+        }
+        return result
     }
 
     public static async removeSeriesFromList(series: Series, notifyRenderer = false, list?: Series[]): Promise<boolean> {

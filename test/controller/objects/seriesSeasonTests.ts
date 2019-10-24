@@ -5,6 +5,7 @@ import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
+import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 
 
 describe('Series | Season', () => {
@@ -164,6 +165,25 @@ describe('Series | Season', () => {
         strictEqual((await series.getSeason()).seasonNumber, undefined);
         return;
     });
+
+    it('should not return any season', async () => {
+        const series = new Series();
+        const lpld = new ListProviderLocalData(3);
+        lpld.infoStatus = ProviderInfoStatus.ONLY_ID;
+        series.addListProvider(lpld);
+
+        const series2 = new Series();
+        const lpld2 = new ListProviderLocalData(1);
+        lpld2.addSeriesName(new Name('Test: yman', 'en'));
+        lpld2.sequelIds.push(3);
+        series2.addListProvider(lpld2);
+
+
+
+        strictEqual((await series.getSeason()).seasonNumber, undefined);
+        return;
+    });
+
 
     it('should not return season (1/3)', async () => {
         const series = new Series();
