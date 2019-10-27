@@ -31,7 +31,7 @@ class ListHelper {
     public async isAnyListEntryInList<T>(array: T[], array2: T[]): Promise<boolean> {
         for (const entry of array) {
             for (const entry2 of array2) {
-                if (this.objectEquals(entry, entry2)) {
+                if (this.objectsEquals(entry, entry2)) {
                     return true;
                 }
             }
@@ -184,7 +184,19 @@ class ListHelper {
         return list.findIndex((x) => x.url === item.url) !== -1;
     }
 
-    private objectEquals(x: any, y: any): boolean {
+    public async countEntrysInArray<T>(array: T[], target: T): Promise<number> {
+        let counter = 0;
+
+        for (const entry of array) {
+            if (this.objectsEquals(entry, target)) {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
+    private objectsEquals(x: any, y: any): boolean {
         'use strict';
 
         if (x === null || x === undefined || y === null || y === undefined) { return x === y; }
@@ -207,7 +219,7 @@ class ListHelper {
         // recursive object equality check
         const p = Object.keys(x);
         return Object.keys(y).every((i) => p.indexOf(i) !== -1) &&
-            p.every((i) => this.objectEquals(x[i], y[i]));
+            p.every((i) => this.objectsEquals(x[i], y[i]));
     }
 }
 

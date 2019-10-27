@@ -116,7 +116,7 @@ export default new class TitleCheckHelper {
     }
 
     public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
-        if (title != null && title !== '') {
+        if (title !== '') {
             let reversedTitle = await stringHelper.reverseString(title);
             const lastChar = reversedTitle.charAt(0);
             let countLastChar = 0;
@@ -140,9 +140,8 @@ export default new class TitleCheckHelper {
                     return (await stringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
                 }
             }
-            return title;
         }
-        throw new Error('[TitleCheckerHelper] No name to remove season');
+        return title;
     }
 
     public async getSeasonNumberBySeasonMarkerInTitle(title: string): Promise<SeasonNumberResponse> {

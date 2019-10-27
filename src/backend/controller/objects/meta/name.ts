@@ -78,8 +78,18 @@ export default class Name {
         if (seasonsDetected.length === 0) {
             return response;
         }
-        const onlyNumbers = seasonsDetected.filter(x => x.seasonNumber).map(x => x.seasonNumber);
-        response.seasonNumber = await listHelper.findMostFrequent(onlyNumbers);
+        const mappedNumbers = seasonsDetected.map(x => x.seasonNumber);
+        const onlyNumbers = mappedNumbers.filter(x => x) as number[];
+        if (onlyNumbers) {
+            const mostFrequentNumberInList = await listHelper.findMostFrequent(onlyNumbers);
+            if (mostFrequentNumberInList) {
+                const entrys = await listHelper.countEntrysInArray(mappedNumbers, mostFrequentNumberInList);
+                // TODO if entrys have 10% 
+                if (mappedNumbers.length / 10 <= entrys) {
+                    response.seasonNumber = mostFrequentNumberInList;
+                }
+            }
+        }
         return response;
     }
     public name: string = '';
