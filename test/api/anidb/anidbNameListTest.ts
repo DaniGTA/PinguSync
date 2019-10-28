@@ -29,37 +29,39 @@ describe('Provider: AniDB | Offline Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new AniListProvider()];
     });
-    it('should allow download (1/2)', async () => {
-        const x = new AniDBProvider(false);
-        // tslint:disable-next-line: no-string-literal
-        AniDBProvider['anidbNameManager'].lastDownloadTime = undefined;
-        // tslint:disable-next-line: no-string-literal
-        deepEqual(x['allowDownload'](), true);
-        return;
-    });
-    it('should allow download (2/2)', async () => {
-        const a = new AniDBProvider(false);
-        const twoDaysInMs = 172800000;
-        // tslint:disable-next-line: no-string-literal
-        AniDBProvider['anidbNameManager'].lastDownloadTime = new Date(Date.now() - twoDaysInMs * 2);
-        // tslint:disable-next-line: no-string-literal
-        deepEqual(a['allowDownload'](), true);
-        return;
-    });
-    it('should not allow download', async () => {
-        const a = new AniDBProvider(false);
-        // tslint:disable-next-line: no-string-literal
-        AniDBProvider['anidbNameManager'].lastDownloadTime = new Date(Date.now());
-        // tslint:disable-next-line: no-string-literal
-        deepEqual(a['allowDownload'](), false);
-        return;
+    describe('Download Tests', () => {
+        it('should allow download (1/2)', async () => {
+            const x = new AniDBProvider(false);
+            // tslint:disable-next-line: no-string-literal
+            AniDBProvider['anidbNameManager'].lastDownloadTime = undefined;
+            // tslint:disable-next-line: no-string-literal
+            deepEqual(x['allowDownload'](), true);
+            return;
+        });
+        it('should allow download (2/2)', async () => {
+            const a = new AniDBProvider(false);
+            const twoDaysInMs = 172800000;
+            // tslint:disable-next-line: no-string-literal
+            AniDBProvider['anidbNameManager'].lastDownloadTime = new Date(Date.now() - twoDaysInMs * 2);
+            // tslint:disable-next-line: no-string-literal
+            deepEqual(a['allowDownload'](), true);
+            return;
+        });
+        it('should not allow download', async () => {
+            const a = new AniDBProvider(false);
+            // tslint:disable-next-line: no-string-literal
+            AniDBProvider['anidbNameManager'].lastDownloadTime = new Date(Date.now());
+            // tslint:disable-next-line: no-string-literal
+            deepEqual(a['allowDownload'](), false);
+            return;
+        });
     });
 
     it('should find id 9579', async () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
         lpdld.targetSeason = 1;
         lpdld.watchStatus = WatchStatus.DROPPED;
 
@@ -87,7 +89,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
         lpdld.watchStatus = WatchStatus.DROPPED;
 
         const series = new Series();
@@ -111,7 +113,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
         lpdld.watchStatus = WatchStatus.DROPPED;
 
         const series = new Series();
@@ -128,7 +130,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -144,7 +146,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -161,7 +163,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -178,7 +180,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -218,7 +220,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -234,7 +236,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -250,7 +252,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -266,7 +268,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         lpdld.addSeriesName(new Name('Persona -Trinity Soul-', NameType.MAIN));
@@ -285,7 +287,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(1, 'AniList');
         lpdld.episodes = 12;
-        lpdld.infoStatus =  ProviderInfoStatus.FULL_INFO;
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
