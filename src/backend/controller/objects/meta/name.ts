@@ -1,8 +1,8 @@
+import { AbsoluteResult } from '../../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 import listHelper from '../../../helpFunctions/list-helper';
 import stringHelper from '../../../helpFunctions/string-helper';
 import { NameType } from './name-type';
 import SeasonNumberResponse from './response-object/season-number-response';
-import { AbsoluteResult } from '../../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 
 export default class Name {
 
@@ -56,12 +56,12 @@ export default class Name {
     public static async getSeasonNumber(names: Name[]): Promise<SeasonNumberResponse> {
         const response = new SeasonNumberResponse();
         const seasonsDetected: SeasonNumberResponse[] = [];
-        for (const name of names) {
+        for (const nameObj of names) {
             try {
-                if (name && name.name) {
-                    if (name.lang !== 'slug') {
-                        if (name.nameType !== NameType.SLUG) {
-                            const nr = await stringHelper.getSeasonNumberFromTitle(name.name);
+                if (nameObj && nameObj.name) {
+                    if (nameObj.lang !== 'slug') {
+                        if (nameObj.nameType !== NameType.SLUG) {
+                            const nr = await stringHelper.getSeasonNumberFromTitle(nameObj.name);
                             if (nr.seasonNumber) {
                                 if (nr.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
                                     return nr;
@@ -78,14 +78,13 @@ export default class Name {
         if (seasonsDetected.length === 0) {
             return response;
         }
-        const mappedNumbers = seasonsDetected.map(x => x.seasonNumber);
-        const onlyNumbers = mappedNumbers.filter(x => x) as number[];
+        const mappedNumbers = seasonsDetected.map((x) => x.seasonNumber);
+        const onlyNumbers = mappedNumbers.filter((x) => x) as number[];
         if (onlyNumbers) {
             const mostFrequentNumberInList = await listHelper.findMostFrequent(onlyNumbers);
             if (mostFrequentNumberInList) {
                 const entrys = await listHelper.countEntrysInArray(mappedNumbers, mostFrequentNumberInList);
-                // TODO if entrys have 10% 
-                if (mappedNumbers.length / 10 <= entrys) {
+                if (names.length / 10 <= entrys) {
                     response.seasonNumber = mostFrequentNumberInList;
                 }
             }

@@ -10,4 +10,5 @@
     "mocha.requires": [
         "ts-node/register"
     ],
+    "mochaExplorer.debuggerPort": 19485,
 }

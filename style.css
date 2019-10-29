@@ -1,0 +1,105 @@
+@import url(https://fonts.googleapis.com/css?family=Arimo);
+
+body{
+  background-color: #f2f2f2;
+  box-sizing: border-box;
+  font-family: Arimo;
+}
+
+h1{
+  text-align: center;
+  color: #515151;
+  font-size: 38px;
+}
+
+.quicklinks-liste {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 30px auto;
+  padding: 30px 26px;
+  max-width: 768px;
+  font-size: 20px;
+}
+
+.lb__card{
+  display: inline-block;
+  vertical-align: top;
+  margin: 0px 18px;
+  position: relative;
+}
+
+  .lb__card::before{
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 104%;
+    top: 0;
+    left: -8px;
+    background-color: #f2f2f2;
+  }
+
+.quicklinks-liste  h2{
+  margin: 0 8px;
+  margin-bottom: 10px;
+  color: #919191;
+}
+
+.quicklinks-liste  li{
+  background-color: #D1D1D1;
+  width: 200px;
+  padding: 4px 8px;
+  margin-bottom: 2px;
+  position: relative;
+  transition: all ease 200ms;
+}
+
+.quicklinks-liste  li:hover{
+  /* transform: scale(1.1) translateX(10px);*/
+  width: 190px;
+}
+
+.quicklinks-liste  li::before{
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 90%;
+  top: 0;
+  left: -8px;
+  border: 2px solid #d1d1d1;
+  border-left: none;
+  background-color: #f2f2f2;
+  opacity: 0;
+}
+
+.quicklinks-liste  li:hover::before{
+  opacity: 1;
+}
+
+.quicklinks-liste  li a{
+  text-decoration: none;
+  color: #6B6B6B;
+}
+
+@media screen and (max-width: 842px){
+  .quicklinks-liste {
+    margin-top: 0;
+  }
+  .lb__card{
+    margin-bottom: 30px; 
+    display: block;
+  }
+  h1{
+    text-align: left; 
+    margin-left: 34px;
+    margin-bottom: 0px;
+  }
+}
+
+.lb__card:nth-child(1)::before{background-color: #00B1B1;}
+.lb__card:nth-child(1) li::before{border-color: #00B1B1;}
+
+.lb__card:nth-child(2)::before{background-color: #D60057;}
+.lb__card:nth-child(2) li::before{border-color: #D60057;}
+
+.lb__card:nth-child(3)::before{background-color: #FFAC45;}
+.lb__card:nth-child(3) li::before{border-color: #FFAC45;}
