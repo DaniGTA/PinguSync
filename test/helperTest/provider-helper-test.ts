@@ -1,20 +1,21 @@
+import ListController from "../../src/backend/controller/list-controller";
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-
 import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
-
-import ListController from '../../src/backend/controller/list-controller';
-
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-
-import { equal } from 'assert';
-import Series from '../../src/backend/controller/objects/series';
-import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import providerHelper from '../../src/backend/helpFunctions/provider/provider-helper';
 import TestProvider from '../controller/objects/testClass/testProvider';
+import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import Series from '../../src/backend/controller/objects/series';
+import { equal } from 'assert';
+import KitsuProvider from '../../src/backend/api/kitsu/kitsu-provider';
+import MalProvider from '../../src/backend/api/mal/mal-provider';
+import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
+import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 
+describe('Provider Helper Test', () => {
 
-// tslint:disable: no-string-literal
-describe('Provider Helper | Examples', () => {
+    const lc = new ListController(true);
+
     before(() => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['listLoaded'] = true;
@@ -22,77 +23,43 @@ describe('Provider Helper | Examples', () => {
         MainListLoader['loadData'] = () => [];
         // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
         MainListLoader['saveData'] = async () => { };
+    });
+    beforeEach(() => {
+        // tslint:disable-next-line: no-string-literal
+        ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider()];
+        // tslint:disable-next-line: no-string-literal
+        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3')];
+        // tslint:disable-next-line: no-string-literal
+        MainListManager['mainList'] = [];
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);
     });
-    beforeEach(() => {
 
-        ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
-        // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedInfoProvider'] = [];
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['mainList'] = [];
-    });
-    it('should check list provider id true', async () => {
+    it('It should find that it can get id from other provider', async () => {
+        const providerHelper = new ProviderHelper();
         // Series A
         const series = new Series();
-        const listProvider = new ListProviderLocalData(1, 'testA');
+        const listProvider = new ListProviderLocalData(1, 'Kitsu');
         series.addProviderDatas(listProvider);
-
-        // Series B
-        const seriesB = new Series();
-        const listProviderB = new ListProviderLocalData(1, 'testA');
-        seriesB.addProviderDatas(listProviderB);
-
-        const result = await providerHelper.checkListProviderId(series, seriesB);
-        equal(result.sameId, true);
+        const pList = ProviderList['loadedListProvider'];
+        let provider;
+        if (pList && pList[1]) {
+            provider = pList[1];
+        }
+        let result;
+        if (provider) {
+            result = await providerHelper['canGetIdFromOtherProviders'](series.getAllProviderLocalDatas(), provider);
+        }
+        equal(result, true);
     });
 
-    it('should check list provider id false (Provider not equal)', async () => {
+    it('It should get all list provider that need a update', async () => {
+        const providerHelper = new ProviderHelper();
         // Series A
         const series = new Series();
-        const listProvider = new ListProviderLocalData(1, 'testA');
-        series.addProviderDatas(listProvider);
-
-        // Series B
-        const seriesB = new Series();
-        const listProviderB = new ListProviderLocalData(1, 'testB');
-        seriesB.addProviderDatas(listProviderB);
-
-        const result = await providerHelper.checkListProviderId(series, seriesB);
-        equal(result.sameId, false);
+        series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
+        series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
+        const result = await providerHelper['getInfoProviderThatNeedUpdate'](series.getAllProviderLocalDatas());
+        equal(result.length, 1);
     });
-
-    it('should check list provider id false (Id not equal)', async () => {
-        // Series A
-        const series = new Series();
-        const listProvider = new ListProviderLocalData(1, 'testA');
-        series.addProviderDatas(listProvider);
-
-        // Series B
-        const seriesB = new Series();
-        const listProviderB = new ListProviderLocalData(2, 'testA');
-        seriesB.addProviderDatas(listProviderB);
-
-        const result = await providerHelper.checkListProviderId(series, seriesB);
-        equal(result.sameId, false);
-    });
-
-    it('should check list provider id false (Provider not exist)', async () => {
-        // Series A
-        const series = new Series();
-        const listProvider = new ListProviderLocalData(1, 'testC');
-        series.addProviderDatas(listProvider);
-
-        // Series B
-        const seriesB = new Series();
-        const listProviderB = new ListProviderLocalData(1, 'testC');
-        seriesB.addProviderDatas(listProviderB);
-
-        const result = await providerHelper.checkListProviderId(series, seriesB);
-        equal(result.sameId, false);
-    });
-
-
-
 });

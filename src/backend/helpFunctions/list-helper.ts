@@ -41,9 +41,11 @@ class ListHelper {
 
     public async removeEntrys<T>(array: T[], ...entrys: T[] | readonly T[]): Promise<T[]> {
         for (const entry of entrys) {
-            const i = array.indexOf(entry);
+            const i = array.findIndex((listEntry) => this.objectsEquals(listEntry, entry));
             if (i > -1) {
                 array.splice(i, 1);
+            } else {
+                logger.error('[ListHelper] Item doesnt exist in List!');
             }
         }
         return array;

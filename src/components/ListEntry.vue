@@ -4,10 +4,11 @@
     <img v-lazy.container="cover" class="series-cover" />
     <button @click="clog(seriesPackage)">Log</button>
     <button @click="seriesDataRefresh(seriesPackage)">Data Refresh</button>
-    <button @click="seriesDataRefresh(seriesPackage)">Delete Package</button>
+    <button @click="removeSeriesPackage(seriesPackage)">Delete Package</button>
 
     <div v-for="item of seriesPackage.allRelations" v-bind:key="item.id">
       <button @click="logNames(item)">Log names</button>
+      <button @click="showMapping(item)">Show mapping</button>
       <Promised
         :promise="getSeason(item)"
         v-slot:combined="{ isPending, isDelayOver, data, error }"
@@ -28,6 +29,7 @@
         (id: {{listProvider.id}} )
       </div>
     </div>
+    <ShowEpisodeMapping v-if="(showModal && currentSelect)" @close="showModal = false" :sSeries.sync="currentSelect"></ShowEpisodeMapping>
   </div>
 </template>
 
@@ -43,17 +45,25 @@ import SeriesPackage from "../backend/controller/objects/series-package";
 import WatchProgress from "../backend/controller/objects/meta/watch-progress";
 import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
 import { ListProviderLocalData } from "../backend/controller/provider-manager/local-data/list-provider-local-data";
+import ShowEpisodeMapping from "./ShowEpisodeMapping.vue";
+
 Vue.component("Promised", Promised);
 Vue.use(VueLazyload);
 
-@Component
+@Component({
+  components: {
+    ShowEpisodeMapping,
+  },
+})
 export default class ListEntry extends Vue {
-  @PropSync("sPackage", { type: SeriesPackage }) seriesPackage!: SeriesPackage;
-  watchProgress: WatchProgress = new WatchProgress(0);
-  cover: string = "";
-  name: string = "?";
-  @Watch("sPackage", { immediate: true, deep: true })
-  async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
+  @PropSync('sPackage', { type: SeriesPackage }) public seriesPackage!: SeriesPackage;
+  public watchProgress: WatchProgress = new WatchProgress(0);
+  public cover: string = '';
+  public name: string = '?';
+  public showModal = false;
+  public currentSelect: Series|null = null;
+  @Watch('sPackage', { immediate: true, deep: true })
+  public async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
     console.log("ANIME CHANGE");
     this.cover = val.getAnyCoverUrl();
     this.name = await val.getPreferedName();
@@ -64,38 +74,45 @@ export default class ListEntry extends Vue {
     }
     // this.canSync = await val.getCanSyncStatus();
   }
-  constructor() {
+  public constructor() {
     super();
     const that = this;
   }
 
-  clog(a: any) {
+  public clog(a: any) {
     console.log(a);
   }
 
-  logNames(item: Series) {
+  public logNames(item: Series) {
     const animeObject = Object.assign(new Series(), item);
     animeObject.readdFunctions();
     console.log(animeObject.getAllNames());
   }
 
+  public showMapping(item:Series){
+    const animeObject = Object.assign(new Series(), item);
+    animeObject.readdFunctions();
+    this.currentSelect = animeObject;
+    this.showModal = true;
+  }
+
   getObjectAsString(series: Series): string {
     return JSON.stringify(series);
   }
-  async getWatchProgress(series: Series): Promise<number> {
+  public async getWatchProgress(series: Series): Promise<number> {
     if (series) {
       const animeObject = Object.assign(new Series(), series);
       const namen = animeObject.getAllNames();
       animeObject.readdFunctions();
       try {
-        var number = await animeObject.getLastWatchProgress();
+        const number = await animeObject.getLastWatchProgress();
         return number.episode;
       } catch (err) {}
     }
     return 0;
   }
 
-  getProviderEpisodesCount(provider: ListProviderLocalData): number {
+  public getProviderEpisodesCount(provider: ListProviderLocalData): number {
     if (typeof provider.episodes === "undefined") {
       return -1;
     } else {
@@ -103,11 +120,11 @@ export default class ListEntry extends Vue {
     }
   }
 
-  removeSeriesPackage(seriesPackage: SeriesPackage): void {
+  public removeSeriesPackage(seriesPackage: SeriesPackage): void {
     App.workerController.send("delete-series-package", seriesPackage.id);
   }
 
-  getProviderWatchProgress(provider: ListProviderLocalData): number {
+  public getProviderWatchProgress(provider: ListProviderLocalData): number {
     provider = Object.assign(new ListProviderLocalData(provider.id), provider);
     const result = provider.getHighestWatchedEpisode();
     if (typeof result === "undefined") {
@@ -119,7 +136,7 @@ export default class ListEntry extends Vue {
   /**
    *
    */
-  updateWatchProgress(series: Series, reduce: boolean) {
+  public updateWatchProgress(series: Series, reduce: boolean) {
     if (series) {
       const div = (this.$refs as any)[
         series.id + "-watchprogress"
@@ -133,27 +150,27 @@ export default class ListEntry extends Vue {
     }
   }
 
-  syncAnime(id: string | number) {
+  public syncAnime(id: string | number) {
     App.workerController.send("sync-series", id);
   }
 
-  delelteData(seriesPackage: SeriesPackage) {
+  public delelteData(seriesPackage: SeriesPackage) {
     App.workerController.send("delete-series-package", seriesPackage.id);
   }
 
   /**
    * Collect information about the series.
    */
-  seriesDataRefresh(seriesPackage: SeriesPackage) {
+  public seriesDataRefresh(seriesPackage: SeriesPackage) {
     App.workerController.send("request-info-refresh", seriesPackage.id);
   }
 
-  async getSeason(series: Series): Promise<number | undefined> {
+  public async getSeason(series: Series): Promise<number | undefined> {
     series = Object.assign(new Series(), series);
     return (await series.getSeason(SeasonSearchMode.NO_SEARCH, []))
       .seasonNumber;
   }
-  async canSync(series: Series): Promise<boolean> {
+  public async canSync(series: Series): Promise<boolean> {
     series = Object.assign(new Series(), series);
     return series.getCanSync();
   }
@@ -161,9 +178,6 @@ export default class ListEntry extends Vue {
 </script>
 
 <style>
-* {
-  color: white;
-}
 .main-list-entry-content-title {
   text-align: left;
   font-size: 24px;

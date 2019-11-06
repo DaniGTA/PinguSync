@@ -1,5 +1,5 @@
 import listHelper from '../../helpFunctions/list-helper';
-import providerHelper from '../../helpFunctions/provider/provider-helper';
+import providerHelper from '../../helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import stringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
@@ -8,6 +8,7 @@ import MainListSearcher from './main-list-searcher';
 import AdderProviderCache from './object-adder/adder-provider-cache';
 import AdderProviderCacheManager from './object-adder/adder-provider-cache-manager';
 import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
+import { ProviderHelper } from '../../helpFunctions/provider/provider-helper';
 export default class MainListAdder {
     /**
      * Stores all adding instances.
@@ -55,6 +56,7 @@ export default class MainListAdder {
      */
     private async listWorker(list: Series[]) {
         const searcher = new MainListSearcher();
+         const providerHelper = new ProviderHelper();
         const providerCacheManager = new AdderProviderCacheManager();
         logger.debug('[MainListAdder] Worker started to process ' + list.length + ' Items.');
         let addCounter = 0;
@@ -66,12 +68,11 @@ export default class MainListAdder {
                     const entry = await searcher.quickFindSameSeriesInMainList(series);
                     if (entry.length === 0) {
                         logger.debug('[MainListAdder] Add non existing Series.');
-                        const filledSeries = await providerHelper.fillMissingProvider(series,false,false,ProviderInfoStatus.BASIC_INFO);
+                        const filledSeries = await providerHelper.requestFullProviderUpdate(series);
                         if (filledSeries.lastInfoUpdate === 0) {
                             logger.error('[ERROR] Series no last info update!');
                         }
                         await MainListManager.addSerieToMainList(filledSeries);
-
                     } else if (entry.length === 1) {
                         try {
                             logger.log('info', '[MainListAdder] Add existing Series.');

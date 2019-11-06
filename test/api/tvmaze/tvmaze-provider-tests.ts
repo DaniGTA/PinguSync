@@ -7,7 +7,7 @@ import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
+import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 
 // tslint:disable: no-string-literal
 describe('Provider: TVMaze | Test runs', () => {
@@ -26,8 +26,8 @@ describe('Provider: TVMaze | Test runs', () => {
         unkownProvider.addSeriesName(new Name('Sankarea', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, tvmazeProvider);
-        strictEqual(result.getInfoProvidersInfos().length, 2);
+        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, tvmazeProvider);
+        strictEqual(result.getAllProviders().length, 2);
         return;
     });
     it('should get series by id', async () => {

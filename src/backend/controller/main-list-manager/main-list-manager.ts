@@ -97,26 +97,30 @@ export default class MainListManager {
     public static async finishListFilling() {
         logger.log('info', '[MainList] Cleanup Mainlist');
         MainListManager.listMaintance = true;
-        MainListManager.secondList = [...MainListManager.mainList];
-        logger.log('info', '[MainList] Temp List created');
-        MainListManager.mainList = [];
-        for (const index = 0; this.secondList.length !== 0;) {
-            try {
-                const entry = this.secondList[index];
-                /**
-                 * Reset Cache and reload it
-                 */
-                await entry.resetCache();
-                await entry.getSeason();
+        try {
+            MainListManager.secondList = [...MainListManager.mainList];
+            logger.log('info', '[MainList] Temp List created');
+            MainListManager.mainList = [];
+            for (const index = 0; this.secondList.length !== 0;) {
+                try {
+                    const entry = this.secondList[index];
+                    /**
+                     * Reset Cache and reload it
+                     */
+                    await entry.resetCache();
+                    await entry.getSeason();
 
-                await MainListManager.addSerieToMainList(entry);
-            } catch (err) {
-                logger.error(err);
+                    await MainListManager.addSerieToMainList(entry);
+                } catch (err) {
+                    logger.error(err);
+                }
+                this.secondList.shift();
             }
-            this.secondList.shift();
+            await MainListLoader.saveData(MainListManager.mainList);
+            logger.log('info', '[MainList] Finish Cleanup Mainlist');
+        } catch (err) {
+            logger.error(err);
         }
-        await MainListLoader.saveData(MainListManager.mainList);
-        logger.log('info', '[MainList] Finish Cleanup Mainlist');
         MainListManager.listMaintance = false;
     }
 
@@ -124,13 +128,13 @@ export default class MainListManager {
     public static async removeSeriesFromMainList(series: Series, notifyRenderer = false): Promise<boolean> {
         let result = false;
         if (this.listMaintance) {
-            await this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
-            await this.removeSeriesFromList(series, notifyRenderer, MainListManager.secondList);
-            return true;
+            const result1 = await this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
+            const result2 = await this.removeSeriesFromList(series, notifyRenderer, MainListManager.secondList);
+            return (result1 || result2);
         } else {
             result = await this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
         }
-        return result
+        return result;
     }
 
     public static async removeSeriesFromList(series: Series, notifyRenderer = false, list?: Series[]): Promise<boolean> {
@@ -139,14 +143,16 @@ export default class MainListManager {
             list = await this.getMainList();
         }
         logger.log('info', '[MainList] Remove Item in mainlist: ' + series.id);
-        const index = await MainListManager.getIndexFromSeries(series);
+        const index = await MainListManager.getIndexFromSeries(series,list);
         if (index !== -1) {
+            const oldSize = list.length;
             let ref = list;
             ref = await listHelper.removeEntrys(ref, ref[index]);
             if (notifyRenderer) {
                 FrontendController.getInstance().removeEntryFromList(index);
             }
-            return true;
+            await this.requestSaveMainList();
+            return oldSize !== ref.length;
         }
         return false;
     }

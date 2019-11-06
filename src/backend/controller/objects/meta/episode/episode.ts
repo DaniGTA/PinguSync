@@ -50,7 +50,7 @@ export default class Episode {
         this.id = stringHelper.randomString(20);
     }
 
-    public async addMapping(episodeMapping: EpisodeMapping) {
+    public addMapping(episodeMapping: EpisodeMapping) {
         let canBeMapped = true;
         for (const mapping of this.mappedTo) {
             if (mapping.id === episodeMapping.id || episodeMapping.id === this.id) {

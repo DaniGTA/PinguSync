@@ -3,9 +3,19 @@ import Name from '../../../src/backend/controller/objects/meta/name';
 import Overview from '../../../src/backend/controller/objects/meta/overview';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 
 
 describe('Series | Merge', () => {
+    before(() => {
+        // tslint:disable-next-line: no-string-literal
+        MainListManager['listLoaded'] = true;
+        // tslint:disable-next-line: no-string-literal
+        MainListLoader['loadData'] = () => [];
+        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
+        MainListLoader['saveData'] = async () => { };
+    });
     it('should merge episode', async () => {
         const seriesA = new Series();
         const lpld = new ListProviderLocalData(1);
@@ -20,6 +30,24 @@ describe('Series | Merge', () => {
 
         const merged = await seriesA.merge(seriesB);
         strictEqual(merged.getMaxEpisode(), 10);
+        return;
+    });
+    
+    it('should generate detailedEpisodes', async () => {
+        const seriesA = new Series();
+        const lpld = new ListProviderLocalData(1,"test");
+        lpld.addSeriesName(new Name('Test', 'en'));
+        lpld.episodes = 10;
+        seriesA.addListProvider(lpld);
+
+        const seriesB = new Series();
+        const lpld2 = new ListProviderLocalData(2,"test2");
+        lpld2.episodes = 10;
+        await seriesB.addListProvider(lpld2);
+
+        const merged = await seriesA.merge(seriesB);
+        const result = await merged.getAllDetailedEpisodes();
+        strictEqual(result.length, 20);
         return;
     });
     it('should merge episode (2)', async () => {

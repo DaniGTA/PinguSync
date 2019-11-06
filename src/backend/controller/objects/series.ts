@@ -159,6 +159,7 @@ export default class Series extends SeriesProviderExtension {
         return array;
     }
 
+
     /**
      * Give an array of all episodes in numbers.
      */
@@ -313,15 +314,10 @@ export default class Series extends SeriesProviderExtension {
         if (mergeType === MergeTypes.UPGRADE) {
             await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
             await newAnime.getMediaType();
-            await new EpisodeMappingHelper().generateEpisodeMapping(newAnime);
         }
-
+        await new EpisodeMappingHelper().generateEpisodeMapping(newAnime);
         logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
         await newAnime.getCanSync();
-
-
-
-
 
         if (this.lastInfoUpdate < anime.lastInfoUpdate) {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;

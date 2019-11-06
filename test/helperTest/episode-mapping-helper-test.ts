@@ -171,7 +171,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         const aProvider = new InfoProviderLocalData('1', 'testA');
         aProvider.targetSeason = 1;
-        aProvider.episodes = 200;
+        aProvider.episodes = 500;
 
         await aSeries.addProviderDatas(aProvider);
 
@@ -179,7 +179,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         const bProvider = new ListProviderLocalData('1', 'testB');
         bProvider.targetSeason = 1;
-        bProvider.episodes = 200;
+        bProvider.episodes = 500;
 
         await aSeries.addProviderDatas(bProvider);
 
@@ -187,7 +187,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         const cProvider = new ListProviderLocalData('1', 'testC');
         cProvider.targetSeason = 1;
-        cProvider.episodes = 200;
+        cProvider.episodes = 500;
 
         await aSeries.addProviderDatas(cProvider);
 
@@ -197,13 +197,13 @@ describe('Episode mapping | Mapping Only', () => {
         const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
 
         // Result checking
-        strictEqual(result.length, 600);
+        strictEqual(result.length, 2700);
         for (const episode of result) {
             strictEqual(episode.mappedTo.length, 2, episode.episodeNumber + '');
             strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);
             notStrictEqual(episode.mappedTo[0].provider, episode.provider);
         }
-    }).timeout(3000);
+    }).timeout(100000);
 
     it('should map episodes length with detailedEpisodes', async () => {
         const aSeries = new Series();

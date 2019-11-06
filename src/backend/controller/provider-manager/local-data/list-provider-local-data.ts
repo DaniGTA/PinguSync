@@ -121,7 +121,7 @@ export class ListProviderLocalData extends ProviderLocalData {
             if (newestProvider.covers) {
                 mergedProvider.runTime = newestProvider.runTime;
             }
-            if (newestProvider.detailEpisodeInfo) {
+            if (newestProvider.detailEpisodeInfo && newestProvider.detailEpisodeInfo.length !== 0) {
                 mergedProvider.detailEpisodeInfo = newestProvider.detailEpisodeInfo;
             }
             mergedProvider.infoStatus = newestProvider.infoStatus;

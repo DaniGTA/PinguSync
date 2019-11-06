@@ -149,7 +149,10 @@ class SeasonHelper {
                 return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
             }
         }
-
+        /**
+         * TRACE ARE DISABLED
+         */
+        /*
         if (SeasonSearchModeHelper.canPerformAPrequelTrace(searchMode)) {
             prequelResult = await this.searchSeasonValuePrequelTrace(series, seriesList);
             if (prequelResult.seasonError === SeasonError.NONE) {
@@ -164,6 +167,7 @@ class SeasonHelper {
                 return sequelResult;
             }
         }
+        */
 
 
 

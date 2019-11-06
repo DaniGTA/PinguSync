@@ -11,7 +11,11 @@
         "command": "./node_modules/.bin/vue-cli-service.cmd"
       },
       "isBackground": true,
-      "args": ["electron:serve", "--debug"],
+      "group": "build",
+      "args": [
+        "electron:serve",
+        "--debug"
+      ],
       "problemMatcher": {
         "owner": "custom",
         "pattern": {
@@ -22,6 +26,11 @@
           "endsPattern": "Not launching electron as debug argument was passed\\."
         }
       }
+    },
+    {
+      "type": "npm",
+      "script": "electron:serve",
+      "problemMatcher": []
     }
   ]
 }

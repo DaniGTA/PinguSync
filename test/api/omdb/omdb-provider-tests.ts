@@ -5,7 +5,7 @@ import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import providerHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
+import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 // tslint:disable: no-string-literal
 describe('Provider: OMDb | Test runs', () => {
     const omdbProvider = new OMDbProvider();
@@ -23,8 +23,8 @@ describe('Provider: OMDb | Test runs', () => {
         unkownProvider.addSeriesName(new Name('Sankarea: Undying Love', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerHelper['getProviderSeriesInfo'](series, omdbProvider);
-        strictEqual(result.getInfoProvidersInfos().length, 1);
+        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, omdbProvider);
+        strictEqual(result.getAllProviders().length, 1);
         return;
     });
 

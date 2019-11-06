@@ -5,6 +5,9 @@ import ProviderLocalData from './local-data/interfaces/provider-local-data';
 import ProviderLoader from './provider-loader';
 
 export default class ProviderList extends ProviderLoader {
+    /**
+     * Get all External Providers that can Support a List api.
+     */
     public static getListProviderList(): ListProvider[] {
         if (!this.loadedListProvider) {
             this.loadedListProvider = this.loadListProviderList();
@@ -14,6 +17,9 @@ export default class ProviderList extends ProviderLoader {
         }
     }
 
+    /**
+     * Get all External Providers that can Support only Information
+     */
     public static getInfoProviderList(): InfoProvider[] {
         if (!this.loadedInfoProvider) {
             this.loadedInfoProvider = this.loadInfoProviderList();
@@ -22,7 +28,17 @@ export default class ProviderList extends ProviderLoader {
             return this.loadedInfoProvider;
         }
     }
+    /**
+     * Get all External Providers that have a supported api.
+     */
+    public static getAllProviderLists(): ExternalProvider[] {
+        return [...this.getInfoProviderList(), ...this.getListProviderList()];
+    }
 
+    /**
+     * Get the current static instance of the api.
+     * @param localdata
+     */
     public static getExternalProviderInstance(localdata: ProviderLocalData): ExternalProvider {
         for (const provider of ProviderList.getListProviderList()) {
             if (provider.providerName === localdata.provider) {
