@@ -1,3 +1,4 @@
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import ExternalProvider from '../../api/provider/external-provider';
 import ListProvider from '../../api/provider/list-provider';
 import Series from '../../controller/objects/series';
@@ -35,13 +36,51 @@ export class ProviderHelper {
         const localDatas: ProviderLocalData[] = [];
         const idProviders = await this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
         for (const idProvider of idProviders) {
-            const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, idProvider, ProviderInfoStatus.FULL_INFO);
-            localDatas.push(...idProviderResult.getAllProviders());
-            await series.addProviderDatas(...idProviderResult.getAllProviders());
+            try {
+                const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, idProvider, ProviderInfoStatus.FULL_INFO);
+                localDatas.push(...idProviderResult.getAllProviders());
+                await series.addProviderDatas(...idProviderResult.getAllProviders());
+            } catch (err) {
+                logger.error(err);
+            }
         }
-        const result = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, provider, target);
-        localDatas.push(...result.getAllProviders());
+
+        let lastLocalDataResult: ProviderLocalData | null = null;
+        let currentResult: ProviderLocalData | null = null;
+        let requestResult: MultiProviderResult | null = null;
+        do {
+
+            try {
+                if (currentResult) {
+                    lastLocalDataResult = currentResult;
+                }
+                requestResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, provider, target);
+                currentResult = requestResult.mainProvider;
+                await series.addProviderDatas(...requestResult.getAllProviders());
+            } catch (err) {
+                logger.error(err);
+            }
+        } while (this.isProviderTargetAchievFailed(currentResult, lastLocalDataResult, target));
+
+        if (requestResult) {
+            localDatas.push(...requestResult.getAllProviders());
+        }
         return localDatas;
+    }
+
+    public isProviderTargetAchievFailed(currentResult: ProviderLocalData | null, lastLocalDataResult: ProviderLocalData | null, target: ProviderInfoStatus) {
+        if (lastLocalDataResult && currentResult) {
+            if (lastLocalDataResult.infoStatus < target) {
+                if (currentResult.infoStatus !== lastLocalDataResult.infoStatus) {
+                    return true;
+                }
+            }
+        } else if (!lastLocalDataResult && currentResult) {
+            if (currentResult.infoStatus < target) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -50,8 +89,12 @@ export class ProviderHelper {
     public async getAllRelevantListProviders(): Promise<ListProvider[]> {
         const relevantList: ListProvider[] = [];
         for (const provider of ProviderList.getListProviderList()) {
-            if (provider.isUserLoggedIn()) {
-                relevantList.push(provider);
+            try {
+                if (await provider.isUserLoggedIn()) {
+                    relevantList.push(provider);
+                }
+            } catch (err) {
+                logger.error(err);
             }
         }
         return relevantList;
