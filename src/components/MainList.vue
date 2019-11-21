@@ -20,10 +20,8 @@
 </template>
 
 <script lang="ts">
-import { ipcRenderer, ipcMain } from "electron";
-
-
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { ipcRenderer, ipcMain } from 'electron';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import App from "../App.vue";
 import ListEntry from "./ListEntry.vue";
@@ -38,9 +36,9 @@ import IUpdateList from '../backend/controller/objects/update-list';
   }
 })
 export default class MainList extends Vue {
-  static instance: MainList;
-  @Prop() sortedList: SeriesPackage[] = [];
-  @Prop() mainList: SeriesPackage[] = [];
+  public static instance: MainList;
+  @Prop() public sortedList: SeriesPackage[] = [];
+  @Prop() public mainList: SeriesPackage[] = [];
 
   constructor() {
     super();
@@ -83,11 +81,11 @@ export default class MainList extends Vue {
     });
   }
 
-  clog(a: any) {
+  public clog(a: any) {
     console.log(a);
   }
 
-  async refreshList() {
+  public async refreshList() {
     // const sorted = await listHelper.sortList(this.mainList);
     // this.sortedList.length = 0;
     // this.sortedList.push(...sorted);

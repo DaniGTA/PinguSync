@@ -122,6 +122,6 @@ export class InfoProviderLocalData extends ProviderLocalData {
                 return provider;
             }
         }
-        throw new Error('[InfoProviderLocalData] NoProviderFound: '+this.provider);
+        throw new Error('[InfoProviderLocalData] NoProviderFound: ' + this.provider);
     }
 }

@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts">
+
 import { ipcRenderer, ipcMain } from "electron";
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
 import App from "../App.vue";
@@ -47,7 +48,7 @@ import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-
 import { ListProviderLocalData } from "../backend/controller/provider-manager/local-data/list-provider-local-data";
 import ShowEpisodeMapping from "./ShowEpisodeMapping.vue";
 
-Vue.component("Promised", Promised);
+Vue.component('Promised', Promised);
 Vue.use(VueLazyload);
 
 @Component({
@@ -61,7 +62,7 @@ export default class ListEntry extends Vue {
   public cover: string = '';
   public name: string = '?';
   public showModal = false;
-  public currentSelect: Series|null = null;
+  public currentSelect: Series | null = null;
   @Watch('sPackage', { immediate: true, deep: true })
   public async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
     console.log("ANIME CHANGE");
@@ -89,14 +90,14 @@ export default class ListEntry extends Vue {
     console.log(animeObject.getAllNames());
   }
 
-  public showMapping(item:Series){
+  public showMapping(item: Series){
     const animeObject = Object.assign(new Series(), item);
     animeObject.readdFunctions();
     this.currentSelect = animeObject;
     this.showModal = true;
   }
 
-  getObjectAsString(series: Series): string {
+  public getObjectAsString(series: Series): string {
     return JSON.stringify(series);
   }
   public async getWatchProgress(series: Series): Promise<number> {
@@ -113,7 +114,7 @@ export default class ListEntry extends Vue {
   }
 
   public getProviderEpisodesCount(provider: ListProviderLocalData): number {
-    if (typeof provider.episodes === "undefined") {
+    if (!provider.episodes) {
       return -1;
     } else {
       return provider.episodes;
@@ -121,13 +122,13 @@ export default class ListEntry extends Vue {
   }
 
   public removeSeriesPackage(seriesPackage: SeriesPackage): void {
-    App.workerController.send("delete-series-package", seriesPackage.id);
+    App.workerController.send('delete-series-package', seriesPackage.id);
   }
 
   public getProviderWatchProgress(provider: ListProviderLocalData): number {
     provider = Object.assign(new ListProviderLocalData(provider.id), provider);
     const result = provider.getHighestWatchedEpisode();
-    if (typeof result === "undefined") {
+    if (!result) {
       return -1;
     } else {
       return result.episode;
@@ -139,30 +140,30 @@ export default class ListEntry extends Vue {
   public updateWatchProgress(series: Series, reduce: boolean) {
     if (series) {
       const div = (this.$refs as any)[
-        series.id + "-watchprogress"
+        series.id + '-watchprogress'
       ][0] as HTMLElement;
       if (div.textContent != null) {
-        App.workerController.send("anime-update-watch-progress", {
-          series: series,
-          reduce
+        App.workerController.send('anime-update-watch-progress', {
+          reduce,
+          series,
         });
       }
     }
   }
 
   public syncAnime(id: string | number) {
-    App.workerController.send("sync-series", id);
+    App.workerController.send('sync-series', id);
   }
 
   public delelteData(seriesPackage: SeriesPackage) {
-    App.workerController.send("delete-series-package", seriesPackage.id);
+    App.workerController.send('delete-series-package', seriesPackage.id);
   }
 
   /**
    * Collect information about the series.
    */
   public seriesDataRefresh(seriesPackage: SeriesPackage) {
-    App.workerController.send("request-info-refresh", seriesPackage.id);
+    App.workerController.send('request-info-refresh', seriesPackage.id);
   }
 
   public async getSeason(series: Series): Promise<number | undefined> {

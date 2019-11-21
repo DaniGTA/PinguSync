@@ -93,57 +93,6 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('[' + provider.providerName + '] Provider is not available!');
     }
 
-    /**
-     * Fill missing providers in a Series.
-     * It wold not update a provider
-     */
-    /*
-    public async fillListProvider(entry: Series, forceUpdate = false, target: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<Series> {
-        const providerList = ProviderList.getListProviderList();
-        for (const provider of providerList) {
-            try {
-                let result;
-                // Check if anime exist in main list and have already all providers in.
-                if (ListController.instance) {
-                    const mainListEntry = await ListController.instance.checkIfProviderExistInMainList(entry, provider);
-                    if (mainListEntry) {
-                        const mainListResult = mainListEntry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
-                        if (mainListResult && mainListResult.version === provider.version && this.shouldUpdateProvider(mainListResult.infoStatus)) {
-                            continue;
-                        } else if (!mainListResult) { 
-                            try {
-                                const subProviderProvider = await this.getSubProviderProvider(provider, mainListEntry);
-                                entry = await this.getProviderSeriesInfo(mainListEntry, subProviderProvider);
-                            } catch (err) { }
-                        } else {
-                            entry = mainListEntry;
-                        }
-                    }
-                } else {
-                    logger.warn('[ProviderHelper] [fillListProvider]: Failed get main list entry: no list controller instance');
-                }
-
-                try {
-                    result = entry.getListProvidersInfos().find((x) => x.provider === provider.providerName);
-                } catch (err) {
-                    logger.error('[ERROR] [ProviderHelper] [fillListProvider]:');
-                    logger.error(err);
-                }
-                if (result) {
-                    if (target > result.infoStatus || forceUpdate) {
-                        entry = await this.getProviderSeriesInfo(entry, provider);
-                        await timeHelper.delay(700);
-                    }
-                } else {
-                    entry = await this.getProviderSeriesInfo(entry, provider);
-                }
-            } catch (err) {
-                continue;
-            }
-        }
-        return entry;
-    }*/
-
     private async getSubProviderProvider(searchedProvider: ExternalProvider, series: Series): Promise<ExternalProvider> {
         const providerList = ProviderList.getListProviderList();
         for (const provider2 of providerList) {

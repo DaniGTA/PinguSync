@@ -1,6 +1,6 @@
-import MultiProviderResult from '../../api/provider/multi-provider-result';
 import ExternalProvider from '../../api/provider/external-provider';
 import ListProvider from '../../api/provider/list-provider';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import Series from '../../controller/objects/series';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
@@ -14,18 +14,19 @@ export class ProviderHelper {
     public async requestFullProviderUpdate(series: Series, target: ProviderInfoStatus = ProviderInfoStatus.BASIC_INFO, force = false): Promise<Series> {
         let currentProviders = series.getAllProviderLocalDatas();
         const infoProvidersThatNeedUpdates = await this.getInfoProviderThatNeedUpdates(currentProviders);
-
+        const tempSeriesCopy = Object.assign(new Series(), series); 
         for (const infoProvider of infoProvidersThatNeedUpdates) {
-            const result = await this.requestProviderInfo(series, infoProvider, force, target);
+            const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
             await series.addProviderDatas(...result);
         }
         currentProviders = series.getAllProviderLocalDatas();
 
         const providersThatNeedUpdates = await this.getProvidersThatNeedUpdates(currentProviders, target);
         for (const providerThatNeedUpdate of providersThatNeedUpdates) {
-            const result = await this.requestProviderInfo(series, providerThatNeedUpdate, force, target);
+            const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
             await series.addProviderDatas(...result);
         }
+        series.lastInfoUpdate = Date.now();
         return series;
     }
 
@@ -70,13 +71,13 @@ export class ProviderHelper {
 
     public isProviderTargetAchievFailed(currentResult: ProviderLocalData | null, lastLocalDataResult: ProviderLocalData | null, target: ProviderInfoStatus) {
         if (lastLocalDataResult && currentResult) {
-            if (lastLocalDataResult.infoStatus < target) {
+            if (currentResult.infoStatus > target) {
                 if (currentResult.infoStatus !== lastLocalDataResult.infoStatus) {
                     return true;
                 }
             }
         } else if (!lastLocalDataResult && currentResult) {
-            if (currentResult.infoStatus < target) {
+            if (currentResult.infoStatus > target) {
                 return true;
             }
         }
@@ -162,7 +163,7 @@ export class ProviderHelper {
 
 
 
-    private async getInLocalDataListContainsThisProvider(list: ProviderLocalData[],provider: ExternalProvider): Promise<ProviderLocalData | undefined> {
+    private async getInLocalDataListContainsThisProvider(list: ProviderLocalData[], provider: ExternalProvider): Promise<ProviderLocalData | undefined> {
         for (const entry of list) {
             if (entry.provider === provider.providerName) {
                 return entry;
@@ -170,7 +171,7 @@ export class ProviderHelper {
         }
     }
 
-    private async getAvaibleProvidersThatCanProvideProviderId(avaibleProviders: ProviderLocalData[], targetProvider: ExternalProvider): Promise<ExternalProvider[]>  {
+    private async getAvaibleProvidersThatCanProvideProviderId(avaibleProviders: ProviderLocalData[], targetProvider: ExternalProvider): Promise<ExternalProvider[]> {
         const result: ExternalProvider[] = [];
         for (const provider of avaibleProviders) {
             if (provider.provider !== targetProvider.providerName) {

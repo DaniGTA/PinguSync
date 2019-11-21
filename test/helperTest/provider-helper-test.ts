@@ -1,23 +1,24 @@
-import ListController from "../../src/backend/controller/list-controller";
-import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-import TestProvider from '../controller/objects/testClass/testProvider';
-import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
-import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import Series from '../../src/backend/controller/objects/series';
 import { equal } from 'assert';
 import KitsuProvider from '../../src/backend/api/kitsu/kitsu-provider';
 import MalProvider from '../../src/backend/api/mal/mal-provider';
-import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
+import ListProvider from '../../src/backend/api/provider/list-provider';
+import ListController from '../../src/backend/controller/list-controller';
+import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
+import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
+import Series from '../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
+import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
+import TestProvider from '../controller/objects/testClass/testProvider';
 
 describe('Provider Helper Test', () => {
 
     const lc = new ListController(true);
 
     before(() => {
-        // tslint:disable-next-line: no-string-literal
+        // tslint:disable: no-string-literal
         MainListManager['listLoaded'] = true;
         // tslint:disable-next-line: no-string-literal
         MainListLoader['loadData'] = () => [];
@@ -42,13 +43,13 @@ describe('Provider Helper Test', () => {
         const listProvider = new ListProviderLocalData(1, 'Kitsu');
         series.addProviderDatas(listProvider);
         const pList = ProviderList['loadedListProvider'];
-        let provider;
+        let provider: ListProvider | null = null;
         if (pList && pList[1]) {
             provider = pList[1];
         }
         let result;
         if (provider) {
-            result = await providerHelper['canGetIdFromOtherProviders'](series.getAllProviderLocalDatas(), provider);
+            result = await providerHelper['canGetTargetIdFromCurrentProvider'](listProvider, provider);
         }
         equal(result, true);
     });
@@ -59,7 +60,7 @@ describe('Provider Helper Test', () => {
         const series = new Series();
         series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
         series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
-        const result = await providerHelper['getInfoProviderThatNeedUpdate'](series.getAllProviderLocalDatas());
+        const result = await providerHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         equal(result.length, 1);
     });
 });

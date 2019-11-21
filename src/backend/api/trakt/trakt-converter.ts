@@ -55,9 +55,10 @@ export default new class TraktConverter {
 
         const result = new MultiProviderResult(provider);
         try {
-            const tvdbProvider = new InfoProviderLocalData(show.ids.tvdb, TVDBProvider.Instance);
-            tvdbProvider.infoStatus = ProviderInfoStatus.BASIC_INFO;
-            result.subProviders.push(tvdbProvider);
+            if (show.ids.tvdb) {
+                const tvdbProvider = new InfoProviderLocalData(show.ids.tvdb, TVDBProvider.Instance);
+                result.subProviders.push(tvdbProvider);
+            }
         } catch (err) {
             logger.error('[TVDBConverter] No tvdb instance.');
         }
@@ -95,17 +96,32 @@ export default new class TraktConverter {
         }
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         if (seasonInfo) {
-            provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
+            try {
+                provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
+            } catch (err) {
+                logger.error('[Trakt] Error: Failed to convert episode infos.')
+                logger.error(err);
+            }
         }
-        const tvdbProvider = new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider.Instance);
-        return new MultiProviderResult(provider, tvdbProvider);
-    }
+        const multiProviderResult = new MultiProviderResult(provider);
+        if (fullShow.ids.tvdb) {
+            multiProviderResult.subProviders.push(new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider.Instance));
+        }
+        if (fullShow.ids.imdb) {
+            multiProviderResult.subProviders.push(new InfoProviderLocalData(fullShow.ids.imdb, 'imdb'));
+        }
+        if (fullShow.ids.tmdb) {
+            multiProviderResult.subProviders.push(new InfoProviderLocalData(fullShow.ids.tmdb, 'tmdb'));
+        }
+
+        return multiProviderResult;
+}
 
     public async getDetailedEpisodeInfo(seasonInfos: TraktShowSeasonInfo[]): Promise<Episode[]> {
         const detailedEpisodes: Episode[] = [];
         for (const seasonInfo of seasonInfos) {
             for (const episode of seasonInfo.episodes) {
-                const tempEpisode = new Episode(seasonInfo.number, episode.number);
+                const tempEpisode = new Episode(episode.number, seasonInfo.number);
                 tempEpisode.title = [new EpisodeTitle(episode.title)];
                 tempEpisode.providerEpisodeId = episode.ids.trakt;
                 detailedEpisodes.push(tempEpisode);
@@ -132,7 +148,7 @@ export default new class TraktConverter {
 
             const season: Season = {
                 number: seasonNumber,
-                episodes,
+                episodes: episodes,
             };
 
             sendEntryShow.seasons.push(season);

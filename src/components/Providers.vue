@@ -23,79 +23,78 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { ipcRenderer } from "electron";
-import MainList from "./MainList.vue";
-import App from "../App.vue";
-import AuthModal from "./AuthModal.vue";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { ipcRenderer } from 'electron';
+import MainList from './MainList.vue';
+import App from '../App.vue';
+import AuthModal from './AuthModal.vue';
 
 @Component({
   components: {
-    AuthModal
-  }
+    AuthModal,
+  },
 })
 export default class Providers extends Vue {
-  @Prop() providerList: string[] = [];
-  currentSelectedProvider: string = "";
-  code: string = "";
-  $refs!: {
+  @Prop() public providerList: string[] = [];
+  public currentSelectedProvider: string = '';
+  public code: string = '';
+  public $refs!: {
     authModal: HTMLElement;
   };
   constructor() {
     super();
     const that = this;
-    App.workerController.on("all-providers", (data: string[]) => {
+    App.workerController.on('all-providers', (data: string[]) => {
       that.providerList = [];
       that.providerList.push(...data);
-      console.log("ProviderList loaded.");
-      App.workerController.send("get-series-list");
+      App.workerController.send('get-series-list');
     });
-    App.workerController.send("get-all-providers");
-    App.workerController.on("open-url", (url: string) => {
-      ipcRenderer.send("open-url", url);
+    App.workerController.send('get-all-providers');
+    App.workerController.on('open-url', (url: string) => {
+      ipcRenderer.send('open-url', url);
     });
-    console.log("Request Providers");
+    console.log('Request Providers');
   }
 
-  sendCode(provider: string, code: string) {
+  public sendCode(provider: string, code: string) {
     App.workerController.send(
-      provider.toLocaleLowerCase() + "-auth-code",
-      code
+      provider.toLocaleLowerCase() + '-auth-code',
+      code,
     );
-    this.$refs.authModal.style.display = "none";
+    this.$refs.authModal.style.display = 'none';
   }
 
-  openAuth(provider: string) {
-    App.workerController.send(provider.toLocaleLowerCase() + "-open-code-url");
+  public openAuth(provider: string) {
+    App.workerController.send(provider.toLocaleLowerCase() + '-open-code-url');
     this.currentSelectedProvider = provider;
   }
 
-  checkLogin(providerName: string) {
+  public checkLogin(providerName: string) {
     const that = this;
     App.workerController.on(
-      providerName.toLocaleLowerCase() + "-auth-status",
+      providerName.toLocaleLowerCase() + '-auth-status',
       (status: boolean) => {
         const button = (that.$refs as any)[
-          providerName + "-button"
+          providerName + '-button'
         ][0] as HTMLElement;
         const img = (that.$refs as any)[
-          providerName + "-img"
+          providerName + '-img'
         ][0] as HTMLElement;
         console.log(button);
         if (status) {
-          button.setAttribute("disable", "true");
-          img.classList.remove("logged-out");
-          img.classList.add("logged-in");
+          button.setAttribute('disable', 'true');
+          img.classList.remove('logged-out');
+          img.classList.add('logged-in');
         } else {
-          button.removeAttribute("disable");
-          img.classList.add("logged-out");
-          img.classList.remove("logged-in");
+          button.removeAttribute('disable');
+          img.classList.add('logged-out');
+          img.classList.remove('logged-in');
         }
       }
     );
 
     App.workerController.send(
-      providerName.toLocaleLowerCase() + "-is-logged-in"
+      providerName.toLocaleLowerCase() + '-is-logged-in'
     );
   }
 }

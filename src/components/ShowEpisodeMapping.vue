@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts">
-import { ipcRenderer, ipcMain } from "electron";
+import { ipcRenderer, ipcMain } from 'electron';
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
-import App from "../App.vue";
+import App from '../App.vue';
 
 import Series from '../backend/controller/objects/series';
 import VueLazyload from 'vue-lazyload';
@@ -51,10 +51,8 @@ export default class ListEntry extends Vue {
   @PropSync('sSeries', { type: Series }) public series!: Series;
   @Watch('sSeries', { immediate: true, deep: true })
   public onChildChanged(val: Series, oldVal: Series) {
-    console.log(val);
-    if(val){
-      this.localData =val.getAllProviderLocalDatas();
-      console.log(this.localData);
+    if (val) {
+      this.localData = val.getAllProviderLocalDatas();
     }
   }
   public localData:ProviderLocalData[] = []
