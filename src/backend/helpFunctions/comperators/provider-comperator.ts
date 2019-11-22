@@ -9,6 +9,8 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
+import { Provider } from 'electron';
+import SeasonComperator from './season-comperator';
 
 export default class ProviderComperator {
     public static async compareAllProviders(a: Series, b: Series): Promise<ComperatorResult> {
@@ -174,4 +176,23 @@ export default class ProviderComperator {
         }
         return false;
     }
+
+    
+    /**
+     * Checks if the series have the same provider.
+     * @param a
+     * @param b
+     */
+    public static bothProviderFromTheSameSeason(a: ProviderLocalData, b: ProviderLocalData, seriesSeasonNumber?: number): boolean {
+        try {
+            const providerASeasonNumber = a.targetSeason;
+            const providerBSeasonNumber = b.targetSeason;
+            return SeasonComperator.isSameSeasonNumber(providerASeasonNumber, providerBSeasonNumber, seriesSeasonNumber);
+        } catch (err) {
+            logger.error(err);
+        }
+        return false;
+    }
+
+
 }

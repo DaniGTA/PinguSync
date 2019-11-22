@@ -9,6 +9,7 @@ import sortHelper from '../sort-helper';
 import EpisodeDifferenceContainer from './episode-difference-container';
 import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
+import ProviderComperator from '../comperators/provider-comperator';
 
 export default class EpisodeMappingHelper {
 
@@ -231,7 +232,10 @@ export default class EpisodeMappingHelper {
             for (const providerB of providers) {
                 if (providerA.provider === providerB.provider) {
                     continue;
+                } else if (!ProviderComperator.bothProviderFromTheSameSeason(providerA,providerB,season)) {
+                    continue;
                 }
+                
                 let episodeDifference = cdiff;
                 if (episodeDifference === 0) {
                     episodeDifference = this.getMaxEpisodeShiftingDifference(providerA, providerB);

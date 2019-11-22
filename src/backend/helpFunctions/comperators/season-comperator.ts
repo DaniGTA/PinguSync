@@ -65,5 +65,31 @@ export default class SeasonComperator {
         }
         return true;
     }
-
+    /**
+     * If the provider has no season number the series number will be take as fallback.
+     * @param providerASeasonNumber Season number of the first provider.
+     * @param providerBSeasonNumber Season number of the second provider.
+     * @param seriesSeasonNumber Season number of the series.
+     */
+    public static isSameSeasonNumber(providerASeasonNumber?: number, providerBSeasonNumber?:number, seriesSeasonNumber?: number): boolean {
+        if (providerASeasonNumber === providerBSeasonNumber) {
+            return true; 
+        } else if (providerASeasonNumber && providerBSeasonNumber) {
+            return false;
+        }
+        
+        if (seriesSeasonNumber) {
+            if (providerASeasonNumber) {
+                if (seriesSeasonNumber === providerBSeasonNumber) {
+                    return true;
+                }
+            } else if (providerBSeasonNumber) {
+                if (seriesSeasonNumber === providerASeasonNumber) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
 }

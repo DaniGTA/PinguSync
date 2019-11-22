@@ -11,4 +11,7 @@
         "ts-node/register"
     ],
     "mochaExplorer.debuggerPort": 19485,
+    "mochaExplorer.optsFile": "test/mocha.opts",
+    "mochaExplorer.files": "test/**/*.ts",
+    "mochaExplorer.require": "ts-node/register"
 }

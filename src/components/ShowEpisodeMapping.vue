@@ -15,7 +15,7 @@
                         <template v-for="episode of provider.detailEpisodeInfo">
                             <template v-for="mapping of episode.mappedTo">
                                 <tr v-bind:key="mapping.id">
-                                    <td>{{provider.provider}}</td>
+                                    <td>{{provider.provider}} ({{provider.id}})</td>
                                     <td>{{episode.episodeNumber}} ({{episode.season}})</td>
                                     <td>{{mapping.provider}} ({{mapping.providerSeriesId}})</td>
                                     <td>{{mapping.episodeNumber}} ({{mapping.season}})</td>
