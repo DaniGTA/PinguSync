@@ -3,6 +3,7 @@
     <div class="modal-mask">
         <div class="modal-wrapper">
             <div class="modal-container">
+              <button @click="close()">Close</button>
                 Local Data Size{{localData.length}}
                 <table style="width:100%">
                     <tr>
@@ -48,7 +49,7 @@ Vue.use(VueLazyload);
 
 @Component
 export default class ListEntry extends Vue {
-  @PropSync('sSeries', { type: Series }) public series!: Series;
+  @PropSync('sSeries', { type: Series }) public series!: Series | null;
   @Watch('sSeries', { immediate: true, deep: true })
   public onChildChanged(val: Series, oldVal: Series) {
     if (val) {
@@ -58,6 +59,9 @@ export default class ListEntry extends Vue {
   public localData:ProviderLocalData[] = []
   public constructor() {
     super();
+  }
+  public close() {
+    this.series = null;
   }
 }
 </script>
@@ -90,6 +94,8 @@ export default class ListEntry extends Vue {
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  overflow: scroll;
+  height: 80%;
 }
 
 .modal-header h3 {

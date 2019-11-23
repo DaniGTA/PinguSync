@@ -33,13 +33,13 @@ export default class EpisodeComperator {
      * @param season
      * @param upshift add the number to the episode number from episode a. This make ep number 1 and ep number 2 match able when upshift set to 1
      */
-    public static async compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, season?: number, upshift: number = 0): Promise<ComperatorResult> {
+    public static async compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: number, providerBSeason?: number, season?: number, upshift: number = 0): Promise<ComperatorResult> {
         const result = new ComperatorResult();
         result.matchAble++;
         if (aEpisode.episodeNumber + upshift === bEpsiode.episodeNumber) {
             result.matches++;
             result.matchAble++;
-            if (await this.isEpisodeSameSeason(aEpisode, bEpsiode, season)) {
+            if (await this.isEpisodeSameSeason(aEpisode, bEpsiode,providerASeason,providerBSeason, season)) {
                 result.matches++;
             }
         }
@@ -51,26 +51,6 @@ export default class EpisodeComperator {
         return result;
     }
 
-    /**
-     * Checks if episode a is equal to episode b.
-     * @param aEpisode episode a
-     * @param bEpisode episode b
-     */
-    public static async isSameEpisode(aEpisode: Episode, bEpisode: Episode, season?: number): Promise<boolean> {
-        if (await this.isEpisodeSameSeason(aEpisode, bEpisode, season)) {
-            if (aEpisode.episodeNumber === bEpisode.episodeNumber) {
-                return true;
-            }
-        }
-
-        const titleResult = await this.compareEpisodeTitle(aEpisode, bEpisode);
-        if (titleResult.matches !== 0 && titleResult.matchAble !== 0) {
-            return true;
-        }
-
-        return false;
-    }
-
     public static async isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: number): Promise<boolean> {
         if (await this.isDetailedEpisodeSameSeason(bEpisode, season)) {
             if (aEpisode === bEpisode.episodeNumber) {
@@ -79,19 +59,41 @@ export default class EpisodeComperator {
         }
         return false;
     }
+    /**
+     * Compares season between two episodes.
+     * Uses provider season as fallback if episode has no season number.
+     * Uses series season as fallback if episode and provider has no season number.
+     * 
+     * @param aEpisode episode a
+     * @param bEpisode episode b
+     * @param providerASeason provider a season number
+     * @param providerBSeason provider b season number
+     * @param season series season number.
+     */
+    public static async isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: number, providerBSeason?: number, season?: number): Promise<boolean> {
+        let aSeason: number | undefined;
+        if (aEpisode.season) {
+            aSeason = aEpisode.season;
+        } else if (providerASeason) {
+            aSeason = providerASeason;
+        } else if (season) {
+            aSeason = season;
+        }
 
-    public static async isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, season?: number): Promise<boolean> {
-        if (aEpisode.season === bEpisode.season) {
+        let bSeason: number | undefined;
+        if (bEpisode.season) {
+            bSeason = bEpisode.season;
+        } else if (providerBSeason) {
+            bSeason = providerBSeason;
+        } else if (season) {
+            bSeason = season;
+        }
+
+        if (aSeason === bSeason) {
             return true;
-        } else if (aEpisode.season === season && bEpisode.season === season) {
+        } else if (!season && !aSeason && bSeason === 1) {
             return true;
-        } else if (!aEpisode.season && bEpisode.season === season) {
-            return true;
-        } else if (!bEpisode.season && aEpisode.season === season) {
-            return true;
-        } else if (!season && !aEpisode.season && bEpisode.season === 1) {
-            return true;
-        } else if (!season && !bEpisode.season && aEpisode.season === 1) {
+        } else if (!season && !bSeason && aSeason === 1) {
             return true;
         }
         return false;
@@ -162,7 +164,7 @@ export default class EpisodeComperator {
         for (const aEpisode of aAllADetailedEpisodes) {
             result.matchAble += 0.15;
             for (const bEpsiode of bAllDetailedEpisodes) {
-                if (await this.isEpisodeSameSeason(aEpisode, bEpsiode, season) && aEpisode.episodeNumber === bEpsiode.episodeNumber) {
+                if (await this.isEpisodeSameSeason(aEpisode, bEpsiode,undefined,undefined, season) && aEpisode.episodeNumber === bEpsiode.episodeNumber) {
                     result.matches += 0.15;
 
                     const episodeTitleResult = await this.compareEpisodeTitle(aEpisode, bEpsiode);

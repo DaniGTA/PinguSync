@@ -98,7 +98,13 @@ export default class EpisodeMappingHelper {
         for (const provider of providers) {
             if (provider.episodes) {
                 if (provider.episodes > await provider.getDetailedEpisodeLength()) {
-                    const generatedEpisodes = await this.generateMissingEpisodes(provider, season);
+                    let tempSeason: number | undefined;
+                    if (provider.targetSeason) {
+                        tempSeason = provider.targetSeason;
+                    } else {
+                        tempSeason = season;
+                    }
+                    const generatedEpisodes = await this.generateMissingEpisodes(provider, tempSeason);
                     provider.detailEpisodeInfo.push(...generatedEpisodes);
                 }
             }
@@ -167,22 +173,24 @@ export default class EpisodeMappingHelper {
                     for (const result of results) {
                         for (const episodeBind of result.episodeBinds) {
                             if (!this.isSameEpisodeID(episode, episodeBind.episode)) {
-                                const mappingB = new EpisodeMapping(episodeBind.episode, episodeBind.provider);
-                                if (!episode.addMapping) {
-                                    episode = Object.assign(new Episode(episode.episodeNumber), episode);
-                                }
-                                episode.addMapping(mappingB);
+                                if (!this.isProviderInMapping(episode, episodeBind.provider.provider)) {
+                                    const mappingB = new EpisodeMapping(episodeBind.episode, episodeBind.provider);
+                                    if (!episode.addMapping) {
+                                        episode = Object.assign(new Episode(episode.episodeNumber), episode);
+                                    }
+                                    episode.addMapping(mappingB);
 
-                                const mapping = new EpisodeMapping(episode, provider);
-                                this.updateMappingInProvider(episodeBind.episode, episodeBind.provider, mapping, providers);
-                                const diff = this.getEpisodeNumberDifference(episode, episodeBind.episode);
-                                if (diff !== currentDiff) {
-                                    currentDiff = diff;
-                                    ratedEquality = [];
-                                } else {
-                                    const ratingsA: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
-                                    const ratingsB: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episodeBind.episode, ratedEquality);
-                                    await listHelper.removeEntrys(ratedEquality, ...ratingsA, ...ratingsB);
+                                    const mapping = new EpisodeMapping(episode, provider);
+                                    this.updateMappingInProvider(episodeBind.episode, episodeBind.provider, mapping, providers);
+                                    const diff = this.getEpisodeNumberDifference(episode, episodeBind.episode);
+                                    if (diff !== currentDiff) {
+                                        currentDiff = diff;
+                                        ratedEquality = [];
+                                    } else {
+                                        const ratingsA: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
+                                        const ratingsB: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episodeBind.episode, ratedEquality);
+                                        await listHelper.removeEntrys(ratedEquality, ...ratingsA, ...ratingsB);
+                                    }
                                 }
                             }
                         }
@@ -238,26 +246,38 @@ export default class EpisodeMappingHelper {
                 if (episodeDifference === 0) {
                     episodeDifference = this.getMaxEpisodeShiftingDifference(providerA, providerB);
                 }
+                /**
+                 * Provider A targetSeason.
+                 */
+                const aTargetS = providerA.targetSeason;
+                /**
+                 * Provider A targetSeason.
+                 */
+                const bTargetS = providerB.targetSeason;
                 let fastCheck = 0;
                 if (providerB.detailEpisodeInfo.length !== 0) {
                     for (const detailedEpA of providerA.detailEpisodeInfo) {
                         if (providerB.detailEpisodeInfo.length > fastCheck) {
                             const detailedEpB = providerB.detailEpisodeInfo[fastCheck];
-                            const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, season, episodeDifference);
-                            if (result.matches !== 0 && result.matchAble === result.matches) {
-                                const epA = new EpisodeProviderBind(detailedEpA, providerA);
-                                const epB = new EpisodeProviderBind(providerB.detailEpisodeInfo[fastCheck], providerB);
-                                const container = new EpisodeRatedEqualityContainer(result, epA, epB);
-                                ratedEquality.push(container);
-                                fastCheck++;
-                                continue;
+                            if (!this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA)) {
+                                if (!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB)) {
+                                    const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDifference);
+                                    if (result.matches !== 0 && result.matchAble === result.matches) {
+                                        const epA = new EpisodeProviderBind(detailedEpA, providerA);
+                                        const epB = new EpisodeProviderBind(providerB.detailEpisodeInfo[fastCheck], providerB);
+                                        const container = new EpisodeRatedEqualityContainer(result, epA, epB);
+                                        ratedEquality.push(container);
+                                        fastCheck++;
+                                        continue;
+                                    }
+                                }
                             }
                         }
                         for (const detailedEpB of providerB.detailEpisodeInfo) {
                             if (!this.isAlreadyRated(detailedEpA, detailedEpB, ratedEquality)) {
                                 if (!this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA)) {
                                     if (!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB)) {
-                                        const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, season, episodeDifference);
+                                        const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDifference);
                                         if (result.matches !== 0) {
                                             const epA = new EpisodeProviderBind(detailedEpA, providerA);
                                             const epB = new EpisodeProviderBind(detailedEpB, providerB);

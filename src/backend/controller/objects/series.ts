@@ -526,7 +526,7 @@ export default class Series extends SeriesProviderExtension {
                     if (provider2.provider === provider.provider) {
                         // tslint:disable-next-line: triple-equals
                         if (!ProviderComperator.simpleProviderIdCheck(provider2.id, provider.id)) {
-                            const log = 'ID1: ' + provider.id + ' | ID2: ' + provider.id;
+                            const log = 'ID1: ' + provider.id + ' | ID2: ' + provider2.id;
                             logger.warn('[Series] [MergeProviders]: Merging two different ids! Provider: ' + provider2.provider + ' | ' + log);
                         }
                         collected.push(provider2);
