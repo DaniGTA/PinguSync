@@ -1,4 +1,3 @@
-import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { UserData } from '../../../../src/backend/api/user-data';
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
@@ -6,12 +5,13 @@ import Series from '../../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import InfoProvider from '../../../../src/backend/api/provider/info-provider';
+import ExternalProvider from '../../../../src/backend/api/provider/external-provider';
 
 
 export default class TestInfoProvider extends InfoProvider {
     public isOffline: boolean = false;
-    public potentialSubProviders: Array<new () => import('../../../../src/backend/api/provider/external-provider').default> = [];
-    public supportedOtherProvider: Array<new () => import('../../../../src/backend/api/provider/external-provider').default> = [];
+    public potentialSubProviders: Array<new () => ExternalProvider> = [];
+    public supportedOtherProvider: Array<new () => ExternalProvider> = [];
 
     public version = 1;
     public hasUniqueIdForSeasons = false;

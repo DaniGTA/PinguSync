@@ -197,7 +197,7 @@ describe('Episode mapping | Mapping Only', () => {
         const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
 
         // Result checking
-        strictEqual(result.length, 2700);
+        strictEqual(result.length, 1500);
         for (const episode of result) {
             strictEqual(episode.mappedTo.length, 2, episode.episodeNumber + '');
             strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);
@@ -648,8 +648,8 @@ describe('Episode mapping | Mapping Only', () => {
             strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
             strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
 
-            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo2.id, 'Episode A1 should have id mapped to Episode B2');
-            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo1.id, 'Episode A2 should have id mapped to Episode B1');
+            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo1.id, 'Episode A1 should have id mapped to Episode B1');
+            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2.id, 'Episode A2 should have id mapped to Episode B2');
             strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3.id, 'Episode A3 should have id mapped to Episode B3');
 
             strictEqual(bEpisodeInfo1.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
@@ -660,8 +660,8 @@ describe('Episode mapping | Mapping Only', () => {
             strictEqual(bEpisodeInfo2s2.mappedTo.length, 0, 'Episode B2 mapping length should be 0');
             strictEqual(bEpisodeInfo3s2.mappedTo.length, 0, 'Episode B3 mapping length should be 0');
 
-            strictEqual(bEpisodeInfo1.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B1 should have id mapped to Episode A2');
-            strictEqual(bEpisodeInfo2.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B2 should have id mapped to Episode A1');
+            strictEqual(bEpisodeInfo1.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1');
+            strictEqual(bEpisodeInfo2.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2');
             strictEqual(bEpisodeInfo3.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3');
         }
     });

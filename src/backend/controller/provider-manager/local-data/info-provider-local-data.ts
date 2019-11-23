@@ -36,6 +36,11 @@ export class InfoProviderLocalData extends ProviderLocalData {
                     }
                 }
             }
+
+            if (provider.episodes) {
+                mergedProvider.episodes = provider.episodes;
+            }
+
             if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length !== 0) {
                 mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
             }

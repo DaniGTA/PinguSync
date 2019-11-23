@@ -27,7 +27,9 @@ export class ListProviderLocalData extends ProviderLocalData {
             mergedProvider.addOverview(...provider.overviews);
             mergedProvider.rawEntry = provider.rawEntry;
             mergedProvider.covers = provider.covers;
-            mergedProvider.episodes = provider.episodes;
+            if (provider.episodes) {
+                mergedProvider.episodes = provider.episodes;
+            }
             if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length !== 0) {
                 mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
             }

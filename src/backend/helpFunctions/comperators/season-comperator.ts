@@ -80,11 +80,11 @@ export default class SeasonComperator {
         
         if (seriesSeasonNumber) {
             if (providerASeasonNumber) {
-                if (seriesSeasonNumber === providerBSeasonNumber) {
+                if (seriesSeasonNumber === providerASeasonNumber) {
                     return true;
                 }
             } else if (providerBSeasonNumber) {
-                if (seriesSeasonNumber === providerASeasonNumber) {
+                if (seriesSeasonNumber === providerBSeasonNumber) {
                     return true;
                 }
             }

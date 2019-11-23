@@ -1,17 +1,11 @@
 {
-    "mocha.files.glob": "test/**/*.ts",
+
     "mocha.runTestsOnSave": "true",
     "mocha.options": {
-        "compilers": {
-            "ts": "ts-node/register"
-        },
         "opts": "./test/mocha.opts"
     },
-    "mocha.requires": [
-        "ts-node/register"
-    ],
+    "mocha.env": {
+        "TS_NODE_TRANSPILE_ONLY": true
+    },
     "mochaExplorer.debuggerPort": 19485,
-    "mochaExplorer.optsFile": "test/mocha.opts",
-    "mochaExplorer.files": "test/**/*.ts",
-    "mochaExplorer.require": "ts-node/register"
 }
