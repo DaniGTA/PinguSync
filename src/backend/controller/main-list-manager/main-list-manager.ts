@@ -8,6 +8,7 @@ import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
 import MainListPackageManager from './main-list-package-manager';
 import MainListSearcher from './main-list-searcher';
+import EpisodeMappingHelper from 'src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 export default class MainListManager {
 
     /**
@@ -96,6 +97,7 @@ export default class MainListManager {
      */
     public static async finishListFilling() {
         logger.log('info', '[MainList] Cleanup Mainlist');
+        const episodeMappingHelperInstance = new EpisodeMappingHelper();
         MainListManager.listMaintance = true;
         try {
             MainListManager.secondList = [...MainListManager.mainList];
@@ -109,7 +111,7 @@ export default class MainListManager {
                      */
                     await entry.resetCache();
                     await entry.getSeason();
-
+                    await episodeMappingHelperInstance.generateEpisodeMapping(entry);
                     await MainListManager.addSerieToMainList(entry);
                 } catch (err) {
                     logger.error(err);
