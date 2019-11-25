@@ -1,3 +1,2 @@
---require ts-node/register
 --require test/tshook.js
 test/**/*.ts

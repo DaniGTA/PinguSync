@@ -1,5 +1,3 @@
-import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
-import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
 import FrontendController from '../frontend-controller';
@@ -8,7 +6,7 @@ import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
 import MainListPackageManager from './main-list-package-manager';
 import MainListSearcher from './main-list-searcher';
-import EpisodeMappingHelper from 'src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
+import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 export default class MainListManager {
 
     /**
@@ -145,7 +143,7 @@ export default class MainListManager {
             list = await this.getMainList();
         }
         logger.log('info', '[MainList] Remove Item in mainlist: ' + series.id);
-        const index = await MainListManager.getIndexFromSeries(series,list);
+        const index = await MainListManager.getIndexFromSeries(series, list);
         if (index !== -1) {
             const oldSize = list.length;
             let ref = list;

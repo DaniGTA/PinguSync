@@ -17,7 +17,6 @@ import AniDBNameManager from './anidb-name-manager';
 import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
 import AniDBNameListXML, { Anime, Title } from './objects/anidbNameListXML';
 import MalProvider from '../mal/mal-provider';
-
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
     private static anidbNameManager: AniDBNameManager = new AniDBNameManager();
