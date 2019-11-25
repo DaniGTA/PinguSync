@@ -10,10 +10,10 @@ export default class RelationComperator {
      * @param a series a
      * @param b series b
      */
-    public static async isAlternativeSeries(a: Series, b: Series): Promise<ComperatorResult> {
+    public static isAlternativeSeries(a: Series, b: Series): ComperatorResult {
         const comperatorResult = new ComperatorResult();
 
-        if (await ProviderComperator.hasSameListProvider(a, b)) {
+        if (ProviderComperator.hasSameListProvider(a, b)) {
             for (const aProviderLocalData of a.getAllProviderLocalDatas()) {
                 for (const bProviderLocalData of b.getAllProviderLocalDatas()) {
                     if (aProviderLocalData.provider === bProviderLocalData.provider) {

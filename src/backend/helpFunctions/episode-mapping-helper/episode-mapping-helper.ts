@@ -81,7 +81,7 @@ export default class EpisodeMappingHelper {
         } else if (b.type === EpisodeType.SPECIAL && a.type !== EpisodeType.SPECIAL) {
             return -1;
         }
-        if (await EpisodeComperator.isEpisodeSameSeason(a, b, season)) {
+        if (EpisodeComperator.isEpisodeSameSeason(a, b, season)) {
             if (a.episodeNumber > b.episodeNumber) {
                 return 1;
             } else {

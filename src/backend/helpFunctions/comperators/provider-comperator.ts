@@ -15,7 +15,7 @@ import SeasonComperator from './season-comperator';
 export default class ProviderComperator {
     public static async compareAllProviders(a: Series, b: Series): Promise<ComperatorResult> {
         const comperatorResult: ComperatorResult = new ComperatorResult();
-        if (await this.hasSameListProvider(a, b)) {
+        if (this.hasSameListProvider(a, b)) {
             comperatorResult.matchAble += 2.5;
             for (let aProvider of a.getAllProviderLocalDatas()) {
                 for (const bProvider of b.getAllProviderLocalDatas()) {
@@ -161,7 +161,7 @@ export default class ProviderComperator {
      * @param a
      * @param b
      */
-    public static async hasSameListProvider(a: Series, b: Series): Promise<boolean> {
+    public static hasSameListProvider(a: Series, b: Series): boolean {
         try {
             for (const aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {

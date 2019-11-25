@@ -28,7 +28,7 @@ class SeriesHelper {
         matchAbleScore += listProviderResult.matchAble;
         matches += listProviderResult.matches;
 
-        const relationResult = await RelationComperator.isAlternativeSeries(a, b);
+        const relationResult = RelationComperator.isAlternativeSeries(a, b);
         if (relationResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return false;
         }
