@@ -99,7 +99,7 @@ export default new class TraktConverter {
             try {
                 provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
             } catch (err) {
-                logger.error('[Trakt] Error: Failed to convert episode infos.')
+                logger.error('[Trakt] Error: Failed to convert episode infos.');
                 logger.error(err);
             }
         }
@@ -115,7 +115,7 @@ export default new class TraktConverter {
         }
 
         return multiProviderResult;
-}
+    }
 
     public async getDetailedEpisodeInfo(seasonInfos: TraktShowSeasonInfo[]): Promise<Episode[]> {
         const detailedEpisodes: Episode[] = [];

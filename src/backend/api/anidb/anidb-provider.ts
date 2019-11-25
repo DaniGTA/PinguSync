@@ -9,6 +9,7 @@ import Name from '../../controller/objects/meta/name';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import logger from '../../logger/logger';
+import MalProvider from '../mal/mal-provider';
 import ExternalProvider from '../provider/external-provider';
 import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
@@ -16,7 +17,6 @@ import AniDBConverter from './anidb-converter';
 import AniDBNameManager from './anidb-name-manager';
 import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
 import AniDBNameListXML, { Anime, Title } from './objects/anidbNameListXML';
-import MalProvider from '../mal/mal-provider';
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
     private static anidbNameManager: AniDBNameManager = new AniDBNameManager();

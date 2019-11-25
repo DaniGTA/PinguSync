@@ -1,3 +1,4 @@
+import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
 import FrontendController from '../frontend-controller';
@@ -6,7 +7,6 @@ import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
 import MainListPackageManager from './main-list-package-manager';
 import MainListSearcher from './main-list-searcher';
-import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 export default class MainListManager {
 
     /**

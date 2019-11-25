@@ -12,21 +12,23 @@ import providerInfoDownloaderhelper from './provider-info-downloader/provider-in
 export class ProviderHelper {
 
     public async requestFullProviderUpdate(series: Series, target: ProviderInfoStatus = ProviderInfoStatus.BASIC_INFO, force = false): Promise<Series> {
-        let currentProviders = series.getAllProviderLocalDatas();
-        const infoProvidersThatNeedUpdates = await this.getInfoProviderThatNeedUpdates(currentProviders);
-        const tempSeriesCopy = Object.assign(new Series(), series); 
-        for (const infoProvider of infoProvidersThatNeedUpdates) {
-            const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
-            await series.addProviderDatas(...result);
-        }
-        currentProviders = series.getAllProviderLocalDatas();
+        if (this.canUpdateSeries(series) || force) {
+            let currentProviders = series.getAllProviderLocalDatas();
+            const infoProvidersThatNeedUpdates = await this.getInfoProviderThatNeedUpdates(currentProviders);
+            const tempSeriesCopy = Object.assign(new Series(), series);
+            for (const infoProvider of infoProvidersThatNeedUpdates) {
+                const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
+                await series.addProviderDatas(...result);
+            }
+            currentProviders = series.getAllProviderLocalDatas();
 
-        const providersThatNeedUpdates = await this.getProvidersThatNeedUpdates(currentProviders, target);
-        for (const providerThatNeedUpdate of providersThatNeedUpdates) {
-            const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-            await series.addProviderDatas(...result);
+            const providersThatNeedUpdates = await this.getProvidersThatNeedUpdates(currentProviders, target);
+            for (const providerThatNeedUpdate of providersThatNeedUpdates) {
+                const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                await series.addProviderDatas(...result);
+            }
+            series.lastInfoUpdate = Date.now();
         }
-        series.lastInfoUpdate = Date.now();
         return series;
     }
 
@@ -99,6 +101,14 @@ export class ProviderHelper {
             }
         }
         return relevantList;
+    }
+
+    private canUpdateSeries(series: Series): boolean {
+        const daysLastUpdate = dateHelper.differenceBetweenTwoDatesInDays(new Date(series.lastInfoUpdate), new Date());
+        if (daysLastUpdate > 30) {
+            return true;
+        }
+        return false;
     }
 
     private async getInfoProviderThatNeedUpdates(currentProviders: ProviderLocalData[]): Promise<ExternalProvider[]> {
@@ -192,7 +202,7 @@ export class ProviderHelper {
         if (currentProvider.infoStatus !== ProviderInfoStatus.FULL_INFO) {
             for (const supportedProvider of ProviderList.getExternalProviderInstance(currentProvider).potentialSubProviders) {
                 if ((supportedProvider as any).getInstance().providerName === targetProvider.providerName) {
-                     return true;
+                    return true;
                 }
             }
         }
