@@ -17,11 +17,8 @@ export default class EpisodeComperator {
                 }
             }
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
-        const detailedEpisodesResults = await this.compareDetailedEpisodesList(a, b);
-        result.matchAble += detailedEpisodesResults.matchAble;
-        result.matches += detailedEpisodesResults.matches;
         return result;
     }
 
@@ -39,7 +36,7 @@ export default class EpisodeComperator {
         if (aEpisode.episodeNumber + upshift === bEpsiode.episodeNumber) {
             result.matches++;
             result.matchAble++;
-            if (this.isEpisodeSameSeason(aEpisode, bEpsiode,providerASeason,providerBSeason, season)) {
+            if (this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season)) {
                 result.matches++;
             }
         }
@@ -164,7 +161,7 @@ export default class EpisodeComperator {
         for (const aEpisode of aAllADetailedEpisodes) {
             result.matchAble += 0.15;
             for (const bEpsiode of bAllDetailedEpisodes) {
-                if (this.isEpisodeSameSeason(aEpisode, bEpsiode,undefined,undefined, season) && aEpisode.episodeNumber === bEpsiode.episodeNumber) {
+                if (this.isEpisodeSameSeason(aEpisode, bEpsiode, undefined, undefined, season) && aEpisode.episodeNumber === bEpsiode.episodeNumber) {
                     result.matches += 0.15;
 
                     const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);

@@ -12,9 +12,9 @@ export default class SeasonComperator {
         const aSeason = await a.getSeason();
         const bSeason = await b.getSeason();
         if (aSeason.seasonError === SeasonError.NONE || bSeason.seasonError === SeasonError.NONE) {
-            comperatorResult.matchAble += 3;
+            comperatorResult.matchAble += 4;
             if (aSeason.seasonNumber === bSeason.seasonNumber) {
-                comperatorResult.matches += 3;
+                comperatorResult.matches += 4;
                 if (bSeason.seasonNumber !== 1 && aSeason.seasonNumber !== 1) {
                     try {
                         if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
@@ -71,13 +71,13 @@ export default class SeasonComperator {
      * @param providerBSeasonNumber Season number of the second provider.
      * @param seriesSeasonNumber Season number of the series.
      */
-    public static isSameSeasonNumber(providerASeasonNumber?: number, providerBSeasonNumber?:number, seriesSeasonNumber?: number): boolean {
+    public static isSameSeasonNumber(providerASeasonNumber?: number, providerBSeasonNumber?: number, seriesSeasonNumber?: number): boolean {
         if (providerASeasonNumber === providerBSeasonNumber) {
-            return true; 
+            return true;
         } else if (providerASeasonNumber && providerBSeasonNumber) {
             return false;
         }
-        
+
         if (seriesSeasonNumber) {
             if (providerASeasonNumber) {
                 if (seriesSeasonNumber === providerASeasonNumber) {
@@ -89,7 +89,7 @@ export default class SeasonComperator {
                 }
             }
         }
-        
+
         return false;
     }
 }
