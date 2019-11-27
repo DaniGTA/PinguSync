@@ -1,5 +1,4 @@
 {
-
     "mocha.runTestsOnSave": "true",
     "mocha.options": {
         "opts": "./test/mocha.opts"

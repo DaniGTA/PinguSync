@@ -147,7 +147,7 @@ describe('Series Helper', () => {
         anilist.addSeriesName(new Name('Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka', 'x-jap', NameType.OFFICIAL));
         anilist.addSeriesName(new Name('Is It Wrong to Try to Pick Up Girls in a Dungeon?', 'unknown', NameType.MAIN));
         anilist.addSeriesName(new Name('ダンジョンに出会いを求めるのは間違っているだろうか', 'jap', NameType.UNKNOWN));
-        await series.addListProvider(trakt);
+        await series.addListProvider(anilist);
         return series;
     }
 
@@ -201,7 +201,7 @@ describe('Series Helper', () => {
         anilist.addSeriesName(new Name('Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka II', 'x-jap', NameType.OFFICIAL));
         anilist.addSeriesName(new Name('Is It Wrong to Try to Pick Up Girls in a Dungeon? II', 'unknown', NameType.MAIN));
         anilist.addSeriesName(new Name('ダンジョンに出会いを求めるのは間違っているだろうかⅡ', 'jap', NameType.UNKNOWN));
-        await series.addListProvider(trakt);
+        await series.addListProvider(anilist);
         return series;
 
     }

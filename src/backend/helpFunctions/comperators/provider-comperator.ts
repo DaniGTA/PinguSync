@@ -17,8 +17,10 @@ export default class ProviderComperator {
         const comperatorResult: ComperatorResult = new ComperatorResult();
         if (this.hasSameListProvider(a, b)) {
             comperatorResult.matchAble += 2.5;
-            for (let aProvider of a.getAllProviderLocalDatas()) {
-                for (const bProvider of b.getAllProviderLocalDatas()) {
+            const allAProviderLocalDatas = a.getAllProviderLocalDatas();
+            const allBProviderLocalDatas = b.getAllProviderLocalDatas();
+            for (let aProvider of allAProviderLocalDatas) {
+                for (const bProvider of allBProviderLocalDatas) {
                     if (aProvider.provider === bProvider.provider) {
                         // tslint:disable-next-line: triple-equals
                         if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id)) {
@@ -37,9 +39,7 @@ export default class ProviderComperator {
                                     }
                                 }
                                 comperatorResult.matches += 0.5;
-                            } catch (err) {
-                                continue;
-                            }
+                            } catch (err) { }
                         } else {
                             if (aProvider.infoStatus !== ProviderInfoStatus.ONLY_ID && bProvider.infoStatus !== ProviderInfoStatus.ONLY_ID) {
                                 comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
