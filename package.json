@@ -10,7 +10,7 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "test": "mocha --require ts-node/register test/**/*.ts"
+    "test": "mocha test/**/*.ts"
   },
   "main": "background.js",
   "dependencies": {

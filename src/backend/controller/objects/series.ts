@@ -8,6 +8,7 @@ import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import logger from '../../logger/logger';
 import ListController from '../list-controller';
 import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
 import SeriesProviderExtension from './extension/series-provider-extension';
@@ -23,7 +24,6 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
-import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;

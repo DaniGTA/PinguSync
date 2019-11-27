@@ -45,6 +45,9 @@ export default class ProviderComperator {
                                 comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                             }
                         }
+                        if (this.isProviderBSequelofProviderA(aProvider, bProvider)) {
+                            comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+                        }
                     }
                 }
             }
@@ -177,7 +180,7 @@ export default class ProviderComperator {
         return false;
     }
 
-    
+
     /**
      * Checks if the series have the same provider.
      * @param a
@@ -194,5 +197,15 @@ export default class ProviderComperator {
         return false;
     }
 
+    private static isProviderBSequelofProviderA(providerA: ProviderLocalData, providerB: ProviderLocalData): boolean {
+        if (providerA.provider === providerB.provider) {
+            for (const providerASequelId of providerA.sequelIds) {
+                if (this.simpleProviderIdCheck(providerASequelId, providerB.id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }
