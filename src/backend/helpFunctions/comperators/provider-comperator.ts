@@ -45,7 +45,7 @@ export default class ProviderComperator {
                                 comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                             }
                         }
-                        if (this.isProviderBSequelofProviderA(aProvider, bProvider)) {
+                        if (this.isProviderBARelationOfProviderA(aProvider, bProvider)) {
                             comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                         }
                     }
@@ -197,15 +197,19 @@ export default class ProviderComperator {
         return false;
     }
 
-    private static isProviderBSequelofProviderA(providerA: ProviderLocalData, providerB: ProviderLocalData): boolean {
+    private static isProviderBARelationOfProviderA(providerA: ProviderLocalData, providerB: ProviderLocalData): boolean {
         if (providerA.provider === providerB.provider) {
             for (const providerASequelId of providerA.sequelIds) {
                 if (this.simpleProviderIdCheck(providerASequelId, providerB.id)) {
                     return true;
                 }
             }
+            for (const providerAPrequelId of providerA.prequelIds) {
+                if (this.simpleProviderIdCheck(providerAPrequelId, providerB.id)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
-
 }

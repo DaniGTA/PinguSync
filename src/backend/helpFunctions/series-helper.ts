@@ -14,6 +14,7 @@ class SeriesHelper {
      * @param b
      */
     public async isSameSeries(a: Series, b: Series): Promise<boolean> {
+
         let matches: number = 0;
         let matchAbleScore: number = 0;
         a = Object.assign(new Series(), a);

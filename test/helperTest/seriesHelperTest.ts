@@ -92,6 +92,7 @@ describe('Series Helper', () => {
         const seriesB = await fullseriesB();
 
         strictEqual(await seriesHelper.isSameSeries(seriesA, seriesB), false);
+        strictEqual(await seriesHelper.isSameSeries(seriesB, seriesA), false);
 
     });
 
