@@ -13,47 +13,23 @@ import { Provider } from 'electron';
 import SeasonComperator from './season-comperator';
 
 export default class ProviderComperator {
+
     public static async compareAllProviders(a: Series, b: Series): Promise<ComperatorResult> {
-        const comperatorResult: ComperatorResult = new ComperatorResult();
-        if (this.hasSameListProvider(a, b)) {
-            comperatorResult.matchAble += 2.5;
-            const allAProviderLocalDatas = a.getAllProviderLocalDatas();
-            const allBProviderLocalDatas = b.getAllProviderLocalDatas();
-            for (let aProvider of allAProviderLocalDatas) {
-                for (const bProvider of allBProviderLocalDatas) {
-                    if (aProvider.provider === bProvider.provider) {
-                        // tslint:disable-next-line: triple-equals
-                        if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id)) {
-                            aProvider = Object.assign(new ListProviderLocalData(aProvider.id), aProvider);
-                            comperatorResult.matches += 2.0;
-                            try {
-                                if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
-                                    if (comperatorResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
-                                        comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                                    }
-                                } else if ((typeof aProvider.targetSeason === 'undefined') || (typeof bProvider.targetSeason === 'undefined')) {
+        const comperatorResults: ComperatorResult[] = [];
 
-                                } else if (aProvider.targetSeason === bProvider.targetSeason) {
-                                    if (comperatorResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
-                                        comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                                    }
-                                }
-                                comperatorResult.matches += 0.5;
-                            } catch (err) { }
-                        } else {
-                            if (aProvider.infoStatus !== ProviderInfoStatus.ONLY_ID && bProvider.infoStatus !== ProviderInfoStatus.ONLY_ID) {
-                                comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
-                            }
-                        }
-                        if (this.isProviderBARelationOfProviderA(aProvider, bProvider)) {
-                            comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
-                        }
-                    }
-                }
+        const allAProviderLocalDatas = a.getAllProviderLocalDatas();
+        const allBProviderLocalDatas = b.getAllProviderLocalDatas();
+
+        for (const provider of allAProviderLocalDatas) {
+            try {
+                const result = this.compareProviderAWithSameProvider(provider, ...allBProviderLocalDatas);
+                comperatorResults.push(result);
+                // tslint:disable-next-line: no-empty
+            } catch (ignore) {
             }
-
         }
-        return comperatorResult;
+
+        return this.calculateResult(...comperatorResults);
     }
 
     /**
@@ -155,8 +131,21 @@ export default class ProviderComperator {
         return false;
     }
 
-    public static simpleProviderIdCheck(id: string | number, id2: string | number): boolean {
-        return id == id2;
+
+    /**
+     * Checks if the series have the same provider.
+     * @param a
+     * @param b
+     */
+    public static bothProviderFromTheSameSeason(a: ProviderLocalData, b: ProviderLocalData, seriesSeasonNumber?: number): boolean {
+        try {
+            const providerASeasonNumber = a.targetSeason;
+            const providerBSeasonNumber = b.targetSeason;
+            return SeasonComperator.isSameSeasonNumber(providerASeasonNumber, providerBSeasonNumber, seriesSeasonNumber);
+        } catch (err) {
+            logger.error(err);
+        }
+        return false;
     }
 
     /**
@@ -180,21 +169,68 @@ export default class ProviderComperator {
         return false;
     }
 
+    public static simpleProviderIdCheck(id: string | number, id2: string | number): boolean {
+        return id == id2;
+    }
 
-    /**
-     * Checks if the series have the same provider.
-     * @param a
-     * @param b
-     */
-    public static bothProviderFromTheSameSeason(a: ProviderLocalData, b: ProviderLocalData, seriesSeasonNumber?: number): boolean {
-        try {
-            const providerASeasonNumber = a.targetSeason;
-            const providerBSeasonNumber = b.targetSeason;
-            return SeasonComperator.isSameSeasonNumber(providerASeasonNumber, providerBSeasonNumber, seriesSeasonNumber);
-        } catch (err) {
-            logger.error(err);
+    private static calculateResult(...results: ComperatorResult[]): ComperatorResult {
+        const finalResult = new ComperatorResult();
+        const absoluteResults: AbsoluteResult[] = [];
+        for (const result of results) {
+            finalResult.matchAble += result.matchAble;
+            finalResult.matches += result.matches;
+            if (result.isAbsolute !== AbsoluteResult.ABSOLUTE_NONE) {
+                absoluteResults.push(result.isAbsolute);
+            }
         }
-        return false;
+        if (absoluteResults.includes(AbsoluteResult.ABSOLUTE_FALSE)) {
+            finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+        } else if (absoluteResults.includes(AbsoluteResult.NOT_ABSOLUTE_TRUE)) {
+            finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_NONE;
+        } else if (absoluteResults.includes(AbsoluteResult.ABSOLUTE_TRUE)) {
+            finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+        }
+
+        return finalResult;
+    }
+
+    private static compareProviderAWithSameProvider(providerA: ProviderLocalData, ...providers: ProviderLocalData[]): ComperatorResult {
+        const result = providers.find((x) => x.provider === providerA.provider);
+        if (result) {
+            return this.compareProviderAWithProviderB(providerA, result);
+        }
+        throw new Error('provider cant be compared (other series dont have this provider)');
+    }
+
+    private static compareProviderAWithProviderB(providerA: ProviderLocalData, providerB: ProviderLocalData): ComperatorResult {
+        const comperatorResult: ComperatorResult = new ComperatorResult();
+        comperatorResult.matchAble += 2.5;
+        if (ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id)) {
+            providerA = Object.assign(new ListProviderLocalData(providerA.id), providerA);
+            comperatorResult.matches += 2.0;
+            try {
+                if (ProviderList.getExternalProviderInstance(providerA).hasUniqueIdForSeasons) {
+                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                    // tslint:disable-next-line: no-empty
+                } else if ((typeof providerA.targetSeason === 'undefined') || (typeof providerB.targetSeason === 'undefined')) {
+
+                } else if (providerA.targetSeason === providerB.targetSeason) {
+                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                }
+                comperatorResult.matches += 0.5;
+                // tslint:disable-next-line: no-empty
+            } catch (err) { }
+        } else {
+            if (providerA.infoStatus !== ProviderInfoStatus.ONLY_ID && providerB.infoStatus !== ProviderInfoStatus.ONLY_ID) {
+                comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+            } else {
+                comperatorResult.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
+            }
+        }
+        if (this.isProviderBARelationOfProviderA(providerA, providerB)) {
+            comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+        }
+        return comperatorResult;
     }
 
     private static isProviderBARelationOfProviderA(providerA: ProviderLocalData, providerB: ProviderLocalData): boolean {

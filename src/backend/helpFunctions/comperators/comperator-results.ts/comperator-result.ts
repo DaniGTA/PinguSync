@@ -9,4 +9,8 @@ export enum AbsoluteResult {
     ABSOLUTE_NONE,
     ABSOLUTE_FALSE,
     ABSOLUTE_TRUE,
+    /**
+     * At this state it cant be absolute true.
+     */
+    NOT_ABSOLUTE_TRUE,
 }
