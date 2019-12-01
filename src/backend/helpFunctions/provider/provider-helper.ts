@@ -17,15 +17,23 @@ export class ProviderHelper {
         const infoProvidersThatNeedUpdates = await this.getInfoProviderThatNeedUpdates(currentProviders);
         const tempSeriesCopy = Object.assign(new Series(), series);
         for (const infoProvider of infoProvidersThatNeedUpdates) {
-            const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
-            await series.addProviderDatas(...result);
+            try {
+                const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
+                await series.addProviderDatas(...result);
+            } catch (err) {
+                logger.error('[ProviderHelper] requestFullProviderUpdate #1: ' + err);
+            }
         }
         currentProviders = series.getAllProviderLocalDatas();
 
         const providersThatNeedUpdates = await this.getProvidersThatNeedUpdates(currentProviders, target);
         for (const providerThatNeedUpdate of providersThatNeedUpdates) {
-            const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-            await series.addProviderDatas(...result);
+            try {
+                const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                await series.addProviderDatas(...result);
+            } catch (err) {
+                logger.error('[ProviderHelper] requestFullProviderUpdate #2: ' + err);
+            }
         }
         series.lastInfoUpdate = Date.now();
         // }

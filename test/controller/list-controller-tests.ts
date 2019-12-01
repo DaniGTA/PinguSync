@@ -28,7 +28,13 @@ describe('ListController | Combine', () => {
         MainListLoader['saveData'] = async () => { };
     });
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
+        ProviderList['loadedListProvider'] = [
+            new TestProvider('Test'),
+            new TestProvider(''),
+            new TestProvider('Test A'),
+            new TestProvider('Test B'),
+            new TestProvider('TestA'),
+            new TestProvider('TestB')];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     });
@@ -384,7 +390,9 @@ async function getFilledAnime(providername: string = 'Test', providerId: number 
 
 async function getRandomeFilledAnime(): Promise<Series> {
     const id = Math.random() * (+0 - +10000) + +10000;
-    const provider = new ListProviderLocalData(id, stringHelper.randomString());
+    const providerName = stringHelper.randomString();
+    const provider = new ListProviderLocalData(id, providerName);
+    ProviderList['loadedListProvider'].push(new TestProvider(providerName));
     const anime: Series = new Series();
     provider.episodes = Math.random() * (+13 - +0) + +0;
     provider.releaseYear = Math.random() * (+2019 - +1989) + +1989;

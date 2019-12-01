@@ -23,6 +23,7 @@ export default abstract class ProviderLocalData {
      * Provider series id.
      */
     public readonly id: number | string;
+    public readonly instance_name: string;
     /**
      * Cant get more info from this provider.
      */
@@ -96,6 +97,7 @@ export default abstract class ProviderLocalData {
             logger.error(errorMsg);
             throw new Error(errorMsg);
         }
+        this.instance_name = this.constructor.name;
     }
 
     public async getDetailedEpisodeLength(): Promise<number> {

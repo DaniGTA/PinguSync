@@ -11,7 +11,7 @@ import { InfoProviderLocalData } from '../provider-manager/local-data/info-provi
 import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
-import SeriesProviderExtension from './extension/series-provider-extension';
+import SeriesProviderExtension from './extension/provider-extension/series-provider-extension';
 import { MergeTypes } from './merge-types';
 import Cover from './meta/cover';
 import Episode from './meta/episode/episode';
@@ -287,16 +287,7 @@ export default class Series extends SeriesProviderExtension {
      * When the anime got loaded from a json or web there are no functions avaible with this we can restore it.
      */
     public readdFunctions() {
-        const providersCache: ListProviderLocalData[] = [];
-        for (const provider of this.getListProvidersInfos()) {
-            providersCache.push(Object.assign(new ListProviderLocalData(provider.id), provider));
-        }
-        const infoPovidersCache: InfoProviderLocalData[] = [];
-        for (const provider of this.getInfoProvidersInfos()) {
-            infoPovidersCache.push(Object.assign(new InfoProviderLocalData(provider.id), provider));
-        }
-        this.infoProviderInfos = infoPovidersCache;
-        this.listProviderInfos = providersCache;
+
     }
 
     /**
@@ -308,8 +299,8 @@ export default class Series extends SeriesProviderExtension {
         logger.debug('[Series ] Merging Series   | SeriesID: ' + this.id);
         const newAnime: Series = new Series();
 
-        newAnime.listProviderInfos = await this.mergeProviders(...[...this.listProviderInfos, ...anime.listProviderInfos]) as ListProviderLocalData[];
-        newAnime.infoProviderInfos = await this.mergeProviders(...[...this.infoProviderInfos, ...anime.infoProviderInfos]) as InfoProviderLocalData[];
+        await newAnime.addListProvider(...[...this.getListProvidersInfos(), ...anime.getListProvidersInfos()]);
+        await newAnime.addInfoProvider(...[...this.getInfoProvidersInfos(), ...anime.getInfoProvidersInfos()]);
         logger.debug('[Series] Merged Providers  | SeriesID: ' + this.id);
         if (mergeType === MergeTypes.UPGRADE) {
             await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
@@ -552,8 +543,8 @@ export default class Series extends SeriesProviderExtension {
         const aMediaType = await a.getMediaType();
         const bMediaType = await b.getMediaType();
         if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
-            for (const providerA of a.listProviderInfos) {
-                for (let providerB of b.listProviderInfos) {
+            for (const providerA of a.getListProvidersInfos()) {
+                for (let providerB of b.getListProvidersInfos()) {
                     if (providerA.provider === providerB.provider) {
                         providerB = Object.assign(new ListProviderLocalData(providerB.id), providerB);
                         const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
@@ -626,7 +617,7 @@ export default class Series extends SeriesProviderExtension {
         latestUpdatedProvider = Object.assign(new ListProviderLocalData(latestUpdatedProvider.id), latestUpdatedProvider);
         if (!await latestUpdatedProvider.getProviderInstance().isUserLoggedIn()) {
             latestUpdatedProvider.lastUpdate = new Date(0);
-            for (let provider of this.listProviderInfos) {
+            for (let provider of this.getListProvidersInfos()) {
                 provider = Object.assign(new ListProviderLocalData(provider.id), provider);
                 if (provider !== latestUpdatedProvider && latestUpdatedProvider) {
                     if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getProviderInstance().isUserLoggedIn()) {
@@ -636,7 +627,7 @@ export default class Series extends SeriesProviderExtension {
             }
         }
 
-        for (let provider of this.listProviderInfos) {
+        for (let provider of this.getListProvidersInfos()) {
             provider = Object.assign(new ListProviderLocalData(provider.id), provider);
             if (latestUpdatedProvider && latestUpdatedProvider.provider !== provider.provider && await provider.getProviderInstance().isUserLoggedIn()) {
                 const watchProgress = provider.getHighestWatchedEpisode();

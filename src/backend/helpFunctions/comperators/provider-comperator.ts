@@ -9,7 +9,6 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
-import { Provider } from 'electron';
 import SeasonComperator from './season-comperator';
 
 export default class ProviderComperator {
@@ -26,6 +25,7 @@ export default class ProviderComperator {
                 comperatorResults.push(result);
                 // tslint:disable-next-line: no-empty
             } catch (ignore) {
+                logger.info(ignore);
             }
         }
 
@@ -169,6 +169,13 @@ export default class ProviderComperator {
         return false;
     }
 
+    /**
+     * use this function to compare two provider ids.
+     * 
+     * This function dosnt compare the type in the values.
+     * @param id id1 will be compared with id2
+     * @param id2 id2 will be compared with id1
+     */
     public static simpleProviderIdCheck(id: string | number, id2: string | number): boolean {
         return id == id2;
     }

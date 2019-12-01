@@ -1,5 +1,5 @@
 import listHelper from '../../helpFunctions/list-helper';
-import providerHelper from '../../helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import { ProviderHelper } from '../../helpFunctions/provider/provider-helper';
 import stringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
@@ -7,8 +7,6 @@ import MainListManager from './main-list-manager';
 import MainListSearcher from './main-list-searcher';
 import AdderProviderCache from './object-adder/adder-provider-cache';
 import AdderProviderCacheManager from './object-adder/adder-provider-cache-manager';
-import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
-import { ProviderHelper } from '../../helpFunctions/provider/provider-helper';
 export default class MainListAdder {
     /**
      * Stores all adding instances.
@@ -56,7 +54,7 @@ export default class MainListAdder {
      */
     private async listWorker(list: Series[]) {
         const searcher = new MainListSearcher();
-         const providerHelper = new ProviderHelper();
+        const providerHelper = new ProviderHelper();
         const providerCacheManager = new AdderProviderCacheManager();
         logger.debug('[MainListAdder] Worker started to process ' + list.length + ' Items.');
         let addCounter = 0;
