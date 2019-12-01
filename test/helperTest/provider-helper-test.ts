@@ -12,18 +12,14 @@ import ProviderList from '../../src/backend/controller/provider-manager/provider
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
 import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
+import TestHelper from '../test-helper';
 
 describe('Provider Helper Test', () => {
 
     const lc = new ListController(true);
 
     before(() => {
-        // tslint:disable: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal

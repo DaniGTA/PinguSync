@@ -5,18 +5,15 @@ import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestHelper from '../../test-helper';
 // tslint:disable: no-string-literal
 describe('Provider: Trakt | Tests runs', () => {
     const traktProvider = new TraktProvider();
 
     before(() => {
+        TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
-    });
-
-    it('should get a series (1/5)', async () => {
-
-
     });
 
     it('should get a series (2/5)', async () => {

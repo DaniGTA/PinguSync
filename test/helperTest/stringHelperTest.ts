@@ -1,6 +1,10 @@
 import * as assert from 'assert';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
+import TestHelper from '../test-helper';
 describe('String Helper', () => {
+    before(() => {
+        TestHelper.mustHaveBefore();
+    });
     it('should generate a randome string', async () => {
         assert.notEqual(stringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
         assert.notEqual(stringHelper.randomString(), '');

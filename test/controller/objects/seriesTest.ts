@@ -2,18 +2,12 @@ import * as assert from 'assert';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
+import TestHelper from '../../test-helper';
 
 
 describe('Series | Basic', () => {
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
     it('should have a id', async () => {
         const series = new Series();

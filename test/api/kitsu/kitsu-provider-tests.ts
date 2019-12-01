@@ -1,25 +1,19 @@
 
 
-import { strictEqual, fail } from 'assert';
+import { fail, strictEqual } from 'assert';
 import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestHelper from '../../test-helper';
 
 // tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {
     const kitsuProvider = new KitsuProvider();
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal

@@ -2,9 +2,14 @@
 import { strictEqual } from 'assert';
 import Cover from '../../../src/backend/controller/objects/meta/cover';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import TestHelper from '../../test-helper';
 
 
 describe('infoProviderLocalData tests', () => {
+    before(() => {
+       TestHelper.mustHaveBefore();
+    });
+
     it('should merge two', async () => {
         const a = new InfoProviderLocalData(1);
         a.episodes = 13;

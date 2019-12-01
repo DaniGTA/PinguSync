@@ -12,19 +12,13 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-man
 
 import TestProvider from '../controller/objects/testClass/testProvider';
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestHelper from '../test-helper';
 
 
 // tslint:disable: no-string-literal
 describe('Provider Helper | Examples', () => {
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
-        // tslint:disable-next-line: no-unused-expression
-        new ListController(true);
+        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
 

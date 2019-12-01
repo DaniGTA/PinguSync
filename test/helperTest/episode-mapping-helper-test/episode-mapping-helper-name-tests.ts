@@ -1,37 +1,33 @@
-import ListController from "../../../src/backend/controller/list-controller";
+import ListController from '../../../src/backend/controller/list-controller';
 
-import MainListManager from "../../../src/backend/controller/main-list-manager/main-list-manager";
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 
-import MainListLoader from "../../../src/backend/controller/main-list-manager/main-list-loader";
+import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 
-import ProviderList from "../../../src/backend/controller/provider-manager/provider-list";
+import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 
-import TestProvider from "../../controller/objects/testClass/testProvider";
+import TestProvider from '../../controller/objects/testClass/testProvider';
 
-import Series from "../../../src/backend/controller/objects/series";
+import Series from '../../../src/backend/controller/objects/series';
 
-import { InfoProviderLocalData } from "../../../src/backend/controller/provider-manager/local-data/info-provider-local-data";
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 
-import Episode from "../../../src/backend/controller/objects/meta/episode/episode";
+import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 
-import EpisodeTitle from "../../../src/backend/controller/objects/meta/episode/episode-title";
+import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
 
-import { ListProviderLocalData } from "../../../src/backend/controller/provider-manager/local-data/list-provider-local-data";
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 
-import EpisodeMappingHelper from "../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper";
+import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 
-import { fail, strictEqual } from "assert";
+import { fail, strictEqual } from 'assert';
+import TestHelper from '../../test-helper';
 
 describe('Episode mapping | Name Mapping Tests Only', () => {
     const lc = new ListController(true);
 
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
@@ -42,7 +38,7 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
         MainListManager['mainList'] = [];
     });
 
-     it('should map by episode name', async () => {
+    it('should map by episode name', async () => {
         const aSeries = new Series();
 
         // A Site

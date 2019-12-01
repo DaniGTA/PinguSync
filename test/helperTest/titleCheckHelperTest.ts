@@ -1,7 +1,12 @@
 import * as assert from 'assert';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import titleCheckHelper from '../../src/backend/helpFunctions/title-check-helper';
+import TestHelper from '../test-helper';
 describe('Title Checker | Some title examples', () => {
+    before(() => {
+        TestHelper.mustHaveBefore();
+    });
+
     it('should match', async () => {
         assert.equal(await titleCheckHelper.checkNames(['Title: Check, It`s a Test` but` its still a test!'], ['Title ~Check, It’s a test but’ its still a test!~']), true);
         assert.equal(await titleCheckHelper.checkNames(['Kiniro Mosaic'], ['Kin`iro Mosaic', 'Kiniro Mosaic', 'Kinmosa', 'Kinmoza!', 'きんいろモザイク']), true);

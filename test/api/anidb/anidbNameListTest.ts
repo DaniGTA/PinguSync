@@ -2,8 +2,6 @@
 import { deepEqual, fail } from 'assert';
 import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../src/backend/controller/objects/meta/name-type';
@@ -13,18 +11,14 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import logger from '../../../src/backend/logger/logger';
+import TestHelper from '../../test-helper';
 
 
 describe('Provider: AniDB | Offline Test runs', () => {
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
-
+        TestHelper.mustHaveBefore();
     });
+
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new AniListProvider()];

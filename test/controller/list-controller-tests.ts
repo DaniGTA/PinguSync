@@ -5,7 +5,6 @@ import * as assert from 'assert';
 
 
 import ListController from '../../src/backend/controller/list-controller';
-import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
@@ -14,18 +13,14 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-man
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
+import TestHelper from '../test-helper';
 import TestProvider from './objects/testClass/testProvider';
 // tslint:disable: no-string-literal
 describe('ListController | Combine', () => {
     const lc = new ListController(true);
 
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         ProviderList['loadedListProvider'] = [

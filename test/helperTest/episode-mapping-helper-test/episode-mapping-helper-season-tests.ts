@@ -10,6 +10,7 @@ import EpisodeTitle from "../../../src/backend/controller/objects/meta/episode/e
 import { ListProviderLocalData } from "../../../src/backend/controller/provider-manager/local-data/list-provider-local-data";
 import EpisodeMappingHelper from "../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper";
 import { fail, strictEqual } from "assert";
+import TestHelper from '../../test-helper';
 
 
 
@@ -18,12 +19,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
     const lc = new ListController(true);
 
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal

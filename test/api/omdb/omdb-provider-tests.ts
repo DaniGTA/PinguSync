@@ -6,9 +6,13 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/provider-
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestHelper from '../../test-helper';
 // tslint:disable: no-string-literal
 describe('Provider: OMDb | Test runs', () => {
     const omdbProvider = new OMDbProvider();
+    before(() => {
+        TestHelper.mustHaveBefore();
+    });
 
     beforeEach(() => {
         ProviderList['loadedListProvider'] = undefined;

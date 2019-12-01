@@ -14,17 +14,11 @@ import ProviderList from '../../src/backend/controller/provider-manager/provider
 import { AbsoluteResult } from '../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import MultiProviderComperator from '../../src/backend/helpFunctions/comperators/multi-provider-results-comperator';
 import TestProvider from '../controller/objects/testClass/testProvider';
+import TestHelper from '../test-helper';
 
 describe('Multi-Provider-Comperator | Examples', () => {
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
-        // tslint:disable-next-line: no-unused-expression
-        new ListController(true);
+        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal

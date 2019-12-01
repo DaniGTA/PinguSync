@@ -1,21 +1,15 @@
 import { strictEqual } from 'assert';
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
+import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
-import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
+import TestHelper from '../../test-helper';
 
 
 describe('Series | Season', () => {
     before(() => {
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['loadData'] = () => [];
-        // tslint:disable-next-line: no-string-literal
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
 
     it('should return season 1', async () => {

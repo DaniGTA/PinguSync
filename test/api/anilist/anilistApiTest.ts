@@ -2,19 +2,14 @@
 import assert, { strictEqual } from 'assert';
 import request from 'request';
 import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import TestHelper from '../../test-helper';
 
 
 // tslint:disable: no-string-literal
 describe('Provider: AniList | Test runs', () => {
     const anilistProvider = new AniListProvider();
-
-
     before(() => {
-        MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => [];
-        MainListLoader['saveData'] = async () => { };
+        TestHelper.mustHaveBefore();
     });
     it('should return headers', async () => {
         const options: (request.UriOptions & request.CoreOptions) = {
