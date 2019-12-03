@@ -4,10 +4,11 @@ import Overview from '../../../src/backend/controller/objects/meta/overview';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import TestHelper from '../../test-helper';
+import logger from '../../../src/backend/logger/logger';
 
 
 describe('Series | Merge', () => {
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
     });
     it('should merge episode', async () => {
@@ -26,16 +27,16 @@ describe('Series | Merge', () => {
         strictEqual(merged.getMaxEpisode(), 10);
         return;
     });
-    
+
     it('should generate detailedEpisodes', async () => {
         const seriesA = new Series();
-        const lpld = new ListProviderLocalData(1,"test");
+        const lpld = new ListProviderLocalData(1,'test');
         lpld.addSeriesName(new Name('Test', 'en'));
         lpld.episodes = 10;
         seriesA.addListProvider(lpld);
 
         const seriesB = new Series();
-        const lpld2 = new ListProviderLocalData(2,"test2");
+        const lpld2 = new ListProviderLocalData(2,'test2');
         lpld2.episodes = 10;
         await seriesB.addListProvider(lpld2);
 
@@ -135,7 +136,11 @@ describe('Series | Merge', () => {
         const seriesB = new Series();
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual((await merged.getAllNames()).length, 1);
+        const names = await merged.getAllNames();
+        for (const name of names) {
+            logger.info(name);
+        }
+        strictEqual(names.length, 1);
         return;
     });
 

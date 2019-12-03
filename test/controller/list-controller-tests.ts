@@ -19,10 +19,8 @@ import TestProvider from './objects/testClass/testProvider';
 describe('ListController | Combine', () => {
     const lc = new ListController(true);
 
-    before(() => {
-        TestHelper.mustHaveBefore();
-    });
     beforeEach(() => {
+        TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = [
             new TestProvider('Test'),
             new TestProvider(''),

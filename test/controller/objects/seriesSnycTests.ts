@@ -8,7 +8,7 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import TestHelper from '../../test-helper';
 
 describe('Series | Sync', () => {
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
     });
 

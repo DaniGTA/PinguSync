@@ -17,7 +17,7 @@ import TestHelper from '../test-helper';
 
 describe('Series Helper', () => {
 
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
     });
     beforeEach(() => {

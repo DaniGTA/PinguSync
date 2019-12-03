@@ -14,11 +14,21 @@ export default class ProviderDataListSearcher {
         return null;
     }
 
-    public static async getProviderLDByProviderLD(pld: ProviderLocalData): Promise<ProviderLocalData | null> {
-        const localDataList = await ProviderDataListManager.getProviderDataList();
+    public static getProviderLDByProviderLD(pld: ProviderLocalData): ProviderLocalData | null {
+        const localDataList =  ProviderDataListManager.getProviderDataListSync();
         for (const entry of localDataList) {
             if (this.isProviderLocalDataTheSearchResult(entry, pld.id, pld.provider)) {
                 return entry;
+            }
+        }
+        return null;
+    }
+
+    public static getIndexByProviderLD(pld: ProviderLocalData): number | null {
+        const localDataList = ProviderDataListManager.getProviderDataListSync();
+        for (const {item, index}  of localDataList.map((provider, providerIndex) => ({ item: provider, index: providerIndex }))) {
+            if (this.isProviderLocalDataTheSearchResult(item, pld.id, pld.provider)) {
+                return index;
             }
         }
         return null;

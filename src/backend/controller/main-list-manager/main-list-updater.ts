@@ -11,7 +11,7 @@ export default class MainListEntryUpdater {
      * This just managed the Waitlist.
      * @param series
      */
-    public async updateProviders(...providers: MultiProviderResult[]) {
+    public async updateSeries(...providers: MultiProviderResult[]) {
         const searcher = new MainListSearcher();
         const notFounded: Series[] = [];
         for (const provider of providers) {

@@ -6,7 +6,7 @@ import TestHelper from '../../test-helper';
 
 
 describe('Series | Basic', () => {
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
     });
     it('should have a id', async () => {

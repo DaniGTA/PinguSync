@@ -120,7 +120,7 @@ export default class ListController {
         logger.log('info', '[calc] -> SeriesList');
         await this.getMainList();
         const allSeries: MultiProviderResult[] = await this.getAllEntrysFromProviders(true);
-        await new MainListEntryUpdater().updateProviders(...allSeries);
+        await new MainListEntryUpdater().updateSeries(...allSeries);
     }
 
 

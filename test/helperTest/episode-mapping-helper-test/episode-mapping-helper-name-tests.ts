@@ -26,10 +26,8 @@ import TestHelper from '../../test-helper';
 describe('Episode mapping | Name Mapping Tests Only', () => {
     const lc = new ListController(true);
 
-    before(() => {
-        TestHelper.mustHaveBefore();
-    });
     beforeEach(() => {
+        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
         // tslint:disable-next-line: no-string-literal

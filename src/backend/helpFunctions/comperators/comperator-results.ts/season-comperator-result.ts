@@ -1,7 +1,7 @@
-import ComperatorResult from "./comperator-result";
 import Series from '../../../controller/objects/series';
+import ComperatorResult from './comperator-result';
 
 export default class SeasonComperatorResult extends ComperatorResult {
-    aFirstSeason:Series | null = null;
-    bFirstSeason:Series | null = null;
+    public aFirstSeason: Series | null = null;
+    public bFirstSeason: Series | null = null;
 }

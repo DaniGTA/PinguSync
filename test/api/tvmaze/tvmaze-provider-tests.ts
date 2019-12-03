@@ -14,11 +14,8 @@ import TestHelper from '../../test-helper';
 describe('Provider: TVMaze | Test runs', () => {
     const tvmazeProvider = new TVMazeProvider();
 
-    before(() => {
-        TestHelper.mustHaveBefore();
-    });
-
     beforeEach(() => {
+        TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = [tvmazeProvider];

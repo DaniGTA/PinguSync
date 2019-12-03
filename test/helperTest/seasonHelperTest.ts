@@ -18,7 +18,7 @@ describe('Season Helper', () => {
 
     const lc = new ListController(true);
 
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
     });
     beforeEach(() => {

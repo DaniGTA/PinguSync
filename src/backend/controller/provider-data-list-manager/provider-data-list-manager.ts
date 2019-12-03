@@ -1,6 +1,8 @@
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
 import ProviderDataListLoader from './provider-data-list-loader';
 import ProviderDataListSearcher from './provider-data-list-searcher';
 
@@ -12,10 +14,11 @@ export default class ProviderDataListManager {
      * @param provider
      * @param notfiyRenderer
      */
-    public static async addSerieToMainList(provider: ProviderLocalData, notfiyRenderer = false): Promise<boolean> {
+    public static async addProviderLocalDataToMainList(provider: ProviderLocalData, notfiyRenderer = false): Promise<boolean> {
         try {
             const alreadyExistingEntry = ProviderDataListSearcher.getProviderLDByProviderLD(provider);
-            if (alreadyExistingEntry) {
+            if (alreadyExistingEntry != null) {
+                await this.updateSerieInList(provider);
                 return true;
             } else {
                 this.providerDataList.push(provider);
@@ -27,9 +30,16 @@ export default class ProviderDataListManager {
         }
     }
 
-    public static async updateSerieInList(series: ProviderLocalData) {
-        logger.info('[MainList] Update series in mainlist ' + series.id);
-
+    public static async updateSerieInList(provider: ProviderLocalData) {
+        const providerIndex = ProviderDataListSearcher.getIndexByProviderLD(provider);
+        if (providerIndex != null) {
+            const oldProvider = this.providerDataList[providerIndex];
+            if (oldProvider instanceof ListProviderLocalData && provider instanceof ListProviderLocalData) {
+                this.providerDataList[providerIndex] = await ListProviderLocalData.mergeProviderInfos(provider, oldProvider);
+            } else if (oldProvider instanceof InfoProviderLocalData && provider instanceof InfoProviderLocalData) {
+                this.providerDataList[providerIndex] = await InfoProviderLocalData.mergeProviderInfos(provider, oldProvider);
+            }
+        }
     }
 
     /**

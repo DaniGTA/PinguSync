@@ -10,7 +10,7 @@ import TestProvider from './testClass/testProvider';
 
 describe('Series | Relations', () => {
 
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
         const testprovider = new TestProvider('Test');
         testprovider.hasUniqueIdForSeasons = false;

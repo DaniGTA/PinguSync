@@ -18,10 +18,8 @@ describe('Provider Helper Test', () => {
 
     const lc = new ListController(true);
 
-    before(() => {
-        TestHelper.mustHaveBefore();
-    });
     beforeEach(() => {
+        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider()];
         // tslint:disable-next-line: no-string-literal

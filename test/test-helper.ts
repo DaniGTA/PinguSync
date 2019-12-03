@@ -10,6 +10,7 @@ export default class TestHelper {
         new ListController(true);
         MainListManager['listLoaded'] = true;
         MainListLoader['loadData'] = () => [];
+        MainListManager['mainList'] = [];
         // tslint:disable-next-line: no-empty
         MainListLoader['saveData'] = async () => { };
 
@@ -17,5 +18,6 @@ export default class TestHelper {
         // tslint:disable-next-line: no-empty
         ProviderDataListLoader['saveData'] = async () => { };
         ProviderDataListLoader['loadData'] = () => [];
+        ProviderDataListManager['providerDataList'] = [];
     }
 }

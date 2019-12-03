@@ -48,7 +48,7 @@ export default class SeriesProviderExtension {
     }
 
     public getInfoProvidersInfos(): InfoProviderLocalData[] {
-        const realData = ProviderDataListSearcher.getAllBindedProvider(...this.listProviderInfos);
+        const realData = ProviderDataListSearcher.getAllBindedProvider(...this.infoProviderInfos);
         return realData as InfoProviderLocalData[];
     }
 

@@ -8,7 +8,7 @@ import TestHelper from '../../test-helper';
 
 
 describe('Series | Season', () => {
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
     });
 

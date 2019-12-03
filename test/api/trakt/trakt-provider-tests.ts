@@ -10,7 +10,7 @@ import TestHelper from '../../test-helper';
 describe('Provider: Trakt | Tests runs', () => {
     const traktProvider = new TraktProvider();
 
-    before(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
@@ -70,8 +70,8 @@ describe('Provider: Trakt | Tests runs', () => {
 
 
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
-        strictEqual(result.getAllProviders()[1].releaseYear, 2013);
-        strictEqual(result.getAllProviders()[1].id, 72367);
+        strictEqual(result.mainProvider.releaseYear, 2013);
+        strictEqual(result.mainProvider.id, 72367);
     });
 
 });

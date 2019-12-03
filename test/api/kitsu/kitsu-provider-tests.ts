@@ -12,10 +12,9 @@ import TestHelper from '../../test-helper';
 // tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {
     const kitsuProvider = new KitsuProvider();
-    before(() => {
-        TestHelper.mustHaveBefore();
-    });
+
     beforeEach(() => {
+        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = undefined;
         // tslint:disable-next-line: no-string-literal
@@ -31,7 +30,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getAllProviders().length, 5);
+        strictEqual(result.mainProvider.id, '6521');
     });
 
     it('should get a series (2/6)', async () => {
@@ -43,7 +42,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getAllProviders().length, 3);
+        strictEqual(result.mainProvider.id, '12959');
     });
 
     it('should get a series (3/6)', async () => {
@@ -55,7 +54,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getAllProviders().length, 5);
+        strictEqual(result.mainProvider.id, '10857');
     }).timeout(4000);
 
     it('should get a series (4/6)', async () => {
@@ -85,7 +84,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getAllProviders().length, 5);
+        strictEqual(result.mainProvider.id, 5);
     }).timeout(4000);
 
     it('should get a series (6/6)', async () => {
@@ -97,7 +96,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.getAllProviders().length, 5);
+        strictEqual(result.mainProvider.id, '1555');
     }).timeout(4000);
 
 });

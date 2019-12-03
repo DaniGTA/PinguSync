@@ -14,16 +14,12 @@ import TestProvider from '../objects/testClass/testProvider';
 describe('MainList | Entry update tests', () => {
     const lc = new ListController(true);
 
-    before(() => {
-        TestHelper.mustHaveBefore();
-    });
     beforeEach(() => {
+        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['mainList'] = [];
     });
 
     it('should update provider', async () => {
@@ -39,7 +35,7 @@ describe('MainList | Entry update tests', () => {
         const mpr = new MultiProviderResult(providerB);
 
         // Testing
-        await new MainListEntryUpdater().updateProviders(mpr);
+        await new MainListEntryUpdater().updateSeries(mpr);
 
         // tslint:disable-next-line: no-string-literal
         strictEqual(MainListManager['mainList'].length, 1);
@@ -64,7 +60,7 @@ describe('MainList | Entry update tests', () => {
         const mpr = new MultiProviderResult(providerB);
 
         // Testing
-        await new MainListEntryUpdater().updateProviders(mpr);
+        await new MainListEntryUpdater().updateSeries(mpr);
 
         // tslint:disable-next-line: no-string-literal
         strictEqual(MainListManager['mainList'].length, 1);
@@ -91,7 +87,7 @@ describe('MainList | Entry update tests', () => {
         const mpr = new MultiProviderResult(providerB);
 
         // Testing
-        await new MainListEntryUpdater().updateProviders(mpr);
+        await new MainListEntryUpdater().updateSeries(mpr);
 
         // tslint:disable-next-line: no-string-literal
         strictEqual(MainListManager['mainList'].length, 1);
@@ -120,7 +116,7 @@ describe('MainList | Entry update tests', () => {
         const mpr = new MultiProviderResult(providerB);
 
         // Testing
-        await new MainListEntryUpdater().updateProviders(mpr);
+        await new MainListEntryUpdater().updateSeries(mpr);
 
         // tslint:disable-next-line: no-string-literal
         strictEqual(MainListManager['mainList'].length, 1);
