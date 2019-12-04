@@ -250,8 +250,10 @@ describe('ListController | Combine', () => {
         x1.getListProvidersInfos()[0].targetSeason = 1;
         await x1.addListProvider(lpld);
         const x2 = await getFilledAnime('', 1);
-        await x2.addListProvider(lpld);
-        x2.getListProvidersInfos()[0].targetSeason = undefined;
+        const lpld2 = new ListProviderLocalData(2);
+        lpld2.episodes = 12;
+        lpld2.targetSeason = undefined;
+        await x2.addListProvider(lpld2);
 
         MainListManager['mainList'] = [x1, x2];
 

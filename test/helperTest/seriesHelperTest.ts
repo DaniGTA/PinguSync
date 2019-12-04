@@ -76,7 +76,7 @@ describe('Series Helper', () => {
         listProviderB.targetSeason = 2;
         listProviderB.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProviderB.addSeriesName(new Name('Series Test', 'x-jap'));
-        c.addListProvider(listProviderB);
+        await c.addListProvider(listProviderB);
 
         strictEqual(await seriesHelper.isSameSeries(a, c), false);
     });

@@ -185,8 +185,9 @@ class SeasonHelper {
 
         if (SeasonSearchModeHelper.canPerformAProviderSeasonValueSearch(searchMode)) {
             for (const provider of series.getListProvidersInfos()) {
-                if (provider.targetSeason) {
-                    return new SearchSeasonValueResult(provider.targetSeason, 'Provider: ' + provider.provider);
+                const targetSeason = series.getProviderSeasonTarget(provider.provider);
+                if (targetSeason) {
+                    return new SearchSeasonValueResult(targetSeason, 'Provider: ' + provider.provider);
                 }
             }
         }

@@ -4,6 +4,7 @@ import { InfoProviderLocalData } from '../../../provider-manager/local-data/info
 import { ListProviderLocalData } from '../../../provider-manager/local-data/list-provider-local-data';
 import InfoLocalDataBind from './binding/info-local-data-bind';
 import ListLocalDataBind from './binding/list-local-data-bind';
+import LocalDataBind from './binding/local-data-bind';
 
 
 export default class SeriesProviderExtension {
@@ -52,5 +53,8 @@ export default class SeriesProviderExtension {
         return realData as InfoProviderLocalData[];
     }
 
+    public getAllProviderBindings(): LocalDataBind[] {
+        return [...this.infoProviderInfos, ...this.listProviderInfos];
+    }
 
 }

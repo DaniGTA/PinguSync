@@ -5,8 +5,8 @@ import Cover from '../../objects/meta/cover';
 import WatchProgress from '../../objects/meta/watch-progress';
 import { WatchStatus } from '../../objects/series';
 import ProviderList from '../provider-list';
-import ProviderLocalData from './interfaces/provider-local-data';
 import ProviderNameManager from '../provider-name-manager';
+import ProviderLocalData from './interfaces/provider-local-data';
 
 /**
  * Contains info about the series and the user watch progress and the list that series is in.
