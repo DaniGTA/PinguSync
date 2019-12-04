@@ -31,39 +31,39 @@ describe('Episode comperator | Full test', () => {
         const bEpisode = new Episode(0);
         it('should compare seasons right (missing providerB season)', async () => {
             // tslint:disable-next-line: no-string-literal
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1, undefined, 1);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1);
             strictEqual(resultA, true);
         });
         it('should compare seasons right (missing providerA season)', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, 1, 1);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1);
             strictEqual(resultA, true);
          });
         it('should compare seasons right (missing all provider season)', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, 1);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1);
             strictEqual(resultA, true);
          });
         it('should compare seasons right (missing series season)', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1, 1, undefined);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined);
             strictEqual(resultA, true);
          });
         it('should compare seasons right (missing provider season and series season)', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, undefined);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined);
             strictEqual(resultA, true);
          });
         it('should compare seasons false', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, 2);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 2);
             strictEqual(resultA, false);
          });
         it('should compare seasons right (no missing seasons)', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, aEpisode, 1, 1, 1);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, aEpisode, 1);
             strictEqual(resultA, true);
          });
         it('should compare seasons false (false provider season)', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1, 2, 1);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1);
             strictEqual(resultA, false);
          });
         it('should compare seasons false (false series season)', async () => {
-            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, 2);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 2);
             strictEqual(resultA, false);
         });
     });
