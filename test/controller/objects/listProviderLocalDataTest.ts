@@ -9,7 +9,7 @@ import TestHelper from '../../test-helper';
 
 describe('listProviderLocalData tests', () => {
     before(() => {
-       TestHelper.mustHaveBefore(); 
+       TestHelper.mustHaveBefore();
     });
     it('should merge two', async () => {
         const a = new ListProviderLocalData(1);

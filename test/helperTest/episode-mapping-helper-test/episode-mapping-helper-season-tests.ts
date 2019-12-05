@@ -1,15 +1,14 @@
-import ListController from "../../../src/backend/controller/list-controller";
-import MainListManager from "../../../src/backend/controller/main-list-manager/main-list-manager";
-import MainListLoader from "../../../src/backend/controller/main-list-manager/main-list-loader";
-import ProviderList from "../../../src/backend/controller/provider-manager/provider-list";
-import TestProvider from "../../controller/objects/testClass/testProvider";
-import Series from "../../../src/backend/controller/objects/series";
-import { InfoProviderLocalData } from "../../../src/backend/controller/provider-manager/local-data/info-provider-local-data";
-import Episode from "../../../src/backend/controller/objects/meta/episode/episode";
-import EpisodeTitle from "../../../src/backend/controller/objects/meta/episode/episode-title";
-import { ListProviderLocalData } from "../../../src/backend/controller/provider-manager/local-data/list-provider-local-data";
-import EpisodeMappingHelper from "../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper";
-import { fail, strictEqual } from "assert";
+import { fail, strictEqual } from 'assert';
+import ListController from '../../../src/backend/controller/list-controller';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
+import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
+import Series from '../../../src/backend/controller/objects/series';
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
+import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
 
 
@@ -165,7 +164,6 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         }
     });
 
-    
     it('should map episode with right season (3/3)', async () => {
         const aSeries = new Series();
         aSeries['cachedSeason'] = 2;

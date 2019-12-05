@@ -17,9 +17,9 @@ export default class EpisodeMappingHelper {
         const season = (await series.getSeason()).seasonNumber;
         await this.prepareDetailedEpisodeInformation(providers, season);
 
-        const ratedEquality: EpisodeRatedEqualityContainer[] = await this.getRatedEqulityOfEpisodes(providers, season);
+        const ratedEquality: EpisodeRatedEqualityContainer[] = await this.getRatedEqulityOfEpisodes(providers, series, season);
 
-        await this.calculateMapping(providers, ratedEquality, season);
+        await this.calculateMapping(providers, ratedEquality, series, season);
         const unmappedEpisodesNumber = await this.getNumberOfUnmappedEpisodesFromProviders(providers);
         if (unmappedEpisodesNumber !== 0) {
             let sequel: Series | null = (await series.getSequel()).foundedSeries;
@@ -36,7 +36,7 @@ export default class EpisodeMappingHelper {
                                 differenceProviders.push(new EpisodeDifferenceContainer(provider, sequelProvider, diff));
                                 const currentDiff = this.getEpisodeDifferenceFromContainer(differenceProviders, provider);
                                 const sequelSeasonNumber = (await sequel.getSeason()).seasonNumber;
-                                await this.calculateMapping([...providers, sequelProvider], [], sequelSeasonNumber, currentDiff);
+                                await this.calculateMapping([...providers, sequelProvider], [], series, sequelSeasonNumber, currentDiff);
                             }
                         }
                     }
@@ -150,12 +150,12 @@ export default class EpisodeMappingHelper {
      * @param ratedEquality the first ratings.
      * @param season the season of the series.
      */
-    private async calculateMapping(providers: ProviderLocalData[], ratedEquality: EpisodeRatedEqualityContainer[], season?: number, cDiff = 0): Promise<ProviderLocalData[]> {
+    private async calculateMapping(providers: ProviderLocalData[], ratedEquality: EpisodeRatedEqualityContainer[],series: Series, season?: number, cDiff = 0): Promise<ProviderLocalData[]> {
         for (const provider of providers) {
             let currentDiff = cDiff;
             for (let episode of provider.detailEpisodeInfo) {
                 if (ratedEquality.length === 0) {
-                    ratedEquality = await this.getRatedEqulityOfEpisodes(providers, season, currentDiff);
+                    ratedEquality = await this.getRatedEqulityOfEpisodes(providers, series, season, currentDiff);
                     if (ratedEquality.length === 0) {
                         break;
                     }
@@ -227,17 +227,26 @@ export default class EpisodeMappingHelper {
         return maxEpisodeDifference;
     }
 
-    private async getRatedEqulityOfEpisodes(providers: ProviderLocalData[], season?: number, cdiff = 0): Promise<EpisodeRatedEqualityContainer[]> {
+    private async getRatedEqulityOfEpisodes(providers: ProviderLocalData[],series: Series, season?: number, cdiff = 0): Promise<EpisodeRatedEqualityContainer[]> {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
         for (const providerA of providers) {
             for (const providerB of providers) {
                 if (providerA.provider === providerB.provider) {
                     continue;
                 }
+                
                 let episodeDifference = cdiff;
                 if (episodeDifference === 0) {
                     episodeDifference = this.getMaxEpisodeShiftingDifference(providerA, providerB);
                 }
+                /**
+                 * Provider A targetSeason.
+                 */
+                const aTargetS = series.getProviderSeasonTarget(providerA.provider);
+                /**
+                 * Provider A targetSeason.
+                 */
+                const bTargetS = series.getProviderSeasonTarget(providerB.provider);
                 let fastCheck = 0;
                 if (providerB.detailEpisodeInfo.length !== 0) {
                     for (const detailedEpA of providerA.detailEpisodeInfo) {
@@ -245,7 +254,7 @@ export default class EpisodeMappingHelper {
                             const detailedEpB = providerB.detailEpisodeInfo[fastCheck];
                             if (!this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA)) {
                                 if (!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB)) {
-                                    const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, season, episodeDifference);
+                                    const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDifference);
                                     if (result.matches !== 0 && result.matchAble === result.matches) {
                                         const epA = new EpisodeProviderBind(detailedEpA, providerA);
                                         const epB = new EpisodeProviderBind(providerB.detailEpisodeInfo[fastCheck], providerB);
@@ -261,7 +270,7 @@ export default class EpisodeMappingHelper {
                             if (!this.isAlreadyRated(detailedEpA, detailedEpB, ratedEquality)) {
                                 if (!this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA)) {
                                     if (!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB)) {
-                                        const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, season, episodeDifference);
+                                        const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDifference);
                                         if (result.matches !== 0) {
                                             const epA = new EpisodeProviderBind(detailedEpA, providerA);
                                             const epB = new EpisodeProviderBind(detailedEpB, providerB);

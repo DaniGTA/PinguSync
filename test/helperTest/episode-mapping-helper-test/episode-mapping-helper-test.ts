@@ -1,10 +1,8 @@
 
 import { fail, notStrictEqual, strictEqual } from 'assert';
 import ListController from '../../../src/backend/controller/list-controller';
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
-import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
 import { EpisodeType } from '../../../src/backend/controller/objects/meta/episode/episode-type';
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';

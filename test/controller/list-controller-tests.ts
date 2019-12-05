@@ -270,16 +270,15 @@ describe('ListController | Combine', () => {
         ProviderList['loadedListProvider'].push(testListProvider1, testListProvider2);
         const lpld = new ListProviderLocalData(2, 'TestA');
         lpld.episodes = 12;
+        lpld.targetSeason = 1;
         const lpld2 = new ListProviderLocalData(3, 'TestB');
         lpld2.episodes = 12;
-
+        lpld2.targetSeason = 2;
         const x1 = await getFilledAnime();
         await x1.addListProvider(lpld);
-        x1.getListProvidersInfos()[0].targetSeason = 1;
 
         const x2 = await getFilledAnime();
         await x2.addListProvider(lpld2);
-        x2.getListProvidersInfos()[0].targetSeason = 2;
 
         await lc.addSeriesToMainList(x1, x2);
 
@@ -289,18 +288,18 @@ describe('ListController | Combine', () => {
     it('shouldnt clean doubled entrys (2/2)', async () => {
         const lpld = new ListProviderLocalData(2, 'Test');
         lpld.episodes = 12;
+        lpld.targetSeason = undefined;
         const lpld2 = new ListProviderLocalData(3, 'Test');
         lpld2.episodes = 12;
+        lpld2.targetSeason = undefined;
 
         const x1 = await getFilledAnime();
         x1['listProviderInfos'] = [];
         await x1.addListProvider(lpld);
-        x1.getListProvidersInfos()[0].targetSeason = undefined;
 
         const x2 = await getFilledAnime();
         x2['listProviderInfos'] = [];
         await x2.addListProvider(lpld2);
-        x2.getListProvidersInfos()[0].targetSeason = undefined;
 
         MainListManager['mainList'] = [x1, x2];
 
@@ -332,15 +331,17 @@ describe('ListController | Combine', () => {
     it('should clean doubled entrys (2/3)', async () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 10;
-
+        lpld.targetSeason = undefined;
         const x1 = await getFilledAnime('Test', 1);
         x1.getListProvidersInfos()[0].targetSeason = undefined;
         await x1.addListProvider(lpld);
 
+        const lpld2 = new ListProviderLocalData(2);
+        lpld2.episodes = 10;
+        lpld2.targetSeason = 1;
 
         const x2 = await getFilledAnime('Test', 1);
-        x2.getListProvidersInfos()[0].targetSeason = 1;
-        await x2.addListProvider(lpld);
+        await x2.addListProvider(lpld2);
 
         MainListManager['mainList'] = [x1, x2];
 

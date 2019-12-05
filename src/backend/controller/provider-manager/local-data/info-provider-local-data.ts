@@ -3,8 +3,8 @@ import listHelper from '../../../helpFunctions/list-helper';
 import Banner from '../../objects/meta/banner';
 import Cover from '../../objects/meta/cover';
 import ProviderList from '../provider-list';
-import ProviderLocalData from './interfaces/provider-local-data';
 import ProviderNameManager from '../provider-name-manager';
+import ProviderLocalData from './interfaces/provider-local-data';
 /**
  * Only contains infos about the series.
  */

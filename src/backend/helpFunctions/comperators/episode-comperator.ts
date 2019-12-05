@@ -30,13 +30,13 @@ export default class EpisodeComperator {
      * @param season
      * @param upshift add the number to the episode number from episode a. This make ep number 1 and ep number 2 match able when upshift set to 1
      */
-    public static async compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, season?: number, upshift: number = 0): Promise<ComperatorResult> {
+    public static async compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: number, providerBSeason?: number, season?: number, upshift: number = 0): Promise<ComperatorResult> {
         const result = new ComperatorResult();
         result.matchAble++;
         if (aEpisode.episodeNumber + upshift === bEpsiode.episodeNumber) {
             result.matches++;
             result.matchAble++;
-            if (this.isEpisodeSameSeason(aEpisode, bEpsiode, season)) {
+            if (this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season)) {
                 result.matches++;
             }
         }
@@ -67,17 +67,21 @@ export default class EpisodeComperator {
      * @param providerBSeason provider b season number
      * @param season series season number.
      */
-    public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode,  season?: number): boolean {
+    public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: number, providerBSeason?: number, season?: number): boolean {
         let aSeason: number | undefined;
         if (aEpisode.season) {
             aSeason = aEpisode.season;
-        }  else if (season) {
+        } else if (providerASeason) {
+            aSeason = providerASeason;
+        } else if (season) {
             aSeason = season;
         }
 
         let bSeason: number | undefined;
         if (bEpisode.season) {
             bSeason = bEpisode.season;
+        } else if (providerBSeason) {
+            bSeason = providerBSeason;
         } else if (season) {
             bSeason = season;
         }
@@ -157,7 +161,7 @@ export default class EpisodeComperator {
         for (const aEpisode of aAllADetailedEpisodes) {
             result.matchAble += 0.15;
             for (const bEpsiode of bAllDetailedEpisodes) {
-                if (this.isEpisodeSameSeason(aEpisode, bEpsiode, season) && aEpisode.episodeNumber === bEpsiode.episodeNumber) {
+                if (this.isEpisodeSameSeason(aEpisode, bEpsiode, undefined, undefined, season) && aEpisode.episodeNumber === bEpsiode.episodeNumber) {
                     result.matches += 0.15;
 
                     const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);
