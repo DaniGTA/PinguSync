@@ -32,12 +32,12 @@ describe('Provider Helper | Examples', () => {
         // Series A
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'testA');
-        series.addProviderDatas(listProvider);
+        await series.addProviderDatas(listProvider);
 
         // Series B
         const seriesB = new Series();
         const listProviderB = new ListProviderLocalData(1, 'testA');
-        seriesB.addProviderDatas(listProviderB);
+        await seriesB.addProviderDatas(listProviderB);
 
         const result = await providerInfoDownloaderhelper.checkListProviderId(series, seriesB);
         equal(result.sameId, true);

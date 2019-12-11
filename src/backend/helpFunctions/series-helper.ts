@@ -19,8 +19,8 @@ class SeriesHelper {
         let matchAbleScore: number = 0;
         a = Object.assign(new Series(), a);
         b = Object.assign(new Series(), b);
-
-        const listProviderResult = await ProviderComperator.compareAllProviders(a, b);
+        const providerComperator = new ProviderComperator(a, b);
+        const listProviderResult = await providerComperator.getCompareResult();
         if (listProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
         } else if (listProviderResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {

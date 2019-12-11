@@ -61,7 +61,7 @@ describe('Provider Helper Test', () => {
     it('should update series', async () => {
         const providerHelper = new ProviderHelper();
         const series = new Series();
-        series.lastInfoUpdate = dateHelper.removeDays(new Date(), 31).getDate();
+        series.lastInfoUpdate = dateHelper.removeDays(new Date(), 31).getTime();
         const result1 = providerHelper['canUpdateSeries'](series);
         strictEqual(result1, true);
     });
@@ -69,7 +69,7 @@ describe('Provider Helper Test', () => {
     it('should not update series', async () => {
         const providerHelper = new ProviderHelper();
         const series = new Series();
-        series.lastInfoUpdate = dateHelper.removeDays(new Date(), 15).getDate();
+        series.lastInfoUpdate = dateHelper.removeDays(new Date(), 15).getTime();
         const result1 = providerHelper['canUpdateSeries'](series);
         strictEqual(result1, false);
     });

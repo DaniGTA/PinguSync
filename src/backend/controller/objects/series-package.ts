@@ -3,17 +3,18 @@ import logger from '../../logger/logger';
 import Name from './meta/name';
 import Series from './series';
 import { PreferedSeriesNameHelper } from './settings/prefered-series-name';
+import { FrontendSeriesInfos } from './transfer/frontend-series-infos';
 
 /**
  * Contains all Relations of a Series.
  */
 export default class SeriesPackage {
     public id: string;
-    public allRelations: Series[] = [];
+    public allRelations: FrontendSeriesInfos[] = [];
     constructor(...series: Series[]) {
         for (const serie of series) {
             if (this.allRelations.findIndex((x) => serie.id === x.id) === -1) {
-                this.allRelations.push(serie);
+                this.allRelations.push(new FrontendSeriesInfos(serie));
             }
         }
 

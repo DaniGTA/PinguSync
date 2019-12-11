@@ -55,7 +55,8 @@ export default class MultiProviderComperator {
         finalResult.matchAble += releaseYearResult.matchAble;
         finalResult.matches += releaseYearResult.matches;
 
-        const providerResult = await ProviderComperator.compareAllProviders(series, tempSeries);
+        const providerComperatorInstance = new ProviderComperator(series, tempSeries);
+        const providerResult = await providerComperatorInstance.getCompareResult();
         finalResult.matchAble += providerResult.matchAble;
         finalResult.matches += providerResult.matches;
         if (providerResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {

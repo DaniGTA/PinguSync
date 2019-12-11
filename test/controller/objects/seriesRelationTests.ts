@@ -21,12 +21,12 @@ describe('Series | Relations', () => {
     });
 
     it('get all Relations based on prequel id', async () => {
-        const series1 = getFilledAnime(1);
-        const series2 = getFilledAnime(2);
+        const series1 = await getFilledAnime(1);
+        const series2 = await getFilledAnime(2);
         series2.getListProvidersInfos()[0].prequelIds.push(1);
-        const series3 = getFilledAnime(3);
+        const series3 = await getFilledAnime(3);
         series3.getListProvidersInfos()[0].prequelIds.push(2);
-        const series4 = getFilledAnime(4);
+        const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
         list = await listHelper.shuffle(list);
@@ -49,12 +49,12 @@ describe('Series | Relations', () => {
     });
 
     it('get all Relations based on sequel id', async () => {
-        const series1 = getFilledAnime(1);
+        const series1 = await getFilledAnime(1);
         series1.getListProvidersInfos()[0].sequelIds.push(2);
-        const series2 = getFilledAnime(2);
+        const series2 = await getFilledAnime(2);
         series2.getListProvidersInfos()[0].sequelIds.push(3);
-        const series3 = getFilledAnime(3);
-        const series4 = getFilledAnime(4);
+        const series3 = await getFilledAnime(3);
+        const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
         list = await listHelper.shuffle(list);
@@ -77,14 +77,14 @@ describe('Series | Relations', () => {
     });
 
     it('get all Relations based on sequel id and prequel id', async () => {
-        const series1 = getFilledAnime(1);
+        const series1 = await getFilledAnime(1);
         series1.getListProvidersInfos()[0].sequelIds.push(2);
-        const series2 = getFilledAnime(2);
+        const series2 = await getFilledAnime(2);
         series2.getListProvidersInfos()[0].sequelIds.push(3);
         series2.getListProvidersInfos()[0].prequelIds.push(1);
-        const series3 = getFilledAnime(3);
+        const series3 = await getFilledAnime(3);
         series2.getListProvidersInfos()[0].prequelIds.push(2);
-        const series4 = getFilledAnime(4);
+        const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
         list = await listHelper.shuffle(list);
@@ -106,13 +106,13 @@ describe('Series | Relations', () => {
     });
 
     it('get all Relations based on provider id', async () => {
-        const series1 = getFilledAnime(1);
+        const series1 = await getFilledAnime(1);
         series1.getListProvidersInfos()[0].targetSeason = 1;
-        const series2 = getFilledAnime(1);
+        const series2 = await getFilledAnime(1);
         series2.getListProvidersInfos()[0].targetSeason = 2;
-        const series3 = getFilledAnime(1);
+        const series3 = await getFilledAnime(1);
         series3.getListProvidersInfos()[0].targetSeason = 3;
-        const series4 = getFilledAnime(4);
+        const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
         list = await listHelper.shuffle(list);
@@ -134,20 +134,20 @@ describe('Series | Relations', () => {
     });
 
     it('get all Relations based on multi sequels id', async () => {
-        const series1 = getFilledAnime(1);
+        const series1 = await getFilledAnime(1);
         series1.getListProvidersInfos()[0].sequelIds.push(2);
         series1.getListProvidersInfos()[0].sequelIds.push(3);
-        const series2 = getFilledAnime(2);
+        const series2 = await getFilledAnime(2);
         series2.getListProvidersInfos()[0].sequelIds.push(5);
-        const series3 = getFilledAnime(3);
+        const series3 = await getFilledAnime(3);
         series3.getListProvidersInfos()[0].sequelIds.push(4);
         series3.getListProvidersInfos()[0].prequelIds.push(1);
-        const series4 = getFilledAnime(4);
+        const series4 = await getFilledAnime(4);
         series4.getListProvidersInfos()[0].prequelIds.push(3);
-        const series5 = getFilledAnime(5);
+        const series5 = await getFilledAnime(5);
         series5.getListProvidersInfos()[0].sequelIds.push(6);
         series5.getListProvidersInfos()[0].prequelIds.push(2);
-        const series6 = getFilledAnime(6);
+        const series6 = await getFilledAnime(6);
 
         let list = [series1, series2, series3, series4, series5, series6];
         list = await listHelper.shuffle(list);
@@ -169,7 +169,7 @@ describe('Series | Relations', () => {
         assert.equal(await listHelper.isSeriesInList(result3, series2), true, 'Series2 should be in result3');
     });
 
-    function getFilledAnime(id: string | number = 1): Series {
+    async function getFilledAnime(id: string | number = 1): Promise<Series> {
         const provider = new ListProviderLocalData(id, 'Test');
         const anime = new Series();
         provider.addSeriesName(new Name('Test', 'en'));
@@ -177,7 +177,7 @@ describe('Series | Relations', () => {
         // tslint:disable-next-line: no-string-literal
         provider['episodes'] = 10;
         provider.releaseYear = 2014;
-        anime.addListProvider(provider);
+        await anime.addListProvider(provider);
         return anime;
     }
 });

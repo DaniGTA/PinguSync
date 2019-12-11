@@ -6,7 +6,7 @@
     <button @click="seriesDataRefresh(seriesPackage)">Data Refresh</button>
     <button @click="removeSeriesPackage(seriesPackage)">Delete Package</button>
 
-    <div v-for="item of seriesPackage.allRelations" v-bind:key="item.id">
+    <div v-for="item of FrontendSeriesInfosPackage.allRelations" v-bind:key="item.id">
       <button @click="logNames(item)">Log names</button>
       <button @click="showMapping(item)">Show mapping</button>
       <Promised
@@ -39,10 +39,10 @@ import { ipcRenderer, ipcMain } from "electron";
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
 import App from "../App.vue";
 
-import Series from "../backend/controller/objects/series";
+import FrontendSeriesInfos from "../backend/controller/objects/series";
 import VueLazyload from "vue-lazyload";
 import { Promised } from "vue-promised";
-import SeriesPackage from "../backend/controller/objects/series-package";
+import FrontendSeriesInfosPackage from "../backend/controller/objects/series-package";
 import WatchProgress from "../backend/controller/objects/meta/watch-progress";
 import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
 import { ListProviderLocalData } from "../backend/controller/provider-manager/local-data/list-provider-local-data";
@@ -57,14 +57,14 @@ Vue.use(VueLazyload);
   },
 })
 export default class ListEntry extends Vue {
-  @PropSync('sPackage', { type: SeriesPackage }) public seriesPackage!: SeriesPackage;
+  @PropSync('sPackage', { type: FrontendSeriesInfosPackage }) public FrontendSeriesInfosPackage!: FrontendSeriesInfosPackage;
   public watchProgress: WatchProgress = new WatchProgress(0);
   public cover: string = '';
   public name: string = '?';
   public showModal = false;
-  public currentSelect: Series | null = null;
+  public currentSelect: FrontendSeriesInfos | null = null;
   @Watch('sPackage', { immediate: true, deep: true })
-  public async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
+  public async onChildChanged(val: FrontendSeriesInfosPackage, oldVal: FrontendSeriesInfosPackage) {
     console.log("ANIME CHANGE");
     this.cover = val.getAnyCoverUrl();
     this.name = await val.getPreferedName();
@@ -84,25 +84,25 @@ export default class ListEntry extends Vue {
     console.log(a);
   }
 
-  public logNames(item: Series) {
-    const animeObject = Object.assign(new Series(), item);
+  public logNames(item: FrontendSeriesInfos) {
+    const animeObject = Object.assign(new FrontendSeriesInfos(), item);
     animeObject.readdFunctions();
     console.log(animeObject.getAllNames());
   }
 
-  public showMapping(item: Series){
-    const animeObject = Object.assign(new Series(), item);
+  public showMapping(item: FrontendSeriesInfos){
+    const animeObject = Object.assign(new FrontendSeriesInfos(), item);
     animeObject.readdFunctions();
     this.currentSelect = animeObject;
     this.showModal = true;
   }
 
-  public getObjectAsString(series: Series): string {
+  public getObjectAsString(series: FrontendSeriesInfos): string {
     return JSON.stringify(series);
   }
-  public async getWatchProgress(series: Series): Promise<number> {
+  public async getWatchProgress(series: FrontendSeriesInfos): Promise<number> {
     if (series) {
-      const animeObject = Object.assign(new Series(), series);
+      const animeObject = Object.assign(new FrontendSeriesInfos(), series);
       const namen = animeObject.getAllNames();
       animeObject.readdFunctions();
       try {
@@ -121,7 +121,7 @@ export default class ListEntry extends Vue {
     }
   }
 
-  public removeSeriesPackage(seriesPackage: SeriesPackage): void {
+  public removeSeriesPackage(seriesPackage: FrontendSeriesInfosPackage): void {
     App.workerController.send('delete-series-package', seriesPackage.id);
   }
 
@@ -137,7 +137,7 @@ export default class ListEntry extends Vue {
   /**
    *
    */
-  public updateWatchProgress(series: Series, reduce: boolean) {
+  public updateWatchProgress(series: FrontendSeriesInfos, reduce: boolean) {
     if (series) {
       const div = (this.$refs as any)[
         series.id + '-watchprogress'
@@ -155,24 +155,24 @@ export default class ListEntry extends Vue {
     App.workerController.send('sync-series', id);
   }
 
-  public delelteData(seriesPackage: SeriesPackage) {
+  public delelteData(seriesPackage: FrontendSeriesInfosPackage) {
     App.workerController.send('delete-series-package', seriesPackage.id);
   }
 
   /**
-   * Collect information about the series.
+   * Collect information about the FrontendSeriesInfos.
    */
-  public seriesDataRefresh(seriesPackage: SeriesPackage) {
+  public FrontendSeriesInfosDataRefresh(seriesPackage: FrontendSeriesInfosPackage) {
     App.workerController.send('request-info-refresh', seriesPackage.id);
   }
 
-  public async getSeason(series: Series): Promise<number | undefined> {
-    series = Object.assign(new Series(), series);
+  public async getSeason(series: FrontendSeriesInfos): Promise<number | undefined> {
+    series = Object.assign(new FrontendSeriesInfos(), series);
     return (await series.getSeason(SeasonSearchMode.NO_SEARCH, []))
       .seasonNumber;
   }
-  public async canSync(series: Series): Promise<boolean> {
-    series = Object.assign(new Series(), series);
+  public async canSync(series: FrontendSeriesInfos): Promise<boolean> {
+    series = Object.assign(new FrontendSeriesInfos(), series);
     return series.getCanSync();
   }
 }

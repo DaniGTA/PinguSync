@@ -551,11 +551,11 @@ export default class Series extends SeriesProviderExtension {
         const bMediaType = await b.getMediaType();
         if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
             for (const providerA of a.getListProvidersInfos()) {
-                const providerATargetSeason = this.getProviderSeasonTarget(providerA.provider);
+                const providerATargetSeason = a.getProviderSeasonTarget(providerA.provider);
                 for (let providerB of b.getListProvidersInfos()) {
                     if (providerA.provider === providerB.provider) {
                         providerB = Object.assign(new ListProviderLocalData(providerB.id), providerB);
-                        const providerBTargetSeason = this.getProviderSeasonTarget(providerB.provider);
+                        const providerBTargetSeason = b.getProviderSeasonTarget(providerB.provider);
                         const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
                         if (simpleProviderCheckResult && providerB.getProviderInstance().hasUniqueIdForSeasons) {
                             throw new Error('[Series] Not the relation was found but the Series himself. SKIPPING SEARCH. SeriesID: ' + this.id);

@@ -32,7 +32,7 @@ export default new class ProviderInfoDownloadHelper {
         try {
             for (let aProvider of a.getListProvidersInfos()) {
                 for (const bProvider of b.getListProvidersInfos()) {
-                    if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeries([aProvider], [bProvider])) {
+                    if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeries([aProvider], [bProvider], a, b)) {
                         aProvider = Object.assign(new ListProviderLocalData(aProvider.id), aProvider);
                         return new SameIdAndUniqueId(true, aProvider.getProviderInstance().hasUniqueIdForSeasons);
                     }

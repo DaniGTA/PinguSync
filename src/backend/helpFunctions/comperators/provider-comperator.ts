@@ -13,25 +13,6 @@ import SeasonComperator from './season-comperator';
 
 export default class ProviderComperator {
 
-    public static async compareAllProviders(a: Series, b: Series): Promise<ComperatorResult> {
-        const comperatorResults: ComperatorResult[] = [];
-
-        const allAProviderLocalDatas = a.getAllProviderLocalDatas();
-        const allBProviderLocalDatas = b.getAllProviderLocalDatas();
-
-        for (const provider of allAProviderLocalDatas) {
-            try {
-                const result = this.compareProviderAWithSameProvider(provider, ...allBProviderLocalDatas);
-                comperatorResults.push(result);
-                // tslint:disable-next-line: no-empty
-            } catch (ignore) {
-                logger.info(ignore);
-            }
-        }
-
-        return this.calculateResult(...comperatorResults);
-    }
-
     /**
      * Checks if a and b have the same provider with the same id and the same season if the provider has no unique id for seasons.
      * If the check fails the function will return always false.
@@ -84,8 +65,12 @@ export default class ProviderComperator {
                                 }
 
                                 if (aSeason && bSeason) {
-                                    if (aSeason.seasonNumber === bSeason.seasonNumber && aSeason.seasonError === SeasonError.NONE) {
-                                        return true;
+                                    if (aSeason.seasonNumber === bSeason.seasonNumber) {
+                                        if (aSeason.seasonError === SeasonError.NONE) {
+                                            return true;
+                                        } else if (aSeason.seasonError  === bSeason.seasonError) {
+                                            return true;
+                                        }
                                     }
                                 }
                             }
@@ -125,6 +110,17 @@ export default class ProviderComperator {
     }
 
     /**
+     * use this function to compare two provider ids.
+     *
+     * This function dosnt compare the type in the values.
+     * @param id id1 will be compared with id2
+     * @param id2 id2 will be compared with id1
+     */
+    public static simpleProviderIdCheck(id: string | number, id2: string | number): boolean {
+        return id == id2;
+    }
+
+    /**
      * Checks if the series have the same provider.
      * @param a
      * @param b
@@ -145,18 +141,34 @@ export default class ProviderComperator {
         return false;
     }
 
-    /**
-     * use this function to compare two provider ids.
-     * 
-     * This function dosnt compare the type in the values.
-     * @param id id1 will be compared with id2
-     * @param id2 id2 will be compared with id1
-     */
-    public static simpleProviderIdCheck(id: string | number, id2: string | number): boolean {
-        return id == id2;
+    private readonly aSeries: Series;
+    private readonly bSeries: Series;
+
+    constructor(aSeries: Series, bSeries: Series) {
+        this.aSeries = aSeries;
+        this.bSeries = bSeries;
     }
 
-    private static calculateResult(...results: ComperatorResult[]): ComperatorResult {
+    public async getCompareResult(): Promise<ComperatorResult> {
+        const comperatorResults: ComperatorResult[] = [];
+
+        const allAProviderLocalDatas = this.aSeries.getAllProviderLocalDatas();
+        const allBProviderLocalDatas = this.bSeries.getAllProviderLocalDatas();
+
+        for (const provider of allAProviderLocalDatas) {
+            try {
+                const result = this.compareProviderAWithSameProvider(provider, ...allBProviderLocalDatas);
+                comperatorResults.push(result);
+                // tslint:disable-next-line: no-empty
+            } catch (ignore) {
+                logger.info(ignore);
+            }
+        }
+
+        return this.calculateResult(...comperatorResults);
+    }
+
+    private calculateResult(...results: ComperatorResult[]): ComperatorResult {
         const finalResult = new ComperatorResult();
         const absoluteResults: AbsoluteResult[] = [];
         for (const result of results) {
@@ -177,7 +189,7 @@ export default class ProviderComperator {
         return finalResult;
     }
 
-    private static compareProviderAWithSameProvider(providerA: ProviderLocalData, ...providers: ProviderLocalData[]): ComperatorResult {
+    private compareProviderAWithSameProvider(providerA: ProviderLocalData, ...providers: ProviderLocalData[]): ComperatorResult {
         const result = providers.find((x) => x.provider === providerA.provider);
         if (result) {
             return this.compareProviderAWithProviderB(providerA, result);
@@ -185,19 +197,21 @@ export default class ProviderComperator {
         throw new Error('provider cant be compared (other series dont have this provider)');
     }
 
-    private static compareProviderAWithProviderB(providerA: ProviderLocalData, providerB: ProviderLocalData): ComperatorResult {
+    private compareProviderAWithProviderB(providerA: ProviderLocalData, providerB: ProviderLocalData): ComperatorResult {
         const comperatorResult: ComperatorResult = new ComperatorResult();
         comperatorResult.matchAble += 2.5;
         if (ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id)) {
             providerA = Object.assign(new ListProviderLocalData(providerA.id), providerA);
             comperatorResult.matches += 2.0;
+            const providerASeason = this.aSeries.getProviderSeasonTarget(providerA.provider);
+            const providerBSeason = this.bSeries.getProviderSeasonTarget(providerB.provider);
             try {
                 if (ProviderList.getExternalProviderInstance(providerA).hasUniqueIdForSeasons) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     // tslint:disable-next-line: no-empty
-                } else if ((typeof providerA.targetSeason === 'undefined') || (typeof providerB.targetSeason === 'undefined')) {
+                } else if ((typeof providerASeason === 'undefined') || (typeof providerBSeason === 'undefined')) {
 
-                } else if (providerA.targetSeason === providerB.targetSeason) {
+                } else if (providerASeason === providerBSeason) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 }
                 comperatorResult.matches += 0.5;
@@ -216,15 +230,15 @@ export default class ProviderComperator {
         return comperatorResult;
     }
 
-    private static isProviderBARelationOfProviderA(providerA: ProviderLocalData, providerB: ProviderLocalData): boolean {
+    private isProviderBARelationOfProviderA(providerA: ProviderLocalData, providerB: ProviderLocalData): boolean {
         if (providerA.provider === providerB.provider) {
             for (const providerASequelId of providerA.sequelIds) {
-                if (this.simpleProviderIdCheck(providerASequelId, providerB.id)) {
+                if (ProviderComperator.simpleProviderIdCheck(providerASequelId, providerB.id)) {
                     return true;
                 }
             }
             for (const providerAPrequelId of providerA.prequelIds) {
-                if (this.simpleProviderIdCheck(providerAPrequelId, providerB.id)) {
+                if (ProviderComperator.simpleProviderIdCheck(providerAPrequelId, providerB.id)) {
                     return true;
                 }
             }

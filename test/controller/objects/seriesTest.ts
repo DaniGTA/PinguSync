@@ -98,7 +98,7 @@ describe('Series | Basic', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 24;
-        series.addListProvider(providerA, providerB);
+        await series.addListProvider(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 24);
         return;
     });

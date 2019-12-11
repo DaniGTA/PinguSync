@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import logger from '../../logger/logger';
-import Series from '../objects/series';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
 import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';

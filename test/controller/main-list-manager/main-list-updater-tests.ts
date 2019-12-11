@@ -90,7 +90,7 @@ describe('MainList | Entry update tests', () => {
         await new MainListEntryUpdater().updateSeries(mpr);
 
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 1);
+        strictEqual(MainListManager['mainList'].length, 2);
         // tslint:disable-next-line: no-string-literal
         throws(MainListManager['mainList'][0].getMaxEpisode);
         // tslint:disable-next-line: no-string-literal

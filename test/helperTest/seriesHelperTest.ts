@@ -54,7 +54,7 @@ describe('Series Helper', () => {
         b['canSync'] = false;
         const infoProviderB = new InfoProviderLocalData(260449, 'test4');
         infoProviderB.infoStatus = ProviderInfoStatus.FULL_INFO;
-        await a.addInfoProvider(infoProviderB);
+        await b.addInfoProvider(infoProviderB);
         const listProvider = new ListProviderLocalData(43973, 'test');
         listProvider.targetSeason = 1;
         listProvider.infoStatus = ProviderInfoStatus.FULL_INFO;
