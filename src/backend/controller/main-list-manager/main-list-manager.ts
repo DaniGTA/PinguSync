@@ -1,11 +1,9 @@
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import listHelper from '../../helpFunctions/list-helper';
 import logger from '../../logger/logger';
-import FrontendController from '../frontend-controller';
 import { MergeTypes } from '../objects/merge-types';
 import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
-import MainListPackageManager from './main-list-package-manager';
 import MainListSearcher from './main-list-searcher';
 export default class MainListManager {
 
@@ -50,13 +48,6 @@ export default class MainListManager {
             }
             logger.log('info', '[MainList] Series was added to MainList');
             MainListManager.mainList.push(...results);
-
-
-            if (notfiyRenderer) {
-                const seriesPackage = await new MainListPackageManager().getSeriesPackage(series, await this.getMainList());
-                await FrontendController.getInstance().updateClientList(await MainListManager.getIndexFromSeries(series), seriesPackage);
-            }
-
         } catch (err) {
             logger.error(err);
             return false;
@@ -148,9 +139,6 @@ export default class MainListManager {
             const oldSize = list.length;
             let ref = list;
             ref = await listHelper.removeEntrys(ref, ref[index]);
-            if (notifyRenderer) {
-                FrontendController.getInstance().removeEntryFromList(index);
-            }
             await this.requestSaveMainList();
             return oldSize !== ref.length;
         }

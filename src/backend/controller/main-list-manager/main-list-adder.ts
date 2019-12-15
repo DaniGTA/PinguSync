@@ -3,6 +3,7 @@ import { ProviderHelper } from '../../helpFunctions/provider/provider-helper';
 import stringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
+import ProviderDataListManager from '../provider-data-list-manager/provider-data-list-manager';
 import MainListManager from './main-list-manager';
 import MainListSearcher from './main-list-searcher';
 import AdderProviderCache from './object-adder/adder-provider-cache';
@@ -37,6 +38,7 @@ export default class MainListAdder {
 
         if (MainListAdder.instanceTracker.length === 1 && MainListAdder.instanceTracker[0] === trackId) {
             await MainListManager.finishListFilling();
+            await ProviderDataListManager.requestSaveProviderList();
         }
         MainListAdder.instanceTracker = await listHelper.removeEntrys(MainListAdder.instanceTracker, trackId);
         logger.log('info', '[MainListAdder] End adding');

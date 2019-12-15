@@ -1,6 +1,6 @@
-import ListController from '../../controller/list-controller';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 
+import MainListManager from '../../controller/main-list-manager/main-list-manager';
 import Name from '../../controller/objects/meta/name';
 import SeasonNumberResponse from '../../controller/objects/meta/response-object/season-number-response';
 import Series from '../../controller/objects/series';
@@ -139,8 +139,8 @@ class SeasonHelper {
         let sequelResult: SearchSeasonValueResult | undefined;
         let numberFromName: SeasonNumberResponse | undefined;
 
-        if (!seriesList && ListController.instance) {
-            seriesList = await ListController.instance.getMainList();
+        if (!seriesList) {
+            seriesList = await MainListManager.getMainList();
         }
         if (SeasonSearchModeHelper.canPerformATitleSearch(searchMode)) {
             numberFromName = await Name.getSeasonNumber(await series.getAllNamesUnique());

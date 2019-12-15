@@ -226,17 +226,15 @@ describe('ListController | Combine', () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
         lpld.targetSeason = 1;
-        const x1 = await getFilledAnime();
-        x1.getListProvidersInfos()[0].targetSeason = 1;
+        const x1 = await getFilledAnime(undefined, undefined, 1);
         await x1.addListProvider(lpld);
 
-        const x2 = await getFilledAnime();
+        const x2 = await getFilledAnime(undefined, undefined, 1);
         await x2.addListProvider(lpld);
-        x2.getListProvidersInfos()[0].targetSeason = 1;
 
-        const x3 = await getFilledAnime();
+        const x3 = await getFilledAnime(undefined, undefined, 1);
+        lpld.targetSeason = 1;
         await x3.addListProvider(lpld);
-        x3.getListProvidersInfos()[0].targetSeason = 1;
 
         await lc.addSeriesToMainList(x1, x2, x3);
 
@@ -246,8 +244,7 @@ describe('ListController | Combine', () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
         lpld.targetSeason = 1;
-        const x1 = await getFilledAnime('', 1);
-        x1.getListProvidersInfos()[0].targetSeason = 1;
+        const x1 = await getFilledAnime('', 1, 1);
         await x1.addListProvider(lpld);
         const x2 = await getFilledAnime('', 1);
         const lpld2 = new ListProviderLocalData(2);
@@ -332,8 +329,7 @@ describe('ListController | Combine', () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 10;
         lpld.targetSeason = undefined;
-        const x1 = await getFilledAnime('Test', 1);
-        x1.getListProvidersInfos()[0].targetSeason = undefined;
+        const x1 = await getFilledAnime('Test', 1, undefined);
         await x1.addListProvider(lpld);
 
         const lpld2 = new ListProviderLocalData(2);
@@ -366,7 +362,7 @@ describe('ListController | Combine', () => {
     });
 });
 
-async function getFilledAnime(providername: string = 'Test', providerId: number = -1): Promise<Series> {
+async function getFilledAnime(providername: string = 'Test', providerId: number = -1, targetSeason: number | undefined = 3): Promise<Series> {
     let id = Math.random() * (+0 - +10000) + +10000;
     if (providerId !== -1) {
         id = providerId;
@@ -379,7 +375,7 @@ async function getFilledAnime(providername: string = 'Test', providerId: number 
     provider.episodes = 10;
     provider.releaseYear = 2014;
     provider.addSeriesName(new Name('FilledTest', 'en'));
-    provider.targetSeason = 3;
+    provider.targetSeason = targetSeason;
     await anime.addListProvider(provider);
     return anime;
 }

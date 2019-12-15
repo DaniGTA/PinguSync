@@ -6,8 +6,9 @@ import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-searc
 import stringHelper from '../../helpFunctions/string-helper';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import logger from '../../logger/logger';
-import ListController from '../list-controller';
-import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
+import MainListAdder from '../main-list-manager/main-list-adder';
+import MainListManager from '../main-list-manager/main-list-manager';
+import MainListSearcher from '../main-list-manager/main-list-searcher';
 import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
@@ -98,17 +99,6 @@ export default class Series extends SeriesProviderExtension {
         return listHelper.getUniqueOverviewList(overviews);
     }
 
-    public async addProviderDatas(...localdatas: ProviderLocalData[]) {
-        for (const localdata of localdatas) {
-            if (localdata instanceof ListProviderLocalData) {
-                await this.addListProvider(localdata as ListProviderLocalData);
-            } else if (localdata instanceof InfoProviderLocalData) {
-                await this.addInfoProvider(localdata as InfoProviderLocalData);
-            }
-        }
-        await this.resetCache();
-    }
-
     /**
      * Get a Cover image of a prefered size.
      *
@@ -187,11 +177,11 @@ export default class Series extends SeriesProviderExtension {
             const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
             if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
                 // UKNOWN SEASON
-                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry && ListController.instance) {
+                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
                     if (result.searchResultDetails.searchedProviders.length !== 0) {
                         logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
                         const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
-                        await ListController.instance.addSeriesToMainList(...list);
+                        await new MainListAdder().addSeries(...list);
                         logger.info('Temp Series Successfull added.');
                     }
                 }
@@ -236,8 +226,8 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async getSequel(searchInList?: readonly Series[] | Series[]): Promise<RelationSearchResults> {
-        if (!searchInList && ListController.instance) {
-            searchInList = await ListController.instance.getMainList();
+        if (!searchInList) {
+            searchInList = await MainListManager.getMainList();
         }
         if (!searchInList) {
             throw new Error('no searchList for sequel search ');
@@ -287,14 +277,6 @@ export default class Series extends SeriesProviderExtension {
             return result.targetSeason;
         }
         return;
-    }
-
-    /**
-     * With this function we can restore to childs there functions.
-     * When the anime got loaded from a json or web there are no functions avaible with this we can restore it.
-     */
-    public readdFunctions() {
-
     }
 
     /**
@@ -360,17 +342,16 @@ export default class Series extends SeriesProviderExtension {
         if ((await this.getSeason()).seasonNumber === 1) {
             return this;
         }
-        if (ListController.instance) {
-            if (!list) {
-                list = await ListController.instance.getMainList();
-            }
-            if (this.firstSeasonSeriesId) {
-                const result = await ListController.instance.getSeriesById(this.firstSeasonSeriesId);
-                if (result) {
-                    return result;
-                } else {
-                    this.firstSeasonSeriesId = undefined;
-                }
+
+        if (!list) {
+            list = await MainListManager.getMainList();
+        }
+        if (this.firstSeasonSeriesId) {
+            const result = await new MainListSearcher().findSeriesBySeriesId(this.firstSeasonSeriesId);
+            if (result) {
+                return result;
+            } else {
+                this.firstSeasonSeriesId = undefined;
             }
         }
 
@@ -513,48 +494,14 @@ export default class Series extends SeriesProviderExtension {
         return average;
     }
 
-    private async mergeProviders(...providers: ProviderLocalData[]): Promise<ProviderLocalData[]> {
-        logger.debug('[Series] [MergeProviders]: Merging providers. SeriesID: ' + this.id);
-        const mergedProviderInfos: ProviderLocalData[] = [];
-        for (const provider of providers) {
-            const check = mergedProviderInfos.find((x) => provider.provider === x.provider);
-            if (!check) {
-                const collected: ProviderLocalData[] = [];
-                for (const provider2 of providers) {
-                    if (provider2.provider === provider.provider) {
-                        // tslint:disable-next-line: triple-equals
-                        if (!ProviderComperator.simpleProviderIdCheck(provider2.id, provider.id)) {
-                            const log = 'ID1: ' + provider.id + ' | ID2: ' + provider2.id;
-                            logger.warn('[Series] [MergeProviders]: Merging two different ids! Provider: ' + provider2.provider + ' | ' + log);
-                        }
-                        collected.push(provider2);
-                        continue;
-                    }
-                }
-                if (collected.length >= 2) {
-                    if (listHelper.checkType(collected, ListProviderLocalData)) {
-                        mergedProviderInfos.push(await ListProviderLocalData.mergeProviderInfos(...collected as ListProviderLocalData[]));
-                    } else if (listHelper.checkType(collected, InfoProviderLocalData)) {
-                        mergedProviderInfos.push(await InfoProviderLocalData.mergeProviderInfos(...collected as InfoProviderLocalData[]));
-                    }
-                } else {
-                    mergedProviderInfos.push(provider);
-                }
-
-            }
-        }
-        return mergedProviderInfos;
-    }
-
     private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {
         const aMediaType = await a.getMediaType();
         const bMediaType = await b.getMediaType();
         if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
             for (const providerA of a.getListProvidersInfos()) {
                 const providerATargetSeason = a.getProviderSeasonTarget(providerA.provider);
-                for (let providerB of b.getListProvidersInfos()) {
+                for (const providerB of b.getListProvidersInfos()) {
                     if (providerA.provider === providerB.provider) {
-                        providerB = Object.assign(new ListProviderLocalData(providerB.id), providerB);
                         const providerBTargetSeason = b.getProviderSeasonTarget(providerB.provider);
                         const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
                         if (simpleProviderCheckResult && providerB.getProviderInstance().hasUniqueIdForSeasons) {

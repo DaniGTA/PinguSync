@@ -78,7 +78,7 @@ export default class ProviderDataListManager {
             if (notifyRenderer) {
                 // FrontendController.getInstance().removeEntryFromList(index);
             }
-            await this.requestSaveMainList();
+            await this.requestSaveProviderList();
             return oldSize !== ref.length;
         }
         return false;
@@ -125,7 +125,7 @@ export default class ProviderDataListManager {
         }
     }
 
-    public static async requestSaveMainList() {
+    public static async requestSaveProviderList() {
         ProviderDataListLoader.saveData(await this.getProviderDataList());
     }
 

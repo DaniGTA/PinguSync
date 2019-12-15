@@ -19,9 +19,9 @@ export default class ProviderDataListLoader {
                 logger.log('info', 'Items loaded: ' + loadedData.length);
                 for (let index = 0; index < loadedData.length; index++) {
                     const loadedDataEntry = loadedData[index];
-                    if (loadedData[index].instance_name === '') {
+                    if (loadedData[index].instance_name === 'ListProviderLocalData') {
                         loadedData[index] = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedData[index]);
-                    } else {
+                    } else if (loadedData[index].instance_name === 'InfoProviderLocalData'){
                         loadedData[index] = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedData[index]);
                     }
                 }

@@ -9,7 +9,6 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
-import SeasonComperator from './season-comperator';
 
 export default class ProviderComperator {
 
@@ -161,7 +160,7 @@ export default class ProviderComperator {
                 comperatorResults.push(result);
                 // tslint:disable-next-line: no-empty
             } catch (ignore) {
-                logger.info(ignore);
+                logger.debug(ignore);
             }
         }
 

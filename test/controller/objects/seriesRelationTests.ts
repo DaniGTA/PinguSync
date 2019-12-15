@@ -106,12 +106,9 @@ describe('Series | Relations', () => {
     });
 
     it('get all Relations based on provider id', async () => {
-        const series1 = await getFilledAnime(1);
-        series1.getListProvidersInfos()[0].targetSeason = 1;
-        const series2 = await getFilledAnime(1);
-        series2.getListProvidersInfos()[0].targetSeason = 2;
-        const series3 = await getFilledAnime(1);
-        series3.getListProvidersInfos()[0].targetSeason = 3;
+        const series1 = await getFilledAnime(1, 1);
+        const series2 = await getFilledAnime(1, 2);
+        const series3 = await getFilledAnime(1, 3);
         const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
@@ -169,11 +166,11 @@ describe('Series | Relations', () => {
         assert.equal(await listHelper.isSeriesInList(result3, series2), true, 'Series2 should be in result3');
     });
 
-    async function getFilledAnime(id: string | number = 1): Promise<Series> {
+    async function getFilledAnime(id: string | number = 1, targetSeason = 3): Promise<Series> {
         const provider = new ListProviderLocalData(id, 'Test');
         const anime = new Series();
         provider.addSeriesName(new Name('Test', 'en'));
-        provider.targetSeason = 3;
+        provider.targetSeason = targetSeason;
         // tslint:disable-next-line: no-string-literal
         provider['episodes'] = 10;
         provider.releaseYear = 2014;

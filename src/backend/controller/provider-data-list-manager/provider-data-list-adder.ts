@@ -1,8 +1,3 @@
-import listHelper from '../../helpFunctions/list-helper';
-import { ProviderHelper } from '../../helpFunctions/provider/provider-helper';
-import stringHelper from '../../helpFunctions/string-helper';
-import logger from '../../logger/logger';
-import Series from '../objects/series';
 import AdderProviderCache from '../main-list-manager/object-adder/adder-provider-cache';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import ProviderDataListManager from './provider-data-list-manager';

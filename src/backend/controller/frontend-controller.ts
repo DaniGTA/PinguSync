@@ -20,11 +20,12 @@ class FrontendController {
                 return provider;
             }
         }
-        throw new Error('[FrontendController] NoProviderFound: '+providerString);
+        throw new Error('[FrontendController] NoProviderFound: ' + providerString);
     }
 
     private static instance: FrontendController;
 
+    // tslint:disable-next-line: no-object-literal-type-assertion
     private communcation: ICommunication = new IPCBackgroundController({} as Electron.WebContents); constructor(webcontents?: Electron.WebContents) {
         logger.log('info', 'Load list controller');
         // tslint:disable-next-line: no-unused-expression
@@ -38,6 +39,7 @@ class FrontendController {
 
     public mainInit(webcontents: Electron.WebContents) {
         this.communcation = new IPCBackgroundController(webcontents);
+        // tslint:disable-next-line: no-this-assignment
         const that = this;
 
         if (typeof FrontendController.instance === 'undefined' && this.communcation) {
@@ -106,7 +108,6 @@ class FrontendController {
                 const lc = ListController.instance;
                 const anime: Series = Object.assign(new Series(), data.anime);
                 logger.log('info', data);
-                anime.readdFunctions();
                 if (data.reduce) {
                     lc.removeWatchProgress(anime, await anime.getLastWatchProgress());
                 } else {
@@ -144,6 +145,7 @@ class FrontendController {
 
     public async updateClientList(targetIndex: number, updatedEntry: SeriesPackage) {
         logger.log('info', '[Send] -> update -> anime');
+        // tslint:disable-next-line: no-object-literal-type-assertion
         this.communcation.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }
 

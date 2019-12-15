@@ -17,7 +17,6 @@ export default class MainListLoader {
                 logger.log('info', 'Items loaded: ' + loadedData.length);
                 for (let index = 0; index < loadedData.length; index++) {
                     loadedData[index] = Object.assign(new Series(), loadedData[index]);
-                    loadedData[index].readdFunctions();
                 }
                 return loadedData;
             } else {

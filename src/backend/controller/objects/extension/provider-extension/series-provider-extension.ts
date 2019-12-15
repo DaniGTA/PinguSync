@@ -1,5 +1,6 @@
 import ProviderDataListAdder from '../../../../../backend/controller/provider-data-list-manager/provider-data-list-adder';
 import ProviderDataListSearcher from '../../../../../backend/controller/provider-data-list-manager/provider-data-list-searcher';
+import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { InfoProviderLocalData } from '../../../provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../provider-manager/local-data/list-provider-local-data';
 import InfoLocalDataBind from './binding/info-local-data-bind';
@@ -39,6 +40,16 @@ export default class SeriesProviderExtension {
                 await new ProviderDataListAdder().addNewProviderData(listProvider);
             } else {
                 await new ProviderDataListAdder().addNewProviderData(listProvider);
+            }
+        }
+    }
+
+    public async addProviderDatas(...localdatas: ProviderLocalData[]) {
+        for (const localdata of localdatas) {
+            if (localdata instanceof ListProviderLocalData) {
+                await this.addListProvider(localdata as ListProviderLocalData);
+            } else if (localdata instanceof InfoProviderLocalData) {
+                await this.addInfoProvider(localdata as InfoProviderLocalData);
             }
         }
     }

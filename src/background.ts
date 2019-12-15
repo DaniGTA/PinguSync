@@ -34,7 +34,7 @@ app.removeAllListeners('ready');
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }, { scheme: 'background', privileges: { secure: true, standard: true } }]);
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 const fc = new FrontendController();
 
@@ -58,6 +58,7 @@ function createWindow() {
     createProtocol('app');
     // Load the index.html when not in development
     win.loadURL('app://./index.html');
+    
   }
 
   win.on('closed', () => {
@@ -101,6 +102,7 @@ app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
+      installVueDevtools();
     } catch (e) {
       logger.error('Vue Devtools failed to install:', e.toString());
     }
