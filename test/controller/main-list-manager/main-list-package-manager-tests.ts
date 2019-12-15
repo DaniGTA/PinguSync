@@ -1,0 +1,38 @@
+import MainListPackageManager from "../../../src/backend/controller/main-list-manager/main-list-package-manager";
+
+import ListController from "../../../src/backend/controller/list-controller";
+
+import TestHelper from "../../test-helper";
+
+import ProviderList from "../../../src/backend/controller/provider-manager/provider-list";
+
+import TestProvider from "../objects/testClass/testProvider";
+import Series from '../../../src/backend/controller/objects/series';
+import { strictEqual } from 'assert';
+
+
+
+describe('MainListPackageManager', () => {
+    const lc = new ListController(true);
+
+    beforeEach(() => {
+        TestHelper.mustHaveBefore();
+        // tslint:disable-next-line: no-string-literal
+        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
+        // tslint:disable-next-line: no-string-literal
+        ProviderList['loadedInfoProvider'] = [];
+    });
+
+    it('should return a list of packages (length: 1)', async () => {
+        const list: Series[] = [];
+
+        const series = new Series();
+
+        list.push(series);
+
+        const seriesList = Object.freeze(list);
+        const seriesPackage = await new MainListPackageManager().getSeriesPackages(seriesList);
+
+        strictEqual(seriesPackage.length, 1);
+    });
+});

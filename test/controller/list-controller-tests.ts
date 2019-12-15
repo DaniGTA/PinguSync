@@ -240,6 +240,20 @@ describe('ListController | Combine', () => {
 
         assert.equal(MainListManager['mainList'].length, 1);
     });
+
+    it('should get series list', async () => {
+        const lpld = new ListProviderLocalData(2);
+        lpld.episodes = 12;
+        lpld.targetSeason = 1;
+        const x1 = await getFilledAnime(undefined, undefined, 1);
+        await x1.addListProvider(lpld);
+
+        await lc.addSeriesToMainList(x1);
+
+        assert.equal(MainListManager['mainList'].length, 1);
+        assert.equal((await ListController.instance.getMainList()).length, 1);
+    });
+
     it('should clean doubled entrys (3/3)', async () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;

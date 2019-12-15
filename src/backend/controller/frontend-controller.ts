@@ -131,8 +131,9 @@ class FrontendController {
     public async sendSeriesList() {
         logger.log('info', '[Send] -> list -> anime');
         if (ListController.instance) {
-            const list = await new MainListPackageManager().getSeriesPackages(await ListController.instance.getMainList());
-            this.communcation.send('series-list', list);
+            const seriesList = await ListController.instance.getMainList();
+            const packagelist = await new MainListPackageManager().getSeriesPackages(seriesList);
+            this.communcation.send('series-list', packagelist);
         } else {
             logger.log('info', 'Failed to send list: no provider instance');
         }
