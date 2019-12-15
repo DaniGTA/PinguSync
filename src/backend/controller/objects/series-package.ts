@@ -1,6 +1,9 @@
 import stringHelper from '../../helpFunctions/string-helper';
 import Series from './series';
 import FrontendSeriesInfos from './transfer/frontend-series-infos';
+import { PreferedSeriesNameHelper } from './settings/prefered-series-name';
+import Name from './meta/name';
+import logger from '../../logger/logger';
 
 /**
  * Contains all Relations of a Series.
@@ -19,7 +22,6 @@ export default class SeriesPackage {
     }
 
     public getAnyCoverUrl(): string {
-        /*
         for (let relation of this.allRelations) {
             relation = Object.assign(new Series(), relation);
             const result = relation.getCoverImage();
@@ -27,12 +29,11 @@ export default class SeriesPackage {
                 return result.url;
             }
         }
-        */
         return '';
     }
 
     public async getPreferedName(): Promise<string> {
-        /*let preferedName = '';
+        let preferedName = '';
         for (let relation of this.allRelations) {
             try {
                 relation = Object.assign(new Series(), relation);
@@ -51,7 +52,5 @@ export default class SeriesPackage {
             }
         }
         return preferedName;
-        */
-        return '';
     }
 }

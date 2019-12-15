@@ -149,27 +149,7 @@ class SeasonHelper {
                 return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
             }
         }
-        /**
-         * TRACE ARE DISABLED
-         */
-        /*
-        if (SeasonSearchModeHelper.canPerformAPrequelTrace(searchMode)) {
-            prequelResult = await this.searchSeasonValuePrequelTrace(series, seriesList);
-            if (prequelResult.seasonError === SeasonError.NONE) {
-                return prequelResult;
-            }
-        }
-
-
-        if (SeasonSearchModeHelper.canPerformASequelTrace(searchMode)) {
-            sequelResult = await this.searchSeasonValueSequelTrace(series, seriesList);
-            if (sequelResult.seasonError === SeasonError.NONE) {
-                return sequelResult;
-            }
-        }
-        */
-
-
+          
 
         if (numberFromName && numberFromName.seasonNumber) {
             return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
@@ -189,6 +169,20 @@ class SeasonHelper {
                 if (targetSeason) {
                     return new SearchSeasonValueResult(targetSeason, 'Provider: ' + provider.provider);
                 }
+            }
+        }
+
+        if (SeasonSearchModeHelper.canPerformAPrequelTrace(searchMode)) {
+            prequelResult = await this.searchSeasonValuePrequelTrace(series, seriesList);
+            if (prequelResult.seasonError === SeasonError.NONE) {
+                return prequelResult;
+            }
+        }
+
+        if (SeasonSearchModeHelper.canPerformASequelTrace(searchMode)) {
+            sequelResult = await this.searchSeasonValueSequelTrace(series, seriesList);
+            if (sequelResult.seasonError === SeasonError.NONE) {
+                return sequelResult;
             }
         }
 

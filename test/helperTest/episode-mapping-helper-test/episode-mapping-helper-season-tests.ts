@@ -233,4 +233,96 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
             strictEqual(bEpisodeInfo3s2.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3S2');
         }
     });
+
+    it('should map episode with right season (Provider is in second season)', async () => {
+        const aSeries = new Series();
+        aSeries['cachedSeason'] = 1;
+        // A Site
+
+        const aProvider = new InfoProviderLocalData('1', 'testA');
+        aProvider.detailEpisodeInfo.push(new Episode(1));
+        aProvider.detailEpisodeInfo.push(new Episode(2));
+        aProvider.detailEpisodeInfo.push(new Episode(3));
+
+        await aSeries.addProviderDatas(aProvider);
+
+        // B Site
+
+        const bProvider = new ListProviderLocalData('1', 'testB');
+        bProvider.targetSeason = 2;
+        bProvider.detailEpisodeInfo.push(new Episode(1, 0));
+        bProvider.detailEpisodeInfo.push(new Episode(2, 0));
+        bProvider.detailEpisodeInfo.push(new Episode(3, 0));
+        bProvider.detailEpisodeInfo.push(new Episode(1, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
+        bProvider.detailEpisodeInfo.push(new Episode(1, 2));
+        bProvider.detailEpisodeInfo.push(new Episode(2, 2));
+        bProvider.detailEpisodeInfo.push(new Episode(3, 2));
+        await aSeries.addProviderDatas(bProvider);
+
+        // Testing
+
+        const episodeMappingInstance = new EpisodeMappingHelper();
+        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+
+        // Extract results.
+
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
+
+        const bEpisodeInfo1s0 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2s0 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3s0 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+
+        const bEpisodeInfo1s1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
+        const bEpisodeInfo2s1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[4].id);
+        const bEpisodeInfo3s1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[5].id);
+
+        const bEpisodeInfo1s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[6].id);
+        const bEpisodeInfo2s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[7].id);
+        const bEpisodeInfo3s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[8].id);
+
+        // Result checking
+        if (!(
+            aEpisodeInfo1 &&
+            aEpisodeInfo2 &&
+            aEpisodeInfo3 &&
+            bEpisodeInfo1s0 &&
+            bEpisodeInfo2s0 &&
+            bEpisodeInfo3s0 &&
+            bEpisodeInfo1s1 &&
+            bEpisodeInfo2s1 &&
+            bEpisodeInfo3s1 &&
+            bEpisodeInfo1s2 &&
+            bEpisodeInfo2s2 &&
+            bEpisodeInfo3s2)) {
+            fail('not all episodes found in the result');
+        } else {
+            strictEqual(aEpisodeInfo1.mappedTo.length, 1, 'Episode A1 mapping length should be 1');
+            strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
+            strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
+
+            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo1s1.id, 'Episode A1 should have id mapped to Episode B1S1');
+            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2s1.id, 'Episode A2 should have id mapped to Episode B2S1');
+            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3s1.id, 'Episode A3 should have id mapped to Episode B3S1');
+
+            strictEqual(bEpisodeInfo1s0.mappedTo.length, 0, 'Episode B1S0 mapping length should be 0');
+            strictEqual(bEpisodeInfo2s0.mappedTo.length, 0, 'Episode B2S0 mapping length should be 0');
+            strictEqual(bEpisodeInfo3s0.mappedTo.length, 0, 'Episode B3S0 mapping length should be 0');
+
+            strictEqual(bEpisodeInfo1s1.mappedTo.length, 1, 'Episode B1S1 mapping length should be 1');
+            strictEqual(bEpisodeInfo2s1.mappedTo.length, 1, 'Episode B2S1 mapping length should be 1');
+            strictEqual(bEpisodeInfo3s1.mappedTo.length, 1, 'Episode B3S1 mapping length should be 1');
+
+            strictEqual(bEpisodeInfo1s2.mappedTo.length, 0, 'Episode B1S2 mapping length should be 0');
+            strictEqual(bEpisodeInfo2s2.mappedTo.length, 0, 'Episode B2S2 mapping length should be 0');
+            strictEqual(bEpisodeInfo3s2.mappedTo.length, 0, 'Episode B3S2 mapping length should be 0');
+
+            strictEqual(bEpisodeInfo1s1.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B1S1 should have id mapped to Episode A1');
+            strictEqual(bEpisodeInfo2s1.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2S1 should have id mapped to Episode A2');
+            strictEqual(bEpisodeInfo3s1.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3S1 should have id mapped to Episode A3');
+        }
+    });
 });
