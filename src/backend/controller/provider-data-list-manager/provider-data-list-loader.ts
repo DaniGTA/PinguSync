@@ -20,9 +20,11 @@ export default class ProviderDataListLoader {
                 for (let index = 0; index < loadedData.length; index++) {
                     const loadedDataEntry = loadedData[index];
                     if (loadedData[index].instance_name === 'ListProviderLocalData') {
-                        loadedData[index] = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedData[index]);
-                    } else if (loadedData[index].instance_name === 'InfoProviderLocalData'){
-                        loadedData[index] = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedData[index]);
+                        loadedData[index] = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
+                    } else if (loadedData[index].instance_name === 'InfoProviderLocalData') {
+                        loadedData[index] = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
+                    } else {
+                        logger.debug('[ProviderDataListLoader] Object cant be assigned');
                     }
                 }
                 return loadedData;

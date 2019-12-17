@@ -38,6 +38,8 @@ export default class ProviderDataListManager {
                 this.providerDataList[providerIndex] = await ListProviderLocalData.mergeProviderInfos(provider, oldProvider);
             } else if (oldProvider instanceof InfoProviderLocalData && provider instanceof InfoProviderLocalData) {
                 this.providerDataList[providerIndex] = await InfoProviderLocalData.mergeProviderInfos(provider, oldProvider);
+            } else {
+                logger.error('[ProviderList] Failed update: Not same instance')
             }
         }
     }
@@ -46,7 +48,7 @@ export default class ProviderDataListManager {
      * Refresh cached data and clean up double entrys.
      */
     public static async finishListFilling() {
-        logger.log('info', '[MainList] Cleanup Mainlist');
+        logger.log('info', '[ProviderList] Cleanup Mainlist');
         ProviderDataListManager.listMaintance = true;
         ProviderDataListManager.listMaintance = false;
     }
@@ -69,7 +71,7 @@ export default class ProviderDataListManager {
         if (!list) {
             list = await this.getProviderDataList();
         }
-        logger.log('info', '[MainList] Remove Item in mainlist: ' + provider.id + '(' + provider.provider + ')');
+        logger.log('info', '[ProviderList] Remove Item in mainlist: ' + provider.id + '(' + provider.provider + ')');
         const index = await ProviderDataListManager.getIndexFromProviderLocalData(provider, list);
         if (index !== -1) {
             const oldSize = list.length;
@@ -91,7 +93,7 @@ export default class ProviderDataListManager {
         this.checkIfListIsLoaded();
         if (this.listMaintance) {
             const arr = [...ProviderDataListManager.secondList, ...ProviderDataListManager.providerDataList];
-            logger.log('info', '[MainList] TempList served: (size= ' + arr.length + ')');
+            logger.log('info', '[ProviderList] TempList served: (size= ' + arr.length + ')');
             return arr;
         } else {
             return ProviderDataListManager.providerDataList;
@@ -105,7 +107,7 @@ export default class ProviderDataListManager {
         this.checkIfListIsLoaded();
         if (this.listMaintance) {
             const arr = [...ProviderDataListManager.secondList, ...ProviderDataListManager.providerDataList];
-            logger.log('info', '[MainList] TempList served: (size= ' + arr.length + ')');
+            logger.log('info', '[ProviderList] TempList served: (size= ' + arr.length + ')');
             return arr;
         } else {
             return ProviderDataListManager.providerDataList;

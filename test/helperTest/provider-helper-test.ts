@@ -13,6 +13,10 @@ import dateHelper from '../../src/backend/helpFunctions/date-helper';
 import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
+import ExternalProvider from '../../src/backend/api/provider/external-provider';
+import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
+import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
+import ProviderLocalData from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-local-data';
 
 describe('Provider Helper Test', () => {
 
@@ -72,5 +76,57 @@ describe('Provider Helper Test', () => {
         series.lastInfoUpdate = dateHelper.removeDays(new Date(), 15).getTime();
         const result1 = providerHelper['canUpdateSeries'](series);
         strictEqual(result1, false);
+    });
+
+    it('should sort provider that need updates right (1/3)', async () => {
+        const providerHelper = new ProviderHelper();
+        const providersThatNeedsAUpdate: ExternalProvider[] = [];
+
+        providersThatNeedsAUpdate.push(AniListProvider.getInstance());
+        providersThatNeedsAUpdate.push(TraktProvider.getInstance());
+        providersThatNeedsAUpdate.push(KitsuProvider.getInstance());
+
+        const currentProviderData: ProviderLocalData[] = [];
+        currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
+
+        // tslint:disable-next-line: no-string-literal
+        providersThatNeedsAUpdate.sort((a, b) => providerHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+
+        strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
+    });
+
+    it('should sort provider that need updates right (2/3)', async () => {
+        const providerHelper = new ProviderHelper();
+        const providersThatNeedsAUpdate: ExternalProvider[] = [];
+
+        providersThatNeedsAUpdate.push(AniListProvider.getInstance());
+        providersThatNeedsAUpdate.push(KitsuProvider.getInstance());
+        providersThatNeedsAUpdate.push(TraktProvider.getInstance());
+
+        const currentProviderData: ProviderLocalData[] = [];
+        currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
+
+        // tslint:disable-next-line: no-string-literal
+        providersThatNeedsAUpdate.sort((a, b) => providerHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+
+        strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
+    });
+
+
+    it('should sort provider that need updates right (3/3)', async () => {
+        const providerHelper = new ProviderHelper();
+        const providersThatNeedsAUpdate: ExternalProvider[] = [];
+
+        providersThatNeedsAUpdate.push(TraktProvider.getInstance());
+        providersThatNeedsAUpdate.push(AniListProvider.getInstance());
+        providersThatNeedsAUpdate.push(KitsuProvider.getInstance());
+
+        const currentProviderData: ProviderLocalData[] = [];
+        currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
+
+        // tslint:disable-next-line: no-string-literal
+        providersThatNeedsAUpdate.sort((a, b) => providerHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+
+        strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });
 });
