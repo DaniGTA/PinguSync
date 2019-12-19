@@ -30,13 +30,13 @@ describe('Series | Merge', () => {
 
     it('should generate detailedEpisodes', async () => {
         const seriesA = new Series();
-        const lpld = new ListProviderLocalData(1,'test');
+        const lpld = new ListProviderLocalData(1, 'test');
         lpld.addSeriesName(new Name('Test', 'en'));
         lpld.episodes = 10;
         seriesA.addListProvider(lpld);
 
         const seriesB = new Series();
-        const lpld2 = new ListProviderLocalData(2,'test2');
+        const lpld2 = new ListProviderLocalData(2, 'test2');
         lpld2.episodes = 10;
         await seriesB.addListProvider(lpld2);
 

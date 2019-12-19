@@ -46,7 +46,7 @@ describe('Provider: OMDb | Test runs', () => {
 
 
     it('should get series by id', async () => {
-        const unkownProvider = new InfoProviderLocalData('tt2341379',OMDbProvider);
+        const unkownProvider = new InfoProviderLocalData('tt2341379', OMDbProvider);
         const result = await omdbProvider.getFullInfoById(unkownProvider);
         strictEqual(result.mainProvider.id, unkownProvider.id);
         return;

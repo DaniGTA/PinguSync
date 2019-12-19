@@ -24,7 +24,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         ProviderList['loadedListProvider'] = [new AniListProvider()];
     });
     describe('Download Tests', () => {
-        it('should allow download (1/2)', async () => {
+       it('should allow download (1/2)', async () => {
             const x = new AniDBProvider(false);
             // tslint:disable-next-line: no-string-literal
             AniDBProvider['anidbNameManager'].lastDownloadTime = undefined;
@@ -32,7 +32,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             deepEqual(x['allowDownload'](), true);
             return;
         });
-        it('should allow download (2/2)', async () => {
+       it('should allow download (2/2)', async () => {
             const a = new AniDBProvider(false);
             const twoDaysInMs = 172800000;
             // tslint:disable-next-line: no-string-literal
@@ -41,7 +41,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             deepEqual(a['allowDownload'](), true);
             return;
         });
-        it('should not allow download', async () => {
+       it('should not allow download', async () => {
             const a = new AniDBProvider(false);
             // tslint:disable-next-line: no-string-literal
             AniDBProvider['anidbNameManager'].lastDownloadTime = new Date(Date.now());

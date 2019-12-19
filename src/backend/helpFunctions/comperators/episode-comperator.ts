@@ -60,7 +60,7 @@ export default class EpisodeComperator {
      * Compares season between two episodes.
      * Uses provider season as fallback if episode has no season number.
      * Uses series season as fallback if episode and provider has no season number.
-     * 
+     *
      * @param aEpisode episode a
      * @param bEpisode episode b
      * @param providerASeason provider a season number

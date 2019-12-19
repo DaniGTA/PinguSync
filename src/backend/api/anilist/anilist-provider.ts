@@ -6,6 +6,7 @@ import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
+import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import logger from '../../logger/logger';
 import ExternalProvider from '../provider/external-provider';
 import ListProvider from '../provider/list-provider';
@@ -227,46 +228,39 @@ export default class AniListProvider extends ListProvider {
 
     private async webRequest<T>(options: (request.UriOptions & request.CoreOptions)): Promise<T> {
         logger.log('info', '[AniList] Start WebRequest');
-        return new Promise<T>((resolve, rejects) => {
-            try {
-                request(options, (error: any, response: any, body: any) => {
 
-                    logger.log('info', '[AniList] statusCode: {0}', response && response.statusCode); // Print the response status code if a response was received
-                    if (response.statusCode === 200) {
-                        const rawdata = JSON.parse(body);
-                        resolve(rawdata.data as T);
-                    } else {
-                        rejects();
-                    }
-                }).on('error', (err) => {
-                    logger.error(err);
-                });
-            } catch (err) {
-                logger.error(err);
-            }
-        });
+        const response = await WebRequestManager.request(options);
+
+        logger.log('info', '[AniList] statusCode: {0}', response && response.statusCode); // Print the response status code if a response was received
+        if (response.statusCode === 200) {
+            const rawdata = JSON.parse(response.body);
+            return rawdata.data as T;
+        } else {
+            throw new Error('Wrong Status Code: ' + response.statusCode);
+        }
+
     }
 
     private getGraphQLOptions(query: string, variables?: any): (request.UriOptions & request.CoreOptions) {
         const options: (request.UriOptions & request.CoreOptions) = {
-            uri: 'https://graphql.anilist.co',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
             body: JSON.stringify({
                 query,
                 variables,
             }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            uri: 'https://graphql.anilist.co',
         };
 
         if (this.userData.access_token !== '' && typeof this.userData.access_token !== 'undefined') {
             if (typeof options.headers !== 'undefined') {
                 options.headers = {
+                    'Accept': 'application/json',
                     'Authorization': 'Bearer ' + this.userData.access_token,
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
                 };
             }
         }

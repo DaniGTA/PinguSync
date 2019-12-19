@@ -1,15 +1,14 @@
 import ExternalProvider from '../../../api/provider/external-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
-import ListController from '../../../controller/list-controller';
+import MainListManager from '../../../controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import Series from '../../../controller/objects/series';
+import ProviderDataListSearcher from '../../../controller/provider-data-list-manager/provider-data-list-searcher';
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../controller/provider-manager/provider-list';
-import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
 import ProviderSearchResultManager from '../../../controller/stats-manager/models/provider-search-result-manager';
 import logger from '../../../logger/logger';
 import { AbsoluteResult } from '../../comperators/comperator-results.ts/comperator-result';
@@ -17,7 +16,6 @@ import MultiProviderComperator from '../../comperators/multi-provider-results-co
 import ProviderComperator from '../../comperators/provider-comperator';
 import listHelper from '../../list-helper';
 import stringHelper from '../../string-helper';
-import timeHelper from '../../time-helper';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
 /**
@@ -55,6 +53,11 @@ export default new class ProviderInfoDownloadHelper {
             const indexOfCurrentProvider = allLocalProviders.findIndex((x) => x.provider === provider.providerName);
             if (indexOfCurrentProvider === -1) {
                 if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
+                    try {
+                        const linkResult = await this.linkProviderDataFromRelations(series, provider);
+                        return new MultiProviderResult(linkResult);
+                    } catch (err) { logger.debug(err); }
+
                     const alreadySearchedNames: string[] = [];
                     const names = await this.getNamesSortedBySearchAbleScore(series);
                     for (const name of names) {
@@ -93,41 +96,36 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('[' + provider.providerName + '] Provider is not available!');
     }
 
-    private async getSubProviderProvider(searchedProvider: ExternalProvider, series: Series): Promise<ExternalProvider> {
-        const providerList = ProviderList.getListProviderList();
-        for (const provider2 of providerList) {
-            if (provider2.providerName !== searchedProvider.providerName) {
-                for (const subProvider of provider2.potentialSubProviders) {
-                    const subProviderName = ProviderNameManager.getProviderName(subProvider);
-                    if (subProviderName === searchedProvider.providerName) {
-                        const checkCurrentResult = series.getListProvidersInfos().find((x) => x.provider === searchedProvider.providerName);
-                        if (checkCurrentResult && checkCurrentResult.infoStatus !== ProviderInfoStatus.FULL_INFO) {
-                            const result = providerList.find(x => x.providerName === checkCurrentResult.provider);
-                            if (result) {
-                                return result;
+    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider) {
+        if (!provider.hasUniqueIdForSeasons) {
+            const relations = await series.getAllRelations(await MainListManager.getMainList());
+            if (relations.length !== 0) {
+                for (const relation of relations) {
+                    const allBindings = relation.getAllProviderBindings();
+                    const result = allBindings.find((x) => x.providerName === provider.providerName);
+                    if (result) {
+                        const seriesSeason = (await series.getSeason()).seasonNumber;
+                        if (seriesSeason) {
+                            const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
+                            if (this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
+                                return providerData;
                             }
                         }
                     }
                 }
             }
         }
-        throw new Error('No SubProviderAvaible');
+        throw new Error('no result');
     }
 
-    /** Checks if it should update.
-     *  We only need to update when we have no info about the provider.
-     */
-    private shouldUpdateProvider(infoStatus: ProviderInfoStatus): boolean {
-        switch (infoStatus) {
-            case ProviderInfoStatus.BASIC_INFO:
-                return false;
-            case ProviderInfoStatus.FULL_INFO:
-                return false;
-            case ProviderInfoStatus.ONLY_ID:
+    private hasProviderLocalDataSeasonTargetInfos(provider: ProviderLocalData, seasonTarget: number): boolean {
+        for (const episode of provider.detailEpisodeInfo) {
+            // tslint:disable-next-line: triple-equals
+            if (episode.season == seasonTarget) {
                 return true;
-            default:
-                return false;
+            }
         }
+        return false;
     }
 
     /**

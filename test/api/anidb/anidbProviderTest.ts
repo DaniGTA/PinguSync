@@ -9,7 +9,7 @@ describe('Provider: AniDB | Online Test runs', () => {
     before(() => {
         TestHelper.mustHaveBefore();
     });
-    it('should get id 14444', async () => {
+   it('should get id 14444', async () => {
         const a = new AniDBProvider(false);
         const lpdld = new InfoProviderLocalData(14444, a.providerName);
 

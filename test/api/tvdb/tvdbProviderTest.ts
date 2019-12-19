@@ -2,7 +2,7 @@ import { notStrictEqual } from 'assert';
 import TVDBProvider from '../../../src/backend/api/tvdb/tvdb-provider';
 
 describe('Provider: TVDB | Test runs', () => {
-    it('should get access key', async () => {
+   it('should get access key', async () => {
         const x = new TVDBProvider();
         // tslint:disable-next-line: no-string-literal
         const token = await x['getAccessKey']();

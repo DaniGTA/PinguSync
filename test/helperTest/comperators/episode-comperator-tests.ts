@@ -2,12 +2,12 @@ import ListController from '../../../src/backend/controller/list-controller';
 
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 
 import { strictEqual } from 'assert';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
+import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
+import { EpisodeType } from '../../../src/backend/controller/objects/meta/episode/episode-type';
 import EpisodeComperator from '../../../src/backend/helpFunctions/comperators/episode-comperator';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
@@ -66,6 +66,21 @@ describe('Episode comperator | Full test', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, 2);
             strictEqual(resultA, false);
         });
+    });
+
+    it('should compare the episode as not the same', async () => {
+        const episodeA = new Episode(2, undefined);
+        episodeA.provider = 'AniList';
+        episodeA.type = EpisodeType.REGULAR_EPISODE;
+
+        const episodeB = new Episode(1, 1);
+        episodeB.title.push(new EpisodeTitle('test'));
+        episodeB.type = EpisodeType.UNKOWN;
+        episodeB.providerEpisodeId = 123;
+
+        const result = await EpisodeComperator.compareDetailedEpisode(episodeA, episodeB, undefined, undefined, 2, 0);
+        strictEqual(result.matchAble, 1);
+        strictEqual(result.matches, 0);
     });
 
 });

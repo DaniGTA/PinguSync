@@ -1,15 +1,13 @@
+import { fail, notStrictEqual, strictEqual } from 'assert';
+import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
+import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-import TestHelper from '../test-helper';
 import Series from '../../src/backend/controller/objects/series';
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
-import Name from '../../src/backend/controller/objects/meta/name';
 import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
-import { strictEqual, fail, notStrictEqual } from 'assert';
-import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
-import ResponseHelper from '../response-helper';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import TestHelper from '../test-helper';
 
 describe('Basic List | Testrun', () => {
     const lc = new ListController(true);
@@ -42,8 +40,8 @@ describe('Basic List | Testrun', () => {
 
         // provider should got been updated
 
-        const anilistResult = updatedProviders.find(x => x.provider === AniListProvider.getInstance().providerName);
-        const traktResult = updatedProviders.find(x => x.provider === TraktProvider.getInstance().providerName);
+        const anilistResult = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
+        const traktResult = updatedProviders.find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (anilistResult && traktResult) {
             notStrictEqual(await anilistResult.detailEpisodeInfo.length, 0);
             notStrictEqual(await traktResult.detailEpisodeInfo.length, 0);
@@ -59,10 +57,8 @@ describe('Basic List | Testrun', () => {
     it('should find other provider and mapping two season together.', async () => {
         const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
         anilistInstance.isUserLoggedIn = async () => true;
-        anilistInstance['webRequest'] = ResponseHelper.aniListResponse;
         const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
         traktInstance.isUserLoggedIn = async () => true;
-        traktInstance['traktRequest'] = ResponseHelper.traktRequest;
 
         // S1
         const series = new Series();
@@ -85,12 +81,15 @@ describe('Basic List | Testrun', () => {
 
         // tslint:disable-next-line: no-string-literal
         const updatedProviders = MainListManager['mainList'][0].getAllProviderLocalDatas();
-
+        const updatedProviders2 = MainListManager['mainList'][1].getAllProviderLocalDatas();
         // provider should got been updated
 
-        const anilistResult = updatedProviders.find(x => x.provider === AniListProvider.getInstance().providerName);
-        const traktResult = updatedProviders.find(x => x.provider === TraktProvider.getInstance().providerName);
-        if (anilistResult && traktResult) {
+        const anilistResult = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
+        const traktResult = updatedProviders2.find((x) => x.provider === TraktProvider.getInstance().providerName);
+
+        const anilistResult2 = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
+        const traktResult2 = updatedProviders.find((x) => x.provider === TraktProvider.getInstance().providerName);
+        if (anilistResult && traktResult && anilistResult2 && traktResult2) {
             notStrictEqual(await anilistResult.detailEpisodeInfo.length, 0);
             notStrictEqual(await traktResult.detailEpisodeInfo.length, 0);
             notStrictEqual(await anilistResult.getAllNames().length, 0);

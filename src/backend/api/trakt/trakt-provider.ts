@@ -11,6 +11,7 @@ import request from 'request';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import logger from '../../logger/logger';
 import ExternalProvider from '../provider/external-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
@@ -75,10 +76,10 @@ export default class TraktProvider extends ListProvider {
         try {
             if (provider.provider === this.providerName) {
                 if (provider.isMediaTypeMovie()) {
-                    const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id+'?extended=full');
+                    const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id + '?extended=full');
                     return (traktConverter.convertFullShowInfoToLocalData(res));
                 } else {
-                    const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id+'?extended=full');
+                    const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id + '?extended=full');
                     const seasonInfo = await this.traktRequest<TraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
                     return (traktConverter.convertFullShowInfoToLocalData(res, seasonInfo));
                 }
@@ -176,49 +177,34 @@ export default class TraktProvider extends ListProvider {
         });
     }
 
-    private traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+    private async traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
         logger.log('info', '[Trakt] Start WebRequest ♗');
-        return new Promise<T>((resolve, reject) => {
-            try {
-                request({
-                    body,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.userData.accessToken,
-                        'Content-Type': 'application/json',
-                        'trakt-api-key': this.clientId,
-                        'trakt-api-version': '2',
-                    },
-                    method,
-                    url,
-                }, (error: any, response: any, responseBody: any) => {
-                    try {
 
-                        if (response.statusCode === 200 || response.statusCode === 201) {
-                            const data: T = JSON.parse(responseBody) as T;
-                            resolve(data);
-                        } else if (response.statusMessage === 'Unauthorized' && response.statusCode === 401) {
-                            this.userData.removeTokens();
-                            logger.error('[Trakt] User is no longer logged in');
-                        } else {
-                            logger.error('[Trakt] status code:' + response.statusCode);
-                            logger.error(error);
-                            logger.error(responseBody);
-                            reject();
-                        }
-                    } catch (err) {
-                        logger.error(err);
-                        logger.error(error);
-                        logger.error(responseBody);
-                        reject();
-                    }
-                }).on('error', (err) => {
-                    logger.error(err);
-                    reject();
-                });
-            } catch (err) {
-                logger.error(err);
-                reject();
-            }
+        const response = await WebRequestManager.request({
+            body,
+            headers: {
+                'Authorization': 'Bearer ' + this.userData.accessToken,
+                'Content-Type': 'application/json',
+                'trakt-api-key': this.clientId,
+                'trakt-api-version': '2',
+            },
+            method,
+            uri: url,
         });
+
+
+        const responseBody = response.body;
+        if (response.statusCode === 200 || response.statusCode === 201) {
+            const data: T = JSON.parse(responseBody) as T;
+            return data;
+        } else if (response.statusMessage === 'Unauthorized' && response.statusCode === 401) {
+            this.userData.removeTokens();
+            logger.error('[Trakt] User is no longer logged in');
+            throw new Error('[Trakt] User is not logged in: ' + response.statusCode);
+        } else {
+            logger.error('[Trakt] status code:' + response.statusCode);
+            logger.error(responseBody);
+            throw new Error('[Trakt] Status code error:' + response.statusCode);
+        }
     }
 }

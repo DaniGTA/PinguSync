@@ -372,8 +372,9 @@ export default class Series extends SeriesProviderExtension {
      * Get all relations from a series based on prequel id or sequel id or same provider id.
      * And this item is in the return to!
      * @param list
+     * @param returnWithThis default value is: FALSE
      */
-    public async getAllRelations(list: readonly Series[] | Series[], retunWithThis = false): Promise<Series[]> {
+    public async getAllRelations(list: readonly Series[] | Series[], returnWithThis = false): Promise<Series[]> {
         let relations = [this as Series];
 
         for (const entry2 of relations) {
@@ -387,7 +388,7 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         }
-        if (!retunWithThis) {
+        if (!returnWithThis) {
             relations = await listHelper.removeEntrys(relations, this);
         }
 

@@ -1,12 +1,12 @@
 import { createReadStream, createWriteStream, readFileSync } from 'fs';
 import * as http from 'http';
 // tslint:disable-next-line: no-implicit-dependencies
-import request from 'request';
 import { xml2json } from 'xml-js';
 import { createGunzip } from 'zlib';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import logger from '../../logger/logger';
 import MalProvider from '../mal/mal-provider';
@@ -189,30 +189,18 @@ export default class AniDBProvider extends InfoProvider {
 
     private async webRequest<T>(url: string): Promise<T> {
         logger.log('info', '[AniDB] Start WebRequest');
-        return new Promise<T>((resolve, rejects) => {
-            try {
 
-                request({ method: 'GET', uri: url, gzip: true }, (error: any, response: any, body: any) => {
-
-                    logger.log('info', '[AniDB] statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                    if (response.statusCode === 200) {
-                        const json = xml2json(body, { compact: true, spaces: 0 });
-                        if (json) {
-                            resolve(JSON.parse(json) as T);
-                        } else {
-                            rejects();
-                        }
-                    } else {
-                        rejects();
-                    }
-                }).on('error', (err) => {
-                    logger.error(err);
-                    rejects();
-                });
-            } catch (err) {
-                logger.error(err);
-                rejects();
+        const response = await WebRequestManager.request({ method: 'GET', uri: url, gzip: true });
+        logger.log('info', '[AniDB] statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        if (response.statusCode === 200) {
+            const json = xml2json(response.body, { compact: true, spaces: 0 });
+            if (json) {
+                return JSON.parse(json) as T;
+            } else {
+                throw new Error('[AniDB] no json to parse. URL: ' + url);
             }
-        });
+        } else {
+            throw new Error('[AniDB] wrong status code: ' + response.statusCode);
+        }
     }
 }

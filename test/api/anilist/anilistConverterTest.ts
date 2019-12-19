@@ -10,7 +10,7 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 
 // tslint:disable: no-string-literal
 describe('Provider: AniList | Converter tests', () => {
-    it('should convert', async () => {
+   it('should convert', async () => {
         const rawdata = JSON.parse(readFileSync('./test/api/anilist/testResponse/anilistUserListResponse.json', { encoding: 'UTF-8' }));
         const collection = rawdata.data.MediaListCollection as MediaListCollection;
         const entry = collection.lists[2].entries[3];
@@ -32,7 +32,7 @@ describe('Provider: AniList | Converter tests', () => {
         return;
     });
 
-    it('should convert format', async () => {
+   it('should convert format', async () => {
         const movieResult = await anilistConverter['convertTypeToMediaType'](MediaFormat.MOVIE);
         const tvResult = await anilistConverter['convertTypeToMediaType'](MediaFormat.TV);
         const tvShortResult = await anilistConverter['convertTypeToMediaType'](MediaFormat.TV_SHORT);

@@ -1,7 +1,7 @@
-import ProviderDataListManager from './provider-data-list-manager';
-import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 import LocalDataBind from '../objects/extension/provider-extension/binding/local-data-bind';
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
+import ProviderDataListManager from './provider-data-list-manager';
 
 export default class ProviderDataListSearcher {
     public static async getOneProviderLocalData(id: string | number, providerName: string): Promise<ProviderLocalData | null> {
@@ -32,6 +32,11 @@ export default class ProviderDataListSearcher {
             }
         }
         return null;
+    }
+
+    public static getOneBindedProvider(binding: LocalDataBind): ProviderLocalData {
+        const result = this.getAllBindedProvider(binding);
+        return result[0];
     }
 
     public static getAllBindedProvider(...bindings: LocalDataBind[]): ProviderLocalData[] {
