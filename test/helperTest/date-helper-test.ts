@@ -17,10 +17,8 @@ describe('Date Helper Test', () => {
 
     const lc = new ListController(true);
 
-    before(() => {
-        TestHelper.mustHaveBefore();
-    });
     beforeEach(() => {
+        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider()];
         // tslint:disable-next-line: no-string-literal
@@ -31,7 +29,7 @@ describe('Date Helper Test', () => {
         new ListController(true);
     });
 
-    it('It should add 1 day', async () => {
+    test('It should add 1 day', async () => {
         const date = new Date();
         const newDate = dateHelper.addDays(date, 1);
         equal(date.getUTCDay() + 1, newDate.getUTCDay());

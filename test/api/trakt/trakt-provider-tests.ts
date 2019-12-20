@@ -16,7 +16,7 @@ describe('Provider: Trakt | Tests runs', () => {
         ProviderList['loadedInfoProvider'] = undefined;
     });
 
-    it('should get a series (2/5)', async () => {
+    test('should get a series (2/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -27,7 +27,7 @@ describe('Provider: Trakt | Tests runs', () => {
         strictEqual(result.getAllProviders().length, 2);
     });
 
-    it('should get a series (3/5)', async () => {
+    test('should get a series (3/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -38,7 +38,7 @@ describe('Provider: Trakt | Tests runs', () => {
         strictEqual(result.getAllProviders().length, 2);
     });
 
-    it('should get a series (4/5)', async () => {
+    test('should get a series (4/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -49,7 +49,7 @@ describe('Provider: Trakt | Tests runs', () => {
         strictEqual(result.getAllProviders().length, 2);
     });
 
-    it('should get a series (5/5)', async () => {
+    test('should get a series (5/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -60,7 +60,7 @@ describe('Provider: Trakt | Tests runs', () => {
         strictEqual(result.getAllProviders().length, 2);
     });
 
-    it('should get a series (6/6) same result but different year', async () => {
+    test('should get a series (6/6) same result but different year', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);

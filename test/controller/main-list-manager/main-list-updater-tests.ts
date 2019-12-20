@@ -22,7 +22,7 @@ describe('MainList | Entry update tests', () => {
         ProviderList['loadedInfoProvider'] = [];
     });
 
-    it('should update provider', async () => {
+    test('should update provider', async () => {
         const seriesA = new Series();
         const providerA = new ListProviderLocalData('test', 'Test');
         await seriesA.addProviderDatas(providerA);
@@ -43,7 +43,7 @@ describe('MainList | Entry update tests', () => {
         strictEqual(MainListManager['mainList'][0].getMaxEpisode(), 10);
     });
 
-    it('should update provider and replace old data', async () => {
+    test('should update provider and replace old data', async () => {
         const seriesA = new Series();
         const providerA = new ListProviderLocalData('test', 'Test');
         providerA.lastUpdate = new Date(200);
@@ -71,7 +71,7 @@ describe('MainList | Entry update tests', () => {
         strictEqual(watchporgress.episode, 2);
     });
 
-    it('should not update provider', async () => {
+    test('should not update provider', async () => {
         const seriesA = new Series();
         const providerA = new ListProviderLocalData('test', 'Test');
         providerA.addOneWatchProgress(new WatchProgress(1));
@@ -97,7 +97,7 @@ describe('MainList | Entry update tests', () => {
         rejects(MainListManager['mainList'][0].getLastWatchProgress);
     });
 
-    it('should not affect other provider', async () => {
+    test('should not affect other provider', async () => {
         const seriesA = new Series();
         const providerA = new ListProviderLocalData(2093, 'Test');
         providerA.lastUpdate = new Date(200);

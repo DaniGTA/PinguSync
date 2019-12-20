@@ -33,7 +33,7 @@ describe('Provider Helper Test', () => {
         new ListController(true);
     });
 
-    it('It should find that it can get id from other provider', async () => {
+    test('It should find that it can get id from other provider', async () => {
         const providerHelper = new ProviderHelper();
         // Series A
         const series = new Series();
@@ -51,7 +51,7 @@ describe('Provider Helper Test', () => {
         equal(result, true);
     });
 
-    it('It should get all list provider that need a update', async () => {
+    test('It should get all list provider that need a update', async () => {
         const providerHelper = new ProviderHelper();
         // Series A
         const series = new Series();
@@ -61,7 +61,7 @@ describe('Provider Helper Test', () => {
         equal(result.length, 1);
     });
 
-    it('should update series', async () => {
+    test('should update series', async () => {
         const providerHelper = new ProviderHelper();
         const series = new Series();
         series.lastInfoUpdate = dateHelper.removeDays(new Date(), 31).getTime();
@@ -69,7 +69,7 @@ describe('Provider Helper Test', () => {
         strictEqual(result1, true);
     });
 
-    it('should not update series', async () => {
+    test('should not update series', async () => {
         const providerHelper = new ProviderHelper();
         const series = new Series();
         series.lastInfoUpdate = dateHelper.removeDays(new Date(), 15).getTime();
@@ -77,7 +77,7 @@ describe('Provider Helper Test', () => {
         strictEqual(result1, false);
     });
 
-    it('should sort provider that need updates right (1/3)', async () => {
+    test('should sort provider that need updates right (1/3)', async () => {
         const providerHelper = new ProviderHelper();
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
@@ -94,7 +94,7 @@ describe('Provider Helper Test', () => {
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });
 
-    it('should sort provider that need updates right (2/3)', async () => {
+    test('should sort provider that need updates right (2/3)', async () => {
         const providerHelper = new ProviderHelper();
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
@@ -112,7 +112,7 @@ describe('Provider Helper Test', () => {
     });
 
 
-    it('should sort provider that need updates right (3/3)', async () => {
+    test('should sort provider that need updates right (3/3)', async () => {
         const providerHelper = new ProviderHelper();
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 

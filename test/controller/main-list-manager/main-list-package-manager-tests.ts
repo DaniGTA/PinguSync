@@ -23,7 +23,7 @@ describe('MainListPackageManager', () => {
         ProviderList['loadedInfoProvider'] = [];
     });
 
-    it('should return a list of packages (length: 1)', async () => {
+    test('should return a list of packages (length: 1)', async () => {
         const list: Series[] = [];
 
         const series = new Series();

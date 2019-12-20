@@ -149,19 +149,13 @@ class SeasonHelper {
                 return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
             }
         }
-          
+
 
         if (numberFromName && numberFromName.seasonNumber) {
             return new SearchSeasonValueResult(numberFromName.seasonNumber, 'Name');
         }
 
-        try {
-            if (!await series.isAnyPrequelPresent() && await series.isAnySequelPresent()) {
-                return new SearchSeasonValueResult(1, 'NoPrequelButSequel');
-            }
-        } catch (err) {
-            logger.warn(err);
-        }
+
 
         if (SeasonSearchModeHelper.canPerformAProviderSeasonValueSearch(searchMode)) {
             for (const provider of series.getListProvidersInfos()) {
@@ -192,6 +186,14 @@ class SeasonHelper {
 
         if (sequelResult && sequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
             return sequelResult;
+        }
+
+        try {
+            if (!await series.isAnyPrequelPresent() && await series.isAnySequelPresent()) {
+                return new SearchSeasonValueResult(1, 'NoPrequelButSequel');
+            }
+        } catch (err) {
+            logger.warn(err);
         }
 
         return new SearchSeasonValueResult(-1, 'None', SeasonError.CANT_GET_SEASON);

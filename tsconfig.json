@@ -14,7 +14,7 @@
     "baseUrl": ".",
     "types": [
       "webpack-env",
-      "mocha",
+      "jest",
       "node",
     ],
     "paths": {},

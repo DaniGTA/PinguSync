@@ -17,7 +17,7 @@ import TestHelper from '../test-helper';
 
 // tslint:disable: no-string-literal
 describe('Provider Helper | Examples', () => {
-    before(() => {
+    beforeAll(() => {
         TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
@@ -28,7 +28,7 @@ describe('Provider Helper | Examples', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
     });
-    it('should check list provider id true', async () => {
+    test('should check list provider id true', async () => {
         // Series A
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'testA');
@@ -43,7 +43,7 @@ describe('Provider Helper | Examples', () => {
         equal(result.sameId, true);
     });
 
-    it('should check list provider id false (Provider not equal)', async () => {
+    test('should check list provider id false (Provider not equal)', async () => {
         // Series A
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'testA');
@@ -58,7 +58,7 @@ describe('Provider Helper | Examples', () => {
         equal(result.sameId, false);
     });
 
-    it('should check list provider id false (Id not equal)', async () => {
+    test('should check list provider id false (Id not equal)', async () => {
         // Series A
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'testA');
@@ -73,7 +73,7 @@ describe('Provider Helper | Examples', () => {
         equal(result.sameId, false);
     });
 
-    it('should check list provider id false (Provider not exist)', async () => {
+    test('should check list provider id false (Provider not exist)', async () => {
         // Series A
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'testC');

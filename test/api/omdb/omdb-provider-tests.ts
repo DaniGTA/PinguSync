@@ -10,7 +10,7 @@ import TestHelper from '../../test-helper';
 // tslint:disable: no-string-literal
 describe('Provider: OMDb | Test runs', () => {
     const omdbProvider = new OMDbProvider();
-    before(() => {
+    beforeAll(() => {
         TestHelper.mustHaveBefore();
     });
 
@@ -20,7 +20,7 @@ describe('Provider: OMDb | Test runs', () => {
         ProviderList['loadedInfoProvider'] = [omdbProvider];
     });
 
-    it('should get a series (1/1)', async () => {
+    test('should get a series (1/1)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -32,7 +32,7 @@ describe('Provider: OMDb | Test runs', () => {
         return;
     });
 
-    it('should not crash', async () => {
+    test('should not crash', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData('-1');
@@ -45,7 +45,7 @@ describe('Provider: OMDb | Test runs', () => {
     });
 
 
-    it('should get series by id', async () => {
+    test('should get series by id', async () => {
         const unkownProvider = new InfoProviderLocalData('tt2341379', OMDbProvider);
         const result = await omdbProvider.getFullInfoById(unkownProvider);
         strictEqual(result.mainProvider.id, unkownProvider.id);

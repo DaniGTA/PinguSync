@@ -1,3 +1,21 @@
 module.exports = {
-	moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
+
+	'roots': [
+
+		'<rootDir>'
+
+	],
+
+	'testMatch': [
+
+		'**/test/**/*-(test|tests).+(ts|tsx|js)',
+
+	],
+
+	'transform': {
+
+		'^.+\\.(ts|tsx)$': 'ts-jest'
+
+	},
+
 }

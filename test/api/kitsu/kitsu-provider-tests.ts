@@ -21,7 +21,7 @@ describe('Provider: Kitsu | Test runs', () => {
         ProviderList['loadedInfoProvider'] = undefined;
     });
 
-    it('should get a series (1/6)', async () => {
+    test('should get a series (1/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -33,7 +33,7 @@ describe('Provider: Kitsu | Test runs', () => {
         strictEqual(result.mainProvider.id, '6521');
     });
 
-    it('should get a series (2/6)', async () => {
+    test('should get a series (2/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -45,7 +45,7 @@ describe('Provider: Kitsu | Test runs', () => {
         strictEqual(result.mainProvider.id, '12959');
     });
 
-    it('should get a series (3/6)', async () => {
+    test('should get a series (3/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -55,9 +55,9 @@ describe('Provider: Kitsu | Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.id, '10857');
-    }).timeout(4000);
+    });
 
-    it('should get a series (4/6)', async () => {
+    test('should get a series (4/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -73,9 +73,9 @@ describe('Provider: Kitsu | Test runs', () => {
         } else {
             fail('No kitsu result');
         }
-    }).timeout(4000);
+    });
 
-    it('should get a series (5/6)', async () => {
+    test('should get a series (5/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -85,9 +85,9 @@ describe('Provider: Kitsu | Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.id, 5);
-    }).timeout(4000);
+    });
 
-    it('should get a series (6/6)', async () => {
+    test('should get a series (6/6)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
@@ -97,6 +97,6 @@ describe('Provider: Kitsu | Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.id, '1555');
-    }).timeout(4000);
+    });
 
 });

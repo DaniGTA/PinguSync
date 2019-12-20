@@ -21,7 +21,7 @@ describe('Provider: TVMaze | Test runs', () => {
         ProviderList['loadedInfoProvider'] = [tvmazeProvider];
     });
 
-    it('should get a series (1/5)', async () => {
+    test('should get a series (1/5)', async () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1, '');
@@ -32,7 +32,7 @@ describe('Provider: TVMaze | Test runs', () => {
         strictEqual(result.getAllProviders().length, 2);
         return;
     });
-    it('should get series by id', async () => {
+    test('should get series by id', async () => {
         const unkownProvider = new InfoProviderLocalData(1505, '');
         const result = await tvmazeProvider.getFullInfoById(unkownProvider);
         strictEqual(result.mainProvider.id, unkownProvider.id);

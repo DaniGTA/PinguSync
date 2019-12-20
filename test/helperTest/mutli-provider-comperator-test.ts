@@ -2,8 +2,6 @@
 import { equal, fail, notStrictEqual, strictEqual } from 'assert';
 
 import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
-import ListController from '../../src/backend/controller/list-controller';
-import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import Name from '../../src/backend/controller/objects/meta/name';
@@ -17,7 +15,7 @@ import TestProvider from '../controller/objects/testClass/testProvider';
 import TestHelper from '../test-helper';
 
 describe('Multi-Provider-Comperator | Examples', () => {
-    before(() => {
+    beforeAll(() => {
         TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
@@ -28,7 +26,7 @@ describe('Multi-Provider-Comperator | Examples', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
     });
-    it('should compare 2 entrys right', async () => {
+    test('should compare 2 entrys right', async () => {
 
         // PART A
 

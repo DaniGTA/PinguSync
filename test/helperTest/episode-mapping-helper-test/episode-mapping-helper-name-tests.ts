@@ -36,7 +36,7 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
         MainListManager['mainList'] = [];
     });
 
-    it('should map by episode name', async () => {
+    test('should map by episode name', async () => {
         const aSeries = new Series();
 
         // A Site
@@ -98,7 +98,7 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
         }
     });
 
-    it('should map by episode name (false name)', async () => {
+    test('should map by episode name (false name)', async () => {
         const aSeries = new Series();
 
         // A Site
@@ -160,7 +160,7 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
         }
     });
 
-    it('should map by episode name (small info)', async () => {
+    test('should map by episode name (small info)', async () => {
         const aSeries = new Series();
 
         // A Site
@@ -222,7 +222,7 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
         }
     });
 
-    it('should map by episode name (small info specials)', async () => {
+    test('should map by episode name (small info specials)', async () => {
         const aSeries = new Series();
 
         // A Site

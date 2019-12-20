@@ -201,19 +201,20 @@ export default class ProviderComperator {
         comperatorResult.matchAble += 2.5;
         if (ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id)) {
             providerA = Object.assign(new ListProviderLocalData(providerA.id), providerA);
-            comperatorResult.matches += 2.0;
+            comperatorResult.matches += 2.5;
             const providerASeason = this.aSeries.getProviderSeasonTarget(providerA.provider);
             const providerBSeason = this.bSeries.getProviderSeasonTarget(providerB.provider);
             try {
                 if (ProviderList.getExternalProviderInstance(providerA).hasUniqueIdForSeasons) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     // tslint:disable-next-line: no-empty
-                } else if ((typeof providerASeason === 'undefined') || (typeof providerBSeason === 'undefined')) {
-
+                } else if ((typeof providerASeason === 'undefined') && providerBSeason === 1 || (typeof providerBSeason === 'undefined') && providerASeason === 1) {
+                    
                 } else if (providerASeason === providerBSeason) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                } else {
+                      comperatorResult.matches -= 0.5;
                 }
-                comperatorResult.matches += 0.5;
                 // tslint:disable-next-line: no-empty
             } catch (err) { }
         } else {

@@ -44,8 +44,8 @@ export default class ResponseHelper {
     }
 
     private static cacheNewRequest(response: request.Response, id: string): void {
-        response.headers = null;
-        response.request.headers = null;
+        response.headers = {};
+        response.request.headers = {};
         const fileContent = JSON.stringify(response);
         try {
             statSync(this.cacheFolderName);

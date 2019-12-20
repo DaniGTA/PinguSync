@@ -7,4 +7,5 @@
         "TS_NODE_TRANSPILE_ONLY": true
     },
     "mochaExplorer.debuggerPort": 19485,
+    "jest.showCoverageOnLoad": true,
 }
