@@ -120,24 +120,5 @@ describe('Basic List | Testrun', () => {
             } else {
                 fail();
             }
-        },
-    );
-    test('should not merge with wrong providers', async () => {
-        if (!ListController.instance) {
-            fail();
-        }
-
-        // S1
-        const series = new Series();
-        const provider = new ListProviderLocalData(1390, TraktProvider);
-        provider.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series.addListProvider(provider);
-
-        await ListController.instance.addSeriesToMainList(series);
-
-        const updatedProviders = MainListManager['mainList'][0].getAllProviderLocalDatas();
-
-        fail();
-
-    });
+        });
 });
