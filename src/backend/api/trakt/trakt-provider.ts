@@ -16,7 +16,7 @@ import logger from '../../logger/logger';
 import ExternalProvider from '../provider/external-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { FullShowInfo } from './objects/fullShowInfo';
-import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
+import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import traktConverter from './trakt-converter';
 export default class TraktProvider extends ListProvider {
 
@@ -80,8 +80,10 @@ export default class TraktProvider extends ListProvider {
                     return (traktConverter.convertFullShowInfoToLocalData(res));
                 } else {
                     const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id + '?extended=full');
-                    const seasonInfo = await this.traktRequest<TraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
-                    return (traktConverter.convertFullShowInfoToLocalData(res, seasonInfo));
+                    const seasonEpisodeInfo = await this.traktRequest<ITraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
+                    const seasonInfo = await this.traktRequest<ITraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=full');
+                    const fullSeasonInfo = traktConverter.combineSeasonInfoAndSeasonEpisodeInfo(seasonInfo, seasonEpisodeInfo);
+                    return traktConverter.convertFullShowInfoToLocalData(res, fullSeasonInfo);
                 }
             }
         } catch (err) {

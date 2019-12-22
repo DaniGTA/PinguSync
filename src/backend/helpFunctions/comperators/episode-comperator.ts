@@ -2,6 +2,7 @@ import Episode from '../../controller/objects/meta/episode/episode';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
 import ComperatorResult from './comperator-results.ts/comperator-result';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
@@ -45,7 +46,27 @@ export default class EpisodeComperator {
         result.matchAble += episodeTitleResult.matchAble * 4;
         result.matches += episodeTitleResult.matches * 4;
 
+        const episodeTypeResult = this.isEpisodeSameType(aEpisode, bEpsiode);
+        result.matchAble += episodeTypeResult.matchAble;
+        result.matches += episodeTypeResult.matches;
+
         return result;
+    }
+
+    public static isEpisodeSameType(aEpsiode: Episode, bEpisode: Episode): ComperatorResult {
+        const compareResult = new ComperatorResult();
+        if (aEpsiode.type === EpisodeType.SPECIAL || bEpisode.type === EpisodeType.SPECIAL) {
+            compareResult.matchAble = 1;
+            if (aEpsiode.type === bEpisode.type) {
+                compareResult.matches = 1;
+            }
+        } else if (aEpsiode.type !== EpisodeType.UNKOWN || bEpisode.type !== EpisodeType.UNKOWN) {
+            compareResult.matchAble = 1;
+            if (aEpsiode.type === bEpisode.type) {
+                compareResult.matches = 1;
+            }
+        }
+        return compareResult;
     }
 
     public static async isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: number): Promise<boolean> {
@@ -69,20 +90,20 @@ export default class EpisodeComperator {
      */
     public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: number, providerBSeason?: number, season?: number): boolean {
         let aSeason: number | undefined;
-        if (aEpisode.season) {
+        if (aEpisode.season !== undefined) {
             aSeason = aEpisode.season;
-        } else if (providerASeason) {
+        } else if (providerASeason !== undefined) {
             aSeason = providerASeason;
-        } else if (season) {
+        } else if (season !== undefined) {
             aSeason = season;
         }
 
         let bSeason: number | undefined;
-        if (bEpisode.season) {
+        if (bEpisode.season !== undefined) {
             bSeason = bEpisode.season;
-        } else if (providerBSeason) {
+        } else if (providerBSeason !== undefined) {
             bSeason = providerBSeason;
-        } else if (season) {
+        } else if (season !== undefined) {
             bSeason = season;
         }
 

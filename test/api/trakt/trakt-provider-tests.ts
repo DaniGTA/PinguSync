@@ -1,4 +1,4 @@
-import { strictEqual } from 'assert';
+import { strictEqual, notStrictEqual } from 'assert';
 import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
@@ -73,5 +73,16 @@ describe('Provider: Trakt | Tests runs', () => {
         strictEqual(result.mainProvider.releaseYear, 2013);
         strictEqual(result.mainProvider.id, 72367);
     });
+    test('should get a series and should mark the episodes right', async () => {
+        const series = new Series();
+        const unkownProvider = new ListProviderLocalData(103803, TraktProvider.getInstance().providerName);
+        unkownProvider.addSeriesName(new Name('Yamada-kun and the Seven Witches', 'en'));
+        unkownProvider.releaseYear = 2013;
+        await series.addProviderDatas(unkownProvider);
 
+
+        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
+        strictEqual(result.mainProvider.id, 103803);
+        notStrictEqual(result.mainProvider.detailEpisodeInfo.length, 0);
+    });
 });

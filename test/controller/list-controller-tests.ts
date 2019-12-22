@@ -189,36 +189,6 @@ describe('ListController | Combine', () => {
         return;
     });
 
-
-    test('should sort list', async () => {
-        let entry: Series[] = [];
-        const x2 = await getFilledAnime();
-        x2.getListProvidersInfos()[0].addSeriesName(new Name('A', 'en'));
-        const x3 = await getFilledAnime();
-        x3.getListProvidersInfos()[0].addSeriesName(new Name('B', 'en'));
-        const x4 = await getFilledAnime();
-        x4.getListProvidersInfos()[0].addSeriesName(new Name('C', 'en'));
-        const x5 = await getFilledAnime();
-        x5.getListProvidersInfos()[0].addSeriesName(new Name('D', 'en'));
-        const x6 = await getFilledAnime();
-        x6.getListProvidersInfos()[0].addSeriesName(new Name('E', 'en'));
-        const x7 = await getFilledAnime();
-        x7.getListProvidersInfos()[0].addSeriesName(new Name('F', 'en'));
-
-        entry.push(x7);
-        entry.push(x6);
-        entry.push(x5);
-        entry.push(x4);
-        entry.push(x3);
-        entry.push(x2);
-        entry = await listHelper.shuffle<Series>(entry);
-        entry = await listHelper.sortList(entry);
-        assert.equal(await entry[0].getAllNames(), await x2.getAllNames());
-        assert.equal(await entry[1].getAllNames(), await x3.getAllNames());
-        assert.equal(await entry[2].getAllNames(), await x4.getAllNames());
-        return;
-    });
-
     test('should clean doubled entrys (1/2)', async () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
@@ -260,8 +230,12 @@ describe('ListController | Combine', () => {
         lpld.episodes = 12;
         lpld.targetSeason = 1;
         const x1 = await getFilledAnime('', 1, 1);
+        x1['infoProviderInfos'] = [];
+        x1['listProviderInfos'] = [];
         await x1.addListProvider(lpld);
         const x2 = await getFilledAnime('', 1);
+        x2['infoProviderInfos'] = [];
+        x2['listProviderInfos'] = [];
         const lpld2 = new ListProviderLocalData(2);
         lpld2.episodes = 12;
         lpld2.targetSeason = undefined;
@@ -271,7 +245,7 @@ describe('ListController | Combine', () => {
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(MainListManager['mainList'].length, 2);
+        assert.equal(MainListManager['mainList'].length, 1);
     });
 
 
@@ -287,9 +261,13 @@ describe('ListController | Combine', () => {
         lpld2.episodes = 12;
         lpld2.targetSeason = 2;
         const x1 = await getFilledAnime();
+        x1['infoProviderInfos'] = [];
+        x1['listProviderInfos'] = [];
         await x1.addListProvider(lpld);
 
         const x2 = await getFilledAnime();
+        x2['infoProviderInfos'] = [];
+        x2['listProviderInfos'] = [];
         await x2.addListProvider(lpld2);
 
         await lc.addSeriesToMainList(x1, x2);

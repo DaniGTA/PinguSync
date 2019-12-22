@@ -1,6 +1,7 @@
 
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Genre from '../../controller/objects/meta/genre';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
@@ -17,7 +18,7 @@ import TVDBProvider from '../tvdb/tvdb-provider';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { Movie, Show } from './objects/search';
 import { Season, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './objects/sendEntryUpdate';
-import { TraktShowSeasonInfo } from './objects/showSeasonInfo';
+import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
 export default new class TraktConverter {
@@ -47,7 +48,9 @@ export default new class TraktConverter {
         const provider = new ListProviderLocalData(show.ids.trakt, TraktProvider.getInstance());
         try {
             provider.addSeriesName(new Name(show.title, 'en', NameType.OFFICIAL));
-        } catch (err) { }
+        } catch (err) {
+            logger.debug(err);
+         }
 
         provider.addSeriesName(new Name(show.ids.slug, 'slug', NameType.SLUG));
         provider.releaseYear = show.year;
@@ -69,7 +72,9 @@ export default new class TraktConverter {
         const provider = new ListProviderLocalData(traktMovie.ids.trakt, TraktProvider.getInstance());
         try {
             provider.addSeriesName(new Name(traktMovie.title, 'en', NameType.OFFICIAL));
-        } catch (err) { }
+        } catch (err) {
+            logger.debug(err);
+        }
         provider.addSeriesName(new Name(traktMovie.ids.slug, 'slug', NameType.SLUG));
         provider.releaseYear = traktMovie.year;
         provider.rawEntry = traktMovie;
@@ -78,7 +83,16 @@ export default new class TraktConverter {
         return new MultiProviderResult(provider);
     }
 
-    public async convertFullShowInfoToLocalData(fullShow: FullShowInfo, seasonInfo?: TraktShowSeasonInfo[]): Promise<MultiProviderResult> {
+    public combineSeasonInfoAndSeasonEpisodeInfo(seasonInfo: ITraktShowSeasonInfo[], seasonEpisodeInfo: ITraktShowSeasonInfo[]): ITraktShowSeasonInfo[] {
+        const finalList: ITraktShowSeasonInfo[] = [];
+        for (const singleSeason of seasonInfo) {
+            const episodeInfo = seasonEpisodeInfo.find((x) => x.number === singleSeason.number);
+            finalList.push({ ...singleSeason, ...episodeInfo });
+        }
+        return finalList;
+    }
+
+    public async convertFullShowInfoToLocalData(fullShow: FullShowInfo, seasonInfo?: ITraktShowSeasonInfo[]): Promise<MultiProviderResult> {
         const provider = new ListProviderLocalData(fullShow.ids.trakt, TraktProvider.getInstance());
         provider.addSeriesName(new Name(fullShow.title, 'en', NameType.OFFICIAL));
         provider.addSeriesName(new Name(fullShow.ids.slug, 'slug', NameType.SLUG));
@@ -117,14 +131,28 @@ export default new class TraktConverter {
         return multiProviderResult;
     }
 
-    public async getDetailedEpisodeInfo(seasonInfos: TraktShowSeasonInfo[]): Promise<Episode[]> {
+    public async getDetailedEpisodeInfo(seasonInfos: ITraktShowSeasonInfo[]): Promise<Episode[]> {
         const detailedEpisodes: Episode[] = [];
         for (const seasonInfo of seasonInfos) {
-            for (const episode of seasonInfo.episodes) {
-                const tempEpisode = new Episode(episode.number, seasonInfo.number);
-                tempEpisode.title = [new EpisodeTitle(episode.title)];
-                tempEpisode.providerEpisodeId = episode.ids.trakt;
-                detailedEpisodes.push(tempEpisode);
+            if (seasonInfo.episodes) {
+                for (const episode of seasonInfo.episodes) {
+                    const tempEpisode = new Episode(episode.number, seasonInfo.number);
+                    tempEpisode.title = [new EpisodeTitle(episode.title)];
+                    tempEpisode.providerEpisodeId = episode.ids.trakt;
+                    if (seasonInfo.title && seasonInfo.title.toLowerCase().includes('special')) {
+                        tempEpisode.type = EpisodeType.SPECIAL;
+                    }
+                    detailedEpisodes.push(tempEpisode);
+                }
+            } else if (seasonInfo.episode_count) {
+                for (let index = 1; index < seasonInfo.episode_count; index++) {
+                   const tempEpisode = new Episode(index, seasonInfo.number);
+                   if (seasonInfo.title && seasonInfo.title.includes('special')) {
+                        tempEpisode.type = EpisodeType.SPECIAL;
+                    }
+                   detailedEpisodes.push(tempEpisode);
+
+                }
             }
         }
         return detailedEpisodes;
@@ -147,8 +175,8 @@ export default new class TraktConverter {
             };
 
             const season: Season = {
+                episodes,
                 number: seasonNumber,
-                episodes: episodes,
             };
 
             sendEntryShow.seasons.push(season);
@@ -188,8 +216,8 @@ export default new class TraktConverter {
                     }
                 }
                 const season: Season = {
-                    number: seasonNumber,
                     episodes,
+                    number: seasonNumber,
                 };
 
                 sendEntryShow.seasons.push(season);

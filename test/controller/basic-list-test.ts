@@ -8,12 +8,19 @@ import { ProviderInfoStatus } from '../../src/backend/controller/provider-manage
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import TestHelper from '../test-helper';
+import { EpisodeType } from '../../src/backend/controller/objects/meta/episode/episode-type';
 
 describe('Basic List | Testrun', () => {
     const lc = new ListController(true);
 
     beforeAll(() => {
-       TestHelper.mustHaveBefore();
+        TestHelper.mustHaveBefore();
+        const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
+        if (!anilistInstance) { fail(); }
+        anilistInstance.isUserLoggedIn = async () => true;
+        const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
+        if (!traktInstance) { fail(); }
+        traktInstance.isUserLoggedIn = async () => true;
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
@@ -24,12 +31,6 @@ describe('Basic List | Testrun', () => {
         if (!ListController.instance) {
             fail();
         }
-        const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
-        if (!anilistInstance) { fail(); }
-        anilistInstance.isUserLoggedIn = async () => true;
-        const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
-        if (!traktInstance) { fail(); }
-        traktInstance.isUserLoggedIn = async () => true;
         const series = new Series();
         const provider = new ListProviderLocalData(101348, AniListProvider);
         provider.infoStatus = ProviderInfoStatus.ONLY_ID;
@@ -48,10 +49,10 @@ describe('Basic List | Testrun', () => {
         const anilistResult = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
         const traktResult = updatedProviders.find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (anilistResult && traktResult) {
-            notStrictEqual(await anilistResult.detailEpisodeInfo.length, 0);
-            notStrictEqual(await traktResult.detailEpisodeInfo.length, 0);
-            notStrictEqual(await anilistResult.getAllNames().length, 0);
-            notStrictEqual(await traktResult.getAllNames().length, 0);
+            notStrictEqual(anilistResult.detailEpisodeInfo.length, 0);
+            notStrictEqual(traktResult.detailEpisodeInfo.length, 0);
+            notStrictEqual(anilistResult.getAllNames().length, 0);
+            notStrictEqual(traktResult.getAllNames().length, 0);
             strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
             strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
         } else {
@@ -65,13 +66,6 @@ describe('Basic List | Testrun', () => {
             if (!ListController.instance) {
                 fail();
             }
-            const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
-            if (!anilistInstance) { fail(); }
-            anilistInstance.isUserLoggedIn = async () => true;
-            const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
-            if (!traktInstance) { fail(); }
-            traktInstance.isUserLoggedIn = async () => true;
-
             // S1
             const series = new Series();
             const provider = new ListProviderLocalData(21202, AniListProvider);
@@ -103,15 +97,47 @@ describe('Basic List | Testrun', () => {
             const anilistResult2 = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
             const traktResult2 = updatedProviders.find((x) => x.provider === TraktProvider.getInstance().providerName);
             if (anilistResult && traktResult && anilistResult2 && traktResult2) {
-                notStrictEqual(await anilistResult.detailEpisodeInfo.length, 0);
-                notStrictEqual(await traktResult.detailEpisodeInfo.length, 0);
-                notStrictEqual(await anilistResult.getAllNames().length, 0);
-                notStrictEqual(await traktResult.getAllNames().length, 0);
+                notStrictEqual(anilistResult.detailEpisodeInfo.length, 0);
+                notStrictEqual(traktResult.detailEpisodeInfo.length, 0);
+                notStrictEqual(anilistResult.getAllNames().length, 0);
+                notStrictEqual(traktResult.getAllNames().length, 0);
                 strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                for (const anilistResultEntry of anilistResult.detailEpisodeInfo) {
+                    strictEqual(anilistResultEntry.mappedTo[0].episodeNumber, anilistResultEntry.episodeNumber);
+                }
+                for (const anilistResult2Entry of anilistResult2.detailEpisodeInfo) {
+                    strictEqual(anilistResult2Entry.mappedTo[0].episodeNumber, anilistResult2Entry.episodeNumber);
+                }
+                for (const trakt of traktResult2.detailEpisodeInfo) {
+                    if (trakt.type === EpisodeType.SPECIAL) {
+                        strictEqual(trakt.mappedTo.length, 0);
+                    } else {
+                        strictEqual(trakt.mappedTo.length, 1);
+                        strictEqual(trakt.mappedTo[0].episodeNumber, trakt.episodeNumber);
+                    }
+                }
             } else {
                 fail();
             }
         },
     );
+    test('should not merge with wrong providers', async () => {
+        if (!ListController.instance) {
+            fail();
+        }
+
+        // S1
+        const series = new Series();
+        const provider = new ListProviderLocalData(1390, TraktProvider);
+        provider.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series.addListProvider(provider);
+
+        await ListController.instance.addSeriesToMainList(series);
+
+        const updatedProviders = MainListManager['mainList'][0].getAllProviderLocalDatas();
+
+        fail();
+
+    });
 });

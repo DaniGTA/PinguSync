@@ -39,6 +39,7 @@ describe('Provider Helper Test', () => {
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'Kitsu');
         series.addProviderDatas(listProvider);
+        // tslint:disable-next-line: no-string-literal
         const pList = ProviderList['loadedListProvider'];
         let provider: ListProvider | null = null;
         if (pList && pList[1]) {
@@ -46,6 +47,7 @@ describe('Provider Helper Test', () => {
         }
         let result;
         if (provider) {
+            // tslint:disable-next-line: no-string-literal
             result = providerHelper['canGetTargetIdFromCurrentProvider'](listProvider, provider);
         }
         equal(result, true);
@@ -57,6 +59,7 @@ describe('Provider Helper Test', () => {
         const series = new Series();
         series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
         series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
+        // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         equal(result.length, 1);
     });
@@ -65,6 +68,7 @@ describe('Provider Helper Test', () => {
         const providerHelper = new ProviderHelper();
         const series = new Series();
         series.lastInfoUpdate = dateHelper.removeDays(new Date(), 31).getTime();
+        // tslint:disable-next-line: no-string-literal
         const result1 = providerHelper['canUpdateSeries'](series);
         strictEqual(result1, true);
     });
@@ -73,6 +77,7 @@ describe('Provider Helper Test', () => {
         const providerHelper = new ProviderHelper();
         const series = new Series();
         series.lastInfoUpdate = dateHelper.removeDays(new Date(), 15).getTime();
+        // tslint:disable-next-line: no-string-literal
         const result1 = providerHelper['canUpdateSeries'](series);
         strictEqual(result1, false);
     });

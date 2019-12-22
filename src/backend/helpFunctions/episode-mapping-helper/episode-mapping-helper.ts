@@ -502,14 +502,14 @@ export default class EpisodeMappingHelper {
     private async sortingEpisodeRatedEqualityContainerByResultPoints(aEp: EpisodeRatedEqualityContainer, bEp: EpisodeRatedEqualityContainer) {
         const a = aEp.result.matches;
         const b = bEp.result.matches;
-        if (a > b) {
-            return -1;
-        } else if (b > a) {
+        if (a < b) {
             return 1;
+        } else if (a > b) {
+            return -1;
+        } else if (aEp.result.matchAble < bEp.result.matchAble) {
+            return -1;
         } else if (aEp.result.matchAble > bEp.result.matchAble) {
             return 1;
-        } else if (bEp.result.matchAble > aEp.result.matchAble) {
-            return -1;
         } else {
             return 0;
         }

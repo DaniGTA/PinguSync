@@ -12,7 +12,9 @@ import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-map
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
-
+import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container';
+import ComperatorResult from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
+import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
 describe('Episode mapping | Mapping Only', () => {
     const lc = new ListController(true);
 
@@ -197,7 +199,7 @@ describe('Episode mapping | Mapping Only', () => {
                 strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);
                 notStrictEqual(episode.mappedTo[0].provider, episode.provider);
             }
-        }
+        },
     );
 
     test('should map episodes length with detailedEpisodes', async () => {
@@ -344,7 +346,7 @@ describe('Episode mapping | Mapping Only', () => {
                 strictEqual(episode.mappedTo.length, 1, episode.episodeNumber + '');
                 notStrictEqual(episode.mappedTo[0].provider, episode.provider);
             }
-        }
+        },
     );
 
     test('should sort episode list right', async () => {
@@ -381,7 +383,43 @@ describe('Episode mapping | Mapping Only', () => {
         strictEqual(result[4], episode2s2, '4 should be EP02S02');
         strictEqual(result[5], episode4, '5 should be EP04S01');
     });
-
+    describe('sorting episode results', () => {
+        test('should sort result container right', async () => {
+            const episodeMappingInstance = new EpisodeMappingHelper();
+            const ep2r = new ComperatorResult();
+            ep2r.matchAble = 2;
+            ep2r.matches = 1;
+            const ep1r = new ComperatorResult();
+            ep1r.matchAble = 3;
+            ep1r.matches = 1;
+            const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
+            const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
+            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            strictEqual(sorted[0], ep2erec);
+            strictEqual(sorted[1], ep1erec);
+            strictEqual(sorted2[0], ep2erec);
+            strictEqual(sorted2[1], ep1erec);
+        });
+        
+        test('should sort result container right', async () => {
+            const episodeMappingInstance = new EpisodeMappingHelper();
+            const ep2r = new ComperatorResult();
+            ep2r.matchAble = 2;
+            ep2r.matches = 1;
+            const ep1r = new ComperatorResult();
+            ep1r.matchAble = 3;
+            ep1r.matches = 2;
+            const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
+            const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
+            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            strictEqual(sorted[0], ep1erec);
+            strictEqual(sorted[1], ep2erec);
+            strictEqual(sorted2[0], ep1erec);
+            strictEqual(sorted2[1], ep2erec);
+        });
+    });
 
 });
 

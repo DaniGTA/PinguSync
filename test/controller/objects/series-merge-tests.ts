@@ -3,8 +3,8 @@ import Name from '../../../src/backend/controller/objects/meta/name';
 import Overview from '../../../src/backend/controller/objects/meta/overview';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import TestHelper from '../../test-helper';
 import logger from '../../../src/backend/logger/logger';
+import TestHelper from '../../test-helper';
 
 
 describe('Series | Merge', () => {

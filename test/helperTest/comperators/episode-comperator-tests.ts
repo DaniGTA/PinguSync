@@ -85,7 +85,7 @@ describe('Episode comperator | Full test', () => {
         episodeB.providerEpisodeId = 123;
 
         const result = await EpisodeComperator.compareDetailedEpisode(episodeA, episodeB, undefined, undefined, 2, 0);
-        strictEqual(result.matchAble, 1);
+        strictEqual(result.matchAble, 2);
         strictEqual(result.matches, 0);
     });
 

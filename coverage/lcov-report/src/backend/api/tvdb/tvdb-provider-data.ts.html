@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">48.15% </span>
+        <span class="strong">77.78% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>13/27</span>
+        <span class='fraction'>21/27</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">50% </span>
@@ -30,21 +30,21 @@
         <span class='fraction'>1/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">60% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/5</span>
+        <span class='fraction'>5/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">48.15% </span>
+        <span class="strong">77.78% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>13/27</span>
+        <span class='fraction'>21/27</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -122,39 +122,39 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,19 +178,19 @@ export class TVDBProviderData {
         }
     }
 &nbsp;
-    public <span class="fstat-no" title="function not covered" >setTokens(</span>accessToken: string, expiresIn: number) {
-<span class="cstat-no" title="statement not covered" >        this.accessToken = accessToken;</span>
-<span class="cstat-no" title="statement not covered" >        this.expiresIn = expiresIn;</span>
-<span class="cstat-no" title="statement not covered" >        this.saveData();</span>
+    public setTokens(accessToken: string, expiresIn: number) {
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
+        this.saveData();
     }
 &nbsp;
-    private <span class="fstat-no" title="function not covered" >async </span>saveData() {
-<span class="cstat-no" title="statement not covered" >        try {</span>
-            const dataPath = <span class="cstat-no" title="statement not covered" >this.getPath();</span>
-<span class="cstat-no" title="statement not covered" >            logger.warn('[IO] Write tvdb user file.');</span>
-<span class="cstat-no" title="statement not covered" >            fs.writeFileSync(dataPath, JSON.stringify(this));</span>
+    private async saveData() {
+        try {
+            const dataPath = this.getPath();
+            logger.warn('[IO] Write tvdb user file.');
+            fs.writeFileSync(dataPath, JSON.stringify(this));
         } catch (err) {
-<span class="cstat-no" title="statement not covered" >           logger.error(err);</span>
+           logger.error(err);
         }
     }
 &nbsp;
@@ -223,7 +223,7 @@ export class TVDBProviderData {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Dec 20 2019 23:25:27 GMT+0100 (GMT+01:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Dec 22 2019 01:09:04 GMT+0100 (Mitteleuropäische Normalzeit)
 </div>
 </div>
 <script src="..\..\..\..\prettify.js"></script>
