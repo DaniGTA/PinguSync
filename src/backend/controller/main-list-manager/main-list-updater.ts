@@ -20,7 +20,7 @@ export default class MainListEntryUpdater {
                 await searchResult.addProviderDatas(...provider.getAllProviders());
                 await MainListManager.updateSerieInList(searchResult);
             } else {
-                logger.debug('Add new series. Reason: Provider not found in mainlist');
+                logger.info('Add new series. Reason: Provider not found in mainlist');
                 const newSeries = new Series();
                 await newSeries.addProviderDatas(...provider.getAllProviders());
                 notFounded.push(newSeries);

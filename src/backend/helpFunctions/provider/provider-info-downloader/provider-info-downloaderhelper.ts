@@ -101,16 +101,20 @@ export default new class ProviderInfoDownloadHelper {
             const relations = await series.getAllRelations(await MainListManager.getMainList());
             if (relations.length !== 0) {
                 for (const relation of relations) {
-                    const allBindings = relation.getAllProviderBindings();
-                    const result = allBindings.find((x) => x.providerName === provider.providerName);
-                    if (result) {
-                        const seriesSeason = (await series.getSeason()).seasonNumber;
-                        if (seriesSeason) {
-                            const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
-                            if (this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
-                                return providerData;
+                    try {
+                        const allBindings = relation.getAllProviderBindings();
+                        const result = allBindings.find((x) => x.providerName === provider.providerName);
+                        if (result) {
+                            const seriesSeason = (await series.getSeason()).seasonNumber;
+                            if (seriesSeason) {
+                                const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
+                                if (this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
+                                    return providerData;
+                                }
                             }
                         }
+                    } catch (err) {
+                        logger.error(err);
                     }
                 }
             }

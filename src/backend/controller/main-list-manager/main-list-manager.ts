@@ -46,7 +46,7 @@ export default class MainListManager {
             if (series.lastInfoUpdate === 0) {
                 logger.error('[ERROR] Series no last info update! In MainList.');
             }
-            logger.log('info', '[MainList] Series was added to MainList');
+            logger.log('info', '[MainList] Series was added to MainList. New list size: ' + this.mainList.length);
             MainListManager.mainList.push(...results);
         } catch (err) {
             logger.error(err);
@@ -85,12 +85,12 @@ export default class MainListManager {
      * Refresh cached data and clean up double entrys.
      */
     public static async finishListFilling() {
-        logger.log('info', '[MainList] Cleanup Mainlist');
+        logger.log('info', '[MainList] Cleanup Mainlist. Current list size: ' + this.mainList.length);
         const episodeMappingHelperInstance = new EpisodeMappingHelper();
         MainListManager.listMaintance = true;
         try {
             MainListManager.secondList = [...MainListManager.mainList];
-            logger.log('info', '[MainList] Temp List created');
+            logger.log('info', '[MainList] Temp List created. Temp list size: ' + this.secondList.length);
             MainListManager.mainList = [];
             for (const index = 0; this.secondList.length !== 0;) {
                 try {
@@ -108,7 +108,7 @@ export default class MainListManager {
                 this.secondList.shift();
             }
             await MainListLoader.saveData(MainListManager.mainList);
-            logger.log('info', '[MainList] Finish Cleanup Mainlist');
+            logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length);
         } catch (err) {
             logger.error(err);
         }

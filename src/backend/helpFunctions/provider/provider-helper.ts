@@ -117,9 +117,12 @@ export class ProviderHelper {
         const providersThatNeedUpdates = await this.getProvidersThatNeedUpdates(currentProviders, target);
         for (const providerThatNeedUpdate of providersThatNeedUpdates) {
             try {
-                const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                await series.addProviderDatas(...result);
-                results.push(...result);
+                const providerLocalData = tempSeriesCopy.getListProvidersInfos().find(x => x.provider === providerThatNeedUpdate.providerName);
+                if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.ADVANCED_BASIC_INFO || !providerLocalData) {
+                    const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                    await series.addProviderDatas(...result);
+                    results.push(...result);
+                }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #2: ' + err);
             }
@@ -131,7 +134,7 @@ export class ProviderHelper {
         const results = [];
         const currentProviders = series.getAllProviderLocalDatas();
         const tempSeriesCopy = Object.assign(new Series(), series);
-        const infoProvidersThatNeedUpdates =  this.getInfoProviderThatNeedUpdates(currentProviders);
+        const infoProvidersThatNeedUpdates = this.getInfoProviderThatNeedUpdates(currentProviders);
         for (const infoProvider of infoProvidersThatNeedUpdates) {
             try {
                 const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
@@ -252,15 +255,19 @@ export class ProviderHelper {
     private getAvaibleProvidersThatCanProvideProviderId(avaibleProviders: ProviderLocalData[], targetProvider: ExternalProvider): ExternalProvider[] {
         const result: ExternalProvider[] = [];
         for (const provider of avaibleProviders) {
-            if (provider.provider !== targetProvider.providerName) {
-                if (this.canGetTargetIdFromCurrentProvider(provider, targetProvider)) {
-                    try {
-                        const instance = ProviderList.getExternalProviderInstance(provider);
-                        result.push(instance);
-                    } catch (err) {
-                        logger.error(err);
+            try {
+                if (provider.provider !== targetProvider.providerName) {
+                    if (this.canGetTargetIdFromCurrentProvider(provider, targetProvider)) {
+                        try {
+                            const instance = ProviderList.getExternalProviderInstance(provider);
+                            result.push(instance);
+                        } catch (err) {
+                            logger.error(err);
+                        }
                     }
                 }
+            } catch (err) {
+                logger.debug(err);
             }
         }
         return result;

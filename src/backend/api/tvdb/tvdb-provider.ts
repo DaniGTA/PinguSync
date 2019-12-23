@@ -2,6 +2,7 @@
 import request from 'request';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import logger from '../../logger/logger';
 import ExternalProvider from '../provider/external-provider';
 import InfoProvider from '../provider/info-provider';
@@ -104,43 +105,30 @@ export default class TVDBProvider extends InfoProvider {
     }
 
     private async webRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
-        logger.log('info', '[TVDB] Start WebRequest');
-        return new Promise<any>((resolve, reject) => {
-            (async () => {
-                try {
-                    request({
-                        method,
-                        url,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + await this.getAccessKey(),
-                        },
 
-                        body,
-                        timeout: 5000,
-                    }, (error: any, response: any, body: any) => {
-                        try {
-                            if (response.statusCode === 200 || response.statusCode === 201) {
-                                const data: T = JSON.parse(body) as T;
-                                resolve(data);
-                            } else {
-                                logger.error('[TVDB] status code: ' + response.statusCode);
-                                reject();
-                            }
-                        } catch (err) {
-                            logger.error(error);
-                            logger.error(err);
-                            reject();
-                        }
-                    }).on('error', (err) => {
-                        logger.error(err);
-                        reject();
-                    });
-                } catch (err) {
-                    logger.error(err);
-                    reject();
-                }
-            })();
-        });
+        try {
+            const response = await WebRequestManager.request({
+                method,
+                uri: url,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + await this.getAccessKey(),
+                },
+
+                body,
+                timeout: 5000,
+            });
+
+            if (response.statusCode === 200 || response.statusCode === 201) {
+                const data: T = JSON.parse(response.body) as T;
+                return data;
+            } else {
+                logger.error('[TVDB] status code: ' + response.statusCode);
+                throw new Error('[TVDB] status code: ' + response.statusCode);
+            }
+        } catch (err) {
+            logger.error(err);
+            throw new Error(err);
+        }
     }
 }

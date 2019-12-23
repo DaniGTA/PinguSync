@@ -60,7 +60,7 @@ describe('Series Helper', () => {
         listProvider.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProvider.releaseYear = 2013;
         listProvider.isNSFW = false;
-        listProvider.addSeriesName(new Name('Test', 'x-jap'));
+        listProvider.addSeriesName(new Name('Other Series', 'x-jap'));
         await b.addListProvider(listProvider);
 
         // tslint:disable-next-line: no-string-literal

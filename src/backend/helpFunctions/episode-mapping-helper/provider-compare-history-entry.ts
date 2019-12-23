@@ -1,8 +1,10 @@
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 
-export default class ProviderCompareHistoryEntry{
+export default class ProviderCompareHistoryEntry {
     public providerAName: string;
     public providerBName: string;
+    public providerASeason: number | undefined;
+    public providerBSeason: number | undefined;
     /**
      * Episode difference that has been used to compare provider a and provider b
      *
@@ -11,9 +13,15 @@ export default class ProviderCompareHistoryEntry{
      */
     public compareDiff: number;
 
-    constructor(providerA: ProviderLocalData, providerB: ProviderLocalData, diff: number) {
+    constructor(providerA: ProviderLocalData,
+        providerB: ProviderLocalData,
+        providerASeason: number | undefined,
+        providerBSeason: number | undefined,
+        diff: number) {
         this.providerAName = providerA.provider;
         this.providerBName = providerB.provider;
+        this.providerASeason = providerASeason;
+        this.providerBSeason = providerBSeason;
         this.compareDiff = diff;
     }
 
@@ -28,11 +36,13 @@ export default class ProviderCompareHistoryEntry{
         return false;
     }
 
-    public isItTheSame(providerA: ProviderLocalData, providerB: ProviderLocalData, diff: number): boolean {
+    public isItTheSame(providerA: ProviderLocalData, providerB: ProviderLocalData, providerASeason: number | undefined,
+        providerBSeason: number | undefined, diff: number): boolean {
         if (this.compareDiff === diff) {
-            if (this.providerAName === providerA.provider && this.providerBName === providerB.provider) {
+            if (this.providerAName === providerA.provider && this.providerASeason === providerASeason
+                && this.providerBName === providerB.provider && this.providerBSeason === providerBSeason) {
                 return true;
-            } else if (this.providerBName === providerA.provider  && this.providerAName === providerB.provider) {
+            } else if (this.providerBName === providerA.provider && this.providerBSeason === providerBSeason && this.providerAName === providerB.provider && this.providerASeason === providerBSeason) {
                 return true;
             }
         }

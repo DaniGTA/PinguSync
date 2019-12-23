@@ -19,3 +19,6 @@ anidb_config.json*
 
 #Electron-builder output
 /dist_electron
+
+#Coverage files
+/coverage

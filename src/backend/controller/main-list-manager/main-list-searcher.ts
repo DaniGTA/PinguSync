@@ -4,6 +4,7 @@ import seriesHelper from '../../helpFunctions/series-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import MainListManager from './main-list-manager';
+import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 
 /**
  * Has search function to find series in the main list.
@@ -88,7 +89,9 @@ export default class MainListSearcher {
             if (listEntry.id === entry.id) {
                 foundedSameSeries.push(listEntry);
             }
-            if (await ProviderComperator.simpleProviderSameIdAndSameSeasonCheckOnSeries(entry, listEntry)) {
+            const providerComperator = new ProviderComperator(entry, listEntry);
+            const providerResult = (await providerComperator.getCompareResult());
+            if (providerResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                 foundedSameSeries.push(listEntry);
             }
         }

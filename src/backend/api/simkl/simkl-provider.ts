@@ -5,9 +5,14 @@ import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
+import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import logger from '../../logger/logger';
+import AniDBProvider from '../anidb/anidb-provider';
+import MalProvider from '../mal/mal-provider';
+import ExternalProvider from '../provider/external-provider';
 import ListProvider from '../provider/list-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
+import TVDBProvider from '../tvdb/tvdb-provider';
 import CodeResponse from './objects/codeResponse';
 import { SimklErrorResponse } from './objects/simklErrorResponse';
 import { ISimklFullInfoAnimeResponse } from './objects/simklFullInfoAnimeResponse';
@@ -17,10 +22,6 @@ import { ISimklTextSearchResults } from './objects/simklTextSearchResults';
 import { UserListResponse } from './objects/userListResonse';
 import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
-import ExternalProvider from '../provider/external-provider';
-import AniDBProvider from '../anidb/anidb-provider';
-import MalProvider from '../mal/mal-provider';
-import TVDBProvider from '../tvdb/tvdb-provider';
 
 export default class SimklProvider extends ListProvider {
     public static instance: SimklProvider;
@@ -48,13 +49,13 @@ export default class SimklProvider extends ListProvider {
         const endResults: MultiProviderResult[] = [];
         try {
             endResults.push(...await this.animeTextSearch(seriesName));
-        } catch (err) { }
+        } catch (err) { logger.debug(err); }
         try {
             endResults.push(...await this.tvTextSearch(seriesName));
-        } catch (err) { }
+        } catch (err) { logger.debug(err); }
         try {
             endResults.push(...await this.movieTextSearch(seriesName));
-        } catch (err) { }
+        } catch (err) { logger.debug(err); }
 
 
         return endResults;
@@ -151,50 +152,40 @@ export default class SimklProvider extends ListProvider {
         if (!await this.isProviderAvailable()) {
             throw new Error('timeout active');
         }
-        logger.log('info', '[Simkl] Start WebRequest');
-        const that = this;
-        return new Promise<T>((resolve, reject) => {
-            try {
-                request({
-                    method: method,
-                    url,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + that.userData.accessToken,
-                    },
-                    body: body,
-                    timeout: 1000,
-                }, (error: any, response: any, body: any) => {
-                    try {
 
-                        if (response.statusCode === 200 || response.statusCode === 201) {
-                            const data: T = JSON.parse(body) as T;
-                            resolve(data);
-                        } else if (response.statusCode === 412) {
-                            const e: SimklErrorResponse = (JSON.parse(body)) as SimklErrorResponse;
-                            if (e.message === 'Total Requests Limit Exceeded') {
-                                const date = new Date();
-                                date.setHours(date.getHours() + 24);
-                                this.timeout = date.getTime();
-                            }
-                            reject();
-                        } else {
-                            logger.error('[Simkl] status code:', response.statusCode);
-                            reject();
-                        }
+        try {
+            const response = await WebRequestManager.request({
+                method: method,
+                uri: url,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + this.userData.accessToken,
+                },
+                body: body,
+                timeout: 1000,
+            });
+            logger.log('info', '[Simkl] Start WebRequest');
 
-                    } catch (err) {
-                        logger.error(err);
-                        reject();
-                    }
-                }).on('error', (err) => {
-                    logger.error(err);
-                    reject();
-                });
-            } catch (err) {
-                logger.error(err);
-                reject();
+            if (response.statusCode === 200 || response.statusCode === 201) {
+                const data: T = JSON.parse(response.body) as T;
+                return data;
+            } else if (response.statusCode === 412) {
+                const e: SimklErrorResponse = (JSON.parse(response.body)) as SimklErrorResponse;
+                if (e.message === 'Total Requests Limit Exceeded') {
+                    const date = new Date();
+                    date.setHours(date.getHours() + 24);
+                    this.timeout = date.getTime();
+                }
+                throw new Error('[Simkl] Reached request limit');
+            } else {
+                logger.error('[Simkl] status code:', response.statusCode);
+                throw new Error('[Simkl] status code:' + response.statusCode);
             }
-        });
+
+        } catch (err) {
+            logger.error(err);
+            throw new Error(err);
+        }
+
     }
 }
