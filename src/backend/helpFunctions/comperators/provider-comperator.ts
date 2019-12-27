@@ -184,7 +184,6 @@ export default class ProviderComperator {
         } else if (absoluteResults.includes(AbsoluteResult.ABSOLUTE_TRUE)) {
             finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
         }
-
         return finalResult;
     }
 

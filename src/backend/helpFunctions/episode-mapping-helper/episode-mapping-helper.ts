@@ -296,7 +296,7 @@ export default class EpisodeMappingHelper {
                 const detailedEpB = providerB.detailEpisodeInfo[fastCheck];
                 if (!this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA)) {
                     if (!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB)) {
-                        const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
+                        const result = EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
                         if (result.matches !== 0 && result.matchAble === result.matches) {
                             const epA = new EpisodeProviderBind(detailedEpA, providerA);
                             const epB = new EpisodeProviderBind(providerB.detailEpisodeInfo[fastCheck], providerB);
@@ -312,7 +312,7 @@ export default class EpisodeMappingHelper {
                 if (!this.isEpisodeAlreadyRated(detailedEpA, detailedEpB, ratedEquality)) {
                     if (!this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA)) {
                         if (!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB)) {
-                            const result = await EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
+                            const result = EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
                             if (result.matches !== 0) {
                                 const epA = new EpisodeProviderBind(detailedEpA, providerA);
                                 const epB = new EpisodeProviderBind(detailedEpB, providerB);

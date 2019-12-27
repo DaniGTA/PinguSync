@@ -12,6 +12,7 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
+import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
@@ -134,9 +135,13 @@ export default new class TraktConverter {
     public async getDetailedEpisodeInfo(seasonInfos: ITraktShowSeasonInfo[]): Promise<Episode[]> {
         const detailedEpisodes: Episode[] = [];
         for (const seasonInfo of seasonInfos) {
+            let seasonNumber = seasonInfo.title ? await (await titleCheckHelper.getSeasonNumberBySeasonMarkerInTitle(seasonInfo.title)).seasonNumber : '';
             if (seasonInfo.episodes) {
                 for (const episode of seasonInfo.episodes) {
-                    const tempEpisode = new Episode(episode.number, seasonInfo.number);
+                    if (seasonNumber === undefined || Number.isNaN(seasonNumber as number)) {
+                        seasonNumber = seasonInfo.number;
+                    }
+                    const tempEpisode = new Episode(episode.number, seasonNumber as number);
                     tempEpisode.title = [new EpisodeTitle(episode.title)];
                     tempEpisode.providerEpisodeId = episode.ids.trakt;
                     if (seasonInfo.title && seasonInfo.title.toLowerCase().includes('special')) {
@@ -146,11 +151,14 @@ export default new class TraktConverter {
                 }
             } else if (seasonInfo.episode_count) {
                 for (let index = 1; index < seasonInfo.episode_count; index++) {
-                   const tempEpisode = new Episode(index, seasonInfo.number);
-                   if (seasonInfo.title && seasonInfo.title.includes('special')) {
+                    if (seasonNumber !== undefined && Number.isNaN(seasonNumber as number)) {
+                        seasonNumber = seasonInfo.number;
+                    }
+                    const tempEpisode = new Episode(index, seasonNumber as number);
+                    if (seasonInfo.title && seasonInfo.title.includes('special')) {
                         tempEpisode.type = EpisodeType.SPECIAL;
                     }
-                   detailedEpisodes.push(tempEpisode);
+                    detailedEpisodes.push(tempEpisode);
 
                 }
             }

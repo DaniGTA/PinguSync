@@ -1,7 +1,7 @@
 import Episode from '../../controller/objects/meta/episode/episode';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import ComperatorResult from './comperator-results.ts/comperator-result';
+import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 
 export default class EpisodeComperator {
@@ -31,9 +31,21 @@ export default class EpisodeComperator {
      * @param season
      * @param upshift add the number to the episode number from episode a. This make ep number 1 and ep number 2 match able when upshift set to 1
      */
-    public static async compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: number, providerBSeason?: number, season?: number, upshift: number = 0): Promise<ComperatorResult> {
+    public static compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: number, providerBSeason?: number, season?: number, upshift: number = 0): ComperatorResult {
         const result = new ComperatorResult();
         result.matchAble++;
+        if (aEpisode.id === bEpsiode.id) {
+            result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+            result.matches++;
+            return result;
+        } else if (aEpisode.provider && bEpsiode.provider) {
+            if (aEpisode.provider === bEpsiode.provider && aEpisode.providerEpisodeId === bEpsiode.providerEpisodeId) {
+                result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                result.matches++;
+                return result;
+            }
+        }
+
         if (aEpisode.episodeNumber + upshift === bEpsiode.episodeNumber) {
             result.matches++;
             result.matchAble++;

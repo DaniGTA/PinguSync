@@ -1,7 +1,13 @@
 
 
 import { strictEqual } from 'assert';
+import Banner from '../../../src/backend/controller/objects/meta/banner';
 import Cover from '../../../src/backend/controller/objects/meta/cover';
+import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
+import EpisodeMapping from '../../../src/backend/controller/objects/meta/episode/episode-mapping';
+import Genre from '../../../src/backend/controller/objects/meta/genre';
+import { ImageSize } from '../../../src/backend/controller/objects/meta/image-size';
+import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -66,15 +72,15 @@ describe('listProviderLocalData tests', () => {
         const a = new ListProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
+        a.isNSFW = true;
         a.lastUpdate = new Date(0);
         a.covers.push(new Cover('c'));
         const b = new ListProviderLocalData(1);
         b.episodes = 14;
-        b.publicScore = 20;
+        b.publicScore = 25;
         b.lastUpdate = new Date(1);
         const c = new ListProviderLocalData(1);
         c.episodes = 15;
-        c.publicScore = 20;
         c.score = 40;
         c.lastUpdate = new Date(2);
         c.covers.push(new Cover('c'));
@@ -83,9 +89,54 @@ describe('listProviderLocalData tests', () => {
         const merged = await ListProviderLocalData.mergeProviderInfos(c, b, a);
         strictEqual(merged.covers.length, 1);
         strictEqual(merged.episodes, 15);
-        strictEqual(merged.publicScore, 20);
+        strictEqual(merged.publicScore, 25);
         strictEqual(merged.lastUpdate.getTime(), 2);
         strictEqual(merged.score, 40);
+        strictEqual(merged.isNSFW, true);
+        return;
+    });
+
+    test('should not dublicate lists', async () => {
+        const a = new ListProviderLocalData(1);
+        a.episodes = 13;
+        a.publicScore = 20;
+        a.score = 20;
+        a.lastUpdate = new Date(0);
+        a.covers.push(new Cover('c'));
+        a.alternativeIds.push(5);
+        a.banners.push(new Banner('x', ImageSize.LARGE));
+        a.banners.push(new Banner('d', ImageSize.LARGE));
+        a.genres.push(new Genre('Action', 100));
+        a.prequelIds.push(1);
+        a.sequelIds.push(1);
+        a.watchProgress = [(new WatchProgress(1))];
+        const episode = new Episode(5, 1);
+        const episode2 = new Episode(6, 1);
+        episode.addMapping(new EpisodeMapping(episode2, a));
+        a.detailEpisodeInfo.push(episode);
+        const b = Object.assign(new ListProviderLocalData(1), a);
+        b.lastUpdate = new Date(1);
+        b.detailEpisodeInfo = [new Episode(5, 1)];
+
+
+        const merged = await ListProviderLocalData.mergeProviderInfos(b, a);
+        strictEqual(merged.covers.length, 1);
+        strictEqual(merged.episodes, 13);
+        strictEqual(merged.publicScore, 20);
+        strictEqual(merged.lastUpdate.getTime(), 1);
+        strictEqual(merged.score, 20);
+        strictEqual(merged.alternativeIds.length, 1);
+        strictEqual(merged.banners.length, 2);
+        strictEqual(merged.genres.length, 1);
+        strictEqual(merged.detailEpisodeInfo.length, 1);
+        strictEqual(merged.detailEpisodeInfo[0].mappedTo.length, 1);
+        strictEqual(merged.prequelIds.length, 1);
+        strictEqual(merged.sequelIds.length, 1);
+        if (merged.watchProgress !== undefined) {
+            strictEqual(merged.watchProgress.length, 1);
+        } else {
+            fail();
+        }
         return;
     });
 });

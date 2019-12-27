@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">88.24% </span>
+        <span class="strong">94.12% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>15/17</span>
+        <span class='fraction'>16/17</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.5% </span>
+        <span class="strong">93.75% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>14/16</span>
+        <span class='fraction'>15/16</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">88.24% </span>
+        <span class="strong">94.12% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/17</span>
+        <span class='fraction'>16/17</span>
       </div>
     </div>
     <p class="quiet">
@@ -76,34 +76,34 @@
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">39x</span>
+<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3239x</span>
-<span class="cline-any cline-yes">3239x</span>
-<span class="cline-any cline-yes">3239x</span>
+<span class="cline-any cline-yes">3381x</span>
+<span class="cline-any cline-yes">3381x</span>
+<span class="cline-any cline-yes">3381x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3245x</span>
-<span class="cline-any cline-yes">3245x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">3387x</span>
+<span class="cline-any cline-yes">3387x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3376x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3240x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3245x</span>
+<span class="cline-any cline-yes">3387x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { MediaType } from '../../controller/objects/meta/media-type';
@@ -120,8 +120,8 @@ export default class MediaTypeComperator {
     public static async comperaMediaType(aMediaType: MediaType, bMediaType: MediaType): Promise&lt;ComperatorResult&gt; {
         const comperatorResult = new ComperatorResult();
         if (aMediaType !== MediaType.UNKOWN &amp;&amp; bMediaType !== MediaType.UNKOWN) {
-            <span class="missing-if-branch" title="if path not taken" >I</span>if ((aMediaType === MediaType.ANIME &amp;&amp; bMediaType === MediaType.SERIES) || (bMediaType === MediaType.ANIME &amp;&amp; aMediaType === MediaType.SERIES)) {
-<span class="cstat-no" title="statement not covered" >                comperatorResult.matchAble += 2;</span>
+            if ((aMediaType === MediaType.ANIME &amp;&amp; bMediaType === MediaType.SERIES) || (bMediaType === MediaType.ANIME &amp;&amp; aMediaType === MediaType.SERIES)) {
+                comperatorResult.matchAble += 2;
             } else {
                 comperatorResult.matchAble += 4;
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (aMediaType === bMediaType) {
@@ -142,7 +142,7 @@ export default class MediaTypeComperator {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Dec 23 2019 14:32:46 GMT+0100 (GMT+01:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Dec 26 2019 18:41:55 GMT+0100 (Mitteleuropäische Normalzeit)
 </div>
 </div>
 <script src="..\..\..\..\prettify.js"></script>

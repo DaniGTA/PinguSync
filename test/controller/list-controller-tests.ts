@@ -8,7 +8,6 @@ import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import Series from '../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-import listHelper from '../../src/backend/helpFunctions/list-helper';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
 import TestHelper from '../test-helper';
 import TestProvider from './objects/testClass/testProvider';

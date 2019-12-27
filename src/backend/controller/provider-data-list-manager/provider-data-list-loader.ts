@@ -1,9 +1,11 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import logger from '../../logger/logger';
+import Episode from '../objects/meta/episode/episode';
+import EpisodeMapping from '../objects/meta/episode/episode-mapping';
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
-import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
 export default class ProviderDataListLoader {
     /**
      * Load json data from file.
@@ -19,6 +21,18 @@ export default class ProviderDataListLoader {
                 logger.log('info', 'Items loaded: ' + loadedData.length);
                 for (let index = 0; index < loadedData.length; index++) {
                     const loadedDataEntry = loadedData[index];
+                    loadedDataEntry.lastUpdate = new Date(loadedDataEntry.lastUpdate);
+                    loadedDataEntry.lastExternalChange = new Date(loadedDataEntry.lastExternalChange);
+                    for (let index2 = 0; index2 < loadedDataEntry.detailEpisodeInfo.length; index2++) {
+                        const x = loadedDataEntry.detailEpisodeInfo[index2];
+
+                        loadedDataEntry.detailEpisodeInfo[index2] = Object.assign(new Episode(x.episodeNumber, x.season, x.title), x);
+                        for (let y = 0; y < x.mappedTo.length; y++) {
+                            // tslint:disable-next-line: no-object-literal-type-assertion
+                            x.mappedTo[y] = Object.assign(new EpisodeMapping(new Episode(0), {} as ProviderLocalData), x.mappedTo[y]);
+                        }
+                    }
+
                     if (loadedData[index].instance_name === 'ListProviderLocalData') {
                         loadedData[index] = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
                     } else if (loadedData[index].instance_name === 'InfoProviderLocalData') {

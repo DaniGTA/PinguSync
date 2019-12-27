@@ -17,7 +17,7 @@ export default class MainListPackageManager {
         for (const entryList of tempList) {
             try {
                 const tempPackage = await this.createSeriesPackage(entryList, tempList);
-                tempList = await listHelper.removeEntrys(tempList, ...tempPackage.allRelations);
+                tempList = listHelper.removeEntrysSync(tempList, ...tempPackage.allRelations);
                 for (const entry of tempPackage.allRelations) {
                     for (const entry2 of tempPackage.allRelations) {
                         if ((await entry.getSeason()).seasonNumber === (await entry2.getSeason()).seasonNumber && entry.id !== entry2.id) {

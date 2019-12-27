@@ -1,8 +1,11 @@
 import Cover from '../controller/objects/meta/cover';
+import Episode from '../controller/objects/meta/episode/episode';
 import Name from '../controller/objects/meta/name';
 import Overview from '../controller/objects/meta/overview';
 import Series from '../controller/objects/series';
 import logger from '../logger/logger';
+import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+import EpisodeComperator from './comperators/episode-comperator';
 import sortHelper from './sort-helper';
 
 class ListHelper {
@@ -50,6 +53,20 @@ class ListHelper {
         }
         return array;
     }
+
+    public removeEntrysSync<T>(array: T[], ...entrys: T[] | readonly T[]): T[] {
+        for (const entry of entrys) {
+            const i = array.findIndex((listEntry) => this.objectsEquals(listEntry, entry));
+            if (i > -1) {
+                array.splice(i, 1);
+            } else {
+                logger.error('[ListHelper] Item doesnt exist in List!');
+            }
+        }
+        return array;
+    }
+
+
     public async shuffle<T>(list: T[]): Promise<T[]> {
         let m = list.length, t, i;
 
@@ -95,6 +112,33 @@ class ListHelper {
         return mostCommonNumber;
     }
 
+    public getUniqueEpisodeList(arr: Episode[]): Episode[] {
+        let copyArr = [...arr];
+        const uniqueEpisodeList: Episode[] = [];
+        if (arr.length !== 0) {
+            for (let index = 0; index < copyArr.length; index++) {
+                let duplicateFound = false;
+                const entry1 = copyArr[index];
+                for (let index2 = index + 1; index2 < copyArr.length; index2++) {
+                    const entry2 = copyArr[index2];
+                    const result = EpisodeComperator.compareDetailedEpisode(entry1, entry2);
+                    if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
+                        entry1.addMappings(...entry2.mappedTo);
+                        if (!duplicateFound) {
+                            uniqueEpisodeList.push(entry1);
+                            copyArr = this.removeEntrysSync(copyArr, entry2);
+                            duplicateFound = true;
+                        }
+                    }
+                }
+                if (!duplicateFound) {
+                    uniqueEpisodeList.push(entry1);
+                }
+            }
+        }
+        return uniqueEpisodeList;
+    }
+
     public async getUniqueOverviewList(arr: Overview[]): Promise<Overview[]> {
         return arr.filter((v, i, a) => a.findIndex((t) => (t.content === v.content)) === i);
     }
@@ -106,7 +150,14 @@ class ListHelper {
     public async getUniqueList<T>(arr: T[]): Promise<T[]> {
         return arr.filter((v, i, a) => a.findIndex((t) => (t === v)) === i);
     }
-
+    /**
+     * Compares the content of a object.
+     * {a: 7, b:'a'} vs {a: 7, b:'a'} from different objects will be the same.
+     * @param arr
+     */
+    public async getUniqueObjectList<T>(arr: T[]): Promise<T[]> {
+        return arr.filter((v, i, a) => a.findIndex((t) => this.objectsEquals(t, v)) === i);
+    }
     public async getLazyUniqueStringList(arr: Name[]): Promise<Name[]> {
         return arr.filter((s, index, array) => array.findIndex((item) => (s.name.toLocaleLowerCase() === item.name.toLocaleLowerCase())) === index);
     }

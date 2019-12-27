@@ -4,6 +4,7 @@ import WatchProgress from '../../src/backend/controller/objects/meta/watch-progr
 import Series from '../../src/backend/controller/objects/series';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 import TestHelper from '../test-helper';
+import Episode from '../../src/backend/controller/objects/meta/episode/episode';
 
 
 describe('List Helper', () => {
@@ -107,5 +108,41 @@ describe('List Helper', () => {
         const array2 = [new Name('tesT1', 'en'), new Name('tesT4', 'en'), new Name('tesT3', 'en')];
         const result = await listHelper.isAnyListEntryInList(array, array2);
         assert.strictEqual(result, false);
+    });
+    
+    test('should filter duplicates in episode list (1/2)', async () => {
+        const episode1 = new Episode(1);
+        episode1.provider = '';
+        const episode2 = new Episode(2);
+        episode2.provider = '';
+        const episode3 = new Episode(3);
+        episode3.provider = '';
+        const episode4 = new Episode(3);
+        episode4.provider = '';
+        const episode5 = new Episode(4);
+        episode5.provider = '';
+
+        const result = await listHelper.getUniqueEpisodeList([episode1, episode2, episode3, episode4, episode5]);
+
+        assert.strictEqual(result.length, 4);
+    });
+
+    test('should filter duplicates in episode list (2/2)', async () => {
+        const episode1 = new Episode(1);
+        episode1.provider = '';
+        const episode2 = new Episode(1);
+        episode2.provider = '';
+        const episode3 = new Episode(2);
+        episode3.provider = '';
+        const episode4 = new Episode(2);
+        episode4.provider = '';
+        const episode5 = new Episode(3);
+        episode5.provider = '';
+        const episode6 = new Episode(3);
+        episode6.provider = '';
+
+        const result = await listHelper.getUniqueEpisodeList([episode1, episode2, episode3, episode4, episode5, episode6]);
+
+        assert.strictEqual(result.length, 3);
     });
 });

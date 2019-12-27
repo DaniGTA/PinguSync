@@ -1,3 +1,4 @@
+import listHelper from '../../../../helpFunctions/list-helper';
 import logger from '../../../../logger/logger';
 import Banner from '../../../objects/meta/banner';
 import Cover from '../../../objects/meta/cover';
@@ -10,6 +11,69 @@ import Overview from '../../../objects/meta/overview';
 import { ProviderInfoStatus } from './provider-info-status';
 
 export default abstract class ProviderLocalData {
+
+    /**
+     * b will be merged in to a. Includes all basic lists and ALL static values.
+     *
+     * All lists that are specific for other providers will merged but not be unique and doubled,
+     * they needed too be filtered by the merged function of the provider.
+     * @param a
+     * @param b
+     */
+    protected static async mergeProviderLocalData(...providers: ProviderLocalData[]): Promise<ProviderLocalData> {
+        providers.sort((a, b) => a.lastUpdate.getTime() - b.lastUpdate.getTime());
+        let finalProvider: any = {};
+        for (const provider of providers) {
+            finalProvider = this.mergeBasicEntrys(finalProvider, provider);
+        }
+
+        finalProvider.genres = finalProvider.genres ? await listHelper.getUniqueObjectList(finalProvider.genres) : [];
+        finalProvider.banners = finalProvider.banners ? await listHelper.getUniqueObjectList(finalProvider.banners) : [];
+        finalProvider.covers = finalProvider.covers ? await listHelper.getUniqueObjectList(finalProvider.covers) : [];
+
+        finalProvider.names = finalProvider.names ? await listHelper.getUniqueNameList(finalProvider.names) : [];
+        finalProvider.overviews = finalProvider.overviews ? await listHelper.getUniqueOverviewList(finalProvider.overviews) : [];
+        return finalProvider;
+    }
+
+    private static mergeBasicEntrys(a: ProviderLocalData, b: ProviderLocalData): ProviderLocalData {
+        const finalProvider: any = a;
+        for (const key in b) {
+            if (b.hasOwnProperty(key)) {
+                const keyValue = (b as any)[key];
+                if (Array.isArray(keyValue)) {
+                    if (finalProvider[key] !== undefined) {
+                        if (key === 'sequelIds' || key === 'prequelIds' || key === 'alternativeIds') {
+                            if (keyValue.length !== 0) {
+                                finalProvider[key] = keyValue;
+                            }
+                        } else if (key === 'detailEpisodeInfo') {
+                            finalProvider[key] = listHelper.getUniqueEpisodeList([...finalProvider[key], ...keyValue]);
+                        } else {
+                            finalProvider[key] = [...finalProvider[key], ...keyValue];
+                        }
+                        continue;
+                    }
+                } else if (key === 'infoStatus') {
+                    if (finalProvider[key] !== undefined) {
+                        if (finalProvider[key] > keyValue) {
+                                finalProvider[key] = keyValue;
+                        }
+                        continue;
+                    }
+                } else if (key === 'isNSFW') {
+                    if (keyValue) {
+                            finalProvider[key] = keyValue;
+                    }
+                    continue;
+                }
+                if (keyValue !== undefined) {
+                        finalProvider[key] = keyValue;
+                }
+            }
+        }
+        return finalProvider;
+    }
     // ------------------
     //  Provider metadata stuff
     // ------------------

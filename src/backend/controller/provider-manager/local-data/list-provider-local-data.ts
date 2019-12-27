@@ -1,7 +1,5 @@
 import ListProvider from '../../../api/provider/list-provider';
 import listHelper from '../../../helpFunctions/list-helper';
-import Banner from '../../objects/meta/banner';
-import Cover from '../../objects/meta/cover';
 import WatchProgress from '../../objects/meta/watch-progress';
 import { WatchStatus } from '../../objects/series';
 import ProviderList from '../provider-list';
@@ -14,129 +12,9 @@ import ProviderLocalData from './interfaces/provider-local-data';
 export class ListProviderLocalData extends ProviderLocalData {
 
     public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
-        const mergedProvider = Object.assign(new ListProviderLocalData(providers[0].id), providers[0]);
-        let newestProvider: ListProviderLocalData | undefined;
-        const covers: Cover[] = [];
-        const banners: Banner[] = [];
-        for (const provider of providers) {
-            // tslint:disable-next-line: triple-equals
-            if (mergedProvider.id != provider.id) {
-                continue;
-            }
-            mergedProvider.addSeriesName(...provider.names);
-            mergedProvider.addOverview(...provider.overviews);
-            mergedProvider.rawEntry = provider.rawEntry;
-            mergedProvider.covers = provider.covers;
-            if (provider.episodes) {
-                mergedProvider.episodes = provider.episodes;
-            }
-            if (provider.detailEpisodeInfo && provider.detailEpisodeInfo.length !== 0) {
-                mergedProvider.detailEpisodeInfo = provider.detailEpisodeInfo;
-            }
-            if (provider.covers) {
-                for (const cover of provider.covers) {
-                    if (!await listHelper.isCoverInList(covers, cover)) {
-                        covers.push(cover);
-                    }
-                }
-            }
-            if (provider.banners) {
-                for (const banner of provider.banners) {
-                    if (!await listHelper.isCoverInList(banners, banner)) {
-                        banners.push(banner);
-                    }
-                }
-            }
-            if (!newestProvider) {
-                newestProvider = provider;
-            } else if (new Date(newestProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
-                newestProvider = provider;
-            }
-            if (provider.publicScore) {
-                if (mergedProvider.publicScore) {
-                    mergedProvider.publicScore = (mergedProvider.publicScore + provider.publicScore) / 2;
-                } else {
-                    mergedProvider.publicScore = provider.publicScore;
-                }
-            }
-            if (provider.targetSeason) {
-                mergedProvider.targetSeason = provider.targetSeason;
-            }
-
-            if (typeof provider.score !== 'undefined') {
-                if (typeof mergedProvider.score !== 'undefined') {
-                    mergedProvider.score = (mergedProvider.score + provider.score) / 2;
-                } else {
-                    mergedProvider.score = provider.score;
-                }
-            }
-
-            if (typeof provider.watchProgress !== 'undefined') {
-                if (typeof mergedProvider.watchProgress !== 'undefined') {
-                    if (mergedProvider.watchProgress < provider.watchProgress) {
-                        mergedProvider.watchProgress = provider.watchProgress;
-                    }
-                } else {
-                    mergedProvider.watchProgress = provider.watchProgress;
-                }
-            }
-
-            if (await ListProviderLocalData.isValidWatchStatus(provider.watchStatus, mergedProvider.watchStatus)) {
-                mergedProvider.watchStatus = provider.watchStatus;
-
-            }
-        }
-        if (newestProvider) {
-            if (newestProvider.watchProgress) {
-                mergedProvider.watchProgress = newestProvider.watchProgress;
-            }
-            if (newestProvider.watchStatus) {
-                mergedProvider.watchStatus = newestProvider.watchStatus;
-            }
-            if (newestProvider.score) {
-                mergedProvider.score = newestProvider.score;
-            }
-            if (newestProvider.publicScore) {
-                mergedProvider.publicScore = newestProvider.publicScore;
-            }
-            if (newestProvider.episodes) {
-                mergedProvider.episodes = newestProvider.episodes;
-            }
-            if (newestProvider.sequelIds) {
-                mergedProvider.sequelIds = newestProvider.sequelIds;
-            }
-            if (newestProvider.prequelIds) {
-                mergedProvider.prequelIds = newestProvider.prequelIds;
-            }
-            if (newestProvider.customList) {
-                mergedProvider.customList = newestProvider.customList;
-            }
-            if (newestProvider.customListName) {
-                mergedProvider.customListName = newestProvider.customListName;
-            }
-            if (newestProvider.covers) {
-                mergedProvider.covers = newestProvider.covers;
-            }
-            if (newestProvider.covers) {
-                mergedProvider.releaseYear = newestProvider.releaseYear;
-            }
-            if (newestProvider.covers) {
-                mergedProvider.runTime = newestProvider.runTime;
-            }
-            if (newestProvider.detailEpisodeInfo && newestProvider.detailEpisodeInfo.length !== 0) {
-                mergedProvider.detailEpisodeInfo = newestProvider.detailEpisodeInfo;
-            }
-            mergedProvider.infoStatus = newestProvider.infoStatus;
-            if (newestProvider.targetSeason) {
-                mergedProvider.targetSeason = newestProvider.targetSeason;
-            }
-            mergedProvider.names = await listHelper.getUniqueNameList(mergedProvider.names);
-            mergedProvider.overviews = await listHelper.getUniqueOverviewList(mergedProvider.overviews);
-            mergedProvider.lastUpdate = newestProvider.lastUpdate;
-        }
-        mergedProvider.covers = covers;
-        mergedProvider.banners = banners;
-        return mergedProvider;
+        const finalProvider = await this.mergeProviderLocalData(...providers) as ListProviderLocalData;
+        finalProvider.watchProgress = finalProvider.watchProgress ? await listHelper.getUniqueObjectList(finalProvider.watchProgress) : [];
+        return Object.assign(new ListProviderLocalData(finalProvider.id), finalProvider as ListProviderLocalData);
     }
 
     /**
@@ -191,7 +69,7 @@ export class ListProviderLocalData extends ProviderLocalData {
                 return provider;
             }
         }
-        throw new Error('[ListProviderLocalData] NoProviderFound: '+this.provider);
+        throw new Error('[ListProviderLocalData] NoProviderFound: ' + this.provider);
     }
 
     public getHighestWatchedEpisode(): WatchProgress | undefined {

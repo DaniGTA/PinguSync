@@ -21,7 +21,7 @@ export default class TitleComperator {
         if (aNames.length === 0 && bNames.length === 0) {
             return comperatorResult;
         } else {
-            comperatorResult.matchAble += 2;
+            comperatorResult.matchAble += 4;
             if (await titleCheckHelper.checkSeriesNames(a, b)) {
                 comperatorResult.matches += 2;
             } else if (aFirstSeason) {
@@ -33,15 +33,16 @@ export default class TitleComperator {
                     comperatorResult.matches += 2;
                 }
             }
-            comperatorResult.matchAble += 2;
-            const aSeasonNumber = (await Name.getSeasonNumber(aNames)).seasonNumber;
-            const bSeasonNumber = (await Name.getSeasonNumber(bNames)).seasonNumber;
-            if (aSeasonNumber === bSeasonNumber) {
-                comperatorResult.matches += 2;
-            } else if (aSeasonNumber === undefined && bSeasonNumber !== undefined) {
-                comperatorResult.matches += 1;
-            } else if (bSeasonNumber === undefined && aSeasonNumber !== undefined) {
-                comperatorResult.matches += 1;
+            if (comperatorResult.matches !== 0) {
+                const aSeasonNumber = (await Name.getSeasonNumber(aNames)).seasonNumber;
+                const bSeasonNumber = (await Name.getSeasonNumber(bNames)).seasonNumber;
+                if (aSeasonNumber === bSeasonNumber) {
+                    comperatorResult.matches += 2;
+                } else if (aSeasonNumber === undefined && bSeasonNumber !== undefined) {
+                    comperatorResult.matches += 1;
+                } else if (bSeasonNumber === undefined && aSeasonNumber !== undefined) {
+                    comperatorResult.matches += 1;
+                }
             }
         }
         return comperatorResult;

@@ -77,7 +77,7 @@ describe('Provider | Watchlist & Merge', () => {
         }
         assert.notEqual(typeof result, 'undefined');
 
-        assert.equal(providerMerged.sequelIds, 12);
+        assert.equal(providerMerged.sequelIds, 12, 'should take the last sequel id and throw old ones away');
         assert.equal(providerMerged.score, 12);
         assert.equal(providerMerged.watchStatus, WatchStatus.COMPLETED);
         assert.equal(providerMerged.publicScore, 15);

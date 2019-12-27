@@ -25,28 +25,6 @@ export default class SeasonComperator {
                     } catch (err) {
                         logger.error(err);
                     }
-                    if (comperatorResult.aFirstSeason) {
-                        for (const listProviderInfos of comperatorResult.aFirstSeason.getListProvidersInfos()) {
-                            for (const lpi of b.getListProvidersInfos()) {
-                                const comperatorSeason = await comperatorResult.aFirstSeason.getSeason();
-                                if (ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeason([listProviderInfos], [lpi], aSeason, comperatorSeason)) {
-                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                                    return comperatorResult;
-                                }
-                            }
-                        }
-
-                    } else if (comperatorResult.bFirstSeason) {
-                        for (const listProviderInfos of comperatorResult.bFirstSeason.getListProvidersInfos()) {
-                            for (const lpi of a.getListProvidersInfos()) {
-                                const comperatorSeason = await comperatorResult.bFirstSeason.getSeason();
-                                if (ProviderComperator.simpleProviderSameIdAndSameSeasonCheckWithSeason([listProviderInfos], [lpi], aSeason, comperatorSeason)) {
-                                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                                    return comperatorResult;
-                                }
-                            }
-                        }
-                    }
                 }
             } else if (aSeason.seasonError === SeasonError.NONE && bSeason.seasonNumber === 1) {
                 comperatorResult.matches += 1;

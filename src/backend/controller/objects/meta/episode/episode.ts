@@ -50,6 +50,12 @@ export default class Episode {
         this.id = stringHelper.randomString(20);
     }
 
+    public addMappings(...episodeMappings: EpisodeMapping[]) {
+        for (const episodeMapping of episodeMappings) {
+            this.addMapping(episodeMapping);
+        }
+    }
+
     public addMapping(episodeMapping: EpisodeMapping) {
         let canBeMapped = true;
         for (const mapping of this.mappedTo) {

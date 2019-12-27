@@ -18,7 +18,7 @@ export default class ProviderDataListManager {
         try {
             const alreadyExistingEntry = ProviderDataListSearcher.getProviderLDByProviderLD(provider);
             if (alreadyExistingEntry != null) {
-                await this.updateSerieInList(provider);
+                await this.updateProviderInList(provider);
                 return true;
             } else {
                 this.providerDataList.push(provider);
@@ -30,7 +30,7 @@ export default class ProviderDataListManager {
         }
     }
 
-    public static async updateSerieInList(provider: ProviderLocalData) {
+    public static async updateProviderInList(provider: ProviderLocalData) {
         const providerIndex = ProviderDataListSearcher.getIndexByProviderLD(provider);
         if (providerIndex != null) {
             const oldProvider = this.providerDataList[providerIndex];
@@ -39,7 +39,7 @@ export default class ProviderDataListManager {
             } else if (oldProvider instanceof InfoProviderLocalData && provider instanceof InfoProviderLocalData) {
                 this.providerDataList[providerIndex] = await InfoProviderLocalData.mergeProviderInfos(provider, oldProvider);
             } else {
-                logger.error('[ProviderList] Failed update: Not same instance')
+                logger.error('[ProviderList] Failed update: Not same instance');
             }
         }
     }

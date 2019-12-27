@@ -84,7 +84,10 @@ export default class MainListManager {
     /**
      * Refresh cached data and clean up double entrys.
      */
-    public static async finishListFilling() {
+    public static async finishListFilling(): Promise<void> {
+        if (MainListManager.listMaintance === true) {
+            return;
+        }
         logger.log('info', '[MainList] Cleanup Mainlist. Current list size: ' + this.mainList.length);
         const episodeMappingHelperInstance = new EpisodeMappingHelper();
         MainListManager.listMaintance = true;
@@ -99,13 +102,19 @@ export default class MainListManager {
                      * Reset Cache and reload it
                      */
                     await entry.resetCache();
-                    await entry.getSeason();
+                    try {
+                        await entry.getSeason();
+                    } catch (ignore) {
+                        logger.debug(ignore);
+                    }
                     await episodeMappingHelperInstance.generateEpisodeMapping(entry);
                     await MainListManager.addSerieToMainList(entry);
                 } catch (err) {
                     logger.error(err);
                 }
-                this.secondList.shift();
+                if (this.secondList.length !== 0) {
+                    this.secondList.shift();
+                }
             }
             await MainListLoader.saveData(MainListManager.mainList);
             logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length);
