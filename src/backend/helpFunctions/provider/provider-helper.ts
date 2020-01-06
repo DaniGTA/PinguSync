@@ -40,9 +40,13 @@ export class ProviderHelper {
     public async requestProviderInfo(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<ProviderLocalData[]> {
         const localDatas: ProviderLocalData[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
+        const seriesSeason = await series.getSeason();
         for (const idProvider of idProviders) {
             try {
                 const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, idProvider, ProviderInfoStatus.FULL_INFO);
+                if (idProviderResult.mainProvider.targetSeason !== undefined && idProviderResult.mainProvider.targetSeason !== seriesSeason.seasonNumber) {
+                    logger.warn('wrong season');
+                }
                 localDatas.push(...idProviderResult.getAllProviders());
                 await series.addProviderDatas(...idProviderResult.getAllProviders());
             } catch (err) {
@@ -61,6 +65,9 @@ export class ProviderHelper {
                 }
                 requestResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, provider, target);
                 currentResult = requestResult.mainProvider;
+                if (currentResult.targetSeason !== undefined && currentResult.targetSeason !== seriesSeason.seasonNumber) {
+                    logger.warn('wrong season');
+                }
                 await series.addProviderDatas(...requestResult.getAllProviders());
             } catch (err) {
                 logger.error(err);
