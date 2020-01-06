@@ -40,8 +40,11 @@ class SeasonHelper {
             if (searchResult.relationExistButNotFounded) {
                 return new SearchSeasonValueResult(-2, 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
+                const mediaTypeSeries = await series.getMediaType();
                 while (prequel) {
-                    if (await prequel.getMediaType() === await series.getMediaType()) {
+                
+                    const mediaTypePrequel = await prequel.getMediaType();
+                    if (mediaTypePrequel === mediaTypeSeries) {
                         searchCount++;
                         const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE, seriesList);
                         if (prequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {

@@ -20,7 +20,7 @@ export default class EpisodeMappingHelper {
         const currentPackages = ProviderAndSeriesPackage.generatePackages(providers, series);
         await this.prepareDetailedEpisodeInformation(providers, season);
 
-        const ratedEquality: EpisodeRatedEqualityContainer[] = await this.getRatedEqulityOfEpisodes(currentPackages, season);
+        const ratedEquality: EpisodeRatedEqualityContainer[] = this.getRatedEqulityOfEpisodes(currentPackages, season);
 
         await this.calculateMapping(currentPackages, ratedEquality, season);
         const unmappedEpisodesNumber = await this.getNumberOfUnmappedEpisodesFromProviders(providers);
@@ -164,7 +164,7 @@ export default class EpisodeMappingHelper {
             let currentDiff = cDiff;
             for (let episode of providerAndSeriesPackage.provider.detailEpisodeInfo) {
                 if (ratedEquality.length === 0) {
-                    ratedEquality = await this.getRatedEqulityOfEpisodes(packages, season, currentDiff);
+                    ratedEquality = this.getRatedEqulityOfEpisodes(packages, season, currentDiff);
                     if (ratedEquality.length === 0) {
                         break;
                     }
@@ -189,9 +189,9 @@ export default class EpisodeMappingHelper {
                                         currentDiff = diff;
                                         ratedEquality = [];
                                     } else {
-                                        const ratingsA: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episode, ratedEquality);
-                                        const ratingsB: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(episodeBind.episode, ratedEquality);
-                                        await listHelper.removeEntrys(ratedEquality, ...ratingsA, ...ratingsB);
+                                        const ratingsA: EpisodeRatedEqualityContainer[] = this.getAllEpisodeRelatedRating(episode, ratedEquality);
+                                        const ratingsB: EpisodeRatedEqualityContainer[] = this.getAllEpisodeRelatedRating(episodeBind.episode, ratedEquality);
+                                        listHelper.removeEntrysSync(ratedEquality, ...ratingsA, ...ratingsB);
                                     }
                                 }
                             }
@@ -204,7 +204,7 @@ export default class EpisodeMappingHelper {
     }
 
     private async getAllRelatedRatings(ep: Episode, provider: ProviderLocalData, rEquality: EpisodeRatedEqualityContainer[]): Promise<EpisodeRatedEqualityContainer[]> {
-        const ratings: EpisodeRatedEqualityContainer[] = await this.getAllEpisodeRelatedRating(ep, rEquality);
+        const ratings: EpisodeRatedEqualityContainer[] = this.getAllEpisodeRelatedRating(ep, rEquality);
         const tempRating: EpisodeRatedEqualityContainer[] = [];
         for (const rating of ratings) {
             for (const ratingEpisodeBind of rating.episodeBinds) {
@@ -212,7 +212,7 @@ export default class EpisodeMappingHelper {
                     continue;
                 }
 
-                const mappingCandidateRatings = await this.getAllEpisodeRelatedRating(ratingEpisodeBind.episode, rEquality);
+                const mappingCandidateRatings = this.getAllEpisodeRelatedRating(ratingEpisodeBind.episode, rEquality);
                 const uniqResults = mappingCandidateRatings.filter((a) => this.filterOutRatingsThatAreAlreadyThere(ratings, a, provider.provider));
                 tempRating.push(...uniqResults);
             }
@@ -246,7 +246,7 @@ export default class EpisodeMappingHelper {
      * @returns {Promise<EpisodeRatedEqualityContainer[]>}
      * @memberof EpisodeMappingHelper
      */
-    private async getRatedEqulityOfEpisodes(providers: ProviderAndSeriesPackage[], season?: number, cdiff = 0): Promise<EpisodeRatedEqualityContainer[]> {
+    private getRatedEqulityOfEpisodes(providers: ProviderAndSeriesPackage[], season?: number, cdiff = 0): EpisodeRatedEqualityContainer[] {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
         const alreadyComparedProviders = [];
         for (const packageA of providers) {
@@ -278,7 +278,7 @@ export default class EpisodeMappingHelper {
                 }
 
                 if (providerB.detailEpisodeInfo.length !== 0) {
-                    const performResult = await this.performRatingEqualityOfEpisodes(providerA, providerB, aTargetS, bTargetS, season, episodeDiff);
+                    const performResult = this.performRatingEqualityOfEpisodes(providerA, providerB, aTargetS, bTargetS, season, episodeDiff);
                     ratedEquality.push(...performResult);
                     alreadyComparedProviders.push(new ProviderCompareHistoryEntry(providerA, providerB, aTargetS, bTargetS, episodeDiff));
                 }
@@ -288,7 +288,7 @@ export default class EpisodeMappingHelper {
     }
 
     // tslint:disable-next-line: max-line-length
-    private async performRatingEqualityOfEpisodes(providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: number | undefined, bTargetS: number | undefined, season: number | undefined, episodeDiff: number): Promise<EpisodeRatedEqualityContainer[]> {
+    private performRatingEqualityOfEpisodes(providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: number | undefined, bTargetS: number | undefined, season: number | undefined, episodeDiff: number): EpisodeRatedEqualityContainer[] {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
         let fastCheck = 0;
         for (const detailedEpA of providerA.detailEpisodeInfo) {
@@ -417,7 +417,7 @@ export default class EpisodeMappingHelper {
         return false;
     }
 
-    private async getAllEpisodeRelatedRating(episode: Episode, ratedEqualityList: EpisodeRatedEqualityContainer[]): Promise<EpisodeRatedEqualityContainer[]> {
+    private getAllEpisodeRelatedRating(episode: Episode, ratedEqualityList: EpisodeRatedEqualityContainer[]): EpisodeRatedEqualityContainer[] {
         const result: EpisodeRatedEqualityContainer[] = [];
         for (const rating of ratedEqualityList) {
             if (this.hasEpisodeBindThisEpisodes(rating.episodeBinds, episode)) {

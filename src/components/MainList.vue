@@ -59,7 +59,6 @@ export default class MainList extends Vue {
         } catch (err) {}
       }
 
-      this.refreshList();
       console.log("Data size: " + data.length);
       console.log("Showed size: " + x);
     });
@@ -71,13 +70,11 @@ export default class MainList extends Vue {
         data.targetIndex,
         Object.assign(new SeriesPackage(), data.updatedEntry)
       );
-      this.refreshList();
     });
 
     App.workerController.on("series-list-remove-entry", (data: number) => {
       console.log("Remove entry: " + data);
       that.$delete(that.mainList, data);
-      this.refreshList();
     });
   }
 
@@ -85,11 +82,7 @@ export default class MainList extends Vue {
     console.log(a);
   }
 
-  public async refreshList() {
-    // const sorted = await listHelper.sortList(this.mainList);
-    // this.sortedList.length = 0;
-    // this.sortedList.push(...sorted);
-  }
+
 }
 </script>
 

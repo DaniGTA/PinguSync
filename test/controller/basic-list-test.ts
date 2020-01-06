@@ -1,4 +1,4 @@
-import { fail, notStrictEqual, strictEqual } from 'assert';
+import { fail, notStrictEqual, strictEqual, notEqual } from 'assert';
 import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
 import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
@@ -13,6 +13,11 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-man
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import TestHelper from '../test-helper';
+import logger from '../../src/backend/logger/logger';
+import MainListSearcher from '../../src/backend/controller/main-list-manager/main-list-searcher';
+import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
+import ProviderComperator from '../../src/backend/helpFunctions/comperators/provider-comperator';
+import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 
 describe('Basic List | Testrun', () => {
     const lc = new ListController(true);
@@ -291,5 +296,142 @@ describe('Basic List | Testrun', () => {
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
         strictEqual(MainListManager['mainList'].length, 2);
+    }, 4000);
+
+    test('should not create too much detailed episodes', async () => {
+        if (!ListController.instance) {
+            fail();
+        }
+        // s1
+        const series1 = new Series();
+        const s1provider1 = new ListProviderLocalData(46004, TraktProvider);
+        s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        s1provider1.targetSeason = 1;
+        await series1.addListProvider(s1provider1);
+
+        await ListController.instance.addSeriesToMainList(series1);
+
+        // tslint:disable-next-line: no-string-literal
+        await MainListManager['finishListFilling']();
+        // tslint:disable-next-line: no-string-literal
+        strictEqual(MainListManager['mainList'].length, 1);
+        const provider = MainListManager['mainList'][0].getAllProviderLocalDatas().find(x => x.provider === TraktProvider.getInstance().providerName);
+        if (provider != null) {
+            for (const iterator of provider.detailEpisodeInfo) {
+                logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
+            }
+            strictEqual(provider.detailEpisodeInfo.length, 341);
+        } else {
+            fail();
+        }
+    }, 4000);
+
+    test('should update', async () => {
+        if (!ListController.instance) {
+            fail();
+        }
+        // s1
+        const series1 = new Series();
+        const s1provider1 = new ListProviderLocalData(20605, AniListProvider);
+        s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        s1provider1.targetSeason = 1;
+        await series1.addListProvider(s1provider1);
+
+        await ListController.instance.addSeriesToMainList(series1);
+
+        // tslint:disable-next-line: no-string-literal
+        await MainListManager['finishListFilling']();
+        // tslint:disable-next-line: no-string-literal
+        const mpr = new MultiProviderResult(s1provider1);
+        const result = await new MainListSearcher().findSeriesWithMultiProviderResult(mpr);
+
+        notEqual(result, null);
+    }, 4000);
+
+    test('should get the right season.', async () => {
+        if (!ListController.instance) {
+            fail();
+        }
+        // s1
+        const series1 = new Series();
+        const s1provider1 = new ListProviderLocalData(79352, TraktProvider);
+        s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series1.addListProvider(s1provider1);
+
+        // s2
+        const series2 = new Series();
+        const s2provider1 = new ListProviderLocalData(99539, AniListProvider);
+        s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series2.addListProvider(s2provider1);
+
+        // s3
+        const series3 = new Series();
+        const s3provider1 = new ListProviderLocalData(108928, AniListProvider);
+        s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series3.addListProvider(s3provider1);
+
+        await ListController.instance.addSeriesToMainList(series1);
+        await ListController.instance.addSeriesToMainList(series2);
+        await ListController.instance.addSeriesToMainList(series3);
+        // tslint:disable-next-line: no-string-literal
+        await MainListManager['finishListFilling']();
+        
+        const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series3, TraktProvider.getInstance());
+        const seasonTarget = series3.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
+
+        strictEqual(seasonTarget, 3);
+        // tslint:disable-next-line: no-string-literal
+        const provider = MainListManager['mainList'][2].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        if (provider != null) {
+            for (const iterator of provider.detailEpisodeInfo) {
+                logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
+            }
+            const season = MainListManager['mainList'][2].getProviderSeasonTarget(provider.provider);
+            strictEqual(season, 3);
+        } else {
+            fail();
+        }
+    }, 4000);
+
+    test('should get the right season. 2', async () => {
+        if (!ListController.instance) {
+            fail();
+        }
+
+        // s2
+        const series2 = new Series();
+        const s2provider1 = new ListProviderLocalData(20923, AniListProvider);
+        s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series2.addListProvider(s2provider1);
+        await ListController.instance.addSeriesToMainList(series2);
+
+        // s3
+        const series3 = new Series();
+        const s3provider1 = new ListProviderLocalData(21518, AniListProvider);
+        s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series3.addListProvider(s3provider1);
+        await ListController.instance.addSeriesToMainList(series3);
+
+        // tslint:disable-next-line: no-string-literal
+        await MainListManager['finishListFilling']();
+
+        const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series3, TraktProvider.getInstance());
+
+        strictEqual(result.targetSeason, 2);
+
+        const seasonTarget = series3.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
+
+        strictEqual(seasonTarget, 2);
+        // tslint:disable-next-line: no-string-literal
+        const provider = MainListManager['mainList'][1].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        if (provider != null) {
+            for (const iterator of provider.detailEpisodeInfo) {
+                logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
+            }
+            const season = MainListManager['mainList'][1].getProviderSeasonTarget(provider.provider);
+            strictEqual(season, 2);
+        } else {
+            fail();
+        }
     }, 4000);
 });

@@ -18,6 +18,8 @@ import listHelper from '../../list-helper';
 import stringHelper from '../../string-helper';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
+import ListLocalDataBind from 'src/backend/controller/objects/extension/provider-extension/binding/list-local-data-bind';
+import ProviderDataWithSeasonInfo from './provider-data-with-season-info';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
@@ -96,7 +98,7 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('[' + provider.providerName + '] Provider is not available!');
     }
 
-    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider) {
+    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider): Promise<ProviderLocalData> {
         if (!provider.hasUniqueIdForSeasons) {
             const relations = await series.getAllRelations(await MainListManager.getMainList());
             if (relations.length !== 0) {
@@ -106,10 +108,20 @@ export default new class ProviderInfoDownloadHelper {
                         const result = allBindings.find((x) => x.providerName === provider.providerName);
                         if (result) {
                             const seriesSeason = (await series.getSeason()).seasonNumber;
-                            if (seriesSeason) {
+                            if (!Number.isNaN(seriesSeason as number)) {
                                 const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
-                                if (this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
-                                    return providerData;
+                                if (this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason as number)) {
+                                    if (providerData instanceof ListProviderLocalData) {
+                                        let newInstance = new ListProviderLocalData(providerData.id, providerData.provider);
+                                        newInstance = Object.assign(newInstance, providerData);
+                                        newInstance.targetSeason = seriesSeason;
+                                        return newInstance;
+                                    } else if (providerData instanceof InfoProviderLocalData) {
+                                        let newInstance = new InfoProviderLocalData(providerData.id, providerData.provider);
+                                        newInstance = Object.assign(newInstance, providerData);
+                                        newInstance.targetSeason = seriesSeason;
+                                        return newInstance;
+                                    }
                                 }
                             }
                         }

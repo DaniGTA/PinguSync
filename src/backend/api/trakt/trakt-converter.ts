@@ -136,7 +136,7 @@ export default new class TraktConverter {
         const detailedEpisodes: Episode[] = [];
         for (const seasonInfo of seasonInfos) {
             let seasonNumber = seasonInfo.title ? await (await titleCheckHelper.getSeasonNumberBySeasonMarkerInTitle(seasonInfo.title)).seasonNumber : '';
-            if (seasonInfo.episodes) {
+            if (Array.isArray(seasonInfo.episodes) && seasonInfo.episodes.length !== 0) {
                 for (const episode of seasonInfo.episodes) {
                     if (seasonNumber === undefined || Number.isNaN(seasonNumber as number)) {
                         seasonNumber = seasonInfo.number;

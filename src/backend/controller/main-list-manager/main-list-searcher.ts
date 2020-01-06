@@ -88,6 +88,7 @@ export default class MainListSearcher {
         for (const listEntry of list) {
             if (listEntry.id === entry.id) {
                 foundedSameSeries.push(listEntry);
+                break;
             }
             const providerComperator = new ProviderComperator(entry, listEntry);
             const providerResult = (await providerComperator.getCompareResult());

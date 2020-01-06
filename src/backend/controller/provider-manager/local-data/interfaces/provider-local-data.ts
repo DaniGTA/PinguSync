@@ -48,7 +48,7 @@ export default abstract class ProviderLocalData {
                                 finalProvider[key] = keyValue;
                             }
                         } else if (key === 'detailEpisodeInfo') {
-                            finalProvider[key] = listHelper.getUniqueEpisodeList([...finalProvider[key], ...keyValue]);
+                            finalProvider[key] = listHelper.getUniqueEpisodeList(finalProvider[key], keyValue);
                         } else {
                             finalProvider[key] = [...finalProvider[key], ...keyValue];
                         }

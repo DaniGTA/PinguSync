@@ -55,12 +55,14 @@ class ListHelper {
     }
 
     public removeEntrysSync<T>(array: T[], ...entrys: T[] | readonly T[]): T[] {
-        for (const entry of entrys) {
-            const i = array.findIndex((listEntry) => this.objectsEquals(listEntry, entry));
-            if (i > -1) {
-                array.splice(i, 1);
-            } else {
-                logger.error('[ListHelper] Item doesnt exist in List!');
+        if (Array.isArray(array) && array.length !== 0) {
+            for (const entry of entrys) {
+                const i: number = array.findIndex((listEntry) => this.objectsEquals(listEntry, entry));
+                if (i > -1) {
+                    array.splice(i, 1);
+                } else {
+                    logger.error('[ListHelper] Item doesnt exist in List! (SYNC)');
+                }
             }
         }
         return array;
@@ -112,21 +114,20 @@ class ListHelper {
         return mostCommonNumber;
     }
 
-    public getUniqueEpisodeList(arr: Episode[]): Episode[] {
-        let copyArr = [...arr];
-        const uniqueEpisodeList: Episode[] = [];
-        if (arr.length !== 0) {
-            for (let index = 0; index < copyArr.length; index++) {
+    public getUniqueEpisodeList(arr1: Episode[], arr2: Episode[]): Episode[] {
+        const copyArr1 = [...arr1];
+        let copyArr2 = [...arr2];
+        let uniqueEpisodeList: Episode[] =  [];
+        if (copyArr1.length !== 0 && copyArr2.length !== 0) {
+            for (const entry1 of copyArr1) {
                 let duplicateFound = false;
-                const entry1 = copyArr[index];
-                for (let index2 = index + 1; index2 < copyArr.length; index2++) {
-                    const entry2 = copyArr[index2];
+                for (const entry2 of copyArr2) {
                     const result = EpisodeComperator.compareDetailedEpisode(entry1, entry2);
                     if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
                         entry1.addMappings(...entry2.mappedTo);
                         if (!duplicateFound) {
                             uniqueEpisodeList.push(entry1);
-                            copyArr = this.removeEntrysSync(copyArr, entry2);
+                            copyArr2 = this.removeEntrysSync(copyArr2, entry2);
                             duplicateFound = true;
                         }
                     }
@@ -135,6 +136,10 @@ class ListHelper {
                     uniqueEpisodeList.push(entry1);
                 }
             }
+        } else if (copyArr1.length !== 0) {
+            uniqueEpisodeList = copyArr1;
+        } else if (copyArr2.length !== 0) {
+            uniqueEpisodeList = copyArr2;
         }
         return uniqueEpisodeList;
     }

@@ -432,9 +432,6 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async getMediaType(): Promise<MediaType> {
-        if (this.cachedMediaType) {
-            return this.cachedMediaType;
-        }
         const collectedMediaTypes: MediaType[] = [];
         for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.mediaType !== MediaType.UNKOWN) {

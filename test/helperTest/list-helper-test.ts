@@ -122,7 +122,7 @@ describe('List Helper', () => {
         const episode5 = new Episode(4);
         episode5.provider = '';
 
-        const result = await listHelper.getUniqueEpisodeList([episode1, episode2, episode3, episode4, episode5]);
+        const result = await listHelper.getUniqueEpisodeList([episode1, episode2, episode3, episode5], [episode4, episode5]);
 
         assert.strictEqual(result.length, 4);
     });
@@ -141,7 +141,7 @@ describe('List Helper', () => {
         const episode6 = new Episode(3);
         episode6.provider = '';
 
-        const result = await listHelper.getUniqueEpisodeList([episode1, episode2, episode3, episode4, episode5, episode6]);
+        const result = await listHelper.getUniqueEpisodeList([episode1, episode3, episode5], [episode4, episode5, episode2]);
 
         assert.strictEqual(result.length, 3);
     });
