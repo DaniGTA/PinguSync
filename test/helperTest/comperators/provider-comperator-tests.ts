@@ -5,6 +5,7 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../../src/backend/helpFunctions/comperators/provider-comperator';
 import TestHelper from '../../test-helper';
+import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 
 describe('Provider Comperator | Testrun', () => {
     beforeAll(() => {
@@ -19,6 +20,32 @@ describe('Provider Comperator | Testrun', () => {
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
         // tslint:disable-next-line: no-string-literal
         const result = instance['compareProviderAWithProviderB'](providerA, providerB);
+        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
+    });
+
+    test('should be absolute false (same provider and wrong provider)', async () => {
+        const s2 = new Series();
+        const provider2A = new ListProviderLocalData(2, TraktProvider);
+        provider2A.targetSeason = 1;
+        provider2A.infoStatus = ProviderInfoStatus.BASIC_INFO;
+        const provider2B = new ListProviderLocalData(2, 'test');
+        provider2B.infoStatus = ProviderInfoStatus.BASIC_INFO;
+
+        await s2.addProviderDatas(provider2A, provider2B);
+
+        const s1 = new Series();
+        const provider1A = new ListProviderLocalData(2, TraktProvider);
+        provider1A.targetSeason = 1;
+        provider1A.infoStatus = ProviderInfoStatus.BASIC_INFO;
+        const provider1B = new ListProviderLocalData(1, 'test');
+        provider1B.infoStatus = ProviderInfoStatus.BASIC_INFO;
+
+        await s1.addProviderDatas(provider1A, provider1B);
+
+        const instance = new ProviderComperator(s1, s2);
+        const result = await instance.getCompareResult();
+        // tslint:disable-next-line: no-string-literal
+
         strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
     });
 });

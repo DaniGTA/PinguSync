@@ -1,0 +1,562 @@
+
+{
+  "header": {
+    "reportVersion": 1,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20200107.231555.12488.0.001.json",
+    "dumpEventTime": "2020-01-07T23:15:55Z",
+    "dumpEventTimeStamp": "1578435355667",
+    "processId": 12488,
+    "cwd": "d:\\GitHub\\listManager",
+    "commandLine": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "d:\\GitHub\\listManager\\node_modules\\jest-worker\\build\\workers\\processChild.js"
+    ],
+    "nodejsVersion": "v13.5.0",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "win32",
+    "componentVersions": {
+      "node": "13.5.0",
+      "v8": "7.9.317.25-node.23",
+      "uv": "1.34.0",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "79",
+      "nghttp2": "1.40.0",
+      "napi": "5",
+      "llhttp": "2.0.1",
+      "openssl": "1.1.1d",
+      "cldr": "36.0",
+      "icu": "65.1",
+      "tz": "2019c",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "headersUrl": "https://nodejs.org/download/release/v13.5.0/node-v13.5.0-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v13.5.0/node-v13.5.0.tar.gz",
+      "libUrl": "https://nodejs.org/download/release/v13.5.0/win-x64/node.lib"
+    },
+    "osName": "Windows_NT",
+    "osRelease": "10.0.18363",
+    "osVersion": "Windows 10 Pro",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 40639265,
+        "nice": 0,
+        "sys": 21111156,
+        "idle": 165522890,
+        "irq": 6020156
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 31703437,
+        "nice": 0,
+        "sys": 8877875,
+        "idle": 186691718,
+        "irq": 327328
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 27076453,
+        "nice": 0,
+        "sys": 7887328,
+        "idle": 192309250,
+        "irq": 286843
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 9048968,
+        "nice": 0,
+        "sys": 3018093,
+        "idle": 215205968,
+        "irq": 106265
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 32774015,
+        "nice": 0,
+        "sys": 8296296,
+        "idle": 186202718,
+        "irq": 212968
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 12167953,
+        "nice": 0,
+        "sys": 4176812,
+        "idle": 210928265,
+        "irq": 150281
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 37950421,
+        "nice": 0,
+        "sys": 8809406,
+        "idle": 180513203,
+        "irq": 173468
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 37800562,
+        "nice": 0,
+        "sys": 9335312,
+        "idle": 180137156,
+        "irq": 164093
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 12465390,
+        "nice": 0,
+        "sys": 3943312,
+        "idle": 210864328,
+        "irq": 142765
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 7529531,
+        "nice": 0,
+        "sys": 2816718,
+        "idle": 216926781,
+        "irq": 87859
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 22325468,
+        "nice": 0,
+        "sys": 5904906,
+        "idle": 199042656,
+        "irq": 182109
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 7965578,
+        "nice": 0,
+        "sys": 2824468,
+        "idle": 216482984,
+        "irq": 88015
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 23494906,
+        "nice": 0,
+        "sys": 12537593,
+        "idle": 191240531,
+        "irq": 272281
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 23917781,
+        "nice": 0,
+        "sys": 10828718,
+        "idle": 192526531,
+        "irq": 253406
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 14999265,
+        "nice": 0,
+        "sys": 3843687,
+        "idle": 208430062,
+        "irq": 125359
+      },
+      {
+        "model": "AMD Ryzen 7 3700X 8-Core Processor             ",
+        "speed": 3600,
+        "user": 9757484,
+        "nice": 0,
+        "sys": 3323281,
+        "idle": 214192250,
+        "irq": 95765
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "Ethernet 2",
+        "internal": false,
+        "mac": "70:85:c2:d8:82:5e",
+        "address": "2003:e0:1704:83b:1589:832c:f518:c751",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Ethernet 2",
+        "internal": false,
+        "mac": "70:85:c2:d8:82:5e",
+        "address": "fd21:22a2:d330:1:1589:832c:f518:c751",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Ethernet 2",
+        "internal": false,
+        "mac": "70:85:c2:d8:82:5e",
+        "address": "2003:e0:1704:83b:8c75:6850:3a7f:8438",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Ethernet 2",
+        "internal": false,
+        "mac": "70:85:c2:d8:82:5e",
+        "address": "fd21:22a2:d330:1:8c75:6850:3a7f:8438",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Ethernet 2",
+        "internal": false,
+        "mac": "70:85:c2:d8:82:5e",
+        "address": "fe80::1589:832c:f518:c751",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 15
+      },
+      {
+        "name": "Ethernet 2",
+        "internal": false,
+        "mac": "70:85:c2:d8:82:5e",
+        "address": "192.168.2.9",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Loopback Pseudo-Interface 1",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "Teredo Tunneling Pseudo-Interface",
+        "internal": false,
+        "mac": "00:00:00:00:00:00",
+        "address": "2001:0:284a:364:1868:bda:a211:4045",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "Teredo Tunneling Pseudo-Interface",
+        "internal": false,
+        "mac": "00:00:00:00:00:00",
+        "address": "fe80::1868:bda:a211:4045",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 17
+      }
+    ],
+    "host": "DanisPC"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x00007ff6ef6d19f9",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+10857"
+    },
+    {
+      "pc": "0x00007ff6ef6d5d6c",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+28124"
+    },
+    {
+      "pc": "0x00007ff6ef6d4d28",
+      "symbol": "std::basic_ostream<char,std::char_traits<char> >::operator<<+23960"
+    },
+    {
+      "pc": "0x00007ff6ef7cddfb",
+      "symbol": "v8::base::CPU::has_sse+39435"
+    },
+    {
+      "pc": "0x00007ff6efff5c2e",
+      "symbol": "v8::Isolate::ReportExternalAllocationLimitReached+94"
+    },
+    {
+      "pc": "0x00007ff6effdd381",
+      "symbol": "v8::SharedArrayBuffer::Externalize+785"
+    },
+    {
+      "pc": "0x00007ff6efea46dc",
+      "symbol": "v8::internal::Heap::EphemeronKeyWriteBarrierFromCode+1436"
+    },
+    {
+      "pc": "0x00007ff6efeaf9d0",
+      "symbol": "v8::internal::Heap::ProtectUnprotectedMemoryChunks+1312"
+    },
+    {
+      "pc": "0x00007ff6efeac4ff",
+      "symbol": "v8::internal::Heap::PageFlagsAreConsistent+3151"
+    },
+    {
+      "pc": "0x00007ff6efea1c53",
+      "symbol": "v8::internal::Heap::CollectGarbage+1283"
+    },
+    {
+      "pc": "0x00007ff6efea03e4",
+      "symbol": "v8::internal::Heap::AllocateExternalBackingStore+1300"
+    },
+    {
+      "pc": "0x00007ff6efec23d4",
+      "symbol": "v8::internal::Factory::NewFillerObject+196"
+    },
+    {
+      "pc": "0x00007ff6efc1c9d1",
+      "symbol": "v8::internal::interpreter::JumpTableTargetOffsets::iterator::operator=+1681"
+    },
+    {
+      "pc": "0x00007ff6f043ebcd",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+517453"
+    },
+    {
+      "pc": "0x00007ff6f03f6aa5",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+222245"
+    },
+    {
+      "pc": "0x00000330edfbd464",
+      "symbol": ""
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 2151436288,
+    "totalCommittedMemory": 2151436288,
+    "usedMemory": 2144820800,
+    "availableMemory": 48634656,
+    "memoryLimit": 2197815296,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 262144,
+        "capacity": 33040,
+        "used": 33040,
+        "available": 0
+      },
+      "new_space": {
+        "memorySize": 2097152,
+        "committedMemory": 2097152,
+        "capacity": 1047424,
+        "used": 68488,
+        "available": 978936
+      },
+      "old_space": {
+        "memorySize": 2119835648,
+        "committedMemory": 2119835648,
+        "capacity": 2116616640,
+        "used": 2116387352,
+        "available": 229288
+      },
+      "code_space": {
+        "memorySize": 1478656,
+        "committedMemory": 1478656,
+        "capacity": 1179776,
+        "used": 1179776,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 3674112,
+        "committedMemory": 3674112,
+        "capacity": 3204800,
+        "used": 3204800,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 24039424,
+        "committedMemory": 24039424,
+        "capacity": 23944560,
+        "used": 23944560,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 49152,
+        "committedMemory": 49152,
+        "capacity": 2784,
+        "used": 2784,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 1047424,
+        "used": 0,
+        "available": 1047424
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 617.968,
+    "kernelCpuSeconds": 26.437,
+    "cpuConsumptionPercent": 115.9,
+    "maxRss": 2231877632,
+    "pageFaults": {
+      "IORequired": 1184937,
+      "IONotRequired": 0
+    },
+    "fsActivity": {
+      "reads": 6519,
+      "writes": 114
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "ALLUSERSPROFILE": "C:\\ProgramData",
+    "AMDRMPATH": "C:\\Program Files\\AMD\\RyzenMaster\\",
+    "AMD_ENTRYPOINT": "vs/workbench/services/extensions/node/extensionHostProcess",
+    "ANDROID_SDK_HOME": "C:\\Android",
+    "APPDATA": "C:\\Users\\danig\\AppData\\Roaming",
+    "APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL": "true",
+    "BESIEGE_GAME_ASSEMBLIES": "D:/SteamLibrary/steamapps/common/Besiege/Besiege_Data\\Managed/",
+    "BESIEGE_UNITY_ASSEMBLIES": "D:/SteamLibrary/steamapps/common/Besiege/Besiege_Data\\Managed/",
+    "ChocolateyInstall": "C:\\ProgramData\\chocolatey",
+    "ChocolateyLastPathUpdate": "132182960438470772",
+    "CI": "true",
+    "CommonProgramFiles": "C:\\Program Files\\Common Files",
+    "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+    "CommonProgramW6432": "C:\\Program Files\\Common Files",
+    "COMPUTERNAME": "DANISPC",
+    "ComSpec": "C:\\WINDOWS\\system32\\cmd.exe",
+    "DokanLibrary1": "C:\\Program Files\\Dokan\\Dokan Library-1.3.0\\",
+    "DokanLibrary1_LibraryPath_x64": "C:\\Program Files\\Dokan\\Dokan Library-1.3.0\\lib\\",
+    "DokanLibrary1_LibraryPath_x86": "C:\\Program Files\\Dokan\\Dokan Library-1.3.0\\x86\\lib\\",
+    "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+    "ELECTRON_CRASHPAD_PIPE_NAME": "\\\\.\\pipe\\crashpad_25420_FCJKPICXJGJDUTNV",
+    "ELECTRON_RUN_AS_NODE": "1",
+    "ESM_DISABLE_CACHE": "1",
+    "FPS_BROWSER_APP_PROFILE_STRING": "Internet Explorer",
+    "FPS_BROWSER_USER_PROFILE_STRING": "Default",
+    "HOMEDRIVE": "C:",
+    "HOMEPATH": "\\Users\\danig",
+    "JEST_WORKER_ID": "2",
+    "LOCALAPPDATA": "C:\\Users\\danig\\AppData\\Local",
+    "LOGONSERVER": "\\\\DANISPC",
+    "NODE_ENV": "test",
+    "NUMBER_OF_PROCESSORS": "16",
+    "OneDrive": "C:\\Users\\danig\\OneDrive",
+    "OneDriveConsumer": "C:\\Users\\danig\\OneDrive",
+    "OS": "Windows_NT",
+    "Path": "C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS;C:\\WINDOWS\\system32;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files (x86)\\IncrediBuild;C:\\Program Files\\CMake\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Android;C:\\ProgramData\\chocolatey\\bin;C:\\Program Files (x86)\\Common Files\\Acronis\\SnapAPI\\;C:\\Program Files (x86)\\Graphviz2.38\\bin;C:\\Program Files\\nodejs\\;C:\\Users\\danig\\AppData\\Local\\Programs\\Python\\Python37-32\\Scripts\\;C:\\Users\\danig\\AppData\\Local\\Programs\\Python\\Python37-32\\;C:\\Users\\danig\\.windows-build-tools\\python27\\;C:\\Users\\danig\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\npm-lifecycle\\node-gyp-bin;C:\\Users\\danig\\AppData\\Roaming\\npm\\node_modules\\windows-build-tools\\node_modules\\.bin;C:\\Users\\danig\\AppData\\Roaming\\npm\\node_modules\\.bin;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS;C:\\WINDOWS\\system32;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files (x86)\\IncrediBuild;C:\\Program Files\\CMake\\bin;C:\\Users\\danig\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\danig\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\danig\\AppData\\Local\\Programs\\Microsoft VS Code Insiders\\bin;C:\\Program Files\\ffmpeg-20190424-d0ca749-win64-static\\bin;;C:\\Users\\danig\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\danig\\AppData\\Roaming\\npm",
+    "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JSE;.WSF;.WSH;.MSC",
+    "PIPE_LOGGING": "true",
+    "PROCESSOR_ARCHITECTURE": "AMD64",
+    "PROCESSOR_IDENTIFIER": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD",
+    "PROCESSOR_LEVEL": "23",
+    "PROCESSOR_REVISION": "7100",
+    "ProgramData": "C:\\ProgramData",
+    "ProgramFiles": "C:\\Program Files",
+    "ProgramFiles(x86)": "C:\\Program Files (x86)",
+    "ProgramW6432": "C:\\Program Files",
+    "PROMPT": "$P$G",
+    "PSModulePath": "C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules",
+    "PUBLIC": "C:\\Users\\Public",
+    "sep": " ",
+    "SESSIONNAME": "Console",
+    "SystemDrive": "C:",
+    "SystemRoot": "C:\\WINDOWS",
+    "TEMP": "C:\\Users\\danig\\AppData\\Local\\Temp",
+    "TMP": "C:\\Users\\danig\\AppData\\Local\\Temp",
+    "USERDOMAIN": "DANISPC",
+    "USERDOMAIN_ROAMINGPROFILE": "DANISPC",
+    "USERNAME": "Dani",
+    "USERPROFILE": "C:\\Users\\danig",
+    "VERBOSE_LOGGING": "true",
+    "VS140COMNTOOLS": "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\Tools\\",
+    "VSCODE_CWD": "C:\\Users\\danig\\AppData\\Local\\Programs\\Microsoft VS Code Insiders",
+    "VSCODE_HANDLES_UNCAUGHT_ERRORS": "true",
+    "VSCODE_IPC_HOOK": "\\\\.\\pipe\\c97ec82bba0017bae5191d7620309d66-1.42.0-insider-main-sock",
+    "VSCODE_IPC_HOOK_EXTHOST": "\\\\.\\pipe\\vscode-ipc-760085c9-244c-4933-b4c9-b657159a1b00-sock",
+    "VSCODE_LOGS": "C:\\Users\\danig\\AppData\\Roaming\\Code - Insiders\\logs\\20200107T173710",
+    "VSCODE_LOG_STACK": "true",
+    "VSCODE_NLS_CONFIG": "{\"locale\":\"de\",\"availableLanguages\":{},\"_languagePackSupport\":true}",
+    "VSCODE_NODE_CACHED_DATA_DIR": "C:\\Users\\danig\\AppData\\Roaming\\Code - Insiders\\CachedData\\629a08ed6231d7af269ae61a5cc610490d1f7f5d",
+    "VSCODE_PID": "8752",
+    "WALLABY_PRODUCTION": "true",
+    "windir": "C:\\WINDOWS",
+    "__COMPAT_LAYER": "DetectorsMessageBoxErrors"
+  },
+  "sharedObjects": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "C:\\WINDOWS\\SYSTEM32\\ntdll.dll",
+    "C:\\WINDOWS\\System32\\KERNEL32.DLL",
+    "C:\\WINDOWS\\System32\\KERNELBASE.dll",
+    "C:\\WINDOWS\\SYSTEM32\\apphelp.dll",
+    "C:\\WINDOWS\\System32\\WS2_32.dll",
+    "C:\\WINDOWS\\System32\\RPCRT4.dll",
+    "C:\\WINDOWS\\System32\\PSAPI.DLL",
+    "C:\\WINDOWS\\System32\\ADVAPI32.dll",
+    "C:\\WINDOWS\\System32\\msvcrt.dll",
+    "C:\\WINDOWS\\System32\\sechost.dll",
+    "C:\\WINDOWS\\System32\\USER32.dll",
+    "C:\\WINDOWS\\System32\\win32u.dll",
+    "C:\\WINDOWS\\System32\\GDI32.dll",
+    "C:\\WINDOWS\\SYSTEM32\\dbghelp.dll",
+    "C:\\WINDOWS\\System32\\ucrtbase.dll",
+    "C:\\WINDOWS\\System32\\gdi32full.dll",
+    "C:\\WINDOWS\\System32\\msvcp_win.dll",
+    "C:\\WINDOWS\\System32\\CRYPT32.dll",
+    "C:\\WINDOWS\\System32\\MSASN1.dll",
+    "C:\\WINDOWS\\System32\\bcrypt.dll",
+    "C:\\WINDOWS\\SYSTEM32\\USERENV.dll",
+    "C:\\WINDOWS\\System32\\profapi.dll",
+    "C:\\WINDOWS\\SYSTEM32\\IPHLPAPI.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\WINMM.dll",
+    "C:\\WINDOWS\\SYSTEM32\\winmmbase.dll",
+    "C:\\WINDOWS\\System32\\cfgmgr32.dll",
+    "C:\\WINDOWS\\System32\\bcryptPrimitives.dll",
+    "C:\\WINDOWS\\System32\\IMM32.DLL",
+    "C:\\WINDOWS\\System32\\powrprof.dll",
+    "C:\\WINDOWS\\System32\\UMPDC.dll",
+    "C:\\WINDOWS\\SYSTEM32\\CRYPTBASE.DLL",
+    "C:\\WINDOWS\\system32\\uxtheme.dll",
+    "C:\\WINDOWS\\System32\\combase.dll",
+    "C:\\WINDOWS\\system32\\mswsock.dll",
+    "C:\\WINDOWS\\System32\\kernel.appcore.dll",
+    "C:\\WINDOWS\\System32\\NSI.dll",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc6.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\dhcpcsvc.DLL",
+    "C:\\WINDOWS\\SYSTEM32\\DNSAPI.dll",
+    "C:\\Windows\\System32\\rasadhlp.dll",
+    "C:\\WINDOWS\\System32\\fwpuclnt.dll",
+    "C:\\WINDOWS\\system32\\napinsp.dll",
+    "C:\\WINDOWS\\system32\\pnrpnsp.dll",
+    "C:\\WINDOWS\\System32\\winrnr.dll",
+    "C:\\WINDOWS\\system32\\NLAapi.dll",
+    "C:\\WINDOWS\\system32\\wshbth.dll"
+  ]
+}

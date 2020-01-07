@@ -83,11 +83,15 @@ export default new class ProviderInfoDownloadHelper {
                     throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'MediaType not supported: .' + seriesMediaType);
                 }
             } else {
-                const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
-                logger.log('info', '[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
-                // tslint:disable-next-line: max-line-length
-                ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
-                return result;
+                try {
+                    const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
+                    logger.log('info', '[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
+                    // tslint:disable-next-line: max-line-length
+                    ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
+                    return result;
+                } catch (err) {
+                    throw new Error('[' + provider.providerName + '] Unkown error: ' + err);
+                }
             }
 
             logger.warn('[' + requestId + '][' + provider.providerName + '] Request failed ❌❌❌❌❌❌');

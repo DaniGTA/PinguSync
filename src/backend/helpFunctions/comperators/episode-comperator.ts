@@ -57,10 +57,11 @@ export default class EpisodeComperator {
         const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);
         result.matchAble += episodeTitleResult.matchAble * 4;
         result.matches += episodeTitleResult.matches * 4;
-
-        const episodeTypeResult = this.isEpisodeSameType(aEpisode, bEpsiode);
-        result.matchAble += episodeTypeResult.matchAble;
-        result.matches += episodeTypeResult.matches;
+        if (result.matches !== 0) {
+            const episodeTypeResult = this.isEpisodeSameType(aEpisode, bEpsiode);
+            result.matchAble += episodeTypeResult.matchAble;
+            result.matches += episodeTypeResult.matches;
+        }
 
         return result;
     }

@@ -8,23 +8,21 @@ import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import ComperatorResult from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
+import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container';
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
+import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
-import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container';
-import ComperatorResult from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
-import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
+            // tslint:disable: no-string-literal
 describe('Episode mapping | Mapping Only', () => {
     const lc = new ListController(true);
 
-    beforeEach(() => {
+    beforeAll(() => {
         TestHelper.mustHaveBefore();
-        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
-        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
-        // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
     });
     test('should map same episodes length from 2 providers', async () => {
@@ -167,7 +165,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             const aProvider = new InfoProviderLocalData('1', 'testA');
             aProvider.targetSeason = 1;
-            aProvider.episodes = 500;
+            aProvider.episodes = 250;
 
             await aSeries.addProviderDatas(aProvider);
 
@@ -175,7 +173,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             const bProvider = new ListProviderLocalData('1', 'testB');
             bProvider.targetSeason = 1;
-            bProvider.episodes = 500;
+            bProvider.episodes = 250;
 
             await aSeries.addProviderDatas(bProvider);
 
@@ -183,7 +181,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             const cProvider = new ListProviderLocalData('1', 'testC');
             cProvider.targetSeason = 1;
-            cProvider.episodes = 500;
+            cProvider.episodes = 250;
 
             await aSeries.addProviderDatas(cProvider);
 
@@ -193,7 +191,7 @@ describe('Episode mapping | Mapping Only', () => {
             const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
 
             // Result checking
-            strictEqual(result.length, 1500);
+            strictEqual(result.length, 750);
             for (const episode of result) {
                 strictEqual(episode.mappedTo.length, 2, episode.episodeNumber + '');
                 strictEqual(episode.mappedTo[0].episodeNumber, episode.episodeNumber);
@@ -412,6 +410,7 @@ describe('Episode mapping | Mapping Only', () => {
             ep1r.matches = 2;
             const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
             const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
+
             const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
             const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
             strictEqual(sorted[0], ep1erec);

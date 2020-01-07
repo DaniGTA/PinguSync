@@ -13,7 +13,7 @@ import logger from '../../logger/logger';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import { SeasonSearchMode } from './season-search-mode';
 import SeasonSearchModeHelper from './season-search-mode-helper';
-import { emit } from 'cluster';
+
 
 class SeasonHelper {
 

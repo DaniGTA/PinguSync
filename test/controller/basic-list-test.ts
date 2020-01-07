@@ -8,6 +8,8 @@ import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListSearcher from '../../src/backend/controller/main-list-manager/main-list-searcher';
 import { EpisodeType } from '../../src/backend/controller/objects/meta/episode/episode-type';
+import Name from '../../src/backend/controller/objects/meta/name';
+import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import Series from '../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
@@ -17,8 +19,6 @@ import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provid
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
 import TestHelper from '../test-helper';
-import Name from '../../src/backend/controller/objects/meta/name';
-import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
@@ -423,6 +423,12 @@ describe('Basic List | Testrun', () => {
         s2provider1.prequelIds.push(20923);
         await series2.addListProvider(s2provider1);
 
+                // s2
+        const series4 = new Series();
+        const s4provider1 = new ListProviderLocalData(109963, AniListProvider);
+        s4provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series4.addListProvider(s4provider1);
+
         // s3
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(94084, TraktProvider);
@@ -431,23 +437,22 @@ describe('Basic List | Testrun', () => {
         await series3.addListProvider(s3provider1);
         await ListController.instance.addSeriesToMainList(series1, series2, series3);
 
-        // tslint:disable-next-line: no-string-literal
-        await MainListManager['finishListFilling']();
+        await ListController.instance.addSeriesToMainList(series4);
 
         const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series2, TraktProvider.getInstance());
 
         strictEqual(result.targetSeason, 2);
 
-        const seasonTarget = series3.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
+        const seasonTarget = series2.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
         strictEqual(seasonTarget, 2);
         // tslint:disable-next-line: no-string-literal
-        const provider = MainListManager['mainList'][1].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        const provider = MainListManager['mainList'][0].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
             for (const iterator of provider.detailEpisodeInfo) {
                 logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
             }
-            const season = MainListManager['mainList'][1].getProviderSeasonTarget(provider.provider);
+            const season = MainListManager['mainList'][0].getProviderSeasonTarget(provider.provider);
             strictEqual(season, 2);
         } else {
             fail();

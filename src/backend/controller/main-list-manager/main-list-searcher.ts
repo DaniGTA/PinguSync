@@ -91,7 +91,7 @@ export default class MainListSearcher {
                 break;
             }
             const providerComperator = new ProviderComperator(entry, listEntry);
-            const providerResult = (await providerComperator.getCompareResult());
+            const providerResult = await providerComperator.getCompareResult();
             if (providerResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                 foundedSameSeries.push(listEntry);
             }

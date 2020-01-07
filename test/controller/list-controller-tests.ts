@@ -40,11 +40,11 @@ describe('ListController | Combine', () => {
         const entry: Series[] = [];
         entry.push(await getFilledAnime('Test A'));
         entry.push(await getFilledAnime('Test B'));
-        for (let index = 0; index < 20; index++) {
+        for (let index = 0; index < 10; index++) {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 11);
     });
 
     test('should combine basic entrys with less data', async () => {
@@ -69,11 +69,11 @@ describe('ListController | Combine', () => {
         x2.getListProvidersInfos()[0].addSeriesName(new Name('Test III', 'en'));
         entry.push(x2);
         entry.push(await getFilledAnime('TestB'));
-        for (let index = 0; index < 20; index++) {
+        for (let index = 0; index < 10; index++) {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 11);
         return;
     });
     test('should combine basic entrys with season in title (2/4)', async () => {
@@ -83,11 +83,11 @@ describe('ListController | Combine', () => {
         x2.getListProvidersInfos()[0].addSeriesName(new Name('Test 3', 'en'));
         entry.push(x2);
         entry.push(await getFilledAnime('TestB'));
-        for (let index = 0; index < 20; index++) {
+        for (let index = 0; index < 10; index++) {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 11);
         return;
     });
     test('should combine basic entrys with season in title (3/4)', async () => {
@@ -98,11 +98,11 @@ describe('ListController | Combine', () => {
         x2.getListProvidersInfos()[0]['releaseYear'] = 0;
         entry.push(x2);
         entry.push(await getFilledAnime('TestB'));
-        for (let index = 0; index < 20; index++) {
+        for (let index = 0; index < 10; index++) {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 21);
+        assert.equal(MainListManager['mainList'].length, 11);
         return;
     });
 
@@ -117,11 +117,11 @@ describe('ListController | Combine', () => {
 
         entry.push(x2);
         entry.push(x);
-        for (let index = 0; index < 22; index++) {
+        for (let index = 0; index < 12; index++) {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 23);
+        assert.equal(MainListManager['mainList'].length, 13);
         return;
     });
 
@@ -137,11 +137,11 @@ describe('ListController | Combine', () => {
         x2.getListProvidersInfos()[0]['releaseYear'] = 2002;
         entry.push(x2);
         entry.push(x);
-        for (let index = 0; index < 22; index++) {
+        for (let index = 0; index < 12; index++) {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 23);
+        assert.equal(MainListManager['mainList'].length, 13);
         return;
     });
 

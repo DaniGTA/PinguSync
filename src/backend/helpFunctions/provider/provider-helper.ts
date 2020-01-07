@@ -17,22 +17,39 @@ export class ProviderHelper {
         if (this.canUpdateSeries(series) || force) {
 
             const hadSeriesNames = this.hasSeriesASeriesNames(series);
-            if (hadSeriesNames) {
-                const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
-                await series.addProviderDatasWithSeasonInfos(...infoProviders);
+            if (!hadSeriesNames) {
+                const upgradedinfos = await this.requestUpgradeAllCurrentinfos(series, force, target);
+                await series.addProviderDatasWithSeasonInfos(...upgradedinfos);
             }
+
+            const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
+            await series.addProviderDatasWithSeasonInfos(...infoProviders);
 
             const listProviders = await this.requestAllListProviderInfos(series, force, target);
             await series.addProviderDatasWithSeasonInfos(...listProviders);
 
-            if (!hadSeriesNames) {
-                const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
-                await series.addProviderDatasWithSeasonInfos(...infoProviders);
-            }
-
             series.lastInfoUpdate = Date.now();
         }
         return series;
+    }
+
+    public async requestUpgradeAllCurrentinfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
+        const resultList: ProviderDataWithSeasonInfo[] = [];
+        const providerLocalDatas = series.getAllProviderLocalDatas();
+        for (const providerLocalData of providerLocalDatas) {
+            try {
+                if (providerLocalData && providerLocalData.infoStatus > target || !providerLocalData) {
+                    const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
+                    const infoResult = await this.requestProviderInfo(series, providerInstance, force, target);
+                    for (const result of infoResult) {
+                        resultList.push(new ProviderDataWithSeasonInfo(result, result.targetSeason));
+                    }
+                }
+            } catch (err) {
+                logger.error(err);
+            }
+        }
+        return resultList;
     }
 
     /**
@@ -41,15 +58,16 @@ export class ProviderHelper {
     public async requestProviderInfo(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<ProviderLocalData[]> {
         const localDatas: ProviderLocalData[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
-        const seriesSeason = await series.getSeason();
+        const tempSeriesCopy = Object.assign(new Series(), series);
+        const seriesSeason = await tempSeriesCopy.getSeason();
         for (const idProvider of idProviders) {
             try {
-                const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, idProvider, ProviderInfoStatus.FULL_INFO);
+                const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, idProvider, ProviderInfoStatus.FULL_INFO);
                 if (idProviderResult.mainProvider.targetSeason !== undefined && idProviderResult.mainProvider.targetSeason !== seriesSeason.seasonNumber) {
                     logger.warn('wrong season');
                 }
                 localDatas.push(...idProviderResult.getAllProviders());
-                await series.addProviderDatas(...idProviderResult.getAllProviders());
+                await tempSeriesCopy.addProviderDatas(...idProviderResult.getAllProviders());
             } catch (err) {
                 logger.error(err);
             }
@@ -64,12 +82,12 @@ export class ProviderHelper {
                 if (currentResult) {
                     lastLocalDataResult = currentResult;
                 }
-                requestResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(series, provider, target);
+                requestResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, provider, target);
                 currentResult = requestResult.mainProvider;
                 if (currentResult.targetSeason !== undefined && currentResult.targetSeason !== seriesSeason.seasonNumber) {
                     logger.warn('wrong season');
                 }
-                await series.addProviderDatas(...requestResult.getAllProviders());
+                await tempSeriesCopy.addProviderDatas(...requestResult.getAllProviders());
             } catch (err) {
                 logger.error(err);
             }
