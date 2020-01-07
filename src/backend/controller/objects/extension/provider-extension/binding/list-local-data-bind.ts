@@ -3,14 +3,7 @@ import { ListProviderLocalData } from '../../../../../controller/provider-manage
 import LocalDataBind from './local-data-bind';
 
 export default class ListLocalDataBind extends LocalDataBind {
-    public id: string | number;
-    public providerName: string;
-    public targetSeason?: number;
-
-    constructor(listProvider: ListProviderLocalData) {
-        super();
-        this.id = listProvider.id;
-        this.providerName = listProvider.provider;
-        this.targetSeason = listProvider.targetSeason;
+    constructor(listProvider: ListProviderLocalData, seasonNumber?: number) {
+        super(listProvider, seasonNumber);
     }
 }

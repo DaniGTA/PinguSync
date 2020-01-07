@@ -84,7 +84,6 @@ export default new class AniListConverter {
             providerInfo.addSeriesName(new Name(entry.media.title.native, 'jap'));
         }
         providerInfo.releaseYear = entry.media.startDate.year;
-        providerInfo.releaseYear = entry.media.startDate.year;
         providerInfo.mediaType = await this.convertTypeToMediaType(entry.media.format);
 
         try {
@@ -116,7 +115,7 @@ export default new class AniListConverter {
 
         providerInfo.watchStatus = watchStatus;
         providerInfo.lastExternalChange = new Date(entry.updatedAt);
-
+        providerInfo.infoStatus = ProviderInfoStatus.BASIC_INFO;
         if (typeof entry.media.episodes !== 'undefined') {
             providerInfo.episodes = entry.media.episodes;
         }

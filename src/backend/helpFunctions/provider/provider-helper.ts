@@ -7,6 +7,7 @@ import ProviderLocalData from '../../controller/provider-manager/local-data/inte
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import dateHelper from '../date-helper';
+import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
 
 
@@ -18,15 +19,15 @@ export class ProviderHelper {
             const hadSeriesNames = this.hasSeriesASeriesNames(series);
             if (hadSeriesNames) {
                 const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
-                await series.addProviderDatas(...infoProviders);
+                await series.addProviderDatasWithSeasonInfos(...infoProviders);
             }
 
             const listProviders = await this.requestAllListProviderInfos(series, force, target);
-            await series.addProviderDatas(...listProviders);
+            await series.addProviderDatasWithSeasonInfos(...listProviders);
 
             if (!hadSeriesNames) {
                 const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
-                await series.addProviderDatas(...infoProviders);
+                await series.addProviderDatasWithSeasonInfos(...infoProviders);
             }
 
             series.lastInfoUpdate = Date.now();
@@ -116,7 +117,7 @@ export class ProviderHelper {
         return relevantList;
     }
 
-    private async requestAllListProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderLocalData[]> {
+    private async requestAllListProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
         const results = [];
         const tempSeriesCopy = Object.assign(new Series(), series);
         const currentProviders = series.getAllProviderLocalDatas();
@@ -124,11 +125,16 @@ export class ProviderHelper {
         const providersThatNeedUpdates = await this.getProvidersThatNeedUpdates(currentProviders, target);
         for (const providerThatNeedUpdate of providersThatNeedUpdates) {
             try {
-                const providerLocalData = tempSeriesCopy.getListProvidersInfos().find(x => x.provider === providerThatNeedUpdate.providerName);
+                const providerLocalData = tempSeriesCopy.getListProvidersInfos().find((x) => x.provider === providerThatNeedUpdate.providerName);
                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.ADVANCED_BASIC_INFO || !providerLocalData) {
                     const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                     await series.addProviderDatas(...result);
-                    results.push(...result);
+                    series.resetCache();
+                    tempSeriesCopy.resetCache();
+                    for (const providerData of result) {
+                        results.push(new ProviderDataWithSeasonInfo(providerData, providerData.targetSeason));
+                    }
+
                 }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #2: ' + err);
@@ -137,7 +143,7 @@ export class ProviderHelper {
         return results;
     }
 
-    private async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderLocalData[]> {
+    private async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
         const results = [];
         const currentProviders = series.getAllProviderLocalDatas();
         const tempSeriesCopy = Object.assign(new Series(), series);
@@ -146,7 +152,9 @@ export class ProviderHelper {
             try {
                 const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
                 await series.addProviderDatas(...result);
-                results.push(...result);
+                for (const providerData of result) {
+                    results.push(new ProviderDataWithSeasonInfo(providerData, providerData.targetSeason));
+                }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #1: ' + err);
             }

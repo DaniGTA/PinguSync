@@ -2,14 +2,7 @@ import { InfoProviderLocalData } from '../../../../../controller/provider-manage
 import LocalDataBind from './local-data-bind';
 
 export default class InfoLocalDataBind extends LocalDataBind {
-    public id: string | number;
-    public providerName: string;
-    public targetSeason?: number;
-
-    constructor(infoProvider: InfoProviderLocalData) {
-        super();
-        this.id = infoProvider.id;
-        this.providerName = infoProvider.provider;
-        this.targetSeason = infoProvider.targetSeason;
+    constructor(infoProvider: InfoProviderLocalData, seasonNumber?: number) {
+        super(infoProvider, seasonNumber);
     }
 }

@@ -1,24 +1,26 @@
-import { fail, notStrictEqual, strictEqual, notEqual } from 'assert';
+import { fail, notEqual, notStrictEqual, strictEqual } from 'assert';
 import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
+import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
 import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
 import TVDBProvider from '../../src/backend/api/tvdb/tvdb-provider';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
+import MainListSearcher from '../../src/backend/controller/main-list-manager/main-list-searcher';
 import { EpisodeType } from '../../src/backend/controller/objects/meta/episode/episode-type';
 import Series from '../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-import seriesHelper from '../../src/backend/helpFunctions/series-helper';
-import TestHelper from '../test-helper';
-import logger from '../../src/backend/logger/logger';
-import MainListSearcher from '../../src/backend/controller/main-list-manager/main-list-searcher';
-import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
-import ProviderComperator from '../../src/backend/helpFunctions/comperators/provider-comperator';
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import seriesHelper from '../../src/backend/helpFunctions/series-helper';
+import logger from '../../src/backend/logger/logger';
+import TestHelper from '../test-helper';
+import Name from '../../src/backend/controller/objects/meta/name';
+import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 
+// tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
     const lc = new ListController(true);
 
@@ -285,7 +287,7 @@ describe('Basic List | Testrun', () => {
         await series2.addListProvider(s2provider1);
 
         const series3 = new Series();
-        const s3provider1 = new ListProviderLocalData(20853 , AniListProvider);
+        const s3provider1 = new ListProviderLocalData(20853, AniListProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
         s3provider1.targetSeason = 2;
         await series3.addListProvider(s3provider1);
@@ -315,7 +317,7 @@ describe('Basic List | Testrun', () => {
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
         strictEqual(MainListManager['mainList'].length, 1);
-        const provider = MainListManager['mainList'][0].getAllProviderLocalDatas().find(x => x.provider === TraktProvider.getInstance().providerName);
+        const provider = MainListManager['mainList'][0].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
             for (const iterator of provider.detailEpisodeInfo) {
                 logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
@@ -373,9 +375,8 @@ describe('Basic List | Testrun', () => {
         await ListController.instance.addSeriesToMainList(series1);
         await ListController.instance.addSeriesToMainList(series2);
         await ListController.instance.addSeriesToMainList(series3);
-        // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
-        
+
         const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series3, TraktProvider.getInstance());
         const seasonTarget = series3.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
@@ -397,25 +398,43 @@ describe('Basic List | Testrun', () => {
         if (!ListController.instance) {
             fail();
         }
+        // s2
+        const series1 = new Series();
+        const s1provider1 = new ListProviderLocalData(20923, AniListProvider);
+        s1provider1.infoStatus = ProviderInfoStatus.BASIC_INFO;
+        s1provider1.addSeriesName(new Name('Shokugeki no Souma', 'x-jap', NameType.OFFICIAL));
+        s1provider1.addSeriesName(new Name('Food Wars! Shokugeki no Soma', 'unkown', NameType.UNKNOWN));
+        s1provider1.addSeriesName(new Name('食戟のソーマ', 'jap', NameType.UNKNOWN));
+        s1provider1.releaseYear = 2015;
+        s1provider1.episodes = 24;
+        s1provider1.targetSeason = 1;
+        s1provider1.sequelIds.push(21518);
+        await series1.addListProvider(s1provider1);
 
         // s2
         const series2 = new Series();
-        const s2provider1 = new ListProviderLocalData(20923, AniListProvider);
-        s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        const s2provider1 = new ListProviderLocalData(21518, AniListProvider);
+        s2provider1.infoStatus = ProviderInfoStatus.BASIC_INFO;
+        s2provider1.addSeriesName(new Name('Shokugeki no Souma: Ni no Sara', 'x-jap', NameType.OFFICIAL));
+        s2provider1.addSeriesName(new Name('Food Wars! The Second Plate', 'unkown', NameType.UNKNOWN));
+        s2provider1.addSeriesName(new Name('食戟のソーマ 弍ノ皿', 'jap', NameType.UNKNOWN));
+        s2provider1.releaseYear = 2016;
+        s2provider1.episodes = 13;
+        s2provider1.prequelIds.push(20923);
         await series2.addListProvider(s2provider1);
-        await ListController.instance.addSeriesToMainList(series2);
 
         // s3
         const series3 = new Series();
-        const s3provider1 = new ListProviderLocalData(21518, AniListProvider);
+        const s3provider1 = new ListProviderLocalData(94084, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        s3provider1.targetSeason = 1;
         await series3.addListProvider(s3provider1);
-        await ListController.instance.addSeriesToMainList(series3);
+        await ListController.instance.addSeriesToMainList(series1, series2, series3);
 
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
 
-        const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series3, TraktProvider.getInstance());
+        const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series2, TraktProvider.getInstance());
 
         strictEqual(result.targetSeason, 2);
 

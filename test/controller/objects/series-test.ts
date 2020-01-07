@@ -24,7 +24,7 @@ describe('Series | Basic', () => {
         const providerB = new ListProviderLocalData(1, 'B');
         providerB.watchProgress = [];
         providerB.lastUpdate = new Date(50);
-        await series.addListProvider(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         // tslint:disable-next-line: no-string-literal
         assert.equal(await series['getLastUpdatedProvider'](), providerA);
         return;
@@ -38,7 +38,7 @@ describe('Series | Basic', () => {
         const providerB = new ListProviderLocalData(1, 'B');
         providerB.lastUpdate = new Date(1);
         providerB.addOneWatchedEpisode(4);
-        await series.addListProvider(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         const result = await series.getLastWatchProgress();
         if (result) {
             assert.equal(result.episode, 5);
@@ -53,7 +53,7 @@ describe('Series | Basic', () => {
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 11;
-        await series.addListProvider(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         const allEpisodes = await series.getAllEpisodes();
         assert.equal(allEpisodes[0], 10);
         assert.equal(allEpisodes[1], 11);
@@ -67,7 +67,7 @@ describe('Series | Basic', () => {
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData(1, 'B');
         providerB.episodes = 11;
-        await series.addListProvider(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         assert.deepEqual(await series.getAllEpisodes(), [10, 11]);
         return;
     });
@@ -87,7 +87,7 @@ describe('Series | Basic', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 11;
-        series.addListProvider(providerA, providerB);
+        series.addProviderDatas(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 12);
         return;
     });
@@ -98,7 +98,7 @@ describe('Series | Basic', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 24;
-        await series.addListProvider(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 24);
         return;
     });
@@ -111,7 +111,7 @@ describe('Series | Basic', () => {
         providerB.episodes = 24;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 11;
-        await series.addListProvider(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         assert.throws(series.getMaxEpisode);
         return;
     });

@@ -18,8 +18,6 @@ import listHelper from '../../list-helper';
 import stringHelper from '../../string-helper';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
-import ListLocalDataBind from 'src/backend/controller/objects/extension/provider-extension/binding/list-local-data-bind';
-import ProviderDataWithSeasonInfo from './provider-data-with-season-info';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */

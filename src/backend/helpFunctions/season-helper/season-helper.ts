@@ -13,6 +13,7 @@ import logger from '../../logger/logger';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import { SeasonSearchMode } from './season-search-mode';
 import SeasonSearchModeHelper from './season-search-mode-helper';
+import { emit } from 'cluster';
 
 class SeasonHelper {
 
@@ -42,7 +43,7 @@ class SeasonHelper {
             } else {
                 const mediaTypeSeries = await series.getMediaType();
                 while (prequel) {
-                
+
                     const mediaTypePrequel = await prequel.getMediaType();
                     if (mediaTypePrequel === mediaTypeSeries) {
                         searchCount++;
@@ -212,15 +213,23 @@ class SeasonHelper {
         logger.info('[SeasonHelper] create temp series');
         for (const entry of localDatas) {
             for (const prequelId of entry.prequelIds) {
-                if (prequelId) {
+                if (prequelId !== undefined && prequelId !== null) {
                     const series = new Series();
                     if (entry instanceof ListProviderLocalData) {
                         const newProvider = new ListProviderLocalData(prequelId, entry.provider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
+                        if (entry.targetSeason !== undefined) {
+                            newProvider.targetSeason = entry.targetSeason - 1;
+                        }
+                        newProvider.sequelIds.push(entry.id as number);
                         await series.addProviderDatas(newProvider);
                     } else if (entry instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
+                        if (entry.targetSeason !== undefined) {
+                            newProvider.targetSeason = entry.targetSeason - 1;
+                        }
+                        newProvider.sequelIds.push(entry.id as number);
                         await series.addProviderDatas(newProvider);
                     } else {
                         continue;
