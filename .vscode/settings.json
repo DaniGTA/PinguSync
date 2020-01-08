@@ -8,5 +8,9 @@
     },
     "mochaExplorer.debuggerPort": 19485,
     "jest.showCoverageOnLoad": true,
-    "jest.debugCodeLens.showWhenTestStateIn": ["fail", "unknown", "pass"]
+    "jest.debugCodeLens.showWhenTestStateIn": [
+        "fail",
+        "unknown",
+        "pass"
+    ]
 }

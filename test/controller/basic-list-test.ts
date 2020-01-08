@@ -144,8 +144,6 @@ describe('Basic List | Testrun', () => {
         s1provider2.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s1provider3 = new ListProviderLocalData(94090, TraktProvider);
         s1provider3.infoStatus = ProviderInfoStatus.ONLY_ID;
-        const s1provider4 = new InfoProviderLocalData(10894, AniDBProvider);
-        s1provider4.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s1provider5 = new InfoProviderLocalData(289882, TVDBProvider);
         s1provider5.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s1provider6 = new InfoProviderLocalData('tt4728568', 'imdb');
@@ -156,7 +154,6 @@ describe('Basic List | Testrun', () => {
         s1provider8.infoStatus = ProviderInfoStatus.ONLY_ID;
         await series1.addListProvider(s1provider2);
         await series1.addListProvider(s1provider3);
-        await series1.addInfoProvider(s1provider4);
         await series1.addInfoProvider(s1provider5);
         await series1.addInfoProvider(s1provider6);
         await series1.addInfoProvider(s1provider7);
@@ -168,8 +165,6 @@ describe('Basic List | Testrun', () => {
         s2provider2.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s2provider3 = new ListProviderLocalData(94090, TraktProvider);
         s2provider3.infoStatus = ProviderInfoStatus.ONLY_ID;
-        const s2provider4 = new InfoProviderLocalData(10894, AniDBProvider);
-        s2provider4.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s2provider5 = new InfoProviderLocalData(289882, TVDBProvider);
         s2provider5.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s2provider6 = new InfoProviderLocalData('tt4728568', 'imdb');
@@ -180,7 +175,6 @@ describe('Basic List | Testrun', () => {
         s2provider8.infoStatus = ProviderInfoStatus.ONLY_ID;
         await series2.addListProvider(s2provider2);
         await series2.addListProvider(s2provider3);
-        await series2.addInfoProvider(s2provider4);
         await series2.addInfoProvider(s2provider5);
         await series2.addInfoProvider(s2provider6);
         await series2.addInfoProvider(s2provider7);
@@ -190,6 +184,12 @@ describe('Basic List | Testrun', () => {
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
         strictEqual(MainListManager['mainList'].length, 2);
+        const anidb = MainListManager['mainList'][0].getAllProviderLocalDatas().find((x) => x.provider === AniDBProvider.instance.providerName);
+        if (anidb) {
+            strictEqual(anidb.id, 10894);
+        } else {
+            fail();
+        }
         strictEqual(await seriesHelper.isSameSeries(series1, series2), false);
     });
 
@@ -244,7 +244,7 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 2);
+        strictEqual(MainListManager['mainList'].length, 3);
         strictEqual(await seriesHelper.isSameSeries(series1, series2), false);
     }, 4000);
 
@@ -423,7 +423,7 @@ describe('Basic List | Testrun', () => {
         s2provider1.prequelIds.push(20923);
         await series2.addListProvider(s2provider1);
 
-                // s2
+        // s2
         const series4 = new Series();
         const s4provider1 = new ListProviderLocalData(109963, AniListProvider);
         s4provider1.infoStatus = ProviderInfoStatus.ONLY_ID;

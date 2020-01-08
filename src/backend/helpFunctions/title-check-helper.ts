@@ -1,9 +1,9 @@
 import { MediaType } from '../controller/objects/meta/media-type';
+import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
 import Series from '../controller/objects/series';
 import logger from '../logger/logger';
-import stringHelper from './string-helper';
-import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+import stringHelper from './string-helper';
 
 export default new class TitleCheckHelper {
     public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
@@ -168,9 +168,9 @@ export default new class TitleCheckHelper {
         }
         response.absoluteResult = AbsoluteResult.ABSOLUTE_NONE;
         return response;
-     }
+    }
 
-    public async getMediaTypeFromTitle(title: string): Promise<MediaType> {
+    public getMediaTypeFromTitle(title: string): MediaType {
         if (title.match(/(:|: | )Movie(\W|$|\_)/)) {
             return MediaType.MOVIE;
         }

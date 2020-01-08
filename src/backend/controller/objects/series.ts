@@ -539,8 +539,9 @@ export default class Series extends SeriesProviderExtension {
      */
     private async getAllMediaTypesFromTitle(): Promise<MediaType[]> {
         const collectedMediaTypes: MediaType[] = [];
-        for (const name of await this.getAllNamesUnique()) {
-            const result = await titleCheckHelper.getMediaTypeFromTitle(name.name);
+        const names = await this.getAllNamesUnique();
+        for (const name of names) {
+            const result = titleCheckHelper.getMediaTypeFromTitle(name.name);
             if (result !== MediaType.UNKOWN) {
                 collectedMediaTypes.push(result);
             }

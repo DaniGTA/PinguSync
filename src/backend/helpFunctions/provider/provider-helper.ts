@@ -59,13 +59,9 @@ export class ProviderHelper {
         const localDatas: ProviderLocalData[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
         const tempSeriesCopy = Object.assign(new Series(), series);
-        const seriesSeason = await tempSeriesCopy.getSeason();
         for (const idProvider of idProviders) {
             try {
                 const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, idProvider, ProviderInfoStatus.FULL_INFO);
-                if (idProviderResult.mainProvider.targetSeason !== undefined && idProviderResult.mainProvider.targetSeason !== seriesSeason.seasonNumber) {
-                    logger.warn('wrong season');
-                }
                 localDatas.push(...idProviderResult.getAllProviders());
                 await tempSeriesCopy.addProviderDatas(...idProviderResult.getAllProviders());
             } catch (err) {
@@ -84,9 +80,6 @@ export class ProviderHelper {
                 }
                 requestResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, provider, target);
                 currentResult = requestResult.mainProvider;
-                if (currentResult.targetSeason !== undefined && currentResult.targetSeason !== seriesSeason.seasonNumber) {
-                    logger.warn('wrong season');
-                }
                 await tempSeriesCopy.addProviderDatas(...requestResult.getAllProviders());
             } catch (err) {
                 logger.error(err);

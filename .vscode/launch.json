@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
-    "configurations": [{
+    "configurations": [
+        {
             "name": "Electron: Main",
             "type": "node",
             "request": "launch",
@@ -62,6 +63,7 @@
             "runtimeArgs": [
                 "--inspect-brk",
                 "${workspaceRoot}/node_modules/jest/bin/jest.js",
+                "-i",
                 "--runInBand"
             ],
             "console": "integratedTerminal",
@@ -69,11 +71,13 @@
             "port": 9229
         }
     ],
-    "compounds": [{
-        "name": "Electron: All",
-        "configurations": [
-            "Electron: Main",
-            "Electron: Renderer"
-        ]
-    }]
+    "compounds": [
+        {
+            "name": "Electron: All",
+            "configurations": [
+                "Electron: Main",
+                "Electron: Renderer"
+            ]
+        }
+    ]
 }
