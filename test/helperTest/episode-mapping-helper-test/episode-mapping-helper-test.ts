@@ -19,7 +19,7 @@ import TestHelper from '../../test-helper';
 describe('Episode mapping | Mapping Only', () => {
     const lc = new ListController(true);
 
-    beforeAll(() => {
+    beforeEach(() => {
         TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
         ProviderList['loadedInfoProvider'] = [];
