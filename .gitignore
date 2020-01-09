@@ -21,4 +21,6 @@ anidb_config.json*
 /dist_electron
 
 #Coverage files
-/coverage
+coverage
+mochawesome-report
+report.*.json

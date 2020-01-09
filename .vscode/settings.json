@@ -12,5 +12,7 @@
         "fail",
         "unknown",
         "pass"
-    ]
+    ],
+    "debug.node.useV3": true,
+    "debug.chrome.useV3": true
 }

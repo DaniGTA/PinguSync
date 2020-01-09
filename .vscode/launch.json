@@ -46,22 +46,11 @@
             "sourceMaps": true
         },
         {
-            "type": "node",
-            "request": "launch",
-            "name": "Mocha Tests",
-            "program": "${workspaceRoot}/node_modules/mocha/bin/mocha",
-            "args": [
-                "--inspect-brk"
-            ],
-            "port": 9229,
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
             "name": "Debug Jest Tests",
             "type": "node",
             "request": "launch",
             "runtimeArgs": [
-                "--inspect-brk",
+                "--inspect",
                 "${workspaceRoot}/node_modules/jest/bin/jest.js",
                 "-i",
                 "--runInBand"
