@@ -16,6 +16,7 @@ list.json*
 anidb-anime-titles.xml*
 anidb-anime-titles.xml.gz*
 anidb_config.json*
+provider_data_list.json
 
 #Electron-builder output
 /dist_electron
