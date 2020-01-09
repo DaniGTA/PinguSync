@@ -9,7 +9,7 @@ export default class MediaTypeComperator {
         return this.comperaMediaType(aMediaType, bMediaType);
     }
 
-    public static async comperaMediaType(aMediaType: MediaType, bMediaType: MediaType): Promise<ComperatorResult> {
+    public static comperaMediaType(aMediaType: MediaType, bMediaType: MediaType): ComperatorResult {
         const comperatorResult = new ComperatorResult();
         if (aMediaType !== MediaType.UNKOWN && bMediaType !== MediaType.UNKOWN) {
             if ((aMediaType === MediaType.ANIME && bMediaType === MediaType.SERIES) || (bMediaType === MediaType.ANIME && aMediaType === MediaType.SERIES)) {
@@ -26,5 +26,20 @@ export default class MediaTypeComperator {
             comperatorResult.matchAble += 1;
         }
         return comperatorResult;
+    }
+
+    public static isMediaTypeANormalSeries(mediaType: MediaType): boolean {
+        if (mediaType === MediaType.UNKOWN_SERIES) {
+            return true;
+        } else if (mediaType === MediaType.SERIES) {
+            return true;
+        } else if (mediaType === MediaType.ANIME) {
+            return true;
+        }
+        return false;
+    }
+
+    public static areTheseMediaTypeBothNormalSeries(a: MediaType, b: MediaType): boolean {
+        return (this.isMediaTypeANormalSeries(a) === this.isMediaTypeANormalSeries(b));
     }
 }

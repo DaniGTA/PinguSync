@@ -77,13 +77,13 @@ export default class TraktProvider extends ListProvider {
             if (provider.provider === this.providerName) {
                 if (provider.isMediaTypeMovie()) {
                     const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/movies/' + provider.id + '?extended=full');
-                    return (traktConverter.convertFullShowInfoToLocalData(res));
+                    return (traktConverter.convertFullShowInfoToLocalData(res, MediaType.MOVIE));
                 } else {
                     const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id + '?extended=full');
                     const seasonEpisodeInfo = await this.traktRequest<ITraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
                     const seasonInfo = await this.traktRequest<ITraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=full');
                     const fullSeasonInfo = traktConverter.combineSeasonInfoAndSeasonEpisodeInfo(seasonInfo, seasonEpisodeInfo);
-                    return traktConverter.convertFullShowInfoToLocalData(res, fullSeasonInfo);
+                    return traktConverter.convertFullShowInfoToLocalData(res, MediaType.UNKOWN_SERIES, fullSeasonInfo);
                 }
             }
         } catch (err) {

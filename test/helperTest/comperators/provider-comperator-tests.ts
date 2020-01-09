@@ -1,11 +1,11 @@
 import { strictEqual } from 'assert';
+import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 import Series from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../../src/backend/helpFunctions/comperators/provider-comperator';
 import TestHelper from '../../test-helper';
-import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 
 describe('Provider Comperator | Testrun', () => {
     beforeAll(() => {

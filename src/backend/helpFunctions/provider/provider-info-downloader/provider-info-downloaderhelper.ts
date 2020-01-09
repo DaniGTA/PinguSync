@@ -12,6 +12,7 @@ import { ListProviderLocalData } from '../../../controller/provider-manager/loca
 import ProviderSearchResultManager from '../../../controller/stats-manager/models/provider-search-result-manager';
 import logger from '../../../logger/logger';
 import { AbsoluteResult } from '../../comperators/comperator-results.ts/comperator-result';
+import MediaTypeComperator from '../../comperators/media-type-comperator';
 import MultiProviderComperator from '../../comperators/multi-provider-results-comperator';
 import ProviderComperator from '../../comperators/provider-comperator';
 import listHelper from '../../list-helper';
@@ -110,9 +111,12 @@ export default new class ProviderInfoDownloadHelper {
                         const result = allBindings.find((x) => x.providerName === provider.providerName);
                         if (result) {
                             const seriesSeason = (await series.getSeason()).seasonNumber;
-                            if (!Number.isNaN(seriesSeason as number)) {
+                            const mediaType = await series.getMediaType();
+
+                            if (!Number.isNaN(seriesSeason as number) && seriesSeason !== undefined) {
                                 const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
-                                if (this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason as number)) {
+                                if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(mediaType, providerData.mediaType)
+                                    || this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
                                     if (providerData instanceof ListProviderLocalData) {
                                         let newInstance = new ListProviderLocalData(providerData.id, providerData.provider);
                                         newInstance = Object.assign(newInstance, providerData);

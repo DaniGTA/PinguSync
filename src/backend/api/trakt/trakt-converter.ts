@@ -22,6 +22,7 @@ import { Season, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
+import { isNullOrUndefined } from 'util';
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
@@ -51,11 +52,12 @@ export default new class TraktConverter {
             provider.addSeriesName(new Name(show.title, 'en', NameType.OFFICIAL));
         } catch (err) {
             logger.debug(err);
-         }
+        }
 
         provider.addSeriesName(new Name(show.ids.slug, 'slug', NameType.SLUG));
         provider.releaseYear = show.year;
         provider.rawEntry = show;
+        provider.mediaType = MediaType.UNKOWN_SERIES;
 
         const result = new MultiProviderResult(provider);
         try {
@@ -93,7 +95,7 @@ export default new class TraktConverter {
         return finalList;
     }
 
-    public async convertFullShowInfoToLocalData(fullShow: FullShowInfo, seasonInfo?: ITraktShowSeasonInfo[]): Promise<MultiProviderResult> {
+    public async convertFullShowInfoToLocalData(fullShow: FullShowInfo, mediaType: MediaType, seasonInfo?: ITraktShowSeasonInfo[]): Promise<MultiProviderResult> {
         const provider = new ListProviderLocalData(fullShow.ids.trakt, TraktProvider.getInstance());
         provider.addSeriesName(new Name(fullShow.title, 'en', NameType.OFFICIAL));
         provider.addSeriesName(new Name(fullShow.ids.slug, 'slug', NameType.SLUG));
@@ -109,6 +111,7 @@ export default new class TraktConverter {
                 provider.genres.push(new Genre(genre));
             }
         }
+        provider.mediaType = this.getMediaTypeFromGenres(provider.genres, mediaType);
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         if (seasonInfo) {
             try {
@@ -130,6 +133,17 @@ export default new class TraktConverter {
         }
 
         return multiProviderResult;
+    }
+
+    public getMediaTypeFromGenres(genres: Genre[], expectedMediaTypeDirection: MediaType): MediaType {
+        if (expectedMediaTypeDirection === MediaType.UNKOWN_SERIES) {
+            if (isNullOrUndefined(genres.find((x) => x.genre === 'anime'))) {
+                return MediaType.SERIES;
+            } else {
+                return MediaType.ANIME;
+            }
+        }
+        return expectedMediaTypeDirection;
     }
 
     public async getDetailedEpisodeInfo(seasonInfos: ITraktShowSeasonInfo[]): Promise<Episode[]> {

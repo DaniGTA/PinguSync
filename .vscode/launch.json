@@ -22,7 +22,6 @@
             "outFiles": [
                 "${workspaceFolder}/dist_electron/**/*.js"
             ],
-            "debug.node.useV3": true,
             "outputCapture": "std",
             "timeout": 45000,
         },
@@ -37,7 +36,6 @@
             "sourceMapPathOverrides": {
                 "webpack:///./src/*": "${webRoot}/*"
             },
-            "debug.chrome.useV3": true
         },
         {
             "type": "electron",
@@ -50,7 +48,7 @@
             "type": "node",
             "request": "launch",
             "runtimeArgs": [
-                "--inspect",
+                "--inspect-brk",
                 "${workspaceRoot}/node_modules/jest/bin/jest.js",
                 "-i",
                 "--runInBand"

@@ -1,20 +1,15 @@
-import ListController from '../../../src/backend/controller/list-controller';
-
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-
 import { strictEqual } from 'assert';
+import ListController from '../../../src/backend/controller/list-controller';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
 import { EpisodeType } from '../../../src/backend/controller/objects/meta/episode/episode-type';
+import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import EpisodeComperator from '../../../src/backend/helpFunctions/comperators/episode-comperator';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
 // tslint:disable: no-string-literal
 describe('Episode comperator | Full test', () => {
-    const lc = new ListController(true);
-
     beforeAll(() => {
         TestHelper.mustHaveBefore();
     });
@@ -43,8 +38,7 @@ describe('Episode comperator | Full test', () => {
             async () => {
                 const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, 1);
                 strictEqual(resultA, true);
-            }
-        );
+            });
         test('should compare seasons right (missing series season)', async () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, 1, 1, undefined);
             strictEqual(resultA, true);
@@ -54,8 +48,7 @@ describe('Episode comperator | Full test', () => {
             async () => {
                 const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, undefined);
                 strictEqual(resultA, true);
-            }
-        );
+            });
         test('should compare seasons false', async () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, 2);
             strictEqual(resultA, false);
