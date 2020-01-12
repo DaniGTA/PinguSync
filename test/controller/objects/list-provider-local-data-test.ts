@@ -22,7 +22,6 @@ describe('listProviderLocalData tests', () => {
         a.episodes = 13;
         a.publicScore = 20;
         a.lastUpdate = new Date(0);
-        a.targetSeason = 5;
         a.watchStatus = WatchStatus.CURRENT;
         const b = new ListProviderLocalData(1);
         b.episodes = 14;
@@ -38,7 +37,6 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.publicScore, 20, 'Public score merge failed');
         strictEqual(merged.score, 40, 'Score merge failed');
         strictEqual(merged.infoStatus, ProviderInfoStatus.FULL_INFO, 'Should add latest hasFullInfo');
-        strictEqual(merged.targetSeason, 5, 'Should merge targetSeason');
         strictEqual(merged.watchStatus, WatchStatus.COMPLETED, 'Should add latest watch status');
         return;
     });

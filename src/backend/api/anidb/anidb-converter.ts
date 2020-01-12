@@ -68,8 +68,7 @@ export default class AniDBConverter {
             ipld.episodes = Number(fullInfo.anime.episodecount._text);
             ipld.detailEpisodeInfo = await this.getDetailEpisodeInfo(fullInfo.anime);
             ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/' + fullInfo.anime.picture._text, ImageSize.ORIGINAL));
-            const mpr = new MultiProviderResult(ipld);
-            mpr.subProviders = await this.getSubProviders(fullInfo.anime);
+            const mpr = new MultiProviderResult(ipld, ...await this.getSubProviders(fullInfo.anime));
             return mpr;
         }
         throw new Error('no anime present');

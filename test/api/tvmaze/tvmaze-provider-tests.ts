@@ -35,7 +35,7 @@ describe('Provider: TVMaze | Test runs', () => {
     test('should get series by id', async () => {
         const unkownProvider = new InfoProviderLocalData(1505, '');
         const result = await tvmazeProvider.getFullInfoById(unkownProvider);
-        strictEqual(result.mainProvider.id, unkownProvider.id);
+        strictEqual(result.mainProvider.providerLocalData.id, unkownProvider.id);
         return;
     });
 

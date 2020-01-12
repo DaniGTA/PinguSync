@@ -288,8 +288,7 @@ export default class Series extends SeriesProviderExtension {
         logger.debug('[Series ] Merging Series   | SeriesID: ' + this.id);
         const newAnime: Series = new Series();
 
-        await newAnime.addProviderDatas(...[...this.getListProvidersInfos(), ...anime.getListProvidersInfos()]);
-        await newAnime.addProviderDatas(...[...this.getInfoProvidersInfos(), ...anime.getInfoProvidersInfos()]);
+        newAnime.addAllBindings(...[...this.getAllProviderBindings(), ...anime.getAllProviderBindings()]);
         logger.debug('[Series] Merged Providers  | SeriesID: ' + this.id);
         if (mergeType === MergeTypes.UPGRADE) {
             await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);

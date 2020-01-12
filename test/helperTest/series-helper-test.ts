@@ -1,6 +1,5 @@
 import { strictEqual } from 'assert';
 import ListController from '../../src/backend/controller/list-controller';
-import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import Name from '../../src/backend/controller/objects/meta/name';
@@ -10,6 +9,7 @@ import { InfoProviderLocalData } from '../../src/backend/controller/provider-man
 import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import TestProvider from '../controller/objects/testClass/testProvider';
 import TestHelper from '../test-helper';
@@ -40,12 +40,11 @@ describe('Series Helper', () => {
         const infoProviderA = new InfoProviderLocalData('14792', 'test3');
         await a.addInfoProvider(infoProviderA);
         const listProviderA = new ListProviderLocalData(108632, 'test2');
-        listProviderA.targetSeason = 2;
         listProviderA.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProviderA.prequelIds.push(21355);
         listProviderA.isNSFW = false;
         listProviderA.addSeriesName(new Name('Test 2', 'x-jap'));
-        await a.addListProvider(listProviderA);
+        await a.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProviderA, 2));
         // B is related too C
         const b = new Series();
         // tslint:disable-next-line: no-string-literal
@@ -56,12 +55,11 @@ describe('Series Helper', () => {
         infoProviderB.infoStatus = ProviderInfoStatus.FULL_INFO;
         await b.addInfoProvider(infoProviderB);
         const listProvider = new ListProviderLocalData(43973, 'test');
-        listProvider.targetSeason = 1;
         listProvider.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProvider.releaseYear = 2013;
         listProvider.isNSFW = false;
         listProvider.addSeriesName(new Name('Other Series', 'x-jap'));
-        await b.addListProvider(listProvider);
+        await b.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProvider, 1));
 
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
@@ -73,10 +71,9 @@ describe('Series Helper', () => {
         c['canSync'] = false;
         const listProviderB = new ListProviderLocalData(43973, 'test');
         listProviderB.isNSFW = false;
-        listProviderB.targetSeason = 2;
         listProviderB.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProviderB.addSeriesName(new Name('Series Test', 'x-jap'));
-        await c.addListProvider(listProviderB);
+        await c.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProviderB, 2));
 
         strictEqual(await seriesHelper.isSameSeries(a, c), false);
     });
@@ -135,14 +132,13 @@ describe('Series Helper', () => {
         const anilist = new ListProviderLocalData(20920, 'AniList');
         anilist.episodes = 13;
         anilist.releaseYear = 2015;
-        anilist.targetSeason = 1;
         anilist.sequelIds.push(21660);
         anilist.alternativeIds.push(85161);
         anilist.infoStatus = ProviderInfoStatus.BASIC_INFO;
         anilist.addSeriesName(new Name('Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka', 'x-jap', NameType.OFFICIAL));
         anilist.addSeriesName(new Name('Is It Wrong to Try to Pick Up Girls in a Dungeon?', 'unknown', NameType.MAIN));
         anilist.addSeriesName(new Name('ダンジョンに出会いを求めるのは間違っているだろうか', 'jap', NameType.UNKNOWN));
-        await series.addListProvider(anilist);
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(anilist,1));
         return series;
     }
 

@@ -1,4 +1,5 @@
 
+import { isNullOrUndefined } from 'util';
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
@@ -12,6 +13,7 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
@@ -22,7 +24,6 @@ import { Season, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
-import { isNullOrUndefined } from 'util';
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
@@ -37,11 +38,10 @@ export default new class TraktConverter {
             for (const episode of season.episodes) {
                 providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
             }
-            providerInfo.targetSeason = season.number;
             providerInfo.watchStatus = WatchStatus.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
             providerInfo.infoStatus = ProviderInfoStatus.BASIC_INFO;
-            result.push(new MultiProviderResult(providerInfo));
+            result.push(new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, season.number)));
         }
         return result;
     }
@@ -59,16 +59,16 @@ export default new class TraktConverter {
         provider.rawEntry = show;
         provider.mediaType = MediaType.UNKOWN_SERIES;
 
-        const result = new MultiProviderResult(provider);
+        const result = [];
         try {
             if (show.ids.tvdb) {
                 const tvdbProvider = new InfoProviderLocalData(show.ids.tvdb, TVDBProvider.Instance);
-                result.subProviders.push(tvdbProvider);
+                result.push(tvdbProvider);
             }
         } catch (err) {
             logger.error('[TVDBConverter] No tvdb instance.');
         }
-        return result;
+        return  new MultiProviderResult(provider, ...result);
     }
 
     public async convertMovieToLocalData(traktMovie: Movie | WatchedShow): Promise<MultiProviderResult> {
@@ -121,18 +121,18 @@ export default new class TraktConverter {
                 logger.error(err);
             }
         }
-        const multiProviderResult = new MultiProviderResult(provider);
+        const multiProviderResult = [];
         if (fullShow.ids.tvdb) {
-            multiProviderResult.subProviders.push(new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider.Instance));
+            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider.Instance));
         }
         if (fullShow.ids.imdb) {
-            multiProviderResult.subProviders.push(new InfoProviderLocalData(fullShow.ids.imdb, 'imdb'));
+            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.imdb, 'imdb'));
         }
         if (fullShow.ids.tmdb) {
-            multiProviderResult.subProviders.push(new InfoProviderLocalData(fullShow.ids.tmdb, 'tmdb'));
+            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.tmdb, 'tmdb'));
         }
 
-        return multiProviderResult;
+        return new MultiProviderResult(provider, ...multiProviderResult);
     }
 
     public getMediaTypeFromGenres(genres: Genre[], expectedMediaTypeDirection: MediaType): MediaType {

@@ -7,6 +7,7 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
 import TestHelper from '../../test-helper';
 import TestProvider from './testClass/testProvider';
+import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 describe('Series | Relations', () => {
 
@@ -170,11 +171,10 @@ describe('Series | Relations', () => {
         const provider = new ListProviderLocalData(id, 'Test');
         const anime = new Series();
         provider.addSeriesName(new Name('Test', 'en'));
-        provider.targetSeason = targetSeason;
         // tslint:disable-next-line: no-string-literal
         provider['episodes'] = 10;
         provider.releaseYear = 2014;
-        await anime.addListProvider(provider);
+        await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, targetSeason));
         return anime;
     }
 });

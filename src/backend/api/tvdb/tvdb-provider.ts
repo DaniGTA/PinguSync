@@ -1,5 +1,4 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import request from 'request';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
@@ -79,25 +78,21 @@ export default class TVDBProvider extends InfoProvider {
         if (TVDBProvider.Instance.apiData.accessToken && TVDBProvider.Instance.apiData.expiresIn && new Date().getTime() < TVDBProvider.Instance.apiData.expiresIn) {
             return TVDBProvider.Instance.apiData.accessToken;
         } else {
-            const token = await new Promise<string>((resolve, reject) => {
-                request({
+            let token: string | null = null;
+            const data = await WebRequestManager.request({
                     method: 'POST',
-                    url: TVDBProvider.Instance.baseUrl + '/login',
+                    uri: TVDBProvider.Instance.baseUrl + '/login',
                     headers: { 'Content-Type': 'application/json' },
                     body: `{
                         "apikey": "` + TVDBProvider.Instance.apiKey + `"
                     }`,
-                }, (error: any, response: any, body: string) => {
-                    if (response.statusCode === 200 || response.statusCode === 201) {
-                        resolve((JSON.parse(body) as TVDBLogin).token);
-                    } else {
-                        reject();
-                    }
-                }).on('error', (err) => {
-                    logger.error(err);
-                    reject();
-                });
             });
+            if (data.statusCode === 200 || data.statusCode === 201) {
+                    const loginData = (JSON.parse(data.body) as TVDBLogin);
+                    token = loginData.token;
+                } else {
+                    throw new Error('[TVDB] Failed to get token');
+                }
             const dayInms = 86400000;
             TVDBProvider.Instance.apiData.setTokens(token, new Date().getTime() + dayInms);
             return token;

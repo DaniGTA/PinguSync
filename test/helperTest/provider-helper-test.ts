@@ -18,9 +18,6 @@ import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
 
 describe('Provider Helper Test', () => {
-
-    const lc = new ListController(true);
-
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
@@ -45,7 +42,7 @@ describe('Provider Helper Test', () => {
         if (pList && pList[1]) {
             provider = pList[1];
         }
-        let result;
+        let result: boolean = false;
         if (provider) {
             // tslint:disable-next-line: no-string-literal
             result = providerHelper['canGetTargetIdFromCurrentProvider'](listProvider, provider);

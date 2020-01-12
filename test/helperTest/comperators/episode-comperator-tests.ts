@@ -1,5 +1,4 @@
 import { strictEqual } from 'assert';
-import ListController from '../../../src/backend/controller/list-controller';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';

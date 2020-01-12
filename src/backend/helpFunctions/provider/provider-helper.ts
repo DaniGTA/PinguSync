@@ -15,13 +15,14 @@ export class ProviderHelper {
 
     public async requestFullProviderUpdate(series: Series, target: ProviderInfoStatus = ProviderInfoStatus.BASIC_INFO, force = false): Promise<Series> {
         if (this.canUpdateSeries(series) || force) {
+            const notSeasonAware = this.onlySeriesIdAndNotSeasonAwareNamesLocalData(series.getAllProviderLocalDatas());
 
             const hadSeriesNames = this.hasSeriesASeriesNames(series);
             if (!hadSeriesNames) {
                 const upgradedinfos = await this.requestUpgradeAllCurrentinfos(series, force, target);
                 await series.addProviderDatasWithSeasonInfos(...upgradedinfos);
             }
-
+            
             const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
             await series.addProviderDatasWithSeasonInfos(...infoProviders);
 
@@ -41,9 +42,7 @@ export class ProviderHelper {
                 if (providerLocalData && providerLocalData.infoStatus > target || !providerLocalData) {
                     const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
                     const infoResult = await this.requestProviderInfo(series, providerInstance, force, target);
-                    for (const result of infoResult) {
-                        resultList.push(new ProviderDataWithSeasonInfo(result, result.targetSeason));
-                    }
+                    resultList.push(...infoResult);
                 }
             } catch (err) {
                 logger.error(err);
@@ -55,22 +54,23 @@ export class ProviderHelper {
     /**
      * requestProviderInfo
      */
-    public async requestProviderInfo(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<ProviderLocalData[]> {
-        const localDatas: ProviderLocalData[] = [];
+    // tslint:disable-next-line: max-line-length
+    public async requestProviderInfo(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
+        const localDatas: ProviderDataWithSeasonInfo[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
         const tempSeriesCopy = Object.assign(new Series(), series);
         for (const idProvider of idProviders) {
             try {
-                const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, idProvider, ProviderInfoStatus.FULL_INFO);
-                localDatas.push(...idProviderResult.getAllProviders());
-                await tempSeriesCopy.addProviderDatas(...idProviderResult.getAllProviders());
+                const idProviderResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, idProvider);
+                localDatas.push(...idProviderResult.getAllProvidersWithSeason());
+                await tempSeriesCopy.addProviderDatasWithSeasonInfos(...idProviderResult.getAllProvidersWithSeason());
             } catch (err) {
                 logger.error(err);
             }
         }
 
-        let lastLocalDataResult: ProviderLocalData | null = null;
-        let currentResult: ProviderLocalData | null = null;
+        let lastLocalDataResult: ProviderDataWithSeasonInfo | null = null;
+        let currentResult: ProviderDataWithSeasonInfo | null = null;
         let requestResult: MultiProviderResult | null = null;
         do {
 
@@ -78,29 +78,45 @@ export class ProviderHelper {
                 if (currentResult) {
                     lastLocalDataResult = currentResult;
                 }
-                requestResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, provider, target);
+                requestResult = await providerInfoDownloaderhelper.getProviderSeriesInfo(tempSeriesCopy, provider);
                 currentResult = requestResult.mainProvider;
-                await tempSeriesCopy.addProviderDatas(...requestResult.getAllProviders());
+                await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResult.getAllProvidersWithSeason());
             } catch (err) {
                 logger.error(err);
             }
         } while (this.isProviderTargetAchievFailed(currentResult, lastLocalDataResult, target));
 
         if (requestResult) {
-            localDatas.push(...requestResult.getAllProviders());
+            localDatas.push(...requestResult.getAllProvidersWithSeason());
+        }
+
+        if (localDatas.length === 0) {
+            const providersThatCanProvideId = this.getProvidersThatCanProviderProviderId(provider);
+            for (const providerThatCanProvideId of providersThatCanProvideId) {
+                try {
+                    const result = await this.requestProviderInfo(series, providerThatCanProvideId, force, target);
+                    if (result.length !== 0) {
+                        localDatas.push(...result);
+                        break;
+                    }
+                } catch (err) {
+                    logger.error(err);
+                }
+            }
         }
         return localDatas;
     }
 
-    public isProviderTargetAchievFailed(currentResult: ProviderLocalData | null, lastLocalDataResult: ProviderLocalData | null, target: ProviderInfoStatus) {
+    // tslint:disable-next-line: max-line-length
+    public isProviderTargetAchievFailed(currentResult: ProviderDataWithSeasonInfo | null, lastLocalDataResult: ProviderDataWithSeasonInfo | null, target: ProviderInfoStatus) {
         if (lastLocalDataResult && currentResult) {
-            if (currentResult.infoStatus > target) {
-                if (currentResult.infoStatus !== lastLocalDataResult.infoStatus) {
+            if (currentResult.providerLocalData.infoStatus > target) {
+                if (currentResult.providerLocalData.infoStatus !== lastLocalDataResult.providerLocalData.infoStatus) {
                     return true;
                 }
             }
         } else if (!lastLocalDataResult && currentResult) {
-            if (currentResult.infoStatus > target) {
+            if (currentResult.providerLocalData.infoStatus > target) {
                 return true;
             }
         }
@@ -129,7 +145,7 @@ export class ProviderHelper {
     }
 
     private async requestAllListProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
-        const results = [];
+        const results: ProviderDataWithSeasonInfo[] = [];
         const tempSeriesCopy = Object.assign(new Series(), series);
         const currentProviders = series.getAllProviderLocalDatas();
 
@@ -139,13 +155,10 @@ export class ProviderHelper {
                 const providerLocalData = tempSeriesCopy.getListProvidersInfos().find((x) => x.provider === providerThatNeedUpdate.providerName);
                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.ADVANCED_BASIC_INFO || !providerLocalData) {
                     const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                    await series.addProviderDatas(...result);
+                    await series.addProviderDatasWithSeasonInfos(...result);
                     series.resetCache();
                     tempSeriesCopy.resetCache();
-                    for (const providerData of result) {
-                        results.push(new ProviderDataWithSeasonInfo(providerData, providerData.targetSeason));
-                    }
-
+                    results.push(...result);
                 }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #2: ' + err);
@@ -155,17 +168,15 @@ export class ProviderHelper {
     }
 
     private async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
-        const results = [];
+        const results: ProviderDataWithSeasonInfo[]  = [];
         const currentProviders = series.getAllProviderLocalDatas();
         const tempSeriesCopy = Object.assign(new Series(), series);
         const infoProvidersThatNeedUpdates = this.getInfoProviderThatNeedUpdates(currentProviders);
         for (const infoProvider of infoProvidersThatNeedUpdates) {
             try {
                 const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
-                await series.addProviderDatas(...result);
-                for (const providerData of result) {
-                    results.push(new ProviderDataWithSeasonInfo(providerData, providerData.targetSeason));
-                }
+                await series.addProviderDatasWithSeasonInfos(...result);
+                results.push(...result);
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #1: ' + err);
             }
@@ -278,6 +289,11 @@ export class ProviderHelper {
         }
     }
 
+    /**
+     * Get every avaible provider that can provider the id of the target provider
+     * @param avaibleProviders
+     * @param targetProvider
+     */
     private getAvaibleProvidersThatCanProvideProviderId(avaibleProviders: ProviderLocalData[], targetProvider: ExternalProvider): ExternalProvider[] {
         const result: ExternalProvider[] = [];
         for (const provider of avaibleProviders) {
@@ -299,6 +315,28 @@ export class ProviderHelper {
         return result;
     }
 
+    /**
+     * Get all providers that can give the id of the target provider.
+     * @param targetProvider
+     */
+    private getProvidersThatCanProviderProviderId(targetProvider: ExternalProvider): ExternalProvider[] {
+        const providerThatProvidersId: ExternalProvider[] = [];
+        for (const provider of ProviderList.getAllProviderLists()) {
+            for (const supportProvider of provider.potentialSubProviders) {
+                try {
+                    const isntance = (supportProvider as any).getInstance();
+                    if (isntance.getInstance().providerName === targetProvider.providerName) {
+                        providerThatProvidersId.push(isntance);
+                        break;
+                    }
+                } catch (err) {
+                    logger.error(err);
+                }
+            }
+        }
+        return providerThatProvidersId;
+    }
+
     private canGetTargetIdFromCurrentProvider(currentProvider: ProviderLocalData, targetProvider: ExternalProvider): boolean {
         if (currentProvider.infoStatus !== ProviderInfoStatus.FULL_INFO) {
             for (const supportedProvider of ProviderList.getExternalProviderInstance(currentProvider).potentialSubProviders) {
@@ -308,5 +346,14 @@ export class ProviderHelper {
             }
         }
         return false;
+    }
+
+    private onlySeriesIdAndNotSeasonAwareNamesLocalData(currentProviders: ProviderLocalData[]): boolean {
+        for (const provider of currentProviders) {
+            if (!ProviderList.getExternalProviderInstance(provider).hasUniqueIdForSeasons) {
+                return false;
+            }
+        }
+        return true;
     }
 }

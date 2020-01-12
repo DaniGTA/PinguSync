@@ -215,7 +215,12 @@ export default class ProviderComperator {
                       comperatorResult.matches -= 0.5;
                 }
                 // tslint:disable-next-line: no-empty
-            } catch (err) { }
+            } catch (err) {
+                if (providerASeason === providerBSeason) {
+                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                }
+                logger.error(err);
+            }
         } else {
             if (providerA.infoStatus !== ProviderInfoStatus.ONLY_ID && providerB.infoStatus !== ProviderInfoStatus.ONLY_ID) {
                 comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;

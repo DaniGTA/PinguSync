@@ -6,7 +6,6 @@ import Name from '../../../controller/objects/meta/name';
 import Series from '../../../controller/objects/series';
 import ProviderDataListSearcher from '../../../controller/provider-data-list-manager/provider-data-list-searcher';
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderSearchResultManager from '../../../controller/stats-manager/models/provider-search-result-manager';
@@ -17,6 +16,7 @@ import MultiProviderComperator from '../../comperators/multi-provider-results-co
 import ProviderComperator from '../../comperators/provider-comperator';
 import listHelper from '../../list-helper';
 import stringHelper from '../../string-helper';
+import ProviderDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
 /**
@@ -44,7 +44,8 @@ export default new class ProviderInfoDownloadHelper {
         return new SameIdAndUniqueId();
     }
 
-    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider, target: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<MultiProviderResult> {
+    // tslint:disable-next-line: max-line-length
+    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<MultiProviderResult> {
         if (await provider.isProviderAvailable()) {
             const requestId = stringHelper.randomString(5);
             let trys = 0;
@@ -87,8 +88,9 @@ export default new class ProviderInfoDownloadHelper {
                 try {
                     const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
                     logger.log('info', '[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
+                    const id = result.mainProvider.providerLocalData.id.toString();
                     // tslint:disable-next-line: max-line-length
-                    ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, result.mainProvider.id.toString());
+                    ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, id);
                     return result;
                 } catch (err) {
                     throw new Error('[' + provider.providerName + '] Unkown error: ' + err);
@@ -101,7 +103,7 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('[' + provider.providerName + '] Provider is not available!');
     }
 
-    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider): Promise<ProviderLocalData> {
+    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider): Promise<ProviderDataWithSeasonInfo> {
         if (!provider.hasUniqueIdForSeasons) {
             const relations = await series.getAllRelations(await MainListManager.getMainList());
             if (relations.length !== 0) {
@@ -118,15 +120,9 @@ export default new class ProviderInfoDownloadHelper {
                                 if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(mediaType, providerData.mediaType)
                                     || this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
                                     if (providerData instanceof ListProviderLocalData) {
-                                        let newInstance = new ListProviderLocalData(providerData.id, providerData.provider);
-                                        newInstance = Object.assign(newInstance, providerData);
-                                        newInstance.targetSeason = seriesSeason;
-                                        return newInstance;
+                                        return new ProviderDataWithSeasonInfo(providerData, seriesSeason);
                                     } else if (providerData instanceof InfoProviderLocalData) {
-                                        let newInstance = new InfoProviderLocalData(providerData.id, providerData.provider);
-                                        newInstance = Object.assign(newInstance, providerData);
-                                        newInstance.targetSeason = seriesSeason;
-                                        return newInstance;
+                                        return new ProviderDataWithSeasonInfo(providerData, seriesSeason);
                                     }
                                 }
                             }
@@ -192,16 +188,20 @@ export default new class ProviderInfoDownloadHelper {
                     resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
                     for (const containerItem of resultContainer) {
                         if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
-                            // tslint:disable-next-line: max-line-length
-                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
+                            const id = containerItem.result.mainProvider.providerLocalData.id.toString();
+                            const mediaType = await series.getMediaType();
+                            const providerName = provider.providerName;
+                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, providerName, name, true, mediaType, id);
                             return containerItem.result;
                         }
                     }
                     for (const containerItem of resultContainer) {
                         if (containerItem.resultRating.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
                             logger.log('info', '[' + provider.providerName + '] Request success 🎉');
-                            // tslint:disable-next-line: max-line-length
-                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, provider.providerName, name, true, await series.getMediaType(), containerItem.result.mainProvider.id.toString());
+                            const id = containerItem.result.mainProvider.providerLocalData.id.toString();
+                            const mediaType = await series.getMediaType();
+                            const providerName = provider.providerName;
+                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, providerName, name, true, mediaType, id);
                             return containerItem.result;
                         }
                     }

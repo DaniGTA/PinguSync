@@ -4,7 +4,6 @@ import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import TestHelper from '../../test-helper';
 
-
 describe('Series | Basic', () => {
     beforeEach(() => {
         TestHelper.mustHaveBefore();

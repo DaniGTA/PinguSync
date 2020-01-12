@@ -31,7 +31,7 @@ describe('Series | Sync', () => {
         providerB.watchStatus = WatchStatus.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB);
+        await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
     });
     test('can sync (2/3)', async () => {
@@ -48,7 +48,7 @@ describe('Series | Sync', () => {
         providerB.episodes = 24;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB);
+        await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
     });
     test('can sync (3/3)', async () => {
@@ -65,7 +65,7 @@ describe('Series | Sync', () => {
         providerB.episodes = 24;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB);
+        await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
     });
     test('cant sync (1/7)', async () => {
@@ -87,7 +87,7 @@ describe('Series | Sync', () => {
         providerB.watchStatus = WatchStatus.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB);
+        await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     });
 
@@ -110,7 +110,7 @@ describe('Series | Sync', () => {
         providerB.addOneWatchedEpisode(1);
         providerB.watchStatus = WatchStatus.COMPLETED;
         providerB.episodes = 24;
-        series.addListProvider(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         assert.equal(await series.getCanSync(), false);
     });
 
@@ -132,7 +132,7 @@ describe('Series | Sync', () => {
         providerB.watchStatus = WatchStatus.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB);
+        await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     });
 
@@ -147,7 +147,7 @@ describe('Series | Sync', () => {
         providerA.watchStatus = WatchStatus.CURRENT;
         // tslint:disable-next-line: no-string-literal
         providerA['episodes'] = 24;
-        anime.addListProvider(providerA);
+        await anime.addProviderDatas(providerA);
         assert.equal(await anime.getCanSync(), false);
     });
 
@@ -170,7 +170,7 @@ describe('Series | Sync', () => {
         providerB.watchStatus = WatchStatus.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB);
+        await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     });
 
@@ -198,7 +198,7 @@ describe('Series | Sync', () => {
         providerC.watchStatus = WatchStatus.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
-        anime.addListProvider(providerA, providerB, providerC);
+        await anime.addProviderDatas(providerA, providerB, providerC);
         assert.equal(await anime.getCanSync(), false);
     });
 
@@ -218,7 +218,7 @@ describe('Series | Sync', () => {
         for (let index = 1; index < 13; index++) {
             providerB.addOneWatchedEpisode(index);
         }
-        anime.addListProvider(providerA, providerB);
+        await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), false);
     });
 });

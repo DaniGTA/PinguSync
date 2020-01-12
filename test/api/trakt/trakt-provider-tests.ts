@@ -70,8 +70,8 @@ describe('Provider: Trakt | Tests runs', () => {
 
 
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
-        strictEqual(result.mainProvider.releaseYear, 2013);
-        strictEqual(result.mainProvider.id, 72367);
+        strictEqual(result.mainProvider.providerLocalData.releaseYear, 2013);
+        strictEqual(result.mainProvider.providerLocalData.id, 72367);
     });
     test('should get a series and should mark the episodes right', async () => {
         const series = new Series();
@@ -82,7 +82,7 @@ describe('Provider: Trakt | Tests runs', () => {
 
 
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
-        strictEqual(result.mainProvider.id, 103803);
-        notStrictEqual(result.mainProvider.detailEpisodeInfo.length, 0);
+        strictEqual(result.mainProvider.providerLocalData.id, 103803);
+        notStrictEqual(result.mainProvider.providerLocalData.detailEpisodeInfo.length, 0);
     });
 });

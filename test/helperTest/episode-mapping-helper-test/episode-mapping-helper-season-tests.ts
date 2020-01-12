@@ -8,6 +8,7 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/provider-
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
+import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
 
@@ -41,14 +42,13 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         // B Site
 
         const bProvider = new ListProviderLocalData('1', 'testB');
-        bProvider.targetSeason = 1;
         bProvider.detailEpisodeInfo.push(new Episode(1, 2));
         bProvider.detailEpisodeInfo.push(new Episode(2, 2));
         bProvider.detailEpisodeInfo.push(new Episode(3, 2));
         bProvider.detailEpisodeInfo.push(new Episode(1, 1));
         bProvider.detailEpisodeInfo.push(new Episode(2, 1));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1));
-        await aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 
         // Testing
 
@@ -97,6 +97,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
     test('should map episode with right season (2/3)', async () => {
         const aSeries = new Series();
+        // tslint:disable-next-line: no-string-literal
         aSeries['cachedSeason'] = 1;
         // A Site
 
@@ -110,14 +111,13 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         // B Site
 
         const bProvider = new ListProviderLocalData('1', 'testB');
-        bProvider.targetSeason = 1;
         bProvider.detailEpisodeInfo.push(new Episode(1, 1));
         bProvider.detailEpisodeInfo.push(new Episode(2, 1));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1));
         bProvider.detailEpisodeInfo.push(new Episode(1, 2));
         bProvider.detailEpisodeInfo.push(new Episode(2, 2));
         bProvider.detailEpisodeInfo.push(new Episode(3, 2));
-        await aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 
         // Testing
 
@@ -166,28 +166,27 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
     test('should map episode with right season (3/3)', async () => {
         const aSeries = new Series();
+        // tslint:disable-next-line: no-string-literal
         aSeries['cachedSeason'] = 2;
         // A Site
 
         const aProvider = new InfoProviderLocalData('1', 'testA');
-        aProvider.targetSeason = 2;
         aProvider.detailEpisodeInfo.push(new Episode(1, undefined, [new EpisodeTitle('First round')]));
         aProvider.detailEpisodeInfo.push(new Episode(2, undefined, [new EpisodeTitle('Special round')]));
         aProvider.detailEpisodeInfo.push(new Episode(3, undefined, [new EpisodeTitle('Second round')]));
 
-        await aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, 2));
 
         // B Site
 
         const bProvider = new ListProviderLocalData('1', 'testB');
-        bProvider.targetSeason = 1;
         bProvider.detailEpisodeInfo.push(new Episode(1, 1));
         bProvider.detailEpisodeInfo.push(new Episode(2, 1));
         bProvider.detailEpisodeInfo.push(new Episode(3, 1));
         bProvider.detailEpisodeInfo.push(new Episode(1, 2));
         bProvider.detailEpisodeInfo.push(new Episode(2, 2));
         bProvider.detailEpisodeInfo.push(new Episode(3, 2));
-        await aSeries.addProviderDatas(bProvider);
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 
         // Testing
 
@@ -238,6 +237,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         'should map episode with right season (Provider is in second season)',
         async () => {
             const aSeries = new Series();
+            // tslint:disable-next-line: no-string-literal
             aSeries['cachedSeason'] = 1;
             // A Site
 
@@ -246,12 +246,11 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
             aProvider.detailEpisodeInfo.push(new Episode(2));
             aProvider.detailEpisodeInfo.push(new Episode(3));
 
-            await aSeries.addProviderDatas(aProvider);
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider));
 
             // B Site
 
             const bProvider = new ListProviderLocalData('1', 'testB');
-            bProvider.targetSeason = 2;
             bProvider.detailEpisodeInfo.push(new Episode(1, 0));
             bProvider.detailEpisodeInfo.push(new Episode(2, 0));
             bProvider.detailEpisodeInfo.push(new Episode(3, 0));
@@ -261,7 +260,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
             bProvider.detailEpisodeInfo.push(new Episode(1, 2));
             bProvider.detailEpisodeInfo.push(new Episode(2, 2));
             bProvider.detailEpisodeInfo.push(new Episode(3, 2));
-            await aSeries.addProviderDatas(bProvider);
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 2));
 
             // Testing
 
@@ -326,6 +325,6 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
                 strictEqual(bEpisodeInfo2s1.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2S1 should have id mapped to Episode A2');
                 strictEqual(bEpisodeInfo3s1.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3S1 should have id mapped to Episode A3');
             }
-        }
+        },
     );
 });

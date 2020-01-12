@@ -56,7 +56,6 @@ describe('Provider: AniDB | Offline Test runs', () => {
         const lpdld = new ListProviderLocalData(9993, 'AniList');
         lpdld.episodes = 12;
         lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
-        lpdld.targetSeason = 1;
         lpdld.watchStatus = WatchStatus.DROPPED;
 
         const series = new Series();
@@ -75,7 +74,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Kiniro Mosaic', 1);
 
-        deepEqual(result[0].mainProvider.id, '9579');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '9579');
     });
 
 
@@ -100,7 +99,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('この素晴らしい世界に祝福を！紅伝説', -1);
 
-        deepEqual(result[0].mainProvider.id, '13310');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '13310');
     });
 
     test('should find id 13493', async () => {
@@ -117,7 +116,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Sword Art Online: Alicization', 3);
 
-        deepEqual(result[0].mainProvider.id, '13493');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '13493');
     });
 
     test('should find id 14977', async () => {
@@ -133,7 +132,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Shingeki no Kyojin The Final Season');
 
-        deepEqual(result[0].mainProvider.id, '14977');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '14977');
     });
 
     test('should find id 3651', async () => {
@@ -151,7 +150,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('The Melancholy of Haruhi Suzumiya', 1);
 
-        deepEqual(result[0].mainProvider.id, '3651');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '3651');
     });
     test('should find id 8550', async () => {
         const a = new AniDBProvider(false);
@@ -167,7 +166,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Hunter x Hunter (2011)', 1);
 
-        deepEqual(result[0].mainProvider.id, '8550');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '8550');
     });
 
     test('should find Danshi', async () => {
@@ -185,7 +184,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, a);
-        deepEqual(result.mainProvider.id, '8729');
+        deepEqual(result.mainProvider.providerLocalData.id, '8729');
     });
 
     test('should find nothing', async () => {
@@ -223,7 +222,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Toaru Majutsu no Index', 1);
 
-        deepEqual(result[0].mainProvider.id, '5975');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '5975');
     });
 
     test('should find id 7599', async () => {
@@ -239,7 +238,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Toaru Majutsu no Index', 2);
 
-        deepEqual(result[0].mainProvider.id, '7599');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '7599');
     });
 
     test('should find id 14416', async () => {
@@ -255,7 +254,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('My Hero Academia Season 4', 4);
 
-        deepEqual(result[0].mainProvider.id, '14416');
+        deepEqual(result[0].mainProvider.providerLocalData.id, '14416');
     });
 
     test('should find id 5544', async () => {
@@ -272,7 +271,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderLocalDataByName'](series, new Name('Persona Trinity Soul', 'x-japclean'), a);
 
-        deepEqual(result.mainProvider.id, '5544');
+        deepEqual(result.mainProvider.providerLocalData.id, '5544');
     });
 
 

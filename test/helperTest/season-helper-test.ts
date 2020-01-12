@@ -1,7 +1,5 @@
 import { strictEqual } from 'assert';
-
 import ListController from '../../src/backend/controller/list-controller';
-import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import Name from '../../src/backend/controller/objects/meta/name';
@@ -15,9 +13,6 @@ import TestProvider from '../controller/objects/testClass/testProvider';
 import TestHelper from '../test-helper';
 
 describe('Season Helper', () => {
-
-    const lc = new ListController(true);
-
     beforeEach(() => {
         TestHelper.mustHaveBefore();
     });

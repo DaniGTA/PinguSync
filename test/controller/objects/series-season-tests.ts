@@ -3,6 +3,7 @@ import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 import TestHelper from '../../test-helper';
 
@@ -15,8 +16,7 @@ describe('Series | Season', () => {
     test('should return season 1', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData(1, 'TestA');
-        provider.targetSeason = 1;
-        await series.addListProvider(provider);
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, 1));
         strictEqual((await series.getSeason()).seasonNumber, 1);
         return;
     });

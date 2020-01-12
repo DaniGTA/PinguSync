@@ -87,7 +87,7 @@ export default abstract class ProviderLocalData {
      * Provider series id.
      */
     public readonly id: number | string;
-    public readonly instance_name: string;
+    public readonly instanceName: string;
     /**
      * Cant get more info from this provider.
      */
@@ -128,7 +128,6 @@ export default abstract class ProviderLocalData {
     public releaseYear?: number;
     public runTime?: number;
     public isNSFW = false;
-    public targetSeason?: number;
     public country?: string;
     public genres: Genre[] = [];
 
@@ -161,7 +160,7 @@ export default abstract class ProviderLocalData {
             logger.error(errorMsg);
             throw new Error(errorMsg);
         }
-        this.instance_name = this.constructor.name;
+        this.instanceName = this.constructor.name;
     }
 
     public async getDetailedEpisodeLength(): Promise<number> {

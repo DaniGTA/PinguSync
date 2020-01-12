@@ -15,14 +15,14 @@ export default class MultiProviderComperator {
         const finalResult = new ComperatorResult();
 
         const tempSeries = new Series();
-        await tempSeries.addProviderDatas(result.mainProvider, ...result.subProviders);
+        await tempSeries.addProviderDatasWithSeasonInfos(result.mainProvider, ...result.subProviders);
         const seasonA = await series.getSeason();
         const seasonB = await tempSeries.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);
 
         finalResult.matchAble += 2;
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
             finalResult.matches += 2;
-            if (ProviderList.getExternalProviderInstance(result.mainProvider).hasUniqueIdForSeasons) {
+            if (ProviderList.getExternalProviderInstance(result.mainProvider.providerLocalData).hasUniqueIdForSeasons) {
                 if (seasonA.seasonError !== SeasonError.CANT_GET_SEASON) {
                     finalResult.matchAble += 2;
                     if (seasonA.seasonNumber === seasonB.seasonNumber) {
@@ -73,7 +73,7 @@ export default class MultiProviderComperator {
                 }
             }
         } else {
-            logger.debug('[MultiProviderComperator] not the same series' + result.mainProvider.getAllNames()[0].name + '(' + result.mainProvider.provider + ')' + ' &' + series.getAllNames()[0].name);
+            logger.debug('[MultiProviderComperator] not the same series' + result.mainProvider.providerLocalData.getAllNames()[0].name + '(' + result.mainProvider.providerLocalData.provider + ')' + ' &' + series.getAllNames()[0].name);
         }
         return finalResult;
     }

@@ -1,9 +1,5 @@
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-
-import MainListLoader from '../../../src/backend/controller/main-list-manager/main-list-loader';
-
 import { equal } from 'assert';
-import ListController from '../../../src/backend/controller/list-controller';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 import SeasonSearchModeHelper from '../../../src/backend/helpFunctions/season-helper/season-search-mode-helper';

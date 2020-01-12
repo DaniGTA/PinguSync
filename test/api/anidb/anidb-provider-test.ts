@@ -9,13 +9,13 @@ describe('Provider: AniDB | Online Test runs', () => {
     beforeAll(() => {
         TestHelper.mustHaveBefore();
     });
-   test('should get id 14444', async () => {
+    test('should get id 14444', async () => {
         const a = new AniDBProvider(false);
         const lpdld = new InfoProviderLocalData(14444, a.providerName);
 
         const result = await a.getFullInfoById(lpdld);
 
-        deepEqual(result.mainProvider.id, '14444');
+        deepEqual(result.mainProvider.providerLocalData.id, '14444');
     });
 
 });

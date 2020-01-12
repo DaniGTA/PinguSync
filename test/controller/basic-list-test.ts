@@ -19,10 +19,10 @@ import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provid
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
 import TestHelper from '../test-helper';
+import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
-    const lc = new ListController(true);
 
     beforeAll(() => {
         TestHelper.mustHaveBefore();
@@ -186,7 +186,7 @@ describe('Basic List | Testrun', () => {
         strictEqual(MainListManager['mainList'].length, 2);
         const anidb = MainListManager['mainList'][0].getAllProviderLocalDatas().find((x) => x.provider === AniDBProvider.instance.providerName);
         if (anidb) {
-            strictEqual(anidb.id, "10894");
+            strictEqual(anidb.id, '10894');
         } else {
             fail();
         }
@@ -278,7 +278,6 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(20853, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        s1provider1.targetSeason = 1;
         await series1.addListProvider(s1provider1);
         // s2
         const series2 = new Series();
@@ -289,7 +288,6 @@ describe('Basic List | Testrun', () => {
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(20853, AniListProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        s3provider1.targetSeason = 2;
         await series3.addListProvider(s3provider1);
 
         await ListController.instance.addSeriesToMainList(series1, series2, series3);
@@ -308,7 +306,6 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(46004, TraktProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        s1provider1.targetSeason = 1;
         await series1.addListProvider(s1provider1);
 
         await ListController.instance.addSeriesToMainList(series1);
@@ -336,7 +333,6 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(20605, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        s1provider1.targetSeason = 1;
         await series1.addListProvider(s1provider1);
 
         await ListController.instance.addSeriesToMainList(series1);
@@ -350,6 +346,52 @@ describe('Basic List | Testrun', () => {
         notEqual(result, null);
     }, 4000);
 
+
+    test('should not get season 1 on season 2', async () => {
+        if (!ListController.instance) {
+            fail();
+        }
+        // s1
+        const series1 = new Series();
+        const s1provider1 = new ListProviderLocalData(20521, AniListProvider);
+        s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series1.addListProvider(s1provider1);
+
+        // s2
+        const series2 = new Series();
+        const s2provider1 = new ListProviderLocalData(20711, AniListProvider);
+        s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series2.addListProvider(s2provider1);
+
+        // s3
+        const series3 = new Series();
+        const s3provider1 = new ListProviderLocalData(60931, TraktProvider);
+        s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
+        await series3.addListProvider(s3provider1);
+
+        await ListController.instance.addSeriesToMainList(series2, series1, series3);
+
+        // tslint:disable-next-line: no-string-literal
+        await MainListManager['finishListFilling']();
+        // tslint:disable-next-line: no-string-literal
+        const mpr1 = new MultiProviderResult(s1provider1);
+        const mpr2 = new MultiProviderResult(s2provider1);
+        const resultS1 = await new MainListSearcher().findSeriesWithMultiProviderResult(mpr1);
+        const resultS2 = await new MainListSearcher().findSeriesWithMultiProviderResult(mpr2);
+        if (resultS1 && resultS2) {
+            const traktProviderS1 = resultS1.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
+            const traktProviderS2 = resultS2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
+            if (traktProviderS1 && traktProviderS2) {
+                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider), 1);
+                strictEqual(resultS2.getProviderSeasonTarget(traktProviderS2.provider), 2);
+            } else {
+                fail();
+            }
+        } else {
+            fail();
+        }
+    }, 4000);
+
     test('should get trakt info data on all seasons', async () => {
         if (!ListController.instance) {
             fail();
@@ -358,23 +400,24 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(20994, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        s1provider1.targetSeason = 1;
         await series1.addListProvider(s1provider1);
 
         // s2
         const series2 = new Series();
         const s2provider1 = new ListProviderLocalData(21364, AniListProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        s2provider1.targetSeason = 1;
         await series2.addListProvider(s2provider1);
 
         await ListController.instance.addSeriesToMainList(series1, series2);
 
         // tslint:disable-next-line: no-string-literal
-        const list = await MainListManager['mainList'][1].getAllProviderLocalDatas();
+        const list = await series1.getAllProviderLocalDatas();
         const trakprovider = list.find((x) => x.provider === TraktProvider.getInstance().providerName);
-
         notEqual(trakprovider, null);
+
+        const list2 = await series2.getAllProviderLocalDatas();
+        const trakprovider2 = list.find((x) => x.provider === TraktProvider.getInstance().providerName);
+        notEqual(trakprovider2, null);
     }, 4000);
 
     test('should get the right season.', async () => {
@@ -434,7 +477,6 @@ describe('Basic List | Testrun', () => {
         s1provider1.addSeriesName(new Name('食戟のソーマ', 'jap', NameType.UNKNOWN));
         s1provider1.releaseYear = 2015;
         s1provider1.episodes = 24;
-        s1provider1.targetSeason = 1;
         s1provider1.sequelIds.push(21518);
         await series1.addListProvider(s1provider1);
 
@@ -450,36 +492,44 @@ describe('Basic List | Testrun', () => {
         s2provider1.prequelIds.push(20923);
         await series2.addListProvider(s2provider1);
 
-        // s2
+        // s4
         const series4 = new Series();
         const s4provider1 = new ListProviderLocalData(109963, AniListProvider);
         s4provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series4.addListProvider(s4provider1);
+        await series4.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s4provider1, 4));
 
         // s3
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(94084, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        s3provider1.targetSeason = 1;
-        await series3.addListProvider(s3provider1);
-        await ListController.instance.addSeriesToMainList(series1, series2, series3);
-
+        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s3provider1, 3));
+        await ListController.instance.addSeriesToMainList(series1, series2);
+        await ListController.instance.addSeriesToMainList(series3);
         await ListController.instance.addSeriesToMainList(series4);
 
         const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series2, TraktProvider.getInstance());
 
-        strictEqual(result.targetSeason, 2);
+        strictEqual(series2.getProviderSeasonTarget(result.providerLocalData.provider), 2);
 
         const seasonTarget = series2.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
         strictEqual(seasonTarget, 2);
         // tslint:disable-next-line: no-string-literal
-        const provider = MainListManager['mainList'][0].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
+        const provider = series2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
             for (const iterator of provider.detailEpisodeInfo) {
+                if (iterator.season === 1) {
+                    strictEqual(iterator.mappedTo.length, 1);
+                } else if (iterator.season === 2) {
+                    strictEqual(iterator.mappedTo.length, 1);
+                } else if (iterator.season === 3) {
+                    strictEqual(iterator.mappedTo.length, 1);
+                } else if (iterator.season === 4) {
+                    strictEqual(iterator.mappedTo.length, 1);
+                }
                 logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
             }
-            const season = MainListManager['mainList'][0].getProviderSeasonTarget(provider.provider);
+            const season = series2.getProviderSeasonTarget(provider.provider);
             strictEqual(season, 2);
         } else {
             fail();

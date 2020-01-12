@@ -1,10 +1,10 @@
 import * as assert from 'assert';
+import Episode from '../../src/backend/controller/objects/meta/episode/episode';
 import Name from '../../src/backend/controller/objects/meta/name';
 import WatchProgress from '../../src/backend/controller/objects/meta/watch-progress';
 import Series from '../../src/backend/controller/objects/series';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
 import TestHelper from '../test-helper';
-import Episode from '../../src/backend/controller/objects/meta/episode/episode';
 
 
 describe('List Helper', () => {
@@ -109,7 +109,7 @@ describe('List Helper', () => {
         const result = await listHelper.isAnyListEntryInList(array, array2);
         assert.strictEqual(result, false);
     });
-    
+
     test('should filter duplicates in episode list (1/2)', async () => {
         const episode1 = new Episode(1);
         episode1.provider = '';

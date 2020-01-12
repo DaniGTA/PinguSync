@@ -1,6 +1,5 @@
 
-import { equal, fail, notStrictEqual, strictEqual } from 'assert';
-
+import { notStrictEqual } from 'assert';
 import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
@@ -11,6 +10,7 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-man
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import { AbsoluteResult } from '../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import MultiProviderComperator from '../../src/backend/helpFunctions/comperators/multi-provider-results-comperator';
+import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../controller/objects/testClass/testProvider';
 import TestHelper from '../test-helper';
 
@@ -36,8 +36,7 @@ describe('Multi-Provider-Comperator | Examples', () => {
         aProvider.addSeriesName(new Name('Demon Slayer: Kimetsu no Yaiba The Movie: Mugen Train', '"unknown"', NameType.MAIN));
         aProvider.addSeriesName(new Name('鬼滅の刃無限列車編', '"jap"', NameType.UNKNOWN));
         aProvider.mediaType = MediaType.MOVIE;
-        aProvider.targetSeason = 1;
-        await aSeries.addProviderDatas(aProvider);
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, 1));
 
         // PART B
 

@@ -5,6 +5,7 @@ import { ProviderInfoStatus } from '../../../src/backend/controller/provider-man
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../../src/backend/helpFunctions/comperators/provider-comperator';
+import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestHelper from '../../test-helper';
 
 describe('Provider Comperator | Testrun', () => {
@@ -26,21 +27,21 @@ describe('Provider Comperator | Testrun', () => {
     test('should be absolute false (same provider and wrong provider)', async () => {
         const s2 = new Series();
         const provider2A = new ListProviderLocalData(2, TraktProvider);
-        provider2A.targetSeason = 1;
         provider2A.infoStatus = ProviderInfoStatus.BASIC_INFO;
         const provider2B = new ListProviderLocalData(2, 'test');
         provider2B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
-        await s2.addProviderDatas(provider2A, provider2B);
+        await s2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2A, 1));
+        await s2.addProviderDatas(provider2B);
 
         const s1 = new Series();
         const provider1A = new ListProviderLocalData(2, TraktProvider);
-        provider1A.targetSeason = 1;
         provider1A.infoStatus = ProviderInfoStatus.BASIC_INFO;
         const provider1B = new ListProviderLocalData(1, 'test');
         provider1B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
-        await s1.addProviderDatas(provider1A, provider1B);
+        await s1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1A, 1));
+        await s1.addProviderDatas(provider1B);
 
         const instance = new ProviderComperator(s1, s2);
         const result = await instance.getCompareResult();

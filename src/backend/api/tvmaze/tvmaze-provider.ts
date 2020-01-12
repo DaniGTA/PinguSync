@@ -1,5 +1,4 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import request from 'request';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
@@ -38,7 +37,7 @@ export default class TVMazeProvider extends InfoProvider {
             const result = await this.webRequest<Search[]>('http://api.tvmaze.com/search/shows?q=' + encodeURI(searchTitle) + '&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons');
             for (const resultEntry of result) {
                 const convertedShow = converter.convertShowToResult(resultEntry.show);
-                convertedShow.mainProvider.infoStatus = ProviderInfoStatus.BASIC_INFO;
+                convertedShow.mainProvider.providerLocalData.infoStatus = ProviderInfoStatus.BASIC_INFO;
                 results.push(convertedShow);
             }
             return results;

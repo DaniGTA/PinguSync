@@ -15,7 +15,7 @@ describe('Provider: AniList | Converter tests', () => {
         const collection = rawdata.data.MediaListCollection as MediaListCollection;
         const entry = collection.lists[2].entries[3];
         const anime = await anilistConverter.convertListEntryToAnime(entry, WatchStatus.COMPLETED);
-        const providerInfo = anime.mainProvider;
+        const providerInfo = anime.mainProvider.providerLocalData;
         if (providerInfo instanceof ListProviderLocalData) {
             const highestWatchedResult = providerInfo.getHighestWatchedEpisode();
             if (highestWatchedResult) {
@@ -23,7 +23,7 @@ describe('Provider: AniList | Converter tests', () => {
             } else {
                 assert.fail();
             }
-            assert.strictEqual(anime.mainProvider.episodes, 1);
+            assert.strictEqual(anime.mainProvider.providerLocalData.episodes, 1);
             assert.strictEqual(providerInfo.watchStatus, WatchStatus.COMPLETED);
         } else {
             assert.fail();

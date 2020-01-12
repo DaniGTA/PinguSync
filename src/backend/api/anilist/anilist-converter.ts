@@ -5,10 +5,11 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
-import Series, { WatchStatus } from '../../controller/objects/series';
+import { WatchStatus } from '../../controller/objects/series';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import listHelper from '../../helpFunctions/list-helper';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import AniListProvider from './anilist-provider';
@@ -72,7 +73,7 @@ export default new class AniListConverter {
     }
 
     public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<MultiProviderResult> {
-
+        let seasonNumber: number | undefined;
         let providerInfo: ListProviderLocalData = new ListProviderLocalData(entry.media.id, AniListProvider.getInstance());
         if (entry.media.title.romaji) {
             providerInfo.addSeriesName(new Name(entry.media.title.romaji, 'x-jap', NameType.OFFICIAL));
@@ -87,13 +88,11 @@ export default new class AniListConverter {
         providerInfo.mediaType = await this.convertTypeToMediaType(entry.media.format);
 
         try {
-            if (!providerInfo.targetSeason) {
-                if (entry.media.relations.edges.findIndex((x) => x.relationType === MediaRelation.PREQUEL) === -1) {
-                    if (providerInfo.mediaType === MediaType.SPECIAL) {
-                        providerInfo.targetSeason = 0;
-                    } else {
-                        providerInfo.targetSeason = 1;
-                    }
+            if (entry.media.relations.edges.findIndex((x) => x.relationType === MediaRelation.PREQUEL) === -1) {
+                if (providerInfo.mediaType === MediaType.SPECIAL) {
+                    seasonNumber = 0;
+                } else {
+                    seasonNumber = 1;
                 }
             }
             providerInfo = await this.fillRelation(providerInfo, entry.media.relations);
@@ -119,7 +118,7 @@ export default new class AniListConverter {
         if (typeof entry.media.episodes !== 'undefined') {
             providerInfo.episodes = entry.media.episodes;
         }
-        return new MultiProviderResult(providerInfo);
+        return new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, seasonNumber));
     }
 
     private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {

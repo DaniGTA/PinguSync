@@ -137,7 +137,7 @@ export default class AniDBProvider extends InfoProvider {
     private async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {
         const converter = new AniDBConverter();
         const localdata = await converter.convertAnimeToLocalData(seriesDB);
-        await localdata.mainProvider.addSeriesName(...result);
+        localdata.mainProvider.providerLocalData.addSeriesName(...result);
         return localdata;
     }
 

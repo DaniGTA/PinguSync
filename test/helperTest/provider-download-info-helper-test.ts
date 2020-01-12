@@ -1,15 +1,8 @@
-import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-
-import MainListLoader from '../../src/backend/controller/main-list-manager/main-list-loader';
-
-import ListController from '../../src/backend/controller/list-controller';
-
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
-
 import { equal } from 'assert';
+import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import Series from '../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-
+import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import TestProvider from '../controller/objects/testClass/testProvider';
 import TestHelper from '../test-helper';

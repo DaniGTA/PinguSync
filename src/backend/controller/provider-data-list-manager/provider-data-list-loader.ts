@@ -33,9 +33,9 @@ export default class ProviderDataListLoader {
                         }
                     }
 
-                    if (loadedData[index].instance_name === 'ListProviderLocalData') {
+                    if (loadedData[index].instanceName === 'ListProviderLocalData') {
                         loadedData[index] = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
-                    } else if (loadedData[index].instance_name === 'InfoProviderLocalData') {
+                    } else if (loadedData[index].instanceName === 'InfoProviderLocalData') {
                         loadedData[index] = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
                     } else {
                         logger.debug('[ProviderDataListLoader] Object cant be assigned');

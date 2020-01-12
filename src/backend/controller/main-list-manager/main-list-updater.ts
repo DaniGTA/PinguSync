@@ -17,12 +17,12 @@ export default class MainListEntryUpdater {
         for (const provider of providers) {
             const searchResult = await searcher.findSeriesWithMultiProviderResult(provider);
             if (searchResult) {
-                await searchResult.addProviderDatas(...provider.getAllProviders());
+                await searchResult.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
                 await MainListManager.updateSerieInList(searchResult);
             } else {
                 logger.info('Add new series. Reason: Provider not found in mainlist');
                 const newSeries = new Series();
-                await newSeries.addProviderDatas(...provider.getAllProviders());
+                await newSeries.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
                 notFounded.push(newSeries);
             }
         }
