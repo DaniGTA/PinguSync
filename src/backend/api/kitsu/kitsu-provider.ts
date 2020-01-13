@@ -4,6 +4,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import timeHelper from '../../helpFunctions/time-helper';
 import logger from '../../logger/logger';
@@ -18,7 +19,6 @@ import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
-import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 export default class KitsuProvider extends ListProvider {
 
     public static getInstance() {
@@ -87,6 +87,7 @@ export default class KitsuProvider extends ListProvider {
         }
         throw new Error('[Kitsu] Cant handle this provider id');
     }
+
     public getAllSeries(disableCache?: boolean | undefined): Promise<MultiProviderResult[]> {
         throw new Error('Method not implemented.');
     }
@@ -108,7 +109,16 @@ export default class KitsuProvider extends ListProvider {
             include: 'mappings',
 
         })) as unknown) as ISearchResult;
+    }
 
+    private async getByTraktId(traktId: string | number) {
+        return ((this.api.get('mappings', {
+            filter: {
+                externalSite: 'trakt',
+                externalId: traktId
+            },
+            include: 'item',
 
+        })) as unknown) as ISearchResult;
     }
 }

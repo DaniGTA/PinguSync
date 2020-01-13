@@ -22,7 +22,6 @@ export class ProviderHelper {
                 const upgradedinfos = await this.requestUpgradeAllCurrentinfos(series, force, target);
                 await series.addProviderDatasWithSeasonInfos(...upgradedinfos);
             }
-            
             const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
             await series.addProviderDatasWithSeasonInfos(...infoProviders);
 
@@ -32,6 +31,23 @@ export class ProviderHelper {
             series.lastInfoUpdate = Date.now();
         }
         return series;
+    }
+
+    public async requestSeasonAwareness(series: Series, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
+        const resultList: ProviderDataWithSeasonInfo[] = [];
+        const providerLocalDatas = series.getAllProviderLocalDatas();
+        for (const providerLocalData of providerLocalDatas) {
+            try {
+                if (providerLocalData && providerLocalData.infoStatus > target || !providerLocalData) {
+                    const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
+                    const infoResult = await this.requestProviderInfo(series, providerInstance, false, target);
+                    resultList.push(...infoResult);
+                }
+            } catch (err) {
+                logger.error(err);
+            }
+        }
+        return resultList;
     }
 
     public async requestUpgradeAllCurrentinfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
@@ -168,7 +184,7 @@ export class ProviderHelper {
     }
 
     private async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
-        const results: ProviderDataWithSeasonInfo[]  = [];
+        const results: ProviderDataWithSeasonInfo[] = [];
         const currentProviders = series.getAllProviderLocalDatas();
         const tempSeriesCopy = Object.assign(new Series(), series);
         const infoProvidersThatNeedUpdates = this.getInfoProviderThatNeedUpdates(currentProviders);

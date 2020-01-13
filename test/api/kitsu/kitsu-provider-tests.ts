@@ -8,6 +8,7 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import TestHelper from '../../test-helper';
+import logger from '../../../src/backend/logger/logger';
 
 // tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {
@@ -66,10 +67,10 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
-        const kitsuResult = result.getAllProviders().find((x) => x.providerLocalData.provider === kitsuProvider.providerName);
+        const kitsuResult = result.getAllProviders().find((x) => x.provider === kitsuProvider.providerName);
         if (kitsuResult) {
-            strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
-            strictEqual(kitsuResult.providerLocalData.id, '12272');
+            strictEqual(kitsuResult.provider, kitsuProvider.providerName);
+            strictEqual(kitsuResult.id, '12272');
         } else {
             fail('No kitsu result');
         }
@@ -99,4 +100,15 @@ describe('Provider: Kitsu | Test runs', () => {
         strictEqual(result.mainProvider.providerLocalData.id, '1555');
     });
 
+    test('it should get a series by trakt id', async () => {
+        const a = new KitsuProvider();
+        try {
+            const result = await a['getByTraktId'](94084);
+            logger.info(result);
+        } catch (err) {
+            logger.error(err);
+            fail();
+        }
+
+    });
 });

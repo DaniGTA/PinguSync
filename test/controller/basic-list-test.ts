@@ -411,7 +411,7 @@ describe('Basic List | Testrun', () => {
         await ListController.instance.addSeriesToMainList(series1, series2);
 
         // tslint:disable-next-line: no-string-literal
-        const list = await series1.getAllProviderLocalDatas();
+        const list = series1.getAllProviderLocalDatas();
         const trakprovider = list.find((x) => x.provider === TraktProvider.getInstance().providerName);
         notEqual(trakprovider, null);
 
