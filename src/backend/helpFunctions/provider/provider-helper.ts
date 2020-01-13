@@ -19,11 +19,15 @@ export class ProviderHelper {
 
             const hadSeriesNames = this.hasSeriesASeriesNames(series);
             if (!hadSeriesNames) {
-                const upgradedinfos = await this.requestUpgradeAllCurrentinfos(series, force, target);
+                const upgradedinfos = await this.requestUpgradeAllCurrentinfos(series, force);
                 await series.addProviderDatasWithSeasonInfos(...upgradedinfos);
             }
             const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
             await series.addProviderDatasWithSeasonInfos(...infoProviders);
+
+            if (notSeasonAware) {
+                
+            }
 
             const listProviders = await this.requestAllListProviderInfos(series, force, target);
             await series.addProviderDatasWithSeasonInfos(...listProviders);
@@ -35,8 +39,8 @@ export class ProviderHelper {
 
     public async requestSeasonAwareness(series: Series, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
         const resultList: ProviderDataWithSeasonInfo[] = [];
-        const providerLocalDatas = series.getAllProviderLocalDatas();
-        for (const providerLocalData of providerLocalDatas) {
+        const infoProviderLocalDatas = series.getInfoProvidersInfos();
+        for (const providerLocalData of infoProviderLocalDatas) {
             try {
                 if (providerLocalData && providerLocalData.infoStatus > target || !providerLocalData) {
                     const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
@@ -47,17 +51,22 @@ export class ProviderHelper {
                 logger.error(err);
             }
         }
+        for (const result of resultList) {
+            const tempSeries = new Series();
+            tempSeries.addProviderDatasWithSeasonInfos(result);
+            const season = tempSeries.getSeason();
+        }
         return resultList;
     }
 
-    public async requestUpgradeAllCurrentinfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
+    public async requestUpgradeAllCurrentinfos(series: Series, force: boolean): Promise<ProviderDataWithSeasonInfo[]> {
         const resultList: ProviderDataWithSeasonInfo[] = [];
         const providerLocalDatas = series.getAllProviderLocalDatas();
         for (const providerLocalData of providerLocalDatas) {
             try {
-                if (providerLocalData && providerLocalData.infoStatus > target || !providerLocalData) {
+                if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !providerLocalData) {
                     const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
-                    const infoResult = await this.requestProviderInfo(series, providerInstance, force, target);
+                    const infoResult = await this.requestProviderInfo(series, providerInstance, force, ProviderInfoStatus.FULL_INFO);
                     resultList.push(...infoResult);
                 }
             } catch (err) {
