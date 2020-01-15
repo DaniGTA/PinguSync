@@ -32,6 +32,7 @@ export default class TraktProvider extends ListProvider {
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
     public hasUniqueIdForSeasons: boolean = false;
+    public hasEpisodeTitleOnFullInfo = true;
     public providerName: string = 'Trakt';
     public hasOAuthCode = true;
     public userData: TraktUserData;

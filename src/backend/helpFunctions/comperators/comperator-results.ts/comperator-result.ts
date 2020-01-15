@@ -1,7 +1,7 @@
 export default class ComperatorResult {
-    matchAble = 0;
-    matches = 0;
-    isAbsolute: AbsoluteResult = AbsoluteResult.ABSOLUTE_NONE;
+    public matchAble: number = 0;
+    public matches: number = 0;
+    public isAbsolute: AbsoluteResult = AbsoluteResult.ABSOLUTE_NONE;
 }
 
 

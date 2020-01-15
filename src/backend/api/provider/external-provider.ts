@@ -10,6 +10,7 @@ export default abstract class ExternalProvider {
     public abstract supportedOtherProvider: Array<(new () => ExternalProvider)>;
     public abstract potentialSubProviders: Array<(new () => ExternalProvider)>;
     public abstract version: number;
+    public hasEpisodeTitleOnFullInfo = false;
 
     public abstract getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]>;
     public abstract getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>;

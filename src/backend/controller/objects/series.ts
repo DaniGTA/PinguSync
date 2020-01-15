@@ -484,10 +484,10 @@ export default class Series extends SeriesProviderExtension {
         return;
     }
 
-    public async getAverageProviderInfoStatus(): Promise<ProviderInfoStatus> {
+    public getAverageProviderInfoStatus(): ProviderInfoStatus {
         const providers = this.getAllProviderLocalDatas();
         const providerInfoStatusCollection = providers.flatMap((provider) => provider.infoStatus);
-        const average = await listHelper.getAverageNumberFromList(providerInfoStatusCollection);
+        const average = listHelper.getMostFrequentNumberFromList(providerInfoStatusCollection);
         return average;
     }
 

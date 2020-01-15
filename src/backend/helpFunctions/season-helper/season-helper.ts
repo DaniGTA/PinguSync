@@ -64,7 +64,7 @@ class SeasonHelper {
                             break;
                         }
                         prequel = prequelSearchResult.foundedSeries;
-                    } else if (await prequel.getAverageProviderInfoStatus() === ProviderInfoStatus.FULL_INFO) {
+                    } else if (prequel.getAverageProviderInfoStatus() === ProviderInfoStatus.FULL_INFO) {
 
                         return new SearchSeasonValueResult(searchCount, 'PrequelTrace - nomore prequel present');
                     } else {

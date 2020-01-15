@@ -1,8 +1,8 @@
 import Episode from '../../controller/objects/meta/episode/episode';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
-import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
@@ -133,18 +133,18 @@ export default class EpisodeComperator {
     public static async isDetailedEpisodeSameSeason(episode: Episode, season?: number) {
         if (episode.season === season) {
             return true;
-        } else if (!episode.season && (!season || season === 1)) {
+        } else if (!episode.season !== undefined && (!season !== undefined || season === 1)) {
             return true;
-        } else if (!season && episode.season === 1) {
+        } else if (!season !== undefined && episode.season === 1) {
             return true;
         }
         return false;
     }
 
     public static async isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: number): Promise<boolean> {
-        if (aEpisode.season && bEpisode.season) {
+        if (aEpisode.season !== undefined && bEpisode.season !== undefined) {
             return aEpisode.season > bEpisode.season;
-        } else if (aEpisode.season) {
+        } else if (aEpisode.season !== undefined) {
             if (season) {
                 return aEpisode.season < season;
             } else {
@@ -154,7 +154,7 @@ export default class EpisodeComperator {
                     return true;
                 }
             }
-        } else if (bEpisode.season) {
+        } else if (bEpisode.season !== undefined) {
             if (season) {
                 return bEpisode.season < season;
             } else {
@@ -164,10 +164,9 @@ export default class EpisodeComperator {
         return false;
     }
 
-
-    private static compareEpisodeTitle(aEpisode: Episode, bEpsiode: Episode): ComperatorResult {
+    public static compareEpisodeTitle(aEpisode: Episode, bEpsiode: Episode): ComperatorResult {
         const result = new ComperatorResult();
-        if (aEpisode.title && bEpsiode.title) {
+        if (aEpisode.title.length !== 0 && bEpsiode.title.length !== 0) {
             for (const aEpisodeTitle of aEpisode.title) {
                 result.matchAble++;
                 for (const bEpisodeTitle of bEpsiode.title) {

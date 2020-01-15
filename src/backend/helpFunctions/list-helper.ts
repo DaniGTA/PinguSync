@@ -117,7 +117,7 @@ class ListHelper {
     public getUniqueEpisodeList(arr1: Episode[], arr2: Episode[]): Episode[] {
         const copyArr1 = [...arr1];
         let copyArr2 = [...arr2];
-        let uniqueEpisodeList: Episode[] =  [];
+        let uniqueEpisodeList: Episode[] = [];
         if (copyArr1.length !== 0 && copyArr2.length !== 0) {
             for (const entry1 of copyArr1) {
                 let duplicateFound = false;
@@ -200,7 +200,7 @@ class ListHelper {
         return true;
     }
 
-    public async getAverageNumberFromList(list: number[]) {
+    public getMostFrequentNumberFromList(list: number[]) {
         const sum = list.reduce((a, b) => a + b);
         return sum / list.length;
     }

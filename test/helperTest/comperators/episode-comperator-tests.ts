@@ -80,5 +80,26 @@ describe('Episode comperator | Full test', () => {
         strictEqual(result.matchAble, 1);
         strictEqual(result.matches, 0);
     });
+    describe('compares simple episode number vs detailed episode', () => {
+        test('same ep 0 s0 (should return true)', async () => {
+            const detailedEpisode = new Episode(0, 0);
+            const result = await EpisodeComperator.isEpisodeSameAsDetailedEpisode(0, detailedEpisode, 0);
 
+            strictEqual(result, true);
+        });
+
+        test('same ep 1 s1 (should return true)', async () => {
+            const detailedEpisode = new Episode(1, 1);
+            const result = await EpisodeComperator.isEpisodeSameAsDetailedEpisode(1, detailedEpisode, 1);
+
+            strictEqual(result, true);
+        });
+
+        test('different ep 1 s1 and ep 2 s1 (should return false)', async () => {
+            const detailedEpisode = new Episode(1, 1);
+            const result = await EpisodeComperator.isEpisodeSameAsDetailedEpisode(2, detailedEpisode, 1);
+
+            strictEqual(result, false);
+        });
+    });
 });

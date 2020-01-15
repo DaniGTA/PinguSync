@@ -25,6 +25,7 @@ export default class AniDBProvider extends InfoProvider {
     public version: number = 1;
     public isOffline = true;
     public hasUniqueIdForSeasons = true;
+    public hasEpisodeTitleOnFullInfo = true;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalProvider)> = [MalProvider];

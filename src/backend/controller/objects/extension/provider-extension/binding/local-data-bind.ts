@@ -11,9 +11,6 @@ export default abstract class LocalDataBind {
         this.providerName = provider.provider;
         if (seasonNumber !== undefined) {
             this.targetSeason = seasonNumber;
-        } else {
-            this.targetSeason = provider.targetSeason;
         }
-
     }
 }
