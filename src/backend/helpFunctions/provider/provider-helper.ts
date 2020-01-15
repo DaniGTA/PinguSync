@@ -10,6 +10,8 @@ import dateHelper from '../date-helper';
 import EpisodeHelper from '../episode-helper/episode-helper';
 import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
+import { InfoProviderLocalData } from 'src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import AniDBProvider from 'src/backend/api/anidb/anidb-provider';
 
 
 export class ProviderHelper {
@@ -45,16 +47,16 @@ export class ProviderHelper {
             for (const listProvider of series.getListProvidersInfos()) {
                 const targetSeason = series.getProviderSeasonTarget(listProvider.provider);
                 if (targetSeason !== undefined) {
-                    const infoProviderLocalDatas = series.getInfoProvidersInfos();
+                    const infoProviderLocalDatas = [...series.getInfoProvidersInfos()];
                     let currentSearchingSeason = 1;
                     for (const providerLocalData of infoProviderLocalDatas) {
                         const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
                         if (providerInstance.hasEpisodeTitleOnFullInfo) {
-                            let provider: ProviderLocalData = providerLocalData;
+                            let provider: InfoProviderLocalData = providerLocalData;
                             try {
                                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !providerLocalData) {
                                     const infoResult = await this.requestProviderInfo(series, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-                                    provider = infoResult[0].mainProvider.providerLocalData;
+                                    provider = infoResult[0].mainProvider.providerLocalData as InfoProviderLocalData;
                                 }
                             } catch (err) {
                                 logger.error(err);
@@ -62,14 +64,18 @@ export class ProviderHelper {
                             if (EpisodeHelper.hasEpisodeNames(provider.detailEpisodeInfo)) {
                                 const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
                                 if (result.seasonComplete) {
-
-                                } else {
                                     currentSearchingSeason++;
                                     if (targetSeason > currentSearchingSeason) {
 
                                     }
+                                } else {
+
                                 }
-                                provider.sequelIds;
+                             
+                                for (const sequelId of provider.sequelIds) {
+                                    const sequelproviderInstance = new InfoProviderLocalData(sequelId, AniDBProvider.instance.providerName);
+                                    infoProviderLocalDatas.push(sequelproviderInstance);
+                                }
                             } else {
                                 continue;
                             }
