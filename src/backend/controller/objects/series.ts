@@ -25,7 +25,6 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
-
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
@@ -420,14 +419,6 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         return false;
-    }
-
-
-    public getAllProviderLocalDatas(): ProviderLocalData[] {
-        const localdata = [];
-        localdata.push(...this.getInfoProvidersInfos());
-        localdata.push(...this.getListProvidersInfos());
-        return localdata;
     }
 
     public async getMediaType(): Promise<MediaType> {

@@ -16,14 +16,18 @@ import dateHelper from '../../src/backend/helpFunctions/date-helper';
 import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
+import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
+import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
+import ProviderNameManager from '../../src/backend/controller/provider-manager/provider-name-manager';
 
 describe('Provider Helper Test', () => {
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider()];
+        ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3')];
+        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3'), new AniDBProvider()];
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
         // tslint:disable-next-line: no-unused-expression
@@ -129,5 +133,21 @@ describe('Provider Helper Test', () => {
         providersThatNeedsAUpdate.sort((a, b) => providerHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
+    });
+
+    test('should create season awareness', async () => {
+        const mainListAdder = new MainListAdder();
+        const series: Series = new Series();
+        const provider = new ListProviderLocalData(94084, TraktProvider.getInstance().providerName);
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, 3));
+        await mainListAdder.addSeries(series);
+        const infoProvider = series.getAllProviderLocalDatas();
+        const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
+        if (anidbProvider) {
+            strictEqual(anidbProvider.id, "13658");
+            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider), 3);
+        } else {
+            fail();
+        }
     });
 });

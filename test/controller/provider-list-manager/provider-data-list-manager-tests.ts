@@ -7,7 +7,7 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import TestHelper from '../../test-helper';
 import TestProvider from '../objects/testClass/testProvider';
 // tslint:disable: no-string-literal
-describe('MainListPackageManager', () => {
+describe('Provider data manager list tests', () => {
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];

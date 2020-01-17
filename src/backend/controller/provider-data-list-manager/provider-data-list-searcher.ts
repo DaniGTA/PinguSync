@@ -1,4 +1,5 @@
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import LocalDataBind from '../objects/extension/provider-extension/binding/local-data-bind';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import ProviderDataListManager from './provider-data-list-manager';
@@ -15,7 +16,7 @@ export default class ProviderDataListSearcher {
     }
 
     public static getProviderLDByProviderLD(pld: ProviderLocalData): ProviderLocalData | null {
-        const localDataList =  ProviderDataListManager.getProviderDataListSync();
+        const localDataList = ProviderDataListManager.getProviderDataListSync();
         for (const entry of localDataList) {
             if (this.isProviderLocalDataTheSearchResult(entry, pld.id, pld.provider)) {
                 return entry;
@@ -26,7 +27,7 @@ export default class ProviderDataListSearcher {
 
     public static getIndexByProviderLD(pld: ProviderLocalData): number | null {
         const localDataList = ProviderDataListManager.getProviderDataListSync();
-        for (const {item, index}  of localDataList.map((provider, providerIndex) => ({ item: provider, index: providerIndex }))) {
+        for (const { item, index } of localDataList.map((provider, providerIndex) => ({ item: provider, index: providerIndex }))) {
             if (this.isProviderLocalDataTheSearchResult(item, pld.id, pld.provider)) {
                 return index;
             }
@@ -46,6 +47,20 @@ export default class ProviderDataListSearcher {
             for (const localData of localDataList) {
                 if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
                     results.push(localData);
+                    break;
+                }
+            }
+        }
+        return results;
+    }
+
+    public static getAllBindedProviderWithSeasonInfo(...bindings: LocalDataBind[]): ProviderDataWithSeasonInfo[] {
+        const localDataList: ProviderLocalData[] = ProviderDataListManager.getProviderDataListSync();
+        const results: ProviderDataWithSeasonInfo[] = [];
+        for (const binding of bindings) {
+            for (const localData of localDataList) {
+                if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
+                    results.push(new ProviderDataWithSeasonInfo(localData, binding.targetSeason));
                     break;
                 }
             }

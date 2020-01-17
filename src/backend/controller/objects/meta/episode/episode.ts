@@ -10,7 +10,7 @@ import { EpisodeType } from './episode-type';
  */
 export default class Episode {
     public readonly season?: number;
-    public readonly episodeNumber: number;
+    public readonly episodeNumber: number | string;
     public readonly lastUpdate: number;
     public readonly id: string;
 
@@ -40,7 +40,7 @@ export default class Episode {
      * @param season season is only needed if its not the same season as the series.
      * @param title
      */
-    constructor(episodeNumber: number, season?: number, title?: EpisodeTitle[]) {
+    constructor(episodeNumber: number | string, season?: number, title?: EpisodeTitle[]) {
         this.season = season;
         this.episodeNumber = episodeNumber;
         if (title) {

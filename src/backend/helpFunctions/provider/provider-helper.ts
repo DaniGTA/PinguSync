@@ -10,15 +10,15 @@ import dateHelper from '../date-helper';
 import EpisodeHelper from '../episode-helper/episode-helper';
 import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
-import { InfoProviderLocalData } from 'src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import AniDBProvider from 'src/backend/api/anidb/anidb-provider';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import MainListAdder from '../../controller/main-list-manager/main-list-adder';
 
 
 export class ProviderHelper {
 
     public async requestFullProviderUpdate(series: Series, target: ProviderInfoStatus = ProviderInfoStatus.BASIC_INFO, force = false): Promise<Series> {
         if (this.canUpdateSeries(series) || force) {
-            const notSeasonAware = this.onlySeriesIdAndNotSeasonAwareNamesLocalData(series.getAllProviderLocalDatas());
+            const seasonAware = this.isSeasonAware(series.getAllProviderLocalDatasWithSeasonInfo());
 
             const hadSeriesNames = this.hasSeriesASeriesNames(series);
             if (!hadSeriesNames) {
@@ -28,8 +28,8 @@ export class ProviderHelper {
             const infoProviders = await this.requestAllInfoProviderInfos(series, force, target);
 
 
-            if (notSeasonAware) {
-
+            if (!seasonAware) {
+                await this.requestSeasonAwareness(series, infoProviders);
             } else {
                 await series.addProviderDatasWithSeasonInfos(...infoProviders);
             }
@@ -43,6 +43,7 @@ export class ProviderHelper {
     }
 
     public async requestSeasonAwareness(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[]): Promise<ProviderDataWithSeasonInfo[]> {
+        const finalList: ProviderDataWithSeasonInfo[] = [];
         if (this.isSeriesAbleToCreateSeasonAwareness(series, extraInfoProviders)) {
             for (const listProvider of series.getListProvidersInfos()) {
                 const targetSeason = series.getProviderSeasonTarget(listProvider.provider);
@@ -50,35 +51,45 @@ export class ProviderHelper {
                     const infoProviderLocalDatas = [...series.getInfoProvidersInfos()];
                     let currentSearchingSeason = 1;
                     for (const providerLocalData of infoProviderLocalDatas) {
-                        const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
-                        if (providerInstance.hasEpisodeTitleOnFullInfo) {
-                            let provider: InfoProviderLocalData = providerLocalData;
-                            try {
-                                if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !providerLocalData) {
-                                    const infoResult = await this.requestProviderInfo(series, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-                                    provider = infoResult[0].mainProvider.providerLocalData as InfoProviderLocalData;
+                        try {
+                            const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
+                            if (providerInstance.hasEpisodeTitleOnFullInfo) {
+                                let provider: InfoProviderLocalData = providerLocalData;
+                                try {
+                                    if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !providerLocalData) {
+                                        const infoResult = await this.requestProviderInfo(series, providerInstance, false, ProviderInfoStatus.FULL_INFO);
+                                        provider = infoResult[0].mainProvider.providerLocalData as InfoProviderLocalData;
+                                    }
+                                } catch (err) {
+                                    logger.error(err);
                                 }
-                            } catch (err) {
-                                logger.error(err);
-                            }
-                            if (EpisodeHelper.hasEpisodeNames(provider.detailEpisodeInfo)) {
-                                const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
-                                if (result.seasonComplete) {
-                                    currentSearchingSeason++;
-                                    if (targetSeason > currentSearchingSeason) {
+                                if (EpisodeHelper.hasEpisodeNames(provider.detailEpisodeInfo)) {
+                                    const mainListAdder = new MainListAdder();
+                                    const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
+                                    const newSeries = new Series();
+                                    newSeries.addListProvider(listProvider, currentSearchingSeason);
+                                    newSeries.addInfoProvider(provider, currentSearchingSeason);
+                                    if (result.seasonComplete) {
+                                        currentSearchingSeason++;
+                                        if (targetSeason > currentSearchingSeason) {
+                                            finalList.push(new ProviderDataWithSeasonInfo(provider, currentSearchingSeason));
+                                        } else {
+                                            mainListAdder.addSeries(newSeries);
+                                        }
+                                    } else {
+                                        mainListAdder.addSeries(newSeries);
+                                    }
 
+                                    for (const sequelId of provider.sequelIds) {
+                                        const sequelproviderInstance = new InfoProviderLocalData(sequelId, provider.provider);
+                                        infoProviderLocalDatas.push(sequelproviderInstance);
                                     }
                                 } else {
-
+                                    continue;
                                 }
-                             
-                                for (const sequelId of provider.sequelIds) {
-                                    const sequelproviderInstance = new InfoProviderLocalData(sequelId, AniDBProvider.instance.providerName);
-                                    infoProviderLocalDatas.push(sequelproviderInstance);
-                                }
-                            } else {
-                                continue;
                             }
+                        } catch (err) {
+                            logger.debug(err);
                         }
                     }
                 }
@@ -113,14 +124,24 @@ export class ProviderHelper {
         let listResult = false;
         let infoResult = false;
         for (const listProvider of listProviders) {
-            if (ProviderList.getExternalProviderInstance(listProvider).hasEpisodeTitleOnFullInfo) {
-                listResult = true;
+            try {
+                if (ProviderList.getExternalProviderInstance(listProvider).hasEpisodeTitleOnFullInfo) {
+                    listResult = true;
+                }
+            } catch (err) {
+                logger.debug('isSeriesAbleToCreateSeasonAwareness for loop #1 error:');
+                logger.debug(err);
             }
         }
 
         for (const infoProvider of infoProviders) {
-            if (ProviderList.getExternalProviderInstance(infoProvider).hasEpisodeTitleOnFullInfo) {
-                infoResult = true;
+            try {
+                if (ProviderList.getExternalProviderInstance(infoProvider).hasEpisodeTitleOnFullInfo) {
+                    infoResult = true;
+                }
+            } catch (err) {
+                logger.debug('isSeriesAbleToCreateSeasonAwareness for loop #2 error:');
+                logger.debug(err);
             }
         }
         return listResult && infoResult;
@@ -423,10 +444,14 @@ export class ProviderHelper {
         return false;
     }
 
-    private onlySeriesIdAndNotSeasonAwareNamesLocalData(currentProviders: ProviderLocalData[]): boolean {
+    private isSeasonAware(currentProviders: ProviderDataWithSeasonInfo[]): boolean {
         for (const provider of currentProviders) {
-            if (!ProviderList.getExternalProviderInstance(provider).hasUniqueIdForSeasons) {
-                return false;
+            try {
+                if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && provider.seasonTarget !== 1) {
+                    return false;
+                }
+            } catch (err) {
+                logger.error(err);
             }
         }
         return true;

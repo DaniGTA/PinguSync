@@ -63,6 +63,16 @@ export default class SeriesProviderExtension {
         return realData as InfoProviderLocalData[];
     }
 
+    public getListProvidersInfosWithSeasonInfo(): ProviderDataWithSeasonInfo[] {
+        const realData = ProviderDataListSearcher.getAllBindedProviderWithSeasonInfo(...this.listProviderInfos);
+        return realData;
+    }
+
+    public getInfoProvidersInfosWithSeasonInfo(): ProviderDataWithSeasonInfo[] {
+        const realData = ProviderDataListSearcher.getAllBindedProviderWithSeasonInfo(...this.infoProviderInfos);
+        return realData;
+    }
+
     public getAllProviderBindings(): LocalDataBind[] {
         return [...this.infoProviderInfos, ...this.listProviderInfos];
     }
@@ -81,7 +91,7 @@ export default class SeriesProviderExtension {
 
     public addInfoProviderBindings(...infoLocalDataBinds: InfoLocalDataBind[]) {
         for (const infoLocalDataBind of infoLocalDataBinds) {
-            let existingBinding = this.infoProviderInfos.find((x) => x.providerName === infoLocalDataBind.providerName && ProviderComperator.simpleProviderIdCheck(x.id,infoLocalDataBind.id));
+            let existingBinding = this.infoProviderInfos.find((x) => x.providerName === infoLocalDataBind.providerName && ProviderComperator.simpleProviderIdCheck(x.id, infoLocalDataBind.id));
             if (existingBinding) {
                 if (existingBinding.targetSeason !== infoLocalDataBind.targetSeason && infoLocalDataBind.targetSeason !== undefined) {
                     existingBinding = infoLocalDataBind;
@@ -103,5 +113,19 @@ export default class SeriesProviderExtension {
                 this.listProviderInfos.push(listLocalDataBind);
             }
         }
+    }
+
+    public getAllProviderLocalDatas(): ProviderLocalData[] {
+        const localdata: ProviderLocalData[] = [];
+        localdata.push(...this.getInfoProvidersInfos());
+        localdata.push(...this.getListProvidersInfos());
+        return localdata;
+    }
+
+    public getAllProviderLocalDatasWithSeasonInfo(): ProviderDataWithSeasonInfo[] {
+        const localdata: ProviderDataWithSeasonInfo[] = [];
+        localdata.push(...this.getListProvidersInfosWithSeasonInfo());
+        localdata.push(...this.getInfoProvidersInfosWithSeasonInfo());
+        return localdata;
     }
 }

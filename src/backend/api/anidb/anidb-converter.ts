@@ -78,24 +78,33 @@ export default class AniDBConverter {
         const episodes: Episode[] = [];
         if (anime.episodes.episode && Array.isArray(anime.episodes.episode)) {
             for (const episode of anime.episodes.episode) {
-                const tempEpisode = new Episode(parseInt(episode.epno._text));
-                if (episode.airdate) {
-                    tempEpisode.airDate = new Date(episode.airdate._text);
-                }
-                tempEpisode.duration = Number(episode.length._text);
-                tempEpisode.type = await this.getEpisodeType(episode);
-                tempEpisode.rating = episode.rating ? Number(episode.rating._text) : undefined;
-                tempEpisode.summery = episode.summary ? episode.summary._text : undefined;
+                if (episode.epno !== undefined && episode.epno._text !== undefined) {
+                    let id;
+                    if (isNaN(episode.epno._text as unknown as number)) {
+                        id = episode.epno._text;
+                    } else {
+                        id = +episode.epno._text;
+                    }
+                    const tempEpisode = new Episode(id);
+                    if (episode.airdate) {
+                        tempEpisode.airDate = new Date(episode.airdate._text);
+                    }
+                    tempEpisode.duration = Number(episode.length._text);
+                    tempEpisode.type = this.getEpisodeType(episode);
+                    tempEpisode.rating = episode.rating ? Number(episode.rating._text) : undefined;
+                    tempEpisode.summery = episode.summary ? episode.summary._text : undefined;
 
-                tempEpisode.title = await this.getEpisodeTitles(episode);
-                tempEpisode.lastProviderUpdate = new Date(episode._attributes.update).getDate();
-                tempEpisode.providerEpisodeId = episode._attributes.id;
+                    tempEpisode.title = this.getEpisodeTitles(episode);
+                    tempEpisode.lastProviderUpdate = new Date(episode._attributes.update).getDate();
+                    tempEpisode.providerEpisodeId = episode._attributes.id;
+                    episodes.push(tempEpisode);
+                }
             }
         }
         return episodes;
     }
 
-    public async getEpisodeTitles(episode: EpisodeElement): Promise<EpisodeTitle[]> {
+    public getEpisodeTitles(episode: EpisodeElement): EpisodeTitle[] {
         const episodeTitles: EpisodeTitle[] = [];
         if (Array.isArray(episode.title)) {
             for (const episodeTile of episode.title) {
@@ -107,7 +116,7 @@ export default class AniDBConverter {
         return episodeTitles;
     }
 
-    public async getEpisodeType(episode: EpisodeElement): Promise<EpisodeType> {
+    public getEpisodeType(episode: EpisodeElement): EpisodeType {
         if (episode.epno._attributes.type === '2' && episode.epno._text.charAt(0) === 'S') {
             return EpisodeType.SPECIAL;
         }

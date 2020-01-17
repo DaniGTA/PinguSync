@@ -2,6 +2,7 @@ import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeComperator from '../comperators/episode-comperator';
 import listHelper from '../list-helper';
 import EpisodeRelationResult from './episode-relation-result';
+import { EpisodeType } from 'src/backend/controller/objects/meta/episode/episode-type';
 
 export default class EpisodeHelper {
 
@@ -18,7 +19,8 @@ export default class EpisodeHelper {
 
     public static calculateRelationBetweenEpisodes(seasonHolder: Episode[], currentSeason: Episode[]): EpisodeRelationResult {
         const seasonNumbers: number[] = [];
-        let numberOfEpisodesFound = 0;
+        let numberOfRegularEpisodesFound = 0;
+        let numberOfSpecialEpisodesFound = 0;
         for (const episode of seasonHolder) {
             for (const newEpisodes of currentSeason) {
                 const result = EpisodeComperator.compareEpisodeTitle(episode, newEpisodes);
@@ -26,21 +28,27 @@ export default class EpisodeHelper {
                     if (episode.season !== undefined) {
                         seasonNumbers.push(episode.season);
                     }
-                    numberOfEpisodesFound++;
+                    if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {
+                        numberOfRegularEpisodesFound++;
+                    } else {
+                        numberOfSpecialEpisodesFound++;
+                    }
                     break;
                 }
             }
         }
         const finalSeasonNumber = listHelper.getMostFrequentNumberFromList(seasonNumbers);
-        const maxEpisodes = this.getEpisodeCountOfSeason(seasonHolder, finalSeasonNumber);
-        return new EpisodeRelationResult(finalSeasonNumber, maxEpisodes, numberOfEpisodesFound);
+        const maxEpisodes = this.getRegularEpisodeCountOfSeason(seasonHolder, finalSeasonNumber);
+        return new EpisodeRelationResult(finalSeasonNumber, maxEpisodes, numberOfRegularEpisodesFound);
     }
 
-    public static getEpisodeCountOfSeason(episodes: Episode[], seasonNumber: number): number {
+    public static getRegularEpisodeCountOfSeason(episodes: Episode[], seasonNumber: number): number {
         let episodeCounter = 0;
         for (const episode of episodes) {
-            if (episode.season === seasonNumber) {
-                episodeCounter++;
+            if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {
+                if (episode.season === seasonNumber) {
+                    episodeCounter++;
+                }
             }
         }
         return episodeCounter;
