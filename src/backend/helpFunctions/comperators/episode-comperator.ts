@@ -1,8 +1,10 @@
 import Episode from '../../controller/objects/meta/episode/episode';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
+import SeasonComperator from './season-comperator';
 
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
@@ -31,7 +33,7 @@ export default class EpisodeComperator {
      * @param season
      * @param upshift add the number to the episode number from episode a. This make ep number 1 and ep number 2 match able when upshift set to 1
      */
-    public static compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: number, providerBSeason?: number, season?: number, upshift: number = 0): ComperatorResult {
+    public static compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season, upshift: number = 0): ComperatorResult {
         const result = new ComperatorResult();
         result.matchAble++;
         if (aEpisode.id === bEpsiode.id) {
@@ -82,7 +84,7 @@ export default class EpisodeComperator {
         return compareResult;
     }
 
-    public static async isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: number): Promise<boolean> {
+    public static async isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: Season): Promise<boolean> {
         if (await this.isDetailedEpisodeSameSeason(bEpisode, season)) {
             if (aEpisode === bEpisode.episodeNumber) {
                 return true;
@@ -101,8 +103,8 @@ export default class EpisodeComperator {
      * @param providerBSeason provider b season number
      * @param season series season number.
      */
-    public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: number, providerBSeason?: number, season?: number): boolean {
-        let aSeason: number | undefined;
+    public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season): boolean {
+        let aSeason: Season | undefined;
         if (aEpisode.season !== undefined) {
             aSeason = aEpisode.season;
         } else if (providerASeason !== undefined) {
@@ -111,7 +113,7 @@ export default class EpisodeComperator {
             aSeason = season;
         }
 
-        let bSeason: number | undefined;
+        let bSeason: Season | undefined;
         if (bEpisode.season !== undefined) {
             bSeason = bEpisode.season;
         } else if (providerBSeason !== undefined) {
@@ -120,43 +122,43 @@ export default class EpisodeComperator {
             bSeason = season;
         }
 
-        if (aSeason === bSeason) {
+        if (SeasonComperator.isSameSeason(aSeason, bSeason)) {
             return true;
-        } else if (!season && !aSeason && bSeason === 1) {
+        } else if (!season && !aSeason && bSeason?.seasonNumber === 1) {
             return true;
-        } else if (!season && !bSeason && aSeason === 1) {
-            return true;
-        }
-        return false;
-    }
-
-    public static async isDetailedEpisodeSameSeason(episode: Episode, season?: number) {
-        if (episode.season === season) {
-            return true;
-        } else if (!episode.season !== undefined && (!season !== undefined || season === 1)) {
-            return true;
-        } else if (!season !== undefined && episode.season === 1) {
+        } else if (!season && !bSeason && aSeason?.seasonNumber === 1) {
             return true;
         }
         return false;
     }
 
-    public static async isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: number): Promise<boolean> {
+    public static async isDetailedEpisodeSameSeason(episode: Episode, season?: Season) {
+        if (SeasonComperator.isSameSeason(episode.season, season)) {
+            return true;
+        } else if (!episode.season !== undefined && (!season !== undefined || season?.seasonNumber === 1)) {
+            return true;
+        } else if (!season !== undefined && episode.season?.seasonNumber === 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public static async isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: Season): Promise<boolean> {
         if (aEpisode.season !== undefined && bEpisode.season !== undefined) {
             return aEpisode.season > bEpisode.season;
-        } else if (aEpisode.season !== undefined) {
-            if (season) {
-                return aEpisode.season < season;
+        } else if (aEpisode.season !== undefined && aEpisode.season.seasonNumber !== undefined) {
+            if (season !== undefined && season.seasonNumber !== undefined) {
+                return aEpisode.season.seasonNumber < season.seasonNumber;
             } else {
-                if (aEpisode.season === 1) {
+                if (aEpisode.season.seasonNumber === 1) {
                     return false;
                 } else {
                     return true;
                 }
             }
         } else if (bEpisode.season !== undefined) {
-            if (season) {
-                return bEpisode.season < season;
+            if (season?.seasonNumber !== undefined &&  bEpisode.season.seasonNumber !== undefined) {
+                return bEpisode.season.seasonNumber < season.seasonNumber;
             } else {
                 return false;
             }
@@ -209,7 +211,7 @@ export default class EpisodeComperator {
         const bSeriesSeason = await b.getSeason();
         let season;
         if (aSeriesSeason.seasonNumber === bSeriesSeason.seasonNumber) {
-            season = aSeriesSeason.seasonNumber;
+            season = aSeriesSeason;
         }
 
         for (const aEpisode of aAllADetailedEpisodes) {

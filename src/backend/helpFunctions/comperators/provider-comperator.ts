@@ -9,6 +9,7 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
+import SeasonComperator from './season-comperator';
 
 export default class ProviderComperator {
 
@@ -207,9 +208,9 @@ export default class ProviderComperator {
                 if (ProviderList.getExternalProviderInstance(providerA).hasUniqueIdForSeasons) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     // tslint:disable-next-line: no-empty
-                } else if ((typeof providerASeason === 'undefined') && providerBSeason === 1 || (typeof providerBSeason === 'undefined') && providerASeason === 1) {
+                } else if ((typeof providerASeason === 'undefined') && providerBSeason?.seasonNumber === 1 || (typeof providerBSeason === 'undefined') && providerASeason?.seasonNumber === 1) {
                     
-                } else if (providerASeason?.seasonNumber === providerBSeason?.seasonNumber && providerASeason?.seasonPart === providerBSeason?.seasonPart) {
+                } else if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 } else {
                       comperatorResult.matches -= 0.5;

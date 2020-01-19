@@ -11,12 +11,13 @@ import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderCompareHistoryEntry from './provider-compare-history-entry';
 import ProviderAndSeriesPackage from './provider-series-package';
+import Season from '../../controller/objects/meta/season';
 
 export default class EpisodeMappingHelper {
 
     public async generateEpisodeMapping(series: Series): Promise<Episode[]> {
         const providers = [...series.getAllProviderLocalDatas()];
-        const season = (await series.getSeason()).seasonNumber;
+        const season = (await series.getSeason());
         const currentPackages = ProviderAndSeriesPackage.generatePackages(providers, series);
         await this.prepareDetailedEpisodeInformation(providers, season);
 
@@ -42,7 +43,7 @@ export default class EpisodeMappingHelper {
                                 await this.prepareDetailedEpisodeInformation([sequelProvider], season);
                                 const diff = this.getMaxEpisodeNumber(sequelProvider);
                                 const currentDiff = this.getEpisodeDifferenceFromContainer(differenceProviders, provider);
-                                const sequelSeasonNumber = (await sequel.getSeason()).seasonNumber;
+                                const sequelSeasonNumber = (await sequel.getSeason());
                                 const sequelPackages = ProviderAndSeriesPackage.generatePackages([sequelProvider], sequel);
                                 await this.calculateMapping([...currentPackages, ...sequelPackages], [], sequelSeasonNumber, currentDiff);
                                 differenceProviders.push(new EpisodeDifferenceContainer(provider, sequelProvider, diff));
@@ -79,11 +80,11 @@ export default class EpisodeMappingHelper {
         return episode;
     }
 
-    public async sortingEpisodeListByEpisodeNumber(episodes: Episode[], season?: number): Promise<Episode[]> {
+    public async sortingEpisodeListByEpisodeNumber(episodes: Episode[], season?: Season): Promise<Episode[]> {
         return sortHelper.quickSort(episodes, async (a, b) => this.sortingEpisodeComperator(a, b, season));
     }
 
-    public async sortingEpisodeComperator(a: Episode, b: Episode, season?: number): Promise<number> {
+    public async sortingEpisodeComperator(a: Episode, b: Episode, season?: Season): Promise<number> {
         if ((a.type === EpisodeType.SPECIAL && b.type !== EpisodeType.SPECIAL)) {
             return 1;
         } else if (b.type === EpisodeType.SPECIAL && a.type !== EpisodeType.SPECIAL) {
@@ -102,7 +103,7 @@ export default class EpisodeMappingHelper {
         }
     }
 
-    private async prepareDetailedEpisodeInformation(providers: ProviderLocalData[], season?: number) {
+    private async prepareDetailedEpisodeInformation(providers: ProviderLocalData[], season?: Season) {
         for (const provider of providers) {
             if (provider.episodes) {
                 if (provider.episodes > await provider.getDetailedEpisodeLength()) {
@@ -164,7 +165,7 @@ export default class EpisodeMappingHelper {
      * @param ratedEquality the first ratings.
      * @param season the season of the series.
      */
-    private async calculateMapping(packages: ProviderAndSeriesPackage[], ratedEquality: EpisodeRatedEqualityContainer[], season?: number, cDiff = 0): Promise<ProviderLocalData[]> {
+    private async calculateMapping(packages: ProviderAndSeriesPackage[], ratedEquality: EpisodeRatedEqualityContainer[], season?: Season, cDiff = 0): Promise<ProviderLocalData[]> {
         for (const providerAndSeriesPackage of packages) {
             let currentDiff = cDiff;
             for (let episode of providerAndSeriesPackage.provider.detailEpisodeInfo) {
@@ -251,7 +252,7 @@ export default class EpisodeMappingHelper {
      * @returns {Promise<EpisodeRatedEqualityContainer[]>}
      * @memberof EpisodeMappingHelper
      */
-    private getRatedEqulityOfEpisodes(providers: ProviderAndSeriesPackage[], season?: number, cdiff = 0): EpisodeRatedEqualityContainer[] {
+    private getRatedEqulityOfEpisodes(providers: ProviderAndSeriesPackage[], season?: Season, cdiff = 0): EpisodeRatedEqualityContainer[] {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
         const alreadyComparedProviders = [];
         for (const packageA of providers) {
@@ -293,7 +294,7 @@ export default class EpisodeMappingHelper {
     }
 
     // tslint:disable-next-line: max-line-length
-    private performRatingEqualityOfEpisodes(providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: number | undefined, bTargetS: number | undefined, season: number | undefined, episodeDiff: number): EpisodeRatedEqualityContainer[] {
+    private performRatingEqualityOfEpisodes(providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: Season | undefined, bTargetS: Season | undefined, season: Season | undefined, episodeDiff: number): EpisodeRatedEqualityContainer[] {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
         let fastCheck = 0;
         for (const detailedEpA of providerA.detailEpisodeInfo) {
@@ -377,7 +378,7 @@ export default class EpisodeMappingHelper {
         return;
     }
 
-    private isProviderAlreadyGotCompared(providerA: ProviderLocalData, providerB: ProviderLocalData, providerASeason: number | undefined, providerBSeason: number | undefined, diff: number, list: ProviderCompareHistoryEntry[]): boolean {
+    private isProviderAlreadyGotCompared(providerA: ProviderLocalData, providerB: ProviderLocalData, providerASeason: Season | undefined, providerBSeason: Season | undefined, diff: number, list: ProviderCompareHistoryEntry[]): boolean {
         for (const entry of list) {
             const result = entry.isItTheSame(providerA, providerB, providerASeason, providerBSeason, diff);
             if (result) {
@@ -476,7 +477,7 @@ export default class EpisodeMappingHelper {
      * @param provider
      * @param season
      */
-    private async generateMissingEpisodes(provider: ProviderLocalData, season?: number): Promise<Episode[]> {
+    private async generateMissingEpisodes(provider: ProviderLocalData, season?: Season): Promise<Episode[]> {
         const generatedEpisodes: Episode[] = [];
         if (provider.episodes) {
             const numberOfMissingEpisodes = provider.episodes - await provider.getDetailedEpisodeLength();

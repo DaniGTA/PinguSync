@@ -1,5 +1,6 @@
 import Episode from './episode';
 import ProviderLocalData from '../../../provider-manager/local-data/interfaces/provider-local-data';
+import Season from '../season';
 
 export default class EpisodeMapping {
     public static readonly currentMappingVersion = 1;
@@ -7,7 +8,7 @@ export default class EpisodeMapping {
     public readonly id: string;
     public readonly providerSeriesId: number | string;
     public readonly episodeNumber: number | string;
-    public readonly season?: number;
+    public readonly season?: Season;
     public readonly provider: string;
     public readonly lastMappingUpdate: number;
     public readonly mappingVersion: number;

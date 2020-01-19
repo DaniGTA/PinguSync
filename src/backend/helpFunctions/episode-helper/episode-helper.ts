@@ -4,6 +4,7 @@ import listHelper from '../list-helper';
 import EpisodeRelationResult from './episode-relation-result';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
+import Season from 'src/backend/controller/objects/meta/season';
 
 export default class EpisodeHelper {
 
@@ -46,8 +47,8 @@ export default class EpisodeHelper {
                             }
                         }
                     }
-                    if (episode.season !== undefined) {
-                        seasonNumbers.push(episode.season);
+                    if (episode.season !== undefined && episode.season.seasonNumber !== undefined) {
+                        seasonNumbers.push(episode.season.seasonNumber);
                     }
                     if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {
                         numberOfRegularEpisodesFound++;
@@ -63,7 +64,7 @@ export default class EpisodeHelper {
         return new EpisodeRelationResult(finalSeasonNumber, maxEpisodes, numberOfRegularEpisodesFound, maxEpisodeNumber, maxDifference);
     }
 
-    public static getRegularEpisodeCountOfSeason(episodes: Episode[], seasonNumber: number): number {
+    public static getRegularEpisodeCountOfSeason(episodes: Episode[], seasonNumber: Season): number {
         let episodeCounter = 0;
         for (const episode of episodes) {
             if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {

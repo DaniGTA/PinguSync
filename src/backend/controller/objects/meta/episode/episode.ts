@@ -1,5 +1,6 @@
 import ExternalProvider from '../../../../api/provider/external-provider';
 import stringHelper from '../../../../helpFunctions/string-helper';
+import Season from '../season';
 import EpisodeMapping from './episode-mapping';
 import EpisodeThumbnail from './episode-thumbnail';
 import EpisodeTitle from './episode-title';
@@ -9,7 +10,7 @@ import { EpisodeType } from './episode-type';
  * Contains detail infos about a episode.
  */
 export default class Episode {
-    public readonly season?: number;
+    public readonly season?: Season;
     public readonly episodeNumber: number | string;
     public readonly lastUpdate: number;
     public readonly id: string;
@@ -40,7 +41,7 @@ export default class Episode {
      * @param season season is only needed if its not the same season as the series.
      * @param title
      */
-    constructor(episodeNumber: number | string, season?: number, title?: EpisodeTitle[]) {
+    constructor(episodeNumber: number | string, season?: Season, title?: EpisodeTitle[]) {
         this.season = season;
         this.episodeNumber = episodeNumber;
         if (title) {

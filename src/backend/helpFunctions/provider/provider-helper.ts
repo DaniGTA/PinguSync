@@ -49,7 +49,7 @@ export class ProviderHelper {
         if (this.isSeriesAbleToCreateSeasonAwareness(series, extraInfoProviders)) {
             for (const listProvider of series.getListProvidersInfos()) {
                 const targetSeason = series.getProviderSeasonTarget(listProvider.provider);
-                if (targetSeason !== undefined) {
+                if (targetSeason !== undefined && targetSeason.seasonNumber !== undefined) {
                     const infoProviderLocalDatas = [...series.getInfoProvidersInfos()];
                     let currentSearchingSeason = 1;
                     for (const providerLocalData of infoProviderLocalDatas) {
@@ -69,7 +69,7 @@ export class ProviderHelper {
                                         await newSeries.addInfoProvider(provider, currentSearchingSeason);
                                         if (result.seasonComplete) {
                                             currentSearchingSeason++;
-                                            if (1 + targetSeason === currentSearchingSeason) {
+                                            if (1 + targetSeason.seasonNumber === currentSearchingSeason) {
                                                 finalList.push(new ProviderDataWithSeasonInfo(provider, currentSearchingSeason - 1));
                                             } else {
                                                 seriesThatShouldAdded.push(newSeries);

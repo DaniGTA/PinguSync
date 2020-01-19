@@ -1,11 +1,9 @@
+import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
-import { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
-import ProviderComperator from './provider-comperator';
-import Season from '../../controller/objects/meta/season';
 
 export default class SeasonComperator {
     public static async compareSeasons(a: Series, b: Series): Promise<SeasonComperatorResult> {
@@ -72,7 +70,11 @@ export default class SeasonComperator {
         return false;
     }
 
-    public static isSameSeason(seasonA: Season, seasonB: Season) {
-        
+    public static isSameSeason(seasonA: Season | undefined, seasonB: Season | undefined): boolean {
+        if (seasonA !== undefined && seasonB !== undefined) {
+            return seasonA.seasonNumber === seasonB.seasonNumber && seasonA.seasonPart === seasonB.seasonPart;
+        } else {
+            return false;
+        }
     }
 }
