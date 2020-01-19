@@ -209,7 +209,7 @@ export default class ProviderComperator {
                     // tslint:disable-next-line: no-empty
                 } else if ((typeof providerASeason === 'undefined') && providerBSeason === 1 || (typeof providerBSeason === 'undefined') && providerASeason === 1) {
                     
-                } else if (providerASeason === providerBSeason) {
+                } else if (providerASeason?.seasonNumber === providerBSeason?.seasonNumber && providerASeason?.seasonPart === providerBSeason?.seasonPart) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 } else {
                       comperatorResult.matches -= 0.5;

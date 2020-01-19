@@ -194,7 +194,6 @@ describe('Series Helper', () => {
         anilist.addSeriesName(new Name('ダンジョンに出会いを求めるのは間違っているだろうかⅡ', 'jap', NameType.UNKNOWN));
         await series.addListProvider(anilist);
         return series;
-
     }
 
 });

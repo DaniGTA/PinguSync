@@ -107,7 +107,7 @@ export default class EpisodeMappingHelper {
             if (provider.episodes) {
                 if (provider.episodes > await provider.getDetailedEpisodeLength()) {
                     const generatedEpisodes = await this.generateMissingEpisodes(provider, season);
-                    provider.detailEpisodeInfo.push(...generatedEpisodes);
+                    provider.addDetailedEpisodeInfos(...generatedEpisodes);
                 }
             }
         }
@@ -125,8 +125,13 @@ export default class EpisodeMappingHelper {
     }
 
     private getMaxEpisodeNumber(provider: ProviderLocalData): number {
-        return Math.max.apply(Math, provider.detailEpisodeInfo.map((o) => o.episodeNumber));
-
+       const unfilteredList = provider.detailEpisodeInfo.map((o) => {
+            if (!isNaN(o.episodeNumber as unknown as number)) {
+                return o.episodeNumber as unknown as number;
+            }
+       });
+       const filteredList = unfilteredList.filter((x) => x !== undefined) as unknown as number[];
+       return Math.max.apply(filteredList);
     }
 
     private async getNumberOfUnmappedEpisodesFromProviders(providers: ProviderLocalData[]): Promise<number> {
@@ -171,7 +176,7 @@ export default class EpisodeMappingHelper {
                 }
                 const combineRatings = await this.getAllRelatedRatings(episode, providerAndSeriesPackage.provider, ratedEquality);
                 if (combineRatings.length !== 0) {
-                    const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings, this.getProviderLength(packages.flatMap(x => x.provider)));
+                    const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings, this.getProviderLength(packages.flatMap((x) => x.provider)));
                     for (const result of results) {
                         for (const episodeBind of result.episodeBinds) {
                             if (!this.isSameEpisodeID(episode, episodeBind.episode)) {
@@ -437,8 +442,12 @@ export default class EpisodeMappingHelper {
     }
 
     private getEpisodeNumberDifference(a: Episode, b: Episode): number {
-        const difference = Math.abs(a.episodeNumber - b.episodeNumber);
-        return difference;
+        if (!isNaN(a.episodeNumber as number) && !isNaN(b.episodeNumber as number)) {
+            const difference = Math.abs((a.episodeNumber as unknown as number) - (b.episodeNumber as unknown as number));
+            return difference;
+        } else {
+            return 0;
+        }
     }
 
     /**

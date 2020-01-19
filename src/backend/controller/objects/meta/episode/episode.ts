@@ -58,10 +58,14 @@ export default class Episode {
 
     public addMapping(episodeMapping: EpisodeMapping) {
         let canBeMapped = true;
-        for (const mapping of this.mappedTo) {
-            if (mapping.id === episodeMapping.id || episodeMapping.id === this.id) {
-                canBeMapped = false;
-                break;
+        if (this.provider === undefined || this.provider === episodeMapping.provider) {
+            canBeMapped = false;
+        } else {
+            for (const mapping of this.mappedTo) {
+                if (mapping.id === episodeMapping.id || episodeMapping.id === this.id) {
+                    canBeMapped = false;
+                    break;
+                }
             }
         }
         if (canBeMapped) {

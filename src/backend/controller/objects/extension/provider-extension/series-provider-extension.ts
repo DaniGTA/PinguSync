@@ -44,12 +44,20 @@ export default class SeriesProviderExtension {
     }
 
     public async addProviderDatasWithSeasonInfos(...localdatas: ProviderDataWithSeasonInfo[]) {
-        for (const localdata of localdatas) {
-            if (localdata.providerLocalData instanceof ListProviderLocalData) {
-                await this.addListProvider(localdata.providerLocalData as ListProviderLocalData, localdata.seasonTarget);
-            } else if (localdata.providerLocalData instanceof InfoProviderLocalData) {
-                await this.addInfoProvider(localdata.providerLocalData as InfoProviderLocalData, localdata.seasonTarget);
+        logger.debug('addProviderDatasWithSeasonInfo: adding ' + localdatas.length);
+        try {
+            for (let index = 0; index < localdatas.length; index++) {
+                const localdata = localdatas[index];
+                if (localdata.providerLocalData instanceof ListProviderLocalData) {
+                    await this.addListProvider(localdata.providerLocalData as ListProviderLocalData, localdata.seasonTarget);
+                } else if (localdata.providerLocalData instanceof InfoProviderLocalData) {
+                    await this.addInfoProvider(localdata.providerLocalData as InfoProviderLocalData, localdata.seasonTarget);
+                } else {
+                    logger.debug('addProviderDatasWithSeasonInfos cant add unkown instance');
+                }
             }
+        } catch (err) {
+            logger.error(err);
         }
     }
 
@@ -91,10 +99,14 @@ export default class SeriesProviderExtension {
 
     public addInfoProviderBindings(...infoLocalDataBinds: InfoLocalDataBind[]) {
         for (const infoLocalDataBind of infoLocalDataBinds) {
-            let existingBinding = this.infoProviderInfos.find((x) => x.providerName === infoLocalDataBind.providerName && ProviderComperator.simpleProviderIdCheck(x.id, infoLocalDataBind.id));
-            if (existingBinding) {
-                if (existingBinding.targetSeason !== infoLocalDataBind.targetSeason && infoLocalDataBind.targetSeason !== undefined) {
-                    existingBinding = infoLocalDataBind;
+            const existingBinding = this.infoProviderInfos.findIndex((x) => x.providerName === infoLocalDataBind.providerName);
+            if (existingBinding !== -1) {
+                if (ProviderComperator.simpleProviderIdCheck(infoLocalDataBind.id, this.infoProviderInfos[existingBinding].id)) {
+                    if (this.infoProviderInfos[existingBinding].targetSeason !== infoLocalDataBind.targetSeason && infoLocalDataBind.targetSeason !== undefined) {
+                        this.infoProviderInfos[existingBinding] = infoLocalDataBind;
+                    }
+                } else {
+                    this.infoProviderInfos[existingBinding] = infoLocalDataBind;
                 }
             } else {
                 this.infoProviderInfos.push(infoLocalDataBind);

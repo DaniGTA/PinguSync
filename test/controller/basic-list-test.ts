@@ -191,7 +191,7 @@ describe('Basic List | Testrun', () => {
             fail();
         }
         strictEqual(await seriesHelper.isSameSeries(series1, series2), false);
-    });
+    }, 4000);
 
     test('should not merge different animes', async () => {
         if (!ListController.instance) {
@@ -517,17 +517,17 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         const provider = series2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
-            for (const iterator of provider.detailEpisodeInfo) {
-                if (iterator.season === 1) {
-                    strictEqual(iterator.mappedTo.length, 1);
-                } else if (iterator.season === 2) {
-                    strictEqual(iterator.mappedTo.length, 1);
-                } else if (iterator.season === 3) {
-                    strictEqual(iterator.mappedTo.length, 1);
-                } else if (iterator.season === 4) {
-                    strictEqual(iterator.mappedTo.length, 1);
+            for (const episode of provider.detailEpisodeInfo) {
+                if (episode.season === 1) {
+                    notStrictEqual(episode.mappedTo.length, 0);
+                } else if (episode.season === 2) {
+                    notStrictEqual(episode.mappedTo.length, 0);
+                } else if (episode.season === 3) {
+                    notStrictEqual(episode.mappedTo.length, 0);
+                } else if (episode.season === 4) {
+                    notStrictEqual(episode.mappedTo.length, 0);
                 }
-                logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
+                logger.warn(episode.episodeNumber + ' S: ' + episode.season);
             }
             const season = series2.getProviderSeasonTarget(provider.provider);
             strictEqual(season, 2);

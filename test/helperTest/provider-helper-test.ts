@@ -1,4 +1,5 @@
 import { equal, strictEqual } from 'assert';
+import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
 import KitsuProvider from '../../src/backend/api/kitsu/kitsu-provider';
 import MalProvider from '../../src/backend/api/mal/mal-provider';
@@ -6,20 +7,19 @@ import ExternalProvider from '../../src/backend/api/provider/external-provider';
 import ListProvider from '../../src/backend/api/provider/list-provider';
 import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
 import ListController from '../../src/backend/controller/list-controller';
+import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import Series from '../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import ProviderNameManager from '../../src/backend/controller/provider-manager/provider-name-manager';
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
 import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
+import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
-import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
-import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
-import ProviderNameManager from '../../src/backend/controller/provider-manager/provider-name-manager';
 
 describe('Provider Helper Test', () => {
     beforeEach(() => {
@@ -144,7 +144,7 @@ describe('Provider Helper Test', () => {
         const infoProvider = series.getAllProviderLocalDatas();
         const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
         if (anidbProvider) {
-            strictEqual(anidbProvider.id, "13658");
+            strictEqual(anidbProvider.id, '13658');
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider), 3);
         } else {
             fail();

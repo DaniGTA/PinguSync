@@ -118,7 +118,6 @@ export default abstract class ProviderLocalData {
     // Series metadata stuff
     // ----------------------
 
-    public detailEpisodeInfo: Episode[] = [];
     public score?: number;
     public episodes?: number;
     public publicScore?: number;
@@ -130,7 +129,7 @@ export default abstract class ProviderLocalData {
     public isNSFW = false;
     public country?: string;
     public genres: Genre[] = [];
-
+    public detailEpisodeInfo: Episode[] = [];
     /**
      * Only fill this if provider give sequel ids and have different ids for every season.
      */
@@ -231,5 +230,16 @@ export default abstract class ProviderLocalData {
      */
     public isMediaTypeMovie(): boolean {
         return this.mediaType === MediaType.MOVIE;
+    }
+
+    public getDetailEpisodeInfos(): Episode[] {
+        return this.detailEpisodeInfo;
+    }
+
+    public addDetailedEpisodeInfos(...episodes: Episode[]): void {
+        for (const episode of episodes) {
+            episode.provider = this.provider;
+            this.detailEpisodeInfo.push(episode);
+        }
     }
 }

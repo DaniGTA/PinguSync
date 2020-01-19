@@ -79,7 +79,7 @@ export default new class KitsuConverter {
 
         providerInfos.lastExternalChange = new Date(media.updatedAt);
         if (media.episodes) {
-            providerInfos.detailEpisodeInfo.push(...await this.convertKitsuEpisodesToEpisodes(media.episodes));
+            providerInfos.addDetailedEpisodeInfos(...await this.convertKitsuEpisodesToEpisodes(media.episodes));
         }
         let providers: Array<ProviderLocalData | ProviderDataWithSeasonInfo> = [];
         if (media.mappings) {

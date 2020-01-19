@@ -5,6 +5,7 @@ import logger from '../../logger/logger';
 import { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
 import ProviderComperator from './provider-comperator';
+import Season from '../../controller/objects/meta/season';
 
 export default class SeasonComperator {
     public static async compareSeasons(a: Series, b: Series): Promise<SeasonComperatorResult> {
@@ -69,5 +70,9 @@ export default class SeasonComperator {
         }
 
         return false;
+    }
+
+    public static isSameSeason(seasonA: Season, seasonB: Season) {
+        
     }
 }

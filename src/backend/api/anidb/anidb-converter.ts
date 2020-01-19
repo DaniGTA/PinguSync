@@ -52,10 +52,10 @@ export default class AniDBConverter {
                 for (const relatedAnime of relatedanimeAnimeList) {
                     switch (relatedAnime._attributes.type) {
                         case 'Prequel':
-                            ipld.sequelIds.push(Number(relatedAnime._attributes.id));
+                            ipld.prequelIds.push(Number(relatedAnime._attributes.id));
                             break;
                         case 'Sequel':
-                            ipld.prequelIds.push(Number(relatedAnime._attributes.id));
+                            ipld.sequelIds.push(Number(relatedAnime._attributes.id));
                             break;
                         default:
                             ipld.alternativeIds.push(Number(relatedAnime._attributes.id));
@@ -66,7 +66,7 @@ export default class AniDBConverter {
 
             ipld.genres = this.getGenres(fullInfo.anime);
             ipld.episodes = Number(fullInfo.anime.episodecount._text);
-            ipld.detailEpisodeInfo = await this.getDetailEpisodeInfo(fullInfo.anime);
+            ipld.addDetailedEpisodeInfos(...await this.getDetailEpisodeInfo(fullInfo.anime));
             ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/' + fullInfo.anime.picture._text, ImageSize.ORIGINAL));
             const mpr = new MultiProviderResult(ipld, ...await this.getSubProviders(fullInfo.anime));
             return mpr;

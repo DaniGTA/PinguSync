@@ -6,7 +6,7 @@ export default class EpisodeMapping {
 
     public readonly id: string;
     public readonly providerSeriesId: number | string;
-    public readonly episodeNumber: number;
+    public readonly episodeNumber: number | string;
     public readonly season?: number;
     public readonly provider: string;
     public readonly lastMappingUpdate: number;

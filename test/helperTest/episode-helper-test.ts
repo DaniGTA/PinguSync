@@ -34,9 +34,9 @@ describe('Episode Helper Test', () => {
 
         const list = [detailedEpisodeS1e1, detailedEpisodeS1e2, detailedEpisodeS2e1, detailedEpisodeS2e2];
 
-        strictEqual(EpisodeHelper.getEpisodeCountOfSeason(list, 1), 2);
-        strictEqual(EpisodeHelper.getEpisodeCountOfSeason(list, 2), 2);
-        strictEqual(EpisodeHelper.getEpisodeCountOfSeason(list, 3), 0);
+        strictEqual(EpisodeHelper.getRegularEpisodeCountOfSeason(list, 1), 2);
+        strictEqual(EpisodeHelper.getRegularEpisodeCountOfSeason(list, 2), 2);
+        strictEqual(EpisodeHelper.getRegularEpisodeCountOfSeason(list, 3), 0);
     });
 
     test('should find one missing episode', () => {

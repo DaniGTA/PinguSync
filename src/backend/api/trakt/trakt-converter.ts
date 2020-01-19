@@ -115,7 +115,7 @@ export default new class TraktConverter {
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         if (seasonInfo) {
             try {
-                provider.detailEpisodeInfo = await this.getDetailedEpisodeInfo(seasonInfo);
+                provider.addDetailedEpisodeInfos(...await this.getDetailedEpisodeInfo(seasonInfo));
             } catch (err) {
                 logger.error('[Trakt] Error: Failed to convert episode infos.');
                 logger.error(err);

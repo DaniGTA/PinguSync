@@ -111,10 +111,10 @@ describe('listProviderLocalData tests', () => {
         const episode = new Episode(5, 1);
         const episode2 = new Episode(6, 1);
         episode.addMapping(new EpisodeMapping(episode2, a));
-        a.detailEpisodeInfo.push(episode);
+        a.addDetailedEpisodeInfos(episode);
         const b = Object.assign(new ListProviderLocalData(1), a);
         b.lastUpdate = new Date(1);
-        b.detailEpisodeInfo = [new Episode(5, 1)];
+        b.addDetailedEpisodeInfos(new Episode(5, 1));
 
 
         const merged = await ListProviderLocalData.mergeProviderInfos(b, a);

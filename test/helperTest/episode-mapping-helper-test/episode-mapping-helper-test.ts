@@ -32,18 +32,18 @@ describe('Episode mapping | Mapping Only', () => {
         // A Site
 
         const aProvider = new InfoProviderLocalData('1', 'testA');
-        aProvider.detailEpisodeInfo.push(new Episode(1));
-        aProvider.detailEpisodeInfo.push(new Episode(2));
-        aProvider.detailEpisodeInfo.push(new Episode(3));
+        aProvider.addDetailedEpisodeInfos(new Episode(1));
+        aProvider.addDetailedEpisodeInfos(new Episode(2));
+        aProvider.addDetailedEpisodeInfos(new Episode(3));
 
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, 1));
 
         // B Site
 
         const bProvider = new ListProviderLocalData(1, 'testB');
-        bProvider.detailEpisodeInfo.push(new Episode(1, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(1, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(2, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(3, 1));
 
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 
@@ -90,18 +90,18 @@ describe('Episode mapping | Mapping Only', () => {
         // A Site
 
         const aProvider = new InfoProviderLocalData('1', 'testA');
-        aProvider.detailEpisodeInfo.push(new Episode(1));
-        aProvider.detailEpisodeInfo.push(new Episode(2));
-        aProvider.detailEpisodeInfo.push(new Episode(3));
+        aProvider.addDetailedEpisodeInfos(new Episode(1));
+        aProvider.addDetailedEpisodeInfos(new Episode(2));
+        aProvider.addDetailedEpisodeInfos(new Episode(3));
 
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, 1));
 
         // B Site
 
         const bProvider = new ListProviderLocalData('1', 'testB');
-        bProvider.detailEpisodeInfo.push(new Episode(1, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(1, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(2, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(3, 1));
 
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 
@@ -109,9 +109,9 @@ describe('Episode mapping | Mapping Only', () => {
         // C Site
 
         const cProvider = new ListProviderLocalData('1', 'testC');
-        cProvider.detailEpisodeInfo.push(new Episode(1, 1));
-        cProvider.detailEpisodeInfo.push(new Episode(2, 1));
-        cProvider.detailEpisodeInfo.push(new Episode(3, 1));
+        cProvider.addDetailedEpisodeInfos(new Episode(1, 1));
+        cProvider.addDetailedEpisodeInfos(new Episode(2, 1));
+        cProvider.addDetailedEpisodeInfos(new Episode(3, 1));
 
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(cProvider, 1));
 
@@ -206,9 +206,9 @@ describe('Episode mapping | Mapping Only', () => {
         // B Site
 
         const bProvider = new ListProviderLocalData('1', 'testB');
-        bProvider.detailEpisodeInfo.push(new Episode(1));
-        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(1));
+        bProvider.addDetailedEpisodeInfos(new Episode(2, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(3, 1));
 
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 
@@ -241,12 +241,12 @@ describe('Episode mapping | Mapping Only', () => {
         // B Site
 
         const bProvider = new ListProviderLocalData('1', 'testB');
-        bProvider.detailEpisodeInfo.push(new Episode(1));
-        bProvider.detailEpisodeInfo.push(new Episode(2, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(3, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(4, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(5, 1));
-        bProvider.detailEpisodeInfo.push(new Episode(6, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(1));
+        bProvider.addDetailedEpisodeInfos(new Episode(2, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(3, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(4, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(5, 1));
+        bProvider.addDetailedEpisodeInfos(new Episode(6, 1));
 
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 
@@ -290,15 +290,15 @@ describe('Episode mapping | Mapping Only', () => {
             // B Site
 
             const bProvider = new ListProviderLocalData('1', 'testB');
-            bProvider.detailEpisodeInfo.push(new Episode(1));
-            bProvider.detailEpisodeInfo.push(new Episode(2, 1));
-            bProvider.detailEpisodeInfo.push(new Episode(3, 1));
-            bProvider.detailEpisodeInfo.push(new Episode(4, 1));
-            bProvider.detailEpisodeInfo.push(new Episode(5, 1));
-            bProvider.detailEpisodeInfo.push(new Episode(6, 1));
-            bProvider.detailEpisodeInfo.push(new Episode(7, 1));
-            bProvider.detailEpisodeInfo.push(new Episode(8, 1));
-            bProvider.detailEpisodeInfo.push(new Episode(9, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(1));
+            bProvider.addDetailedEpisodeInfos(new Episode(2, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(3, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(4, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(5, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(6, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(7, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(8, 1));
+            bProvider.addDetailedEpisodeInfos(new Episode(9, 1));
 
             await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, 1));
 

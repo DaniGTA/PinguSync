@@ -3,6 +3,8 @@ import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import TestHelper from '../../test-helper';
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 describe('Series | Basic', () => {
     beforeEach(() => {
@@ -138,5 +140,16 @@ describe('Series | Basic', () => {
         providerA.addSeriesName(undefined as unknown as Name);
         await series.addListProvider(providerA);
         assert.strictEqual((await series.getAllNames()).length, 0);
+    });
+
+    test('should replace existing info provider binding', async () => {
+        const series = new Series();
+        const provider1 = new InfoProviderLocalData(1, 'test');
+        const provider2 = new InfoProviderLocalData(2, 'test');
+
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, 3));
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, 3));
+
+        assert.strictEqual(series.getAllProviderBindings()[0].id, 2);
     });
 });

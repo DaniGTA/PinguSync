@@ -269,7 +269,7 @@ export default class Series extends SeriesProviderExtension {
         return this.canSync;
     }
 
-    public getProviderSeasonTarget(providerName: string): number | undefined {
+    public getProviderSeasonTarget(providerName: string): Season | undefined {
         const bindings = this.getAllProviderBindings();
         const result = bindings.find((x) => x.providerName === providerName);
         if (result) {

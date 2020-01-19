@@ -29,7 +29,8 @@ export class ProviderHelper {
 
 
             if (!seasonAware) {
-                await this.requestSeasonAwareness(series, infoProviders);
+                const providers = await this.requestSeasonAwareness(series, infoProviders);
+                await series.addProviderDatasWithSeasonInfos(...providers);
             } else {
                 await series.addProviderDatasWithSeasonInfos(...infoProviders);
             }
@@ -44,6 +45,7 @@ export class ProviderHelper {
 
     public async requestSeasonAwareness(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[]): Promise<ProviderDataWithSeasonInfo[]> {
         const finalList: ProviderDataWithSeasonInfo[] = [];
+        const seriesThatShouldAdded = []; 
         if (this.isSeriesAbleToCreateSeasonAwareness(series, extraInfoProviders)) {
             for (const listProvider of series.getListProvidersInfos()) {
                 const targetSeason = series.getProviderSeasonTarget(listProvider.provider);
@@ -51,55 +53,54 @@ export class ProviderHelper {
                     const infoProviderLocalDatas = [...series.getInfoProvidersInfos()];
                     let currentSearchingSeason = 1;
                     for (const providerLocalData of infoProviderLocalDatas) {
-                        try {
-                            const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
-                            if (providerInstance.hasEpisodeTitleOnFullInfo) {
-                                let provider: InfoProviderLocalData = providerLocalData;
-                                try {
-                                    if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !providerLocalData) {
-                                        const infoResult = await this.requestProviderInfo(series, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-                                        provider = infoResult[0].mainProvider.providerLocalData as InfoProviderLocalData;
-                                    }
-                                } catch (err) {
-                                    logger.error(err);
-                                }
-                                if (EpisodeHelper.hasEpisodeNames(provider.detailEpisodeInfo)) {
-                                    const mainListAdder = new MainListAdder();
-                                    const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
-                                    const newSeries = new Series();
-                                    newSeries.addListProvider(listProvider, currentSearchingSeason);
-                                    newSeries.addInfoProvider(provider, currentSearchingSeason);
-                                    if (result.seasonComplete) {
-                                        currentSearchingSeason++;
-                                        if (targetSeason > currentSearchingSeason) {
-                                            finalList.push(new ProviderDataWithSeasonInfo(provider, currentSearchingSeason));
+                        let currentLocalData: InfoProviderLocalData | null = providerLocalData;
+                        do {
+                            try {
+                                const providerInstance = ProviderList.getExternalProviderInstance(currentLocalData);
+                                if (providerInstance.hasEpisodeTitleOnFullInfo) {
+                                    let provider: InfoProviderLocalData | null = currentLocalData;
+                                    provider = await this.simpleProviderInfoRequest(currentLocalData, providerInstance) as InfoProviderLocalData | null;
+                                    currentLocalData = null;
+                                    if (provider && EpisodeHelper.hasEpisodeNames(provider.detailEpisodeInfo)) {
+                                        const mainListAdder = new MainListAdder();
+                                        const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
+                                        const newSeries = new Series();
+                                        await newSeries.addListProvider(listProvider, currentSearchingSeason);
+                                        await newSeries.addInfoProvider(provider, currentSearchingSeason);
+                                        if (result.seasonComplete) {
+                                            currentSearchingSeason++;
+                                            if (1 + targetSeason === currentSearchingSeason) {
+                                                finalList.push(new ProviderDataWithSeasonInfo(provider, currentSearchingSeason - 1));
+                                            } else {
+                                                seriesThatShouldAdded.push(newSeries);
+                                            }
                                         } else {
-                                            mainListAdder.addSeries(newSeries);
+                                            seriesThatShouldAdded.push(newSeries);
+                                        }
+
+                                        for (const sequelId of provider.sequelIds) {
+                                            const sequelproviderInstance = new InfoProviderLocalData(sequelId, provider.provider);
+                                            currentLocalData = sequelproviderInstance;
                                         }
                                     } else {
-                                        mainListAdder.addSeries(newSeries);
-                                    }
-
-                                    for (const sequelId of provider.sequelIds) {
-                                        const sequelproviderInstance = new InfoProviderLocalData(sequelId, provider.provider);
-                                        infoProviderLocalDatas.push(sequelproviderInstance);
+                                        currentLocalData = null;
                                     }
                                 } else {
-                                    continue;
+                                    currentLocalData = null;
                                 }
+                            } catch (err) {
+                                logger.debug(err);
+                                currentLocalData = null;
                             }
-                        } catch (err) {
-                            logger.debug(err);
-                        }
+                        } while (currentLocalData !== null);
                     }
                 }
             }
-            return [];
+            return finalList;
         } else {
             return extraInfoProviders;
         }
     }
-
 
     public async requestUpgradeAllCurrentinfos(series: Series, force: boolean): Promise<ProviderDataWithSeasonInfo[]> {
         const resultList: ProviderDataWithSeasonInfo[] = [];
@@ -238,6 +239,20 @@ export class ProviderHelper {
             }
         }
         return relevantList;
+    }
+
+    private async simpleProviderInfoRequest(currentLocalData: ProviderLocalData, providerInstance: ExternalProvider): Promise<ProviderLocalData | null> {
+        try {
+            if (currentLocalData && currentLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !currentLocalData) {
+                const tempSeries = new Series();
+                tempSeries.addProviderDatas(currentLocalData);
+                const infoResult = await this.requestProviderInfo(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
+                return infoResult[0].mainProvider.providerLocalData;
+            }
+        } catch (err) {
+            logger.error(err);
+        }
+        return null;
     }
 
     private async requestAllListProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {

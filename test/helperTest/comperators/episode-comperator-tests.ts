@@ -7,6 +7,7 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import EpisodeComperator from '../../../src/backend/helpFunctions/comperators/episode-comperator';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
+import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 // tslint:disable: no-string-literal
 describe('Episode comperator | Full test', () => {
     beforeAll(() => {
@@ -80,6 +81,28 @@ describe('Episode comperator | Full test', () => {
         strictEqual(result.matchAble, 1);
         strictEqual(result.matches, 0);
     });
+
+    test('should compare the episode as the same', async () => {
+        const episodeA = new Episode(2, undefined);
+        episodeA.type = EpisodeType.OTHER;
+        episodeA.summery = 'ABC';
+        episodeA.title.push(new EpisodeTitle('X', 'X'));
+        episodeA.title.push(new EpisodeTitle('ABC', 'ABC'));
+        episodeA.title.push(new EpisodeTitle('Y', 'Y'));
+        episodeA.title.push(new EpisodeTitle('ABC', 'ABC2'));
+
+
+        const episodeB = new Episode(2, 1);
+        episodeB.title.push(new EpisodeTitle('ABC'));
+        episodeB.type = EpisodeType.UNKOWN;
+        episodeB.providerEpisodeId = 123;
+
+        const result = await EpisodeComperator.compareEpisodeTitle(episodeA, episodeB);
+        strictEqual(result.matchAble, 4);
+        strictEqual(result.matches, 2);
+        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
+        });
+    
     describe('compares simple episode number vs detailed episode', () => {
         test('same ep 0 s0 (should return true)', async () => {
             const detailedEpisode = new Episode(0, 0);
