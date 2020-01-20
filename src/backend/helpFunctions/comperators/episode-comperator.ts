@@ -41,7 +41,7 @@ export default class EpisodeComperator {
             result.matches++;
             return result;
         } else if (aEpisode.provider && bEpsiode.provider) {
-            if (aEpisode.provider === bEpsiode.provider && aEpisode.providerEpisodeId === bEpsiode.providerEpisodeId) {
+            if (aEpisode.provider === bEpsiode.provider && aEpisode.providerEpisodeId === bEpsiode.providerEpisodeId && aEpisode.providerEpisodeId !== undefined) {
                 result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 result.matches++;
                 return result;
@@ -157,7 +157,7 @@ export default class EpisodeComperator {
                 }
             }
         } else if (bEpisode.season !== undefined) {
-            if (season?.seasonNumber !== undefined &&  bEpisode.season.seasonNumber !== undefined) {
+            if (season?.seasonNumber !== undefined && bEpisode.season.seasonNumber !== undefined) {
                 return bEpisode.season.seasonNumber < season.seasonNumber;
             } else {
                 return false;
@@ -173,8 +173,8 @@ export default class EpisodeComperator {
                 let textA = aEpisodeTitle.text;
                 for (const bEpisodeTitle of bEpsiode.title) {
                     let textB = bEpisodeTitle.text;
-                    result.matchAble++;
                     if (textB !== '') {
+                        result.matchAble++;
                         // tslint:disable-next-line: triple-equals
                         if (textA == textB) {
                             result.matches++;

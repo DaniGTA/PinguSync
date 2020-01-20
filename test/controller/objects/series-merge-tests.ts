@@ -1,6 +1,7 @@
 import { strictEqual } from 'assert';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Overview from '../../../src/backend/controller/objects/meta/overview';
+import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
@@ -149,14 +150,14 @@ describe('Series | Merge', () => {
         const seriesA = new Series();
         const lpld = new ListProviderLocalData(2, 'Test');
         lpld.addSeriesName(new Name('TestA', 'en'));
-        await seriesA.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, 1));
+        await seriesA.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
         const seriesB = new Series();
         const lpld2 = new ListProviderLocalData(2, 'Test');
-        await seriesB.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, 1));
+        await seriesB.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season(1)));
 
         const merged = await seriesA.merge(seriesB);
         strictEqual((merged.getListProvidersInfos()).length, 1);
-        strictEqual(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider), 1);
+        strictEqual(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider)?.seasonNumber, 1);
         return;
     });
 

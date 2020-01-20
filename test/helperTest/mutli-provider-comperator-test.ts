@@ -5,6 +5,7 @@ import MainListManager from '../../src/backend/controller/main-list-manager/main
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
+import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
@@ -36,7 +37,7 @@ describe('Multi-Provider-Comperator | Examples', () => {
         aProvider.addSeriesName(new Name('Demon Slayer: Kimetsu no Yaiba The Movie: Mugen Train', '"unknown"', NameType.MAIN));
         aProvider.addSeriesName(new Name('鬼滅の刃無限列車編', '"jap"', NameType.UNKNOWN));
         aProvider.mediaType = MediaType.MOVIE;
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, 1));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season(1)));
 
         // PART B
 

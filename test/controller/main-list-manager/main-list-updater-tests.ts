@@ -1,6 +1,5 @@
 import { rejects, strictEqual, throws } from 'assert';
 import MultiProviderResult from '../../../src/backend/api/provider/multi-provider-result';
-import ListController from '../../../src/backend/controller/list-controller';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListEntryUpdater from '../../../src/backend/controller/main-list-manager/main-list-updater';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
@@ -12,8 +11,6 @@ import TestProvider from '../objects/testClass/testProvider';
 
 
 describe('MainList | Entry update tests', () => {
-    const lc = new ListController(true);
-
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal

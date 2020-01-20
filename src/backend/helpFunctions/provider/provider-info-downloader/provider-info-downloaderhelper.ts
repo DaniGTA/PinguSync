@@ -3,6 +3,7 @@ import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import MainListManager from '../../../controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
+import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
 import ProviderDataListSearcher from '../../../controller/provider-data-list-manager/provider-data-list-searcher';
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
@@ -14,6 +15,7 @@ import { AbsoluteResult } from '../../comperators/comperator-results.ts/comperat
 import MediaTypeComperator from '../../comperators/media-type-comperator';
 import MultiProviderComperator from '../../comperators/multi-provider-results-comperator';
 import ProviderComperator from '../../comperators/provider-comperator';
+import SeasonComperator from '../../comperators/season-comperator';
 import listHelper from '../../list-helper';
 import stringHelper from '../../string-helper';
 import ProviderDataWithSeasonInfo from './provider-data-with-season-info';
@@ -112,10 +114,10 @@ export default new class ProviderInfoDownloadHelper {
                         const allBindings = relation.getAllProviderBindings();
                         const result = allBindings.find((x) => x.providerName === provider.providerName);
                         if (result) {
-                            const seriesSeason = (await series.getSeason()).seasonNumber;
+                            const seriesSeason = (await series.getSeason());
                             const mediaType = await series.getMediaType();
 
-                            if (!Number.isNaN(seriesSeason as number) && seriesSeason !== undefined) {
+                            if (seriesSeason.isSeasonNumberPresent()) {
                                 const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
                                 if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(mediaType, providerData.mediaType)
                                     || this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
@@ -136,10 +138,10 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('no result');
     }
 
-    private hasProviderLocalDataSeasonTargetInfos(provider: ProviderLocalData, seasonTarget: number): boolean {
+    private hasProviderLocalDataSeasonTargetInfos(provider: ProviderLocalData, seasonTarget: Season): boolean {
         for (const episode of provider.detailEpisodeInfo) {
             // tslint:disable-next-line: triple-equals
-            if (episode.season == seasonTarget) {
+            if (SeasonComperator.isSameSeason(episode.season, seasonTarget)) {
                 return true;
             }
         }

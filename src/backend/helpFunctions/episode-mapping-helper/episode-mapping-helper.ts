@@ -1,6 +1,7 @@
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import EpisodeComperator from '../comperators/episode-comperator';
@@ -11,7 +12,6 @@ import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderCompareHistoryEntry from './provider-compare-history-entry';
 import ProviderAndSeriesPackage from './provider-series-package';
-import Season from '../../controller/objects/meta/season';
 
 export default class EpisodeMappingHelper {
 
@@ -126,13 +126,13 @@ export default class EpisodeMappingHelper {
     }
 
     private getMaxEpisodeNumber(provider: ProviderLocalData): number {
-       const unfilteredList = provider.detailEpisodeInfo.map((o) => {
+        const unfilteredList = provider.detailEpisodeInfo.map((o) => {
             if (!isNaN(o.episodeNumber as unknown as number)) {
                 return o.episodeNumber as unknown as number;
             }
-       });
-       const filteredList = unfilteredList.filter((x) => x !== undefined) as unknown as number[];
-       return Math.max.apply(filteredList);
+        });
+        const filteredList = unfilteredList.filter((x) => x !== undefined) as unknown as number[];
+        return Math.max.apply(filteredList);
     }
 
     private async getNumberOfUnmappedEpisodesFromProviders(providers: ProviderLocalData[]): Promise<number> {

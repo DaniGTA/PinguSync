@@ -1,4 +1,5 @@
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
+import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import listHelper from '../../helpFunctions/list-helper';
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
@@ -33,7 +34,7 @@ export default class Series extends SeriesProviderExtension {
     public lastUpdate: number = Date.now();
     public lastInfoUpdate: number = 0;
 
-    private cachedSeason?: number;
+    private cachedSeason?: Season;
     private cachedMediaType?: MediaType;
     private seasonDetectionType: string = '';
     private canSync: boolean | null = null;
@@ -54,7 +55,7 @@ export default class Series extends SeriesProviderExtension {
 
     public async getSlugNames(): Promise<Name[]> {
         const slugs = [];
-        const names = await this.getAllNames();
+        const names = this.getAllNames();
         for (const name of names) {
             if (name.nameType === NameType.SLUG) {
                 slugs.push(name);
@@ -172,7 +173,7 @@ export default class Series extends SeriesProviderExtension {
      */
     public async getSeason(searchMode: SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
         logger.debug('[Season] [Serve]: Serve Season');
-        if ((!this.cachedSeason || this.cachedSeason === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
+        if ((!this.cachedSeason?.isSeasonNumberPresent() || this.cachedSeason.seasonNumber === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
             const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
             if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
                 // UKNOWN SEASON
@@ -184,19 +185,24 @@ export default class Series extends SeriesProviderExtension {
                         logger.info('Temp Series Successfull added.');
                     }
                 }
-                this.cachedSeason = -2;
-                return new Season(undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+                this.cachedSeason = new Season(-2);
+                return new Season(undefined, undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
             } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
-                this.cachedSeason = -1;
+                this.cachedSeason = new Season(-1);
             } else {
                 this.cachedSeason = result.season;
                 this.seasonDetectionType = result.foundType;
             }
         }
-        if (this.cachedSeason === -1) {
-            return new Season(undefined, SeasonError.CANT_GET_SEASON);
+        if (SeasonComperator.isSameSeason(this.cachedSeason, new Season(-1))) {
+            return new Season(undefined, undefined, SeasonError.CANT_GET_SEASON);
         }
-        return new Season(this.cachedSeason);
+        if (this.cachedSeason) {
+            return this.cachedSeason;
+        } else {
+            logger.warn('Created undefined temp season');
+            return new Season();
+        }
     }
 
     public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
@@ -494,7 +500,7 @@ export default class Series extends SeriesProviderExtension {
                         const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
                         if (simpleProviderCheckResult && providerB.getProviderInstance().hasUniqueIdForSeasons) {
                             throw new Error('[Series] Not the relation was found but the Series himself. SKIPPING SEARCH. SeriesID: ' + this.id);
-                        } else if (simpleProviderCheckResult && providerATargetSeason !== providerBTargetSeason) {
+                        } else if (simpleProviderCheckResult && !SeasonComperator.isSameSeason(providerATargetSeason, providerBTargetSeason)) {
                             return a;
                         }
                         for (const prequelIdB of providerB.prequelIds) {

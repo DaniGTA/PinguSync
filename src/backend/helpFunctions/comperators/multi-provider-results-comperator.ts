@@ -9,6 +9,7 @@ import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comper
 import MediaTypeComperator from './media-type-comperator';
 import ProviderComperator from './provider-comperator';
 import ReleaseYearComperator from './release-year-comperator';
+import SeasonComperator from './season-comperator';
 
 export default class MultiProviderComperator {
     public static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult> {
@@ -25,7 +26,7 @@ export default class MultiProviderComperator {
             if (ProviderList.getExternalProviderInstance(result.mainProvider.providerLocalData).hasUniqueIdForSeasons) {
                 if (seasonA.seasonError !== SeasonError.CANT_GET_SEASON) {
                     finalResult.matchAble += 2;
-                    if (seasonA.seasonNumber === seasonB.seasonNumber) {
+                    if (SeasonComperator.isSameSeason(seasonA, seasonB)) {
                         finalResult.matches += 2;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     } else if ((seasonB.seasonError === SeasonError.CANT_GET_SEASON || seasonB.seasonError === SeasonError.NONE) && seasonA.seasonNumber === 1) {

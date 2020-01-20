@@ -5,6 +5,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
+import Season from '../../controller/objects/meta/season';
 import { WatchStatus } from '../../controller/objects/series';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
@@ -118,7 +119,7 @@ export default new class AniListConverter {
         if (typeof entry.media.episodes !== 'undefined') {
             providerInfo.episodes = entry.media.episodes;
         }
-        return new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, seasonNumber));
+        return new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, new Season(seasonNumber)));
     }
 
     private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {

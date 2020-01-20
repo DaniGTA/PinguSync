@@ -9,6 +9,7 @@ import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
+import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-local-data';
@@ -39,7 +40,7 @@ describe('Provider Helper Test', () => {
         // Series A
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'Kitsu');
-        series.addProviderDatas(listProvider);
+        await series.addProviderDatas(listProvider);
         // tslint:disable-next-line: no-string-literal
         const pList = ProviderList['loadedListProvider'];
         let provider: ListProvider | null = null;
@@ -58,8 +59,8 @@ describe('Provider Helper Test', () => {
         const providerHelper = new ProviderHelper();
         // Series A
         const series = new Series();
-        series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
-        series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
+        await series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
+        await series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         equal(result.length, 1);
@@ -139,13 +140,13 @@ describe('Provider Helper Test', () => {
         const mainListAdder = new MainListAdder();
         const series: Series = new Series();
         const provider = new ListProviderLocalData(94084, TraktProvider.getInstance().providerName);
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, 3));
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(3)));
         await mainListAdder.addSeries(series);
         const infoProvider = series.getAllProviderLocalDatas();
         const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
         if (anidbProvider) {
             strictEqual(anidbProvider.id, '13658');
-            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider), 3);
+            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonNumber, 3);
         } else {
             fail();
         }

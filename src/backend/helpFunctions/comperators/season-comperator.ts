@@ -1,7 +1,6 @@
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
-import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
 
@@ -12,15 +11,17 @@ export default class SeasonComperator {
         const bSeason = await b.getSeason();
         if (aSeason.seasonError === SeasonError.NONE || bSeason.seasonError === SeasonError.NONE) {
             comperatorResult.matchAble += 4;
-            if (aSeason.seasonNumber === bSeason.seasonNumber) {
+            if (this.isSameSeason(aSeason, bSeason)) {
                 comperatorResult.matches += 4;
                 if (bSeason.seasonNumber !== 1 && aSeason.seasonNumber !== 1) {
                     try {
+                        /** 
                         if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
                             comperatorResult.bFirstSeason = await b.getFirstSeason();
                         } else if (await this.hasOnlyProviderWithSameIdForSeasons(b) && !await this.hasOnlyProviderWithSameIdForSeasons(a)) {
                             comperatorResult.aFirstSeason = await a.getFirstSeason();
                         }
+                        */
                     } catch (err) {
                         logger.error(err);
                     }
@@ -33,15 +34,15 @@ export default class SeasonComperator {
         }
         return comperatorResult;
     }
-
-    public static async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean> {
-        for (const provider of series.getAllProviderLocalDatas()) {
-            if (ProviderList.getExternalProviderInstance(provider).hasUniqueIdForSeasons) {
-                return false;
+    /*
+        public static async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean> {
+            for (const provider of series.getAllProviderLocalDatas()) {
+                if (ProviderList.getExternalProviderInstance(provider).hasUniqueIdForSeasons) {
+                    return false;
+                }
             }
-        }
-        return true;
-    }
+            return true;
+        }*/
     /**
      * If the provider has no season number the series number will be take as fallback.
      * @param providerASeasonNumber Season number of the first provider.
@@ -73,6 +74,8 @@ export default class SeasonComperator {
     public static isSameSeason(seasonA: Season | undefined, seasonB: Season | undefined): boolean {
         if (seasonA !== undefined && seasonB !== undefined) {
             return seasonA.seasonNumber === seasonB.seasonNumber && seasonA.seasonPart === seasonB.seasonPart;
+        } else if (seasonA === undefined && seasonB === undefined) {
+            return true;
         } else {
             return false;
         }

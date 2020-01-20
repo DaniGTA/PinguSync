@@ -1,10 +1,11 @@
 import Episode from '../../controller/objects/meta/episode/episode';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import Season from '../../controller/objects/meta/season';
+import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../comperators/episode-comperator';
+import SeasonComperator from '../comperators/season-comperator';
 import listHelper from '../list-helper';
 import EpisodeRelationResult from './episode-relation-result';
-import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
-import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
-import Season from 'src/backend/controller/objects/meta/season';
 
 export default class EpisodeHelper {
 
@@ -60,7 +61,7 @@ export default class EpisodeHelper {
             }
         }
         const finalSeasonNumber = listHelper.getMostFrequentNumberFromList(seasonNumbers);
-        const maxEpisodes = this.getRegularEpisodeCountOfSeason(seasonHolder, finalSeasonNumber);
+        const maxEpisodes = this.getRegularEpisodeCountOfSeason(seasonHolder, new Season(finalSeasonNumber));
         return new EpisodeRelationResult(finalSeasonNumber, maxEpisodes, numberOfRegularEpisodesFound, maxEpisodeNumber, maxDifference);
     }
 
@@ -68,7 +69,7 @@ export default class EpisodeHelper {
         let episodeCounter = 0;
         for (const episode of episodes) {
             if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {
-                if (episode.season === seasonNumber) {
+                if (SeasonComperator.isSameSeason(episode.season, seasonNumber)) {
                     episodeCounter++;
                 }
             }

@@ -1,13 +1,14 @@
 import assert from 'assert';
 
 import Name from '../../../src/backend/controller/objects/meta/name';
+import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
+import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestHelper from '../../test-helper';
 import TestProvider from './testClass/testProvider';
-import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 describe('Series | Relations', () => {
 
@@ -174,7 +175,7 @@ describe('Series | Relations', () => {
         // tslint:disable-next-line: no-string-literal
         provider['episodes'] = 10;
         provider.releaseYear = 2014;
-        await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, targetSeason));
+        await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(targetSeason)));
         return anime;
     }
 });

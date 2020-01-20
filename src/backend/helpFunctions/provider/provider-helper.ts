@@ -1,7 +1,10 @@
 import ExternalProvider from '../../api/provider/external-provider';
 import ListProvider from '../../api/provider/list-provider';
 import MultiProviderResult from '../../api/provider/multi-provider-result';
+import MainListAdder from '../../controller/main-list-manager/main-list-adder';
+import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
+import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
@@ -10,8 +13,6 @@ import dateHelper from '../date-helper';
 import EpisodeHelper from '../episode-helper/episode-helper';
 import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
-import MainListAdder from '../../controller/main-list-manager/main-list-adder';
 
 
 export class ProviderHelper {
@@ -45,7 +46,7 @@ export class ProviderHelper {
 
     public async requestSeasonAwareness(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[]): Promise<ProviderDataWithSeasonInfo[]> {
         const finalList: ProviderDataWithSeasonInfo[] = [];
-        const seriesThatShouldAdded = []; 
+        const seriesThatShouldAdded = [];
         if (this.isSeriesAbleToCreateSeasonAwareness(series, extraInfoProviders)) {
             for (const listProvider of series.getListProvidersInfos()) {
                 const targetSeason = series.getProviderSeasonTarget(listProvider.provider);
@@ -65,12 +66,12 @@ export class ProviderHelper {
                                         const mainListAdder = new MainListAdder();
                                         const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
                                         const newSeries = new Series();
-                                        await newSeries.addListProvider(listProvider, currentSearchingSeason);
-                                        await newSeries.addInfoProvider(provider, currentSearchingSeason);
+                                        await newSeries.addListProvider(listProvider, new Season(currentSearchingSeason));
+                                        await newSeries.addInfoProvider(provider, new Season(currentSearchingSeason));
                                         if (result.seasonComplete) {
                                             currentSearchingSeason++;
                                             if (1 + targetSeason.seasonNumber === currentSearchingSeason) {
-                                                finalList.push(new ProviderDataWithSeasonInfo(provider, currentSearchingSeason - 1));
+                                                finalList.push(new ProviderDataWithSeasonInfo(provider, new Season(currentSearchingSeason - 1)));
                                             } else {
                                                 seriesThatShouldAdded.push(newSeries);
                                             }
@@ -435,9 +436,9 @@ export class ProviderHelper {
         for (const provider of ProviderList.getAllProviderLists()) {
             for (const supportProvider of provider.potentialSubProviders) {
                 try {
-                    const isntance = (supportProvider as any).getInstance();
-                    if (isntance.getInstance().providerName === targetProvider.providerName) {
-                        providerThatProvidersId.push(isntance);
+                    const instance = (supportProvider as any).getInstance();
+                    if (instance.getInstance().providerName === targetProvider.providerName) {
+                        providerThatProvidersId.push(instance);
                         break;
                     }
                 } catch (err) {
@@ -462,7 +463,7 @@ export class ProviderHelper {
     private isSeasonAware(currentProviders: ProviderDataWithSeasonInfo[]): boolean {
         for (const provider of currentProviders) {
             try {
-                if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && provider.seasonTarget !== 1) {
+                if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && provider.seasonTarget?.seasonNumber !== 1) {
                     return false;
                 }
             } catch (err) {

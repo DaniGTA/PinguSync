@@ -1,5 +1,6 @@
 import { strictEqual } from 'assert';
 import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
+import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -31,7 +32,7 @@ describe('Provider Comperator | Testrun', () => {
         const provider2B = new ListProviderLocalData(2, 'test');
         provider2B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
-        await s2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2A, 1));
+        await s2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2A, new Season(1)));
         await s2.addProviderDatas(provider2B);
 
         const s1 = new Series();
@@ -40,7 +41,7 @@ describe('Provider Comperator | Testrun', () => {
         const provider1B = new ListProviderLocalData(1, 'test');
         provider1B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
-        await s1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1A, 1));
+        await s1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1A, new Season(1)));
         await s1.addProviderDatas(provider1B);
 
         const instance = new ProviderComperator(s1, s2);

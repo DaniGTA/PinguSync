@@ -62,7 +62,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season, 2);
+        strictEqual(result.season?.seasonNumber, 2);
     });
 
     test('should get the right season value: 3', async () => {
@@ -88,7 +88,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season, 3);
+        strictEqual(result.season?.seasonNumber, 3);
     });
 
     test('should get the right season value: 4', async () => {
@@ -114,7 +114,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season, 4);
+        strictEqual(result.season?.seasonNumber, 4);
     });
 
     test('should get the right season value: 5', async () => {
@@ -134,7 +134,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season, 5);
+        strictEqual(result.season?.seasonNumber, 5);
     });
 
     test('should get none seasons', async () => {

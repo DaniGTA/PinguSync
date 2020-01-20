@@ -7,6 +7,7 @@ import Episode from '../../../src/backend/controller/objects/meta/episode/episod
 import EpisodeMapping from '../../../src/backend/controller/objects/meta/episode/episode-mapping';
 import Genre from '../../../src/backend/controller/objects/meta/genre';
 import { ImageSize } from '../../../src/backend/controller/objects/meta/image-size';
+import Season from '../../../src/backend/controller/objects/meta/season';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
@@ -15,7 +16,7 @@ import TestHelper from '../../test-helper';
 
 describe('listProviderLocalData tests', () => {
     beforeAll(() => {
-       TestHelper.mustHaveBefore();
+        TestHelper.mustHaveBefore();
     });
     test('should merge two', async () => {
         const a = new ListProviderLocalData(1);
@@ -108,13 +109,13 @@ describe('listProviderLocalData tests', () => {
         a.prequelIds.push(1);
         a.sequelIds.push(1);
         a.watchProgress = [(new WatchProgress(1))];
-        const episode = new Episode(5, 1);
-        const episode2 = new Episode(6, 1);
+        const episode = new Episode(5, new Season(1));
+        const episode2 = new Episode(6, new Season(1));
         episode.addMapping(new EpisodeMapping(episode2, a));
         a.addDetailedEpisodeInfos(episode);
         const b = Object.assign(new ListProviderLocalData(1), a);
         b.lastUpdate = new Date(1);
-        b.addDetailedEpisodeInfos(new Episode(5, 1));
+        b.addDetailedEpisodeInfos(new Episode(5, new Season(1)));
 
 
         const merged = await ListProviderLocalData.mergeProviderInfos(b, a);

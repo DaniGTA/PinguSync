@@ -8,6 +8,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
+import Season from '../../controller/objects/meta/season';
 import Series, { WatchStatus } from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
@@ -20,7 +21,7 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { FullShowInfo } from './objects/fullShowInfo';
 import { Movie, Show } from './objects/search';
-import { Season, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './objects/sendEntryUpdate';
+import { Season as TrakSeason, SendEntryUpdate, Show as SendEntryShow, TraktEpisode } from './objects/sendEntryUpdate';
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
@@ -41,7 +42,7 @@ export default new class TraktConverter {
             providerInfo.watchStatus = WatchStatus.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
             providerInfo.infoStatus = ProviderInfoStatus.BASIC_INFO;
-            result.push(new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, season.number)));
+            result.push(new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, new Season(season.number))));
         }
         return result;
     }
@@ -68,7 +69,7 @@ export default new class TraktConverter {
         } catch (err) {
             logger.error('[TVDBConverter] No tvdb instance.');
         }
-        return  new MultiProviderResult(provider, ...result);
+        return new MultiProviderResult(provider, ...result);
     }
 
     public async convertMovieToLocalData(traktMovie: Movie | WatchedShow): Promise<MultiProviderResult> {
@@ -155,7 +156,7 @@ export default new class TraktConverter {
                     if (seasonNumber === undefined || Number.isNaN(seasonNumber as number)) {
                         seasonNumber = seasonInfo.number;
                     }
-                    const tempEpisode = new Episode(episode.number, seasonNumber as number);
+                    const tempEpisode = new Episode(episode.number, new Season(seasonNumber as number));
                     tempEpisode.title = [new EpisodeTitle(episode.title)];
                     tempEpisode.providerEpisodeId = episode.ids.trakt;
                     if (seasonInfo.title && seasonInfo.title.toLowerCase().includes('special')) {
@@ -168,7 +169,7 @@ export default new class TraktConverter {
                     if (seasonNumber !== undefined && Number.isNaN(seasonNumber as number)) {
                         seasonNumber = seasonInfo.number;
                     }
-                    const tempEpisode = new Episode(index, seasonNumber as number);
+                    const tempEpisode = new Episode(index, new Season(seasonNumber as number));
                     if (seasonInfo.title && seasonInfo.title.includes('special')) {
                         tempEpisode.type = EpisodeType.SPECIAL;
                     }
@@ -196,7 +197,7 @@ export default new class TraktConverter {
                 seasons: [],
             };
 
-            const season: Season = {
+            const season: TrakSeason = {
                 episodes,
                 number: seasonNumber,
             };
@@ -237,7 +238,7 @@ export default new class TraktConverter {
                         episodes.push({ number: index });
                     }
                 }
-                const season: Season = {
+                const season: TrakSeason = {
                     episodes,
                     number: seasonNumber,
                 };

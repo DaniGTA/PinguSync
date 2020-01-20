@@ -6,6 +6,7 @@ import ProviderDataWithSeasonInfo from '../../../../helpFunctions/provider/provi
 import logger from '../../../../logger/logger';
 import { InfoProviderLocalData } from '../../../provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../provider-manager/local-data/list-provider-local-data';
+import Season from '../../meta/season';
 import InfoLocalDataBind from './binding/info-local-data-bind';
 import ListLocalDataBind from './binding/list-local-data-bind';
 import LocalDataBind from './binding/local-data-bind';
@@ -19,7 +20,7 @@ export default class SeriesProviderExtension {
      * Prevents too have double entrys of the same provider.
      * @param infoProviders
      */
-    public async addInfoProvider(infoProvider: InfoProviderLocalData, season?: number) {
+    public async addInfoProvider(infoProvider: InfoProviderLocalData, season?: Season) {
         this.addInfoProviderBindings(new InfoLocalDataBind(infoProvider, season));
         await new ProviderDataListAdder().addNewProviderData(infoProvider);
     }
@@ -28,7 +29,7 @@ export default class SeriesProviderExtension {
      * Prevents too have double entrys of the same provider.
      * @param listProvider
      */
-    public async addListProvider(listProvider: ListProviderLocalData, season?: number) {
+    public async addListProvider(listProvider: ListProviderLocalData, season?: Season) {
         this.addListProviderBindings(new ListLocalDataBind(listProvider, season));
         await new ProviderDataListAdder().addNewProviderData(listProvider);
     }

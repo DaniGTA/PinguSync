@@ -16,10 +16,10 @@ export default class ProviderCompareHistoryEntry {
     public compareDiff: number;
 
     constructor(providerA: ProviderLocalData,
-                providerB: ProviderLocalData,
-                providerASeason: Season | undefined,
-                providerBSeason: Season | undefined,
-                diff: number) {
+        providerB: ProviderLocalData,
+        providerASeason: Season | undefined,
+        providerBSeason: Season | undefined,
+        diff: number) {
         this.providerAName = providerA.provider;
         this.providerBName = providerB.provider;
         this.providerASeason = providerASeason;
@@ -39,7 +39,7 @@ export default class ProviderCompareHistoryEntry {
     }
 
     public isItTheSame(providerA: ProviderLocalData, providerB: ProviderLocalData, providerASeason: Season | undefined,
-                       providerBSeason: Season | undefined, diff: number): boolean {
+        providerBSeason: Season | undefined, diff: number): boolean {
         if (this.compareDiff === diff) {
             if ((this.providerAName === providerA.provider && SeasonComperator.isSameSeason(providerASeason, providerBSeason))
                 && (this.providerBName === providerB.provider && SeasonComperator.isSameSeason(providerASeason, providerBSeason))) {
@@ -47,7 +47,7 @@ export default class ProviderCompareHistoryEntry {
             } else if (this.providerBName === providerA.provider &&
                 SeasonComperator.isSameSeason(providerASeason, providerBSeason) &&
                 this.providerAName === providerB.provider &&
-                this.providerASeason === providerBSeason) {
+                SeasonComperator.isSameSeason(this.providerASeason, providerBSeason)) {
                 return true;
             }
         }

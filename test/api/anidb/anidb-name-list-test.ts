@@ -5,6 +5,7 @@ import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../src/backend/controller/objects/meta/name-type';
+import Season from '../../../src/backend/controller/objects/meta/season';
 import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -24,7 +25,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         ProviderList['loadedListProvider'] = [new AniListProvider()];
     });
     describe('Download Tests', () => {
-       test('should allow download (1/2)', async () => {
+        test('should allow download (1/2)', async () => {
             const x = new AniDBProvider(false);
             // tslint:disable-next-line: no-string-literal
             AniDBProvider['anidbNameManager'].lastDownloadTime = undefined;
@@ -32,7 +33,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             deepEqual(x['allowDownload'](), true);
             return;
         });
-       test('should allow download (2/2)', async () => {
+        test('should allow download (2/2)', async () => {
             const a = new AniDBProvider(false);
             const twoDaysInMs = 172800000;
             // tslint:disable-next-line: no-string-literal
@@ -41,7 +42,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             deepEqual(a['allowDownload'](), true);
             return;
         });
-       test('should not allow download', async () => {
+        test('should not allow download', async () => {
             const a = new AniDBProvider(false);
             // tslint:disable-next-line: no-string-literal
             AniDBProvider['anidbNameManager'].lastDownloadTime = new Date(Date.now());
@@ -60,7 +61,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         // tslint:disable-next-line: no-string-literal
         series['canSync'] = false;
         // tslint:disable-next-line: no-string-literal
@@ -87,7 +88,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = -1;
+        series['cachedSeason'] = new Season(-1);
         // tslint:disable-next-line: no-string-literal
         series['canSync'] = false;
         lpdld.isNSFW = false;
@@ -111,7 +112,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 3;
+        series['cachedSeason'] = new Season(3);
         lpdld.addSeriesName(new Name('Sword Art Online: Alicization', 'en', NameType.MAIN));
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Sword Art Online: Alicization', 3);
@@ -127,7 +128,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 4;
+        series['cachedSeason'] = new Season(4);
         lpdld.addSeriesName(new Name('Shingeki no Kyojin The Final Season', 'x-jap', NameType.MAIN));
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Shingeki no Kyojin The Final Season');
@@ -143,7 +144,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Suzumiya Haruhi no Yuuutsu', 'x-jap', NameType.MAIN));
         lpdld.addSeriesName(new Name('The Melancholy of Haruhi Suzumiya', 'unkown', NameType.MAIN));
         lpdld.addSeriesName(new Name('涼宮ハルヒの憂鬱', 'x-jap', NameType.MAIN));
@@ -160,7 +161,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Hunter x Hunter (2011)', '', NameType.MAIN));
         lpdld.addSeriesName(new Name('ハンター×ハンター (2011)', 'jap', NameType.MAIN));
         await series.addListProvider(lpdld);
@@ -177,7 +178,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Danshi Koukousei no Nichijou', NameType.MAIN));
         lpdld.addSeriesName(new Name('Daily Lives of High School Boys', 'jap', NameType.MAIN));
         lpdld.addSeriesName(new Name('男子高校生の日常', 'jap', NameType.MAIN));
@@ -195,7 +196,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Danshi Koukousei no Nichijou Specials', NameType.MAIN));
         lpdld.addSeriesName(new Name('Daily Lives of High School Boys Specials', 'jap', NameType.MAIN));
         lpdld.addSeriesName(new Name('男子高校生の日常', 'jap', NameType.MAIN));
@@ -217,7 +218,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Toaru Majutsu no Index', NameType.MAIN));
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Toaru Majutsu no Index', 1);
@@ -233,7 +234,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Toaru Majutsu no Index', NameType.MAIN));
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('Toaru Majutsu no Index', 2);
@@ -249,7 +250,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Boku no Hero Academia 4', NameType.MAIN));
         await series.addListProvider(lpdld);
         const result = await a.getMoreSeriesInfoByName('My Hero Academia Season 4', 4);
@@ -284,7 +285,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
         const series = new Series();
         // tslint:disable-next-line: no-string-literal
-        series['cachedSeason'] = 1;
+        series['cachedSeason'] = new Season(1);
         lpdld.addSeriesName(new Name('Tokyo Ghoulre', 'jap', NameType.MAIN));
         await series.addListProvider(lpdld);
         try {

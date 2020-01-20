@@ -8,6 +8,7 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
+import Season from '../../controller/objects/meta/season';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
@@ -59,7 +60,7 @@ export default new class KitsuConverter {
             providerInfos.covers.push(new Cover(media.posterImage.small, ImageSize.SMALL));
             providerInfos.covers.push(new Cover(media.posterImage.large, ImageSize.LARGE));
         } catch (err) {
-             logger.debug(err);
+            logger.debug(err);
         }
 
         try {
@@ -69,7 +70,7 @@ export default new class KitsuConverter {
             providerInfos.banners.push(new Banner(media.coverImage.large, ImageSize.LARGE));
         } catch (err) {
             logger.debug(err);
-         }
+        }
 
 
         providerInfos.infoStatus = fullInfo;
@@ -141,7 +142,7 @@ export default new class KitsuConverter {
             if (result) {
                 const idSeason = result.externalId.split('/');
                 const seasonnumber = Number(idSeason[1]);
-                const localdata = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(idSeason[0], TVDBProvider), seasonnumber);
+                const localdata = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(idSeason[0], TVDBProvider), new Season(seasonnumber));
                 providerLocalData.push(localdata);
             }
         } catch (err) {
@@ -176,7 +177,7 @@ export default new class KitsuConverter {
                 }
             }
 
-            const detailedEpisode = new Episode(episode.number, episode.seasonNumber, episodeTitles);
+            const detailedEpisode = new Episode(episode.number, new Season(episode.seasonNumber), episodeTitles);
             detailedEpisode.airDate = new Date(episode.airdate);
             detailedEpisode.duration = episode.length;
             detailedEpisode.lastProviderUpdate = new Date(episode.updatedAt).getTime();

@@ -65,10 +65,10 @@ export default class ProviderComperator {
                                 }
 
                                 if (aSeason && bSeason) {
-                                    if (aSeason.seasonNumber === bSeason.seasonNumber) {
+                                    if (SeasonComperator.isSameSeason(aSeason, bSeason)) {
                                         if (aSeason.seasonError === SeasonError.NONE) {
                                             return true;
-                                        } else if (aSeason.seasonError  === bSeason.seasonError) {
+                                        } else if (aSeason.seasonError === bSeason.seasonError) {
                                             return true;
                                         }
                                     }
@@ -209,15 +209,15 @@ export default class ProviderComperator {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     // tslint:disable-next-line: no-empty
                 } else if ((typeof providerASeason === 'undefined') && providerBSeason?.seasonNumber === 1 || (typeof providerBSeason === 'undefined') && providerASeason?.seasonNumber === 1) {
-                    
+
                 } else if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 } else {
-                      comperatorResult.matches -= 0.5;
+                    comperatorResult.matches -= 0.5;
                 }
                 // tslint:disable-next-line: no-empty
             } catch (err) {
-                if (providerASeason === providerBSeason) {
+                if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 }
                 logger.error(err);

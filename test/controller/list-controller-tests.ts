@@ -5,6 +5,7 @@ import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
+import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
@@ -159,7 +160,7 @@ describe('ListController | Combine', () => {
         const lplc = new ListProviderLocalData(2, 'test');
         lplc.prequelIds.push(1);
         const x = new Series();
-        x['cachedSeason'] = 2;
+        x['cachedSeason'] = new Season(2);
         lplc.releaseYear = 2017;
         x.lastInfoUpdate = Date.now();
         lplc.episodes = 11;
@@ -169,7 +170,7 @@ describe('ListController | Combine', () => {
         const lplcs1 = new ListProviderLocalData(1, 'test');
         lplcs1.sequelIds.push(2);
         const xs1 = new Series();
-        xs1['cachedSeason'] = 1;
+        xs1['cachedSeason'] = new Season(1);
         xs1.lastInfoUpdate = Date.now();
         lplcs1.addSeriesName(new Name('Rewrite', 'en', NameType.OFFICIAL));
         await xs1.addListProvider(lplcs1);
@@ -181,7 +182,7 @@ describe('ListController | Combine', () => {
         lplc2.addSeriesName(new Name('rewrite', 'slug', NameType.SLUG));
         lplc2.addSeriesName(new Name('リライト', 'ja', NameType.UNKNOWN));
 
-        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lplc2, 2));
+        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lplc2, new Season(2)));
 
         const a = await lc['addSeriesToMainList'](x, xs1, x2);
         assert.equal(MainListManager['mainList'].length, 2, MainListManager['mainList'].toString());
@@ -192,13 +193,13 @@ describe('ListController | Combine', () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
         const x1 = await getFilledAnime(undefined, undefined, 1);
-        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, 1));
+        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
 
         const x2 = await getFilledAnime(undefined, undefined, 1);
-        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, 1));
+        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
 
         const x3 = await getFilledAnime(undefined, undefined, 1);
-        await x3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, 1));
+        await x3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
 
         await lc.addSeriesToMainList(x1, x2, x3);
 
@@ -209,7 +210,7 @@ describe('ListController | Combine', () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
         const x1 = await getFilledAnime(undefined, undefined, 1);
-        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, 1));
+        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
 
         await lc.addSeriesToMainList(x1);
 
@@ -227,7 +228,7 @@ describe('ListController | Combine', () => {
         const x1 = await getFilledAnime('', 1, 1);
         x1['infoProviderInfos'] = [];
         x1['listProviderInfos'] = [];
-        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, 1));
+        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
         const x2 = await getFilledAnime('', 1);
         x2['infoProviderInfos'] = [];
         x2['listProviderInfos'] = [];
@@ -255,12 +256,12 @@ describe('ListController | Combine', () => {
         const x1 = await getFilledAnime();
         x1['infoProviderInfos'] = [];
         x1['listProviderInfos'] = [];
-        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, 1));
+        await x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
 
         const x2 = await getFilledAnime();
         x2['infoProviderInfos'] = [];
         x2['listProviderInfos'] = [];
-        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, 2));
+        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season(2)));
 
         await lc.addSeriesToMainList(x1, x2);
 
@@ -317,7 +318,7 @@ describe('ListController | Combine', () => {
         lpld2.episodes = 10;
 
         const x2 = await getFilledAnime('Test', 1);
-        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, 1));
+        await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season(1)));
 
         MainListManager['mainList'] = [x1, x2];
 
@@ -359,7 +360,7 @@ async function getFilledAnime(providername: string = 'Test', providerId: number 
     provider.episodes = 10;
     provider.releaseYear = 2014;
     provider.addSeriesName(new Name('FilledTest', 'en'));
-    await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, targetSeason));
+    await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(targetSeason)));
     return anime;
 }
 
@@ -377,6 +378,6 @@ async function getRandomeFilledAnime(): Promise<Series> {
     const season = Math.random() * (+3 - +0) + +0;
 
     provider.addSeriesName(new Name(stringHelper.randomString(), 'en'));
-    await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, season));
+    await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(season)));
     return anime;
 }

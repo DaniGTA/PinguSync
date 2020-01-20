@@ -1,5 +1,6 @@
 import { strictEqual } from 'assert';
 import Name from '../../../src/backend/controller/objects/meta/name';
+import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -16,7 +17,7 @@ describe('Series | Season', () => {
     test('should return season 1', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData(1, 'TestA');
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, 1));
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(1)));
         strictEqual((await series.getSeason()).seasonNumber, 1);
         return;
     });
