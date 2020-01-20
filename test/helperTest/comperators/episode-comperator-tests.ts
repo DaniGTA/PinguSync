@@ -126,4 +126,12 @@ describe('Episode comperator | Full test', () => {
             strictEqual(result, false);
         });
     });
+
+    test('match by name ep 1 s1 and ep 2 s1 (should return false)', async () => {
+            const detailedEpisode = new Episode(2, new Season(1));
+            const detailedEpisode2 = new Episode(1, new Season(1), [new EpisodeTitle('Test', '')]);
+            const result = EpisodeComperator.compareDetailedEpisode(detailedEpisode, detailedEpisode2);
+
+            strictEqual(result, false);
+        });
 });

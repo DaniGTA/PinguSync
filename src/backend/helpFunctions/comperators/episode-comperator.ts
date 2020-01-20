@@ -168,36 +168,45 @@ export default class EpisodeComperator {
 
     public static compareEpisodeTitle(aEpisode: Episode, bEpsiode: Episode): ComperatorResult {
         const result = new ComperatorResult();
-        if (aEpisode.title.length !== 0 && bEpsiode.title.length !== 0) {
-            for (const aEpisodeTitle of aEpisode.title) {
-                let textA = aEpisodeTitle.text;
-                for (const bEpisodeTitle of bEpsiode.title) {
-                    let textB = bEpisodeTitle.text;
-                    if (textB !== '') {
-                        result.matchAble++;
-                        // tslint:disable-next-line: triple-equals
-                        if (textA == textB) {
-                            result.matches++;
-                            result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                        }
-                        textA = textA.toLowerCase();
-                        textB = textB.toLowerCase();
-                        textA = textA.replace(' the ', ' ');
-                        textB = textB.replace(' the ', ' ');
-                        if (textA === textB) {
-                            result.matches++;
-                            result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                        }
-                        textA = textA.replace(' & ', ' ');
-                        textB = textB.replace(' & ', ' ');
-                        textA = textA.replace(' and ', ' ');
-                        textB = textB.replace(' and ', ' ');
-                        if (textA === textB) {
-                            result.matches++;
-                            result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                        }
+        
+        for (const aEpisodeTitle of aEpisode.title) {
+            let found = false;
+            let textA = aEpisodeTitle.text;
+            result.matchAble++;
+            for (const bEpisodeTitle of bEpsiode.title) {
+                let textB = bEpisodeTitle.text;
+                if (textB !== '') {
+                    // tslint:disable-next-line: triple-equals
+                    if (textA == textB) {
+                        result.matches++;
+                        found = true;
+                        result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                        break;
+                    }
+                    textA = textA.toLowerCase();
+                    textB = textB.toLowerCase();
+                    textA = textA.replace(' the ', ' ');
+                    textB = textB.replace(' the ', ' ');
+                    if (textA === textB) {
+                        result.matches++;
+                        found = true;
+                        result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                        break;
+                    }
+                    textA = textA.replace(' & ', ' ');
+                    textB = textB.replace(' & ', ' ');
+                    textA = textA.replace(' and ', ' ');
+                    textB = textB.replace(' and ', ' ');
+                    if (textA === textB) {
+                        result.matches++;
+                        found = true;
+                        result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                        break;
                     }
                 }
+            }
+            if (found) {
+                break;
             }
         }
         return result;
