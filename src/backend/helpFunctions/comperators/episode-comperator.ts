@@ -105,20 +105,20 @@ export default class EpisodeComperator {
      */
     public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season): boolean {
         let aSeason: Season | undefined;
-        if (aEpisode.season !== undefined) {
+        if (aEpisode.season !== undefined && aEpisode.season.isSeasonNumberPresent()) {
             aSeason = aEpisode.season;
-        } else if (providerASeason !== undefined) {
+        } else if (providerASeason !== undefined && providerASeason.isSeasonNumberPresent()) {
             aSeason = providerASeason;
-        } else if (season !== undefined) {
+        } else if (season !== undefined && season.isSeasonNumberPresent()) {
             aSeason = season;
         }
 
         let bSeason: Season | undefined;
-        if (bEpisode.season !== undefined) {
+        if (bEpisode.season !== undefined && bEpisode.season.isSeasonNumberPresent()) {
             bSeason = bEpisode.season;
-        } else if (providerBSeason !== undefined) {
+        } else if (providerBSeason !== undefined && providerBSeason.isSeasonNumberPresent()) {
             bSeason = providerBSeason;
-        } else if (season !== undefined) {
+        } else if (season !== undefined && season.isSeasonNumberPresent()) {
             bSeason = season;
         }
 
@@ -168,45 +168,42 @@ export default class EpisodeComperator {
 
     public static compareEpisodeTitle(aEpisode: Episode, bEpsiode: Episode): ComperatorResult {
         const result = new ComperatorResult();
-        
-        for (const aEpisodeTitle of aEpisode.title) {
-            let found = false;
-            let textA = aEpisodeTitle.text;
+        if (aEpisode.title.length !== 0 || bEpsiode.title.length !== 0) {
             result.matchAble++;
-            for (const bEpisodeTitle of bEpsiode.title) {
-                let textB = bEpisodeTitle.text;
-                if (textB !== '') {
-                    // tslint:disable-next-line: triple-equals
-                    if (textA == textB) {
-                        result.matches++;
-                        found = true;
-                        result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                        break;
-                    }
-                    textA = textA.toLowerCase();
-                    textB = textB.toLowerCase();
-                    textA = textA.replace(' the ', ' ');
-                    textB = textB.replace(' the ', ' ');
-                    if (textA === textB) {
-                        result.matches++;
-                        found = true;
-                        result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                        break;
-                    }
-                    textA = textA.replace(' & ', ' ');
-                    textB = textB.replace(' & ', ' ');
-                    textA = textA.replace(' and ', ' ');
-                    textB = textB.replace(' and ', ' ');
-                    if (textA === textB) {
-                        result.matches++;
-                        found = true;
-                        result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                        break;
+            for (const aEpisodeTitle of aEpisode.title) {
+                let found = false;
+                let textA = aEpisodeTitle.text;
+                for (const bEpisodeTitle of bEpsiode.title) {
+                    let textB = bEpisodeTitle.text;
+                    if (textB !== '') {
+                        // tslint:disable-next-line: triple-equals
+                        if (textA == textB) {
+                            found = true;
+                            break;
+                        }
+                        textA = textA.toLowerCase();
+                        textB = textB.toLowerCase();
+                        textA = textA.replace(' the ', ' ');
+                        textB = textB.replace(' the ', ' ');
+                        if (textA === textB) {
+                            found = true;
+                            break;
+                        }
+                        textA = textA.replace(' & ', ' ');
+                        textB = textB.replace(' & ', ' ');
+                        textA = textA.replace(' and ', ' ');
+                        textB = textB.replace(' and ', ' ');
+                        if (textA === textB) {
+                            found = true;
+                            break;
+                        }
                     }
                 }
-            }
-            if (found) {
-                break;
+                if (found) {
+                    result.matches++;
+                    result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                    return result;
+                }
             }
         }
         return result;

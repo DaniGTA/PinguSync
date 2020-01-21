@@ -403,6 +403,13 @@ describe('Episode mapping | Mapping Only', () => {
             strictEqual(sorted2[0], ep1erec);
             strictEqual(sorted2[1], ep2erec);
         });
+
+        test('should get the right max episode number', async () => {
+            const episodeMappingInstance = new EpisodeMappingHelper();
+            const episodes = [new Episode(1), new Episode(2), new Episode(3)];
+            const result = episodeMappingInstance['getMaxEpisodeNumber'](episodes);
+            strictEqual(result, 3);
+        });
     });
 
 });

@@ -459,7 +459,7 @@ describe('Basic List | Testrun', () => {
                 logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
             }
             const season = MainListManager['mainList'][2].getProviderSeasonTarget(provider.provider);
-            strictEqual(season, 3);
+            strictEqual(season?.seasonNumber, 3);
         } else {
             fail();
         }
@@ -514,7 +514,7 @@ describe('Basic List | Testrun', () => {
 
         const seasonTarget = series2.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
-        strictEqual(seasonTarget, 2);
+        strictEqual(seasonTarget?.seasonNumber, 2);
         // tslint:disable-next-line: no-string-literal
         const provider = series2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {

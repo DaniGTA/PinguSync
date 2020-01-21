@@ -37,11 +37,11 @@ export default class EpisodeMappingHelper {
                             const sequelProvider = sequel.getAllProviderLocalDatas().find((x) => x.provider === provider.provider);
                             if (sequelProvider) {
                                 if (!differenceProviders.find((x) => x.providerNameA.provider === provider.provider)) {
-                                    const firstDiff = this.getMaxEpisodeNumber(provider);
+                                    const firstDiff = this.getMaxEpisodeNumber(provider.detailEpisodeInfo);
                                     differenceProviders.push(new EpisodeDifferenceContainer(provider, provider, firstDiff));
                                 }
                                 await this.prepareDetailedEpisodeInformation([sequelProvider], season);
-                                const diff = this.getMaxEpisodeNumber(sequelProvider);
+                                const diff = this.getMaxEpisodeNumber(sequelProvider.detailEpisodeInfo);
                                 const currentDiff = this.getEpisodeDifferenceFromContainer(differenceProviders, provider);
                                 const sequelSeasonNumber = (await sequel.getSeason());
                                 const sequelPackages = ProviderAndSeriesPackage.generatePackages([sequelProvider], sequel);
@@ -125,14 +125,14 @@ export default class EpisodeMappingHelper {
         return diff;
     }
 
-    private getMaxEpisodeNumber(provider: ProviderLocalData): number {
-        const unfilteredList = provider.detailEpisodeInfo.map((o) => {
+    private getMaxEpisodeNumber(episodes: Episode[]): number {
+        const unfilteredList = episodes.map((o) => {
             if (!isNaN(o.episodeNumber as unknown as number)) {
                 return o.episodeNumber as unknown as number;
             }
         });
         const filteredList = unfilteredList.filter((x) => x !== undefined) as unknown as number[];
-        return Math.max.apply(filteredList);
+        return Math.max(...filteredList);
     }
 
     private async getNumberOfUnmappedEpisodesFromProviders(providers: ProviderLocalData[]): Promise<number> {

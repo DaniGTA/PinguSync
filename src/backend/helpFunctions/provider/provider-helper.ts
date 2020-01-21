@@ -53,6 +53,7 @@ export class ProviderHelper {
                 if (targetSeason !== undefined && targetSeason.seasonNumber !== undefined) {
                     const infoProviderLocalDatas = [...series.getInfoProvidersInfos()];
                     let currentSearchingSeason = 1;
+                    let currentSeasonPart: number | undefined = undefined;
                     for (const providerLocalData of infoProviderLocalDatas) {
                         let currentLocalData: InfoProviderLocalData | null = providerLocalData;
                         do {
@@ -65,17 +66,33 @@ export class ProviderHelper {
                                     if (provider && EpisodeHelper.hasEpisodeNames(provider.detailEpisodeInfo)) {
                                         const mainListAdder = new MainListAdder();
                                         const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
+
+                                        if (result.seasonComplete) {
+                                            if (currentSeasonPart !== undefined) {
+                                                currentSeasonPart++;
+                                            }
+                                        } else {
+                                            if (currentSeasonPart === undefined) {
+                                                currentSeasonPart = 1;
+                                            } else {
+                                                currentSeasonPart++;
+                                            }
+                                        }
+
                                         const newSeries = new Series();
-                                        await newSeries.addListProvider(listProvider, new Season(currentSearchingSeason));
-                                        await newSeries.addInfoProvider(provider, new Season(currentSearchingSeason));
+                                        await newSeries.addListProvider(listProvider, new Season(currentSearchingSeason, currentSeasonPart));
+                                        await newSeries.addInfoProvider(provider, new Season(currentSearchingSeason, currentSeasonPart));
+
                                         if (result.seasonComplete) {
                                             currentSearchingSeason++;
                                             if (1 + targetSeason.seasonNumber === currentSearchingSeason) {
-                                                finalList.push(new ProviderDataWithSeasonInfo(provider, new Season(currentSearchingSeason - 1)));
+                                                finalList.push(new ProviderDataWithSeasonInfo(provider, new Season(currentSearchingSeason - 1, currentSeasonPart)));
                                             } else {
                                                 seriesThatShouldAdded.push(newSeries);
                                             }
+                                            currentSeasonPart = undefined
                                         } else {
+
                                             seriesThatShouldAdded.push(newSeries);
                                         }
 

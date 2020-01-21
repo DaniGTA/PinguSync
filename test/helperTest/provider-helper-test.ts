@@ -63,7 +63,7 @@ describe('Provider Helper Test', () => {
         await series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
         // tslint:disable-next-line: no-string-literal
         const result = await providerHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
-        equal(result.length, 1);
+        equal(result.length, 2);
     });
 
     test('should update series', async () => {
@@ -147,6 +147,8 @@ describe('Provider Helper Test', () => {
         if (anidbProvider) {
             strictEqual(anidbProvider.id, '13658');
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonNumber, 3);
+            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart, 2);
+
         } else {
             fail();
         }
