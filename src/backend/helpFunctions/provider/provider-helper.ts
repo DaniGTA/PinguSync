@@ -84,12 +84,12 @@ export class ProviderHelper {
                                         await newSeries.addInfoProvider(provider, new Season(currentSearchingSeason, currentSeasonPart));
 
                                         if (result.seasonComplete) {
-                                            currentSearchingSeason++;
-                                            if (1 + targetSeason.seasonNumber === currentSearchingSeason) {
-                                                finalList.push(new ProviderDataWithSeasonInfo(provider, new Season(currentSearchingSeason - 1, currentSeasonPart)));
+                                            if (targetSeason.seasonNumber === currentSearchingSeason) {
+                                                finalList.push(new ProviderDataWithSeasonInfo(provider, new Season(currentSearchingSeason, currentSeasonPart)));
                                             } else {
                                                 seriesThatShouldAdded.push(newSeries);
                                             }
+                                            currentSearchingSeason++;
                                             currentSeasonPart = undefined
                                         } else {
 

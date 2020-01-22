@@ -16,7 +16,7 @@ export default new class TitleCheckHelper {
         if (await this.fastMatch(aNameList, bNameList)) {
             for (const aName of aNameList) {
                 try {
-                    let aName2 = await stringHelper.cleanString(aName);
+                    let aName2 = stringHelper.cleanString(aName);
                     aName2 = await this.removeMediaTypeFromTitle(aName2);
                     aName2 = await this.removeSeasonMarkesFromTitle(aName2);
                     if (aName2 !== aName) {
@@ -28,7 +28,7 @@ export default new class TitleCheckHelper {
             }
             for (const bName of bNameList) {
                 try {
-                    let bName2 = await stringHelper.cleanString(bName);
+                    let bName2 = stringHelper.cleanString(bName);
                     bName2 = await this.removeMediaTypeFromTitle(bName2);
                     bName2 = await this.removeSeasonMarkesFromTitle(bName2);
                     if (bName2 !== bName) {
@@ -56,8 +56,8 @@ export default new class TitleCheckHelper {
                         if (aName === bName) {
                             return true;
                         }
-                        aName = await stringHelper.cleanString(aName);
-                        bName = await stringHelper.cleanString(bName);
+                        aName = stringHelper.cleanString(aName);
+                        bName = stringHelper.cleanString(bName);
                         if (aName === bName) {
                             return true;
                         }

@@ -5,6 +5,8 @@ import logger from '../../logger/logger';
 import Series from '../objects/series';
 import MainListManager from './main-list-manager';
 import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
+import Season from '../objects/meta/season';
+import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 
 /**
  * Has search function to find series in the main list.
@@ -98,5 +100,22 @@ export default class MainListSearcher {
         }
         logger.log('debug', 'Found: ' + foundedSameSeries.length);
         return foundedSameSeries;
+    }
+
+    private async findSeriesByProvider(providerId: string | number, providerName: string, providerSeason: Season): Promise<Series | null> {
+        const list = await MainListManager.getMainList();
+        for (const entry of list) {
+            const providers = entry.getAllProviderBindings();
+            for (const provider of providers) {
+                if (ProviderComperator.simpleProviderIdCheck(provider.id, providerId)) {
+                    if (providerName === provider.providerName) {
+                        if (SeasonComperator.isSameSeason(provider.targetSeason, providerSeason)) {
+                            return entry;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

@@ -125,14 +125,18 @@ export default class EpisodeMappingHelper {
         return diff;
     }
 
-    private getMaxEpisodeNumber(episodes: Episode[]): number {
-        const unfilteredList = episodes.map((o) => {
-            if (!isNaN(o.episodeNumber as unknown as number)) {
-                return o.episodeNumber as unknown as number;
-            }
-        });
-        const filteredList = unfilteredList.filter((x) => x !== undefined) as unknown as number[];
-        return Math.max(...filteredList);
+    private getMaxEpisodeNumber(episodes: Episode[]): number | undefined {
+        if (episodes.length === 0) {
+            return undefined;
+        } else {
+            const unfilteredList = episodes.map((o) => {
+                if (!isNaN(o.episodeNumber as unknown as number)) {
+                    return o.episodeNumber as unknown as number;
+                }
+            });
+            const filteredList = unfilteredList.filter((x) => x !== undefined) as unknown as number[];
+            return Math.max(...filteredList);
+        }
     }
 
     private async getNumberOfUnmappedEpisodesFromProviders(providers: ProviderLocalData[]): Promise<number> {

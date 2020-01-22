@@ -29,7 +29,7 @@ class StringHelper {
      * We need too clean title so that they can match like:
      * titleA! vs titleA
      */
-    public async cleanString(s: string): Promise<string> {
+    public cleanString(s: string): string {
         s = s.replace(/\:/, '');
         s = s.replace('！', '! ');
         s = s.replace('!', '!');

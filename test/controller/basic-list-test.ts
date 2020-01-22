@@ -504,6 +504,7 @@ describe('Basic List | Testrun', () => {
         const s3provider1 = new ListProviderLocalData(94084, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
         await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s3provider1, new Season(3)));
+
         await ListController.instance.addSeriesToMainList(series1, series2);
         await ListController.instance.addSeriesToMainList(series3);
         await ListController.instance.addSeriesToMainList(series4);

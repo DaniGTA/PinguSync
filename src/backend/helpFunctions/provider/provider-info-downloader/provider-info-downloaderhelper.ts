@@ -157,7 +157,7 @@ export default new class ProviderInfoDownloadHelper {
         names = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names));
         try {
             // Test
-            names.unshift(new Name(await stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
+            names.unshift(new Name(stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
         } catch (err) {
             logger.error('[ERROR] [ProviderHelper] [getNamesSortedBySearchAbleScore]:');
             logger.debug(err);

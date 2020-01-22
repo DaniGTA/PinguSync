@@ -5,6 +5,7 @@ import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperator from './season-comperator';
+import stringHelper from '../string-helper';
 
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
@@ -193,6 +194,8 @@ export default class EpisodeComperator {
                         textB = textB.replace(' & ', ' ');
                         textA = textA.replace(' and ', ' ');
                         textB = textB.replace(' and ', ' ');
+                        textA = stringHelper.cleanString(textA);
+                        textB = stringHelper.cleanString(textB);
                         if (textA === textB) {
                             found = true;
                             break;

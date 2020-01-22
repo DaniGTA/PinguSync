@@ -38,6 +38,7 @@ export default class MainListManager {
                     }
                 }
             } else {
+                await new EpisodeMappingHelper().generateEpisodeMapping(series);
                 results.push(series);
             }
             if (results.length === 0) {
