@@ -12,6 +12,7 @@ import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderCompareHistoryEntry from './provider-compare-history-entry';
 import ProviderAndSeriesPackage from './provider-series-package';
+import ProviderDataListManager from '../../controller/provider-data-list-manager/provider-data-list-manager';
 
 export default class EpisodeMappingHelper {
 
@@ -49,6 +50,7 @@ export default class EpisodeMappingHelper {
                                 differenceProviders.push(new EpisodeDifferenceContainer(provider, sequelProvider, diff));
                             }
                         }
+                        await ProviderDataListManager.addProviderLocalDataToMainList(provider);
                     }
                     const nextSequel: Series | null = (await sequel.getSequel()).foundedSeries;
                     if (nextSequel && !mappedSequels.includes(nextSequel)) {
@@ -209,6 +211,7 @@ export default class EpisodeMappingHelper {
                     }
                 }
             }
+            await ProviderDataListManager.addProviderLocalDataToMainList(providerAndSeriesPackage.provider);
         }
         return packages.flatMap((x) => x.provider);
     }

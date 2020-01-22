@@ -3,9 +3,9 @@ import { EpisodeType } from '../../controller/objects/meta/episode/episode-type'
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
+import stringHelper from '../string-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperator from './season-comperator';
-import stringHelper from '../string-helper';
 
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {

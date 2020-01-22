@@ -208,7 +208,7 @@ export default class ProviderComperator {
                 if (ProviderList.getExternalProviderInstance(providerA).hasUniqueIdForSeasons) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     // tslint:disable-next-line: no-empty
-                } else if ((typeof providerASeason === 'undefined') && providerBSeason?.seasonNumber === 1 || (typeof providerBSeason === 'undefined') && providerASeason?.seasonNumber === 1) {
+                } else if ((providerASeason === undefined) && providerBSeason?.seasonNumber === 1 || (typeof providerBSeason === 'undefined') && providerASeason?.seasonNumber === 1) {
 
                 } else if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
