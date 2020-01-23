@@ -85,8 +85,8 @@ export default class EpisodeComperator {
         return compareResult;
     }
 
-    public static async isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: Season): Promise<boolean> {
-        if (await this.isDetailedEpisodeSameSeason(bEpisode, season)) {
+    public static isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: Season): boolean {
+        if (this.isDetailedEpisodeSameSeason(bEpisode, season)) {
             if (aEpisode === bEpisode.episodeNumber) {
                 return true;
             }
@@ -133,7 +133,7 @@ export default class EpisodeComperator {
         return false;
     }
 
-    public static async isDetailedEpisodeSameSeason(episode: Episode, season?: Season) {
+    public static isDetailedEpisodeSameSeason(episode: Episode, season?: Season): boolean {
         if (SeasonComperator.isSameSeason(episode.season, season)) {
             return true;
         } else if (!episode.season !== undefined && (!season !== undefined || season?.seasonNumber === 1)) {
@@ -144,7 +144,18 @@ export default class EpisodeComperator {
         return false;
     }
 
-    public static async isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: Season): Promise<boolean> {
+    public static isSameEpisodeNumber(episodeNumberA: number | string, episodeNumberB: number | string, episodeDiff: number): boolean {
+        if (!isNaN(episodeNumberA as number) && (episodeNumberA as unknown as number) + episodeDiff == episodeNumberB) {
+            return true;
+        } else if (!isNaN(episodeNumberB as number) && (episodeNumberB as unknown as number) + episodeDiff == episodeNumberA) {
+            return true;
+        } else if (isNaN(episodeNumberA as number) && isNaN(episodeNumberB as number) && episodeNumberA == episodeNumberB) {
+            return true;
+        }
+        return false;
+    }
+
+    public static isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: Season): boolean {
         if (aEpisode.season !== undefined && bEpisode.season !== undefined) {
             return aEpisode.season > bEpisode.season;
         } else if (aEpisode.season !== undefined && aEpisode.season.seasonNumber !== undefined) {

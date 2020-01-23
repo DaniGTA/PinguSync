@@ -114,6 +114,9 @@ export class ProviderHelper {
                     }
                 }
             }
+
+            await new MainListAdder().addSeries(...seriesThatShouldAdded);
+
             return finalList;
         } else {
             return extraInfoProviders;

@@ -73,4 +73,14 @@ export default class Episode {
             this.mappedTo.push(episodeMapping);
         }
     }
+
+    public isEpisodeNumberARealNumber(): boolean {
+        return !isNaN(this.episodeNumber as number);
+    }
+    /**
+     * Convert the Episode number to a absolute number
+     */
+    public getEpNrAsNr(): number {
+        return this.episodeNumber as number;
+    }
 }

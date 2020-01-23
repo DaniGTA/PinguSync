@@ -42,7 +42,7 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(1, new Season(1)));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season(1), [new EpisodeTitle('First round')]));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season(1), [new EpisodeTitle('Second round')]));
-        bProvider.addDetailedEpisodeInfos(new Episode(4, new Season(1), [new EpisodeTitle('Third round')]));
+        bProvider.addDetailedEpisodeInfos(new Episode(4, new Season(1), [new EpisodeTitle('Third rounds')]));
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season(1)));
 
         // Testing
@@ -81,6 +81,64 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
             strictEqual(bEpisodeInfo2.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B2 should have id mapped to Episode A1');
             strictEqual(bEpisodeInfo3.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B3 should have id mapped to Episode A2');
             strictEqual(bEpisodeInfo4.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B4 should have id mapped to Episode A3');
+        }
+    });
+
+
+    test('should map random wrong name but right order', async () => {
+        const aSeries = new Series();
+
+        // A Site
+
+        const aProvider = new InfoProviderLocalData('1', 'testA');
+        aProvider.addDetailedEpisodeInfos(new Episode(2, undefined, [new EpisodeTitle('First round')]));
+        aProvider.addDetailedEpisodeInfos(new Episode(3, undefined, [new EpisodeTitle('Second round')]));
+        aProvider.addDetailedEpisodeInfos(new Episode(4, undefined, [new EpisodeTitle('Third round')]));
+
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season(1)));
+
+        // B Site
+
+        const bProvider = new ListProviderLocalData('1', 'testB');
+        bProvider.addDetailedEpisodeInfos(new Episode(1, new Season(1), [new EpisodeTitle('First round')]));
+        bProvider.addDetailedEpisodeInfos(new Episode(2, new Season(1), [new EpisodeTitle('Seconds rounds')]));
+        bProvider.addDetailedEpisodeInfos(new Episode(3, new Season(1), [new EpisodeTitle('Third round')]));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season(1)));
+
+        // Testing
+
+        const episodeMappingInstance = new EpisodeMappingHelper();
+        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+
+        // Extract results.
+
+        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
+        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
+        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
+
+        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
+        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
+        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+
+        // Result checking
+        if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3)) {
+            fail('not all episodes found in the result');
+        } else {
+            strictEqual(aEpisodeInfo1.mappedTo.length, 1, 'Episode A1 mapping length should be 1');
+            strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
+            strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
+
+            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo1.id, 'Episode A1 should have id mapped to Episode B2');
+            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2.id, 'Episode A2 should have id mapped to Episode B3');
+            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3.id, 'Episode A3 should have id mapped to Episode B4');
+
+            strictEqual(bEpisodeInfo1.mappedTo.length, 0, 'Episode B1 mapping length should be 0');
+            strictEqual(bEpisodeInfo2.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
+            strictEqual(bEpisodeInfo3.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
+
+            strictEqual(bEpisodeInfo1.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B2 should have id mapped to Episode A1');
+            strictEqual(bEpisodeInfo2.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B3 should have id mapped to Episode A2');
+            strictEqual(bEpisodeInfo3.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B4 should have id mapped to Episode A3');
         }
     });
 

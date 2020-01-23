@@ -57,18 +57,18 @@ export default abstract class ProviderLocalData {
                 } else if (key === 'infoStatus') {
                     if (finalProvider[key] !== undefined) {
                         if (finalProvider[key] > keyValue) {
-                                finalProvider[key] = keyValue;
+                            finalProvider[key] = keyValue;
                         }
                         continue;
                     }
                 } else if (key === 'isNSFW') {
                     if (keyValue) {
-                            finalProvider[key] = keyValue;
+                        finalProvider[key] = keyValue;
                     }
                     continue;
                 }
                 if (keyValue !== undefined) {
-                        finalProvider[key] = keyValue;
+                    finalProvider[key] = keyValue;
                 }
             }
         }
@@ -162,7 +162,7 @@ export default abstract class ProviderLocalData {
         this.instanceName = this.constructor.name;
     }
 
-    public async getDetailedEpisodeLength(): Promise<number> {
+    public getDetailedEpisodeLength(): number {
         let length = 0;
 
         for (const episode of this.detailEpisodeInfo) {

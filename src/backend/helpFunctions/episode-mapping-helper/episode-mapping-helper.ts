@@ -13,6 +13,7 @@ import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderCompareHistoryEntry from './provider-compare-history-entry';
 import ProviderAndSeriesPackage from './provider-series-package';
 import ProviderDataListManager from '../../controller/provider-data-list-manager/provider-data-list-manager';
+import EpisodeHelper from '../episode-helper/episode-helper';
 
 export default class EpisodeMappingHelper {
 
@@ -98,7 +99,7 @@ export default class EpisodeMappingHelper {
             } else {
                 return -1;
             }
-        } else if (await EpisodeComperator.isEpisodeASeasonHigher(a, b, season)) {
+        } else if (EpisodeComperator.isEpisodeASeasonHigher(a, b, season)) {
             return 1;
         } else {
             return -1;
@@ -108,7 +109,7 @@ export default class EpisodeMappingHelper {
     private async prepareDetailedEpisodeInformation(providers: ProviderLocalData[], season?: Season) {
         for (const provider of providers) {
             if (provider.episodes) {
-                if (provider.episodes > await provider.getDetailedEpisodeLength()) {
+                if (provider.episodes > provider.getDetailedEpisodeLength()) {
                     const generatedEpisodes = await this.generateMissingEpisodes(provider, season);
                     provider.addDetailedEpisodeInfos(...generatedEpisodes);
                 }
@@ -312,10 +313,13 @@ export default class EpisodeMappingHelper {
                         const result = EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
                         if (result.matches !== 0 && result.matchAble === result.matches) {
                             const epA = new EpisodeProviderBind(detailedEpA, providerA);
-                            const epB = new EpisodeProviderBind(providerB.detailEpisodeInfo[fastCheck], providerB);
+                            const epB = new EpisodeProviderBind(detailedEpB, providerB);
                             const container = new EpisodeRatedEqualityContainer(result, epA, epB);
                             ratedEquality.push(container);
                             fastCheck++;
+                            if (!EpisodeComperator.isSameEpisodeNumber(detailedEpA.episodeNumber, detailedEpB.episodeNumber, episodeDiff)) {
+                                episodeDiff = EpisodeHelper.getEpisodeDifference(detailedEpA, detailedEpB);
+                            }
                             continue;
                         }
                     }
@@ -331,6 +335,9 @@ export default class EpisodeMappingHelper {
                                 const epB = new EpisodeProviderBind(detailedEpB, providerB);
                                 const container = new EpisodeRatedEqualityContainer(result, epA, epB);
                                 ratedEquality.push(container);
+                                if (!EpisodeComperator.isSameEpisodeNumber(detailedEpA.episodeNumber, detailedEpB.episodeNumber, episodeDiff)) {
+                                    episodeDiff = EpisodeHelper.getEpisodeDifference(detailedEpA, detailedEpB);
+                                }
                                 if (result.matchAble === result.matches) {
                                     break;
                                 }
@@ -487,11 +494,11 @@ export default class EpisodeMappingHelper {
     private async generateMissingEpisodes(provider: ProviderLocalData, season?: Season): Promise<Episode[]> {
         const generatedEpisodes: Episode[] = [];
         if (provider.episodes) {
-            const numberOfMissingEpisodes = provider.episodes - await provider.getDetailedEpisodeLength();
+            const numberOfMissingEpisodes = provider.episodes - provider.getDetailedEpisodeLength();
             for (let episode = 1; episode <= numberOfMissingEpisodes; episode++) {
                 let episodeFounded = false;
                 for (const detailedEpisode of provider.detailEpisodeInfo) {
-                    if (await EpisodeComperator.isEpisodeSameAsDetailedEpisode(episode, detailedEpisode, season)) {
+                    if (EpisodeComperator.isEpisodeSameAsDetailedEpisode(episode, detailedEpisode, season)) {
                         episodeFounded = true;
                         break;
                     }
