@@ -2,6 +2,7 @@ import { fail, strictEqual } from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
+import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -10,7 +11,6 @@ import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-map
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
-import Season from '../../../src/backend/controller/objects/meta/season';
 
 describe('Episode mapping | Name Mapping Tests Only', () => {
 
@@ -132,7 +132,7 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
             strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2.id, 'Episode A2 should have id mapped to Episode B3');
             strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3.id, 'Episode A3 should have id mapped to Episode B4');
 
-            strictEqual(bEpisodeInfo1.mappedTo.length, 0, 'Episode B1 mapping length should be 0');
+            strictEqual(bEpisodeInfo1.mappedTo.length, 1, 'Episode B1 mapping length should be 0');
             strictEqual(bEpisodeInfo2.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
             strictEqual(bEpisodeInfo3.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
 

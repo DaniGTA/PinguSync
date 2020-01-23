@@ -17,8 +17,6 @@ import TestHelper from '../../test-helper';
 
 
 describe('Episode mapping | Season Mapping Tests Only', () => {
-    const lc = new ListController(true);
-
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal

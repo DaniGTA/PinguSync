@@ -49,7 +49,7 @@ export default class EpisodeComperator {
             }
         }
 
-        if (!isNaN(aEpisode.episodeNumber as unknown as number) && (aEpisode.episodeNumber as number) + upshift === bEpsiode.episodeNumber) {
+        if (!isNaN(bEpsiode.episodeNumber as unknown as number) && (bEpsiode.episodeNumber as number) + upshift === aEpisode.episodeNumber) {
             result.matches++;
             result.matchAble++;
             if (this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season)) {
@@ -60,6 +60,7 @@ export default class EpisodeComperator {
         const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);
         result.matchAble += episodeTitleResult.matchAble * 4;
         result.matches += episodeTitleResult.matches * 4;
+        result.isAbsolute = episodeTitleResult.isAbsolute;
         if (result.matches !== 0) {
             const episodeTypeResult = this.isEpisodeSameType(aEpisode, bEpsiode);
             result.matchAble += episodeTypeResult.matchAble;
@@ -146,8 +147,6 @@ export default class EpisodeComperator {
 
     public static isSameEpisodeNumber(episodeNumberA: number | string, episodeNumberB: number | string, episodeDiff: number): boolean {
         if (!isNaN(episodeNumberA as number) && (episodeNumberA as unknown as number) + episodeDiff == episodeNumberB) {
-            return true;
-        } else if (!isNaN(episodeNumberB as number) && (episodeNumberB as unknown as number) + episodeDiff == episodeNumberA) {
             return true;
         } else if (isNaN(episodeNumberA as number) && isNaN(episodeNumberB as number) && episodeNumberA == episodeNumberB) {
             return true;

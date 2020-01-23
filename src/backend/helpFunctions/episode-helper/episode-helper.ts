@@ -79,7 +79,7 @@ export default class EpisodeHelper {
 
     public static getEpisodeDifference(episodeA: Episode, episodeB: Episode): number {
         if (episodeA.isEpisodeNumberARealNumber() && episodeB.isEpisodeNumberARealNumber()) {
-            return Math.abs(episodeA.getEpNrAsNr() - episodeB.getEpNrAsNr());
+            return episodeA.getEpNrAsNr() - episodeB.getEpNrAsNr();
         }
         return 0;
     }
