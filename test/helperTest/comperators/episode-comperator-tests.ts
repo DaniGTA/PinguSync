@@ -38,11 +38,15 @@ describe('Episode comperator | Full test', () => {
             'should compare seasons right (missing all provider season)',
             async () => {
                 const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, new Season(1));
+                const resultB = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, undefined, undefined, new Season(1));
                 strictEqual(resultA, true);
+                strictEqual(resultB, true);
             });
         test('should compare seasons right (missing series season)', async () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, new Season(1), new Season(1), undefined);
+            const resultB = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, new Season(1), new Season(1), undefined);
             strictEqual(resultA, true);
+            strictEqual(resultB, true);
         });
         test(
             'should compare seasons right (missing provider season and series season)',
@@ -50,6 +54,11 @@ describe('Episode comperator | Full test', () => {
                 const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, undefined);
                 strictEqual(resultA, true);
             });
+        test('should compare seasons right (missing provider season and series season) v2', () => {
+                const resultA = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, undefined, undefined, undefined);
+                strictEqual(resultA, true);
+        });
+
         test('should compare seasons false', async () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, new Season(2));
             strictEqual(resultA, false);
@@ -124,6 +133,63 @@ describe('Episode comperator | Full test', () => {
             const result = await EpisodeComperator.isEpisodeSameAsDetailedEpisode(2, detailedEpisode, new Season(1));
 
             strictEqual(result, false);
+        });
+    });
+
+    describe('checks if episode a season number is higher then episode b or not', () => {
+        test('should be false | same season (not higher)', async () => {
+            const episodeA = new Episode(1, new Season(1));
+            const episodeB = new Episode(1, new Season(1));
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
+            strictEqual(resultA, false);
+        });
+
+        test('should be false | same season with series season (not higher)', async () => {
+            const episodeA = new Episode(1, new Season(1));
+            const episodeB = new Episode(1);
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season(1));
+            strictEqual(resultA, false);
+        });
+
+        test('should be true | higher season', async () => {
+            const episodeA = new Episode(1, new Season(1));
+            const episodeB = new Episode(1, new Season(2));
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
+            strictEqual(resultA, true);
+        });
+
+        test('should be true | higher season with series season for season b', async () => {
+            const episodeA = new Episode(1, new Season(1));
+            const episodeB = new Episode(1);
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season(2));
+            strictEqual(resultA, true);
+        });
+
+        test('should be true | higher season b with series season for season a', async () => {
+            const episodeA = new Episode(1);
+            const episodeB = new Episode(1, new Season(2));
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season(1));
+            strictEqual(resultA, true);
+        });
+        test('should be false | lower season', async () => {
+            const episodeA = new Episode(1, new Season(2));
+            const episodeB = new Episode(1, new Season(1));
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
+            strictEqual(resultA, false);
+        });
+
+        test('should be false | lower season with series season', async () => {
+            const episodeA = new Episode(1, new Season(2));
+            const episodeB = new Episode(1);
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season(1));
+            strictEqual(resultA, false);
+        });
+
+        test('should be false | undefined season', async () => {
+            const episodeA = new Episode(1);
+            const episodeB = new Episode(1);
+            const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
+            strictEqual(resultA, false);
         });
     });
 });

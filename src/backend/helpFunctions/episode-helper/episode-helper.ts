@@ -6,6 +6,7 @@ import EpisodeComperator from '../comperators/episode-comperator';
 import SeasonComperator from '../comperators/season-comperator';
 import listHelper from '../list-helper';
 import EpisodeRelationResult from './episode-relation-result';
+import sortHelper from '../sort-helper';
 
 export default class EpisodeHelper {
 
@@ -82,6 +83,29 @@ export default class EpisodeHelper {
             return episodeA.getEpNrAsNr() - episodeB.getEpNrAsNr();
         }
         return 0;
+    }
+
+    public static sortingEpisodeListByEpisodeNumber(episodes: Episode[], season?: Season): Episode[] {
+        return episodes.sort((a, b) => this.sortingEpisodeComperator(a, b, season));
+    }
+
+    private static sortingEpisodeComperator(a: Episode, b: Episode, season?: Season): number {
+        if ((a.type === EpisodeType.SPECIAL && b.type !== EpisodeType.SPECIAL)) {
+            return 1;
+        } else if (b.type === EpisodeType.SPECIAL && a.type !== EpisodeType.SPECIAL) {
+            return -1;
+        }
+        if (EpisodeComperator.isEpisodeSameSeason(a, b, season)) {
+            if (a.episodeNumber > b.episodeNumber) {
+                return 1;
+            } else {
+                return -1;
+            }
+        } else if (EpisodeComperator.isEpisodeASeasonHigher(a, b, season)) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
 }

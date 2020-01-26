@@ -185,7 +185,7 @@ describe('ListController | Combine', () => {
         await x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lplc2, new Season(2)));
 
         const a = await lc['addSeriesToMainList'](x, xs1, x2);
-        assert.equal(MainListManager['mainList'].length, 2, MainListManager['mainList'].toString());
+        assert.equal(MainListManager['mainList'].length, 2, JSON.stringify(MainListManager['mainList']));
         return;
     });
 

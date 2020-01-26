@@ -13,19 +13,10 @@ export default class SeasonComperator {
             comperatorResult.matchAble += 4;
             if (this.isSameSeason(aSeason, bSeason)) {
                 comperatorResult.matches += 4;
-                if (bSeason.seasonNumber !== 1 && aSeason.seasonNumber !== 1) {
-                    try {
-                        /** 
-                        if (await this.hasOnlyProviderWithSameIdForSeasons(a) && !await this.hasOnlyProviderWithSameIdForSeasons(b)) {
-                            comperatorResult.bFirstSeason = await b.getFirstSeason();
-                        } else if (await this.hasOnlyProviderWithSameIdForSeasons(b) && !await this.hasOnlyProviderWithSameIdForSeasons(a)) {
-                            comperatorResult.aFirstSeason = await a.getFirstSeason();
-                        }
-                        */
-                    } catch (err) {
-                        logger.error(err);
-                    }
-                }
+            } else if (this.isSeasonUndefined(aSeason) && bSeason && bSeason.seasonNumber === 1) {
+                comperatorResult.matches += 4;
+            } else if (this.isSeasonUndefined(bSeason) && aSeason && aSeason.seasonNumber === 1) {
+                comperatorResult.matches += 4;
             } else if (aSeason.seasonError === SeasonError.NONE && bSeason.seasonNumber === 1) {
                 comperatorResult.matches += 1;
             } else if (bSeason.seasonError === SeasonError.NONE && aSeason.seasonNumber === 1) {
@@ -52,5 +43,14 @@ export default class SeasonComperator {
         } else {
             return false;
         }
+    }
+
+    public static isSeasonUndefined(season: Season | undefined): boolean {
+        if (season === undefined) {
+            return true;
+        } else if (season.seasonNumber === undefined) {
+            return true;
+        }
+        return false;
     }
 }

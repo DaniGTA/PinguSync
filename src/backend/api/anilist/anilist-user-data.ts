@@ -5,8 +5,8 @@ import * as path from 'path';
 import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
-import { UserData } from '../user-data';
 import MultiProviderResult from '../provider/multi-provider-result';
+import { UserData } from '../user-data';
 
 export class AniListUserData extends UserData {
     public username: string = '';
@@ -46,13 +46,6 @@ export class AniListUserData extends UserData {
         this.saveData();
     }
 
-
-
-    private async saveData() {
-        logger.warn('[IO] Write anilist user file.');
-        writeFileSync(await this.getPath(), JSON.stringify(this));
-    }
-
     protected loadData() {
         try {
             logger.warn('[IO] Read anilist user file.');
@@ -62,7 +55,7 @@ export class AniListUserData extends UserData {
                 Object.assign(this, loadedData);
                 if (typeof this.list !== 'undefined') {
                     for (let index = 0; index < this.list.length; index++) {
-                        this.list[index] = Object.assign(new Series(), this.list[index]);
+                        this.list[index] = Object.assign(new MultiProviderResult(this.list[index].mainProvider), this.list[index]);
                     }
                 }
                 this.lastListUpdate = loadedData.lastListUpdate;
@@ -71,6 +64,13 @@ export class AniListUserData extends UserData {
             logger.error('[AniListUserData] Error on next line.');
             logger.error(err);
         }
+    }
+
+
+
+    private async saveData() {
+        logger.warn('[IO] Write anilist user file.');
+        writeFileSync(await this.getPath(), JSON.stringify(this));
     }
 
     private getPath(): string {

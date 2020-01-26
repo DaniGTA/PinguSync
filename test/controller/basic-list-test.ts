@@ -532,7 +532,7 @@ describe('Basic List | Testrun', () => {
                 logger.warn(episode.episodeNumber + ' S: ' + episode.season);
             }
             const season = series2.getProviderSeasonTarget(provider.provider);
-            strictEqual(season, 2);
+            strictEqual(season?.seasonNumber, 2);
         } else {
             fail();
         }

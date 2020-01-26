@@ -3,18 +3,18 @@ import EpisodeMapping from '../../controller/objects/meta/episode/episode-mappin
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
+import ProviderDataListManager from '../../controller/provider-data-list-manager/provider-data-list-manager';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ComperatorResult, { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../comperators/episode-comperator';
-import listHelper from '../list-helper';
+import EpisodeHelper from '../episode-helper/episode-helper';
 import sortHelper from '../sort-helper';
 import EpisodeDifferenceContainer from './episode-difference-container';
 import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderCompareHistoryEntry from './provider-compare-history-entry';
 import ProviderAndSeriesPackage from './provider-series-package';
-import ProviderDataListManager from '../../controller/provider-data-list-manager/provider-data-list-manager';
-import EpisodeHelper from '../episode-helper/episode-helper';
-import ComperatorResult, { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
+import listHelper from '../list-helper';
 
 export default class EpisodeMappingHelper {
 
@@ -82,29 +82,6 @@ export default class EpisodeMappingHelper {
             episode.mappedTo.push(mapping);
         }
         return episode;
-    }
-
-    public async sortingEpisodeListByEpisodeNumber(episodes: Episode[], season?: Season): Promise<Episode[]> {
-        return sortHelper.quickSort(episodes, async (a, b) => this.sortingEpisodeComperator(a, b, season));
-    }
-
-    public async sortingEpisodeComperator(a: Episode, b: Episode, season?: Season): Promise<number> {
-        if ((a.type === EpisodeType.SPECIAL && b.type !== EpisodeType.SPECIAL)) {
-            return 1;
-        } else if (b.type === EpisodeType.SPECIAL && a.type !== EpisodeType.SPECIAL) {
-            return -1;
-        }
-        if (EpisodeComperator.isEpisodeSameSeason(a, b, season)) {
-            if (a.episodeNumber > b.episodeNumber) {
-                return 1;
-            } else {
-                return -1;
-            }
-        } else if (EpisodeComperator.isEpisodeASeasonHigher(a, b, season)) {
-            return 1;
-        } else {
-            return -1;
-        }
     }
 
     private async prepareDetailedEpisodeInformation(providers: ProviderLocalData[], season?: Season) {
@@ -203,8 +180,8 @@ export default class EpisodeMappingHelper {
 
                                     const ratingsA: EpisodeRatedEqualityContainer[] = this.getAllEpisodeRelatedRating(episode, ratedEquality);
                                     const ratingsB: EpisodeRatedEqualityContainer[] = this.getAllEpisodeRelatedRating(episodeBind.episode, ratedEquality);
-                                    listHelper.removeEntrysSync(ratedEquality, ...ratingsA, ...ratingsB);
 
+                                    listHelper.removeEntrysSync(ratedEquality, ...ratingsA, ...ratingsB);
                                 }
                             }
                         }
@@ -303,13 +280,27 @@ export default class EpisodeMappingHelper {
     private performRatingEqualityOfEpisodes(providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: Season | undefined, bTargetS: Season | undefined, season: Season | undefined, episodeDiff: number): EpisodeRatedEqualityContainer[] {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
         let fastCheck = 0;
+        let fastStreakEnabled = true;
         let providerAEpDiff = episodeDiff;
+        let lastDiffA = null;
+        let lastDiffB = null;
         for (const detailedEpA of providerA.detailEpisodeInfo) {
-            for (const detailedEpB of providerB.detailEpisodeInfo) {
+            for (let index = fastCheck; index < providerB.detailEpisodeInfo.length; index++) {
+                const detailedEpB = providerB.detailEpisodeInfo[index];
                 let result = this.getRatedEqualityContainer(detailedEpA, detailedEpB, providerA, providerB, aTargetS, bTargetS, season, providerAEpDiff);
                 if (result !== undefined) {
+                    if ((result.result.matchAble === result.result.matches && result.result.matchAble !== 0) || result.result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
+                        if (fastStreakEnabled) {
+                            fastCheck++;
+                        }
+                    } else if (fastStreakEnabled){
+                        fastCheck = 0;
+                        fastStreakEnabled = false;
+                    }
                     if (result.result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                         const oldDiff = providerAEpDiff;
+                        lastDiffA = Object.assign(new Episode(0), detailedEpA);
+                        lastDiffB =  Object.assign(new Episode(0), detailedEpB);
                         providerAEpDiff = EpisodeHelper.getEpisodeDifference(detailedEpA, detailedEpB);
                         if (oldDiff !== providerAEpDiff) {
                             const resultWithNewDiff = this.getRatedEqualityContainer(detailedEpA, detailedEpB, providerA, providerB, aTargetS, bTargetS, season, providerAEpDiff);
@@ -321,7 +312,12 @@ export default class EpisodeMappingHelper {
                     if (result.episodeBinds.length !== 0) {
                         ratedEquality.push(result);
                     }
-                    continue;
+                    if (fastStreakEnabled) {
+                        break;
+                    }
+                } else {
+                    fastCheck = 0;
+                    fastStreakEnabled = false;
                 }
             }
         }
@@ -338,9 +334,11 @@ export default class EpisodeMappingHelper {
                     return new EpisodeRatedEqualityContainer(result, epA, epB);
                 }
             } else {
-                const result = new ComperatorResult();
-                result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                return new EpisodeRatedEqualityContainer(result);
+                if (this.isEpisodeAlreadyMappedToEpisode(detailedEpA, detailedEpB) || this.isEpisodeAlreadyMappedToEpisode(detailedEpB, detailedEpA)) {
+                    const result = new ComperatorResult();
+                    result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                    return new EpisodeRatedEqualityContainer(result);
+                }
             }
         }
 

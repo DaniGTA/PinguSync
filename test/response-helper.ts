@@ -44,15 +44,17 @@ export default class ResponseHelper {
     }
 
     private static cacheNewRequest(response: request.Response, id: string): void {
-        response.headers = {};
-        response.request.headers = {};
-        const fileContent = JSON.stringify(response);
-        try {
-            statSync(this.cacheFolderName);
-        } catch (e) {
-            mkdirSync(this.cacheFolderName);
+        if (response !== undefined) {
+            response.headers = {};
+            response.request.headers = {};
+            const fileContent = JSON.stringify(response);
+            try {
+                statSync(this.cacheFolderName);
+            } catch (e) {
+                mkdirSync(this.cacheFolderName);
+            }
+            writeFileSync(this.cacheFolderName + id + '.json', fileContent);
         }
-        writeFileSync(this.cacheFolderName + id + '.json', fileContent);
     }
 
     private static loadCache(id: string): request.Response {

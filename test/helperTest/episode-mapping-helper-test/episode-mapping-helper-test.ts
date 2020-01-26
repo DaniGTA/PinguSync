@@ -10,6 +10,7 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/provider-
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import ComperatorResult from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
+import EpisodeHelper from '../../../src/backend/helpFunctions/episode-helper/episode-helper';
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container';
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
@@ -354,8 +355,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.sortingEpisodeListByEpisodeNumber(episodes);
+        const result = EpisodeHelper.sortingEpisodeListByEpisodeNumber(episodes, new Season(1));
 
         // Result checking
 

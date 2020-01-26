@@ -17,6 +17,11 @@ export default class AniDBNameManager {
        this.saveData();
     }
 
+    public updateOnlyData(data?: AniDBNameListXML) {
+        this.data = data;
+        this.saveData();
+    }
+
     private async saveData() {
         try {
            logger.log('info', '[Save] -> AniDB -> Names');

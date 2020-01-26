@@ -1,3 +1,4 @@
+import EpisodeHelper from '../../../../helpFunctions/episode-helper/episode-helper';
 import listHelper from '../../../../helpFunctions/list-helper';
 import logger from '../../../../logger/logger';
 import Banner from '../../../objects/meta/banner';
@@ -240,6 +241,7 @@ export default abstract class ProviderLocalData {
         for (const episode of episodes) {
             episode.provider = this.provider;
             this.detailEpisodeInfo.push(episode);
+            this.detailEpisodeInfo  = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo);
         }
     }
 }

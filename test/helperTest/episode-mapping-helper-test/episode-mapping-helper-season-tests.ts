@@ -1,5 +1,4 @@
 import { fail, strictEqual } from 'assert';
-import ListController from '../../../src/backend/controller/list-controller';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
@@ -41,12 +40,23 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         // B Site
 
         const bProvider = new ListProviderLocalData('1', 'testB');
-        bProvider.addDetailedEpisodeInfos(new Episode(1, new Season(2)));
-        bProvider.addDetailedEpisodeInfos(new Episode(2, new Season(2)));
-        bProvider.addDetailedEpisodeInfos(new Episode(3, new Season(2)));
-        bProvider.addDetailedEpisodeInfos(new Episode(1, new Season(1)));
-        bProvider.addDetailedEpisodeInfos(new Episode(2, new Season(1)));
-        bProvider.addDetailedEpisodeInfos(new Episode(3, new Season(1)));
+
+        const bEpisodeInfo1s2 = new Episode(1, new Season(2));
+        const bEpisodeInfo2s2 = new Episode(2, new Season(2));
+        const bEpisodeInfo3s2 = new Episode(3, new Season(2));
+
+        bProvider.addDetailedEpisodeInfos(bEpisodeInfo1s2);
+        bProvider.addDetailedEpisodeInfos(bEpisodeInfo2s2);
+        bProvider.addDetailedEpisodeInfos(bEpisodeInfo3s2);
+
+        const bEpisodeInfo1 = new Episode(1, new Season(1));
+        const bEpisodeInfo2 = new Episode(2, new Season(1));
+        const bEpisodeInfo3 = new Episode(3, new Season(1));
+
+        bProvider.addDetailedEpisodeInfos(bEpisodeInfo1);
+        bProvider.addDetailedEpisodeInfos(bEpisodeInfo2);
+        bProvider.addDetailedEpisodeInfos(bEpisodeInfo3);
+
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season(1)));
 
         // Testing
@@ -60,16 +70,9 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
         const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
 
-        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
-        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[4].id);
-        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[5].id);
-
-        const bEpisodeInfo1s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
 
         // Result checking
-        if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo1s2 && bEpisodeInfo2s2 && bEpisodeInfo3s2)) {
+        if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3)) {
             fail('not all episodes found in the result');
         } else {
             strictEqual(aEpisodeInfo1.mappedTo.length, 1, 'Episode A1 mapping length should be 1');

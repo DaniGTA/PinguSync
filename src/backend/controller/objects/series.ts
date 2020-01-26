@@ -173,6 +173,10 @@ export default class Series extends SeriesProviderExtension {
      */
     public async getSeason(searchMode: SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
         logger.debug('[Season] [Serve]: Serve Season');
+        if (!this.cachedSeason?.isSeasonNumberPresent) {
+            this.cachedSeason = new Season(this.cachedSeason?.seasonNumber, this.cachedSeason?.seasonPart, this.cachedSeason?.seasonError);
+        }
+        // TODO FIX
         if ((!this.cachedSeason?.isSeasonNumberPresent() || this.cachedSeason.seasonNumber === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
             const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
             if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {

@@ -6,7 +6,6 @@ import logger from '../../logger/logger';
 import stringHelper from '../string-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperator from './season-comperator';
-
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
         const result = new ComperatorResult();
@@ -42,10 +41,16 @@ export default class EpisodeComperator {
             result.matches++;
             return result;
         } else if (aEpisode.provider && bEpsiode.provider) {
-            if (aEpisode.provider === bEpsiode.provider && aEpisode.providerEpisodeId === bEpsiode.providerEpisodeId && aEpisode.providerEpisodeId !== undefined) {
-                result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                result.matches++;
-                return result;
+            if (aEpisode.provider === bEpsiode.provider) {
+                if (aEpisode.providerEpisodeId === bEpsiode.providerEpisodeId && aEpisode.providerEpisodeId !== undefined) {
+                    result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                    result.matches++;
+                    return result;
+                }
+                if (aEpisode.id !== bEpsiode.id) {
+                    result.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+                    return result;
+                }
             }
         }
 
@@ -155,21 +160,15 @@ export default class EpisodeComperator {
     }
 
     public static isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: Season): boolean {
-        if (aEpisode.season !== undefined && bEpisode.season !== undefined) {
-            return aEpisode.season > bEpisode.season;
+        if (aEpisode.season !== undefined && bEpisode.season !== undefined && aEpisode.season.isSeasonNumberPresent() && bEpisode.season.isSeasonNumberPresent()) {
+            return (aEpisode.season.seasonNumber as unknown as number) < (bEpisode.season.seasonNumber as unknown as number);
         } else if (aEpisode.season !== undefined && aEpisode.season.seasonNumber !== undefined) {
             if (season !== undefined && season.seasonNumber !== undefined) {
                 return aEpisode.season.seasonNumber < season.seasonNumber;
-            } else {
-                if (aEpisode.season.seasonNumber === 1) {
-                    return false;
-                } else {
-                    return true;
-                }
             }
-        } else if (bEpisode.season !== undefined) {
+        } else if (bEpisode.season !== undefined && season !== undefined) {
             if (season?.seasonNumber !== undefined && bEpisode.season.seasonNumber !== undefined) {
-                return bEpisode.season.seasonNumber < season.seasonNumber;
+                return bEpisode.season.seasonNumber > season.seasonNumber;
             } else {
                 return false;
             }

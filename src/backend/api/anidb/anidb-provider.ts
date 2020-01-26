@@ -1,4 +1,4 @@
-import { createReadStream, createWriteStream, readFileSync } from 'fs';
+import { createReadStream, createWriteStream, existsSync, readFileSync } from 'fs';
 import * as http from 'http';
 // tslint:disable-next-line: no-implicit-dependencies
 import { xml2json } from 'xml-js';
@@ -36,6 +36,12 @@ export default class AniDBProvider extends InfoProvider {
             AniDBProvider.instance = this;
             if (this.allowDownload() && download) {
                 this.getData();
+            } else if (!AniDBProvider.anidbNameManager.data) {
+                try {
+                    AniDBProvider.anidbNameManager.updateOnlyData(this.convertXmlToJson());
+                } catch (err) {
+                    logger.error(err);
+               }
             }
         }
     }
@@ -144,47 +150,60 @@ export default class AniDBProvider extends InfoProvider {
 
     private getData() {
         logger.warn('[ANIDB] Download anime names.');
-        this.downloadFile('http://anidb.net/api/anime-titles.xml.gz').then(async (value) => {
-
+        this.downloadFile('http://anidb.net/api/anime-titles.xml.gz', './anidb-anime-titles.xml.gz').then(async (value) => {
             AniDBProvider.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML());
-
         }).catch((err) => {
-            AniDBProvider.anidbNameManager.updateData(new Date(Date.now()));
+            AniDBProvider.anidbNameManager.updateData(new Date(Date.now()), AniDBProvider.anidbNameManager.data);
             logger.error(err);
         });
     }
 
     private async getAniDBNameListXML(): Promise<AniDBNameListXML> {
-        const fileContents = createReadStream('./anidb-anime-titles.xml.gz');
-        const writeStream = createWriteStream('./anidb-anime-titles.xml');
-        const unzip = createGunzip();
+        try {
+            if (existsSync('./anidb-anime-titles.xml.gz')) {
+                const fileContents = createReadStream('./anidb-anime-titles.xml.gz');
+                const writeStream = createWriteStream('./anidb-anime-titles.xml');
+                const unzip = createGunzip();
 
-        const stream = fileContents.pipe(unzip).pipe(writeStream);
-        // Wait until the Stream ends.
-        await new Promise((fulfill) => { stream.on('finish', fulfill); stream.on('close', fulfill); });
-
-        const data = readFileSync('./anidb-anime-titles.xml', 'UTF-8');
-        const json = xml2json(data, { compact: true, spaces: 0 });
-        if (json) {
-            return JSON.parse(json) as AniDBNameListXML;
+                const stream = fileContents.pipe(unzip).pipe(writeStream);
+                // Wait until the Stream ends.
+                await new Promise((fulfill) => { stream.on('finish', fulfill); stream.on('close', fulfill); });
+                return this.convertXmlToJson();
+            }
+        } catch (err) {
+            logger.error(err);
         }
         throw new Error('convert from anidb xml to json failed');
     }
 
-    private async downloadFile(url: string): Promise<string> {
-        return new Promise<string>((resolve, rejects) => {
-            const path = './anidb-anime-titles.xml.gz';
-            const file = createWriteStream(path);
-            http.get(url, (res) => {
-                res.pipe(file);
+    private convertXmlToJson(filePath = './anidb-anime-titles.xml') {
+        try {
+            if (existsSync(filePath)) {
+                const data = readFileSync(filePath, 'UTF-8');
+                const json = xml2json(data, { compact: true, spaces: 0 });
+                if (json) {
+                    return JSON.parse(json) as AniDBNameListXML;
+                }
+            }
+        } catch (err) {
+            logger.error(err);
+        }
+        throw new Error('convert from ' + filePath + ' to JSON has failed');
+    }
+
+    private async downloadFile(url: string, filePath: string): Promise<string> {
+        return new Promise<string>(async (resolve, rejects) => {
+            const res = await WebRequestManager.request({ uri: url, gzip: true });
+            if (res.statusCode === 200) {
+                const file = createWriteStream(filePath);
+                res.body.pipe(file);
                 file.on('finish', () => {
                     file.close();  // close() is async, call cb after close completes.
-                    resolve(readFileSync(path, 'UTF-8'));
+                    resolve(readFileSync(filePath, 'UTF-8'));
                 });
-            }).on('error', (e) => {
-                logger.error(e);
-                rejects();
-            });
+            } else {
+                rejects(new Error('Status Code: ' + res.statusCode));
+            }
         });
     }
 
