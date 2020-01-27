@@ -147,7 +147,7 @@ export default class TraktProvider extends ListProvider {
         throw new Error('err');
     }
 
-    public logInUser(code: string) {
+    public async logInUser(code: string): Promise<boolean> {
         const that = this;
         const options = {
             headers: {
@@ -164,20 +164,15 @@ export default class TraktProvider extends ListProvider {
             },
             uri: 'https://api.trakt.tv/oauth/token',
         };
-        return new Promise<boolean>((resolve, reject) => {
-            request(options, (error: any, response: any, body: any) => {
-                if (body.access_token) {
-                    that.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
-                    that.getUserInfo();
-                    resolve();
-                } else {
-                    reject();
-                }
-            }).on('error', (err) => {
-                logger.error(err);
-                reject();
-            });
-        });
+        const response = await WebRequestManager.request(options);
+
+        if (response.body.access_token) {
+            const body = response.body;
+            that.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
+            that.getUserInfo();
+            return true;
+        }
+        return false;
     }
 
     private async traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {

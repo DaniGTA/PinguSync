@@ -13,6 +13,10 @@ import dateHelper from '../date-helper';
 import EpisodeHelper from '../episode-helper/episode-helper';
 import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
+import { ListProviderLocalData } from 'src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import EpisodeRelationResult from '../episode-helper/episode-relation-result';
+import season from 'node-myanimelist/typings/methods/jikan/season';
+import SeasonAwarenessHelper from './season-awareness-helper';
 
 
 export class ProviderHelper {
@@ -30,7 +34,8 @@ export class ProviderHelper {
 
 
             if (!seasonAware) {
-                const providers = await this.requestSeasonAwareness(series, infoProviders);
+                const instance = new SeasonAwarenessHelper(series, infoProviders);
+                const providers = await instance.requestSeasonAwareness();
                 await series.addProviderDatasWithSeasonInfos(...providers);
             } else {
                 await series.addProviderDatasWithSeasonInfos(...infoProviders);
@@ -42,85 +47,6 @@ export class ProviderHelper {
             series.lastInfoUpdate = Date.now();
         }
         return series;
-    }
-
-    public async requestSeasonAwareness(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[]): Promise<ProviderDataWithSeasonInfo[]> {
-        const finalList: ProviderDataWithSeasonInfo[] = [];
-        const seriesThatShouldAdded = [];
-        if (this.isSeriesAbleToCreateSeasonAwareness(series, extraInfoProviders)) {
-            for (const listProvider of series.getListProvidersInfos()) {
-                const targetSeason = series.getProviderSeasonTarget(listProvider.provider);
-                if (targetSeason !== undefined && targetSeason.seasonNumber !== undefined) {
-                    const infoProviderLocalDatas = [...series.getInfoProvidersInfos()];
-                    let currentSearchingSeason = 1;
-                    let currentSeasonPart: number | undefined = undefined;
-                    for (const providerLocalData of infoProviderLocalDatas) {
-                        let currentLocalData: InfoProviderLocalData | null = providerLocalData;
-                        do {
-                            try {
-                                const providerInstance = ProviderList.getExternalProviderInstance(currentLocalData);
-                                if (providerInstance.hasEpisodeTitleOnFullInfo) {
-                                    let provider: InfoProviderLocalData | null = currentLocalData;
-                                    provider = await this.simpleProviderInfoRequest(currentLocalData, providerInstance) as InfoProviderLocalData | null;
-                                    currentLocalData = null;
-                                    if (provider && EpisodeHelper.hasEpisodeNames(provider.detailEpisodeInfo)) {
-                                        const mainListAdder = new MainListAdder();
-                                        const result = EpisodeHelper.calculateRelationBetweenEpisodes(listProvider.detailEpisodeInfo, provider.detailEpisodeInfo);
-
-                                        if (result.seasonComplete) {
-                                            if (currentSeasonPart !== undefined) {
-                                                currentSeasonPart++;
-                                            }
-                                        } else {
-                                            if (currentSeasonPart === undefined) {
-                                                currentSeasonPart = 1;
-                                            } else {
-                                                currentSeasonPart++;
-                                            }
-                                        }
-
-                                        const newSeries = new Series();
-                                        await newSeries.addListProvider(listProvider, new Season(currentSearchingSeason, currentSeasonPart));
-                                        await newSeries.addInfoProvider(provider, new Season(currentSearchingSeason, currentSeasonPart));
-
-                                        if (result.seasonComplete) {
-                                            if (targetSeason.seasonNumber === currentSearchingSeason) {
-                                                finalList.push(new ProviderDataWithSeasonInfo(provider, new Season(currentSearchingSeason, currentSeasonPart)));
-                                            } else {
-                                                seriesThatShouldAdded.push(newSeries);
-                                            }
-                                            currentSearchingSeason++;
-                                            currentSeasonPart = undefined
-                                        } else {
-
-                                            seriesThatShouldAdded.push(newSeries);
-                                        }
-
-                                        for (const sequelId of provider.sequelIds) {
-                                            const sequelproviderInstance = new InfoProviderLocalData(sequelId, provider.provider);
-                                            currentLocalData = sequelproviderInstance;
-                                        }
-                                    } else {
-                                        currentLocalData = null;
-                                    }
-                                } else {
-                                    currentLocalData = null;
-                                }
-                            } catch (err) {
-                                logger.debug(err);
-                                currentLocalData = null;
-                            }
-                        } while (currentLocalData !== null);
-                    }
-                }
-            }
-
-            await new MainListAdder().addSeries(...seriesThatShouldAdded);
-
-            return finalList;
-        } else {
-            return extraInfoProviders;
-        }
     }
 
     public async requestUpgradeAllCurrentinfos(series: Series, force: boolean): Promise<ProviderDataWithSeasonInfo[]> {
@@ -138,35 +64,6 @@ export class ProviderHelper {
             }
         }
         return resultList;
-    }
-
-    public isSeriesAbleToCreateSeasonAwareness(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[]): boolean {
-        const listProviders = series.getListProvidersInfos();
-        const infoProviders = [...series.getInfoProvidersInfos(), ...(extraInfoProviders).flatMap((x) => x.providerLocalData)];
-        let listResult = false;
-        let infoResult = false;
-        for (const listProvider of listProviders) {
-            try {
-                if (ProviderList.getExternalProviderInstance(listProvider).hasEpisodeTitleOnFullInfo) {
-                    listResult = true;
-                }
-            } catch (err) {
-                logger.debug('isSeriesAbleToCreateSeasonAwareness for loop #1 error:');
-                logger.debug(err);
-            }
-        }
-
-        for (const infoProvider of infoProviders) {
-            try {
-                if (ProviderList.getExternalProviderInstance(infoProvider).hasEpisodeTitleOnFullInfo) {
-                    infoResult = true;
-                }
-            } catch (err) {
-                logger.debug('isSeriesAbleToCreateSeasonAwareness for loop #2 error:');
-                logger.debug(err);
-            }
-        }
-        return listResult && infoResult;
     }
 
     /**
@@ -262,7 +159,7 @@ export class ProviderHelper {
         return relevantList;
     }
 
-    private async simpleProviderInfoRequest(currentLocalData: ProviderLocalData, providerInstance: ExternalProvider): Promise<ProviderLocalData | null> {
+    public async simpleProviderInfoRequest(currentLocalData: ProviderLocalData, providerInstance: ExternalProvider): Promise<ProviderLocalData | null> {
         try {
             if (currentLocalData && currentLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !currentLocalData) {
                 const tempSeries = new Series();

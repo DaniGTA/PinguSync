@@ -57,7 +57,9 @@ export class TraktUserData extends UserData {
             const path = this.getPath();
             logger.warn('[IO] Write trakt user file.');
             fs.writeFileSync(path, JSON.stringify(this));
-        } catch (err) { }
+        } catch (err) {
+            logger.error(err);
+        }
     }
 
     protected loadData() {
@@ -70,7 +72,7 @@ export class TraktUserData extends UserData {
                 Object.assign(this, loadedData);
             }
         } catch (err) {
-
+            logger.error(err);
         }
     }
 

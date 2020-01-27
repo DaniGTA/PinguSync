@@ -17,9 +17,9 @@ export default class SeasonComperator {
                 comperatorResult.matches += 4;
             } else if (this.isSeasonUndefined(bSeason) && aSeason && aSeason.seasonNumber === 1) {
                 comperatorResult.matches += 4;
-            } else if (aSeason.seasonError === SeasonError.NONE && bSeason.seasonNumber === 1) {
+            } else if (aSeason.seasonError === SeasonError.NONE && bSeason.seasonNumber === 1 && aSeason.seasonNumber === undefined) {
                 comperatorResult.matches += 1;
-            } else if (bSeason.seasonError === SeasonError.NONE && aSeason.seasonNumber === 1) {
+            } else if (bSeason.seasonError === SeasonError.NONE && aSeason.seasonNumber === 1 && bSeason.seasonNumber === undefined) {
                 comperatorResult.matches += 1;
             }
         }
@@ -34,7 +34,7 @@ export default class SeasonComperator {
             }
             return true;
         }*/
-    
+
     public static isSameSeason(seasonA: Season | undefined, seasonB: Season | undefined): boolean {
         if (seasonA !== undefined && seasonB !== undefined) {
             return seasonA.seasonNumber === seasonB.seasonNumber && seasonA.seasonPart === seasonB.seasonPart;

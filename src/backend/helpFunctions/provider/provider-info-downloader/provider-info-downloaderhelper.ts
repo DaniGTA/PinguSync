@@ -71,11 +71,14 @@ export default new class ProviderInfoDownloadHelper {
                                 break;
                             }
                             trys++;
-
-                            const result = await this.getProviderLocalDataByName(series, name, provider);
-                            if (result) {
-                                logger.log('info', '[' + requestId + '][' + provider.providerName + '] ByName Request success 🎉');
-                                return result;
+                            try {
+                                const result = await this.getProviderLocalDataByName(series, name, provider);
+                                if (result) {
+                                    logger.log('info', '[' + requestId + '][' + provider.providerName + '] ByName Request success 🎉');
+                                    return result;
+                                }
+                            } catch (err) {
+                                logger.error(err);
                             }
                             logger.warn('[' + requestId + '][' + provider.providerName + '] ByName Request failed. try next...');
 

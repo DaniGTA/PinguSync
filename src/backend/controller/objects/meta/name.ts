@@ -55,25 +55,9 @@ export default class Name {
 
     public static async getSeasonNumber(names: Name[]): Promise<SeasonNumberResponse> {
         const response = new SeasonNumberResponse();
-        const seasonsDetected: SeasonNumberResponse[] = [];
-        for (const nameObj of names) {
-            try {
-                if (nameObj && nameObj.name) {
-                    if (nameObj.lang !== 'slug') {
-                        if (nameObj.nameType !== NameType.SLUG) {
-                            const nr = await stringHelper.getSeasonNumberFromTitle(nameObj.name);
-                            if (nr.seasonNumber) {
-                                if (nr.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
-                                    return nr;
-                                }
-                                seasonsDetected.push(nr);
-                            }
-                        }
-                    }
-                }
-            } catch (err) {
-                continue;
-            }
+        const seasonsDetected = await Name.getSeasonNumbersInNames(names);
+        if (!Array.isArray(seasonsDetected)) {
+            return seasonsDetected;
         }
         if (seasonsDetected.length === 0) {
             return response;
@@ -91,6 +75,34 @@ export default class Name {
         }
         return response;
     }
+
+    private static async getSeasonNumbersInNames(names: Name[]): Promise<SeasonNumberResponse[] | SeasonNumberResponse> {
+        const seasonsDetected: SeasonNumberResponse[] = [];
+        for (const nameObj of names) {
+            try {
+                if (Name.canGetValidSeasonNumberFromName(nameObj)) {
+                    const nr = await stringHelper.getSeasonNumberFromTitle(nameObj.name);
+                    if (nr.seasonNumber) {
+                        if (nr.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
+                            return nr;
+                        }
+                        seasonsDetected.push(nr);
+                    }
+                }
+            } catch (err) {
+                continue;
+            }
+        }
+        return seasonsDetected;
+    }
+
+    private static canGetValidSeasonNumberFromName(nameObj?: Name): boolean {
+        if (nameObj?.name && nameObj.lang !== 'slug' && nameObj.nameType !== NameType.SLUG) {
+            return true;
+        }
+        return false;
+    }
+
     public name: string = '';
     public lang: string = '';
     public nameType: NameType = NameType.UNKNOWN;

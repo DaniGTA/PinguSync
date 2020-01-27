@@ -176,27 +176,8 @@ export default class Series extends SeriesProviderExtension {
         if (!this.cachedSeason?.isSeasonNumberPresent) {
             this.cachedSeason = new Season(this.cachedSeason?.seasonNumber, this.cachedSeason?.seasonPart, this.cachedSeason?.seasonError);
         }
-        // TODO FIX
-        if ((!this.cachedSeason?.isSeasonNumberPresent() || this.cachedSeason.seasonNumber === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
-            const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
-            if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
-                // UKNOWN SEASON
-                if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
-                    if (result.searchResultDetails.searchedProviders.length !== 0) {
-                        logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                        const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
-                        await new MainListAdder().addSeries(...list);
-                        logger.info('Temp Series Successfull added.');
-                    }
-                }
-                this.cachedSeason = new Season(-2);
-                return new Season(undefined, undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
-            } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
-                this.cachedSeason = new Season(-1);
-            } else {
-                this.cachedSeason = result.season;
-                this.seasonDetectionType = result.foundType;
-            }
+        if ((this.cachedSeason.seasonNumber === undefined || this.cachedSeason?.seasonNumber === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
+            this.cachedSeason = await this.prepareSeasonSearch(searchMode, allowAddNewEntry, searchInList);
         }
         if (SeasonComperator.isSameSeason(this.cachedSeason, new Season(-1))) {
             return new Season(undefined, undefined, SeasonError.CANT_GET_SEASON);
@@ -207,6 +188,29 @@ export default class Series extends SeriesProviderExtension {
             logger.warn('Created undefined temp season');
             return new Season();
         }
+    }
+
+    private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {
+        const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
+        if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
+            // UKNOWN SEASON
+            if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
+                if (result.searchResultDetails.searchedProviders.length !== 0) {
+                    logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
+                    const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
+                    await new MainListAdder().addSeries(...list);
+                    logger.info('Temp Series Successfull added.');
+                }
+            }
+            this.cachedSeason = new Season(-2);
+            return new Season(undefined, undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+        } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
+            this.cachedSeason = new Season(-1);
+        } else {
+            this.cachedSeason = result.season;
+            this.seasonDetectionType = result.foundType;
+        }
+        return this.cachedSeason;
     }
 
     public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {

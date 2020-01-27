@@ -16,13 +16,18 @@ export default class EpisodeMapping {
     public readonly season?: Season;
 
     constructor(episode: Episode, provider: ProviderLocalData) {
-        this.id = episode.id;
+        // Add Episode
         this.episodeNumber = episode.episodeNumber;
+        this.id = episode.id;
         this.providerEpisodeId = episode.providerEpisodeId;
         this.season = episode.season;
+
+        // Add Provider
         this.provider = provider.provider;
-        this.lastMappingUpdate = new Date().getTime();
-        this.mappingVersion = EpisodeMapping.currentMappingVersion;
         this.providerSeriesId = provider.id;
+
+        // Meta data
+        this.mappingVersion = EpisodeMapping.currentMappingVersion;
+        this.lastMappingUpdate = new Date().getTime();
     }
 }

@@ -17,43 +17,47 @@ export default class MainListManager {
         await this.checkIfListIsLoaded();
         const searcher = new MainListSearcher();
         const results = [];
-        try {
-            const searchResults = await searcher.findSameSeriesInList(series, this.mainList);
-            if (searchResults.length !== 0) {
-                for (const entry of searchResults) {
-                    try {
-                        if (series.id === entry.id) {
-                            await this.updateSerieInList(series);
-                            return true;
-                        }
-                        if (typeof series.merge !== 'function') {
-                            series = Object.assign(new Series(), series);
-                        }
+        if (series.getAllProviderBindings().length !== 0) {
+            try {
+                const searchResults = await searcher.findSameSeriesInList(series, this.mainList);
+                if (searchResults.length !== 0) {
+                    for (const entry of searchResults) {
+                        try {
+                            if (series.id === entry.id) {
+                                await this.updateSerieInList(series);
+                                return true;
+                            }
+                            if (typeof series.merge !== 'function') {
+                                series = Object.assign(new Series(), series);
+                            }
 
-                        logger.log('info', '[MainList] Duplicate found: merging...');
-                        series = await series.merge(entry, false);
-                        await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
-                    } catch (err) {
-                        logger.error(err);
+                            logger.log('info', '[MainList] Duplicate found: merging...');
+                            series = await series.merge(entry, false);
+                            await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
+                        } catch (err) {
+                            logger.error(err);
+                        }
                     }
+                } else {
+                    await new EpisodeMappingHelper().generateEpisodeMapping(series);
+                    results.push(series);
                 }
-            } else {
-                await new EpisodeMappingHelper().generateEpisodeMapping(series);
-                results.push(series);
+                if (results.length === 0) {
+                    results.push(series);
+                }
+                if (series.lastInfoUpdate === 0) {
+                    logger.error('[ERROR] Series no last info update! In MainList.');
+                }
+                logger.log('info', '[MainList] Series was added to MainList. New list size: ' + this.mainList.length);
+                MainListManager.mainList.push(...results);
+            } catch (err) {
+                logger.error(err);
+                return false;
             }
-            if (results.length === 0) {
-                results.push(series);
-            }
-            if (series.lastInfoUpdate === 0) {
-                logger.error('[ERROR] Series no last info update! In MainList.');
-            }
-            logger.log('info', '[MainList] Series was added to MainList. New list size: ' + this.mainList.length);
-            MainListManager.mainList.push(...results);
-        } catch (err) {
-            logger.error(err);
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
     public static async updateSerieInList(series: Series) {

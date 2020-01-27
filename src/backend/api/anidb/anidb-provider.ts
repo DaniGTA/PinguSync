@@ -1,5 +1,4 @@
 import { createReadStream, createWriteStream, existsSync, readFileSync } from 'fs';
-import * as http from 'http';
 // tslint:disable-next-line: no-implicit-dependencies
 import { xml2json } from 'xml-js';
 import { createGunzip } from 'zlib';
@@ -17,6 +16,7 @@ import AniDBConverter from './anidb-converter';
 import AniDBNameManager from './anidb-name-manager';
 import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
 import AniDBNameListXML, { Anime, Title } from './objects/anidbNameListXML';
+import { DataStream } from "scramjet";
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
     private static anidbNameManager: AniDBNameManager = new AniDBNameManager();
@@ -41,7 +41,7 @@ export default class AniDBProvider extends InfoProvider {
                     AniDBProvider.anidbNameManager.updateOnlyData(this.convertXmlToJson());
                 } catch (err) {
                     logger.error(err);
-               }
+                }
             }
         }
     }
@@ -98,6 +98,8 @@ export default class AniDBProvider extends InfoProvider {
         } else {
             stringTitles.push(titles._text);
         }
+        const dataStream = new DataStream();
+        const test = dataStream.use(await titleCheckHelper.checkNames([name], stringTitles));
         if (await titleCheckHelper.checkNames([name], stringTitles)) {
             if (Array.isArray(titles)) {
                 for (const title of titles) {
@@ -123,7 +125,7 @@ export default class AniDBProvider extends InfoProvider {
     private allowDownload(): boolean {
         if (typeof AniDBProvider.anidbNameManager.lastDownloadTime === 'undefined') {
             return true;
-        } else if (this.dateDiffInDays(AniDBProvider.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 2) {
+        } else if (this.dateDiffInDays(AniDBProvider.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 3) {
             return true;
         }
         return false;

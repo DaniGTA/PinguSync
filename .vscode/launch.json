@@ -16,13 +16,14 @@
                 "NODE_ENV": "development"
             },
             "args": [
-                "--remote-debugging-port=9223",
-                "./dist_electron"
+                "."
             ],
             "outFiles": [
                 "${workspaceFolder}/dist_electron/**/*.js"
             ],
             "outputCapture": "std",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
             "timeout": 45000,
         },
         {
