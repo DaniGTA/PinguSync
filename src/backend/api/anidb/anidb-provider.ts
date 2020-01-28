@@ -6,7 +6,6 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Name from '../../controller/objects/meta/name';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
-import titleCheckHelper from '../../helpFunctions/title-check-helper';
 import logger from '../../logger/logger';
 import MalProvider from '../mal/mal-provider';
 import ExternalProvider from '../provider/external-provider';
@@ -16,7 +15,8 @@ import AniDBConverter from './anidb-converter';
 import AniDBNameManager from './anidb-name-manager';
 import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
 import AniDBNameListXML, { Anime, Title } from './objects/anidbNameListXML';
-import { DataStream } from "scramjet";
+import MultiThreadingHelper from '../../helpFunctions/multi-threading-helper';
+import TitleCheckHelper from '../../helpFunctions/title-check-helper';
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
     private static anidbNameManager: AniDBNameManager = new AniDBNameManager();
@@ -48,32 +48,37 @@ export default class AniDBProvider extends InfoProvider {
 
     public async getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
         const nameDBList = AniDBProvider.anidbNameManager.data;
-        let lastResult: Name[] | null = null;
-        let lastSeriesDB: Anime | null = null;
         if (nameDBList) {
-            for (const seriesDB of nameDBList.animetitles.anime) {
-                try {
-                    const result = await this.checkTitles(searchTitle, seriesDB.title);
-
-                    if (result) {
-                        const seasonOfTitle = await Name.getSeasonNumber(result);
-                        if (!seasonOfTitle.seasonNumber) {
-                            lastResult = result;
-                            lastSeriesDB = seriesDB;
-                        }
-                        if (seasonOfTitle.seasonNumber === season || !season) {
-                            return [await this.fillSeries(seriesDB, result)];
-                        }
-                    }
-                } catch (err) {
-                    logger.error(err);
-                }
-            }
-            if (lastResult && lastSeriesDB) {
-                return [await this.fillSeries(lastSeriesDB, lastResult)];
-            }
+            return await MultiThreadingHelper.runFunctionInWorker(this.getSameTitle, searchTitle, nameDBList, season);
         }
         throw new Error('nothing found');
+    }
+
+    private async getSameTitle(searchTitle: string, nameDBList: AniDBNameListXML, season?: number) {
+        let lastResult: Name[] | null = null;
+        let lastSeriesDB: Anime | null = null;
+        for (const seriesDB of nameDBList.animetitles.anime) {
+            try {
+                const result = await AniDBProvider.checkTitles(searchTitle, seriesDB.title);
+
+                if (result.length !== 0) {
+                    const seasonOfTitle = await Name.getSeasonNumber(result);
+                    if (!seasonOfTitle.seasonNumber) {
+                        lastResult = result;
+                        lastSeriesDB = seriesDB;
+                    }
+                    if (seasonOfTitle.seasonNumber === season || !season) {
+                        return [await AniDBProvider.fillSeries(seriesDB, result)];
+                    }
+                }
+            } catch (err) {
+                logger.error(err);
+            }
+        }
+        if (lastResult && lastSeriesDB) {
+            return [await AniDBProvider.fillSeries(lastSeriesDB, lastResult)];
+        }
+        return [];
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
@@ -88,35 +93,6 @@ export default class AniDBProvider extends InfoProvider {
         }
         throw new Error('False provider - AniDB');
     }
-
-    public async checkTitles(name: string, titles: Title[] | Title) {
-        const converter = new AniDBConverter();
-        const resultNames = [];
-        let stringTitles = [];
-        if (Array.isArray(titles)) {
-            stringTitles = titles.flatMap((x) => x._text);
-        } else {
-            stringTitles.push(titles._text);
-        }
-        const dataStream = new DataStream();
-        const test = dataStream.use(await titleCheckHelper.checkNames([name], stringTitles));
-        if (await titleCheckHelper.checkNames([name], stringTitles)) {
-            if (Array.isArray(titles)) {
-                for (const title of titles) {
-                    if (title._text) {
-                        const nameType = await converter.convertToNameType(title._attributes.type);
-                        resultNames.push(new Name(title._text, title._attributes['xml:lang'], nameType));
-                    }
-                }
-            } else {
-                const nameType = await converter.convertToNameType(titles._attributes.type);
-                resultNames.push(new Name(titles._text, titles._attributes['xml:lang'], nameType));
-            }
-            return resultNames;
-        }
-        return null;
-    }
-
 
     public async isProviderAvailable(): Promise<boolean> {
         return true;
@@ -143,7 +119,7 @@ export default class AniDBProvider extends InfoProvider {
     }
 
 
-    private async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {
+    private static async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {
         const converter = new AniDBConverter();
         const localdata = await converter.convertAnimeToLocalData(seriesDB);
         localdata.mainProvider.providerLocalData.addSeriesName(...result);
@@ -158,6 +134,32 @@ export default class AniDBProvider extends InfoProvider {
             AniDBProvider.anidbNameManager.updateData(new Date(Date.now()), AniDBProvider.anidbNameManager.data);
             logger.error(err);
         });
+    }
+    private static async checkTitles(name: string, titles: Title[] | Title): Promise<Name[]> {
+        const converter = new AniDBConverter();
+        const resultNames = [];
+        let stringTitles = [];
+        if (Array.isArray(titles)) {
+            stringTitles = titles.flatMap((x) => x._text);
+        } else {
+            stringTitles.push(titles._text);
+        }
+
+        if (await TitleCheckHelper.checkNames([name], stringTitles)) {
+            if (Array.isArray(titles)) {
+                for (const title of titles) {
+                    if (title._text) {
+                        const nameType = await converter.convertToNameType(title._attributes.type);
+                        resultNames.push(new Name(title._text, title._attributes['xml:lang'], nameType));
+                    }
+                }
+            } else {
+                const nameType = await converter.convertToNameType(titles._attributes.type);
+                resultNames.push(new Name(titles._text, titles._attributes['xml:lang'], nameType));
+            }
+            return resultNames;
+        }
+        return [];
     }
 
     private async getAniDBNameListXML(): Promise<AniDBNameListXML> {

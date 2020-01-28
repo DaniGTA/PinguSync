@@ -5,15 +5,15 @@ import logger from '../logger/logger';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
 import stringHelper from './string-helper';
 
-export default new class TitleCheckHelper {
-    public async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
+export default class TitleCheckHelper {
+    public static async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
         const aNameList: string[] = (await a.getAllNamesUnique()).flatMap((x) => x.name);
         const bNameList: string[] = (await b.getAllNamesUnique()).flatMap((x) => x.name);
         return this.checkNames(aNameList, bNameList);
     }
 
-    public async checkNames(aNameList: string[], bNameList: string[]) {
-        if (await this.fastMatch(aNameList, bNameList)) {
+    public static async checkNames(aNameList: string[], bNameList: string[]) {
+        if (await TitleCheckHelper.fastMatch(aNameList, bNameList)) {
             for (const aName of aNameList) {
                 try {
                     let aName2 = stringHelper.cleanString(aName);
@@ -45,7 +45,7 @@ export default new class TitleCheckHelper {
         return false;
     }
 
-    public async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
+    public static async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
         for (let aName of [...a]) {
             if (aName != null && aName !== '') {
                 for (let bName of [...b]) {
@@ -73,8 +73,7 @@ export default new class TitleCheckHelper {
         return false;
     }
 
-    public async fastMatch(aList: string[], bList: string[]): Promise<boolean> {
-        const that = this;
+    public static async fastMatch(aList: string[], bList: string[]): Promise<boolean> {
         try {
             const al = [...aList];
             const bl = [...bList];
@@ -82,7 +81,7 @@ export default new class TitleCheckHelper {
                 if (a) {
                     for (const b of bl) {
                         if (b) {
-                            if (!that.equalIgnoreCase(a.substring(0, 3), b.substring(0, 3))) {
+                            if (!this.equalIgnoreCase(a.substring(0, 3), b.substring(0, 3))) {
                                 continue;
                             }
                             let shortestTextLength = 0;
@@ -100,7 +99,7 @@ export default new class TitleCheckHelper {
                             const aResult = a.substring(0, shortScan);
                             const bResult = b.substring(0, shortScan);
 
-                            const result = that.equalIgnoreCase(aResult, bResult);
+                            const result = this.equalIgnoreCase(aResult, bResult);
                             if (result) {
                                 return true;
                             }
@@ -115,7 +114,7 @@ export default new class TitleCheckHelper {
         }
     }
 
-    public async removeSeasonMarkesFromTitle(title: string): Promise<string> {
+    public static async removeSeasonMarkesFromTitle(title: string): Promise<string> {
         if (title !== '') {
             let reversedTitle = await stringHelper.reverseString(title);
             const lastChar = reversedTitle.charAt(0);
@@ -144,7 +143,7 @@ export default new class TitleCheckHelper {
         return title;
     }
 
-    public async getSeasonNumberBySeasonMarkerInTitle(title: string): Promise<SeasonNumberResponse> {
+    public static async getSeasonNumberBySeasonMarkerInTitle(title: string): Promise<SeasonNumberResponse> {
         const response = new SeasonNumberResponse();
         const regex = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s(\d{1,})($|\s))/gmi;
         const isNumber = /^\d+$/;
@@ -170,7 +169,7 @@ export default new class TitleCheckHelper {
         return response;
     }
 
-    public getMediaTypeFromTitle(title: string): MediaType {
+    public static getMediaTypeFromTitle(title: string): MediaType {
         if (title.match(/(:|: | )Movie(\W|$|\_)/)) {
             return MediaType.MOVIE;
         }
@@ -195,7 +194,7 @@ export default new class TitleCheckHelper {
         return MediaType.UNKOWN;
     }
 
-    public async removeMediaTypeFromTitle(title: string): Promise<string> {
+    public static async removeMediaTypeFromTitle(title: string): Promise<string> {
         title = title.replace(/ Movie:/g, ':');
         title = title.replace(/Movie/g, '');
         title = title.replace(/Specials/g, '');
@@ -206,7 +205,7 @@ export default new class TitleCheckHelper {
         return title.trim();
     }
 
-    private equalIgnoreCase(s1: string, s2: string) {
+    private static equalIgnoreCase(s1: string, s2: string) {
         return s1.toUpperCase() === s2.toUpperCase();
     }
-}();
+};
