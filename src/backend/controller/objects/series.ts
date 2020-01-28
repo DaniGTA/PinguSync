@@ -190,29 +190,6 @@ export default class Series extends SeriesProviderExtension {
         }
     }
 
-    private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {
-        const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
-        if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
-            // UKNOWN SEASON
-            if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
-                if (result.searchResultDetails.searchedProviders.length !== 0) {
-                    logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                    const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
-                    await new MainListAdder().addSeries(...list);
-                    logger.info('Temp Series Successfull added.');
-                }
-            }
-            this.cachedSeason = new Season(-2);
-            return new Season(undefined, undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
-        } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
-            this.cachedSeason = new Season(-1);
-        } else {
-            this.cachedSeason = result.season;
-            this.seasonDetectionType = result.foundType;
-        }
-        return this.cachedSeason;
-    }
-
     public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
         logger.debug('[Season] [Serve]: Last Prequel');
         const searchedProviders: ProviderLocalData[] = [];
@@ -494,6 +471,29 @@ export default class Series extends SeriesProviderExtension {
         const providerInfoStatusCollection = providers.flatMap((provider) => provider.infoStatus);
         const average = listHelper.getMostFrequentNumberFromList(providerInfoStatusCollection);
         return average;
+    }
+
+    private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {
+        const result = await seasonHelper.searchSeasonValue(this, searchMode, searchInList);
+        if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
+            // UKNOWN SEASON
+            if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
+                if (result.searchResultDetails.searchedProviders.length !== 0) {
+                    logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
+                    const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
+                    await new MainListAdder().addSeries(...list);
+                    logger.info('Temp Series Successfull added.');
+                }
+            }
+            this.cachedSeason = new Season(-2);
+            return new Season(undefined, undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+        } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
+            this.cachedSeason = new Season(-1);
+        } else {
+            this.cachedSeason = result.season;
+            this.seasonDetectionType = result.foundType;
+        }
+        return this.cachedSeason;
     }
 
     private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {

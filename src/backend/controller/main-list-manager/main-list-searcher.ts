@@ -1,12 +1,12 @@
 import MultiProviderResult from '../../api/provider/multi-provider-result';
+import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
+import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import seriesHelper from '../../helpFunctions/series-helper';
 import logger from '../../logger/logger';
+import Season from '../objects/meta/season';
 import Series from '../objects/series';
 import MainListManager from './main-list-manager';
-import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
-import Season from '../objects/meta/season';
-import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 
 /**
  * Has search function to find series in the main list.

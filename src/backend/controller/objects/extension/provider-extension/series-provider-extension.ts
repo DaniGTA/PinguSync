@@ -88,9 +88,9 @@ export default class SeriesProviderExtension {
 
     public addAllBindings(...localDataBindings: LocalDataBind[]) {
         for (const localDataBinding of localDataBindings) {
-            if (localDataBinding instanceof InfoLocalDataBind) {
+            if (localDataBinding.instanceName === InfoLocalDataBind.name || localDataBinding instanceof InfoLocalDataBind) {
                 this.addInfoProviderBindings(localDataBinding);
-            } else if (localDataBinding instanceof ListLocalDataBind) {
+            } else if (localDataBinding.instanceName === ListLocalDataBind.name || localDataBinding instanceof ListLocalDataBind) {
                 this.addListProviderBindings(localDataBinding);
             } else {
                 logger.error('UNKOWN BINDING INSTANCE');

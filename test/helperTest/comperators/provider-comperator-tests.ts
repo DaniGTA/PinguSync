@@ -25,6 +25,18 @@ describe('Provider Comperator | Testrun', () => {
         strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
     });
 
+    test('should be absolute true (same provider and same id)', async () => {
+        const instance = new ProviderComperator(new Series(), new Series());
+
+        const providerA = new ListProviderLocalData(2, 'test');
+        providerA.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
+        const providerB = new ListProviderLocalData(2, 'test');
+        providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
+        // tslint:disable-next-line: no-string-literal
+        const result = instance['compareProviderAWithProviderB'](providerA, providerB);
+        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
+    });
+
     test('should be absolute false (same provider and wrong provider)', async () => {
         const s2 = new Series();
         const provider2A = new ListProviderLocalData(2, TraktProvider);

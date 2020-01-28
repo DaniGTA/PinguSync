@@ -1,21 +1,14 @@
 import ExternalProvider from '../../api/provider/external-provider';
 import ListProvider from '../../api/provider/list-provider';
 import MultiProviderResult from '../../api/provider/multi-provider-result';
-import MainListAdder from '../../controller/main-list-manager/main-list-adder';
-import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import dateHelper from '../date-helper';
-import EpisodeHelper from '../episode-helper/episode-helper';
 import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
-import { ListProviderLocalData } from 'src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import EpisodeRelationResult from '../episode-helper/episode-relation-result';
-import season from 'node-myanimelist/typings/methods/jikan/season';
 import SeasonAwarenessHelper from './season-awareness-helper';
 
 
@@ -359,7 +352,7 @@ export class ProviderHelper {
                         break;
                     }
                 } catch (err) {
-                    logger.error(err);
+                    logger.debug(err);
                 }
             }
         }
@@ -369,8 +362,12 @@ export class ProviderHelper {
     private canGetTargetIdFromCurrentProvider(currentProvider: ProviderLocalData, targetProvider: ExternalProvider): boolean {
         if (currentProvider.infoStatus !== ProviderInfoStatus.FULL_INFO) {
             for (const supportedProvider of ProviderList.getExternalProviderInstance(currentProvider).potentialSubProviders) {
-                if ((supportedProvider as any).getInstance().providerName === targetProvider.providerName) {
-                    return true;
+                try {
+                    if ((supportedProvider as any).getInstance().providerName === targetProvider.providerName) {
+                        return true;
+                    }
+                } catch (err) {
+                    logger.debug(err);
                 }
             }
         }
