@@ -10,7 +10,15 @@ import { EpisodeType } from './episode-type';
  * Contains detail infos about a episode.
  */
 export default class Episode {
-    public readonly season?: Season;
+    private readonly _season?: Season;
+
+    public get season(): Season | undefined {
+        if (this._season) {
+            return Object.assign(new Season(), this._season);
+        }
+        return undefined;
+    }
+
     public readonly episodeNumber: number | string;
     public readonly lastUpdate: number;
     public readonly id: string;
@@ -42,7 +50,7 @@ export default class Episode {
      * @param title
      */
     constructor(episodeNumber: number | string, season?: Season, title?: EpisodeTitle[]) {
-        this.season = season;
+        this._season = season;
         this.episodeNumber = episodeNumber;
         if (title) {
             this.title = title;

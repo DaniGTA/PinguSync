@@ -18,7 +18,8 @@ export class PreferedSeriesNameHelper {
         try {
             return Name.getRomajiName(seriesNames);
         } catch (err) {
-           logger.error(err);
+            logger.error('Error at PreferedSeriesNameHelper.getPreferedNameOfSeries')
+            logger.error(err);
         }
 
         return seriesNames[0].name;

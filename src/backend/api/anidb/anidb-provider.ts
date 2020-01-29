@@ -70,10 +70,11 @@ export default class AniDBProvider extends InfoProvider {
             AniDBProvider.instance = this;
             if (this.allowDownload() && download) {
                 this.getData();
-            } else if (!AniDBProvider.anidbNameManager.data) {
+            } else if (!AniDBProvider.anidbNameManager.data || Object.entries(AniDBProvider.anidbNameManager.data).length === 0) {
                 try {
                     AniDBProvider.anidbNameManager.updateOnlyData(this.convertXmlToJson());
                 } catch (err) {
+                    logger.error('Error at AniDBProvider.constructor:')
                     logger.error(err);
                 }
             }

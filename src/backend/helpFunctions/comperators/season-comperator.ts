@@ -7,8 +7,10 @@ import SeasonComperatorResult from './comperator-results.ts/season-comperator-re
 export default class SeasonComperator {
     public static async compareSeasons(a: Series, b: Series): Promise<SeasonComperatorResult> {
         const comperatorResult: SeasonComperatorResult = new SeasonComperatorResult();
-        const aSeason = await a.getSeason();
-        const bSeason = await b.getSeason();
+        const seasonAPromise = a.getSeason();
+        const seasonBPromise = b.getSeason();
+        const aSeason = (await seasonAPromise);
+        const bSeason = (await seasonBPromise);
         if (aSeason.seasonError === SeasonError.NONE || bSeason.seasonError === SeasonError.NONE) {
             comperatorResult.matchAble += 4;
             if (this.isSameSeason(aSeason, bSeason)) {

@@ -78,6 +78,7 @@ export default new class ProviderInfoDownloadHelper {
                                     return result;
                                 }
                             } catch (err) {
+                                logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo')
                                 logger.error(err);
                             }
                             logger.warn('[' + requestId + '][' + provider.providerName + '] ByName Request failed. try next...');
@@ -117,8 +118,7 @@ export default new class ProviderInfoDownloadHelper {
                         const allBindings = relation.getAllProviderBindings();
                         const result = allBindings.find((x) => x.providerName === provider.providerName);
                         if (result) {
-                            const seriesSeason = (await series.getSeason());
-                            const mediaType = await series.getMediaType();
+                            const [seriesSeason, mediaType] = await Promise.all([series.getSeason(), series.getMediaType()]);
 
                             if (seriesSeason.isSeasonNumberPresent()) {
                                 const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
@@ -133,6 +133,7 @@ export default new class ProviderInfoDownloadHelper {
                             }
                         }
                     } catch (err) {
+                        logger.error('Error at ProviderInfoDownloadHelper.linkProviderDataFromRelations')
                         logger.error(err);
                     }
                 }

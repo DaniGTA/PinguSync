@@ -53,6 +53,7 @@ export class ProviderHelper {
                     resultList.push(...infoResult.flatMap((x) => x.getAllProvidersWithSeason()));
                 }
             } catch (err) {
+                logger.error('Error at ProviderHelper.requestUpgradeAllCurrentinfos')
                 logger.error(err);
             }
         }
@@ -73,6 +74,7 @@ export class ProviderHelper {
                 localDatas.push(idProviderResult);
                 await tempSeriesCopy.addProviderDatasWithSeasonInfos(...idProviderResult.getAllProvidersWithSeason());
             } catch (err) {
+                logger.error('Error at ProviderHelper.requestProviderInfo')
                 logger.error(err);
             }
         }

@@ -10,8 +10,10 @@ export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
         const result = new ComperatorResult();
         try {
-            const allAEpisodes = await a.getAllEpisodes();
-            const allBEpisodes = await b.getAllEpisodes();
+            const allAEpisodePromise = a.getAllEpisodes();
+            const allBEpisodePromise = b.getAllEpisodes();
+            const allAEpisodes = await allAEpisodePromise;
+            const allBEpisodes = await allBEpisodePromise;
             // Search if there is a match between the arrays.
             if (allAEpisodes.length !== 0 && allBEpisodes.length !== 0) {
                 result.matchAble += 2;
@@ -20,6 +22,7 @@ export default class EpisodeComperator {
                 }
             }
         } catch (err) {
+            logger.error('Error at EpisodeComperator.compareEpisodes')
             logger.error(err);
         }
         return result;
@@ -216,33 +219,6 @@ export default class EpisodeComperator {
                     result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     return result;
                 }
-            }
-        }
-        return result;
-    }
-
-    private static async compareDetailedEpisodesList(a: Series, b: Series) {
-        const result = new ComperatorResult();
-        const aAllADetailedEpisodes = await a.getAllDetailedEpisodes();
-        const aSeriesSeason = await a.getSeason();
-        const bAllDetailedEpisodes = await b.getAllDetailedEpisodes();
-        const bSeriesSeason = await b.getSeason();
-        let season;
-        if (aSeriesSeason.seasonNumber === bSeriesSeason.seasonNumber) {
-            season = aSeriesSeason;
-        }
-
-        for (const aEpisode of aAllADetailedEpisodes) {
-            result.matchAble += 0.15;
-            for (const bEpsiode of bAllDetailedEpisodes) {
-                if (this.isEpisodeSameSeason(aEpisode, bEpsiode, undefined, undefined, season) && aEpisode.episodeNumber === bEpsiode.episodeNumber) {
-                    result.matches += 0.15;
-
-                    const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);
-                    result.matchAble += episodeTitleResult.matchAble;
-                    result.matches += episodeTitleResult.matches;
-                }
-
             }
         }
         return result;

@@ -53,6 +53,7 @@ class FrontendController {
                             await pl.logInUser(code);
                             that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                         } catch (err) {
+                            logger.error('Error at FrontendController.mainInit #1')
                             logger.error(err);
                         }
                     });
@@ -64,6 +65,7 @@ class FrontendController {
                     try {
                         that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                     } catch (err) {
+                        logger.error('Error at FrontendController.mainInit #2')
                         logger.error(err);
                     }
                 });

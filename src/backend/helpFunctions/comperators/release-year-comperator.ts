@@ -12,11 +12,10 @@ export default class ReleaseYearComperator {
      */
     public static async compareReleaseYear(a: Series, b: Series): Promise<ComperatorResult> {
         const result = new ComperatorResult();
-        const aYearList = await a.getAllReleaseYears();
-        const bYearList = await b.getAllReleaseYears();
+        const [aYearList, bYearList] = await Promise.all([a.getAllReleaseYears(), b.getAllReleaseYears()]);
         if (aYearList.length !== 0 && bYearList.length !== 0) {
-            for (const aYear of await a.getAllReleaseYears()) {
-                for (const bYear of await b.getAllReleaseYears()) {
+            for (const aYear of aYearList) {
+                for (const bYear of bYearList) {
                     result.matchAble++;
                     if (aYear === bYear) {
                         result.matches++;

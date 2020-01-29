@@ -4,8 +4,7 @@ import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comper
 
 export default class MediaTypeComperator {
     public static async compareMediaTypeWithSeries(a: Series, b: Series): Promise<ComperatorResult> {
-        const aMediaType = await a.getMediaType();
-        const bMediaType = await b.getMediaType();
+        const [aMediaType, bMediaType] = await Promise.all([a.getMediaType(), b.getMediaType()]);
         return this.comperaMediaType(aMediaType, bMediaType);
     }
 
@@ -40,6 +39,6 @@ export default class MediaTypeComperator {
     }
 
     public static areTheseMediaTypeBothNormalSeries(a: MediaType, b: MediaType): boolean {
-        return (this.isMediaTypeANormalSeries(a) === this.isMediaTypeANormalSeries(b));
+        return this.isMediaTypeANormalSeries(a) === this.isMediaTypeANormalSeries(b);
     }
 }

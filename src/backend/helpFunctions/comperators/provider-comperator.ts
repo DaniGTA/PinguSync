@@ -23,13 +23,13 @@ export default class ProviderComperator {
         try {
             const aProviders = a.getListProvidersInfos();
             const bProviders = b.getListProvidersInfos();
-            const aMediaType = await a.getMediaType();
-            const bMediaType = await b.getMediaType();
+            const [aMediaType, bMediaType] = await Promise.all([a.getMediaType(), b.getMediaType()]);
             if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
                 return this.simpleProviderSameIdAndSameSeasonCheckWithSeries(aProviders, bProviders, a, b);
             }
 
         } catch (err) {
+            logger.error('Error at ProviderComperator.simpleProviderSameIdAndSameSeasonCheckOnSeries')
             logger.error(err);
         }
         return false;
@@ -136,6 +136,7 @@ export default class ProviderComperator {
             }
 
         } catch (err) {
+            logger.error('Error at ProviderComperator.hasSameListProvider')
             logger.error(err);
         }
         return false;
@@ -220,6 +221,7 @@ export default class ProviderComperator {
                 if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 }
+                logger.error('Error at ProviderComperator.compareProviderAWithProviderB')
                 logger.error(err);
             }
         } else {

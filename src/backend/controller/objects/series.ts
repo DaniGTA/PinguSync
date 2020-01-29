@@ -44,6 +44,7 @@ export default class Series extends SeriesProviderExtension {
         super();
         // Generates randome string.
         this.id = stringHelper.randomString(35);
+        this.cachedSeason = new Season();
     }
 
     public async resetCache() {
@@ -183,7 +184,7 @@ export default class Series extends SeriesProviderExtension {
             return new Season(undefined, undefined, SeasonError.CANT_GET_SEASON);
         }
         if (this.cachedSeason) {
-            return this.cachedSeason;
+            return Object.assign(new Season(), this.cachedSeason);
         } else {
             logger.warn('Created undefined temp season');
             return new Season();
@@ -241,6 +242,7 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         } catch (err) {
+            logger.error('Error at Series.getSequel')
             logger.error(err);
         }
         return new RelationSearchResults(null, ...searchedProviders);
@@ -254,6 +256,7 @@ export default class Series extends SeriesProviderExtension {
             this.canSync = await this.getCanSyncStatus();
             logger.debug('Calculated Sync status');
         } catch (err) {
+            logger.error('Error at Series.getCanSync')
             logger.error(err);
             this.canSync = false;
         }
@@ -281,8 +284,10 @@ export default class Series extends SeriesProviderExtension {
         newAnime.addAllBindings(...[...this.getAllProviderBindings(), ...anime.getAllProviderBindings()]);
         logger.debug('[Series] Merged Providers  | SeriesID: ' + this.id);
         if (mergeType === MergeTypes.UPGRADE) {
-            await newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
-            await newAnime.getMediaType();
+            const getSeason = newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
+            const getMediaType = await newAnime.getMediaType();
+            await getSeason;
+            await getMediaType;
         }
         await new EpisodeMappingHelper().generateEpisodeMapping(newAnime);
         logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
@@ -493,13 +498,13 @@ export default class Series extends SeriesProviderExtension {
             this.cachedSeason = result.season;
             this.seasonDetectionType = result.foundType;
         }
-        return this.cachedSeason;
+        return Object.assign(new Season(), this.cachedSeason);
     }
 
     private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {
-        const aMediaType = await a.getMediaType();
-        const bMediaType = await b.getMediaType();
-        if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
+        const aMediaType = a.getMediaType();
+        const bMediaType = b.getMediaType();
+        if (await aMediaType === await bMediaType || await aMediaType === MediaType.UNKOWN || await bMediaType === MediaType.UNKOWN) {
             for (const providerA of a.getListProvidersInfos()) {
                 const providerATargetSeason = a.getProviderSeasonTarget(providerA.provider);
                 for (const providerB of b.getListProvidersInfos()) {

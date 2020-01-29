@@ -14,6 +14,8 @@ import FrontendController from './backend/controller/frontend-controller';
 import DatabaseLoader from './backend/controller/stats-manager/database-loader';
 import logger from './backend/logger/logger';
 
+const ClinicDoctor = require('@nearform/doctor')
+const doctor = new ClinicDoctor()
 try {
 
   mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
