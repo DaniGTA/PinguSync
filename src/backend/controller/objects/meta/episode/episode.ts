@@ -10,7 +10,11 @@ import { EpisodeType } from './episode-type';
  * Contains detail infos about a episode.
  */
 export default class Episode {
-    private readonly _season?: Season;
+    private _season?: Season;
+
+    public set season(season: Season | undefined) {
+        this._season = season;
+    }
 
     public get season(): Season | undefined {
         if (this._season) {
@@ -40,7 +44,6 @@ export default class Episode {
     public rating?: number;
     public provider?: string;
     public providerEpisodeId?: number | string;
-    public mappedTo: EpisodeMapping[] = [];
     public thumbnails: EpisodeThumbnail[] = [];
 
     /**
@@ -59,28 +62,6 @@ export default class Episode {
         this.id = stringHelper.randomString(20);
     }
 
-    public addMappings(...episodeMappings: EpisodeMapping[]) {
-        for (const episodeMapping of episodeMappings) {
-            this.addMapping(episodeMapping);
-        }
-    }
-
-    public addMapping(episodeMapping: EpisodeMapping) {
-        let canBeMapped = true;
-        if (this.provider === undefined || this.provider === episodeMapping.provider) {
-            canBeMapped = false;
-        } else {
-            for (const mapping of this.mappedTo) {
-                if (mapping.id === episodeMapping.id || episodeMapping.id === this.id) {
-                    canBeMapped = false;
-                    break;
-                }
-            }
-        }
-        if (canBeMapped) {
-            this.mappedTo.push(episodeMapping);
-        }
-    }
 
     public isEpisodeNumberARealNumber(): boolean {
         return !isNaN(this.episodeNumber as number);

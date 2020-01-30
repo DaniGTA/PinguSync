@@ -26,6 +26,8 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+import EpisodeBindingPool from './meta/episode/episode-binding-pool';
+import EpisodeMapping from './meta/episode/episode-mapping';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
@@ -38,6 +40,7 @@ export default class Series extends SeriesProviderExtension {
     private cachedMediaType?: MediaType;
     private seasonDetectionType: string = '';
     private canSync: boolean | null = null;
+    private episodeBindingPools: EpisodeBindingPool[] = [];
 
     private firstSeasonSeriesId?: string;
     constructor() {
@@ -98,6 +101,27 @@ export default class Series extends SeriesProviderExtension {
             overviews.push(...provider.getAllOverviews());
         }
         return listHelper.getUniqueOverviewList(overviews);
+    }
+
+    public addEpisodeMapping(...episodeMappings: EpisodeMapping[]): void {
+        const existingBindingPool = this.findExistingBindingPoolByEpisodeMapping(...episodeMappings);
+        if (existingBindingPool) {
+            existingBindingPool.addEpisodeMappingToBindings(...episodeMappings);
+        } else {
+            const newBindingPool = new EpisodeBindingPool(episodeMappings);
+            this.episodeBindingPools.push(newBindingPool);
+        }
+    }
+
+    public findExistingBindingPoolByEpisodeMapping(...episodeMappings: EpisodeMapping[]): EpisodeBindingPool | null {
+        for (const bindingPool of this.episodeBindingPools) {
+            for (const episodeMapping of episodeMappings) {
+                if (bindingPool.bindingPoolHasEpisodeMapping(episodeMapping)) {
+                    return bindingPool;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -199,9 +223,9 @@ export default class Series extends SeriesProviderExtension {
                 if (listProvider.prequelIds && listProvider.prequelIds.length !== 0) {
                     searchedProviders.push(listProvider);
                     for (const entry of searchInList) {
-                        for (const entryListProvider of entry.getAllProviderLocalDatas()) {
+                        for (const entryListProvider of entry.getAllProviderBindings()) {
                             // tslint:disable-next-line: triple-equals
-                            if (entryListProvider.provider === listProvider.provider) {
+                            if (entryListProvider.providerName === listProvider.provider) {
                                 if (listProvider.prequelIds.findIndex((x) => ProviderComperator.simpleProviderIdCheck(entryListProvider.id, x)) !== -1) {
                                     return new RelationSearchResults(entry);
                                 }
@@ -230,8 +254,8 @@ export default class Series extends SeriesProviderExtension {
                 searchedProviders.push(listProvider);
                 if (listProvider.sequelIds && listProvider.sequelIds.length !== 0) {
                     for (const entry of searchInList) {
-                        for (const entryListProvider of entry.getAllProviderLocalDatas()) {
-                            if (entryListProvider.provider === listProvider.provider) {
+                        for (const entryListProvider of entry.getAllProviderBindings()) {
+                            if (entryListProvider.providerName === listProvider.provider) {
                                 if (listProvider.sequelIds.findIndex((x) => ProviderComperator.simpleProviderIdCheck(entryListProvider.id, x)) !== -1) {
                                     return new RelationSearchResults(entry);
                                 }
@@ -267,7 +291,7 @@ export default class Series extends SeriesProviderExtension {
         const bindings = this.getAllProviderBindings();
         const result = bindings.find((x) => x.providerName === providerName);
         if (result) {
-            return result.targetSeason;
+            return Object.assign(new Season(), result.targetSeason);
         }
         return;
     }

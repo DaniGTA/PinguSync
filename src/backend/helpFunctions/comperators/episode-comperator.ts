@@ -6,6 +6,8 @@ import logger from '../../logger/logger';
 import stringHelper from '../string-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperator from './season-comperator';
+import EpisodeMapping from 'src/backend/controller/objects/meta/episode/episode-mapping';
+
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
         const result = new ComperatorResult();
@@ -176,6 +178,20 @@ export default class EpisodeComperator {
                 return false;
             }
         }
+        return false;
+    }
+
+    public static compareEpisodeMapping(aEpisodeMapping: EpisodeMapping, bEpisodeMapping: EpisodeMapping): boolean {
+        if (aEpisodeMapping.id === bEpisodeMapping.id) {
+            return true;
+        } else if (aEpisodeMapping.provider === bEpisodeMapping.provider) {
+            if (aEpisodeMapping.episodeNumber == bEpisodeMapping.episodeNumber) {
+                return true;
+            } else if (aEpisodeMapping.providerEpisodeId === bEpisodeMapping.providerEpisodeId) {
+                return true;
+            }
+        }
+
         return false;
     }
 

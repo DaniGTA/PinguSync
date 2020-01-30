@@ -44,7 +44,9 @@ export default class ProviderDataListSearcher {
         const localDataList: ProviderLocalData[] = ProviderDataListManager.getProviderDataListSync();
         const results: ProviderLocalData[] = [];
         for (const binding of bindings) {
-            for (const localData of localDataList) {
+            const len = localDataList.length;
+            for (let index = 0; index < len; index++) {
+                const localData = localDataList[index];
                 if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
                     results.push(localData);
                     break;

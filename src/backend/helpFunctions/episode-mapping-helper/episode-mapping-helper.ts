@@ -166,25 +166,15 @@ export default class EpisodeMappingHelper {
                 if (combineRatings.length !== 0) {
                     const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings, this.getProviderLength(packages.flatMap((x) => x.provider)));
                     for (const result of results) {
-                        for (const episodeBind of result.episodeBinds) {
-                            if (!this.isSameEpisodeID(episode, episodeBind.episode)) {
-                                if (!this.isProviderInMapping(episode, episodeBind.provider.provider)) {
-                                    const mappingB = new EpisodeMapping(episodeBind.episode, episodeBind.provider);
-                                    if (!episode.addMapping) {
-                                        episode = Object.assign(new Episode(episode.episodeNumber), episode);
-                                    }
-                                    episode.addMapping(mappingB);
+                        providerAndSeriesPackage.series.addEpisodeMapping(...result.getEpisodeMappings());
 
-                                    const mapping = new EpisodeMapping(episode, providerAndSeriesPackage.provider);
-                                    this.updateMappingInProvider(episodeBind.episode, episodeBind.provider, mapping, packages.flatMap((x) => x.provider));
-
-                                    const ratingsA: EpisodeRatedEqualityContainer[] = this.getAllEpisodeRelatedRating(episode, ratedEquality);
-                                    const ratingsB: EpisodeRatedEqualityContainer[] = this.getAllEpisodeRelatedRating(episodeBind.episode, ratedEquality);
-
-                                    listHelper.removeEntrysSync(ratedEquality, ...ratingsA, ...ratingsB);
-                                }
-                            }
+                        const ratings: EpisodeRatedEqualityContainer[] = [];
+                        for (const epsiodeBind of result.episodeBinds) {
+                            ratings.push(this.getAllEpisodeRelatedRating(result.result, ratedEquality));
                         }
+
+
+                        listHelper.removeEntrysSync(ratedEquality, ...ratingsA, ...ratingsB);
                     }
                 }
             }
@@ -293,14 +283,14 @@ export default class EpisodeMappingHelper {
                         if (fastStreakEnabled) {
                             fastCheck++;
                         }
-                    } else if (fastStreakEnabled){
+                    } else if (fastStreakEnabled) {
                         fastCheck = 0;
                         fastStreakEnabled = false;
                     }
                     if (result.result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                         const oldDiff = providerAEpDiff;
                         lastDiffA = Object.assign(new Episode(0), detailedEpA);
-                        lastDiffB =  Object.assign(new Episode(0), detailedEpB);
+                        lastDiffB = Object.assign(new Episode(0), detailedEpB);
                         providerAEpDiff = EpisodeHelper.getEpisodeDifference(detailedEpA, detailedEpB);
                         if (oldDiff !== providerAEpDiff) {
                             const resultWithNewDiff = this.getRatedEqualityContainer(detailedEpA, detailedEpB, providerA, providerB, aTargetS, bTargetS, season, providerAEpDiff);
@@ -365,25 +355,6 @@ export default class EpisodeMappingHelper {
             }
         }
         return false;
-    }
-
-    private updateMappingInProvider(tempEpisode: Episode, tempProvider: ProviderLocalData, mapping: EpisodeMapping, providers: ProviderLocalData[]): void {
-        for (const provider of providers) {
-            if (tempProvider.provider === provider.provider) {
-                for (let episode of tempProvider.detailEpisodeInfo) {
-                    if (episode.id === tempEpisode.id) {
-                        if (episode.addMapping) {
-                            episode.addMapping(mapping);
-                        } else {
-                            episode = Object.assign(new Episode(0), episode);
-                            episode.addMapping(mapping);
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        return;
     }
 
     private isProviderAlreadyGotCompared(providerA: ProviderLocalData, providerB: ProviderLocalData, providerASeason: Season | undefined, providerBSeason: Season | undefined, diff: number, list: ProviderCompareHistoryEntry[]): boolean {
