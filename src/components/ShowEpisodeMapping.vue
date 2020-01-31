@@ -1,62 +1,59 @@
 <template>
-<div>
+  <div>
     <div class="modal-mask">
-        <div class="modal-wrapper">
-            <div class="modal-container">
-              <button @click="close()">Close</button>
-                Local Data Size{{localData.length}}
-                <table style="width:100%">
-                    <tr>
-                        <th>Provider</th>
-                        <th>Number</th>
-                        <th>MappingProvider</th>
-                        <th>MappingNumber</th>
-                    </tr>
-                    <template v-for="provider of localData">
-                        <template v-for="episode of provider.detailEpisodeInfo">
-                            <template v-for="mapping of episode.mappedTo">
-                                <tr v-bind:key="mapping.id">
-                                    <td>{{provider.provider}} ({{provider.id}})</td>
-                                    <td>{{episode.episodeNumber}} ({{episode.season}})</td>
-                                    <td>{{mapping.provider}} ({{mapping.providerSeriesId}})</td>
-                                    <td>{{mapping.episodeNumber}} ({{mapping.season}})</td>
-                                </tr>
-                            </template >
-                        </template >
-                    </template >
-                </table>
-            </div>
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <button @click="close()">Close</button>
+          Local Data Size{{localData.length}}
+          <table style="width:100%">
+            <tr>
+              <th>Provider</th>
+              <th>Number</th>
+              <th>MappingProvider</th>
+              <th>MappingNumber</th>
+            </tr>
+            <template v-for="pool of series.episodeBindingPools">
+              <template v-for="episode of pool.bindedEpisodes"></template>
+              <tr v-bind:key="mapping.id">
+                <td>{{provider.provider}} ({{provider.id}})</td>
+                <td>{{episode.episodeNumber}} ({{episode.season}})</td>
+                <td>{{mapping.provider}} ({{mapping.providerSeriesId}})</td>
+                <td>{{mapping.episodeNumber}} ({{mapping.season}})</td>
+              </tr>
+            </template>
+          </table>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 <script lang="ts">
-import { ipcRenderer, ipcMain } from 'electron';
+import { ipcRenderer, ipcMain } from "electron";
 import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
-import App from '../App.vue';
+import App from "../App.vue";
 
-import Series from '../backend/controller/objects/series';
-import VueLazyload from 'vue-lazyload';
-import { Promised } from 'vue-promised';
-import SeriesPackage from '../backend/controller/objects/series-package';
-import WatchProgress from '../backend/controller/objects/meta/watch-progress';
-import { SeasonSearchMode } from '../backend/helpFunctions/season-helper/season-search-mode';
-import { ListProviderLocalData } from '../backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderLocalData from '../backend/controller/provider-manager/local-data/interfaces/provider-local-data';
-Vue.component('Promised', Promised);
+import Series from "../backend/controller/objects/series";
+import VueLazyload from "vue-lazyload";
+import { Promised } from "vue-promised";
+import SeriesPackage from "../backend/controller/objects/series-package";
+import WatchProgress from "../backend/controller/objects/meta/watch-progress";
+import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
+import { ListProviderLocalData } from "../backend/controller/provider-manager/local-data/list-provider-local-data";
+import ProviderLocalData from "../backend/controller/provider-manager/local-data/interfaces/provider-local-data";
+Vue.component("Promised", Promised);
 Vue.use(VueLazyload);
 
 @Component
 export default class ListEntry extends Vue {
-  @PropSync('sSeries', { type: Series }) public series!: Series | null;
-  @Watch('sSeries', { immediate: true, deep: true })
+  @PropSync("sSeries", { type: Series }) public series!: Series | null;
+  @Watch("sSeries", { immediate: true, deep: true })
   public onChildChanged(val: Series, oldVal: Series) {
     if (val) {
       this.localData = val.getAllProviderLocalDatas();
     }
   }
-  public localData:ProviderLocalData[] = []
+  public localData: ProviderLocalData[] = [];
   public constructor() {
     super();
   }
@@ -69,16 +66,16 @@ export default class ListEntry extends Vue {
 <style>
 .modal-mask {
   height: 100%;
-    overflow: scroll;
+  overflow: scroll;
   position: fixed;
   z-index: 9998;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity .3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .modal-wrapper {
@@ -91,8 +88,8 @@ export default class ListEntry extends Vue {
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
   overflow: scroll;
   height: 80%;
