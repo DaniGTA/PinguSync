@@ -39,7 +39,7 @@ export default class MainListManager {
                         }
                     }
                 } else {
-                    await new EpisodeMappingHelper().generateEpisodeMapping(series);
+                    await new EpisodeMappingHelper(series).generateEpisodeMapping();
                     results.push(series);
                 }
                 if (results.length === 0) {
@@ -94,7 +94,7 @@ export default class MainListManager {
             return;
         }
         logger.log('info', '[MainList] Cleanup Mainlist. Current list size: ' + this.mainList.length);
-        const episodeMappingHelperInstance = new EpisodeMappingHelper();
+        
         MainListManager.listMaintance = true;
         try {
             MainListManager.secondList = [...MainListManager.mainList];
@@ -112,7 +112,8 @@ export default class MainListManager {
                     } catch (ignore) {
                         logger.debug(ignore);
                     }
-                    await episodeMappingHelperInstance.generateEpisodeMapping(entry);
+                    const episodeMappingHelperInstance = new EpisodeMappingHelper(entry);
+                    await episodeMappingHelperInstance.generateEpisodeMapping();
                     await MainListManager.addSerieToMainList(entry);
                 } catch (err) {
                     logger.error(err);

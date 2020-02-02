@@ -124,7 +124,6 @@ class ListHelper {
                 for (const entry2 of copyArr2) {
                     const result = EpisodeComperator.compareDetailedEpisode(entry1, entry2);
                     if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
-                        entry1.addMappings(...entry2.mappedTo);
                         if (!duplicateFound) {
                             uniqueEpisodeList.push(entry1);
                             copyArr2 = this.removeEntrysSync(copyArr2, entry2);

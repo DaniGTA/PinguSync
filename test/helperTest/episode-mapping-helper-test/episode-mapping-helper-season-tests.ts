@@ -11,6 +11,7 @@ import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-map
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
+import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode-binding-pool-helper';
 
 
 
@@ -61,39 +62,39 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+        const result = await episodeMappingInstance.generateEpisodeMapping();
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
+        const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
+        const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
 
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3)) {
             fail('not all episodes found in the result');
         } else {
-            strictEqual(aEpisodeInfo1.mappedTo.length, 1, 'Episode A1 mapping length should be 1');
-            strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
-            strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1).length, 1, 'Episode A1 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2).length, 1, 'Episode A2 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3).length, 1, 'Episode A3 mapping length should be 1');
 
-            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo1.id, 'Episode A1 should have id mapped to Episode B1');
-            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2.id, 'Episode A2 should have id mapped to Episode B2');
-            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3.id, 'Episode A3 should have id mapped to Episode B3');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1)[0].id, bEpisodeInfo1.id, 'Episode A1 should have id mapped to Episode B1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2)[0].id, bEpisodeInfo2.id, 'Episode A2 should have id mapped to Episode B2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3)[0].id, bEpisodeInfo3.id, 'Episode A3 should have id mapped to Episode B3');
 
-            strictEqual(bEpisodeInfo1.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
-            strictEqual(bEpisodeInfo2.mappedTo.length, 1, 'Episode B2 mapping length should be 1');
-            strictEqual(bEpisodeInfo3.mappedTo.length, 1, 'Episode B3 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1).length, 1, 'Episode B1 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2).length, 1, 'Episode B2 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3).length, 1, 'Episode B3 mapping length should be 1');
 
-            strictEqual(bEpisodeInfo1s2.mappedTo.length, 0, 'Episode B1 mapping length should be 0');
-            strictEqual(bEpisodeInfo2s2.mappedTo.length, 0, 'Episode B2 mapping length should be 0');
-            strictEqual(bEpisodeInfo3s2.mappedTo.length, 0, 'Episode B3 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s2).length, 0, 'Episode B1 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s2).length, 0, 'Episode B2 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s2).length, 0, 'Episode B3 mapping length should be 0');
 
-            strictEqual(bEpisodeInfo1.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1');
-            strictEqual(bEpisodeInfo2.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2');
-            strictEqual(bEpisodeInfo3.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1)[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2)[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3)[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3');
         }
     });
 
@@ -123,46 +124,46 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+        const result = await episodeMappingInstance.generateEpisodeMapping();
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
+        const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
+        const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
 
-        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo1 = bProvider.detailEpisodeInfo[0];
+        const bEpisodeInfo2 = bProvider.detailEpisodeInfo[1];
+        const bEpisodeInfo3 = bProvider.detailEpisodeInfo[2];
 
-        const bEpisodeInfo1s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
-        const bEpisodeInfo2s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[4].id);
-        const bEpisodeInfo3s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[5].id);
+        const bEpisodeInfo1s2 = bProvider.detailEpisodeInfo[3];
+        const bEpisodeInfo2s2 = bProvider.detailEpisodeInfo[4];
+        const bEpisodeInfo3s2 = bProvider.detailEpisodeInfo[5];
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo1s2 && bEpisodeInfo2s2 && bEpisodeInfo3s2)) {
             fail('not all episodes found in the result');
         } else {
-            strictEqual(aEpisodeInfo1.mappedTo.length, 1, 'Episode A1 mapping length should be 1');
-            strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
-            strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1).length, 1, 'Episode A1 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2).length, 1, 'Episode A2 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3).length, 1, 'Episode A3 mapping length should be 1');
 
-            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo1.id, 'Episode A1 should have id mapped to Episode B1');
-            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2.id, 'Episode A2 should have id mapped to Episode B2');
-            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3.id, 'Episode A3 should have id mapped to Episode B3');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1)[0].id, bEpisodeInfo1.id, 'Episode A1 should have id mapped to Episode B1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2)[0].id, bEpisodeInfo2.id, 'Episode A2 should have id mapped to Episode B2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3)[0].id, bEpisodeInfo3.id, 'Episode A3 should have id mapped to Episode B3');
 
-            strictEqual(bEpisodeInfo1.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
-            strictEqual(bEpisodeInfo2.mappedTo.length, 1, 'Episode B2 mapping length should be 1');
-            strictEqual(bEpisodeInfo3.mappedTo.length, 1, 'Episode B3 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1).length, 1, 'Episode B1 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2).length, 1, 'Episode B2 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3).length, 1, 'Episode B3 mapping length should be 1');
 
-            strictEqual(bEpisodeInfo1s2.mappedTo.length, 0, 'Episode B1 mapping length should be 0');
-            strictEqual(bEpisodeInfo2s2.mappedTo.length, 0, 'Episode B2 mapping length should be 0');
-            strictEqual(bEpisodeInfo3s2.mappedTo.length, 0, 'Episode B3 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s2).length, 0, 'Episode B1 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s2).length, 0, 'Episode B2 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s2).length, 0, 'Episode B3 mapping length should be 0');
 
-            strictEqual(bEpisodeInfo1.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1');
-            strictEqual(bEpisodeInfo2.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2');
-            strictEqual(bEpisodeInfo3.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1)[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2)[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3)[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3');
         }
     });
 
@@ -192,46 +193,46 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+        const result = await episodeMappingInstance.generateEpisodeMapping();
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
+        const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
+        const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
 
-        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo1 = bProvider.detailEpisodeInfo[0];
+        const bEpisodeInfo2 = bProvider.detailEpisodeInfo[1];
+        const bEpisodeInfo3 = bProvider.detailEpisodeInfo[2];
 
-        const bEpisodeInfo1s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
-        const bEpisodeInfo2s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[4].id);
-        const bEpisodeInfo3s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[5].id);
+        const bEpisodeInfo1s2 = bProvider.detailEpisodeInfo[3];
+        const bEpisodeInfo2s2 = bProvider.detailEpisodeInfo[4];
+        const bEpisodeInfo3s2 = bProvider.detailEpisodeInfo[5];
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo1s2 && bEpisodeInfo2s2 && bEpisodeInfo3s2)) {
             fail('not all episodes found in the result');
         } else {
-            strictEqual(aEpisodeInfo1.mappedTo.length, 1, 'Episode A1 mapping length should be 1');
-            strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
-            strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1).length, 1, 'Episode A1 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2).length, 1, 'Episode A2 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3).length, 1, 'Episode A3 mapping length should be 1');
 
-            strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo1s2.id, 'Episode A1 should have id mapped to Episode B1S2');
-            strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2s2.id, 'Episode A2 should have id mapped to Episode B2S2');
-            strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3s2.id, 'Episode A3 should have id mapped to Episode B3S2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1)[0].id, bEpisodeInfo1s2.id, 'Episode A1 should have id mapped to Episode B1S2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2)[0].id, bEpisodeInfo2s2.id, 'Episode A2 should have id mapped to Episode B2S2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3)[0].id, bEpisodeInfo3s2.id, 'Episode A3 should have id mapped to Episode B3S2');
 
-            strictEqual(bEpisodeInfo1.mappedTo.length, 0, 'Episode B1 mapping length should be 0');
-            strictEqual(bEpisodeInfo2.mappedTo.length, 0, 'Episode B2 mapping length should be 0');
-            strictEqual(bEpisodeInfo3.mappedTo.length, 0, 'Episode B3 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1).length, 0, 'Episode B1 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2).length, 0, 'Episode B2 mapping length should be 0');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3).length, 0, 'Episode B3 mapping length should be 0');
 
-            strictEqual(bEpisodeInfo1s2.mappedTo.length, 1, 'Episode B1 mapping length should be 1');
-            strictEqual(bEpisodeInfo2s2.mappedTo.length, 1, 'Episode B2 mapping length should be 1');
-            strictEqual(bEpisodeInfo3s2.mappedTo.length, 1, 'Episode B3 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s2).length, 1, 'Episode B1 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s2).length, 1, 'Episode B2 mapping length should be 1');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s2).length, 1, 'Episode B3 mapping length should be 1');
 
-            strictEqual(bEpisodeInfo1s2.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1S2');
-            strictEqual(bEpisodeInfo2s2.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2S2');
-            strictEqual(bEpisodeInfo3s2.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3S2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s2)[0].id, aEpisodeInfo1.id, 'Episode B1 should have id mapped to Episode A1S2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s2)[0].id, aEpisodeInfo2.id, 'Episode B2 should have id mapped to Episode A2S2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s2)[0].id, aEpisodeInfo3.id, 'Episode B3 should have id mapped to Episode A3S2');
         }
     });
 
@@ -266,26 +267,26 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
             // Testing
 
-            const episodeMappingInstance = new EpisodeMappingHelper();
-            const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+            const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+            const result = await episodeMappingInstance.generateEpisodeMapping();
 
             // Extract results.
 
-            const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
-            const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
-            const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
+            const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
+            const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
+            const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
 
-            const bEpisodeInfo1s0 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
-            const bEpisodeInfo2s0 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
-            const bEpisodeInfo3s0 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+            const bEpisodeInfo1s0 = bProvider.detailEpisodeInfo[0];
+            const bEpisodeInfo2s0 = bProvider.detailEpisodeInfo[1];
+            const bEpisodeInfo3s0 = bProvider.detailEpisodeInfo[2];
 
-            const bEpisodeInfo1s1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[3].id);
-            const bEpisodeInfo2s1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[4].id);
-            const bEpisodeInfo3s1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[5].id);
+            const bEpisodeInfo1s1 = bProvider.detailEpisodeInfo[3];
+            const bEpisodeInfo2s1 = bProvider.detailEpisodeInfo[4];
+            const bEpisodeInfo3s1 = bProvider.detailEpisodeInfo[5];
 
-            const bEpisodeInfo1s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[6].id);
-            const bEpisodeInfo2s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[7].id);
-            const bEpisodeInfo3s2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[8].id);
+            const bEpisodeInfo1s2 = bProvider.detailEpisodeInfo[6];
+            const bEpisodeInfo2s2 = bProvider.detailEpisodeInfo[7];
+            const bEpisodeInfo3s2 = bProvider.detailEpisodeInfo[8];
 
             // Result checking
             if (!(
@@ -303,29 +304,29 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
                 bEpisodeInfo3s2)) {
                 fail('not all episodes found in the result');
             } else {
-                strictEqual(aEpisodeInfo1.mappedTo.length, 1, 'Episode A1 mapping length should be 1');
-                strictEqual(aEpisodeInfo2.mappedTo.length, 1, 'Episode A2 mapping length should be 1');
-                strictEqual(aEpisodeInfo3.mappedTo.length, 1, 'Episode A3 mapping length should be 1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1).length, 1, 'Episode A1 mapping length should be 1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2).length, 1, 'Episode A2 mapping length should be 1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3).length, 1, 'Episode A3 mapping length should be 1');
 
-                strictEqual(aEpisodeInfo1.mappedTo[0].id, bEpisodeInfo1s1.id, 'Episode A1 should have id mapped to Episode B1S1');
-                strictEqual(aEpisodeInfo2.mappedTo[0].id, bEpisodeInfo2s1.id, 'Episode A2 should have id mapped to Episode B2S1');
-                strictEqual(aEpisodeInfo3.mappedTo[0].id, bEpisodeInfo3s1.id, 'Episode A3 should have id mapped to Episode B3S1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1)[0].id, bEpisodeInfo1s1.id, 'Episode A1 should have id mapped to Episode B1S1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2)[0].id, bEpisodeInfo2s1.id, 'Episode A2 should have id mapped to Episode B2S1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3)[0].id, bEpisodeInfo3s1.id, 'Episode A3 should have id mapped to Episode B3S1');
 
-                strictEqual(bEpisodeInfo1s0.mappedTo.length, 0, 'Episode B1S0 mapping length should be 0');
-                strictEqual(bEpisodeInfo2s0.mappedTo.length, 0, 'Episode B2S0 mapping length should be 0');
-                strictEqual(bEpisodeInfo3s0.mappedTo.length, 0, 'Episode B3S0 mapping length should be 0');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s0).length, 0, 'Episode B1S0 mapping length should be 0');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s0).length, 0, 'Episode B2S0 mapping length should be 0');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s0).length, 0, 'Episode B3S0 mapping length should be 0');
 
-                strictEqual(bEpisodeInfo1s1.mappedTo.length, 1, 'Episode B1S1 mapping length should be 1');
-                strictEqual(bEpisodeInfo2s1.mappedTo.length, 1, 'Episode B2S1 mapping length should be 1');
-                strictEqual(bEpisodeInfo3s1.mappedTo.length, 1, 'Episode B3S1 mapping length should be 1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s1).length, 1, 'Episode B1S1 mapping length should be 1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s1).length, 1, 'Episode B2S1 mapping length should be 1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s1).length, 1, 'Episode B3S1 mapping length should be 1');
 
-                strictEqual(bEpisodeInfo1s2.mappedTo.length, 0, 'Episode B1S2 mapping length should be 0');
-                strictEqual(bEpisodeInfo2s2.mappedTo.length, 0, 'Episode B2S2 mapping length should be 0');
-                strictEqual(bEpisodeInfo3s2.mappedTo.length, 0, 'Episode B3S2 mapping length should be 0');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s2).length, 0, 'Episode B1S2 mapping length should be 0');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s2).length, 0, 'Episode B2S2 mapping length should be 0');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s2).length, 0, 'Episode B3S2 mapping length should be 0');
 
-                strictEqual(bEpisodeInfo1s1.mappedTo[0].id, aEpisodeInfo1.id, 'Episode B1S1 should have id mapped to Episode A1');
-                strictEqual(bEpisodeInfo2s1.mappedTo[0].id, aEpisodeInfo2.id, 'Episode B2S1 should have id mapped to Episode A2');
-                strictEqual(bEpisodeInfo3s1.mappedTo[0].id, aEpisodeInfo3.id, 'Episode B3S1 should have id mapped to Episode A3');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s1)[0].id, aEpisodeInfo1.id, 'Episode B1S1 should have id mapped to Episode A1');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s1)[0].id, aEpisodeInfo2.id, 'Episode B2S1 should have id mapped to Episode A2');
+                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s1)[0].id, aEpisodeInfo3.id, 'Episode B3S1 should have id mapped to Episode A3');
             }
         },
     );

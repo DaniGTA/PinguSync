@@ -17,6 +17,8 @@ import SeriesProviderExtension from './extension/provider-extension/series-provi
 import { MergeTypes } from './merge-types';
 import Cover from './meta/cover';
 import Episode from './meta/episode/episode';
+import EpisodeBindingPool from './meta/episode/episode-binding-pool';
+import EpisodeMapping from './meta/episode/episode-mapping';
 import { ImageSize } from './meta/image-size';
 import { MediaType } from './meta/media-type';
 import Name from './meta/name';
@@ -26,8 +28,6 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
-import EpisodeBindingPool from './meta/episode/episode-binding-pool';
-import EpisodeMapping from './meta/episode/episode-mapping';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
@@ -36,13 +36,15 @@ export default class Series extends SeriesProviderExtension {
     public lastUpdate: number = Date.now();
     public lastInfoUpdate: number = 0;
 
+    public episodeBindingPools: EpisodeBindingPool[] = [];
+
     private cachedSeason?: Season;
     private cachedMediaType?: MediaType;
     private seasonDetectionType: string = '';
     private canSync: boolean | null = null;
-    private episodeBindingPools: EpisodeBindingPool[] = [];
 
     private firstSeasonSeriesId?: string;
+
     constructor() {
         super();
         // Generates randome string.
@@ -108,7 +110,7 @@ export default class Series extends SeriesProviderExtension {
         if (existingBindingPool) {
             existingBindingPool.addEpisodeMappingToBindings(...episodeMappings);
         } else {
-            const newBindingPool = new EpisodeBindingPool(episodeMappings);
+            const newBindingPool = new EpisodeBindingPool(...episodeMappings);
             this.episodeBindingPools.push(newBindingPool);
         }
     }
@@ -266,7 +268,7 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         } catch (err) {
-            logger.error('Error at Series.getSequel')
+            logger.error('Error at Series.getSequel');
             logger.error(err);
         }
         return new RelationSearchResults(null, ...searchedProviders);
@@ -280,7 +282,7 @@ export default class Series extends SeriesProviderExtension {
             this.canSync = await this.getCanSyncStatus();
             logger.debug('Calculated Sync status');
         } catch (err) {
-            logger.error('Error at Series.getCanSync')
+            logger.error('Error at Series.getCanSync');
             logger.error(err);
             this.canSync = false;
         }
@@ -313,10 +315,9 @@ export default class Series extends SeriesProviderExtension {
             await getSeason;
             await getMediaType;
         }
-        await new EpisodeMappingHelper().generateEpisodeMapping(newAnime);
+        await new EpisodeMappingHelper(newAnime).generateEpisodeMapping();
         logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
         await newAnime.getCanSync();
-
         if (this.lastInfoUpdate < anime.lastInfoUpdate) {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;
         } else {

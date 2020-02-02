@@ -21,6 +21,7 @@ import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provid
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
 import TestHelper from '../test-helper';
+import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper';
 
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
@@ -115,18 +116,20 @@ describe('Basic List | Testrun', () => {
                 notStrictEqual(traktResult.getAllNames().length, 0);
                 strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                
                 for (const anilistResultEntry of anilistResult.detailEpisodeInfo) {
-                    strictEqual(anilistResultEntry.mappedTo[0].episodeNumber, anilistResultEntry.episodeNumber);
+                    
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools ,anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
                 }
                 for (const anilistResult2Entry of anilistResult2.detailEpisodeInfo) {
-                    strictEqual(anilistResult2Entry.mappedTo[0].episodeNumber, anilistResult2Entry.episodeNumber);
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools ,anilistResult2Entry)[0].episodeNumber, anilistResult2Entry.episodeNumber);
                 }
                 for (const trakt of traktResult2.detailEpisodeInfo) {
                     if (trakt.type === EpisodeType.SPECIAL) {
-                        strictEqual(trakt.mappedTo.length, 0);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools ,trakt).length, 0);
                     } else {
-                        strictEqual(trakt.mappedTo.length, 1);
-                        strictEqual(trakt.mappedTo[0].episodeNumber, trakt.episodeNumber);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools ,trakt).length, 1);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools ,trakt)[0].episodeNumber, trakt.episodeNumber);
                     }
                 }
             } else {

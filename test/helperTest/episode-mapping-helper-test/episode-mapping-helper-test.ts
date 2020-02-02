@@ -18,6 +18,7 @@ import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provi
 import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
+import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode-binding-pool-helper';
 // tslint:disable: no-string-literal
 describe('Episode mapping | Mapping Only', () => {
     const lc = new ListController(true);
@@ -51,8 +52,8 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+        const result = await episodeMappingInstance.generateEpisodeMapping();
 
         // Extract results.
 
@@ -119,38 +120,38 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+        const result = await episodeMappingInstance.generateEpisodeMapping();
 
         // Extract results.
 
-        const aEpisodeInfo1 = result.find((x) => x.id === aProvider.detailEpisodeInfo[0].id);
-        const aEpisodeInfo2 = result.find((x) => x.id === aProvider.detailEpisodeInfo[1].id);
-        const aEpisodeInfo3 = result.find((x) => x.id === aProvider.detailEpisodeInfo[2].id);
+        const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
+        const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
+        const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
 
-        const bEpisodeInfo1 = result.find((x) => x.id === bProvider.detailEpisodeInfo[0].id);
-        const bEpisodeInfo2 = result.find((x) => x.id === bProvider.detailEpisodeInfo[1].id);
-        const bEpisodeInfo3 = result.find((x) => x.id === bProvider.detailEpisodeInfo[2].id);
+        const bEpisodeInfo1 = bProvider.detailEpisodeInfo[0];
+        const bEpisodeInfo2 = bProvider.detailEpisodeInfo[1];
+        const bEpisodeInfo3 = bProvider.detailEpisodeInfo[2];
 
-        const cEpisodeInfo1 = result.find((x) => x.id === cProvider.detailEpisodeInfo[0].id);
-        const cEpisodeInfo2 = result.find((x) => x.id === cProvider.detailEpisodeInfo[1].id);
-        const cEpisodeInfo3 = result.find((x) => x.id === cProvider.detailEpisodeInfo[2].id);
+        const cEpisodeInfo1 = cProvider.detailEpisodeInfo[0];
+        const cEpisodeInfo2 = cProvider.detailEpisodeInfo[1];
+        const cEpisodeInfo3 = cProvider.detailEpisodeInfo[2];
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && cEpisodeInfo1 && cEpisodeInfo2 && cEpisodeInfo3)) {
             fail('not all episodes found in the result');
         } else {
-            strictEqual(aEpisodeInfo1.mappedTo.length, 2, 'Episode A1 mapping length should be 2');
-            strictEqual(aEpisodeInfo2.mappedTo.length, 2, 'Episode A2 mapping length should be 2');
-            strictEqual(aEpisodeInfo3.mappedTo.length, 2, 'Episode A3 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1).length, 2, 'Episode A1 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2).length, 2, 'Episode A2 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3).length, 2, 'Episode A3 mapping length should be 2');
 
-            strictEqual(bEpisodeInfo1.mappedTo.length, 2, 'Episode B1 mapping length should be 2');
-            strictEqual(bEpisodeInfo2.mappedTo.length, 2, 'Episode B2 mapping length should be 2');
-            strictEqual(bEpisodeInfo3.mappedTo.length, 2, 'Episode B3 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1).length, 2, 'Episode B1 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2).length, 2, 'Episode B2 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3).length, 2, 'Episode B3 mapping length should be 2');
 
-            strictEqual(cEpisodeInfo1.mappedTo.length, 2, 'Episode C1 mapping length should be 2');
-            strictEqual(cEpisodeInfo2.mappedTo.length, 2, 'Episode C2 mapping length should be 2');
-            strictEqual(cEpisodeInfo3.mappedTo.length, 2, 'Episode C3 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, cEpisodeInfo1).length, 2, 'Episode C1 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, cEpisodeInfo2).length, 2, 'Episode C2 mapping length should be 2');
+            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, cEpisodeInfo3).length, 2, 'Episode C3 mapping length should be 2');
         }
     });
 
@@ -182,8 +183,8 @@ describe('Episode mapping | Mapping Only', () => {
 
             // Testing
 
-            const episodeMappingInstance = new EpisodeMappingHelper();
-            const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+            const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+            const result = await episodeMappingInstance.generateEpisodeMapping();
 
             // Result checking
             strictEqual(result.length, 750);
@@ -216,8 +217,8 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+        const result = await episodeMappingInstance.generateEpisodeMapping();
 
         // Result checking
         strictEqual(result.length, 6);
@@ -263,8 +264,8 @@ describe('Episode mapping | Mapping Only', () => {
         // Testing
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [sequelOfaSeries];
-        const episodeMappingInstance = new EpisodeMappingHelper();
-        const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+        const result = await episodeMappingInstance.generateEpisodeMapping();
 
         // Result checking
         strictEqual(result.length, 9);
@@ -321,8 +322,8 @@ describe('Episode mapping | Mapping Only', () => {
             // Testing
             // tslint:disable-next-line: no-string-literal
             MainListManager['mainList'] = [sequelOfaSeries, sequelOfSequelOfaSeries];
-            const episodeMappingInstance = new EpisodeMappingHelper();
-            const result = await episodeMappingInstance.generateEpisodeMapping(aSeries);
+            const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
+            const result = await episodeMappingInstance.generateEpisodeMapping();
 
             // Result checking
             strictEqual(result.length, 12);
@@ -368,7 +369,7 @@ describe('Episode mapping | Mapping Only', () => {
     });
     describe('sorting episode results', () => {
         test('should sort result container right', async () => {
-            const episodeMappingInstance = new EpisodeMappingHelper();
+
             const ep2r = new ComperatorResult();
             ep2r.matchAble = 2;
             ep2r.matches = 1;
@@ -377,8 +378,8 @@ describe('Episode mapping | Mapping Only', () => {
             ep1r.matches = 1;
             const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
             const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
-            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
-            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeMappingHelper['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeMappingHelper['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
             strictEqual(sorted[0], ep2erec);
             strictEqual(sorted[1], ep1erec);
             strictEqual(sorted2[0], ep2erec);
@@ -386,7 +387,7 @@ describe('Episode mapping | Mapping Only', () => {
         });
 
         test('should sort result container right', async () => {
-            const episodeMappingInstance = new EpisodeMappingHelper();
+          
             const ep2r = new ComperatorResult();
             ep2r.matchAble = 2;
             ep2r.matches = 1;
@@ -396,8 +397,8 @@ describe('Episode mapping | Mapping Only', () => {
             const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
             const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
 
-            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
-            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => episodeMappingInstance['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeMappingHelper['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeMappingHelper['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
             strictEqual(sorted[0], ep1erec);
             strictEqual(sorted[1], ep2erec);
             strictEqual(sorted2[0], ep1erec);
@@ -405,7 +406,7 @@ describe('Episode mapping | Mapping Only', () => {
         });
 
         test('should get the right max episode number', async () => {
-            const episodeMappingInstance = new EpisodeMappingHelper();
+            const episodeMappingInstance = new EpisodeMappingHelper(new Series());
             const episodes = [new Episode(1), new Episode(2), new Episode(3)];
             const result = episodeMappingInstance['getMaxEpisodeNumber'](episodes);
             strictEqual(result, 3);

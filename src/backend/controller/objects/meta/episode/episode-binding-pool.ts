@@ -1,21 +1,30 @@
+import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator';
 import Episode from './episode';
 import EpisodeMapping from './episode-mapping';
-import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator';
 
 export default class EpisodeBindingPool {
-    public readonly bindedEpisodes: EpisodeMapping[] = [];
+    public readonly bindedEpisodeMappings: EpisodeMapping[] = [];
 
-    constructor(episodes: EpisodeMapping[]) {
-        this.bindedEpisodes = episodes;
+    constructor(...episodes: EpisodeMapping[]) {
+        this.bindedEpisodeMappings.push(...episodes);
     }
 
-    addEpisodeMappingToBindings(...episodeMappings: EpisodeMapping[]) {
-        this.bindedEpisodes.push(...episodeMappings);
+    public addEpisodeMappingToBindings(...episodeMappings: EpisodeMapping[]) {
+        this.bindedEpisodeMappings.push(...episodeMappings);
     }
 
-    bindingPoolHasEpisodeMapping(episodeMapping: EpisodeMapping): boolean {
-        for (const episode of this.bindedEpisodes) {
+    public bindingPoolHasEpisodeMapping(episodeMapping: EpisodeMapping): boolean {
+        for (const episode of this.bindedEpisodeMappings) {
             if (EpisodeComperator.compareEpisodeMapping(episode, episodeMapping)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bindingPoolHasEpisode(episode: Episode): boolean {
+        for (const bindedEpisode of this.bindedEpisodeMappings) {
+            if (EpisodeComperator.compareEpisodeMappingToEpisode(bindedEpisode, episode)) {
                 return true;
             }
         }

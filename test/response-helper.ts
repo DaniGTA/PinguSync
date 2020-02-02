@@ -34,7 +34,7 @@ export default class ResponseHelper {
         // reset headers
         const copy = { ...options };
         copy.headers = {};
-
+        
         const text = JSON.stringify(copy);
         return createHash('sha256').update(text).digest('hex');
     }

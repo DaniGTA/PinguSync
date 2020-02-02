@@ -10,7 +10,6 @@ import { EpisodeType } from './episode-type';
  * Contains detail infos about a episode.
  */
 export default class Episode {
-    private _season?: Season;
 
     public set season(season: Season | undefined) {
         this._season = season;
@@ -45,6 +44,8 @@ export default class Episode {
     public provider?: string;
     public providerEpisodeId?: number | string;
     public thumbnails: EpisodeThumbnail[] = [];
+
+    private _season?: Season;
 
     /**
      * Only giv

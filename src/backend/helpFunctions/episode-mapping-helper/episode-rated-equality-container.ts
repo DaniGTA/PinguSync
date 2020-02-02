@@ -1,6 +1,6 @@
+import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 import ComperatorResult from '../comperators/comperator-results.ts/comperator-result';
 import EpisodeProviderBind from './episode-provider-bind';
-import EpisodeMapping from 'src/backend/controller/objects/meta/episode/episode-mapping';
 
 export default class EpisodeRatedEqualityContainer {
     public readonly result: ComperatorResult;

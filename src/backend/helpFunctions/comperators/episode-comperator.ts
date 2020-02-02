@@ -185,9 +185,25 @@ export default class EpisodeComperator {
         if (aEpisodeMapping.id === bEpisodeMapping.id) {
             return true;
         } else if (aEpisodeMapping.provider === bEpisodeMapping.provider) {
-            if (aEpisodeMapping.episodeNumber == bEpisodeMapping.episodeNumber) {
+            // tslint:disable-next-line: triple-equals
+            if (aEpisodeMapping.episodeNumber == bEpisodeMapping.episodeNumber && SeasonComperator.isSameSeason(aEpisodeMapping.season,bEpisodeMapping.season)) {
                 return true;
-            } else if (aEpisodeMapping.providerEpisodeId === bEpisodeMapping.providerEpisodeId) {
+            } else if (aEpisodeMapping.providerEpisodeId !== undefined && (aEpisodeMapping.providerEpisodeId === bEpisodeMapping.providerEpisodeId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static compareEpisodeMappingToEpisode(aEpisodeMapping: EpisodeMapping, aEpisode: Episode): boolean {
+        if (aEpisodeMapping.id === aEpisode.id) {
+            return true;
+        } else if (aEpisodeMapping.provider === aEpisode.provider) {
+            // tslint:disable-next-line: triple-equals
+            if (aEpisodeMapping.episodeNumber == aEpisode.episodeNumber && SeasonComperator.isSameSeason(aEpisodeMapping.season, aEpisode.season)) {
+                return true;
+            } else if (aEpisodeMapping.providerEpisodeId !== undefined && (aEpisodeMapping.providerEpisodeId === aEpisode.providerEpisodeId)) {
                 return true;
             }
         }
