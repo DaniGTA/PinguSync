@@ -10,7 +10,18 @@ export default class EpisodeBindingPool {
     }
 
     public addEpisodeMappingToBindings(...episodeMappings: EpisodeMapping[]) {
-        this.bindedEpisodeMappings.push(...episodeMappings);
+        for (const episodeMapping of episodeMappings) {
+            let found = false;
+            for (const currentEpisodeMapping of this.bindedEpisodeMappings) {
+                if (EpisodeComperator.compareEpisodeMapping(episodeMapping, currentEpisodeMapping)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                this.bindedEpisodeMappings.push(episodeMapping);
+            }
+        }
     }
 
     public bindingPoolHasEpisodeMapping(episodeMapping: EpisodeMapping): boolean {

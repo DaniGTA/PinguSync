@@ -12,10 +12,9 @@ export default class MainListEntryUpdater {
      * @param series
      */
     public async updateSeries(...providers: MultiProviderResult[]) {
-        const searcher = new MainListSearcher();
         const notFounded: Series[] = [];
         for (const provider of providers) {
-            const searchResult = await searcher.findSeriesWithMultiProviderResult(provider);
+            const searchResult = await MainListSearcher.findSeriesWithMultiProviderResult(provider);
             if (searchResult) {
                 await searchResult.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
                 await MainListManager.updateSerieInList(searchResult);

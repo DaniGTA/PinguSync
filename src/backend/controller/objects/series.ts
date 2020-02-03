@@ -115,6 +115,12 @@ export default class Series extends SeriesProviderExtension {
         }
     }
 
+    public addEpisodeBindingPools(...bindingPools: EpisodeBindingPool[]) {
+        for (const bindingPool of bindingPools) {
+            this.addEpisodeMapping(...bindingPool.bindedEpisodeMappings);
+        }
+    }
+
     public findExistingBindingPoolByEpisodeMapping(...episodeMappings: EpisodeMapping[]): EpisodeBindingPool | null {
         for (const bindingPool of this.episodeBindingPools) {
             for (const episodeMapping of episodeMappings) {
@@ -170,7 +176,7 @@ export default class Series extends SeriesProviderExtension {
     /**
      *
      */
-    public async getAllDetailedEpisodes(): Promise<Episode[]> {
+    public getAllDetailedEpisodes(): Episode[] {
         const providers = this.getAllProviderLocalDatas();
         const array = providers.flatMap((x) => x.detailEpisodeInfo);
         return array;
@@ -314,8 +320,10 @@ export default class Series extends SeriesProviderExtension {
             const getMediaType = await newAnime.getMediaType();
             await getSeason;
             await getMediaType;
+            await new EpisodeMappingHelper(newAnime).generateEpisodeMapping();
+        } else if (mergeType = MergeTypes.UPGRADE) {
+            newAnime.addEpisodeBindingPools(...anime.episodeBindingPools, ...this.episodeBindingPools);
         }
-        await new EpisodeMappingHelper(newAnime).generateEpisodeMapping();
         logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
         await newAnime.getCanSync();
         if (this.lastInfoUpdate < anime.lastInfoUpdate) {

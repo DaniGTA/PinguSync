@@ -5,23 +5,26 @@
         <div class="modal-container">
           <button @click="close()">Close</button>
           Local Data Size{{localData.length}}
-          <table style="width:100%">
-            <tr>
-              <th>Provider</th>
-              <th>Number</th>
-              <th>MappingProvider</th>
-              <th>MappingNumber</th>
-            </tr>
-            <template v-for="pool of series.episodeBindingPools">
-              <template v-for="episode of pool.bindedEpisodes"></template>
-              <tr v-bind:key="mapping.id">
-                <td>{{provider.provider}} ({{provider.id}})</td>
-                <td>{{episode.episodeNumber}} ({{episode.season}})</td>
-                <td>{{mapping.provider}} ({{mapping.providerSeriesId}})</td>
-                <td>{{mapping.episodeNumber}} ({{mapping.season}})</td>
+          <template
+            v-for="pool of series.episodeBindingPools"
+          >
+            <table style="width:100%">
+              <tr>
+                <th>Provider</th>
+                <th>Provider ID</th>
+                <th>Episode Number</th>
+                <th>Season Number</th>
               </tr>
-            </template>
-          </table>
+              <template v-for="mapping of pool.bindedEpisodeMappings">
+                <tr v-bind:key="mapping.id">
+                  <td>{{mapping.provider}}</td>
+                  <td>{{mapping.providerSeriesId}}</td>
+                  <td>{{mapping.episodeNumber}}</td>
+                  <td>{{mapping.season}}</td>
+                </tr>
+              </template>
+            </table>
+          </template>
         </div>
       </div>
     </div>

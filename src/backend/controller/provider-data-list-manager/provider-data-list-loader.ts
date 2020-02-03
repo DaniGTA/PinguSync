@@ -27,10 +27,6 @@ export default class ProviderDataListLoader {
                         const x = loadedDataEntry.detailEpisodeInfo[index2];
 
                         loadedDataEntry.detailEpisodeInfo[index2] = Object.assign(new Episode(x.episodeNumber, x.season, x.title), x);
-                        for (let y = 0; y < x.mappedTo.length; y++) {
-                            // tslint:disable-next-line: no-object-literal-type-assertion
-                            x.mappedTo[y] = Object.assign(new EpisodeMapping(new Episode(0), {} as ProviderLocalData), x.mappedTo[y]);
-                        }
                     }
 
                     if (loadedData[index].instanceName === 'ListProviderLocalData') {

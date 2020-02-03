@@ -115,32 +115,24 @@ class ListHelper {
     }
 
     public getUniqueEpisodeList(arr1: Episode[], arr2: Episode[]): Episode[] {
-        const copyArr1 = [...arr1];
-        let copyArr2 = [...arr2];
+        const copyArr1 = [...arr1, ...arr2];
         let uniqueEpisodeList: Episode[] = [];
-        if (copyArr1.length !== 0 && copyArr2.length !== 0) {
-            for (const entry1 of copyArr1) {
-                let duplicateFound = false;
-                for (const entry2 of copyArr2) {
-                    const result = EpisodeComperator.compareDetailedEpisode(entry1, entry2);
-                    if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
-                        if (!duplicateFound) {
-                            uniqueEpisodeList.push(entry1);
-                            copyArr2 = this.removeEntrysSync(copyArr2, entry2);
-                            duplicateFound = true;
-                        }
-                    }
-                }
-                if (!duplicateFound) {
-                    uniqueEpisodeList.push(entry1);
-                }
+        for (const episode of copyArr1) {
+            if (!this.isEpisodeInArray(uniqueEpisodeList, episode)) {
+                uniqueEpisodeList.push(episode);
             }
-        } else if (copyArr1.length !== 0) {
-            uniqueEpisodeList = copyArr1;
-        } else if (copyArr2.length !== 0) {
-            uniqueEpisodeList = copyArr2;
         }
         return uniqueEpisodeList;
+    }
+
+    private isEpisodeInArray(arr: Episode[], episode: Episode) {
+        for (const episodeArr of arr) {
+            const result = EpisodeComperator.compareDetailedEpisode(episode, episodeArr);
+            if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public async getUniqueOverviewList(arr: Overview[]): Promise<Overview[]> {

@@ -94,7 +94,7 @@ export default class MainListManager {
             return;
         }
         logger.log('info', '[MainList] Cleanup Mainlist. Current list size: ' + this.mainList.length);
-        
+
         MainListManager.listMaintance = true;
         try {
             MainListManager.secondList = [...MainListManager.mainList];

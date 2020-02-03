@@ -3,6 +3,7 @@ import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
 import ProviderLocalData from './local-data/interfaces/provider-local-data';
 import ProviderLoader from './provider-loader';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 export default class ProviderList extends ProviderLoader {
     /**
@@ -39,18 +40,24 @@ export default class ProviderList extends ProviderLoader {
      * Get the current static instance of the api.
      * @param localdata
      */
-    public static getExternalProviderInstance(localdata: ProviderLocalData): ExternalProvider {
+    public static getExternalProviderInstance(localdata: ProviderLocalData | ProviderDataWithSeasonInfo): ExternalProvider {
+        let providerName = "";
+        if (localdata instanceof ProviderDataWithSeasonInfo) {
+            providerName = localdata.providerLocalData.provider;
+        } else {
+            providerName = localdata.provider;
+        }
         for (const provider of ProviderList.getListProviderList()) {
-            if (provider.providerName === localdata.provider) {
+            if (provider.providerName === providerName) {
                 return provider;
             }
         }
         for (const provider of ProviderList.getInfoProviderList()) {
-            if (provider.providerName === localdata.provider) {
+            if (provider.providerName === providerName) {
                 return provider;
             }
         }
-        throw new Error('[ProviderList] NoProviderFound: ' + localdata.provider);
+        throw new Error('[ProviderList] NoProviderFound: ' + providerName);
     }
 
 }

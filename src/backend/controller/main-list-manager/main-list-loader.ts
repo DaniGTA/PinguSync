@@ -2,6 +2,7 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
+import EpisodeBindingPool from '../objects/meta/episode/episode-binding-pool';
 export default class MainListLoader {
     /**
      * Load json data from file.
@@ -17,6 +18,10 @@ export default class MainListLoader {
                 logger.log('info', 'Items loaded: ' + loadedData.length);
                 for (let index = 0; index < loadedData.length; index++) {
                     loadedData[index] = Object.assign(new Series(), loadedData[index]);
+                    for (let index2 = 0; index2 < loadedData[index].episodeBindingPools.length; index2++) {
+                        loadedData[index].episodeBindingPools[index2] = Object.assign(new EpisodeBindingPool(), loadedData[index].episodeBindingPools[index2]);
+                    }
+
                 }
                 return loadedData;
             } else {

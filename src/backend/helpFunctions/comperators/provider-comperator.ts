@@ -10,6 +10,9 @@ import logger from '../../logger/logger';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
 import SeasonComperator from './season-comperator';
+import MultiProviderResult from 'src/backend/api/provider/multi-provider-result';
+import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
+import LocalDataBind from '../../controller/objects/extension/provider-extension/binding/local-data-bind';
 
 export default class ProviderComperator {
 
@@ -84,6 +87,30 @@ export default class ProviderComperator {
         return false;
     }
 
+    public static seriesHaveProviders(providers: MultiProviderResult, series: Series): boolean {
+        for (const searchingProvider of providers.getAllProvidersWithSeason()) {
+            for (const binding of series.getAllProviderBindings()) {
+                if (this.isBindingAndProviderLocalDataWithSeasonTheSame(searchingProvider, binding)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static isBindingAndProviderLocalDataWithSeasonTheSame(pws: ProviderDataWithSeasonInfo, binding: LocalDataBind): boolean {
+        if (this.simpleProviderIdCheck(pws.providerLocalData.id, binding.id)) {
+            if (pws.providerLocalData.provider === binding.providerName) {
+                if (pws.seasonTarget && binding.targetSeason) {
+                    return SeasonComperator.isSameSeason(pws.seasonTarget, binding.targetSeason);
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static async simpleProviderSameIdAndSameSeasonCheckWithSeason(a: ProviderLocalData[], b: ProviderLocalData[], aSeason?: Season, bSeason?: Season): Promise<boolean> {
         for (const aProvider of a) {
             for (const bProvider of b) {
@@ -93,10 +120,8 @@ export default class ProviderComperator {
                             return ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id);
                         } else {
                             if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id)) {
-                                if (aSeason && bSeason) {
-                                    if (aSeason.seasonNumber === bSeason.seasonNumber && aSeason.seasonError === SeasonError.NONE) {
-                                        return true;
-                                    }
+                                if (SeasonComperator.isSameSeason(aSeason, bSeason) && aSeason?.seasonError === SeasonError.NONE) {
+                                    return true;
                                 }
                             }
                         }
