@@ -16,12 +16,12 @@ import { InfoProviderLocalData } from '../../src/backend/controller/provider-man
 import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
 import TestHelper from '../test-helper';
-import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper';
 
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
@@ -116,20 +116,18 @@ describe('Basic List | Testrun', () => {
                 notStrictEqual(traktResult.getAllNames().length, 0);
                 strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                
                 for (const anilistResultEntry of anilistResult.detailEpisodeInfo) {
-                    
-                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools ,anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools , anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
                 }
                 for (const anilistResult2Entry of anilistResult2.detailEpisodeInfo) {
-                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools ,anilistResult2Entry)[0].episodeNumber, anilistResult2Entry.episodeNumber);
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools , anilistResult2Entry)[0].episodeNumber, anilistResult2Entry.episodeNumber);
                 }
                 for (const trakt of traktResult2.detailEpisodeInfo) {
                     if (trakt.type === EpisodeType.SPECIAL) {
-                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools ,trakt).length, 0);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools , trakt).length, 0);
                     } else {
-                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools ,trakt).length, 1);
-                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools ,trakt)[0].episodeNumber, trakt.episodeNumber);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools , trakt).length, 1);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools , trakt)[0].episodeNumber, trakt.episodeNumber);
                     }
                 }
             } else {
@@ -345,7 +343,7 @@ describe('Basic List | Testrun', () => {
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
         const mpr = new MultiProviderResult(s1provider1);
-        const result = await new MainListSearcher().findSeriesWithMultiProviderResult(mpr);
+        const result = await MainListSearcher['findSeriesWithMultiProviderResult'](mpr);
 
         notEqual(result, null);
     }, 4000);
@@ -380,8 +378,8 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         const mpr1 = new MultiProviderResult(s1provider1);
         const mpr2 = new MultiProviderResult(s2provider1);
-        const resultS1 = await new MainListSearcher().findSeriesWithMultiProviderResult(mpr1);
-        const resultS2 = await new MainListSearcher().findSeriesWithMultiProviderResult(mpr2);
+        const resultS1 = await MainListSearcher['findSeriesWithMultiProviderResult'](mpr1);
+        const resultS2 = await MainListSearcher['findSeriesWithMultiProviderResult'](mpr2);
         if (resultS1 && resultS2) {
             const traktProviderS1 = resultS1.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             const traktProviderS2 = resultS2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
@@ -420,7 +418,7 @@ describe('Basic List | Testrun', () => {
         notEqual(trakprovider, null);
 
         const list2 = await series2.getAllProviderLocalDatas();
-        const trakprovider2 = list.find((x) => x.provider === TraktProvider.getInstance().providerName);
+        const trakprovider2 = list2.find((x) => x.provider === TraktProvider.getInstance().providerName);
         notEqual(trakprovider2, null);
     }, 4000);
 
@@ -524,13 +522,13 @@ describe('Basic List | Testrun', () => {
         if (provider != null) {
             for (const episode of provider.detailEpisodeInfo) {
                 if (episode.season?.seasonNumber === 1) {
-                    notStrictEqual(episode.mappedTo.length, 0);
+                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode).length, 0);
                 } else if (episode.season?.seasonNumber === 2) {
-                    notStrictEqual(episode.mappedTo.length, 0);
+                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode).length, 0);
                 } else if (episode.season?.seasonNumber === 3) {
-                    notStrictEqual(episode.mappedTo.length, 0);
+                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series3.episodeBindingPools, episode).length, 0);
                 } else if (episode.season?.seasonNumber === 4) {
-                    notStrictEqual(episode.mappedTo.length, 0);
+                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 0);
                 }
                 logger.warn(episode.episodeNumber + ' S: ' + episode.season);
             }

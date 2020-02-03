@@ -186,7 +186,7 @@ export default class EpisodeComperator {
             return true;
         } else if (aEpisodeMapping.provider === bEpisodeMapping.provider) {
             // tslint:disable-next-line: triple-equals
-            if (aEpisodeMapping.episodeNumber == bEpisodeMapping.episodeNumber && SeasonComperator.isSameSeason(aEpisodeMapping.season,bEpisodeMapping.season)) {
+            if (aEpisodeMapping.episodeNumber == bEpisodeMapping.episodeNumber && SeasonComperator.isSameSeason(aEpisodeMapping.season, bEpisodeMapping.season)) {
                 return true;
             } else if (aEpisodeMapping.providerEpisodeId !== undefined && (aEpisodeMapping.providerEpisodeId === bEpisodeMapping.providerEpisodeId)) {
                 return true;
