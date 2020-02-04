@@ -28,6 +28,8 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
@@ -366,7 +368,8 @@ export default class Series extends SeriesProviderExtension {
      */
     public async getFirstSeason(list?: readonly Series[] | Series[]): Promise<Series> {
         logger.debug('[Season] [Serve]: First Season. SeriesID: ' + this.id);
-        if ((await this.getSeason()).seasonNumber === 1) {
+        const season = (await this.getSeason());
+        if (season.seasonNumber === 1) {
             return this;
         }
 
@@ -392,7 +395,37 @@ export default class Series extends SeriesProviderExtension {
             }
         }
 
+        const generatedPrequel = await this.generatePrequel(season);
+        if (generatedPrequel !== null) {
+            return generatedPrequel;
+        }
         throw new Error('[Series] no first season found SeriesID: ' + this.id);
+    }
+
+    private async generatePrequel(season: Season): Promise<Series | null> {
+        let newSNumber = undefined;
+        if (season.isSeasonNumberPresent() && season.seasonNumber !== undefined) {
+            newSNumber = season.seasonNumber - 1;
+            for (const localdataProvider of this.getAllProviderLocalDatas()) {
+                if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
+                    for (const id of localdataProvider.prequelIds) {
+                        let newProvider = null;
+                        if (localdataProvider instanceof ListProviderLocalData) {
+                            newProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider), new Season(newSNumber));
+                        } else if (localdataProvider instanceof InfoProviderLocalData) {
+                            newProvider = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider), new Season(newSNumber));
+                        }
+                        const newSeries = new Series();
+                        if (newProvider) {
+                            await newSeries.addProviderDatasWithSeasonInfos(newProvider);
+                            await new MainListAdder().addSeries(newSeries);
+                            return newSeries.getFirstSeason();
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**

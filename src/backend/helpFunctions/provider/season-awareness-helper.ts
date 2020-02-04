@@ -30,11 +30,13 @@ export default class SeasonAwarenessHelper {
                 const targetSeason = this.series.getProviderSeasonTarget(listProvider.provider);
                 if (targetSeason !== undefined && targetSeason.seasonNumber !== undefined) {
                     finalList.push(...await this.createSeasonAwareness(this.series, listProvider, targetSeason));
+                    this.finalList = [];
+                    this.seriesThatShouldAdded = [];
                 }
             }
             return finalList;
         } else {
-            return this.extraInfoProviders;
+            return [];
         }
     }
 

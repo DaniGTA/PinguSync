@@ -117,17 +117,17 @@ describe('Basic List | Testrun', () => {
                 strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 for (const anilistResultEntry of anilistResult.detailEpisodeInfo) {
-                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools , anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools, anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
                 }
                 for (const anilistResult2Entry of anilistResult2.detailEpisodeInfo) {
-                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools , anilistResult2Entry)[0].episodeNumber, anilistResult2Entry.episodeNumber);
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools, anilistResult2Entry)[0].episodeNumber, anilistResult2Entry.episodeNumber);
                 }
                 for (const trakt of traktResult2.detailEpisodeInfo) {
                     if (trakt.type === EpisodeType.SPECIAL) {
-                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools , trakt).length, 0);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt).length, 0);
                     } else {
-                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools , trakt).length, 1);
-                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools , trakt)[0].episodeNumber, trakt.episodeNumber);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt).length, 1);
+                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt)[0].episodeNumber, trakt.episodeNumber);
                     }
                 }
             } else {
@@ -384,7 +384,7 @@ describe('Basic List | Testrun', () => {
             const traktProviderS1 = resultS1.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             const traktProviderS2 = resultS2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             if (traktProviderS1 && traktProviderS2) {
-                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.seasonNumber, 1);
+                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.seasonNumber, undefined);
                 strictEqual(resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.seasonNumber, 2);
             } else {
                 fail();
