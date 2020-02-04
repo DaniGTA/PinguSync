@@ -157,7 +157,8 @@ export default new class ProviderInfoDownloadHelper {
      * @param series The series from which the names will be taken.
      */
     private async getNamesSortedBySearchAbleScore(series: Series): Promise<Name[]> {
-        let names = series.getAllNames();
+        const season = await series.getSeason();
+        let names = series.getAllNamesSeasonAware(season);
         names = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names));
         try {
             // Test

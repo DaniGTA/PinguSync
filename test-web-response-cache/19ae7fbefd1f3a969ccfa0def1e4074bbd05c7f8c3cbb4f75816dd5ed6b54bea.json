@@ -1,1 +1,0 @@
-{"statusCode":404,"body":"","headers":{},"request":{"uri":{"protocol":"https:","slashes":true,"auth":null,"host":"api.trakt.tv","port":443,"hostname":"api.trakt.tv","hash":null,"search":"?extended=full","query":"extended=full","pathname":"/shows/21202","path":"/shows/21202?extended=full","href":"https://api.trakt.tv/shows/21202?extended=full"},"method":"GET","headers":{}}}

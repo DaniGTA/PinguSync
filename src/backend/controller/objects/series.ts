@@ -30,6 +30,7 @@ import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
 import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderList from '../provider-manager/provider-list';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
@@ -88,6 +89,24 @@ export default class Series extends SeriesProviderExtension {
         for (const provider of this.getAllProviderLocalDatas()) {
             try {
                 names.push(...provider.getAllNames());
+            } catch (err) {
+                logger.error('[NAME] [GET]: Failed to add Name on name request. SeriesID: ' + this.id);
+            }
+        }
+        return names;
+    }
+
+    public getAllNamesSeasonAware(season: Season) {
+        const names = [];
+        for (const provider of this.getAllProviderLocalDatasWithSeasonInfo()) {
+            const instance = ProviderList.getExternalProviderInstance(provider);
+            if (!instance.hasUniqueIdForSeasons) {
+                if (!SeasonComperator.isSameSeason(provider.seasonTarget, season)) {
+                    continue;
+                }
+            }
+            try {
+                names.push(...provider.providerLocalData.getAllNames());
             } catch (err) {
                 logger.error('[NAME] [GET]: Failed to add Name on name request. SeriesID: ' + this.id);
             }

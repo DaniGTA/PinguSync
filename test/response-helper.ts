@@ -15,7 +15,7 @@ export default class ResponseHelper {
             return new Promise<request.Response>((resolve, rejects) => {
                 try {
                     request(options, (errormsg: any, response: request.Response, body: any) => {
-                        ResponseHelper.cacheNewRequest(response, requestId);
+                        ResponseHelper.cacheNewRequest(response, options, requestId);
                         resolve(response);
                     }).on('error', (err) => {
                         logger.error(err);
@@ -34,7 +34,7 @@ export default class ResponseHelper {
         // reset headers
         const copy = { ...options };
         copy.headers = {};
-        
+
         const text = JSON.stringify(copy);
         return createHash('sha256').update(text).digest('hex');
     }
@@ -43,11 +43,11 @@ export default class ResponseHelper {
         return existsSync(this.cacheFolderName + id + '.json');
     }
 
-    private static cacheNewRequest(response: request.Response, id: string): void {
+    private static cacheNewRequest(response: request.Response, options: (request.UriOptions & request.CoreOptions), id: string): void {
         if (response !== undefined) {
             response.headers = {};
             response.request.headers = {};
-            const fileContent = JSON.stringify(response);
+            const fileContent = JSON.stringify({ response, options });
             try {
                 statSync(this.cacheFolderName);
             } catch (e) {
@@ -58,6 +58,6 @@ export default class ResponseHelper {
     }
 
     private static loadCache(id: string): request.Response {
-        return JSON.parse(readFileSync(this.cacheFolderName + id + '.json', 'UTF-8')) as unknown as request.Response ;
+        return (JSON.parse(readFileSync(this.cacheFolderName + id + '.json', 'UTF-8'))).response as request.Response ;
     }
 }
