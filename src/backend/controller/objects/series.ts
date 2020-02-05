@@ -99,16 +99,20 @@ export default class Series extends SeriesProviderExtension {
     public getAllNamesSeasonAware(season: Season) {
         const names = [];
         for (const provider of this.getAllProviderLocalDatasWithSeasonInfo()) {
-            const instance = ProviderList.getExternalProviderInstance(provider);
-            if (!instance.hasUniqueIdForSeasons) {
-                if (!SeasonComperator.isSameSeason(provider.seasonTarget, season)) {
-                    continue;
-                }
-            }
             try {
-                names.push(...provider.providerLocalData.getAllNames());
+                const instance = ProviderList.getExternalProviderInstance(provider);
+                if (!instance.hasUniqueIdForSeasons) {
+                    if (!SeasonComperator.isSameSeason(provider.seasonTarget, season)) {
+                        continue;
+                    }
+                }
+                try {
+                    names.push(...provider.providerLocalData.getAllNames());
+                } catch (err) {
+                    logger.error('[NAME] [GET]: Failed to add Name on name request. SeriesID: ' + this.id);
+                }
             } catch (err) {
-                logger.error('[NAME] [GET]: Failed to add Name on name request. SeriesID: ' + this.id);
+                logger.debug('[Series] [getAllNamesSeasonAware] -> provider instance not found: ' + provider)
             }
         }
         return names;
@@ -385,7 +389,7 @@ export default class Series extends SeriesProviderExtension {
      * Get the first season of this series.
      * @param list
      */
-    public async getFirstSeason(list?: readonly Series[] | Series[]): Promise<Series> {
+    public async getFirstSeason(list?: readonly Series[] | Series[], targetSeason?: Season): Promise<Series> {
         logger.debug('[Season] [Serve]: First Season. SeriesID: ' + this.id);
         const season = (await this.getSeason());
         if (season.seasonNumber === 1) {
@@ -413,36 +417,49 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         }
-
-        const generatedPrequel = await this.generatePrequel(season);
-        if (generatedPrequel !== null) {
-            return generatedPrequel;
+        if (targetSeason === undefined || SeasonComperator.isSameSeason(season, targetSeason)) {
+            const generatedPrequel = await this.generatePrequel(season);
+            if (generatedPrequel !== null) {
+                return generatedPrequel;
+            }
         }
         throw new Error('[Series] no first season found SeriesID: ' + this.id);
     }
 
     private async generatePrequel(season: Season): Promise<Series | null> {
         let newSNumber = undefined;
-        if (season.isSeasonNumberPresent() && season.seasonNumber !== undefined) {
+        if (season.isSeasonNumberPresent() && season.seasonNumber !== undefined && season.seasonNumber > 0) {
             newSNumber = season.seasonNumber - 1;
             for (const localdataProvider of this.getAllProviderLocalDatas()) {
-                if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
-                    for (const id of localdataProvider.prequelIds) {
-                        let newProvider = null;
-                        if (localdataProvider instanceof ListProviderLocalData) {
-                            newProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider), new Season(newSNumber));
-                        } else if (localdataProvider instanceof InfoProviderLocalData) {
-                            newProvider = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider), new Season(newSNumber));
+                try {
+                    if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
+                        for (const id of localdataProvider.prequelIds) {
+                            return this.createPrequel(localdataProvider, id, new Season(newSNumber));
                         }
-                        const newSeries = new Series();
-                        if (newProvider) {
-                            await newSeries.addProviderDatasWithSeasonInfos(newProvider);
-                            await new MainListAdder().addSeries(newSeries);
-                            return newSeries.getFirstSeason();
-                        }
+
+                    } else if (!ProviderList.getExternalProviderInstance(localdataProvider).hasUniqueIdForSeasons) {
+                        return this.createPrequel(localdataProvider, localdataProvider.id, new Season(newSNumber));
                     }
+                } catch (err) {
+                    logger.error(err);
                 }
             }
+        }
+        return null;
+    }
+
+    private async createPrequel(localdataProvider: ProviderLocalData, id: number | string, season: Season) {
+        let newProvider = null;
+        if (localdataProvider instanceof ListProviderLocalData) {
+            newProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider), season);
+        } else if (localdataProvider instanceof InfoProviderLocalData) {
+            newProvider = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider), season);
+        }
+        const newSeries = new Series();
+        if (newProvider) {
+            await newSeries.addProviderDatasWithSeasonInfos(newProvider);
+            await new MainListAdder().addSeries(newSeries);
+            return newSeries.getFirstSeason(undefined, season);
         }
         return null;
     }

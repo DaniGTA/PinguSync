@@ -140,9 +140,11 @@ describe('Provider Helper Test', () => {
         const mainListAdder = new MainListAdder();
         const series: Series = new Series();
         const provider = new ListProviderLocalData(94084, TraktProvider.getInstance().providerName);
+
         await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(3)));
         await mainListAdder.addSeries(series);
         const infoProvider = series.getAllProviderLocalDatas();
+
         const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
         if (anidbProvider) {
             strictEqual(anidbProvider.id, '13658');

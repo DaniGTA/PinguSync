@@ -92,8 +92,8 @@ export default class MainListAdder {
                     logger.error('[MainListAdder] [listWorker]: (error below)');
                     logger.error(err);
                 }
+                await listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache);
             }
-            await listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache);
         }
 
         logger.log('info', 'Added ' + addCounter + ' to mainList');

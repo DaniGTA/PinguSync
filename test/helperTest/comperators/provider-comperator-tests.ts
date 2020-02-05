@@ -37,6 +37,26 @@ describe('Provider Comperator | Testrun', () => {
         strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
     });
 
+    test('should be false (same provider and same id and wrong season)', async () => {
+
+        const series1 = new Series();
+        const providerA = new ListProviderLocalData(2, TraktProvider);
+        providerA.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
+        series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerA, new Season(1)));
+
+        const series2 = new Series();
+        const providerB = new ListProviderLocalData(2, TraktProvider);
+        providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
+        series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerB, new Season(2)));
+
+        const instance = new ProviderComperator(series1, series2);
+
+
+        // tslint:disable-next-line: no-string-literal
+        const result = await instance.getCompareResult();
+        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
+    });
+
     test('should be absolute false (same provider and wrong provider)', async () => {
         const s2 = new Series();
         const provider2A = new ListProviderLocalData(2, TraktProvider);

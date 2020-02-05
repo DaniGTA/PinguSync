@@ -238,6 +238,8 @@ export default class ProviderComperator {
 
                 } else if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                } else if (providerASeason?.isSeasonNumberPresent() && providerBSeason?.isSeasonNumberPresent()) {
+                    comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                 } else {
                     comperatorResult.matches -= 0.5;
                 }
@@ -245,6 +247,8 @@ export default class ProviderComperator {
             } catch (err) {
                 if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                } else if (providerASeason?.isSeasonNumberPresent() && providerBSeason?.isSeasonNumberPresent()) {
+                    comperatorResult.matches -= 0.5;
                 }
                 logger.error('Error at ProviderComperator.compareProviderAWithProviderB')
                 logger.error(err);
