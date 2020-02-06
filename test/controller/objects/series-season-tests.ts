@@ -69,15 +69,15 @@ describe('Series | Season', () => {
         return;
     });
 
-    test('should return season 6', async () => {
+    test('should return season by name 6', async () => {
         const series = new Series();
-        const lpld = new ListProviderLocalData(1);
+        const lpld = new ListProviderLocalData(1, 'test2');
         lpld.prequelIds.push(6);
         lpld.addSeriesName(new Name('Test III', 'en'));
         await series.addListProvider(lpld);
 
         const series2 = new Series();
-        const lpld2 = new ListProviderLocalData(1);
+        const lpld2 = new ListProviderLocalData(1, 'test');
         lpld2.prequelIds.push(5);
         lpld2.sequelIds.push(6);
         lpld2.addSeriesName(new Name('Test II', 'en'));

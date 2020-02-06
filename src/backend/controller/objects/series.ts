@@ -2,6 +2,7 @@ import ProviderComperator from '../../helpFunctions/comperators/provider-compera
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import listHelper from '../../helpFunctions/list-helper';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
 import stringHelper from '../../helpFunctions/string-helper';
@@ -10,9 +11,11 @@ import logger from '../../logger/logger';
 import MainListAdder from '../main-list-manager/main-list-adder';
 import MainListManager from '../main-list-manager/main-list-manager';
 import MainListSearcher from '../main-list-manager/main-list-searcher';
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../provider-manager/provider-list';
 import SeriesProviderExtension from './extension/provider-extension/series-provider-extension';
 import { MergeTypes } from './merge-types';
 import Cover from './meta/cover';
@@ -28,9 +31,6 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
-import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import ProviderList from '../provider-manager/provider-list';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
@@ -426,44 +426,6 @@ export default class Series extends SeriesProviderExtension {
         throw new Error('[Series] no first season found SeriesID: ' + this.id);
     }
 
-    private async generatePrequel(season: Season): Promise<Series | null> {
-        let newSNumber = undefined;
-        if (season.isSeasonNumberPresent() && season.seasonNumber !== undefined && season.seasonNumber > 0) {
-            newSNumber = season.seasonNumber - 1;
-            for (const localdataProvider of this.getAllProviderLocalDatas()) {
-                try {
-                    if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
-                        for (const id of localdataProvider.prequelIds) {
-                            return this.createPrequel(localdataProvider, id, new Season(newSNumber));
-                        }
-
-                    } else if (!ProviderList.getExternalProviderInstance(localdataProvider).hasUniqueIdForSeasons) {
-                        return this.createPrequel(localdataProvider, localdataProvider.id, new Season(newSNumber));
-                    }
-                } catch (err) {
-                    logger.error(err);
-                }
-            }
-        }
-        return null;
-    }
-
-    private async createPrequel(localdataProvider: ProviderLocalData, id: number | string, season: Season) {
-        let newProvider = null;
-        if (localdataProvider instanceof ListProviderLocalData) {
-            newProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider), season);
-        } else if (localdataProvider instanceof InfoProviderLocalData) {
-            newProvider = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider), season);
-        }
-        const newSeries = new Series();
-        if (newProvider) {
-            await newSeries.addProviderDatasWithSeasonInfos(newProvider);
-            await new MainListAdder().addSeries(newSeries);
-            return newSeries.getFirstSeason(undefined, season);
-        }
-        return null;
-    }
-
     /**
      * Get all relations from a series based on prequel id or sequel id or same provider id.
      * And this item is in the return to!
@@ -491,28 +453,18 @@ export default class Series extends SeriesProviderExtension {
         return relations;
     }
 
-    public async isAnySequelPresent(): Promise<boolean> {
-        for (const listprovider of this.getListProvidersInfos()) {
-            if (listprovider.sequelIds.length !== 0) {
-                return true;
-            }
-        }
-        for (const infoprovider of this.getInfoProvidersInfos()) {
-            if (infoprovider.sequelIds.length !== 0) {
+    public isAnySequelPresent(): boolean {
+        for (const provider of this.getAllProviderLocalDatas()) {
+            if (provider.sequelIds.length !== 0) {
                 return true;
             }
         }
         return false;
     }
 
-    public async isAnyPrequelPresent(): Promise<boolean> {
-        for (const listprovider of this.getListProvidersInfos()) {
-            if (listprovider.prequelIds.length !== 0) {
-                return true;
-            }
-        }
-        for (const infoprovider of this.getInfoProvidersInfos()) {
-            if (infoprovider.prequelIds.length !== 0) {
+    public isAnyPrequelPresent(): boolean {
+        for (const provider of this.getAllProviderLocalDatas()) {
+            if (provider.prequelIds.length !== 0) {
                 return true;
             }
         }
@@ -578,6 +530,44 @@ export default class Series extends SeriesProviderExtension {
         const providerInfoStatusCollection = providers.flatMap((provider) => provider.infoStatus);
         const average = listHelper.getMostFrequentNumberFromList(providerInfoStatusCollection);
         return average;
+    }
+
+    private async generatePrequel(season: Season): Promise<Series | null> {
+        let newSNumber = undefined;
+        if (season.isSeasonNumberPresent() && season.seasonNumber !== undefined && season.seasonNumber > 0) {
+            newSNumber = season.seasonNumber - 1;
+            for (const localdataProvider of this.getAllProviderLocalDatas()) {
+                try {
+                    if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
+                        for (const id of localdataProvider.prequelIds) {
+                            return this.createPrequel(localdataProvider, id, new Season(newSNumber));
+                        }
+
+                    } else if (!ProviderList.getExternalProviderInstance(localdataProvider).hasUniqueIdForSeasons) {
+                        return this.createPrequel(localdataProvider, localdataProvider.id, new Season(newSNumber));
+                    }
+                } catch (err) {
+                    logger.error(err);
+                }
+            }
+        }
+        return null;
+    }
+
+    private async createPrequel(localdataProvider: ProviderLocalData, id: number | string, season: Season) {
+        let newProvider = null;
+        if (localdataProvider instanceof ListProviderLocalData) {
+            newProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider), season);
+        } else if (localdataProvider instanceof InfoProviderLocalData) {
+            newProvider = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider), season);
+        }
+        const newSeries = new Series();
+        if (newProvider) {
+            await newSeries.addProviderDatasWithSeasonInfos(newProvider);
+            await new MainListAdder().addSeries(newSeries);
+            return newSeries.getFirstSeason(undefined, season);
+        }
+        return null;
     }
 
     private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {

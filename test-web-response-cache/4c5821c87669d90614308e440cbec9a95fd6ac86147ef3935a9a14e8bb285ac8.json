@@ -1,7 +1,7 @@
 {
     "response": {
         "statusCode": 200,
-        "body": "[{\"type\":\"show\",\"score\":20.982845,\"show\":{\"title\":\"Miss Kobayashi's Dragon Maid\",\"year\":2017,\"ids\":{\"trakt\":112705,\"slug\":\"miss-kobayashi-s-dragon-maid\",\"tvdb\":318893,\"imdb\":\"tt6185782\",\"tmdb\":69291,\"tvrage\":null}}}]",
+        "body": "[]",
         "headers": {},
         "request": {
             "uri": {
@@ -12,11 +12,11 @@
                 "port": 443,
                 "hostname": "api.trakt.tv",
                 "hash": null,
-                "search": "?query=The%20Maid%20Dragon%20of%20Kobayashi-san",
-                "query": "query=The%20Maid%20Dragon%20of%20Kobayashi-san",
+                "search": "?query=Re:_HAMATORA",
+                "query": "query=Re:_HAMATORA",
                 "pathname": "/search/movie,show",
-                "path": "/search/movie,show?query=The%20Maid%20Dragon%20of%20Kobayashi-san",
-                "href": "https://api.trakt.tv/search/movie,show?query=The%20Maid%20Dragon%20of%20Kobayashi-san"
+                "path": "/search/movie,show?query=Re:_HAMATORA",
+                "href": "https://api.trakt.tv/search/movie,show?query=Re:_HAMATORA"
             },
             "method": "GET",
             "headers": {}
@@ -30,6 +30,6 @@
             "trakt-api-version": "2"
         },
         "method": "GET",
-        "uri": "https://api.trakt.tv/search/movie,show?query=The%20Maid%20Dragon%20of%20Kobayashi-san"
+        "uri": "https://api.trakt.tv/search/movie,show?query=Re:_HAMATORA"
     }
 }
