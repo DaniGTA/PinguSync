@@ -14,7 +14,7 @@ import SeasonAwarenessHelper from "../../../src/backend/helpFunctions/provider/s
 import Season from "../../../src/backend/controller/objects/meta/season";
 
 
-describe('Date Helper Test', () => {
+describe('Season Awareness Test', () => {
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
