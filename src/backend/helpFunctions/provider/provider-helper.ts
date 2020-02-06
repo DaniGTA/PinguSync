@@ -16,7 +16,7 @@ export class ProviderHelper {
 
     public async requestFullProviderUpdate(series: Series, target: ProviderInfoStatus = ProviderInfoStatus.BASIC_INFO, force = false): Promise<Series> {
         if (this.canUpdateSeries(series) || force) {
-            const seasonAware = this.isSeasonAware(series.getAllProviderLocalDatasWithSeasonInfo());
+            const seasonAware = SeasonAwarenessHelper.isSeasonAware(series.getAllProviderLocalDatasWithSeasonInfo());
 
             const hadSeriesNames = this.hasSeriesASeriesNames(series);
             if (!hadSeriesNames) {
@@ -387,18 +387,5 @@ export class ProviderHelper {
             }
         }
         return false;
-    }
-
-    private isSeasonAware(currentProviders: ProviderDataWithSeasonInfo[]): boolean {
-        for (const provider of currentProviders) {
-            try {
-                if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && provider.seasonTarget?.seasonNumber !== 1) {
-                    return false;
-                }
-            } catch (err) {
-                logger.error(err);
-            }
-        }
-        return true;
     }
 }

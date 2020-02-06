@@ -148,4 +148,17 @@ export default class SeasonAwarenessHelper {
         }
         return listResult && infoResult;
     }
+
+    public static isSeasonAware(currentProviders: ProviderDataWithSeasonInfo[]): boolean {
+        for (const provider of currentProviders) {
+            try {
+                if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && (provider.seasonTarget?.seasonNumber !== 1)) {
+                    return false;
+                }
+            } catch (err) {
+                logger.debug(err);
+            }
+        }
+        return true;
+    }
 }
