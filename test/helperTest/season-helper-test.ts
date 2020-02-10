@@ -3,6 +3,7 @@ import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import Name from '../../src/backend/controller/objects/meta/name';
+import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
 import { SeasonError } from '../../src/backend/controller/objects/transfer/season-error';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -42,7 +43,7 @@ describe('Season Helper', () => {
         b.addListProvider(listProvider2);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season, undefined);
     });
 
@@ -61,7 +62,7 @@ describe('Season Helper', () => {
         b.addListProvider(listProvider2);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.seasonNumber, 2);
     });
 
@@ -87,7 +88,7 @@ describe('Season Helper', () => {
         c.addListProvider(listProvider3);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
-        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.seasonNumber, 3);
     });
 
@@ -113,7 +114,7 @@ describe('Season Helper', () => {
         c.addListProvider(listProvider3);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
-        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.seasonNumber, 4);
     });
 
@@ -133,7 +134,7 @@ describe('Season Helper', () => {
         b.addListProvider(listProvider2);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.seasonNumber, 5);
     });
 
@@ -145,7 +146,45 @@ describe('Season Helper', () => {
         a.addListProvider(listProvider);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a];
-        const result = await seasonHelper.searchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.seasonError, SeasonError.CANT_GET_SEASON);
     });
+    describe('check if it is the first season', () => {
+        test('should be the first season (simple season 1)', async () => {
+            strictEqual(seasonHelper.isSeasonFirstSeason(new Season(1)), true);
+        });
+
+        test('should be the first season (simple season 1 but part 1)', async () => {
+            strictEqual(seasonHelper.isSeasonFirstSeason(new Season(1, 1)), true);
+        });
+
+        test('should be not the first season (season undefined)', async () => {
+            strictEqual(seasonHelper.isSeasonFirstSeason(undefined), false);
+        });
+
+        test('should be not the first season (simple season 2)', async () => {
+            strictEqual(seasonHelper.isSeasonFirstSeason(new Season(2)), false);
+        });
+
+        test('should be not the first season (simple season 1 but part 2)', async () => {
+            strictEqual(seasonHelper.isSeasonFirstSeason(new Season(1, 2)), false);
+        });
+    });
+
+    test('should be check if season is undefined (simple undefined)', async () => {
+            strictEqual(seasonHelper.isSeasonUndefined(undefined), true);
+    });
+
+    test('should be check if season is undefined (simple undefined season number)', async () => {
+        strictEqual(seasonHelper.isSeasonUndefined(new Season()), true);
+    });
+
+    test('should be check if season is undefined (simple defined season number 1)', async () => {
+        strictEqual(seasonHelper.isSeasonUndefined(new Season(1)), false);
+    });
+
+    test('should be check if season is undefined (simple defined season number 0)', async () => {
+        strictEqual(seasonHelper.isSeasonUndefined(new Season(0)), false);
+    });
+
 });

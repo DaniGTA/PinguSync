@@ -47,7 +47,7 @@ export default new class ProviderInfoDownloadHelper {
     }
 
     // tslint:disable-next-line: max-line-length
-    public async getProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<MultiProviderResult> {
+    public async downloadProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<MultiProviderResult> {
         if (await provider.isProviderAvailable()) {
             const requestId = stringHelper.randomString(5);
             let trys = 0;
@@ -78,7 +78,7 @@ export default new class ProviderInfoDownloadHelper {
                                     return result;
                                 }
                             } catch (err) {
-                                logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo')
+                                logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo');
                                 logger.error(err);
                             }
                             logger.warn('[' + requestId + '][' + provider.providerName + '] ByName Request failed. try next...');
@@ -160,14 +160,18 @@ export default new class ProviderInfoDownloadHelper {
         const season = await series.getSeason();
         let names = series.getAllNamesSeasonAware(season);
         names = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names));
-        try {
-            // Test
-            names.unshift(new Name(stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
-        } catch (err) {
-            logger.error('[ERROR] [ProviderHelper] [getNamesSortedBySearchAbleScore]:');
-            logger.debug(err);
+        if (names.length !== 0) {
+            try {
+                // Test
+                names.unshift(new Name(stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
+            } catch (err) {
+                logger.error('[ERROR] [ProviderHelper] [getNamesSortedBySearchAbleScore]:');
+                logger.debug(err);
+            }
+            return listHelper.getLazyUniqueStringList(names);
+        } else {
+            return [];
         }
-        return listHelper.getLazyUniqueStringList(names);
     }
 
     /**

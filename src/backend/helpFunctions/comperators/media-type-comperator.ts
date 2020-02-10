@@ -11,10 +11,12 @@ export default class MediaTypeComperator {
     public static comperaMediaType(aMediaType: MediaType, bMediaType: MediaType): ComperatorResult {
         const comperatorResult = new ComperatorResult();
         if (aMediaType !== MediaType.UNKOWN && bMediaType !== MediaType.UNKOWN) {
-            if ((aMediaType === MediaType.ANIME && bMediaType === MediaType.SERIES) || (bMediaType === MediaType.ANIME && aMediaType === MediaType.SERIES)) {
-                comperatorResult.matchAble += 2;
+             comperatorResult.matchAble += 4;
+            if (aMediaType === bMediaType) {
+                comperatorResult.matches += 4;
+            } else if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(aMediaType, bMediaType)) {
+                comperatorResult.matches += 2;
             } else {
-                comperatorResult.matchAble += 4;
                 if (aMediaType === bMediaType) {
                     comperatorResult.matches += 4;
                 } else {

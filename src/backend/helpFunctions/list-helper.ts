@@ -116,23 +116,13 @@ class ListHelper {
 
     public getUniqueEpisodeList(arr1: Episode[], arr2: Episode[]): Episode[] {
         const copyArr1 = [...arr1, ...arr2];
-        let uniqueEpisodeList: Episode[] = [];
+        const uniqueEpisodeList: Episode[] = [];
         for (const episode of copyArr1) {
             if (!this.isEpisodeInArray(uniqueEpisodeList, episode)) {
                 uniqueEpisodeList.push(episode);
             }
         }
         return uniqueEpisodeList;
-    }
-
-    private isEpisodeInArray(arr: Episode[], episode: Episode) {
-        for (const episodeArr of arr) {
-            const result = EpisodeComperator.compareDetailedEpisode(episode, episodeArr);
-            if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public async getUniqueOverviewList(arr: Overview[]): Promise<Overview[]> {
@@ -191,9 +181,13 @@ class ListHelper {
         return true;
     }
 
-    public getMostFrequentNumberFromList(list: number[]) {
-        const sum = list.reduce((a, b) => a + b);
-        return sum / list.length;
+    public getMostFrequentNumberFromList(list: number[]): number | undefined {
+        if (list.length === 0) {
+            return undefined;
+        } else {
+            const sum = list.reduce((a, b) => a + b);
+            return sum / list.length;
+        }
     }
 
     /**
@@ -243,6 +237,16 @@ class ListHelper {
         }
 
         return counter;
+    }
+
+    private isEpisodeInArray(arr: Episode[], episode: Episode): boolean {
+        for (const episodeArr of arr) {
+            const result = EpisodeComperator.compareDetailedEpisode(episode, episodeArr);
+            if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private objectsEquals(x: any, y: any): boolean {

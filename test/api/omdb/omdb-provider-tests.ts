@@ -27,7 +27,7 @@ describe('Provider: OMDb | Test runs', () => {
         unkownProvider.addSeriesName(new Name('Sankarea: Undying Love', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, omdbProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, omdbProvider);
         strictEqual(result.getAllProviders().length, 1);
         return;
     });

@@ -17,7 +17,7 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-man
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import ProviderNameManager from '../../src/backend/controller/provider-manager/provider-name-manager';
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
-import { ProviderHelper } from '../../src/backend/helpFunctions/provider/provider-helper';
+import ProviderHelper from '../../src/backend/helpFunctions/provider/provider-helper';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
@@ -36,7 +36,6 @@ describe('Provider Helper Test', () => {
     });
 
     test('It should find that it can get id from other provider', async () => {
-        const providerHelper = new ProviderHelper();
         // Series A
         const series = new Series();
         const listProvider = new ListProviderLocalData(1, 'Kitsu');
@@ -50,42 +49,38 @@ describe('Provider Helper Test', () => {
         let result: boolean = false;
         if (provider) {
             // tslint:disable-next-line: no-string-literal
-            result = providerHelper['canGetTargetIdFromCurrentProvider'](listProvider, provider);
+            result = ProviderHelper['canGetTargetIdFromCurrentProvider'](listProvider, provider);
         }
         equal(result, true);
     });
 
     test('It should get all list provider that need a update', async () => {
-        const providerHelper = new ProviderHelper();
         // Series A
         const series = new Series();
         await series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
         await series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
         // tslint:disable-next-line: no-string-literal
-        const result = await providerHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
+        const result = await ProviderHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         equal(result.length, 2);
     });
 
     test('should update series', async () => {
-        const providerHelper = new ProviderHelper();
         const series = new Series();
         series.lastInfoUpdate = dateHelper.removeDays(new Date(), 31).getTime();
         // tslint:disable-next-line: no-string-literal
-        const result1 = providerHelper['canUpdateSeries'](series);
+        const result1 = ProviderHelper['canUpdateSeries'](series);
         strictEqual(result1, true);
     });
 
     test('should not update series', async () => {
-        const providerHelper = new ProviderHelper();
         const series = new Series();
         series.lastInfoUpdate = dateHelper.removeDays(new Date(), 15).getTime();
         // tslint:disable-next-line: no-string-literal
-        const result1 = providerHelper['canUpdateSeries'](series);
+        const result1 = ProviderHelper['canUpdateSeries'](series);
         strictEqual(result1, false);
     });
 
     test('should sort provider that need updates right (1/3)', async () => {
-        const providerHelper = new ProviderHelper();
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
         providersThatNeedsAUpdate.push(AniListProvider.getInstance());
@@ -96,13 +91,12 @@ describe('Provider Helper Test', () => {
         currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
 
         // tslint:disable-next-line: no-string-literal
-        providersThatNeedsAUpdate.sort((a, b) => providerHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+        providersThatNeedsAUpdate.sort((a, b) => ProviderHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });
 
     test('should sort provider that need updates right (2/3)', async () => {
-        const providerHelper = new ProviderHelper();
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
         providersThatNeedsAUpdate.push(AniListProvider.getInstance());
@@ -113,14 +107,13 @@ describe('Provider Helper Test', () => {
         currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
 
         // tslint:disable-next-line: no-string-literal
-        providersThatNeedsAUpdate.sort((a, b) => providerHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+        providersThatNeedsAUpdate.sort((a, b) => ProviderHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });
 
 
     test('should sort provider that need updates right (3/3)', async () => {
-        const providerHelper = new ProviderHelper();
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
         providersThatNeedsAUpdate.push(TraktProvider.getInstance());
@@ -131,7 +124,7 @@ describe('Provider Helper Test', () => {
         currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
 
         // tslint:disable-next-line: no-string-literal
-        providersThatNeedsAUpdate.sort((a, b) => providerHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+        providersThatNeedsAUpdate.sort((a, b) => ProviderHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });

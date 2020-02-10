@@ -48,7 +48,7 @@ export default class MultiProviderComperator {
         const mediaTypeResult = await MediaTypeComperator.compareMediaTypeWithSeries(series, tempSeries);
         finalResult.matchAble += mediaTypeResult.matchAble;
         finalResult.matches += mediaTypeResult.matches;
-        if (mediaTypeResult.matchAble !== mediaTypeResult.matches) {
+        if (mediaTypeResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
             finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
         }
 

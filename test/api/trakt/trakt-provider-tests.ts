@@ -23,7 +23,7 @@ describe('Provider: Trakt | Tests runs', () => {
         unkownProvider.addSeriesName(new Name('Seitokai Yakuindomo＊', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getAllProviders().length, 2);
     });
 
@@ -34,7 +34,7 @@ describe('Provider: Trakt | Tests runs', () => {
         unkownProvider.addSeriesName(new Name('The Asterisk War: The Academy City on the Water', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getAllProviders().length, 2);
     });
 
@@ -45,7 +45,7 @@ describe('Provider: Trakt | Tests runs', () => {
         unkownProvider.addSeriesName(new Name('Little Witch Academia', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getAllProviders().length, 2);
     });
 
@@ -56,7 +56,7 @@ describe('Provider: Trakt | Tests runs', () => {
         unkownProvider.addSeriesName(new Name('Avatar: The Last Airbender', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.getAllProviders().length, 2);
     });
 
@@ -69,7 +69,7 @@ describe('Provider: Trakt | Tests runs', () => {
         await series.addProviderDatas(unkownProvider);
 
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.mainProvider.providerLocalData.releaseYear, 2013);
         strictEqual(result.mainProvider.providerLocalData.id, 72367);
     });
@@ -81,7 +81,7 @@ describe('Provider: Trakt | Tests runs', () => {
         await series.addProviderDatas(unkownProvider);
 
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, traktProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProvider);
         strictEqual(result.mainProvider.providerLocalData.id, 103803);
         notStrictEqual(result.mainProvider.providerLocalData.detailEpisodeInfo.length, 0);
     });

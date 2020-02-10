@@ -125,7 +125,7 @@ export default class MainListManager {
             await MainListLoader.saveData(MainListManager.mainList);
             logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length);
         } catch (err) {
-            logger.error('Error at MainListManager.finishListFilling')
+            logger.error('Error at MainListManager.finishListFilling');
             logger.error(err);
         }
         MainListManager.listMaintance = false;

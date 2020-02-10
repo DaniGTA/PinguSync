@@ -13,4 +13,5 @@
         "unknown",
         "pass"
     ],
+    "discord.enabled": false,
 }

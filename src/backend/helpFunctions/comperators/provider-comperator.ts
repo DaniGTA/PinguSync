@@ -13,6 +13,7 @@ import SeasonComperator from './season-comperator';
 import MultiProviderResult from 'src/backend/api/provider/multi-provider-result';
 import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 import LocalDataBind from '../../controller/objects/extension/provider-extension/binding/local-data-bind';
+import seasonHelper from '../season-helper/season-helper';
 
 export default class ProviderComperator {
 
@@ -169,7 +170,8 @@ export default class ProviderComperator {
 
     private readonly aSeries: Series;
     private readonly bSeries: Series;
-
+    private aSeriesSeason: Season | undefined;
+    private bSeriesSeason: Season | undefined;
     constructor(aSeries: Series, bSeries: Series) {
         this.aSeries = aSeries;
         this.bSeries = bSeries;
@@ -177,6 +179,9 @@ export default class ProviderComperator {
 
     public async getCompareResult(): Promise<ComperatorResult> {
         const comperatorResults: ComperatorResult[] = [];
+
+        this.aSeriesSeason = await this.aSeries.getSeason();
+        this.bSeriesSeason = await this.bSeries.getSeason();
 
         const allAProviderLocalDatas = this.aSeries.getAllProviderLocalDatas();
         const allBProviderLocalDatas = this.bSeries.getAllProviderLocalDatas();
@@ -234,6 +239,14 @@ export default class ProviderComperator {
                 if (ProviderList.getExternalProviderInstance(providerA).hasUniqueIdForSeasons) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     // tslint:disable-next-line: no-empty
+                } else if (seasonHelper.isSeasonUndefined(providerASeason) && seasonHelper.isSeasonUndefined(providerBSeason)) {
+                    if (!seasonHelper.isSeasonUndefined(this.aSeriesSeason) && SeasonComperator.isSameSeason(this.aSeriesSeason, this.bSeriesSeason)) {
+                        comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                    } else if(!seasonHelper.isSeasonUndefined(this.aSeriesSeason) && !seasonHelper.isSeasonUndefined(this.bSeriesSeason)){
+                         comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+                    } else {
+                        comperatorResult.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
+                    }
                 } else if ((providerASeason === undefined) && providerBSeason?.seasonNumber === 1 || (typeof providerBSeason === 'undefined') && providerASeason?.seasonNumber === 1) {
 
                 } else if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {

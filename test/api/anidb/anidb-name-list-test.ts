@@ -184,7 +184,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         lpdld.addSeriesName(new Name('男子高校生の日常', 'jap', NameType.MAIN));
         await series.addListProvider(lpdld);
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, a);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, a);
         deepEqual(result.mainProvider.providerLocalData.id, '8729');
     });
 
@@ -203,7 +203,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         try {
             // tslint:disable-next-line: no-string-literal
-            await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, a);
+            await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, a);
             fail();
         } catch (err) {
             logger.error(err);
@@ -290,7 +290,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         try {
             // tslint:disable-next-line: no-string-literal
-            await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, a);
+            await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, a);
             fail();
         } catch (err) {
             logger.error(err);

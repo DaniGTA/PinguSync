@@ -1,4 +1,5 @@
 import Episode from '../../controller/objects/meta/episode/episode';
+import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
@@ -6,7 +7,6 @@ import logger from '../../logger/logger';
 import stringHelper from '../string-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperator from './season-comperator';
-import EpisodeMapping from 'src/backend/controller/objects/meta/episode/episode-mapping';
 
 export default class EpisodeComperator {
     public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
@@ -24,7 +24,7 @@ export default class EpisodeComperator {
                 }
             }
         } catch (err) {
-            logger.error('Error at EpisodeComperator.compareEpisodes')
+            logger.error('Error at EpisodeComperator.compareEpisodes');
             logger.error(err);
         }
         return result;
@@ -98,7 +98,7 @@ export default class EpisodeComperator {
 
     public static isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: Season): boolean {
         if (this.isDetailedEpisodeSameSeason(bEpisode, season)) {
-            if (aEpisode === bEpisode.episodeNumber) {
+            if (this.compareEpNr(aEpisode, bEpisode.episodeNumber)) {
                 return true;
             }
         }
@@ -156,8 +156,10 @@ export default class EpisodeComperator {
     }
 
     public static isSameEpisodeNumber(episodeNumberA: number | string, episodeNumberB: number | string, episodeDiff: number): boolean {
+        // tslint:disable-next-line: triple-equals
         if (!isNaN(episodeNumberA as number) && (episodeNumberA as unknown as number) + episodeDiff == episodeNumberB) {
             return true;
+        // tslint:disable-next-line: triple-equals
         } else if (isNaN(episodeNumberA as number) && isNaN(episodeNumberB as number) && episodeNumberA == episodeNumberB) {
             return true;
         }
@@ -186,7 +188,7 @@ export default class EpisodeComperator {
             return true;
         } else if (aEpisodeMapping.provider === bEpisodeMapping.provider) {
             // tslint:disable-next-line: triple-equals
-            if (aEpisodeMapping.episodeNumber == bEpisodeMapping.episodeNumber && SeasonComperator.isSameSeason(aEpisodeMapping.season, bEpisodeMapping.season)) {
+            if (this.compareEpNr(aEpisodeMapping.episodeNumber, bEpisodeMapping.episodeNumber) && SeasonComperator.isSameSeason(aEpisodeMapping.season, bEpisodeMapping.season)) {
                 return true;
             } else if (aEpisodeMapping.providerEpisodeId !== undefined && (aEpisodeMapping.providerEpisodeId === bEpisodeMapping.providerEpisodeId)) {
                 return true;
@@ -254,5 +256,14 @@ export default class EpisodeComperator {
             }
         }
         return result;
+    }
+    /**
+     * Compares two episode numbers
+     * @param number1 episode number 1 will be compared with 2.
+     * @param number2 episode number 2 will be compared with 1.
+     */
+    public static compareEpNr(number1: number | string, number2: number | string): boolean {
+        // tslint:disable-next-line: triple-equals
+        return number1 == number2;
     }
 }

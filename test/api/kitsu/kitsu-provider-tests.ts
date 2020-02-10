@@ -30,7 +30,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, '6521');
     });
 
@@ -42,7 +42,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, '12959');
     });
 
@@ -54,7 +54,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, '10857');
     });
 
@@ -66,7 +66,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
         const kitsuResult = result.getAllProviders().find((x) => x.provider === kitsuProvider.providerName);
         if (kitsuResult) {
             strictEqual(kitsuResult.provider, kitsuProvider.providerName);
@@ -84,7 +84,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, 5);
     });
 
@@ -96,7 +96,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, kitsuProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, '1555');
     });
 

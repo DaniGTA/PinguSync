@@ -15,10 +15,10 @@ import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-
 import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from './season-search-mode';
 import SeasonSearchModeHelper from './season-search-mode-helper';
-
+import listHelper from '../list-helper';
 
 class SeasonHelper {
-
+    private static currentSeriesSeasonRequest: Series[] = [];
     /**
      * Traceing down.
      *
@@ -36,7 +36,6 @@ class SeasonHelper {
     public async searchSeasonValuePrequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.debug('[Season] [Search]: Prequel Trace.' + ' (' + series.id + ')');
         let prequel: Series | null = null;
-
         if (series.isAnyPrequelPresent() && seriesList) {
                 const searchResult = await series.getPrequel(seriesList);
                 prequel = searchResult.foundedSeries;
@@ -45,8 +44,9 @@ class SeasonHelper {
                     return new SearchSeasonValueResult(new Season(-2), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                 } else {
                     const mediaTypeSeries = await series.getMediaType();
-                    while (prequel) {
-
+                    const alreadyCheckedPrequels: string[] = [];
+                    while (prequel && alreadyCheckedPrequels.findIndex(x=> x === prequel?.id) === -1) {
+                        alreadyCheckedPrequels.push(prequel.id);
                         const mediaTypePrequel = await prequel.getMediaType();
                         if (mediaTypePrequel === mediaTypeSeries) {
                             searchCount++;
@@ -104,7 +104,9 @@ class SeasonHelper {
             if (searchResult.relationExistButNotFounded) {
                 return new SearchSeasonValueResult(new Season(-2), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
-                while (sequel) {
+                const alreadyCheckedSequels: string[] = [];
+                while (sequel && alreadyCheckedSequels.findIndex((x) => x === sequel?.id) === -1) {
+                    alreadyCheckedSequels.push(sequel.id);
                     if (await sequel.getMediaType() === await series.getMediaType()) {
                         searchCount++;
                         const sequelSeason = await sequel.getSeason(SeasonSearchMode.SEQUEL_TRACE_MODE, seriesList);
@@ -133,13 +135,81 @@ class SeasonHelper {
         return new SearchSeasonValueResult(new Season(-2), 'NoSequelAvaible', SeasonError.CANT_GET_SEASON);
     }
 
+
+    public async prepareSearchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
+        if (this.isSeriesCurrentlyInTheSeasonProcess(series)) {
+            return new SearchSeasonValueResult(new Season(undefined, undefined, SeasonError.CANT_GET_SEASON), 'None', SeasonError.CANT_GET_SEASON);
+        }
+        SeasonHelper.currentSeriesSeasonRequest.push(series);
+        try {
+            const result = await this.searchSeasonValue(series, searchMode, seriesList);
+            SeasonHelper.currentSeriesSeasonRequest = listHelper.removeEntrysSync(SeasonHelper.currentSeriesSeasonRequest, series);
+            return result;
+        } catch (err) {
+            listHelper.removeEntrysSync(SeasonHelper.currentSeriesSeasonRequest, series);
+            throw new Error(err);
+        }
+    }
+
+    public isSeasonFirstSeason(season?: Season): boolean {
+        if (season?.isSeasonNumberPresent() && season.seasonNumber === 1) {
+            if (season.seasonPart === 1 || season.seasonPart === undefined) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * A prequel was found but it is not in the list.
+     * So a dummy will be created where all provider data can be filled in.
+     * @param localDatas
+     */
+    public async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
+        const result: Series[] = [];
+        logger.info('[SeasonHelper] create temp series');
+        for (const entry of localDatas) {
+            for (const prequelId of entry.prequelIds) {
+                if (prequelId !== undefined && prequelId !== null) {
+                    const series = new Series();
+                    if (entry instanceof ListProviderLocalData) {
+                        const newProvider = new ListProviderLocalData(prequelId, entry.provider);
+                        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
+                        newProvider.sequelIds.push(entry.id as number);
+                        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(newProvider));
+                    } else if (entry instanceof InfoProviderLocalData) {
+                        const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
+                        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
+                        newProvider.sequelIds.push(entry.id as number);
+                        await series.addProviderDatas(newProvider);
+                    } else {
+                        continue;
+
+                    }
+                    result.push(series);
+                }
+            }
+        }
+        logger.info('[SeasonHelper] info' + result.length + ' created temp series');
+        return result;
+    }
+
+    public isSeasonUndefined(currentSeason?: Season): boolean {
+        if (currentSeason === undefined) {
+            return true;
+        } else if (currentSeason.seasonNumber === undefined) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     /**
      * Controlls the search modes and will collect the result rate it and return it.
      * @param series where the season number is missing.
      * @param searchMode what search should be performed ? DEFAULT: `ALL`
      * @param seriesList where the relation should be, this will be needed to perform relation tracing. DEFAULT: `main list`
      */
-    public async searchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
+    private async searchSeasonValue(series: Series, searchMode: SeasonSearchMode, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.debug('[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
 
         let prequelResult: SearchSeasonValueResult | undefined;
@@ -157,12 +227,9 @@ class SeasonHelper {
             }
         }
 
-
         if (numberFromName && numberFromName.seasonNumber !== undefined) {
             return new SearchSeasonValueResult(numberFromName.convertToSeason(), 'Name');
         }
-
-
 
         if (SeasonSearchModeHelper.canPerformAProviderSeasonValueSearch(searchMode)) {
             for (const provider of series.getListProvidersInfos()) {
@@ -206,38 +273,8 @@ class SeasonHelper {
         return new SearchSeasonValueResult(new Season(-1), 'None', SeasonError.CANT_GET_SEASON);
     }
 
-    /**
-     * A prequel was found but it is not in the list.
-     * So a dummy will be created where all provider data can be filled in.
-     * @param localDatas
-     */
-    public async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
-        const result: Series[] = [];
-        logger.info('[SeasonHelper] create temp series');
-        for (const entry of localDatas) {
-            for (const prequelId of entry.prequelIds) {
-                if (prequelId !== undefined && prequelId !== null) {
-                    const series = new Series();
-                    if (entry instanceof ListProviderLocalData) {
-                        const newProvider = new ListProviderLocalData(prequelId, entry.provider);
-                        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
-                        newProvider.sequelIds.push(entry.id as number);
-                        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(newProvider));
-                    } else if (entry instanceof InfoProviderLocalData) {
-                        const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
-                        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
-                        newProvider.sequelIds.push(entry.id as number);
-                        await series.addProviderDatas(newProvider);
-                    } else {
-                        continue;
-
-                    }
-                    result.push(series);
-                }
-            }
-        }
-        logger.info('[SeasonHelper] info' + result.length + ' created temp series');
-        return result;
+    private isSeriesCurrentlyInTheSeasonProcess(series: Series): boolean {
+        return SeasonHelper.currentSeriesSeasonRequest.findIndex((cSeries) => cSeries.id === series.id) !== -1;
     }
 }
 

@@ -1,9 +1,12 @@
 import listHelper from '../../helpFunctions/list-helper';
-import { ProviderHelper } from '../../helpFunctions/provider/provider-helper';
+import ProviderHelper from '../../helpFunctions/provider/provider-helper';
+import seasonHelper from '../../helpFunctions/season-helper/season-helper';
 import stringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import ProviderDataListManager from '../provider-data-list-manager/provider-data-list-manager';
+import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
+import ProviderList from '../provider-manager/provider-list';
 import MainListManager from './main-list-manager';
 import MainListSearcher from './main-list-searcher';
 import AdderProviderCache from './object-adder/adder-provider-cache';
@@ -56,7 +59,6 @@ export default class MainListAdder {
      */
     private async listWorker(list: Series[]) {
         const searcher = new MainListSearcher();
-        const providerHelper = new ProviderHelper();
         const providerCacheManager = new AdderProviderCacheManager();
         logger.debug('[MainListAdder] Worker started to process ' + list.length + ' Items.');
         let addCounter = 0;
@@ -68,20 +70,25 @@ export default class MainListAdder {
                     const entry = await searcher.quickFindSameSeriesInMainList(series);
                     if (entry.length === 0) {
                         logger.debug('[MainListAdder] Add non existing Series.');
-                        const filledSeries = await providerHelper.requestFullProviderUpdate(series);
+                        const filledSeries = await ProviderHelper.requestFullProviderUpdate(series);
                         if (filledSeries.lastInfoUpdate === 0) {
                             logger.error('[ERROR] Series no last info update!');
                         }
                         await MainListManager.addSerieToMainList(filledSeries);
+
+                        if (seasonHelper.isSeasonFirstSeason(await filledSeries.getSeason())) {
+                            await this.syncRelationWithNewProviders(filledSeries);
+                        }
                     } else if (entry.length === 1) {
                         try {
                             logger.log('info', '[MainListAdder] Add existing Series.');
                             series.id = entry[0].id;
                             await MainListManager.updateSerieInList(series);
                         } catch (err) {
-                            logger.warn(err);
+                            logger.error(err);
                         }
                     } else {
+                        logger.log('info', '[MainListAdder] Add multi existing Series.');
                         const rdmProvider = series.getAllProviderLocalDatas()[0];
                         logger.warn('[WARNING] Found more results from main list from one Series! ' + rdmProvider.provider + ': ' + rdmProvider.id);
                         await MainListManager.addSerieToMainList(series);
@@ -99,5 +106,20 @@ export default class MainListAdder {
         logger.log('info', 'Added ' + addCounter + ' to mainList');
         logger.log('info', 'End waitlist worker');
         return;
+    }
+
+    private async syncRelationWithNewProviders(series: Series) {
+        const list = await MainListManager.getMainList();
+        const allRelations = await series.getAllRelations(list, false);
+        const allProviders = ProviderList.getAllProviderLists();
+        for (const relatedSeries of allRelations) {
+            for (const provider of allProviders) {
+                if (!ProviderHelper.hasSeriesProvider(relatedSeries, provider)) {
+                    if (!provider.hasUniqueIdForSeasons) {
+                        await ProviderHelper.requestProviderInfo(relatedSeries, provider, false, ProviderInfoStatus.ONLY_ID);
+                    }
+                }
+            }
+        }
     }
 }

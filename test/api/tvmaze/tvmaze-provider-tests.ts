@@ -28,7 +28,7 @@ describe('Provider: TVMaze | Test runs', () => {
         unkownProvider.addSeriesName(new Name('Sankarea', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerInfoDownloaderhelper['getProviderSeriesInfo'](series, tvmazeProvider);
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, tvmazeProvider);
         strictEqual(result.getAllProviders().length, 2);
         return;
     });

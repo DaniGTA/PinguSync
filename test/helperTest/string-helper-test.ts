@@ -12,18 +12,34 @@ describe('String Helper', () => {
         assert.notEqual(stringHelper.randomString(), null);
         return;
     });
-    test('should clean string', async () => {
-        assert.strictEqual(await stringHelper.cleanString('Title ~Title!~'), 'Title Title');
-        assert.strictEqual(await stringHelper.cleanString('Test.'), 'Test');
-        assert.strictEqual(await stringHelper.cleanString('Title -test-'), 'Title test');
-        assert.strictEqual(await stringHelper.cleanString('Title-test'), 'Title test');
-        assert.strictEqual(await stringHelper.cleanString('Title \'test\''), 'Title test');
-        assert.strictEqual(await stringHelper.cleanString('Title!'), 'Title');
-        assert.strictEqual(await stringHelper.cleanString('Title!!'), 'Title!!');
-        assert.strictEqual(await stringHelper.cleanString('Title: test'), 'Title test');
-        assert.strictEqual(await stringHelper.cleanString('Title  test'), 'Title test');
-        assert.strictEqual(await stringHelper.cleanString('Title`Title`'), 'TitleTitle');
-        return;
+    describe('should clean string', () => {
+        test('should clean string: Title ~Title!~', () => {
+            assert.strictEqual(stringHelper.cleanString('Title ~Title!~'), 'Title Title');
+        });
+        test('should clean string: Test.', () => {
+            assert.strictEqual(stringHelper.cleanString('Test.'), 'Test');
+        });
+        test('should clean string: Title -test-', () => {
+            assert.strictEqual(stringHelper.cleanString('Title -test-'), 'Title test');
+        });
+        test('should clean string: Title-test', () => {
+            assert.strictEqual(stringHelper.cleanString('Title-test'), 'Title test');
+        });
+        test('should clean string: Title \'test\'', () => {
+        assert.strictEqual(stringHelper.cleanString('Title \'test\''), 'Title test');
+        });
+        test('should clean string: Title!!', () => {
+        assert.strictEqual(stringHelper.cleanString('Title!!'), 'Title!!');
+        });
+        test('should clean string: Title: test', () => {
+            assert.strictEqual(stringHelper.cleanString('Title: test'), 'Title test');
+        });
+        test('should clean string: Title  test', () => {
+        assert.strictEqual(stringHelper.cleanString('Title  test'), 'Title test');
+           });
+        test('should clean string: Title`Title`', () => {
+        assert.strictEqual(stringHelper.cleanString('Title`Title`'), 'TitleTitle');
+        });
     });
 
     test('should clean string of other characters', async () => {
@@ -77,6 +93,9 @@ describe('String Helper', () => {
         });
        test('Season marking with the a A', async () => {
             assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
+       });
+       test('should get season number 2 from title: アルドノア・ゼロ 2', async () => {
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('アルドノア・ゼロ 2')).seasonNumber, 'test 2');
         });
 
     });
