@@ -70,6 +70,7 @@ export default class ProviderHelper {
      */
     // tslint:disable-next-line: max-line-length
     public static async requestProviderInfo(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult[]> {
+        logger.debug('Start request for Provider: ')
         const localDatas: MultiProviderResult[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
         const tempSeriesCopy = Object.assign(new Series(), series);
@@ -87,7 +88,11 @@ export default class ProviderHelper {
         let firstSeason: Series | null = null;
         const season = (await series.getSeason()).seasonNumber;
         if (season !== 1 && season !== undefined) {
-            firstSeason = await series.getFirstSeason();
+            try {
+                firstSeason = await series.getFirstSeason();
+            } catch (err) {
+                logger.debug(err);
+            }
         }
         const requestResult = await this.requestProviderToTarget(provider, firstSeason, series, target);
 
@@ -153,7 +158,7 @@ export default class ProviderHelper {
         try {
             if (currentLocalData && currentLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !currentLocalData) {
                 const tempSeries = new Series();
-                tempSeries.addProviderDatas(currentLocalData);
+                await tempSeries.addProviderDatas(currentLocalData);
                 const infoResult = await this.requestProviderInfo(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
                 return infoResult[0].mainProvider.providerLocalData;
             }
@@ -163,7 +168,7 @@ export default class ProviderHelper {
         return null;
     }
 
-    private static async requestProviderToTarget(provider: ExternalProvider , firstSeason: Series | null, tempSeriesCopy: Series, target: ProviderInfoStatus) {
+    private static async requestProviderToTarget(provider: ExternalProvider, firstSeason: Series | null, tempSeriesCopy: Series, target: ProviderInfoStatus) {
         let lastLocalDataResult: ProviderDataWithSeasonInfo | null = null;
         let currentResult: ProviderDataWithSeasonInfo | null = null;
         let requestResult: MultiProviderResult | null = null;

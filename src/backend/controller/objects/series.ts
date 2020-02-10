@@ -516,7 +516,7 @@ export default class Series extends SeriesProviderExtension {
         const providers = this.getAllProviderLocalDatas();
         const providerInfoStatusCollection = providers.flatMap((provider) => provider.infoStatus);
         const average = listHelper.getMostFrequentNumberFromList(providerInfoStatusCollection);
-        if(average !== undefined) {
+        if (average !== undefined) {
             return average;
         } else {
             throw new Error('Cant get average provider info status');

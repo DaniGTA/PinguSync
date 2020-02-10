@@ -67,14 +67,11 @@ export default class SeasonAwarenessHelper {
         if (targetSeason !== undefined && targetSeason.seasonNumber !== undefined) {
             finalSeason = targetSeason;
         } else {
-            finalSeason =  await this.series.getSeason();
+            finalSeason = await this.series.getSeason();
         }
-        if (finalSeason !== undefined && finalSeason.seasonNumber !== undefined) {
-            this.finalList = [];
-            this.seriesThatShouldAdded = [];
-            return this.createSeasonAwareness(this.series, provider, finalSeason);
-        }
-        throw new Error('cant process season awarness for provider: ' + provider.provider);
+        this.finalList = [];
+        this.seriesThatShouldAdded = [];
+        return this.createSeasonAwareness(provider, finalSeason);
     }
 
     public async requestSeasonAwarnessForProvider(provider: ExternalProvider) {
@@ -82,7 +79,7 @@ export default class SeasonAwarenessHelper {
         return this.requestSeasonAwarnessForProviderLocalData(localDataInfoResult.mainProvider.providerLocalData);
     }
 
-    private async createSeasonAwareness(series: Series, targetProviderLocalData: ProviderLocalData, targetSeason: Season): Promise<ProviderDataWithSeasonInfo[]> {
+    private async createSeasonAwareness(targetProviderLocalData: ProviderLocalData, targetSeason: Season): Promise<ProviderDataWithSeasonInfo[]> {
 
         this.currentSearchingSeason = 1;
         this.currentSeasonPart = undefined;
@@ -106,21 +103,26 @@ export default class SeasonAwarenessHelper {
         return this.finalList;
     }
 
-    private getOtherProvidersWithSeasonAwareness(targetProvider: ProviderLocalData) {
-        const collectedProviders = [];
+    private getOtherProvidersWithSeasonAwareness(targetProvider: ProviderLocalData): ProviderLocalData[] {
+        const collectedProviders: ProviderLocalData[] = [];
         const allProviders = this.series.getAllProviderLocalDatas();
         for (const providerLocalData of allProviders) {
             if (providerLocalData.provider !== targetProvider.provider) {
-                if (ProviderList.getExternalProviderInstance(providerLocalData).hasEpisodeTitleOnFullInfo) {
-                    collectedProviders.push(providerLocalData);
+                try {
+                    if (ProviderList.getExternalProviderInstance(providerLocalData).hasEpisodeTitleOnFullInfo) {
+                        collectedProviders.push(providerLocalData);
+                    }
+                } catch (err) {
+                    logger.debug(err);
                 }
             }
         }
         return collectedProviders;
     }
 
-    private async calcSeasonAwareness(currentLocalData: ProviderLocalData | null, listLocalData: ProviderLocalData, providerInstance: ExternalProvider, targetSeason: Season) {
-        let currentProviderLocalData: ProviderLocalData | null = currentLocalData;
+    private async calcSeasonAwareness(inputCurrentLocalData: ProviderLocalData, listLocalData: ProviderLocalData, providerInstance: ExternalProvider, targetSeason: Season) {
+        let currentLocalData: ProviderLocalData | null = { ...inputCurrentLocalData } as ProviderLocalData
+        let currentProviderLocalData: ProviderLocalData | null = { ...currentLocalData } as ProviderLocalData;
         if (currentLocalData !== null && EpisodeHelper.hasEpisodeNames(listLocalData.detailEpisodeInfo)) {
             currentProviderLocalData = await ProviderHelper.simpleProviderInfoRequest(currentLocalData, providerInstance) as InfoProviderLocalData | null;
             currentLocalData = null;

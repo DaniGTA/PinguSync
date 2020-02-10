@@ -7,43 +7,44 @@ import stringHelper from './string-helper';
 
 export default class TitleCheckHelper {
     public static async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
-        const aNameList: string[] = (await a.getAllNamesUnique()).flatMap((x) => x.name);
-        const bNameList: string[] = (await b.getAllNamesUnique()).flatMap((x) => x.name);
+        const aNamesUnique = a.getAllNamesUnique();
+        const bNamesUnique = b.getAllNamesUnique();
+        const aNameList: string[] = (await aNamesUnique).flatMap((x) => x.name);
+        const bNameList: string[] = (await bNamesUnique).flatMap((x) => x.name);
         return this.checkNames(aNameList, bNameList);
     }
 
     public static async checkNames(aNameList: string[], bNameList: string[]) {
         if (await TitleCheckHelper.fastMatch(aNameList, bNameList)) {
-            for (const aName of aNameList) {
-                try {
-                    let aName2 = stringHelper.cleanString(aName);
-                    aName2 = await this.removeMediaTypeFromTitle(aName2);
-                    aName2 = await this.removeSeasonMarkesFromTitle(aName2);
-                    if (aName2 !== aName) {
-                        aNameList.push(aName2);
-                    }
-                } catch (err) {
-                    continue;
-                }
-            }
-            for (const bName of bNameList) {
-                try {
-                    let bName2 = stringHelper.cleanString(bName);
-                    bName2 = await this.removeMediaTypeFromTitle(bName2);
-                    bName2 = await this.removeSeasonMarkesFromTitle(bName2);
-                    if (bName2 !== bName) {
-                        bNameList.push(bName2);
-                    }
-                } catch (err) {
-                    continue;
-                }
-            }
-            if (await this.checkAnimeNamesInArray(aNameList, bNameList)) {
+            const aCleanedNameList = TitleCheckHelper.cleanStringList(aNameList);
+            const bCleanedNameList = TitleCheckHelper.cleanStringList(bNameList);
+            if (await this.checkAnimeNamesInArray(await aCleanedNameList, await bCleanedNameList)) {
                 return true;
             }
         }
         return false;
     }
+    /**
+     * Clean all strings and add cleaned string to the list.
+     * @param nameList 
+     * @returns a list with uncleaned and cleaned strings.
+     */
+    private static async cleanStringList(nameList: string[]): Promise<string[]> {
+        for (const name of nameList) {
+            try {
+                let bName2 = stringHelper.cleanString(name);
+                bName2 = await this.removeMediaTypeFromTitle(bName2);
+                bName2 = await this.removeSeasonMarkesFromTitle(bName2);
+                if (bName2 !== name) {
+                    nameList.push(bName2);
+                }
+            } catch (err) {
+                continue;
+            }
+        }
+        return nameList;
+    }
+
 
     public static async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
         for (let aName of [...a]) {
@@ -61,9 +62,9 @@ export default class TitleCheckHelper {
                         if (aName === bName) {
                             return true;
                         }
-                        aName = await this.removeSeasonMarkesFromTitle(aName);
-                        bName = await this.removeSeasonMarkesFromTitle(bName);
-                        if (aName === bName) {
+                        const tempAName = this.removeSeasonMarkesFromTitle(aName);
+                        const tempBName = this.removeSeasonMarkesFromTitle(bName);
+                        if (await tempAName === await tempBName) {
                             return true;
                         }
                     }

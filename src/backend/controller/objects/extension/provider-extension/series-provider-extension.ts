@@ -36,12 +36,26 @@ export default class SeriesProviderExtension {
 
     public async addProviderDatas(...localdatas: ProviderLocalData[]) {
         for (const localdata of localdatas) {
-            if (localdata instanceof ListProviderLocalData) {
+            if (this.instanceOfListProviderLocalData(localdata)) {
                 await this.addListProvider(localdata as ListProviderLocalData);
-            } else if (localdata instanceof InfoProviderLocalData) {
+            } else if (this.instanceOfInfoProviderLocalData(localdata)) {
                 await this.addInfoProvider(localdata as InfoProviderLocalData);
             }
         }
+    }
+
+    private instanceOfInfoProviderLocalData(pld: ProviderLocalData) {
+        if (pld instanceof InfoProviderLocalData || pld.instanceName === 'InfoProviderLocalData') {
+            return true;
+        }
+        return false;
+    }
+
+    private instanceOfListProviderLocalData(pld: ProviderLocalData) {
+        if (pld instanceof ListProviderLocalData || pld.instanceName === 'ListProviderLocalData') {
+            return true;
+        }
+        return false;
     }
 
     public async addProviderDatasWithSeasonInfos(...localdatas: ProviderDataWithSeasonInfo[]) {
@@ -49,9 +63,9 @@ export default class SeriesProviderExtension {
         try {
             for (let index = 0; index < localdatas.length; index++) {
                 const localdata = localdatas[index];
-                if (localdata.providerLocalData instanceof ListProviderLocalData) {
+                if (this.instanceOfListProviderLocalData(localdata.providerLocalData)) {
                     await this.addListProvider(localdata.providerLocalData as ListProviderLocalData, localdata.seasonTarget);
-                } else if (localdata.providerLocalData instanceof InfoProviderLocalData) {
+                } else if (this.instanceOfInfoProviderLocalData(localdata.providerLocalData)) {
                     await this.addInfoProvider(localdata.providerLocalData as InfoProviderLocalData, localdata.seasonTarget);
                 } else {
                     logger.debug('addProviderDatasWithSeasonInfos cant add unkown instance');
