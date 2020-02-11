@@ -247,11 +247,11 @@ export default class ProviderComperator {
                     } else {
                         comperatorResult.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
                     }
-                } else if ((providerASeason === undefined) && providerBSeason?.seasonNumber === 1 || (typeof providerBSeason === 'undefined') && providerASeason?.seasonNumber === 1) {
+                } else if ((seasonHelper.isSeasonUndefined(providerASeason) && providerBSeason?.seasonNumber === 1) || (seasonHelper.isSeasonUndefined(providerBSeason) && providerASeason?.seasonNumber === 1)) {
 
                 } else if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                } else if (providerASeason?.isSeasonNumberPresent() && providerBSeason?.isSeasonNumberPresent()) {
+                } else if (providerASeason?.isSeasonNumberPresent() || providerBSeason?.isSeasonNumberPresent()) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                 } else {
                     comperatorResult.matches -= 0.5;

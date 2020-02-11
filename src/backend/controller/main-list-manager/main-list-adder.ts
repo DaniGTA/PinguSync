@@ -75,10 +75,6 @@ export default class MainListAdder {
                             logger.error('[ERROR] Series no last info update!');
                         }
                         await MainListManager.addSerieToMainList(filledSeries);
-
-                        if (seasonHelper.isSeasonFirstSeason(await filledSeries.getSeason())) {
-                            await this.syncRelationWithNewProviders(filledSeries);
-                        }
                     } else if (entry.length === 1) {
                         try {
                             logger.log('info', '[MainListAdder] Add existing Series.');

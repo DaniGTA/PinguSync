@@ -3,6 +3,7 @@ import ProviderDataListSearcher from '../../../../../backend/controller/provider
 import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderComperator from '../../../../helpFunctions/comperators/provider-comperator';
 import ProviderDataWithSeasonInfo from '../../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import seasonHelper from '../../../../helpFunctions/season-helper/season-helper';
 import logger from '../../../../logger/logger';
 import { InfoProviderLocalData } from '../../../provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../provider-manager/local-data/list-provider-local-data';
@@ -44,20 +45,6 @@ export default class SeriesProviderExtension {
         }
     }
 
-    private instanceOfInfoProviderLocalData(pld: ProviderLocalData) {
-        if (pld instanceof InfoProviderLocalData || pld.instanceName === 'InfoProviderLocalData') {
-            return true;
-        }
-        return false;
-    }
-
-    private instanceOfListProviderLocalData(pld: ProviderLocalData) {
-        if (pld instanceof ListProviderLocalData || pld.instanceName === 'ListProviderLocalData') {
-            return true;
-        }
-        return false;
-    }
-
     public async addProviderDatasWithSeasonInfos(...localdatas: ProviderDataWithSeasonInfo[]) {
         logger.debug('addProviderDatasWithSeasonInfo: adding ' + localdatas.length);
         try {
@@ -72,7 +59,7 @@ export default class SeriesProviderExtension {
                 }
             }
         } catch (err) {
-            logger.error('Error at SeriesProviderExtension.addProviderDatasWithSeasonInfos')
+            logger.error('Error at SeriesProviderExtension.addProviderDatasWithSeasonInfos');
             logger.error(err);
         }
     }
@@ -132,10 +119,13 @@ export default class SeriesProviderExtension {
 
     public addListProviderBindings(...listLocalDataBinds: ListLocalDataBind[]) {
         for (const listLocalDataBind of listLocalDataBinds) {
-            let existingBinding = this.listProviderInfos.find((x) => x.providerName === listLocalDataBind.providerName && ProviderComperator.simpleProviderIdCheck(x.id, listLocalDataBind.id));
-            if (existingBinding) {
+            let existingBindingIndex = this.listProviderInfos.findIndex((x) => x.providerName === listLocalDataBind.providerName && ProviderComperator.simpleProviderIdCheck(x.id, listLocalDataBind.id));
+            if (existingBindingIndex !== -1) {
+                const existingBinding = this.listProviderInfos[existingBindingIndex];
                 if (existingBinding.targetSeason !== listLocalDataBind.targetSeason && listLocalDataBind.targetSeason !== undefined) {
-                    existingBinding = listLocalDataBind;
+                    this.listProviderInfos[existingBindingIndex] = listLocalDataBind;
+                } else if (seasonHelper.isSeasonUndefined(existingBinding.targetSeason)) {
+                     this.listProviderInfos[existingBindingIndex] = listLocalDataBind;
                 }
             } else {
                 this.listProviderInfos.push(listLocalDataBind);
@@ -155,5 +145,19 @@ export default class SeriesProviderExtension {
         localdata.push(...this.getListProvidersInfosWithSeasonInfo());
         localdata.push(...this.getInfoProvidersInfosWithSeasonInfo());
         return localdata;
+    }
+
+    private instanceOfInfoProviderLocalData(pld: ProviderLocalData) {
+        if (pld instanceof InfoProviderLocalData || pld.instanceName === 'InfoProviderLocalData') {
+            return true;
+        }
+        return false;
+    }
+
+    private instanceOfListProviderLocalData(pld: ProviderLocalData) {
+        if (pld instanceof ListProviderLocalData || pld.instanceName === 'ListProviderLocalData') {
+            return true;
+        }
+        return false;
     }
 }

@@ -380,7 +380,7 @@ describe('Basic List | Testrun', () => {
             const traktProviderS1 = resultS1.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             const traktProviderS2 = resultS2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             if (traktProviderS1 && traktProviderS2) {
-                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.seasonNumber, undefined);
+                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.seasonNumber, 1);
                 strictEqual(resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.seasonNumber, 2);
             } else {
                 fail();
@@ -521,7 +521,8 @@ describe('Basic List | Testrun', () => {
                 } else if (episode.season?.seasonNumber === 2) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode).length, 0);
                 } else if (episode.season?.seasonNumber === 3) {
-                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series3.episodeBindingPools, episode).length, 0);
+                    const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series3.episodeBindingPools, episode).length;
+                    notStrictEqual(len, 0);
                 } else if (episode.season?.seasonNumber === 4) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 0);
                 }

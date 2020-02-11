@@ -1,4 +1,6 @@
 import { strictEqual } from 'assert';
+import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
+import MultiProviderResult from '../../../src/backend/api/provider/multi-provider-result';
 import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListSearcher from '../../../src/backend/controller/main-list-manager/main-list-searcher';
@@ -9,8 +11,6 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestHelper from '../../test-helper';
 import TestProvider from '../objects/testClass/testProvider';
-import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
-import MultiProviderResult from '../../../src/backend/api/provider/multi-provider-result';
 
 // tslint:disable: no-string-literal
 describe('MainList | Searcher tests', () => {
@@ -44,7 +44,7 @@ describe('MainList | Searcher tests', () => {
         strictEqual(result.length, 1);
     });
 
-    test('should find series', async () => {
+    test('should find series 2', async () => {
 
         ProviderList['loadedListProvider'] = [new TraktProvider(), new AniListProvider()];
 
@@ -61,7 +61,7 @@ describe('MainList | Searcher tests', () => {
         const provider3 = new ListProviderLocalData(1, AniListProvider.getInstance().providerName);
         await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season(1)));
 
-        MainListManager['mainList'] = [series1, series2, series3]
+        MainListManager['mainList'] = [series1, series2, series3];
 
         const search = new MultiProviderResult(new ListProviderLocalData(1, TraktProvider.getInstance().providerName));
         const result = await MainListSearcher.findSeriesWithMultiProviderResult(search);
