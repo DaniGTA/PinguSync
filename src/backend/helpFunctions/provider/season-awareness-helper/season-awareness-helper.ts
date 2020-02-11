@@ -1,16 +1,16 @@
-import ExternalProvider from '../../api/provider/external-provider';
-import MainListAdder from '../../controller/main-list-manager/main-list-adder';
-import Season from '../../controller/objects/meta/season';
-import Series from '../../controller/objects/series';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../controller/provider-manager/provider-list';
-import logger from '../../logger/logger';
-import EpisodeHelper from '../episode-helper/episode-helper';
-import EpisodeRelationResult from '../episode-helper/episode-relation-result';
-import ProviderHelper from './provider-helper';
-import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
-import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
+import ExternalProvider from '../../../api/provider/external-provider';
+import MainListAdder from '../../../controller/main-list-manager/main-list-adder';
+import Season from '../../../controller/objects/meta/season';
+import Series from '../../../controller/objects/series';
+import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../../controller/provider-manager/provider-list';
+import logger from '../../../logger/logger';
+import EpisodeHelper from '../../episode-helper/episode-helper';
+import EpisodeRelationResult from '../../episode-helper/episode-relation-result';
+import ProviderHelper from '../provider-helper';
+import ProviderDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
+import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
 
 export default class SeasonAwarenessHelper {
 
@@ -83,7 +83,7 @@ export default class SeasonAwarenessHelper {
 
         this.currentSearchingSeason = 1;
         this.currentSeasonPart = undefined;
-        for (const infoLocalData of this.getOtherProvidersWithSeasonAwareness(targetProviderLocalData)) {
+        for (const infoLocalData of SeasonAwarenessHelper.getOtherProvidersWithSeasonAwareness(this.series, targetProviderLocalData)) {
             let currentLocalData: ProviderLocalData | null = infoLocalData;
             do {
                 try {
@@ -103,11 +103,11 @@ export default class SeasonAwarenessHelper {
         return this.finalList;
     }
 
-    private getOtherProvidersWithSeasonAwareness(targetProvider: ProviderLocalData): ProviderLocalData[] {
+    public static getOtherProvidersWithSeasonAwareness(series: Series, filterOut: ProviderLocalData): ProviderLocalData[] {
         const collectedProviders: ProviderLocalData[] = [];
-        const allProviders = this.series.getAllProviderLocalDatas();
+        const allProviders = series.getAllProviderLocalDatas();
         for (const providerLocalData of allProviders) {
-            if (providerLocalData.provider !== targetProvider.provider) {
+            if (providerLocalData.provider !== filterOut.provider) {
                 try {
                     if (ProviderList.getExternalProviderInstance(providerLocalData).hasEpisodeTitleOnFullInfo) {
                         collectedProviders.push(providerLocalData);
@@ -134,6 +134,7 @@ export default class SeasonAwarenessHelper {
                 if (result.seasonComplete) {
                     if (targetSeason.seasonNumber === this.currentSearchingSeason) {
                         this.finalList.push(new ProviderDataWithSeasonInfo(currentProviderLocalData, new Season(this.currentSearchingSeason, this.currentSeasonPart)));
+                        return null;
                     } else {
                         this.seriesThatShouldAdded.push(newSeries);
                     }
@@ -163,7 +164,7 @@ export default class SeasonAwarenessHelper {
         return newSeries;
     }
 
-    private calcNewSeasonPartNumber(result: EpisodeRelationResult, currentSeasonPart?: number): number | undefined {
+    public calcNewSeasonPartNumber(result: EpisodeRelationResult, currentSeasonPart?: number): number | undefined {
         if (result.seasonComplete) {
             if (currentSeasonPart !== undefined) {
                 currentSeasonPart++;

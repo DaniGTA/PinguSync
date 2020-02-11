@@ -6,7 +6,6 @@ import EpisodeComperator from '../comperators/episode-comperator';
 import SeasonComperator from '../comperators/season-comperator';
 import listHelper from '../list-helper';
 import EpisodeRelationResult from './episode-relation-result';
-import sortHelper from '../sort-helper';
 
 export default class EpisodeHelper {
 

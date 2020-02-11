@@ -10,7 +10,8 @@ import dateHelper from '../date-helper';
 import seasonHelper from '../season-helper/season-helper';
 import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
-import SeasonAwarenessHelper from './season-awareness-helper';
+import SeasonAwarenessHelper from './season-awareness-helper/season-awareness-helper';
+import SeasonAwarenessFindSeasonNumber from './season-awareness-helper/season-awareness-find-season-number';
 
 
 export default class ProviderHelper {
@@ -204,16 +205,21 @@ export default class ProviderHelper {
             try {
                 const providerLocalData = tempSeriesCopy.getListProvidersInfos().find((x) => x.provider === providerThatNeedUpdate.providerName);
                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.ADVANCED_BASIC_INFO || !providerLocalData) {
-                    const result = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                    await series.addProviderDatasWithSeasonInfos(...result.flatMap((x) => x.getAllProvidersWithSeason()));
-                    if (!providerThatNeedUpdate.hasUniqueIdForSeasons && !seasonHelper.isSeasonFirstSeason(await season) && result.length !== 0) {
-                        const instance = new SeasonAwarenessHelper(series);
-                        const seasonAware = await instance.requestSeasonAwareness();
-                        await series.addProviderDatasWithSeasonInfos(...seasonAware);
+                    const requestResults = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                    for (const result of requestResults) {
+                        try {
+                            if (!providerThatNeedUpdate.hasUniqueIdForSeasons && !seasonHelper.isSeasonFirstSeason(await season) && requestResults.length !== 0) {
+                                result.mainProvider.seasonTarget = await SeasonAwarenessFindSeasonNumber.getSeasonForProvider(tempSeriesCopy, result.mainProvider.providerLocalData);
+                            }
+                        } catch (err) {
+                            logger.error(err);
+                        }
+                        await tempSeriesCopy.addProviderDatasWithSeasonInfos(...result.getAllProvidersWithSeason());
+                        results.push(...result.getAllProvidersWithSeason())
+
                     }
                     series.resetCache();
                     tempSeriesCopy.resetCache();
-                    results.push(...result.flatMap((x) => x.getAllProvidersWithSeason()));
                 }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #2: ' + err);

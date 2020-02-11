@@ -55,8 +55,8 @@ describe('Episode comperator | Full test', () => {
                 strictEqual(resultA, true);
             });
         test('should compare seasons right (missing provider season and series season) v2', () => {
-                const resultA = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, undefined, undefined, undefined);
-                strictEqual(resultA, true);
+            const resultA = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, undefined, undefined, undefined);
+            strictEqual(resultA, true);
         });
 
         test('should compare seasons false', async () => {
@@ -112,6 +112,14 @@ describe('Episode comperator | Full test', () => {
         strictEqual(result.matches, 1);
         strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
     });
+
+    test('should be the same Episode title', () => {
+        const episodeA = new Episode(1, undefined, [new EpisodeTitle('Final Flame for This Over-the-Top Fortress!')]);
+        const episodeB = new Episode(1, undefined, [new EpisodeTitle('Final Flame for this Over-the-top Fortress!')]);
+        const result = EpisodeComperator.compareEpisodeTitle(episodeA, episodeB);
+
+        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
+    })
 
     describe('compares simple episode number vs detailed episode', () => {
         test('same ep 0 s0 (should return true)', async () => {

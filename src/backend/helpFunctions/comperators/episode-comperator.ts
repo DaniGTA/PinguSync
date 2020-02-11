@@ -159,7 +159,7 @@ export default class EpisodeComperator {
         // tslint:disable-next-line: triple-equals
         if (!isNaN(episodeNumberA as number) && (episodeNumberA as unknown as number) + episodeDiff == episodeNumberB) {
             return true;
-        // tslint:disable-next-line: triple-equals
+            // tslint:disable-next-line: triple-equals
         } else if (isNaN(episodeNumberA as number) && isNaN(episodeNumberB as number) && episodeNumberA == episodeNumberB) {
             return true;
         }
@@ -219,9 +219,9 @@ export default class EpisodeComperator {
             result.matchAble++;
             for (const aEpisodeTitle of aEpisode.title) {
                 let found = false;
-                let textA = aEpisodeTitle.text;
                 for (const bEpisodeTitle of bEpsiode.title) {
-                    let textB = bEpisodeTitle.text;
+                    let textA = { ...aEpisodeTitle }.text;
+                    let textB = { ...bEpisodeTitle }.text;
                     if (textB !== '') {
                         // tslint:disable-next-line: triple-equals
                         if (textA == textB) {

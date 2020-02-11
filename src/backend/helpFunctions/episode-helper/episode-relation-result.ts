@@ -1,4 +1,6 @@
 export default class EpisodeRelationResult {
+    private toleranze = 1;
+
     public seasonNumber: number | undefined;
     public episodes: number;
     public missingEpisodes: number;
@@ -14,6 +16,6 @@ export default class EpisodeRelationResult {
         this.maxEpisodeNumberFound = maxEpisodeNumberFound;
         this.missingEpisodes = episodes - episodesFound;
         this.maxDifference = maxDifference;
-        this.seasonComplete = episodes === maxDifference + maxEpisodeNumberFound;
+        this.seasonComplete = (episodes === maxDifference + maxEpisodeNumberFound) || this.missingEpisodes === this.toleranze;
     }
 }
