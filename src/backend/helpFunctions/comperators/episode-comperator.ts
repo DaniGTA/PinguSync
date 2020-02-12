@@ -220,32 +220,36 @@ export default class EpisodeComperator {
             for (const aEpisodeTitle of aEpisode.title) {
                 let found = false;
                 for (const bEpisodeTitle of bEpsiode.title) {
-                    let textA = { ...aEpisodeTitle }.text;
-                    let textB = { ...bEpisodeTitle }.text;
-                    if (textB !== '') {
-                        // tslint:disable-next-line: triple-equals
-                        if (textA == textB) {
-                            found = true;
-                            break;
+                    try {
+                        let textA = { ...aEpisodeTitle }.text;
+                        let textB = { ...bEpisodeTitle }.text;
+                        if (textB && textA) {
+                            // tslint:disable-next-line: triple-equals
+                            if (textA == textB) {
+                                found = true;
+                                break;
+                            }
+                            textA = textA.toLowerCase();
+                            textB = textB.toLowerCase();
+                            textA = textA.replace(' the ', ' ');
+                            textB = textB.replace(' the ', ' ');
+                            if (textA === textB) {
+                                found = true;
+                                break;
+                            }
+                            textA = textA.replace(' & ', ' ');
+                            textB = textB.replace(' & ', ' ');
+                            textA = textA.replace(' and ', ' ');
+                            textB = textB.replace(' and ', ' ');
+                            textA = stringHelper.cleanString(textA);
+                            textB = stringHelper.cleanString(textB);
+                            if (textA === textB) {
+                                found = true;
+                                break;
+                            }
                         }
-                        textA = textA.toLowerCase();
-                        textB = textB.toLowerCase();
-                        textA = textA.replace(' the ', ' ');
-                        textB = textB.replace(' the ', ' ');
-                        if (textA === textB) {
-                            found = true;
-                            break;
-                        }
-                        textA = textA.replace(' & ', ' ');
-                        textB = textB.replace(' & ', ' ');
-                        textA = textA.replace(' and ', ' ');
-                        textB = textB.replace(' and ', ' ');
-                        textA = stringHelper.cleanString(textA);
-                        textB = stringHelper.cleanString(textB);
-                        if (textA === textB) {
-                            found = true;
-                            break;
-                        }
+                    } catch (err) {
+                        logger.error(err);
                     }
                 }
                 if (found) {

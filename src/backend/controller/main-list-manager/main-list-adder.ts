@@ -1,6 +1,5 @@
 import listHelper from '../../helpFunctions/list-helper';
 import ProviderHelper from '../../helpFunctions/provider/provider-helper';
-import seasonHelper from '../../helpFunctions/season-helper/season-helper';
 import stringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';

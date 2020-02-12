@@ -37,7 +37,7 @@ describe('Basic List | Testrun', () => {
     });
 
     beforeEach(() => {
-         MainListManager['mainList'] = [];
+        MainListManager['mainList'] = [];
     });
 
     test('should find other provider and mapping them.', async () => {
@@ -124,11 +124,13 @@ describe('Basic List | Testrun', () => {
                 }
                 for (const trakt of traktResult2.detailEpisodeInfo) {
                     if (trakt.type === EpisodeType.SPECIAL) {
-                        strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt).length, 0);
+                        const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt);
+                        strictEqual(r.length, 0);
                     } else {
                         if (trakt?.season?.seasonNumber === 2) {
-                            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt).length, 1);
-                            strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt)[0].episodeNumber, trakt.episodeNumber);
+                            const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt);
+                            notStrictEqual(r.length, 0);
+                            strictEqual(r[0].episodeNumber, trakt.episodeNumber);
                         }
                     }
                 }
