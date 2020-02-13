@@ -1,17 +1,15 @@
-import TestHelper from "../../test-helper";
-import ProviderList from "../../../src/backend/controller/provider-manager/provider-list";
-import KitsuProvider from "../../../src/backend/api/kitsu/kitsu-provider";
-import MalProvider from "../../../src/backend/api/mal/mal-provider";
-import MainListManager from "../../../src/backend/controller/main-list-manager/main-list-manager";
-import ListController from "../../../src/backend/controller/list-controller";
-import dateHelper from "../../../src/backend/helpFunctions/date-helper";
-import { equal, strictEqual } from "assert";
-import ProviderDataWithSeasonInfo from "../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info";
-import ProviderLocalData from "../../../src/backend/controller/provider-manager/local-data/interfaces/provider-local-data";
-import { ListProviderLocalData } from "../../../src/backend/controller/provider-manager/local-data/list-provider-local-data";
-import TraktProvider from "../../../src/backend/api/trakt/trakt-provider";
-import SeasonAwarenessHelper from "../../../src/backend/helpFunctions/provider/season-awareness-helper";
-import Season from "../../../src/backend/controller/objects/meta/season";
+import { equal, strictEqual } from 'assert';
+import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
+import MalProvider from '../../../src/backend/api/mal/mal-provider';
+import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
+import ListController from '../../../src/backend/controller/list-controller';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import Season from '../../../src/backend/controller/objects/meta/season';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import SeasonAwarenessHelper from '../../../src/backend/helpFunctions/provider/season-awareness-helper/season-awareness-helper';
+import TestHelper from '../../test-helper';
 
 
 describe('Season Awareness Test', () => {

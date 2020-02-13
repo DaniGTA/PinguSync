@@ -54,7 +54,7 @@ describe('Episode Helper Test', () => {
         const result = EpisodeHelper.calculateRelationBetweenEpisodes(list, list2);
         strictEqual(result.episodes, 2);
         strictEqual(result.missingEpisodes, 1);
-        strictEqual(result.seasonComplete, false);
+        strictEqual(result.seasonComplete, true);
         strictEqual(result.episodesFound, 1);
         strictEqual(result.seasonNumber, 2);
     });
