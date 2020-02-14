@@ -215,8 +215,7 @@ export default class ProviderHelper {
                             logger.error(err);
                         }
                         await tempSeriesCopy.addProviderDatasWithSeasonInfos(...result.getAllProvidersWithSeason());
-                        results.push(...result.getAllProvidersWithSeason())
-
+                        results.push(...result.getAllProvidersWithSeason());
                     }
                     series.resetCache();
                     tempSeriesCopy.resetCache();
@@ -308,6 +307,7 @@ export default class ProviderHelper {
         providersThatNeedsAUpdate.sort((a, b) => this.sortProvidersThatNeedUpdates(a, b, currentProviderData));
         return providersThatNeedsAUpdate;
     }
+
     /**
      * @test should sort provider that need updates right
      * @param a
@@ -324,6 +324,7 @@ export default class ProviderHelper {
         }
         return 0;
     }
+
     /**
      * Checks if the localdata is not older then 30 days.
      * And it checks if the version has changed

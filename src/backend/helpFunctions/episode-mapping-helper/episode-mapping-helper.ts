@@ -1,4 +1,5 @@
 import Episode from '../../controller/objects/meta/episode/episode';
+import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
 import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
@@ -16,9 +17,26 @@ import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderCompareHistoryEntry from './provider-compare-history-entry';
 import ProviderAndSeriesPackage from './provider-series-package';
-import EpisodeBindingPool from 'src/backend/controller/objects/meta/episode/episode-binding-pool';
 
 export default class EpisodeMappingHelper {
+
+
+
+    private static async sortingEpisodeRatedEqualityContainerByResultPoints(aEp: EpisodeRatedEqualityContainer, bEp: EpisodeRatedEqualityContainer) {
+        const a = aEp.result.matches;
+        const b = bEp.result.matches;
+        if (a < b) {
+            return 1;
+        } else if (a > b) {
+            return -1;
+        } else if (aEp.result.matchAble < bEp.result.matchAble) {
+            return -1;
+        } else if (aEp.result.matchAble > bEp.result.matchAble) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
     private currentSeries: Series;
     constructor(series: Series) {
         this.currentSeries = series;
@@ -158,8 +176,8 @@ export default class EpisodeMappingHelper {
      */
     private async calculateMapping(packages: ProviderAndSeriesPackage[], ratedEquality: EpisodeRatedEqualityContainer[], season?: Season, cDiff = 0): Promise<EpisodeBindingPool[]> {
         for (const providerAndSeriesPackage of packages) {
-            for (let episode of providerAndSeriesPackage.provider.detailEpisodeInfo) {
-                let currentDiff = cDiff;
+            for (const episode of providerAndSeriesPackage.provider.detailEpisodeInfo) {
+                const currentDiff = cDiff;
                 if (ratedEquality.length === 0) {
                     ratedEquality = this.getRatedEqulityOfEpisodes(packages, season, currentDiff);
                     if (ratedEquality.length === 0) {
@@ -217,6 +235,7 @@ export default class EpisodeMappingHelper {
         }
         return maxEpisodeDifference;
     }
+
     /**
      *
      *
@@ -248,10 +267,12 @@ export default class EpisodeMappingHelper {
                  * Provider A targetSeason.
                  */
                 const aTargetS = packageA.series.getProviderSeasonTarget(providerA.provider);
+
                 /**
                  * Provider A targetSeason.
                  */
                 const bTargetS = packageB.series.getProviderSeasonTarget(providerB.provider);
+
                 /**
                  * TODO fix tests
                  */
@@ -503,23 +524,5 @@ export default class EpisodeMappingHelper {
             }
         }
         return false;
-    }
-
-
-
-    private static async sortingEpisodeRatedEqualityContainerByResultPoints(aEp: EpisodeRatedEqualityContainer, bEp: EpisodeRatedEqualityContainer) {
-        const a = aEp.result.matches;
-        const b = bEp.result.matches;
-        if (a < b) {
-            return 1;
-        } else if (a > b) {
-            return -1;
-        } else if (aEp.result.matchAble < bEp.result.matchAble) {
-            return -1;
-        } else if (aEp.result.matchAble > bEp.result.matchAble) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 }

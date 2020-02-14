@@ -119,7 +119,6 @@ export default new class ProviderInfoDownloadHelper {
                         const result = allBindings.find((x) => x.providerName === provider.providerName);
                         if (result) {
                             const [seriesSeason, mediaType] = await Promise.all([series.getSeason(), series.getMediaType()]);
-
                             if (seriesSeason.isSeasonNumberPresent()) {
                                 const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
                                 if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(mediaType, providerData.mediaType)
