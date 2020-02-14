@@ -51,4 +51,28 @@ describe('Episode binding pool helper tests | Testrun', () => {
 
         strictEqual(result.length, 0);
     });
+
+    describe('testing function: isEpisodeAlreadyBindedToAProvider', () => {
+        const episode1 = new Episode(2);
+        episode1.provider = 'a';
+        const episode2 = new Episode(2);
+        episode2.provider = 'b'
+        const episodeMapping1 = new EpisodeMapping(episode1, new ListProviderLocalData(1, 'a'));
+        const episodeMapping2 = new EpisodeMapping(episode2, new ListProviderLocalData(1, 'b'));
+
+        const episodeBindingPool = new EpisodeBindingPool(episodeMapping1, episodeMapping2);
+        test('should find already binded episode', async () => {
+            const result = EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider([episodeBindingPool], episode1, 'b');
+
+            strictEqual(result, true);
+        });
+
+        test('should not find already binded episode', async () => {
+
+            const result2 = EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider([episodeBindingPool], episode1, 'c');
+
+            strictEqual(result2, false);
+        });
+
+    });
 });

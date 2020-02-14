@@ -176,6 +176,7 @@ export default class EpisodeMappingHelper {
      */
     private async calculateMapping(packages: ProviderAndSeriesPackage[], ratedEquality: EpisodeRatedEqualityContainer[], season?: Season, cDiff = 0): Promise<EpisodeBindingPool[]> {
         for (const providerAndSeriesPackage of packages) {
+            const currentBindingPools = providerAndSeriesPackage.series.episodeBindingPools;
             for (const episode of providerAndSeriesPackage.provider.detailEpisodeInfo) {
                 const currentDiff = cDiff;
                 if (ratedEquality.length === 0) {
@@ -189,18 +190,33 @@ export default class EpisodeMappingHelper {
                 if (combineRatings.length !== 0) {
                     const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings, this.getProviderLength(packages.flatMap((x) => x.provider)));
                     for (const result of results) {
-                        providerAndSeriesPackage.series.addEpisodeMapping(...result.getEpisodeMappings());
-                        const ratings: EpisodeRatedEqualityContainer[] = [];
-                        for (const epsiodeBind of result.episodeBinds) {
-                            ratings.push(...this.getAllEpisodeRelatedRating(epsiodeBind.episode, ratedEquality));
+                        if (!this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(currentBindingPools, result)) {
+
+                            providerAndSeriesPackage.series.addEpisodeMapping(...result.getEpisodeMappings());
+                            const ratings: EpisodeRatedEqualityContainer[] = [];
+                            for (const epsiodeBind of result.episodeBinds) {
+                                ratings.push(...this.getAllEpisodeRelatedRating(epsiodeBind.episode, ratedEquality));
+                            }
+                            listHelper.removeEntrysSync(ratedEquality, ...ratings);
+                            break;
                         }
-                        listHelper.removeEntrysSync(ratedEquality, ...ratings);
-                        break;
                     }
                 }
             }
         }
         return packages.flatMap((x) => x.series.episodeBindingPools);
+    }
+
+    private isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(episodeBindingPools: EpisodeBindingPool[], episodeRatedEqualityContainer: EpisodeRatedEqualityContainer): boolean {
+        const episodeBinds = episodeRatedEqualityContainer.episodeBinds;
+        for (let index = 0; index < episodeBinds.length; index++) {
+            for (let index2 = index + 1; index2 < episodeBinds.length; index2++) {
+                if (EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider(episodeBindingPools, episodeBinds[index].episode, episodeBinds[index2].provider.provider)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private async getAllRelatedRatings(ep: Episode, provider: ProviderLocalData, rEquality: EpisodeRatedEqualityContainer[]): Promise<EpisodeRatedEqualityContainer[]> {

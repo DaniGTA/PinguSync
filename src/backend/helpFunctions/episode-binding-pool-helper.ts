@@ -36,4 +36,15 @@ export default class EpisodeBindingPoolHelper {
         }
         return result;
     }
+
+
+    public static isEpisodeAlreadyBindedToAProvider(episodeBindingPools: EpisodeBindingPool[], episode: Episode, providerName: string): boolean {
+        const allBindedEpisodes: EpisodeMapping[] = this.getAllBindedEpisodesOfEpisode(episodeBindingPools, episode);
+        for (const bindedEpisode of allBindedEpisodes) {
+            if (bindedEpisode.provider === providerName) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
