@@ -11,6 +11,9 @@ import EpisodeRelationResult from '../../episode-helper/episode-relation-result'
 import ProviderHelper from '../provider-helper';
 import ProviderDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 import SeasonAwarenessHelper from './season-awareness-helper';
+import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
+import TitleHelper from '../../name-helper/title-helper';
+import MainListAdder from '../../../controller/main-list-manager/main-list-adder';
 
 export default class SeasonAwarenessCreatorSeasonNumber {
     private finalList: ProviderDataWithSeasonInfo[] = [];
@@ -28,6 +31,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                 }
             }
         }
+        await new MainListAdder().addSeries(...this.seriesThatShouldAdded);
         return finalList;
     }
 
@@ -44,16 +48,40 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         const externalProviders = this.getAllExternalProvidersThatCanHelpToCreateSeasonAwarness();
 
         for (const externalProvider of externalProviders) {
-            let providerLocalData = allProviders.find((x) => x.provider === externalProvider.providerName);
-            if (!providerLocalData) {
-                providerLocalData = await ProviderHelper.simpleProviderInfoRequest(allProviders, externalProvider);
-            }
+            const providerLocalData = await this.getValidProviderLocalData(allProviders, series, externalProvider);
             if (providerLocalData) {
-                const result = this.createAwareness(providerLocalData, providerWithoutSeasonAwarness, finalSeason);
+                const result = await this.createAwareness(providerLocalData, providerWithoutSeasonAwarness, finalSeason);
                 if (result) {
                     return;
                 }
             }
+        }
+    }
+
+    private async getValidProviderLocalData(allProviders: ProviderLocalData[], series: Series, externalProvider: ExternalProvider) {
+        let providerLocalData = allProviders.find((x) => x.provider === externalProvider.providerName);
+        if (!providerLocalData) {
+            providerLocalData = await this.getProviderLocalDataFromFirstSeason(series, externalProvider);
+        }
+        if (!providerLocalData) {
+            providerLocalData = await ProviderHelper.simpleProviderInfoRequest(allProviders, externalProvider);
+        }
+        if (!providerLocalData) {
+            let names = series.getAllNames();
+            names = TitleHelper.getAllNamesSortedBySearchAbleScore(names);
+            const result = await providerInfoDownloaderhelper.downloadProviderSeriesInfoBySeriesName(names, series, externalProvider);
+            providerLocalData = result?.mainProvider.providerLocalData;
+        }
+        return providerLocalData;
+    }
+
+    private async getProviderLocalDataFromFirstSeason(series: Series, providerInstance: ExternalProvider): Promise<ProviderLocalData | undefined> {
+        logger.debug('[SeasonAwarenessCreatorSeasonNumber] [getProviderLocalDataFromFirstSeason] for provider instance: ' + providerInstance.providerName);
+        try {
+            return (await series.getFirstSeason()).getProviderLocalData(providerInstance);
+        } catch (err) {
+            logger.debug(err);
+            return undefined;
         }
     }
 

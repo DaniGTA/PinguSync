@@ -528,7 +528,7 @@ describe('Basic List | Testrun', () => {
                 } else if (episode.season?.seasonNumber === 4) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 0);
                 }
-                logger.warn(episode.episodeNumber + ' S: ' + episode.season);
+                logger.warn(episode.episodeNumber + ' S: ' + episode.season?.seasonNumber);
             }
             const season = series2.getProviderSeasonTarget(provider.provider);
             strictEqual(season?.seasonNumber, 2);

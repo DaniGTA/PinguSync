@@ -7,7 +7,6 @@ import { WatchedInfo } from './objects/watchedInfo';
 import { TraktUserData } from './trakt-user-data';
 
 // tslint:disable-next-line: no-implicit-dependencies
-import request from 'request';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';

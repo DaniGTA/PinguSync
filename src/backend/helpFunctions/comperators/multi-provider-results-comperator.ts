@@ -4,7 +4,7 @@ import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import { SeasonSearchMode } from '../season-helper/season-search-mode';
-import titleCheckHelper from '../title-check-helper';
+import titleCheckHelper from '../name-helper/title-check-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
 import ProviderComperator from './provider-comperator';

@@ -1,9 +1,9 @@
-import { MediaType } from '../controller/objects/meta/media-type';
-import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
-import Series from '../controller/objects/series';
-import logger from '../logger/logger';
-import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
-import stringHelper from './string-helper';
+import { MediaType } from '../../controller/objects/meta/media-type';
+import SeasonNumberResponse from '../../controller/objects/meta/response-object/season-number-response';
+import Series from '../../controller/objects/series';
+import logger from '../../logger/logger';
+import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
+import stringHelper from '../string-helper';
 
 export default class TitleCheckHelper {
     public static async checkSeriesNames(a: Series, b: Series): Promise<boolean> {

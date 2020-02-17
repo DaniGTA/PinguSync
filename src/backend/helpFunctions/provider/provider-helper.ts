@@ -161,7 +161,9 @@ export default class ProviderHelper {
             const tempSeries = new Series();
             await tempSeries.addProviderDatas(...currentLocalDatas);
             const infoResult = await this.requestProviderInfo(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-            return infoResult[0].mainProvider.providerLocalData;
+            if (infoResult && infoResult.length !== 0) {
+                return infoResult[0].mainProvider.providerLocalData;
+            }
         } catch (err) {
             logger.error(err);
         }
@@ -178,7 +180,7 @@ export default class ProviderHelper {
                 if (currentResult) {
                     lastLocalDataResult = currentResult;
                 }
-                if (firstSeason !== null && provider.hasUniqueIdForSeasons) {
+                if (firstSeason !== null && !provider.hasUniqueIdForSeasons) {
                     requestResult = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(firstSeason, provider);
                 }
                 if (requestResult === null) {

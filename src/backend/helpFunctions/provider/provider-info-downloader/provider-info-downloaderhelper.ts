@@ -21,10 +21,12 @@ import stringHelper from '../../string-helper';
 import ProviderDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
+import TitleHelper from '../../name-helper/title-helper';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
 export default new class ProviderInfoDownloadHelper {
+    private static readonly MAX_RETRYS_FOR_NAME_SEARCH: number = 9;
     // ---------------------------------------------------------
     // ! This function below have a big impact on this program !
     // ----------------------------------------------------------
@@ -50,7 +52,6 @@ export default new class ProviderInfoDownloadHelper {
     public async downloadProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<MultiProviderResult> {
         if (await provider.isProviderAvailable()) {
             const requestId = stringHelper.randomString(5);
-            let trys = 0;
             const seriesMediaType = await series.getMediaType();
 
             const allLocalProviders = series.getAllProviderLocalDatas();
@@ -61,31 +62,10 @@ export default new class ProviderInfoDownloadHelper {
                         const linkResult = await this.linkProviderDataFromRelations(series, provider);
                         return new MultiProviderResult(linkResult);
                     } catch (err) { logger.debug(err); }
-
-                    const alreadySearchedNames: string[] = [];
                     const names = await this.getNamesSortedBySearchAbleScore(series);
-                    for (const name of names) {
-                        const alreadySearchedName = alreadySearchedNames.findIndex((x) => name.name === x) !== -1;
-                        if (!alreadySearchedName && name.name) {
-                            if (trys > 9) {
-                                break;
-                            }
-                            trys++;
-                            try {
-                                const result = await this.getProviderLocalDataByName(series, name, provider);
-                                if (result) {
-                                    logger.log('info', '[' + requestId + '][' + provider.providerName + '] ByName Request success 🎉');
-                                    return result;
-                                }
-                            } catch (err) {
-                                logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo');
-                                logger.error(err);
-                            }
-                            logger.warn('[' + requestId + '][' + provider.providerName + '] ByName Request failed. try next...');
-
-                            alreadySearchedNames.push(name.name);
-                        }
-                        logger.warn('info', '[' + requestId + '][' + provider.providerName + '] ByName Request failed. ❌');
+                    const result = await this.downloadProviderSeriesInfoBySeriesName(names, series, provider, requestId);
+                    if (result) {
+                        return result;
                     }
                 } else {
                     throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'MediaType not supported: .' + seriesMediaType);
@@ -96,17 +76,45 @@ export default new class ProviderInfoDownloadHelper {
                     logger.log('info', '[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
                     const id = result.mainProvider.providerLocalData.id.toString();
                     // tslint:disable-next-line: max-line-length
-                    ProviderSearchResultManager.addNewSearchResult(1, requestId, trys, provider.providerName, new Name('id', 'id'), true, seriesMediaType, id);
+                    ProviderSearchResultManager.addNewSearchResult(1, requestId, 0, provider.providerName, new Name('id', 'id'), true, seriesMediaType, id);
                     return result;
                 } catch (err) {
                     throw new Error('[' + provider.providerName + '] Unkown error: ' + err);
                 }
             }
 
-            logger.warn('[' + requestId + '][' + provider.providerName + '] Request failed ❌❌❌❌❌❌');
-            throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'No series info found by names.');
+            logger.warn(`[${requestId}][${provider.providerName}] Request failed ❌❌❌❌❌❌`);
+            throw new Error(`[${requestId}][${provider.providerName}] No series info found by names.`);
         }
-        throw new Error('[' + provider.providerName + '] Provider is not available!');
+        throw new Error(`[${provider.providerName}] Provider is not available!`);
+    }
+
+    public async downloadProviderSeriesInfoBySeriesName(names: Name[], series: Series, provider: ExternalProvider, requestId?: string): Promise<MultiProviderResult | undefined> {
+        let trys = 0;
+        const alreadySearchedNames: string[] = [];
+        for (const name of names) {
+            const alreadySearchedName = alreadySearchedNames.findIndex((x) => name.name === x) !== -1;
+            if (!alreadySearchedName && name.name) {
+                if (trys > ProviderInfoDownloadHelper.MAX_RETRYS_FOR_NAME_SEARCH) {
+                    break;
+                }
+                trys++;
+                try {
+                    const result = await this.getProviderLocalDataByName(series, name, provider);
+                    if (result) {
+                        logger.log('info', `[${requestId}][${provider.providerName}] ByName ${name.name} Request success 🎉`);
+                        return result;
+                    }
+                } catch (err) {
+                    logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo');
+                    logger.error(err);
+                }
+                logger.warn(`[${requestId}][${provider.providerName}] ByName ${name.name} Request failed. try next...`);
+
+                alreadySearchedNames.push(name.name);
+            }
+            logger.warn(`[${requestId}][${provider.providerName}] ByName ${name.name} Request failed. ❌`);
+        }
     }
 
     private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider): Promise<ProviderDataWithSeasonInfo> {
@@ -158,13 +166,14 @@ export default new class ProviderInfoDownloadHelper {
     private async getNamesSortedBySearchAbleScore(series: Series): Promise<Name[]> {
         const season = await series.getSeason();
         let names = series.getAllNamesSeasonAware(season);
-        names = names.sort((a, b) => Name.getSearchAbleScore(b, names) - Name.getSearchAbleScore(a, names));
+        logger.debug(`[INFO] [ProviderInfoDownloadHelper] [getNamesSortedBySearchAbleScore] start sorting ${names.length} names by search able score.`);
+        names = TitleHelper.getAllNamesSortedBySearchAbleScore(names);
         if (names.length !== 0) {
             try {
                 // Test
                 names.unshift(new Name(stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
             } catch (err) {
-                logger.error('[ERROR] [ProviderHelper] [getNamesSortedBySearchAbleScore]:');
+                logger.debug('[ERROR] [ProviderInfoDownloadHelper] [getNamesSortedBySearchAbleScore]:');
                 logger.debug(err);
             }
             return listHelper.getLazyUniqueStringList(names);

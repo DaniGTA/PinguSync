@@ -15,7 +15,7 @@ import { ProviderInfoStatus } from '../../controller/provider-manager/local-data
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import titleCheckHelper from '../../helpFunctions/title-check-helper';
+import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';

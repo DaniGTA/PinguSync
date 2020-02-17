@@ -7,7 +7,7 @@ import Name from '../../controller/objects/meta/name';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import MultiThreadingHelper from '../../helpFunctions/multi-threading-helper';
-import TitleCheckHelper from '../../helpFunctions/title-check-helper';
+import TitleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
 import logger from '../../logger/logger';
 import MalProvider from '../mal/mal-provider';
 import ExternalProvider from '../provider/external-provider';

@@ -1,6 +1,6 @@
 import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
-import titleCheckHelper from './title-check-helper';
+import titleCheckHelper from './name-helper/title-check-helper';
 
 class StringHelper {
     /**
@@ -140,6 +140,8 @@ class StringHelper {
         }
         return false;
     }
+
+
 }
 
 export default new StringHelper();

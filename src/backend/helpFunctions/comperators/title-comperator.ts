@@ -1,6 +1,6 @@
 import Name from '../../controller/objects/meta/name';
 import Series from '../../controller/objects/series';
-import titleCheckHelper from '../title-check-helper';
+import titleCheckHelper from '../name-helper/title-check-helper';
 import ComperatorResult from './comperator-results.ts/comperator-result';
 
 export default class TitleComperator {
