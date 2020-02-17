@@ -11,6 +11,7 @@ import Season from '../../meta/season';
 import InfoLocalDataBind from './binding/info-local-data-bind';
 import ListLocalDataBind from './binding/list-local-data-bind';
 import LocalDataBind from './binding/local-data-bind';
+import ExternalProvider from 'src/backend/api/provider/external-provider';
 
 
 export default class SeriesProviderExtension {
@@ -146,6 +147,24 @@ export default class SeriesProviderExtension {
         localdata.push(...this.getInfoProvidersInfosWithSeasonInfo());
         return localdata;
     }
+    /**
+     * Get a single provider local data with the given provider.
+     * @param provider the given provider.
+     */
+    public getProviderLocalData(provider: ExternalProvider): ProviderLocalData | undefined {
+        const localdata: ProviderLocalData[] = this.getAllProviderLocalDatas();
+        return localdata.find((entry) => entry.provider === provider.providerName);
+    }
+
+    /**
+     * Get a single provider local data with the given provider.
+     * @param provider the given provider.
+     */
+    public getProviderLocalDataWithSeasonInfo(provider: ExternalProvider): ProviderDataWithSeasonInfo | undefined {
+        const localdata: ProviderDataWithSeasonInfo[] = this.getAllProviderLocalDatasWithSeasonInfo();
+        return localdata.find((entry) => entry.providerLocalData.provider === provider.providerName);
+    }
+
 
     private instanceOfInfoProviderLocalData(pld: ProviderLocalData) {
         if (pld instanceof InfoProviderLocalData || pld.instanceName === 'InfoProviderLocalData') {

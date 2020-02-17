@@ -10,8 +10,9 @@ import dateHelper from '../date-helper';
 import seasonHelper from '../season-helper/season-helper';
 import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
-import SeasonAwarenessHelper from './season-awareness-helper/season-awareness-helper';
+import SeasonAwarenessCreatorSeasonNumber from './season-awareness-helper/season-awareness-creator-season-number';
 import SeasonAwarenessFindSeasonNumber from './season-awareness-helper/season-awareness-find-season-number';
+import SeasonAwarenessHelper from './season-awareness-helper/season-awareness-helper';
 
 
 export default class ProviderHelper {
@@ -33,8 +34,8 @@ export default class ProviderHelper {
 
 
             if (!seasonAware) {
-                const instance = new SeasonAwarenessHelper(series, infoProviders);
-                const providers = await instance.requestSeasonAwareness();
+                const instance = new SeasonAwarenessCreatorSeasonNumber();
+                const providers = await instance.requestSeasonAwareness(series, infoProviders);
                 await series.addProviderDatasWithSeasonInfos(...providers);
             } else {
                 await series.addProviderDatasWithSeasonInfos(...infoProviders);
@@ -71,7 +72,7 @@ export default class ProviderHelper {
      */
     // tslint:disable-next-line: max-line-length
     public static async requestProviderInfo(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult[]> {
-        logger.debug('Start request for Provider: ')
+        logger.debug('Start request for Provider: ');
         const localDatas: MultiProviderResult[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
         const tempSeriesCopy = Object.assign(new Series(), series);
@@ -155,18 +156,16 @@ export default class ProviderHelper {
         return relevantList;
     }
 
-    public static async simpleProviderInfoRequest(currentLocalData: ProviderLocalData, providerInstance: ExternalProvider): Promise<ProviderLocalData | null> {
+    public static async simpleProviderInfoRequest(currentLocalDatas: ProviderLocalData[], providerInstance: ExternalProvider): Promise<ProviderLocalData | undefined> {
         try {
-            if (currentLocalData && currentLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !currentLocalData) {
-                const tempSeries = new Series();
-                await tempSeries.addProviderDatas(currentLocalData);
-                const infoResult = await this.requestProviderInfo(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-                return infoResult[0].mainProvider.providerLocalData;
-            }
+            const tempSeries = new Series();
+            await tempSeries.addProviderDatas(...currentLocalDatas);
+            const infoResult = await this.requestProviderInfo(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
+            return infoResult[0].mainProvider.providerLocalData;
         } catch (err) {
             logger.error(err);
         }
-        return null;
+        return currentLocalDatas.find((x) => x.provider === providerInstance.providerName);
     }
 
     private static async requestProviderToTarget(provider: ExternalProvider, firstSeason: Series | null, tempSeriesCopy: Series, target: ProviderInfoStatus) {
@@ -179,7 +178,7 @@ export default class ProviderHelper {
                 if (currentResult) {
                     lastLocalDataResult = currentResult;
                 }
-                if (firstSeason !== null) {
+                if (firstSeason !== null && provider.hasUniqueIdForSeasons) {
                     requestResult = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(firstSeason, provider);
                 }
                 if (requestResult === null) {
@@ -210,6 +209,8 @@ export default class ProviderHelper {
                         try {
                             if (!providerThatNeedUpdate.hasUniqueIdForSeasons && !seasonHelper.isSeasonFirstSeason(await season) && requestResults.length !== 0) {
                                 result.mainProvider.seasonTarget = await SeasonAwarenessFindSeasonNumber.getSeasonForProvider(tempSeriesCopy, result.mainProvider.providerLocalData);
+                            } else if (seasonHelper.isSeasonUndefined(result.mainProvider.seasonTarget)) {
+                                result.mainProvider.seasonTarget = await season;
                             }
                         } catch (err) {
                             logger.error(err);
@@ -236,16 +237,9 @@ export default class ProviderHelper {
             try {
                 if (seasonAware) {
                     const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
-                    await series.addProviderDatasWithSeasonInfos(...result.flatMap((x) => x.getAllProvidersWithSeason()));
                     const allResults = result.flatMap((x) => x.getAllProvidersWithSeason());
                     results.push(...allResults);
                     tempSeriesCopy.addProviderDatasWithSeasonInfos(...allResults);
-                } else {
-                    const instance = new SeasonAwarenessHelper(series);
-                    const result = await instance.requestSeasonAwarnessForProvider(infoProvider);
-                    results.push(...result);
-                    tempSeriesCopy.addProviderDatasWithSeasonInfos(...result);
-                    seasonAware = true;
                 }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #1: ' + err);
@@ -255,7 +249,7 @@ export default class ProviderHelper {
     }
 
     private static hasSeriesASeriesNames(series: Series): boolean {
-        const allNames = series.getAllProviderLocalDatas().flatMap((x) => x.getAllNames());
+        const allNames = series.getAllNames();
         return allNames.length !== 0;
     }
 

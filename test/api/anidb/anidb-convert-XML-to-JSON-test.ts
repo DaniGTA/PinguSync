@@ -1,5 +1,4 @@
-import { deepEqual, strictEqual } from 'assert';
-import { existsSync, unlinkSync } from 'fs';
+import { deepEqual } from 'assert';
 import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 import AniDBNameListXML from '../../../src/backend/api/anidb/objects/anidbNameListXML';
 

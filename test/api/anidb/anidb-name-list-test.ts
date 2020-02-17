@@ -265,14 +265,30 @@ describe('Provider: AniDB | Offline Test runs', () => {
         lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
 
         const series = new Series();
-        lpdld.addSeriesName(new Name('Persona -Trinity Soul-', NameType.MAIN));
-        lpdld.addSeriesName(new Name(' Persona -trinity soul-', NameType.MAIN));
-        lpdld.addSeriesName(new Name('ペルソナ 〜トリニティ・ソウル〜', NameType.MAIN));
+        lpdld.addSeriesName(new Name('Persona -Trinity Soul-', 'x-jap', NameType.MAIN));
+        lpdld.addSeriesName(new Name(' Persona -trinity soul-', 'unknown', NameType.MAIN));
+        lpdld.addSeriesName(new Name('ペルソナ 〜トリニティ・ソウル〜', 'jap', NameType.UNKNOWN));
         await series.addListProvider(lpdld);
         // tslint:disable-next-line: no-string-literal
         const result = await providerInfoDownloaderhelper['getProviderLocalDataByName'](series, new Name('Persona Trinity Soul', 'x-japclean'), a);
 
         deepEqual(result.mainProvider.providerLocalData.id, '5544');
+    });
+
+    test('should find id 14819', async () => {
+        const a = new AniDBProvider(false);
+        const lpdld = new ListProviderLocalData(108928, 'AniList');
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
+
+        const series = new Series();
+        lpdld.addSeriesName(new Name('Nanatsu no Taizai: Kamigami no Gekirin', 'x-jap', NameType.OFFICIAL));
+        lpdld.addSeriesName(new Name('The Seven Deadly Sins: Wrath of the Gods', 'unknown', NameType.MAIN));
+        lpdld.addSeriesName(new Name('ペルソナ 〜トリニティ・ソウル〜', 'jap', NameType.UNKNOWN));
+        await series.addListProvider(lpdld);
+        // tslint:disable-next-line: no-string-literal
+        const result = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(series, a);
+
+        deepEqual(result.mainProvider.providerLocalData.id, '14819');
     });
 
 

@@ -420,7 +420,7 @@ describe('Basic List | Testrun', () => {
         notEqual(trakprovider2, null);
     }, 4000);
 
-    test('should get the right season.', async () => {
+    test('should get the right season. Trakt', async () => {
         if (!ListController.instance) {
             fail();
         }
@@ -428,7 +428,7 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(79352, TraktProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s1provider1, new Season(1)));
 
         // s2
         const series2 = new Series();

@@ -1,6 +1,4 @@
 import * as assert from 'assert';
-
-
 import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../src/backend/controller/objects/meta/name';
