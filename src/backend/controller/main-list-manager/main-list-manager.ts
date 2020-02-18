@@ -113,9 +113,6 @@ export default class MainListManager {
                     } catch (ignore) {
                         logger.debug(ignore);
                     }
-                    const episodeMappingHelperInstance = new EpisodeMappingHelper(entry);
-                    const episodeMapping = await episodeMappingHelperInstance.generateEpisodeMapping();
-                    entry.addEpisodeBindingPools(...episodeMapping);
                     await MainListManager.addSerieToMainList(entry);
                 } catch (err) {
                     logger.error(err);

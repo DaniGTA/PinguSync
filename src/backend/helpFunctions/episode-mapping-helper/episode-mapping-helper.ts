@@ -38,53 +38,22 @@ export default class EpisodeMappingHelper {
         }
     }
     private currentSeries: Series;
+    private providers: ProviderLocalData[];
     constructor(series: Series) {
         this.currentSeries = series;
+        this.providers = [...this.currentSeries.getAllProviderLocalDatas()];
     }
     public async generateEpisodeMapping(): Promise<EpisodeBindingPool[]> {
-        const providers = [...this.currentSeries.getAllProviderLocalDatas()];
         const season = (await this.currentSeries.getSeason());
-        const currentPackages = ProviderAndSeriesPackage.generatePackages(providers, this.currentSeries);
-        await this.prepareDetailedEpisodeInformation(providers, season);
+        const currentPackages = ProviderAndSeriesPackage.generatePackages(this.providers, this.currentSeries);
+        await this.prepareDetailedEpisodeInformation(this.providers, season);
 
         const ratedEquality: EpisodeRatedEqualityContainer[] = this.getRatedEqulityOfEpisodes(currentPackages, season);
 
         await this.calculateMapping(currentPackages, ratedEquality, season);
-        const unmappedEpisodesNumber = await this.getNumberOfUnmappedEpisodesFromProviders(providers);
+        const unmappedEpisodesNumber = await this.getNumberOfUnmappedEpisodesFromProviders(this.providers);
         if (unmappedEpisodesNumber !== 0) {
-            let sequel: Series | null = (await this.currentSeries.getSequel()).foundedSeries;
-            if (sequel) {
-                const mappedSequels = [sequel];
-                const differenceProviders: EpisodeDifferenceContainer[] = [];
-
-                do {
-                    for (const provider of providers) {
-                        if (await this.getNumberOfUnmappedEpisodesFromProvider(provider, this.getProviderLength(providers)) === 0) {
-                            const sequelProvider = sequel.getAllProviderLocalDatas().find((x) => x.provider === provider.provider);
-                            if (sequelProvider) {
-                                if (!differenceProviders.find((x) => x.providerNameA.provider === provider.provider)) {
-                                    const firstDiff = this.getMaxEpisodeNumber(provider.detailEpisodeInfo);
-                                    differenceProviders.push(new EpisodeDifferenceContainer(provider, provider, firstDiff));
-                                }
-                                await this.prepareDetailedEpisodeInformation([sequelProvider], season);
-                                const diff = this.getMaxEpisodeNumber(sequelProvider.detailEpisodeInfo);
-                                const currentDiff = this.getEpisodeDifferenceFromContainer(differenceProviders, provider);
-                                const sequelSeasonNumber = (await sequel.getSeason());
-                                const sequelPackages = ProviderAndSeriesPackage.generatePackages([sequelProvider], sequel);
-                                await this.calculateMapping([...currentPackages, ...sequelPackages], [], sequelSeasonNumber, currentDiff);
-                                differenceProviders.push(new EpisodeDifferenceContainer(provider, sequelProvider, diff));
-                            }
-                        }
-                    }
-                    const nextSequel: Series | null = (await sequel.getSequel()).foundedSeries;
-                    if (nextSequel && !mappedSequels.includes(nextSequel)) {
-                        sequel = nextSequel;
-                        mappedSequels.push(nextSequel);
-                    } else {
-                        break;
-                    }
-                } while (await this.getNumberOfUnmappedEpisodesFromProviders([...sequel.getAllProviderLocalDatas(), ...providers]) !== 0);
-            }
+            await this.createMappingForSequels(season, currentPackages);
         }
 
         return this.currentSeries.episodeBindingPools;
@@ -105,6 +74,42 @@ export default class EpisodeMappingHelper {
             this.currentSeries.addEpisodeMapping(mapping);
         }
         return episode;
+    }
+
+    private async createMappingForSequels(season: Season, currentPackages: ProviderAndSeriesPackage[]) {
+        let sequel: Series | null = (await this.currentSeries.getSequel()).foundedSeries;
+        if (sequel) {
+            const mappedSequels = [sequel];
+            const differenceProviders: EpisodeDifferenceContainer[] = [];
+
+            do {
+                for (const provider of this.providers) {
+                    if (await this.getNumberOfUnmappedEpisodesFromProvider(provider, this.getProviderLength(this.providers)) === 0) {
+                        const sequelProvider = sequel.getAllProviderLocalDatas().find((x) => x.provider === provider.provider);
+                        if (sequelProvider) {
+                            if (!differenceProviders.find((x) => x.providerNameA.provider === provider.provider)) {
+                                const firstDiff = this.getMaxEpisodeNumber(provider.detailEpisodeInfo);
+                                differenceProviders.push(new EpisodeDifferenceContainer(provider, provider, firstDiff));
+                            }
+                            await this.prepareDetailedEpisodeInformation([sequelProvider], season);
+                            const diff = this.getMaxEpisodeNumber(sequelProvider.detailEpisodeInfo);
+                            const currentDiff = this.getEpisodeDifferenceFromContainer(differenceProviders, provider);
+                            const sequelSeasonNumber = (await sequel.getSeason());
+                            const sequelPackages = ProviderAndSeriesPackage.generatePackages([sequelProvider], sequel);
+                            await this.calculateMapping([...currentPackages, ...sequelPackages], [], sequelSeasonNumber, currentDiff);
+                            differenceProviders.push(new EpisodeDifferenceContainer(provider, sequelProvider, diff));
+                        }
+                    }
+                }
+                const nextSequel: Series | null = (await sequel.getSequel()).foundedSeries;
+                if (nextSequel && !mappedSequels.includes(nextSequel)) {
+                    sequel = nextSequel;
+                    mappedSequels.push(nextSequel);
+                } else {
+                    break;
+                }
+            } while (await this.getNumberOfUnmappedEpisodesFromProviders([...sequel.getAllProviderLocalDatas(), ...this.providers]) !== 0);
+        }
     }
 
     private async prepareDetailedEpisodeInformation(providers: ProviderLocalData[], season?: Season) {
@@ -270,7 +275,7 @@ export default class EpisodeMappingHelper {
             for (const packageB of providers) {
                 const providerA = packageA.provider;
                 const providerB = packageB.provider;
-                if (providerA.provider === providerB.provider) {
+                if (!this.canProviderPerformARatingEquality(providerA, providerB)) {
                     continue;
                 }
 
@@ -304,6 +309,15 @@ export default class EpisodeMappingHelper {
             }
         }
         return ratedEquality;
+    }
+
+    private canProviderPerformARatingEquality(providerA: ProviderLocalData, providerB: ProviderLocalData): boolean {
+        if (providerA.provider === providerB.provider) {
+            return false;
+        } else if (providerA.detailEpisodeInfo.length === 0 || providerB.detailEpisodeInfo.length === 0) {
+            return false;
+        }
+        return true;
     }
 
     // tslint:disable-next-line: max-line-length
@@ -353,7 +367,17 @@ export default class EpisodeMappingHelper {
         }
         return ratedEquality;
     }
-
+    /**
+     * TODO
+     * @param detailedEpA 
+     * @param detailedEpB 
+     * @param providerA 
+     * @param providerB 
+     * @param aTargetS 
+     * @param bTargetS 
+     * @param season 
+     * @param episodeDiff 
+     */
     private getRatedEqualityContainer(detailedEpA: Episode, detailedEpB: Episode, providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: Season | undefined, bTargetS: Season | undefined, season: Season | undefined, episodeDiff: number) {
         this.applySeasonOnEpisode(detailedEpA, aTargetS);
         this.applySeasonOnEpisode(detailedEpB, bTargetS);

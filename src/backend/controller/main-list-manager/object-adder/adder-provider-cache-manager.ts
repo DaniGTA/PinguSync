@@ -3,10 +3,11 @@ import AdderProviderCache from './adder-provider-cache';
 
 export default class AdderProviderCacheManager {
     public convertSeriesToProviderCache(series: Series): AdderProviderCache[] {
-        const providerLocalData = series.getAllProviderLocalDatas();
+        const providerLocalData = series.getAllProviderLocalDatasWithSeasonInfo();
         const providerCache: AdderProviderCache[] = [];
-        for (const provider of providerLocalData) {
-            providerCache.push(new AdderProviderCache(provider.provider, provider.id));
+        for (const providerWithSeasonInfo of providerLocalData) {
+            const provider = providerWithSeasonInfo.providerLocalData;
+            providerCache.push(new AdderProviderCache(provider.provider, provider.id, providerWithSeasonInfo.seasonTarget));
         }
         return providerCache;
     }

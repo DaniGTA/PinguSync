@@ -19,7 +19,6 @@ export default class SeasonAwarenessCreatorSeasonNumber {
     private finalList: ProviderDataWithSeasonInfo[] = [];
     private seriesThatShouldAdded: Series[] = [];
     public async requestSeasonAwareness(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[] = []): Promise<ProviderDataWithSeasonInfo[]> {
-        const finalList: ProviderDataWithSeasonInfo[] = [];
         for (const listProvider of series.getListProvidersInfosWithSeasonInfo()) {
             if (ProviderList.getExternalProviderInstance(listProvider.providerLocalData).hasEpisodeTitleOnFullInfo) {
                 if (!SeasonAwarenessHelper.isProviderSeasonAware(listProvider)) {
@@ -32,7 +31,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
             }
         }
         await new MainListAdder().addSeries(...this.seriesThatShouldAdded);
-        return finalList;
+        return this.finalList;
     }
 
     public async requestSeasonAwarnessForProviderLocalData(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[], providerWithoutSeasonAwarness: ProviderLocalData): Promise<void> {

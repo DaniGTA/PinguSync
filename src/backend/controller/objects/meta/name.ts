@@ -3,6 +3,7 @@ import listHelper from '../../../helpFunctions/list-helper';
 import stringHelper from '../../../helpFunctions/string-helper';
 import { NameType } from './name-type';
 import SeasonNumberResponse from './response-object/season-number-response';
+import logger from '../../../logger/logger';
 
 export default class Name {
 
@@ -90,6 +91,8 @@ export default class Name {
                     }
                 }
             } catch (err) {
+                logger.debug(`[getSeasonNumbersInNames] Failed extracting season from name: ` + nameObj.name);
+                logger.debug(err);
                 continue;
             }
         }
