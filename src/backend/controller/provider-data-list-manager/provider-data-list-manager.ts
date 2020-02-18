@@ -5,6 +5,7 @@ import ProviderLocalData from '../provider-manager/local-data/interfaces/provide
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
 import ProviderDataListLoader from './provider-data-list-loader';
 import ProviderDataListSearcher from './provider-data-list-searcher';
+import SeriesProviderExtension from '../objects/extension/provider-extension/series-provider-extension';
 
 export default class ProviderDataListManager {
 
@@ -34,10 +35,12 @@ export default class ProviderDataListManager {
         const providerIndex = ProviderDataListSearcher.getIndexByProviderLD(provider);
         if (providerIndex != null) {
             const oldProvider = this.providerDataList[providerIndex];
-            if (oldProvider instanceof ListProviderLocalData && provider instanceof ListProviderLocalData) {
-                this.providerDataList[providerIndex] = await ListProviderLocalData.mergeProviderInfos(provider, oldProvider);
-            } else if (oldProvider instanceof InfoProviderLocalData && provider instanceof InfoProviderLocalData) {
-                this.providerDataList[providerIndex] = await InfoProviderLocalData.mergeProviderInfos(provider, oldProvider);
+            if (SeriesProviderExtension.instanceOfListProviderLocalData(oldProvider) && SeriesProviderExtension.instanceOfListProviderLocalData(provider)) {
+                const lpld = await ListProviderLocalData.mergeProviderInfos(provider as ListProviderLocalData, oldProvider as ListProviderLocalData);
+                this.providerDataList[providerIndex] = lpld;
+            } else if (SeriesProviderExtension.instanceOfInfoProviderLocalData(oldProvider) && SeriesProviderExtension.instanceOfInfoProviderLocalData(provider)) {
+                const ipld = await InfoProviderLocalData.mergeProviderInfos(provider as InfoProviderLocalData, oldProvider as InfoProviderLocalData);
+                this.providerDataList[providerIndex] = ipld;
             } else {
                 logger.error('[ProviderList] Failed update: Not same instance');
             }

@@ -15,14 +15,13 @@
     "types": [
       "webpack-env",
       "jest",
-      "node",
+      "node"
     ],
     "paths": {},
     "lib": [
       "esnext",
       "es6",
       "es7",
-      "ES2019",
       "dom",
       "dom.iterable",
       "scripthost"

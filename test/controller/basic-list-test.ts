@@ -523,8 +523,8 @@ describe('Basic List | Testrun', () => {
                 } else if (episode.season?.seasonNumber === 2) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode).length, 0);
                 } else if (episode.season?.seasonNumber === 3) {
-                    const allSeries = (await MainListManager.getMainList()).flatMap(x => x.episodeBindingPools);
-                    const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allSeries, episode).length;
+                    const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
+                    const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode).length;
                     notStrictEqual(len, 0);
                 } else if (episode.season?.seasonNumber === 4) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 0);

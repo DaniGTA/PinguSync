@@ -1,4 +1,5 @@
 import ExternalProvider from '../../../api/provider/external-provider';
+import MainListAdder from '../../../controller/main-list-manager/main-list-adder';
 import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
@@ -8,12 +9,11 @@ import ProviderList from '../../../controller/provider-manager/provider-list';
 import logger from '../../../logger/logger';
 import EpisodeHelper from '../../episode-helper/episode-helper';
 import EpisodeRelationResult from '../../episode-helper/episode-relation-result';
+import TitleHelper from '../../name-helper/title-helper';
 import ProviderHelper from '../provider-helper';
 import ProviderDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
-import SeasonAwarenessHelper from './season-awareness-helper';
 import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
-import TitleHelper from '../../name-helper/title-helper';
-import MainListAdder from '../../../controller/main-list-manager/main-list-adder';
+import SeasonAwarenessHelper from './season-awareness-helper';
 
 export default class SeasonAwarenessCreatorSeasonNumber {
     private finalList: ProviderDataWithSeasonInfo[] = [];

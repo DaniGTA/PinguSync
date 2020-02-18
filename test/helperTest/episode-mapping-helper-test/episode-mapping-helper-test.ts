@@ -1,6 +1,5 @@
 
 import { fail, notStrictEqual, strictEqual } from 'assert';
-import ListController from '../../../src/backend/controller/list-controller';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import { EpisodeType } from '../../../src/backend/controller/objects/meta/episode/episode-type';
@@ -10,6 +9,7 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/provider-
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import ComperatorResult from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
+import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode-binding-pool-helper';
 import EpisodeHelper from '../../../src/backend/helpFunctions/episode-helper/episode-helper';
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container';
@@ -18,11 +18,8 @@ import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provi
 import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
-import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode-binding-pool-helper';
 // tslint:disable: no-string-literal
 describe('Episode mapping | Mapping Only', () => {
-    const lc = new ListController(true);
-
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
@@ -264,14 +261,15 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
         // tslint:disable-next-line: no-string-literal
-        MainListManager['mainList'] = [sequelOfaSeries];
-        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        const result = await episodeMappingInstance.generateEpisodeMapping();
+        MainListManager['mainList'] = [aSeries, sequelOfaSeries];
+
+        await MainListManager.finishListFilling();
 
         // Result checking
-        for (const episode of aSeries.getAllDetailedEpisodes()) {
-            const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, episode);
+        const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
 
+        for (const episode of aSeries.getAllDetailedEpisodes()) {
+            const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
             strictEqual(mappedTo.length, 1, episode.episodeNumber + '');
             notStrictEqual(mappedTo[0].provider, episode.provider);
         }
@@ -323,13 +321,15 @@ describe('Episode mapping | Mapping Only', () => {
 
             // Testing
             // tslint:disable-next-line: no-string-literal
-            MainListManager['mainList'] = [sequelOfaSeries, sequelOfSequelOfaSeries];
-            const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-            const result = await episodeMappingInstance.generateEpisodeMapping();
+            MainListManager['mainList'] = [aSeries, sequelOfaSeries, sequelOfSequelOfaSeries];
+
+            await MainListManager.finishListFilling();
+
+            const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
 
             // Result checking
             for (const episode of aSeries.getAllDetailedEpisodes()) {
-                const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, episode);
+                const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
 
                 strictEqual(mappedTo.length, 1, episode.episodeNumber + '');
                 notStrictEqual(mappedTo[0].provider, episode.provider);

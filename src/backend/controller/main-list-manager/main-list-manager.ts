@@ -39,7 +39,8 @@ export default class MainListManager {
                         }
                     }
                 } else {
-                    await new EpisodeMappingHelper(series).generateEpisodeMapping();
+                    const episodeMapping = await new EpisodeMappingHelper(series).generateEpisodeMapping();
+                    series.addEpisodeBindingPools(...episodeMapping);
                     results.push(series);
                 }
                 if (results.length === 0) {
@@ -113,7 +114,8 @@ export default class MainListManager {
                         logger.debug(ignore);
                     }
                     const episodeMappingHelperInstance = new EpisodeMappingHelper(entry);
-                    await episodeMappingHelperInstance.generateEpisodeMapping();
+                    const episodeMapping = await episodeMappingHelperInstance.generateEpisodeMapping();
+                    entry.addEpisodeBindingPools(...episodeMapping);
                     await MainListManager.addSerieToMainList(entry);
                 } catch (err) {
                     logger.error(err);
