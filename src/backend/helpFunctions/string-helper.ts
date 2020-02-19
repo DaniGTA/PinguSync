@@ -67,16 +67,19 @@ class StringHelper {
             } else {
                 reversedTitle = await this.reverseString(title);
             }
-            const lastChar = reversedTitle.charAt(0);
 
             if (title.toLocaleLowerCase().includes('episode')) {
                 throw new Error('That name dont have a Season');
             }
             const seasonMarkerResult = await titleCheckHelper.getSeasonNumberBySeasonMarkerInTitle(title);
+
             if (seasonMarkerResult.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
                 return seasonMarkerResult;
             }
-            if ('0123456789'.includes(lastChar) && !await this.hasKanji(title) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
+
+            const lastChar = reversedTitle.charAt(0);
+
+            if (this.isNumber(lastChar) && !this.hasKanji(title) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
                 response.seasonNumber = parseInt(lastChar, 10);
                 return response;
             } else if (['I'].includes(lastChar)) {
@@ -110,7 +113,7 @@ class StringHelper {
      * Check if the string contains any japanese letters.
      * @param s
      */
-    public async hasKanji(s: string): Promise<boolean> {
+    public hasKanji(s: string): boolean {
         if (s) {
             const regex = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}/;
             return s.match(regex) != null;
@@ -121,7 +124,7 @@ class StringHelper {
      * Check if the string contains any korean letters.
      * @param s
      */
-    public async hasHangul(s: string): Promise<boolean> {
+    public hasHangul(s: string): boolean {
         if (s) {
             const regex = /[\u3131-\uD79D]/ugi;
             return s.match(regex) != null;
@@ -133,7 +136,7 @@ class StringHelper {
      * Check if the string contains any russian letters.
      * @param s
      */
-    public async hasCyrillic(s: string): Promise<boolean> {
+    public hasCyrillic(s: string): boolean {
         if (s) {
             const regex = /[\u0400-\u04FF]/;
             return s.match(regex) != null;
@@ -141,6 +144,9 @@ class StringHelper {
         return false;
     }
 
+    public isNumber(s: string): boolean {
+        return (s >= '0' && s <= '9');
+    }
 
 }
 
