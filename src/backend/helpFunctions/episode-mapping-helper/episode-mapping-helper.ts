@@ -294,6 +294,10 @@ export default class EpisodeMappingHelper {
                  */
                 const bTargetS = packageB.series.getProviderSeasonTarget(providerB.provider);
 
+                if (aTargetS?.seasonPart !== bTargetS?.seasonPart) {
+                    continue;
+                }
+
                 /**
                  * TODO fix tests
                  */
@@ -432,21 +436,6 @@ export default class EpisodeMappingHelper {
             const result = entry.isItTheSame(providerA, providerB, providerASeason, providerBSeason, diff);
             if (result) {
                 return true;
-            }
-        }
-        return false;
-    }
-
-    private isEpisodeAlreadyRated(episodeA: Episode, episodeB: Episode, ratedEqualityList: EpisodeRatedEqualityContainer[]): boolean {
-        for (const rateing of ratedEqualityList) {
-            let result = true;
-            for (const episodeBind of rateing.episodeBinds) {
-                if (!(this.isSameEpisodeID(episodeA, episodeBind.episode) || this.isSameEpisodeID(episodeB, episodeBind.episode))) {
-                    result = false;
-                }
-            }
-            if (result) {
-                return result;
             }
         }
         return false;

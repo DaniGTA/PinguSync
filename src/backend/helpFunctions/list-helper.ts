@@ -181,13 +181,21 @@ class ListHelper {
         return true;
     }
 
-    public getMostFrequentNumberFromList(list: number[]): number | undefined {
-        if (list.length === 0) {
-            return undefined;
+    public getMostFrequentNumberFromList(arr: number[]): number | undefined {
+        let max = 1;
+        const m = [];
+        let val = arr[0];
+        let i;
+        let x;
+
+        for (i = 0; i < arr.length; i ++) {
+        x = arr[i];
+        if (m[x]) {
+            ++m[x] > max && (max = m[i], val = x);
         } else {
-            const sum = list.reduce((a, b) => a + b);
-            return sum / list.length;
+            m[x] = 1;
         }
+    }   return val;
     }
 
     /**

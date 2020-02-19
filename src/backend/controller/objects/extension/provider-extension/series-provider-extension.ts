@@ -1,6 +1,6 @@
-import ExternalProvider from 'src/backend/api/provider/external-provider';
 import ProviderDataListAdder from '../../../../../backend/controller/provider-data-list-manager/provider-data-list-adder';
 import ProviderDataListSearcher from '../../../../../backend/controller/provider-data-list-manager/provider-data-list-searcher';
+import ExternalProvider from '../../../../api/provider/external-provider';
 import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderComperator from '../../../../helpFunctions/comperators/provider-comperator';
 import ProviderDataWithSeasonInfo from '../../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';

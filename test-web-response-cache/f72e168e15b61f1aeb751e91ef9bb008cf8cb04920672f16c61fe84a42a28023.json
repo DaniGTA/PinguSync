@@ -1,0 +1,34 @@
+{
+    "response": {
+        "statusCode": 403,
+        "body": "error code: 1020",
+        "headers": {},
+        "request": {
+            "uri": {
+                "protocol": "https:",
+                "slashes": true,
+                "auth": null,
+                "host": "graphql.anilist.co",
+                "port": 443,
+                "hostname": "graphql.anilist.co",
+                "hash": null,
+                "search": null,
+                "query": null,
+                "pathname": "/",
+                "path": "/",
+                "href": "https://graphql.anilist.co/"
+            },
+            "method": "POST",
+            "headers": {}
+        }
+    },
+    "options": {
+        "body": "{\"query\":\"\\nquery ($id: Int!, $type: MediaType) {\\n  Media(id: $id, type: $type) {\\n    id\\n    idMal\\n    title {\\n      romaji\\n      english\\n      native\\n      userPreferred\\n    }\\n    startDate {\\n      year\\n      month\\n      day\\n    }\\n    endDate {\\n      year\\n      month\\n      day\\n    }\\n    coverImage {\\n      large\\n      medium\\n    }\\n    bannerImage\\n    format\\n    type\\n    status\\n    episodes\\n    chapters\\n    volumes\\n    season\\n    description\\n    averageScore\\n    meanScore\\n    genres\\n    synonyms\\n    nextAiringEpisode {\\n      airingAt\\n      timeUntilAiring\\n      episode\\n    }\\n    relations {\\n      edges {\\n        relationType\\n      }\\n      nodes{\\n        id\\n      }\\n    }\\n  }\\n}\",\"variables\":{\"id\":20626,\"type\":\"ANIME\"}}",
+        "headers": {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "uri": "https://graphql.anilist.co"
+    }
+}

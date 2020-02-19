@@ -145,4 +145,10 @@ describe('List Helper', () => {
 
         assert.strictEqual(result.length, 3);
     });
+
+    test('should get a even number', async () => {
+        const te = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8];
+        const result = listHelper.getMostFrequentNumberFromList(te);
+        assert.strictEqual(result, 2);
+    });
 });
