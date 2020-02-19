@@ -225,25 +225,7 @@ export default class EpisodeComperator {
                         let textB = { ...bEpisodeTitle }.text;
                         if (textB && textA) {
                             // tslint:disable-next-line: triple-equals
-                            if (textA == textB) {
-                                found = true;
-                                break;
-                            }
-                            textA = textA.toLowerCase();
-                            textB = textB.toLowerCase();
-                            textA = textA.replace(' the ', ' ');
-                            textB = textB.replace(' the ', ' ');
-                            if (textA === textB) {
-                                found = true;
-                                break;
-                            }
-                            textA = textA.replace(' & ', ' ');
-                            textB = textB.replace(' & ', ' ');
-                            textA = textA.replace(' and ', ' ');
-                            textB = textB.replace(' and ', ' ');
-                            textA = stringHelper.cleanString(textA);
-                            textB = stringHelper.cleanString(textB);
-                            if (textA === textB) {
+                            if (this.isEpisodeTitleEquals(textA, textB)) {
                                 found = true;
                                 break;
                             }
@@ -261,6 +243,30 @@ export default class EpisodeComperator {
         }
         return result;
     }
+
+    private static isEpisodeTitleEquals(textA: string, textB: string) {
+        if (textA == textB) {
+            return true;
+        }
+        textA = textA.toLowerCase();
+        textB = textB.toLowerCase();
+        textA = textA.replace(' the ', ' ');
+        textB = textB.replace(' the ', ' ');
+        if (textA === textB) {
+            return true;
+        }
+        textA = textA.replace(' & ', ' ');
+        textB = textB.replace(' & ', ' ');
+        textA = textA.replace(' and ', ' ');
+        textB = textB.replace(' and ', ' ');
+        textA = stringHelper.cleanString(textA);
+        textB = stringHelper.cleanString(textB);
+        if (textA === textB) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Compares two episode numbers
      * @param number1 episode number 1 will be compared with 2.

@@ -106,7 +106,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                 if (result.seasonComplete) {
                     if (targetSeason.seasonNumber === currentSearchingSeason) {
                         const pdwsi = new ProviderDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(currentSearchingSeason, currentSeasonPart));
-                        const pdwsi2 = new ProviderDataWithSeasonInfo(currentProviderThatHasAwareness);
+                        const pdwsi2 = new ProviderDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(currentSearchingSeason, currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);
                         return pdwsi;
                     } else {

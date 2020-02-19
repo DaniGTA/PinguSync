@@ -144,6 +144,28 @@ describe('Episode comperator | Full test', () => {
         });
     });
 
+    describe('checks if episode title are equals or not equals', () => {
+        test('should be equels', () => {
+            const result = EpisodeComperator['isEpisodeTitleEquals']('Title', 'title');
+            strictEqual(result, true);
+        });
+
+        test('should be equels (special charactar: ")', () => {
+            const result = EpisodeComperator['isEpisodeTitleEquals']('"Ma" and "La"', '"Ma" and "La" ');
+            strictEqual(result, true);
+        });
+
+        test('should be equels (should ignore: The)', () => {
+            const result = EpisodeComperator['isEpisodeTitleEquals']('Title: the title', 'title: title');
+            strictEqual(result, true);
+        });
+
+        test('should be equels (should ignore: and)', () => {
+            const result = EpisodeComperator['isEpisodeTitleEquals']('Title & title', 'title and title');
+            strictEqual(result, true);
+        });
+    })
+
     describe('checks if episode a season number is higher then episode b or not', () => {
         test('should be false | same season (not higher)', async () => {
             const episodeA = new Episode(1, new Season(1));
