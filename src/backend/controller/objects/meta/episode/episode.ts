@@ -1,7 +1,6 @@
 import ExternalProvider from '../../../../api/provider/external-provider';
 import stringHelper from '../../../../helpFunctions/string-helper';
 import Season from '../season';
-import EpisodeMapping from './episode-mapping';
 import EpisodeThumbnail from './episode-thumbnail';
 import EpisodeTitle from './episode-title';
 import { EpisodeType } from './episode-type';

@@ -18,13 +18,8 @@ export default class EpisodeBindingPoolHelper {
         }
     }
 
-    public static getEpisodeBindingPoolThatContainsTheEpisode(episodeBindingPools: EpisodeBindingPool[], episode: Episode): EpisodeBindingPool | null {
-        for (const episodeBindingPool of episodeBindingPools) {
-            if (episodeBindingPool.bindingPoolHasEpisode(episode)) {
-                return episodeBindingPool;
-            }
-        }
-        return null;
+    public static getEpisodeBindingPoolThatContainsTheEpisode(episodeBindingPools: EpisodeBindingPool[], episode: Episode): EpisodeBindingPool | undefined {
+        return episodeBindingPools.find(x => x.bindingPoolHasEpisode(episode));
     }
 
     private static extractAllMappedEpiodesFromBindingPool(episodeBindingPool: EpisodeBindingPool, episode: Episode) {

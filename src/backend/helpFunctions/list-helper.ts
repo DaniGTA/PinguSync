@@ -185,17 +185,16 @@ class ListHelper {
         let max = 1;
         const m = [];
         let val = arr[0];
-        let i;
         let x;
 
-        for (i = 0; i < arr.length; i ++) {
-        x = arr[i];
-        if (m[x]) {
-            ++m[x] > max && (max = m[i], val = x);
-        } else {
-            m[x] = 1;
-        }
-    }   return val;
+        for (let i = 0; i < arr.length; i++) {
+            x = arr[i];
+            if (m[x]) {
+                ++m[x] > max && (max = m[i], val = x);
+            } else {
+                m[x] = 1;
+            }
+        } return val;
     }
 
     /**
