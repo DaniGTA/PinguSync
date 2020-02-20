@@ -4,7 +4,6 @@ import EpisodeMapping from '../../controller/objects/meta/episode/episode-mappin
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
-import ProviderDataListManager from '../../controller/provider-data-list-manager/provider-data-list-manager';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ComperatorResult, { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../comperators/episode-comperator';
@@ -243,6 +242,7 @@ export default class EpisodeMappingHelper {
 
     private getMaxEpisodeShiftingDifference(providerA: ProviderLocalData, providerB: ProviderLocalData): number {
         let maxEpisodeDifference = 0;
+        let providerIsMapped = false;
         for (const episodeA of providerA.detailEpisodeInfo) {
             for (const episodeB of providerB.detailEpisodeInfo) {
                 if (this.isEpisodeAlreadyMappedToEpisode(episodeA, episodeB, this.currentSeries.episodeBindingPools)) {
@@ -250,6 +250,15 @@ export default class EpisodeMappingHelper {
                     if (difference > maxEpisodeDifference) {
                         maxEpisodeDifference = difference;
                     }
+                    break;
+                } else if (this.isProviderInMapping(episodeA, providerB.provider)){
+                    providerIsMapped = true;
+                } else if (providerIsMapped) {
+                    const difference = EpisodeHelper.getEpisodeDifference(episodeA, episodeB);
+                    if (difference > maxEpisodeDifference) {
+                        maxEpisodeDifference = difference;
+                    }
+                    providerIsMapped = false;
                     break;
                 }
             }
@@ -279,10 +288,7 @@ export default class EpisodeMappingHelper {
                     continue;
                 }
 
-                let episodeDiff = cdiff;
-                if (episodeDiff === 0) {
-                    episodeDiff = this.getMaxEpisodeShiftingDifference(providerA, providerB);
-                }
+                let episodeDiff = this.getMaxEpisodeShiftingDifference(providerA, providerB);
 
                 /**
                  * Provider A targetSeason.

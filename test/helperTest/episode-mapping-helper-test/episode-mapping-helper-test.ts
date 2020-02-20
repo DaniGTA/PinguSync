@@ -312,12 +312,14 @@ describe('Episode mapping | Mapping Only', () => {
             cProvider.sequelIds.push(3);
             await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(cProvider, new Season(2)));
 
+
             // Sequel 2
 
             const dProvider = new InfoProviderLocalData(3, 'testA');
             dProvider.episodes = 3;
 
             await sequelOfSequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(dProvider, new Season(3)));
+
 
             // Testing
             // tslint:disable-next-line: no-string-literal

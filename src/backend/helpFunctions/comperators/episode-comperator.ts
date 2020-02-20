@@ -59,7 +59,7 @@ export default class EpisodeComperator {
             }
         }
 
-        if (!isNaN(bEpsiode.episodeNumber as unknown as number) && (bEpsiode.episodeNumber as number) + upshift === aEpisode.episodeNumber) {
+        if (aEpisode.episodeNumber === (!isNaN(bEpsiode.episodeNumber as unknown as number) && (bEpsiode.episodeNumber as number) + upshift)) {
             result.matchAble += 2;
             result.matches += 2;
             const seasonResult = this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season);
