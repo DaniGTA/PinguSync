@@ -29,12 +29,26 @@ export default class SeasonComperator {
 
     public static isSameSeason(seasonA: Season | undefined, seasonB: Season | undefined): boolean {
         if (seasonA !== undefined && seasonB !== undefined) {
-            return seasonA.seasonNumber === seasonB.seasonNumber && seasonA.seasonPart === seasonB.seasonPart;
+            return this.isSameSeasonNumber(seasonA, seasonB) && this.isSameSeasonPartNumber(seasonA, seasonB);
         } else if (seasonA === undefined && seasonB === undefined) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public static isSameSeasonNumber(seasonA?: Season, seasonB?: Season): boolean {
+        if (seasonA && seasonB) {
+            return seasonA.seasonNumber === seasonB.seasonNumber;
+        }
+        return false;
+    }
+
+    public static isSameSeasonPartNumber(seasonA?: Season, seasonB?: Season): boolean {
+        if (seasonA && seasonB) {
+            return seasonA.seasonPart === seasonB.seasonPart;
+        }
+        return false;
     }
 
     public static isSeasonUndefined(season: Season | undefined): boolean {

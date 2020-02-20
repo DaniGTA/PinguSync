@@ -240,8 +240,9 @@ export default abstract class ProviderLocalData {
     public addDetailedEpisodeInfos(...episodes: Episode[]): void {
         for (const episode of episodes) {
             episode.provider = this.provider;
+            episode.providerId = this.id;
             this.detailEpisodeInfo.push(episode);
-            this.detailEpisodeInfo  = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo);
+            this.detailEpisodeInfo = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo);
         }
     }
 }

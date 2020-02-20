@@ -41,8 +41,8 @@ export default class ProviderCompareHistoryEntry {
     public isItTheSame(providerA: ProviderLocalData, providerB: ProviderLocalData, providerASeason: Season | undefined,
         providerBSeason: Season | undefined, diff: number): boolean {
         if (this.compareDiff === diff) {
-            if ((this.providerAName === providerA.provider && SeasonComperator.isSameSeason(providerASeason, providerBSeason))
-                && (this.providerBName === providerB.provider && SeasonComperator.isSameSeason(providerASeason, providerBSeason))) {
+            if (this.providerAName === providerA.provider && SeasonComperator.isSameSeason(providerASeason, providerBSeason)
+                && this.providerBName === providerB.provider) {
                 return true;
             } else if (this.providerBName === providerA.provider &&
                 SeasonComperator.isSameSeason(providerASeason, providerBSeason) &&

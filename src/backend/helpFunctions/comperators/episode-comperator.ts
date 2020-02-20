@@ -60,11 +60,11 @@ export default class EpisodeComperator {
         }
 
         if (!isNaN(bEpsiode.episodeNumber as unknown as number) && (bEpsiode.episodeNumber as number) + upshift === aEpisode.episodeNumber) {
-            result.matches++;
-            result.matchAble++;
-            if (this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season)) {
-                result.matches++;
-            }
+            result.matchAble += 2;
+            result.matches += 2;
+            const seasonResult = this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season);
+            result.matchAble += seasonResult.matchAble;
+            result.matches += seasonResult.matches;
         }
 
         const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);
@@ -115,7 +115,8 @@ export default class EpisodeComperator {
      * @param providerBSeason provider b season number
      * @param season series season number.
      */
-    public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season): boolean {
+    public static isEpisodeSameSeason(aEpisode: Episode, bEpisode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season): ComperatorResult {
+        const result = new ComperatorResult();
         let aSeason: Season | undefined;
         if (aEpisode.season !== undefined && aEpisode.season.isSeasonNumberPresent()) {
             aSeason = aEpisode.season;
@@ -133,15 +134,26 @@ export default class EpisodeComperator {
         } else if (season !== undefined && season.isSeasonNumberPresent()) {
             bSeason = season;
         }
-
+        result.matchAble += 2;
         if (SeasonComperator.isSameSeason(aSeason, bSeason)) {
-            return true;
+            result.matches += 2;
+            return result;
         } else if (!season && !aSeason && bSeason?.seasonNumber === 1) {
-            return true;
+            result.matches += 2;
+            return result;
         } else if (!season && !bSeason && aSeason?.seasonNumber === 1) {
-            return true;
+            result.matches += 2;
+            return result;
         }
-        return false;
+        if (!SeasonComperator.isSeasonUndefined(aSeason) && !SeasonComperator.isSeasonUndefined(bSeason)) {
+            if (SeasonComperator.isSameSeasonNumber(aSeason, bSeason)) {
+                result.matches += 1;
+            } else {
+                result.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+            }
+        }
+
+        return result;
     }
 
     public static isDetailedEpisodeSameSeason(episode: Episode, season?: Season): boolean {

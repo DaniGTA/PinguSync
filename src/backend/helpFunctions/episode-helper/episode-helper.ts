@@ -94,7 +94,8 @@ export default class EpisodeHelper {
         } else if (b.type === EpisodeType.SPECIAL && a.type !== EpisodeType.SPECIAL) {
             return -1;
         }
-        if (EpisodeComperator.isEpisodeSameSeason(a, b, season)) {
+        const result = EpisodeComperator.isEpisodeSameSeason(a, b, season);
+        if (result.matchAble === result.matches) {
             if (a.episodeNumber > b.episodeNumber) {
                 return 1;
             } else {
