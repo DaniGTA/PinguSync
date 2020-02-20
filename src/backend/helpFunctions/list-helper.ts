@@ -194,7 +194,8 @@ class ListHelper {
             } else {
                 m[x] = 1;
             }
-        } return val;
+        }
+        return val;
     }
 
     /**

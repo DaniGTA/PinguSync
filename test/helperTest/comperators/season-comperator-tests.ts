@@ -1,7 +1,9 @@
-import { strictEqual } from 'assert';
+import { strictEqual, notStrictEqual } from 'assert';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import SeasonComperator from '../../../src/backend/helpFunctions/comperators/season-comperator';
 import TestHelper from '../../test-helper';
+import Series from '../../../src/backend/controller/objects/series';
+import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 
 describe('Season Comperator tests', () => {
     beforeEach(() => {
@@ -48,7 +50,30 @@ describe('Season Comperator tests', () => {
         strictEqual(SeasonComperator.isSameSeason(season1, season2), false);
     });
 
+    test('should equals true (wrong season and undefined part)', () => {
+        const season1 = new Season(1, undefined);
+        const season2 = new Season(2, 2);
+
+        strictEqual(SeasonComperator.isSameSeason(season1, season2), false);
+    });
+
     test('should equals true (both undefined)', () => {
         strictEqual(SeasonComperator.isSameSeason(undefined, undefined), true);
+    });
+
+    test('should not be anywhere equals in a comperation result', async () => {
+        const a: Series = new Series();
+        const b: Series = new Series();
+
+        // tslint:disable: no-string-literal
+        a['cachedSeason'] = new Season(3, 1);
+        b['cachedSeason'] = new Season(3, 2);
+
+        const result = await SeasonComperator.compareSeasons(a, b);
+
+        notStrictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
+        strictEqual(result.matches, 0);
+        strictEqual(result.aFirstSeason, null);
+        strictEqual(result.bFirstSeason, null);
     });
 });

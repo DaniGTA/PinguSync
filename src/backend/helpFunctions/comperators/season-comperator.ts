@@ -1,7 +1,6 @@
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
-import logger from '../../logger/logger';
 import SeasonComperatorResult from './comperator-results.ts/season-comperator-result';
 
 export default class SeasonComperator {
@@ -27,15 +26,6 @@ export default class SeasonComperator {
         }
         return comperatorResult;
     }
-    /*
-        public static async hasOnlyProviderWithSameIdForSeasons(series: Series): Promise<boolean> {
-            for (const provider of series.getAllProviderLocalDatas()) {
-                if (ProviderList.getExternalProviderInstance(provider).hasUniqueIdForSeasons) {
-                    return false;
-                }
-            }
-            return true;
-        }*/
 
     public static isSameSeason(seasonA: Season | undefined, seasonB: Season | undefined): boolean {
         if (seasonA !== undefined && seasonB !== undefined) {

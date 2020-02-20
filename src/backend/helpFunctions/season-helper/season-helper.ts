@@ -219,16 +219,19 @@ class SeasonHelper {
         if (!seriesList) {
             seriesList = await MainListManager.getMainList();
         }
+
+        const seasonPart = this.getSeasonPart(series);
+
         if (SeasonSearchModeHelper.canPerformATitleSearch(searchMode)) {
             numberFromName = await Name.getSeasonNumber(await series.getAllNamesUnique());
 
             if (numberFromName && numberFromName.seasonNumber && numberFromName.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
-                return new SearchSeasonValueResult(numberFromName.convertToSeason(), 'Name');
+                return new SearchSeasonValueResult(numberFromName.convertToSeason(seasonPart), 'Name');
             }
         }
 
         if (numberFromName && numberFromName.seasonNumber !== undefined) {
-            return new SearchSeasonValueResult(numberFromName.convertToSeason(), 'Name');
+            return new SearchSeasonValueResult(numberFromName.convertToSeason(seasonPart), 'Name');
         }
 
         if (SeasonSearchModeHelper.canPerformAProviderSeasonValueSearch(searchMode)) {
@@ -275,6 +278,15 @@ class SeasonHelper {
 
     private isSeriesCurrentlyInTheSeasonProcess(series: Series): boolean {
         return SeasonHelper.currentSeriesSeasonRequest.findIndex((cSeries) => cSeries.id === series.id) !== -1;
+    }
+    
+    private getSeasonPart(series: Series): number | undefined {
+        for (const binding of series.getAllProviderBindings()) {
+            if (binding.targetSeason?.seasonPart !== undefined) {
+                return binding.targetSeason.seasonPart;
+            }
+        }
+        return;
     }
 }
 

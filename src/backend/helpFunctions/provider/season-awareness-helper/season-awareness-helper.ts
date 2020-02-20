@@ -7,16 +7,17 @@ import ProviderDataWithSeasonInfo from '../provider-info-downloader/provider-dat
 export default class SeasonAwarenessHelper {
 
     public static isSeasonAware(currentProviders: ProviderDataWithSeasonInfo[]): boolean {
+        let result = false;
         for (const provider of currentProviders) {
             try {
-                if (!SeasonAwarenessHelper.isProviderSeasonAware(provider)) {
-                    return false;
+                if (SeasonAwarenessHelper.isProviderSeasonAware(provider)) {
+                    result =  true;
                 }
             } catch (err) {
                 logger.debug(err);
             }
         }
-        return true;
+        return result;
     }
 
     public static isProviderSeasonAware(provider: ProviderDataWithSeasonInfo) {

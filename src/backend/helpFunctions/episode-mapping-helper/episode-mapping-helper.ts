@@ -329,9 +329,8 @@ export default class EpisodeMappingHelper {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
         let fastCheck = 0;
         let fastStreakEnabled = true;
+
         let providerAEpDiff = episodeDiff;
-        let lastDiffA = null;
-        let lastDiffB = null;
         for (const detailedEpA of providerA.detailEpisodeInfo) {
             for (let index = fastCheck; index < providerB.detailEpisodeInfo.length; index++) {
                 const detailedEpB = providerB.detailEpisodeInfo[index];
@@ -342,13 +341,15 @@ export default class EpisodeMappingHelper {
                             fastCheck++;
                         }
                     } else if (fastStreakEnabled) {
+                        if (fastCheck !== 0) {
+                            index = 0;
+                        }
                         fastCheck = 0;
                         fastStreakEnabled = false;
                     }
+
                     if (result.result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                         const oldDiff = providerAEpDiff;
-                        lastDiffA = Object.assign(new Episode(0), detailedEpA);
-                        lastDiffB = Object.assign(new Episode(0), detailedEpB);
                         providerAEpDiff = EpisodeHelper.getEpisodeDifference(detailedEpA, detailedEpB);
                         if (oldDiff !== providerAEpDiff) {
                             const resultWithNewDiff = this.getRatedEqualityContainer(detailedEpA, detailedEpB, providerA, providerB, aTargetS, bTargetS, season, providerAEpDiff);
@@ -364,6 +365,9 @@ export default class EpisodeMappingHelper {
                         break;
                     }
                 } else {
+                    if (fastCheck !== 0) {
+                        index = 0;
+                    }
                     fastCheck = 0;
                     fastStreakEnabled = false;
                 }
@@ -371,6 +375,7 @@ export default class EpisodeMappingHelper {
         }
         return ratedEquality;
     }
+
     /**
      * TODO
      * @param detailedEpA 
