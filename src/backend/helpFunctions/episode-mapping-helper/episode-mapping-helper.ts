@@ -37,10 +37,12 @@ export default class EpisodeMappingHelper {
         }
     }
     private currentSeries: Series;
+    private allProcessedSeries: Series[] = [];
     private providers: ProviderLocalData[];
     constructor(series: Series) {
         this.currentSeries = series;
         this.providers = [...this.currentSeries.getAllProviderLocalDatas()];
+        this.allProcessedSeries.push(this.currentSeries);
     }
     public async generateEpisodeMapping(): Promise<EpisodeBindingPool[]> {
         const season = (await this.currentSeries.getSeason());
@@ -82,6 +84,7 @@ export default class EpisodeMappingHelper {
             const differenceProviders: EpisodeDifferenceContainer[] = [];
 
             do {
+                this.allProcessedSeries.push(sequel);
                 for (const provider of this.providers) {
                     if (await this.getNumberOfUnmappedEpisodesFromProvider(provider, this.getProviderLength(this.providers)) === 0) {
                         const sequelProvider = sequel.getAllProviderLocalDatas().find((x) => x.provider === provider.provider);
@@ -251,7 +254,7 @@ export default class EpisodeMappingHelper {
                         maxEpisodeDifference = difference;
                     }
                     break;
-                } else if (this.isProviderInMapping(episodeA, providerB.provider)){
+                } else if (this.isProviderInMapping(episodeA, providerB.provider)) {
                     providerIsMapped = true;
                 } else if (providerIsMapped) {
                     const difference = EpisodeHelper.getEpisodeDifference(episodeA, episodeB);
@@ -424,7 +427,7 @@ export default class EpisodeMappingHelper {
 
     private isProviderInMapping(episode: Episode, providerName: string): boolean {
         if (this.currentSeries.episodeBindingPools.length !== 0 && episode.provider !== providerName) {
-            const list = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(this.currentSeries.episodeBindingPools, episode);
+            const list = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(this.getAllEpsidoeBindingPoolsThatAreRelated(), episode);
             for (const mapping of list) {
                 if (mapping.provider === providerName) {
                     return true;
@@ -432,6 +435,10 @@ export default class EpisodeMappingHelper {
             }
         }
         return false;
+    }
+
+    private getAllEpsidoeBindingPoolsThatAreRelated(): EpisodeBindingPool[] {
+        return this.allProcessedSeries.flatMap(x => x.episodeBindingPools);
     }
 
     private isProviderAlreadyGotCompared(providerA: ProviderLocalData, providerB: ProviderLocalData, providerASeason: Season | undefined, providerBSeason: Season | undefined, diff: number, list: ProviderCompareHistoryEntry[]): boolean {

@@ -550,13 +550,17 @@ export default class Series extends SeriesProviderExtension {
         const aMediaType = a.getMediaType();
         const bMediaType = b.getMediaType();
         if (await aMediaType === await bMediaType || await aMediaType === MediaType.UNKOWN || await bMediaType === MediaType.UNKOWN) {
-            for (const providerA of a.getListProvidersInfos()) {
-                const providerATargetSeason = a.getProviderSeasonTarget(providerA.provider);
-                for (const providerB of b.getListProvidersInfos()) {
+            const allAProviders = a.getAllProviderLocalDatasWithSeasonInfo();
+            const allBProviders = b.getAllProviderLocalDatasWithSeasonInfo();
+            for (const providerAWithSeason of allAProviders) {
+                const providerA = providerAWithSeason.providerLocalData;
+                const providerATargetSeason = providerAWithSeason.seasonTarget;
+                for (const providerBWithSeason of allBProviders) {
+                    const providerB = providerBWithSeason.providerLocalData;
                     if (providerA.provider === providerB.provider) {
-                        const providerBTargetSeason = b.getProviderSeasonTarget(providerB.provider);
+                        const providerBTargetSeason = providerBWithSeason.seasonTarget;
                         const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
-                        if (simpleProviderCheckResult && providerB.getProviderInstance().hasUniqueIdForSeasons) {
+                        if (simpleProviderCheckResult && ProviderList.getExternalProviderInstance(providerB).hasUniqueIdForSeasons) {
                             throw new Error('[Series] Not the relation was found but the Series himself. SKIPPING SEARCH. SeriesID: ' + this.id);
                         } else if (simpleProviderCheckResult && !SeasonComperator.isSameSeason(providerATargetSeason, providerBTargetSeason)) {
                             return a;

@@ -40,12 +40,13 @@ export default class EpisodeComperator {
      */
     public static compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season, upshift: number = 0): ComperatorResult {
         const result = new ComperatorResult();
-        result.matchAble++;
         if (aEpisode.id === bEpsiode.id) {
             result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+            result.matchAble++;
             result.matches++;
             return result;
         } else if (aEpisode.provider && bEpsiode.provider) {
+            result.matchAble++;
             if (aEpisode.provider === bEpsiode.provider) {
                 if (aEpisode.providerEpisodeId === bEpsiode.providerEpisodeId && aEpisode.providerEpisodeId !== undefined) {
                     result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
@@ -59,8 +60,8 @@ export default class EpisodeComperator {
             }
         }
 
+        result.matchAble += 2;
         if (aEpisode.episodeNumber === (!isNaN(bEpsiode.episodeNumber as unknown as number) && (bEpsiode.episodeNumber as number) + upshift)) {
-            result.matchAble += 2;
             result.matches += 2;
             const seasonResult = this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season);
             result.matchAble += seasonResult.matchAble;

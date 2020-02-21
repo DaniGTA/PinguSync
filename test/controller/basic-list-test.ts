@@ -189,7 +189,7 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 4);
+        strictEqual(MainListManager['mainList'].length, 2);
         strictEqual(await seriesHelper.isSameSeries(series1, series2), false);
     }, 4000);
 
@@ -313,7 +313,7 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 4);
+        strictEqual(MainListManager['mainList'].length, 3);
         const provider = MainListManager['mainList'][0].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
             for (const iterator of provider.detailEpisodeInfo) {
