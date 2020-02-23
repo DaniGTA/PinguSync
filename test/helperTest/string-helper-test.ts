@@ -95,7 +95,7 @@ describe('String Helper', () => {
             assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
        });
        test('should get season number 2 from title: アルドノア・ゼロ 2', async () => {
-            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('アルドノア・ゼロ 2')).seasonNumber, 'test 2');
+            assert.strictEqual((await stringHelper.getSeasonNumberFromTitle('アルドノア・ゼロ 2')).seasonNumber, 2, 'test 2');
         });
 
     });

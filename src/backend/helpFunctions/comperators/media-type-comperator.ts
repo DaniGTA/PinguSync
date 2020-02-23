@@ -12,7 +12,7 @@ export default class MediaTypeComperator {
         const comperatorResult = new ComperatorResult();
         if (aMediaType !== MediaType.UNKOWN && bMediaType !== MediaType.UNKOWN) {
              comperatorResult.matchAble += 4;
-            if (aMediaType === bMediaType) {
+             if (aMediaType === bMediaType) {
                 comperatorResult.matches += 4;
             } else if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(aMediaType, bMediaType)) {
                 comperatorResult.matches += 2;

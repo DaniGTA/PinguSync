@@ -19,17 +19,7 @@ export default class EpisodeBindingPoolHelper {
     }
 
     public static getEpisodeBindingPoolThatContainsTheEpisode(episodeBindingPools: EpisodeBindingPool[], episode: Episode): EpisodeBindingPool | undefined {
-        return episodeBindingPools.find(x => x.bindingPoolHasEpisode(episode));
-    }
-
-    private static extractAllMappedEpiodesFromBindingPool(episodeBindingPool: EpisodeBindingPool, episode: Episode) {
-        const result: EpisodeMapping[] = [];
-        for (const bindedEpisode of episodeBindingPool.bindedEpisodeMappings) {
-            if (!EpisodeComperator.compareEpisodeMappingToEpisode(bindedEpisode, episode)) {
-                result.push(bindedEpisode);
-            }
-        }
-        return result;
+        return episodeBindingPools.find((x) => x.bindingPoolHasEpisode(episode));
     }
 
 
@@ -41,5 +31,15 @@ export default class EpisodeBindingPoolHelper {
             }
         }
         return false;
+    }
+
+    private static extractAllMappedEpiodesFromBindingPool(episodeBindingPool: EpisodeBindingPool, episode: Episode) {
+        const result: EpisodeMapping[] = [];
+        for (const bindedEpisode of episodeBindingPool.bindedEpisodeMappings) {
+            if (!EpisodeComperator.compareEpisodeMappingToEpisode(bindedEpisode, episode)) {
+                result.push(bindedEpisode);
+            }
+        }
+        return result;
     }
 }

@@ -17,11 +17,11 @@ import MultiProviderComperator from '../../comperators/multi-provider-results-co
 import ProviderComperator from '../../comperators/provider-comperator';
 import SeasonComperator from '../../comperators/season-comperator';
 import listHelper from '../../list-helper';
+import TitleHelper from '../../name-helper/title-helper';
 import stringHelper from '../../string-helper';
 import ProviderDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
-import TitleHelper from '../../name-helper/title-helper';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
@@ -140,7 +140,7 @@ export default new class ProviderInfoDownloadHelper {
                             }
                         }
                     } catch (err) {
-                        logger.error('Error at ProviderInfoDownloadHelper.linkProviderDataFromRelations')
+                        logger.error('Error at ProviderInfoDownloadHelper.linkProviderDataFromRelations');
                         logger.error(err);
                     }
                 }

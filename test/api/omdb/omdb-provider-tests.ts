@@ -6,6 +6,7 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/provider-
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
 // tslint:disable: no-string-literal
 describe('Provider: OMDb | Test runs', () => {
@@ -15,7 +16,7 @@ describe('Provider: OMDb | Test runs', () => {
     });
 
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = undefined;
+        ProviderList['loadedListProvider'] = [new TestProvider('', true, true)];
         ProviderList['loadedInfoProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = [omdbProvider];
     });

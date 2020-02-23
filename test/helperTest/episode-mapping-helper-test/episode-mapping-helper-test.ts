@@ -13,6 +13,7 @@ import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode
 import EpisodeHelper from '../../../src/backend/helpFunctions/episode-helper/episode-helper';
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container';
+import EpisodeRatedEqualityContainerHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container-helper';
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
@@ -402,8 +403,8 @@ describe('Episode mapping | Mapping Only', () => {
             const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
             const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
 
-            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeMappingHelper['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
-            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeMappingHelper['sortingEpisodeRatedEqualityContainerByResultPoints'](a, b));
+            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
+            const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
             strictEqual(sorted[0], ep1erec);
             strictEqual(sorted[1], ep2erec);
             strictEqual(sorted2[0], ep1erec);

@@ -6,11 +6,18 @@ export default class EpisodeBindingPool {
     public readonly bindedEpisodeMappings: EpisodeMapping[] = [];
 
     constructor(...episodes: EpisodeMapping[]) {
+
         this.bindedEpisodeMappings.push(...episodes);
     }
-
+    /**
+     * Checks if episodeMapping already exists in pool.
+     * @param episodeMappings
+     */
     public addEpisodeMappingToBindings(...episodeMappings: EpisodeMapping[]) {
         for (const episodeMapping of episodeMappings) {
+            if (this.isBindingpoolHaveThisProvider(episodeMapping.provider)) {
+                break;
+            }
             let found = false;
             for (const currentEpisodeMapping of this.bindedEpisodeMappings) {
                 if (EpisodeComperator.compareEpisodeMapping(episodeMapping, currentEpisodeMapping)) {
@@ -31,6 +38,10 @@ export default class EpisodeBindingPool {
             }
         }
         return false;
+    }
+
+    public isBindingpoolHaveThisProvider(provider: string): boolean {
+        return this.bindedEpisodeMappings.findIndex((x) => x.provider === provider) !== -1;
     }
 
     public bindingPoolHasEpisode(episode: Episode): boolean {

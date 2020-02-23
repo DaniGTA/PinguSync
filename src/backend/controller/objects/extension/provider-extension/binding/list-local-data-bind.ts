@@ -4,7 +4,7 @@ import Season from '../../../meta/season';
 import LocalDataBind from './local-data-bind';
 
 export default class ListLocalDataBind extends LocalDataBind {
-    constructor(listProvider: ListProviderLocalData, seasonNumber?: Season) {
-        super(listProvider, seasonNumber);
+    constructor(listProvider: ListProviderLocalData, seasonNumber?: Season, index?: number) {
+        super(listProvider, seasonNumber, index);
     }
 }

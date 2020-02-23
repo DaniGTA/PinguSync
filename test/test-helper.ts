@@ -7,6 +7,10 @@ import WebRequestManager from '../src/backend/controller/web-request-manager/web
 import ResponseHelper from './response-helper';
 export default class TestHelper {
     // tslint:disable: no-string-literal
+    /**
+     * This disables loading from files and saving data to files and it  clears all data lists.
+     * Adds a caching system for webrequests
+     */
     public static mustHaveBefore() {
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);

@@ -38,8 +38,8 @@ export default class SeriesProviderExtension {
      * @param infoProviders
      */
     public async addInfoProvider(infoProvider: InfoProviderLocalData, season?: Season) {
-        this.addInfoProviderBindings(new InfoLocalDataBind(infoProvider, season));
-        await new ProviderDataListAdder().addNewProviderData(infoProvider);
+        const index = await new ProviderDataListAdder().addNewProviderData(infoProvider);
+        this.addInfoProviderBindings(new InfoLocalDataBind(infoProvider, season, index));
     }
 
     /**
@@ -47,8 +47,8 @@ export default class SeriesProviderExtension {
      * @param listProvider
      */
     public async addListProvider(listProvider: ListProviderLocalData, season?: Season) {
-        this.addListProviderBindings(new ListLocalDataBind(listProvider, season));
-        await new ProviderDataListAdder().addNewProviderData(listProvider);
+        const index = await new ProviderDataListAdder().addNewProviderData(listProvider);
+        this.addListProviderBindings(new ListLocalDataBind(listProvider, season, index));
     }
 
     public async addProviderDatas(...localdatas: ProviderLocalData[]) {

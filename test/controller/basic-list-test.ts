@@ -298,6 +298,7 @@ describe('Basic List | Testrun', () => {
         strictEqual(MainListManager['mainList'].length, 2);
     }, 4000);
 
+    // TODO SPEED UP TEST (THIS TEST TAKES 1 SECOND)
     test('should not create too much detailed episodes', async () => {
         if (!ListController.instance) {
             fail();

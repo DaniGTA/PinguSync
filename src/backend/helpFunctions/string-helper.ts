@@ -79,7 +79,7 @@ class StringHelper {
 
             const lastChar = reversedTitle.charAt(0);
 
-            if (this.isNumber(lastChar) && !this.hasKanji(title) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
+            if (this.isNumber(lastChar) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
                 response.seasonNumber = parseInt(lastChar, 10);
                 return response;
             } else if (['I'].includes(lastChar)) {

@@ -17,7 +17,6 @@ describe('Series | Basic', () => {
         return;
     });
 
-
     test('should return last provider', async () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1, 'A');
@@ -78,7 +77,7 @@ describe('Series | Basic', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1);
 
-        series.addListProvider(providerA);
+        await series.addListProvider(providerA);
         assert.deepStrictEqual(await series.getAllEpisodes(), []);
         return;
     });
@@ -89,7 +88,7 @@ describe('Series | Basic', () => {
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 11;
-        series.addProviderDatas(providerA, providerB);
+        await series.addProviderDatas(providerA, providerB);
         assert.equal(series.getMaxEpisode(), 12);
         return;
     });

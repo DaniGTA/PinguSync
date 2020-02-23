@@ -2,11 +2,11 @@ import ProviderComperator from '../../helpFunctions/comperators/provider-compera
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import listHelper from '../../helpFunctions/list-helper';
+import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
 import PrequelGeneratorHelper from '../../helpFunctions/prequel-generator-helper';
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
 import stringHelper from '../../helpFunctions/string-helper';
-import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
 import logger from '../../logger/logger';
 import MainListAdder from '../main-list-manager/main-list-adder';
 import MainListManager from '../main-list-manager/main-list-manager';

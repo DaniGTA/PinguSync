@@ -7,8 +7,9 @@ export default abstract class LocalDataBind {
     public providerName: string;
     public targetSeason?: Season;
     public readonly instanceName: string;
+    public lastIndex?: number;
 
-    constructor(provider: ProviderLocalData, seasonNumber?: Season) {
+    constructor(provider: ProviderLocalData, seasonNumber?: Season, lastIndex?: number) {
         this.instanceName = this.constructor.name;
         this.id = provider.id;
         this.providerName = provider.provider;

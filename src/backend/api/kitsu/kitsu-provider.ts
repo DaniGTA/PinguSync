@@ -114,8 +114,8 @@ export default class KitsuProvider extends ListProvider {
     private async getByTraktId(traktId: string | number) {
         return ((this.api.get('mappings', {
             filter: {
+                externalId: traktId,
                 externalSite: 'trakt',
-                externalId: traktId
             },
             include: 'item',
 

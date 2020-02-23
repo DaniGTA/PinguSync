@@ -43,13 +43,18 @@ export default class ProviderDataListSearcher {
     public static getAllBindedProvider(...bindings: LocalDataBind[]): ProviderLocalData[] {
         const localDataList: ProviderLocalData[] = ProviderDataListManager.getProviderDataListSync();
         const results: ProviderLocalData[] = [];
+        const len = localDataList.length;
         for (const binding of bindings) {
-            const len = localDataList.length;
-            for (let index = 0; index < len; index++) {
-                const localData = localDataList[index];
-                if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
-                    results.push(localData);
-                    break;
+            if (this.isProviderLocalDataSavedIndexValid(localDataList, binding)) {
+                results.push(localDataList[binding.lastIndex as number]);
+            } else {
+                for (let index = 0; index < len; index++) {
+                    const localData = localDataList[index];
+                    if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
+                        binding.lastIndex = index;
+                        results.push(localData);
+                        break;
+                    }
                 }
             }
         }
@@ -59,11 +64,18 @@ export default class ProviderDataListSearcher {
     public static getAllBindedProviderWithSeasonInfo(...bindings: LocalDataBind[]): ProviderDataWithSeasonInfo[] {
         const localDataList: ProviderLocalData[] = ProviderDataListManager.getProviderDataListSync();
         const results: ProviderDataWithSeasonInfo[] = [];
+        const len = localDataList.length;
         for (const binding of bindings) {
-            for (const localData of localDataList) {
+            if (this.isProviderLocalDataSavedIndexValid(localDataList, binding)) {
+                results.push(new ProviderDataWithSeasonInfo(localDataList[binding.lastIndex as number], binding.targetSeason));
+            } else {
+             for (let index = 0; index < len; index++) {
+                const localData = localDataList[index];
                 if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
-                    results.push(new ProviderDataWithSeasonInfo(localData, binding.targetSeason));
-                    break;
+                        binding.lastIndex = index;
+                        results.push(new ProviderDataWithSeasonInfo(localData, binding.targetSeason));
+                        break;
+                    }
                 }
             }
         }
@@ -72,5 +84,12 @@ export default class ProviderDataListSearcher {
 
     public static isProviderLocalDataTheSearchResult(entry: ProviderLocalData, id: string | number, providerName: string): boolean {
         return (ProviderComperator.simpleProviderIdCheck(entry.id, id) && providerName === entry.provider);
+    }
+
+    private static isProviderLocalDataSavedIndexValid(localDataList: ProviderLocalData[], binding: LocalDataBind): boolean {
+        if (binding.lastIndex !== undefined) {
+            return this.isProviderLocalDataTheSearchResult(localDataList[binding.lastIndex], binding.id, binding.providerName);
+        }
+        return false;
     }
 }

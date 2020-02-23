@@ -1,9 +1,9 @@
 import ExternalProvider from '../../api/provider/external-provider';
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import ProviderLocalData from './local-data/interfaces/provider-local-data';
 import ProviderLoader from './provider-loader';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 export default class ProviderList extends ProviderLoader {
     /**
@@ -41,7 +41,7 @@ export default class ProviderList extends ProviderLoader {
      * @param localdata
      */
     public static getExternalProviderInstance(localdata: ProviderLocalData | ProviderDataWithSeasonInfo): ExternalProvider {
-        let providerName = "";
+        let providerName = '';
         if (localdata instanceof ProviderDataWithSeasonInfo) {
             providerName = localdata.providerLocalData.provider;
         } else {

@@ -200,6 +200,11 @@ export default class EpisodeComperator {
         if (aEpisodeMapping.id === bEpisodeMapping.id) {
             return true;
         } else if (aEpisodeMapping.provider === bEpisodeMapping.provider) {
+            if (aEpisodeMapping.providerEpisodeId !== bEpisodeMapping.providerEpisodeId) {
+                return false;
+            } else if (aEpisodeMapping.providerEpisodeId !== undefined) {
+                return true;
+            }
             // tslint:disable-next-line: triple-equals
             if (this.compareEpNr(aEpisodeMapping.episodeNumber, bEpisodeMapping.episodeNumber) && SeasonComperator.isSameSeason(aEpisodeMapping.season, bEpisodeMapping.season)) {
                 return true;
@@ -234,8 +239,8 @@ export default class EpisodeComperator {
                 let found = false;
                 for (const bEpisodeTitle of bEpsiode.title) {
                     try {
-                        let textA = { ...aEpisodeTitle }.text;
-                        let textB = { ...bEpisodeTitle }.text;
+                        const textA = { ...aEpisodeTitle }.text;
+                        const textB = { ...bEpisodeTitle }.text;
                         if (textB && textA) {
                             // tslint:disable-next-line: triple-equals
                             if (this.isEpisodeTitleEquals(textA, textB)) {
@@ -257,7 +262,18 @@ export default class EpisodeComperator {
         return result;
     }
 
+    /**
+     * Compares two episode numbers
+     * @param number1 episode number 1 will be compared with 2.
+     * @param number2 episode number 2 will be compared with 1.
+     */
+    public static compareEpNr(number1: number | string, number2: number | string): boolean {
+        // tslint:disable-next-line: triple-equals
+        return number1 == number2;
+    }
+
     private static isEpisodeTitleEquals(textA: string, textB: string) {
+        // tslint:disable-next-line: triple-equals
         if (textA == textB) {
             return true;
         }
@@ -278,15 +294,5 @@ export default class EpisodeComperator {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Compares two episode numbers
-     * @param number1 episode number 1 will be compared with 2.
-     * @param number2 episode number 2 will be compared with 1.
-     */
-    public static compareEpNr(number1: number | string, number2: number | string): boolean {
-        // tslint:disable-next-line: triple-equals
-        return number1 == number2;
     }
 }

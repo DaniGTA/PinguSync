@@ -8,6 +8,7 @@ import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/c
 import ProviderComperator from '../../../src/backend/helpFunctions/comperators/provider-comperator';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestHelper from '../../test-helper';
+import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 
 describe('Provider Comperator | Testrun', () => {
     beforeAll(() => {
@@ -63,13 +64,13 @@ describe('Provider Comperator | Testrun', () => {
         series1['cachedSeason'] = new Season(1);
         const providerA = new ListProviderLocalData(2, TraktProvider);
         providerA.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
-        series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerA));
+        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerA));
 
         const series2 = new Series();
         series2['cachedSeason'] = new Season(2);
         const providerB = new ListProviderLocalData(2, TraktProvider);
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
-        series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerB));
+        await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerB));
 
         const instance = new ProviderComperator(series1, series2);
 

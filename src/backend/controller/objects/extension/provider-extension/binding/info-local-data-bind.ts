@@ -3,7 +3,7 @@ import Season from '../../../meta/season';
 import LocalDataBind from './local-data-bind';
 
 export default class InfoLocalDataBind extends LocalDataBind {
-    constructor(infoProvider: InfoProviderLocalData, seasonNumber?: Season) {
-        super(infoProvider, seasonNumber);
+    constructor(infoProvider: InfoProviderLocalData, seasonNumber?: Season, lastIndex?: number) {
+        super(infoProvider, seasonNumber, lastIndex);
     }
 }
