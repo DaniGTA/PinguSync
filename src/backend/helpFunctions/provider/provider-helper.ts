@@ -88,8 +88,8 @@ export default class ProviderHelper {
         }
 
         let firstSeason: Series | null = null;
-        const season = (await series.getSeason()).seasonNumber;
-        if (season !== 1 && season !== undefined) {
+        const season = (await series.getSeason()).seasonNumbers;
+        if (season.includes(1) && season !== undefined) {
             try {
                 firstSeason = await series.getFirstSeason();
             } catch (err) {

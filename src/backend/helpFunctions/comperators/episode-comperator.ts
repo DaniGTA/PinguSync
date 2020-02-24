@@ -139,14 +139,8 @@ export default class EpisodeComperator {
         if (SeasonComperator.isSameSeason(aSeason, bSeason)) {
             result.matches += 2;
             return result;
-        } else if (!season && !aSeason && bSeason?.seasonNumber === 1) {
-            result.matches += 2;
-            return result;
-        } else if (!season && !bSeason && aSeason?.seasonNumber === 1) {
-            result.matches += 2;
-            return result;
         }
-        if (!SeasonComperator.isSeasonUndefined(aSeason) && !SeasonComperator.isSeasonUndefined(bSeason)) {
+        if (aSeason !== undefined && !aSeason.isSeasonUndefined() && bSeason !== undefined && !bSeason.isSeasonUndefined()) {
             if (SeasonComperator.isSameSeasonNumber(aSeason, bSeason)) {
                 result.matches += 1;
             } else {
@@ -160,37 +154,27 @@ export default class EpisodeComperator {
     public static isDetailedEpisodeSameSeason(episode: Episode, season?: Season): boolean {
         if (SeasonComperator.isSameSeason(episode.season, season)) {
             return true;
-        } else if (!episode.season !== undefined && (!season !== undefined || season?.seasonNumber === 1)) {
+        } else if (!episode.season !== undefined && (!season !== undefined || season?.seasonNumbers.includes(1))) {
             return true;
-        } else if (!season !== undefined && episode.season?.seasonNumber === 1) {
-            return true;
-        }
-        return false;
-    }
-
-    public static isSameEpisodeNumber(episodeNumberA: number | string, episodeNumberB: number | string, episodeDiff: number): boolean {
-        // tslint:disable-next-line: triple-equals
-        if (!isNaN(episodeNumberA as number) && (episodeNumberA as unknown as number) + episodeDiff == episodeNumberB) {
-            return true;
-            // tslint:disable-next-line: triple-equals
-        } else if (isNaN(episodeNumberA as number) && isNaN(episodeNumberB as number) && episodeNumberA == episodeNumberB) {
+        } else if (!season !== undefined && episode.season?.seasonNumbers.includes(1)) {
             return true;
         }
         return false;
     }
 
     public static isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: Season): boolean {
-        if (aEpisode.season !== undefined && bEpisode.season !== undefined && aEpisode.season.isSeasonNumberPresent() && bEpisode.season.isSeasonNumberPresent()) {
-            return (aEpisode.season.seasonNumber as unknown as number) < (bEpisode.season.seasonNumber as unknown as number);
-        } else if (aEpisode.season !== undefined && aEpisode.season.seasonNumber !== undefined) {
-            if (season !== undefined && season.seasonNumber !== undefined) {
-                return aEpisode.season.seasonNumber < season.seasonNumber;
+        const aEpisodeSeasonNumber = aEpisode.season?.getSingleSeasonNumber();
+        const bEpisodeSeasonNumber = bEpisode.season?.getSingleSeasonNumber();
+        const seasonNumber = season?.getSingleSeasonNumber();
+        if (aEpisodeSeasonNumber !== undefined && bEpisodeSeasonNumber !== undefined) {
+            return aEpisodeSeasonNumber < bEpisodeSeasonNumber;
+        } else if (aEpisode.season !== undefined && aEpisodeSeasonNumber !== undefined) {
+            if (season !== undefined && seasonNumber !== undefined) {
+                return aEpisodeSeasonNumber < seasonNumber;
             }
         } else if (bEpisode.season !== undefined && season !== undefined) {
-            if (season?.seasonNumber !== undefined && bEpisode.season.seasonNumber !== undefined) {
-                return bEpisode.season.seasonNumber > season.seasonNumber;
-            } else {
-                return false;
+            if (seasonNumber !== undefined && bEpisodeSeasonNumber !== undefined) {
+                return bEpisodeSeasonNumber > seasonNumber;
             }
         }
         return false;

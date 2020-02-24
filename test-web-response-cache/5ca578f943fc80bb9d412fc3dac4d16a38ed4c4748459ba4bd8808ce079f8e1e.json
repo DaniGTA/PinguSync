@@ -1,0 +1,33 @@
+{
+    "response": {
+        "statusCode": 200,
+        "body": "[]",
+        "headers": {},
+        "request": {
+            "uri": {
+                "protocol": "http:",
+                "slashes": true,
+                "auth": null,
+                "host": "api.tvmaze.com",
+                "port": 80,
+                "hostname": "api.tvmaze.com",
+                "hash": null,
+                "search": "?q=%E9%A3%9F%E6%88%9F%E3%81%AE%E3%82%BD%E3%83%BC%E3%83%9E%20%E5%BC%90%E3%83%8E%E7%9A%BF&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons",
+                "query": "q=%E9%A3%9F%E6%88%9F%E3%81%AE%E3%82%BD%E3%83%BC%E3%83%9E%20%E5%BC%90%E3%83%8E%E7%9A%BF&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons",
+                "pathname": "/search/shows",
+                "path": "/search/shows?q=%E9%A3%9F%E6%88%9F%E3%81%AE%E3%82%BD%E3%83%BC%E3%83%9E%20%E5%BC%90%E3%83%8E%E7%9A%BF&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons",
+                "href": "http://api.tvmaze.com/search/shows?q=%E9%A3%9F%E6%88%9F%E3%81%AE%E3%82%BD%E3%83%BC%E3%83%9E%20%E5%BC%90%E3%83%8E%E7%9A%BF&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons"
+            },
+            "method": "GET",
+            "headers": {}
+        }
+    },
+    "options": {
+        "method": "GET",
+        "uri": "http://api.tvmaze.com/search/shows?q=%E9%A3%9F%E6%88%9F%E3%81%AE%E3%82%BD%E3%83%BC%E3%83%9E%20%E5%BC%90%E3%83%8E%E7%9A%BF&embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "timeout": 5000
+    }
+}

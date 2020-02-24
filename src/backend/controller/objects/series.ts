@@ -95,13 +95,13 @@ export default class Series extends SeriesProviderExtension {
         return names;
     }
 
-    public getAllNamesSeasonAware(season: Season) {
+    public getAllNamesSeasonAware() {
         const names = [];
         for (const provider of this.getAllProviderLocalDatasWithSeasonInfo()) {
             try {
                 const instance = ProviderList.getExternalProviderInstance(provider);
                 if (!instance.hasUniqueIdForSeasons) {
-                    if (!SeasonComperator.isSameSeason(provider.seasonTarget, season)) {
+                    if (!SeasonComperator.isSameSeason(provider.seasonTarget, new Season([1]))) {
                         continue;
                     }
                 }
@@ -228,12 +228,12 @@ export default class Series extends SeriesProviderExtension {
     public async getSeason(searchMode: SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
         logger.debug('[Season] [Serve]: Serve Season');
         if (!this.cachedSeason?.isSeasonNumberPresent) {
-            this.cachedSeason = new Season(this.cachedSeason?.seasonNumber, this.cachedSeason?.seasonPart, this.cachedSeason?.seasonError);
+            this.cachedSeason = new Season(this.cachedSeason?.seasonNumbers, this.cachedSeason?.seasonPart, this.cachedSeason?.seasonError);
         }
-        if ((this.cachedSeason.seasonNumber === undefined || this.cachedSeason?.seasonNumber === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
+        if ((this.cachedSeason.seasonNumbers.length === 0 || this.cachedSeason?.getSingleSeasonNumber() === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
             this.cachedSeason = await this.prepareSeasonSearch(searchMode, allowAddNewEntry, searchInList);
         }
-        if (SeasonComperator.isSameSeason(this.cachedSeason, new Season(-1))) {
+        if (SeasonComperator.isSameSeason(this.cachedSeason, new Season([-1]))) {
             return new Season(undefined, undefined, SeasonError.CANT_GET_SEASON);
         }
         if (this.cachedSeason) {
@@ -535,10 +535,10 @@ export default class Series extends SeriesProviderExtension {
                     logger.info('Temp Series Successfull added.');
                 }
             }
-            this.cachedSeason = new Season(-2);
+            this.cachedSeason = new Season([-2]);
             return new Season(undefined, undefined, SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
         } else if (result.seasonError === SeasonError.CANT_GET_SEASON) {
-            this.cachedSeason = new Season(-1);
+            this.cachedSeason = new Season([-1]);
         } else {
             this.cachedSeason = result.season;
             this.seasonDetectionType = result.foundType;

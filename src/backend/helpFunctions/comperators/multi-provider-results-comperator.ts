@@ -3,8 +3,8 @@ import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
-import { SeasonSearchMode } from '../season-helper/season-search-mode';
 import titleCheckHelper from '../name-helper/title-check-helper';
+import { SeasonSearchMode } from '../season-helper/season-search-mode';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
 import ProviderComperator from './provider-comperator';
@@ -29,10 +29,11 @@ export default class MultiProviderComperator {
                     if (SeasonComperator.isSameSeason(seasonA, seasonB)) {
                         finalResult.matches += 2;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if ((seasonB.seasonError === SeasonError.CANT_GET_SEASON || seasonB.seasonError === SeasonError.NONE) && seasonA.seasonNumber === 1) {
+                    } else if ((seasonB.seasonError === SeasonError.CANT_GET_SEASON || seasonB.seasonError === SeasonError.NONE) &&
+                        seasonA.seasonNumbers.includes(1)) {
                         finalResult.matches += 1;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if (!seasonA.seasonNumber || !seasonB.seasonNumber) {
+                    } else if (!seasonA.seasonNumbers || !seasonB.seasonNumbers) {
 
                     } else {
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;

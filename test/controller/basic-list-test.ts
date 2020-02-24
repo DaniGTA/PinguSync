@@ -127,7 +127,7 @@ describe('Basic List | Testrun', () => {
                         const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt);
                         strictEqual(r.length, 0);
                     } else {
-                        if (trakt?.season?.seasonNumber === 2) {
+                        if (trakt?.season?.getSingleSeasonNumber() === 2) {
                             const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt);
                             notStrictEqual(r.length, 0);
                             strictEqual(r[0].episodeNumber, trakt.episodeNumber);
@@ -298,7 +298,7 @@ describe('Basic List | Testrun', () => {
         strictEqual(MainListManager['mainList'].length, 2);
     }, 4000);
 
-    // TODO SPEED UP TEST (THIS TEST TAKES 1 SECOND)
+    // TODO SPEED UP TEST (THIS TEST TAKES 1 MINUTE)
     test('should not create too much detailed episodes', async () => {
         if (!ListController.instance) {
             fail();
@@ -314,7 +314,7 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 3);
+        strictEqual(MainListManager['mainList'].length, 1);
         const provider = MainListManager['mainList'][0].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
             for (const iterator of provider.detailEpisodeInfo) {
@@ -383,8 +383,8 @@ describe('Basic List | Testrun', () => {
             const traktProviderS1 = resultS1.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             const traktProviderS2 = resultS2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             if (traktProviderS1 && traktProviderS2) {
-                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.seasonNumber, 1);
-                strictEqual(resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.seasonNumber, 2);
+                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.seasonNumbers, 1);
+                strictEqual(resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.seasonNumbers, 2);
             } else {
                 fail();
             }
@@ -414,11 +414,11 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         const list = series1.getAllProviderLocalDatas();
         const trakprovider = list.find((x) => x.provider === TraktProvider.getInstance().providerName);
-        notEqual(trakprovider, null);
+        notEqual(trakprovider, undefined);
 
         const list2 = await series2.getAllProviderLocalDatas();
         const trakprovider2 = list2.find((x) => x.provider === TraktProvider.getInstance().providerName);
-        notEqual(trakprovider2, null);
+        notEqual(trakprovider2, undefined);
     }, 4000);
 
     test('should get the right season. Trakt', async () => {
@@ -429,7 +429,7 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(79352, TraktProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s1provider1, new Season(1)));
+        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s1provider1, new Season([1])));
 
         // s2
         const series2 = new Series();
@@ -450,7 +450,7 @@ describe('Basic List | Testrun', () => {
 
         const seasonTarget = series3.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
-        strictEqual(seasonTarget?.seasonNumber, 3);
+        strictEqual(seasonTarget?.getSingleSeasonNumber(), 3);
         // tslint:disable-next-line: no-string-literal
         const provider = MainListManager['mainList'][2].getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
@@ -458,7 +458,7 @@ describe('Basic List | Testrun', () => {
                 logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
             }
             const season = MainListManager['mainList'][2].getProviderSeasonTarget(provider.provider);
-            strictEqual(season?.seasonNumber, 3);
+            strictEqual(season?.getSingleSeasonNumber(), 3);
         } else {
             fail();
         }
@@ -496,13 +496,13 @@ describe('Basic List | Testrun', () => {
         const series4 = new Series();
         const s4provider1 = new ListProviderLocalData(109963, AniListProvider);
         s4provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series4.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s4provider1, new Season(4)));
+        await series4.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s4provider1, new Season([4])));
 
         // s3
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(94084, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s3provider1, new Season(3)));
+        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s3provider1, new Season([3])));
 
         await ListController.instance.addSeriesToMainList(series1, series2);
         await ListController.instance.addSeriesToMainList(series3);
@@ -510,30 +510,30 @@ describe('Basic List | Testrun', () => {
 
         const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series2, TraktProvider.getInstance());
 
-        strictEqual(series2.getProviderSeasonTarget(result.providerLocalData.provider)?.seasonNumber, 2);
+        strictEqual(series2.getProviderSeasonTarget(result.providerLocalData.provider)?.seasonNumbers, 2);
 
         const seasonTarget = series2.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
-        strictEqual(seasonTarget?.seasonNumber, 2);
+        strictEqual(seasonTarget?.seasonNumbers, 2);
         // tslint:disable-next-line: no-string-literal
         const provider = series2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
             for (const episode of provider.detailEpisodeInfo) {
-                if (episode.season?.seasonNumber === 1) {
+                if (episode.season?.getSingleSeasonNumber() === 1) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode).length, 0);
-                } else if (episode.season?.seasonNumber === 2) {
+                } else if (episode.season?.getSingleSeasonNumber() === 2) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode).length, 0);
-                } else if (episode.season?.seasonNumber === 3) {
+                } else if (episode.season?.getSingleSeasonNumber() === 3) {
                     const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
                     const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode).length;
                     notStrictEqual(len, 0);
-                } else if (episode.season?.seasonNumber === 4) {
+                } else if (episode.season?.getSingleSeasonNumber() === 4) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 0);
                 }
-                logger.warn(episode.episodeNumber + ' S: ' + episode.season?.seasonNumber);
+                logger.warn(episode.episodeNumber + ' S: ' + episode.season?.seasonNumbers);
             }
             const season = series2.getProviderSeasonTarget(provider.provider);
-            strictEqual(season?.seasonNumber, 2);
+            strictEqual(season?.seasonNumbers, 2);
         } else {
             fail();
         }

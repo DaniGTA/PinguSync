@@ -21,7 +21,7 @@ export default class SeasonAwarenessHelper {
     }
 
     public static isProviderSeasonAware(provider: ProviderDataWithSeasonInfo) {
-        if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && (provider.seasonTarget?.seasonNumber !== 1)) {
+        if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && !(provider.seasonTarget?.seasonNumbers.includes(1))) {
             return false;
         }
         return true;

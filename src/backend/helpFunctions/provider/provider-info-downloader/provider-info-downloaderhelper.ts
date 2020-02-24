@@ -164,8 +164,7 @@ export default new class ProviderInfoDownloadHelper {
      * @param series The series from which the names will be taken.
      */
     private async getNamesSortedBySearchAbleScore(series: Series): Promise<Name[]> {
-        const season = await series.getSeason();
-        let names = series.getAllNamesSeasonAware(season);
+        let names = series.getAllNamesSeasonAware();
         logger.debug(`[INFO] [ProviderInfoDownloadHelper] [getNamesSortedBySearchAbleScore] start sorting ${names.length} names by search able score.`);
         names = TitleHelper.getAllNamesSortedBySearchAbleScore(names);
         if (names.length !== 0) {
@@ -193,9 +192,10 @@ export default new class ProviderInfoDownloadHelper {
         let searchResult: MultiProviderResult[] = [];
         let resultContainer: SearchResultRatingContainer[] = [];
         const season = await series.getSeason();
-        if (!season.seasonNumber || season.seasonNumber === 1 || provider.hasUniqueIdForSeasons) {
-            logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumber);
-            searchResult = await provider.getMoreSeriesInfoByName(name.name, season.seasonNumber);
+        if (!season.seasonNumbers || season.getSingleSeasonNumber() === 1 || provider.hasUniqueIdForSeasons) {
+            logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumbers);
+            const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); } , 1500));
+            searchResult = await Promise.race([maxRequestTime , provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumber())]);
 
             if (searchResult && searchResult.length !== 0) {
                 logger.debug('[' + provider.providerName + '] Results: ' + searchResult.length);
@@ -229,7 +229,7 @@ export default new class ProviderInfoDownloadHelper {
                 logger.warn('[' + provider.providerName + '] No results to name: ' + name.name);
             }
         } else {
-            logger.warn('[' + provider.providerName + '] Season number problem. On name: ' + name.name + ' SeasonNumber: ' + season.seasonNumber);
+            logger.warn('[' + provider.providerName + '] Season number problem. On name: ' + name.name + ' SeasonNumber: ' + season.seasonNumbers);
         }
         throw new Error('[' + provider.providerName + '] [getSeriesByName]: No result with the name: ' + name.name);
     }

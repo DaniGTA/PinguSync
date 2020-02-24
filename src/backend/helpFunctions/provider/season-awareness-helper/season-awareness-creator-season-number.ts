@@ -14,6 +14,8 @@ import ProviderHelper from '../provider-helper';
 import ProviderDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
 import SeasonAwarenessHelper from './season-awareness-helper';
+import seasonHelper from '../../season-helper/season-helper';
+import listHelper from '../../list-helper';
 
 export default class SeasonAwarenessCreatorSeasonNumber {
     private finalList: ProviderDataWithSeasonInfo[] = [];
@@ -38,8 +40,8 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         let finalSeason: Season | undefined;
         const targetSeason = series.getProviderSeasonTarget(providerWithoutSeasonAwarness.provider);
 
-        if (targetSeason !== undefined && targetSeason.seasonNumber !== undefined) {
-            finalSeason = targetSeason;
+        if (!seasonHelper.isSeasonUndefined(targetSeason)) {
+            finalSeason = targetSeason as Season;
         } else {
             finalSeason = await series.getSeason();
         }
@@ -99,25 +101,36 @@ export default class SeasonAwarenessCreatorSeasonNumber {
             }
             if (EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.detailEpisodeInfo)) {
                 const result = EpisodeHelper.calculateRelationBetweenEpisodes(providerThatDontHaveAwareness.detailEpisodeInfo, currentProviderThatHasAwareness.detailEpisodeInfo);
-                currentSearchingSeason = result.seasonNumber;
+                if (result.seasonNumber && result.seasonNumber.length !== 0) {
+                    currentSearchingSeason = result.seasonNumber[result.seasonNumber.length - 1];
+                } else {
+                    currentSearchingSeason = undefined;
+                }
                 currentSeasonPart = this.calcNewSeasonPartNumber(result, currentSeasonPart);
-                const newSeries = await this.createTempSeries(providerThatDontHaveAwareness, currentProviderThatHasAwareness, new Season(currentSearchingSeason, currentSeasonPart));
-
+                const newSeries = [];
+                newSeries.push(await this.createTempSeries(providerThatDontHaveAwareness, currentProviderThatHasAwareness, new Season(result.seasonNumber, undefined)));
+     
                 if (result.seasonComplete) {
-                    if (targetSeason.seasonNumber === currentSearchingSeason) {
-                        const pdwsi = new ProviderDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(currentSearchingSeason, currentSeasonPart));
-                        const pdwsi2 = new ProviderDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(currentSearchingSeason, currentSeasonPart));
+                    if (currentSearchingSeason !== undefined && ((targetSeason.seasonNumbers.includes(currentSearchingSeason)) ||
+                        (result.seasonNumber !== undefined && listHelper.isAnyNumberListEntryInNumberList(result.seasonNumber, targetSeason.seasonNumbers)))) {
+                        const pdwsi = new ProviderDataWithSeasonInfo(providerThatDontHaveAwareness, new Season([currentSearchingSeason], currentSeasonPart));
+                        const pdwsi2 = new ProviderDataWithSeasonInfo(currentProviderThatHasAwareness, new Season([currentSearchingSeason], currentSeasonPart));
+                        this.finalList.push(pdwsi, pdwsi2);
+                        return pdwsi;
+                    } else if ((seasonHelper.isSeasonUndefined(targetSeason) && result.seasonComplete && result.seasonNumber !== undefined && result.seasonNumber.length !== 0)) {
+                        const pdwsi = new ProviderDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(result.seasonNumber, currentSeasonPart));
+                        const pdwsi2 = new ProviderDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(result.seasonNumber, currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);
                         return pdwsi;
                     } else {
-                        this.seriesThatShouldAdded.push(newSeries);
+                        this.seriesThatShouldAdded.push(...newSeries);
                     }
                     if (currentSearchingSeason) {
                         currentSearchingSeason++;
                     }
                     currentSeasonPart = undefined;
                 } else {
-                    this.seriesThatShouldAdded.push(newSeries);
+                    this.seriesThatShouldAdded.push(...newSeries);
                 }
                 const current = this.getSequelProviderLocalData(currentProviderThatHasAwareness, currentProviderThatHasAwarenessProvider.providerName);
                 if (current) {

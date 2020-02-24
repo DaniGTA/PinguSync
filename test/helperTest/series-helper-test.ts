@@ -34,7 +34,7 @@ describe('Series Helper', () => {
     test('should not detect as same series', async () => {
         const a = new Series();
         // tslint:disable-next-line: no-string-literal
-        a['cachedSeason'] = new Season(2);
+        a['cachedSeason'] = new Season([2]);
         // tslint:disable-next-line: no-string-literal
         a['canSync'] = false;
         // A is should not match with any of them.
@@ -45,11 +45,11 @@ describe('Series Helper', () => {
         listProviderA.prequelIds.push(21355);
         listProviderA.isNSFW = false;
         listProviderA.addSeriesName(new Name('Test 2', 'x-jap'));
-        await a.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProviderA, new Season(2)));
+        await a.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProviderA, new Season([2])));
         // B is related too C
         const b = new Series();
         // tslint:disable-next-line: no-string-literal
-        b['cachedSeason'] = new Season(1);
+        b['cachedSeason'] = new Season([1]);
         // tslint:disable-next-line: no-string-literal
         b['canSync'] = false;
         const infoProviderB = new InfoProviderLocalData(260449, 'test4');
@@ -60,21 +60,21 @@ describe('Series Helper', () => {
         listProvider.releaseYear = 2013;
         listProvider.isNSFW = false;
         listProvider.addSeriesName(new Name('Other Series', 'x-jap'));
-        await b.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProvider, new Season(1)));
+        await b.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProvider, new Season([1])));
 
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
 
         const c = new Series();
         // tslint:disable-next-line: no-string-literal
-        c['cachedSeason'] = new Season(2);
+        c['cachedSeason'] = new Season([2]);
         // tslint:disable-next-line: no-string-literal
         c['canSync'] = false;
         const listProviderB = new ListProviderLocalData(43973, 'test');
         listProviderB.isNSFW = false;
         listProviderB.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProviderB.addSeriesName(new Name('Series Test', 'x-jap'));
-        await c.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProviderB, new Season(2)));
+        await c.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listProviderB, new Season([2])));
 
         strictEqual(await seriesHelper.isSameSeries(a, c), false);
     });
@@ -139,7 +139,7 @@ describe('Series Helper', () => {
         anilist.addSeriesName(new Name('Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka', 'x-jap', NameType.OFFICIAL));
         anilist.addSeriesName(new Name('Is It Wrong to Try to Pick Up Girls in a Dungeon?', 'unknown', NameType.MAIN));
         anilist.addSeriesName(new Name('ダンジョンに出会いを求めるのは間違っているだろうか', 'jap', NameType.UNKNOWN));
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(anilist, new Season(1)));
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(anilist, new Season([1])));
         return series;
     }
 

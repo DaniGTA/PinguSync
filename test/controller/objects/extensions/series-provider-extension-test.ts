@@ -17,7 +17,7 @@ describe('Series provider extension tests', () => {
     test('should add providers with season info to series', async () => {
         const series = new Series();
 
-        const provider1 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), new Season(2));
+        const provider1 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), new Season([2]));
         const provider2 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(2));
 
         await series.addProviderDatasWithSeasonInfos(...[provider1, provider2]);
@@ -34,7 +34,7 @@ describe('Series provider extension tests', () => {
 
         await series.addProviderDatasWithSeasonInfos(...[provider1]);
 
-        const season = new Season(2);
+        const season = new Season([2]);
         const provider2 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), season);
         await series.addProviderDatasWithSeasonInfos(...[provider2]);
         const result = series.getAllProviderLocalDatasWithSeasonInfo();
@@ -45,7 +45,7 @@ describe('Series provider extension tests', () => {
 
     test('should combine bindings and add them all without duplication', () => {
         const series = new Series();
-        const season = new Season(2);
+        const season = new Season([2]);
 
         const binding1 = new ListLocalDataBind(new ListProviderLocalData(1));
         const binding2 = new ListLocalDataBind(new ListProviderLocalData(1), season);

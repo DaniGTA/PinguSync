@@ -33,11 +33,12 @@ export default class TitleComperator {
                     comperatorResult.matches += 2;
                 }
             }
+
             if (comperatorResult.matches !== 0) {
-                const seasonAPromise = Name.getSeasonNumber(aNames);
-                const seasonBPromise = Name.getSeasonNumber(bNames);
-                const aSeasonNumber = (await seasonAPromise).seasonNumber;
-                const bSeasonNumber = (await seasonBPromise).seasonNumber;
+                const seasonAPromise = a.getSeason();
+                const seasonBPromise = b.getSeason();
+                const aSeasonNumber = (await seasonAPromise).seasonNumbers;
+                const bSeasonNumber = (await seasonBPromise).seasonNumbers;
                 if (aSeasonNumber === bSeasonNumber) {
                     comperatorResult.matches += 2;
                 } else if (aSeasonNumber === undefined && bSeasonNumber !== undefined) {

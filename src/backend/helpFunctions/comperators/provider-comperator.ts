@@ -1,3 +1,5 @@
+import MultiProviderResult from '../../api/provider/multi-provider-result';
+import LocalDataBind from '../../controller/objects/extension/provider-extension/binding/local-data-bind';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
@@ -7,13 +9,11 @@ import ProviderLocalData from '../../controller/provider-manager/local-data/inte
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
+import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
+import seasonHelper from '../season-helper/season-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
 import SeasonComperator from './season-comperator';
-import MultiProviderResult from 'src/backend/api/provider/multi-provider-result';
-import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
-import LocalDataBind from '../../controller/objects/extension/provider-extension/binding/local-data-bind';
-import seasonHelper from '../season-helper/season-helper';
 
 export default class ProviderComperator {
 
@@ -33,7 +33,7 @@ export default class ProviderComperator {
             }
 
         } catch (err) {
-            logger.error('Error at ProviderComperator.simpleProviderSameIdAndSameSeasonCheckOnSeries')
+            logger.error('Error at ProviderComperator.simpleProviderSameIdAndSameSeasonCheckOnSeries');
             logger.error(err);
         }
         return false;
@@ -60,7 +60,8 @@ export default class ProviderComperator {
                             return ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id);
                         } else {
                             const mediaTypeResult = await MediaTypeComperator.comperaMediaType(aMediaType, bMediaType);
-                            if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id) && mediaTypeResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
+                            if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id) &&
+                                mediaTypeResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
                                 if (aSeries && !aSeason) {
                                     aSeason = (await aSeries.getSeason());
                                 }
@@ -162,7 +163,7 @@ export default class ProviderComperator {
             }
 
         } catch (err) {
-            logger.error('Error at ProviderComperator.hasSameListProvider')
+            logger.error('Error at ProviderComperator.hasSameListProvider');
             logger.error(err);
         }
         return false;
@@ -228,6 +229,7 @@ export default class ProviderComperator {
     }
 
     private compareProviderAWithProviderB(providerA: ProviderLocalData, providerB: ProviderLocalData): ComperatorResult {
+        logger.debug(`[compareProviderAWithProviderB] Comparing season between provider: ${providerA.provider} (id:${providerA.id}) and ${providerB.provider} (id: ${providerB.id})`);
         const comperatorResult: ComperatorResult = new ComperatorResult();
         comperatorResult.matchAble += 2.5;
         if (ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id)) {
@@ -242,13 +244,11 @@ export default class ProviderComperator {
                 } else if (seasonHelper.isSeasonUndefined(providerASeason) && seasonHelper.isSeasonUndefined(providerBSeason)) {
                     if (!seasonHelper.isSeasonUndefined(this.aSeriesSeason) && SeasonComperator.isSameSeason(this.aSeriesSeason, this.bSeriesSeason)) {
                         comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if(!seasonHelper.isSeasonUndefined(this.aSeriesSeason) && !seasonHelper.isSeasonUndefined(this.bSeriesSeason)){
+                    } else if (!seasonHelper.isSeasonUndefined(this.aSeriesSeason) && !seasonHelper.isSeasonUndefined(this.bSeriesSeason)) {
                          comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                     } else {
                         comperatorResult.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
                     }
-                } else if ((seasonHelper.isSeasonUndefined(providerASeason) && providerBSeason?.seasonNumber === 1) || (seasonHelper.isSeasonUndefined(providerBSeason) && providerASeason?.seasonNumber === 1)) {
-
                 } else if (SeasonComperator.isSameSeason(providerASeason, providerBSeason)) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                 } else if (providerASeason?.isSeasonNumberPresent() || providerBSeason?.isSeasonNumberPresent()) {
@@ -263,8 +263,8 @@ export default class ProviderComperator {
                 } else if (providerASeason?.isSeasonNumberPresent() && providerBSeason?.isSeasonNumberPresent()) {
                     comperatorResult.matches -= 0.5;
                 }
-                logger.error('Error at ProviderComperator.compareProviderAWithProviderB')
-                logger.error(err);
+                logger.debug('Error at ProviderComperator.compareProviderAWithProviderB');
+                logger.debug(err);
             }
         } else {
             if (providerA.infoStatus !== ProviderInfoStatus.ONLY_ID && providerB.infoStatus !== ProviderInfoStatus.ONLY_ID) {

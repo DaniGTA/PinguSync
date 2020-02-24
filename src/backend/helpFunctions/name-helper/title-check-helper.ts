@@ -24,26 +24,6 @@ export default class TitleCheckHelper {
         }
         return false;
     }
-    /**
-     * Clean all strings and add cleaned string to the list.
-     * @param nameList 
-     * @returns a list with uncleaned and cleaned strings.
-     */
-    private static async cleanStringList(nameList: string[]): Promise<string[]> {
-        for (const name of nameList) {
-            try {
-                let bName2 = stringHelper.cleanString(name);
-                bName2 = await this.removeMediaTypeFromTitle(bName2);
-                bName2 = await this.removeSeasonMarkesFromTitle(bName2);
-                if (bName2 !== name) {
-                    nameList.push(bName2);
-                }
-            } catch (err) {
-                continue;
-            }
-        }
-        return nameList;
-    }
 
 
     public static async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
@@ -205,8 +185,28 @@ export default class TitleCheckHelper {
         title = title.replace(/:\s*$/gm, '');
         return title.trim();
     }
+    /**
+     * Clean all strings and add cleaned string to the list.
+     * @param nameList
+     * @returns a list with uncleaned and cleaned strings.
+     */
+    private static async cleanStringList(nameList: string[]): Promise<string[]> {
+        for (const name of nameList) {
+            try {
+                let bName2 = stringHelper.cleanString(name);
+                bName2 = await this.removeMediaTypeFromTitle(bName2);
+                bName2 = await this.removeSeasonMarkesFromTitle(bName2);
+                if (bName2 !== name) {
+                    nameList.push(bName2);
+                }
+            } catch (err) {
+                continue;
+            }
+        }
+        return nameList;
+    }
 
     private static equalIgnoreCase(s1: string, s2: string) {
         return s1.toUpperCase() === s2.toUpperCase();
     }
-};
+}

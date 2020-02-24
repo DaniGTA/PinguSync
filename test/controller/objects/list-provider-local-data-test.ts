@@ -106,11 +106,11 @@ describe('listProviderLocalData tests', () => {
         a.prequelIds.push(1);
         a.sequelIds.push(1);
         a.watchProgress = [(new WatchProgress(1))];
-        const episode = new Episode(5, new Season(1));
+        const episode = new Episode(5, new Season([1]));
         a.addDetailedEpisodeInfos(episode);
         const b = Object.assign(new ListProviderLocalData(1), a);
         b.lastUpdate = new Date(1);
-        b.addDetailedEpisodeInfos(new Episode(5, new Season(1)));
+        b.addDetailedEpisodeInfos(new Episode(5, new Season([1])));
 
 
         const merged = await ListProviderLocalData.mergeProviderInfos(b, a);

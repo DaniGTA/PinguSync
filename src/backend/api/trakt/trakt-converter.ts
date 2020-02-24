@@ -14,8 +14,8 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
+import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
@@ -42,7 +42,7 @@ export default new class TraktConverter {
             providerInfo.watchStatus = WatchStatus.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
             providerInfo.infoStatus = ProviderInfoStatus.BASIC_INFO;
-            result.push(new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, new Season(season.number))));
+            result.push(new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, new Season([season.number]))));
         }
         return result;
     }
@@ -156,7 +156,7 @@ export default new class TraktConverter {
                     if (seasonNumber === undefined || Number.isNaN(seasonNumber as number)) {
                         seasonNumber = seasonInfo.number;
                     }
-                    const tempEpisode = new Episode(episode.number, new Season(seasonNumber as number));
+                    const tempEpisode = new Episode(episode.number, new Season([seasonNumber as number]));
                     tempEpisode.title = [new EpisodeTitle(episode.title)];
                     tempEpisode.providerEpisodeId = episode.ids.trakt;
                     if (seasonInfo.title && seasonInfo.title.toLowerCase().includes('special')) {
@@ -169,7 +169,7 @@ export default new class TraktConverter {
                     if (seasonNumber !== undefined && Number.isNaN(seasonNumber as number)) {
                         seasonNumber = seasonInfo.number;
                     }
-                    const tempEpisode = new Episode(index, new Season(seasonNumber as number));
+                    const tempEpisode = new Episode(index, new Season([seasonNumber as number]));
                     if (seasonInfo.title && seasonInfo.title.includes('special')) {
                         tempEpisode.type = EpisodeType.SPECIAL;
                     }
@@ -183,8 +183,9 @@ export default new class TraktConverter {
 
     public async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
         const currentProvider = series.getListProvidersInfos().find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
-        const seasonNumber = (await series.getSeason()).seasonNumber;
-        if (typeof currentProvider !== 'undefined' && seasonNumber) {
+        const seriesSeason = (await series.getSeason());
+       
+        if (typeof currentProvider !== 'undefined' && seriesSeason.isSeasonNumberPresent()) {
 
             const episodes: TraktEpisode[] = [];
 
@@ -196,26 +197,27 @@ export default new class TraktConverter {
                 },
                 seasons: [],
             };
+            for (const seasonNumber of seriesSeason.seasonNumbers) {
+                const season: TrakSeason = {
+                    episodes,
+                    number: seasonNumber,
+                };
 
-            const season: TrakSeason = {
-                episodes,
-                number: seasonNumber,
-            };
-
-            sendEntryShow.seasons.push(season);
-
+                sendEntryShow.seasons.push(season);
+            }
             const sendEntryUpdate: SendEntryUpdate = {
                 shows: [sendEntryShow],
             };
             return sendEntryUpdate;
         }
+    
         throw new Error('failed convert');
     }
 
     public async convertAnimeToSendEntryShow(series: Series, newWatchprogress: number): Promise<SendEntryUpdate> {
         const currentProvider = series.getListProvidersInfos().find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
-        let seasonNumber = (await series.getSeason()).seasonNumber;
-        if (currentProvider && seasonNumber) {
+        let seasonNumbers = (await series.getSeason()).seasonNumbers;
+        if (currentProvider && seasonNumbers) {
 
             const episodes: TraktEpisode[] = [];
             const maxEpisodes = currentProvider.episodes || newWatchprogress;
@@ -238,14 +240,14 @@ export default new class TraktConverter {
                         episodes.push({ number: index });
                     }
                 }
-                const season: TrakSeason = {
-                    episodes,
-                    number: seasonNumber,
-                };
+                for (const seasonNumber of seasonNumbers) {
+                    const season: TrakSeason = {
+                        episodes,
+                        number: seasonNumber,
+                    };
 
-                sendEntryShow.seasons.push(season);
-
-                seasonNumber++;
+                    sendEntryShow.seasons.push(season);
+                }
             }
             const sendEntryUpdate: SendEntryUpdate = {
                 shows: [sendEntryShow],

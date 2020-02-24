@@ -42,6 +42,11 @@ class ListHelper {
         return false;
     }
 
+    public isAnyNumberListEntryInNumberList(array: number[], array2: number[]): boolean {
+        return array.findIndex((x) => array2.includes(x)) !== -1;
+    }
+
+
     public async removeEntrys<T>(array: T[], ...entrys: T[] | readonly T[]): Promise<T[]> {
         for (const entry of entrys) {
             const i = array.findIndex((listEntry) => this.objectsEquals(listEntry, entry));
@@ -133,7 +138,7 @@ class ListHelper {
         return arr.filter((v, i, a) => a.findIndex((t) => (t.name === v.name)) === i);
     }
 
-    public async getUniqueList<T>(arr: T[]): Promise<T[]> {
+    public getUniqueList<T>(arr: T[]): T[] {
         return arr.filter((v, i, a) => a.findIndex((t) => (t === v)) === i);
     }
     /**

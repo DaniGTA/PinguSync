@@ -48,8 +48,8 @@ export default class EpisodeHelper {
                             }
                         }
                     }
-                    if (episode.season !== undefined && episode.season.seasonNumber !== undefined) {
-                        seasonNumbers.push(episode.season.seasonNumber);
+                    if (episode.season !== undefined && episode.season.seasonNumbers !== undefined) {
+                        seasonNumbers.push(...episode.season.seasonNumbers);
                     }
                     if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {
                         numberOfRegularEpisodesFound++;
@@ -60,9 +60,12 @@ export default class EpisodeHelper {
                 }
             }
         }
-        const finalSeasonNumber = listHelper.getMostFrequentNumberFromList(seasonNumbers);
-        const maxEpisodes = this.getRegularEpisodeCountOfSeason(seasonHolder, new Season(finalSeasonNumber));
-        return new EpisodeRelationResult(finalSeasonNumber, maxEpisodes, numberOfRegularEpisodesFound, maxEpisodeNumber, maxDifference);
+        const finalSeasonNumbers = listHelper.getUniqueList(seasonNumbers);
+        let maxEpisodes = 0;
+        for (const season of finalSeasonNumbers) {
+            maxEpisodes += this.getRegularEpisodeCountOfSeason(seasonHolder, new Season([season]));
+        }
+        return new EpisodeRelationResult(finalSeasonNumbers, maxEpisodes, numberOfRegularEpisodesFound, maxEpisodeNumber, maxDifference);
     }
 
     public static getRegularEpisodeCountOfSeason(episodes: Episode[], seasonNumber: Season): number {

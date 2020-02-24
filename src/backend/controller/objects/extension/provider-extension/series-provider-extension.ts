@@ -12,24 +12,12 @@ import Season from '../../meta/season';
 import InfoLocalDataBind from './binding/info-local-data-bind';
 import ListLocalDataBind from './binding/list-local-data-bind';
 import LocalDataBind from './binding/local-data-bind';
+import SeriesProviderExtensionInstanceCheck from './series-provider-extension-instance-check';
 
 
 export default class SeriesProviderExtension {
 
 
-    public static instanceOfInfoProviderLocalData(pld: ProviderLocalData) {
-        if (pld instanceof InfoProviderLocalData || pld.instanceName === 'InfoProviderLocalData') {
-            return true;
-        }
-        return false;
-    }
-
-    public static instanceOfListProviderLocalData(pld: ProviderLocalData) {
-        if (pld instanceof ListProviderLocalData || pld.instanceName === 'ListProviderLocalData') {
-            return true;
-        }
-        return false;
-    }
     protected listProviderInfos: ListLocalDataBind[] = [];
     protected infoProviderInfos: InfoLocalDataBind[] = [];
 
@@ -53,9 +41,9 @@ export default class SeriesProviderExtension {
 
     public async addProviderDatas(...localdatas: ProviderLocalData[]) {
         for (const localdata of localdatas) {
-            if (SeriesProviderExtension.instanceOfListProviderLocalData(localdata)) {
+            if (SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(localdata)) {
                 await this.addListProvider(localdata as ListProviderLocalData);
-            } else if (SeriesProviderExtension.instanceOfInfoProviderLocalData(localdata)) {
+            } else if (SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(localdata)) {
                 await this.addInfoProvider(localdata as InfoProviderLocalData);
             }
         }
@@ -66,9 +54,9 @@ export default class SeriesProviderExtension {
         try {
             for (let index = 0; index < localdatas.length; index++) {
                 const localdata = localdatas[index];
-                if (SeriesProviderExtension.instanceOfListProviderLocalData(localdata.providerLocalData)) {
+                if (SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(localdata.providerLocalData)) {
                     await this.addListProvider(localdata.providerLocalData as ListProviderLocalData, localdata.seasonTarget);
-                } else if (SeriesProviderExtension.instanceOfInfoProviderLocalData(localdata.providerLocalData)) {
+                } else if (SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(localdata.providerLocalData)) {
                     await this.addInfoProvider(localdata.providerLocalData as InfoProviderLocalData, localdata.seasonTarget);
                 } else {
                     logger.debug('addProviderDatasWithSeasonInfos cant add unkown instance');
@@ -121,7 +109,8 @@ export default class SeriesProviderExtension {
             const existingBinding = this.infoProviderInfos.findIndex((x) => x.providerName === infoLocalDataBind.providerName);
             if (existingBinding !== -1) {
                 if (ProviderComperator.simpleProviderIdCheck(infoLocalDataBind.id, this.infoProviderInfos[existingBinding].id)) {
-                    if (this.infoProviderInfos[existingBinding].targetSeason !== infoLocalDataBind.targetSeason && infoLocalDataBind.targetSeason !== undefined) {
+                    if (this.infoProviderInfos[existingBinding].targetSeason !== infoLocalDataBind.targetSeason &&
+                        infoLocalDataBind.targetSeason !== undefined) {
                         this.infoProviderInfos[existingBinding] = infoLocalDataBind;
                     }
                 } else {
@@ -135,7 +124,9 @@ export default class SeriesProviderExtension {
 
     public addListProviderBindings(...listLocalDataBinds: ListLocalDataBind[]) {
         for (const listLocalDataBind of listLocalDataBinds) {
-            let existingBindingIndex = this.listProviderInfos.findIndex((x) => x.providerName === listLocalDataBind.providerName && ProviderComperator.simpleProviderIdCheck(x.id, listLocalDataBind.id));
+            const existingBindingIndex = this.listProviderInfos.findIndex((x) =>
+                x.providerName === listLocalDataBind.providerName &&
+                ProviderComperator.simpleProviderIdCheck(x.id, listLocalDataBind.id));
             if (existingBindingIndex !== -1) {
                 const existingBinding = this.listProviderInfos[existingBindingIndex];
                 if (existingBinding.targetSeason !== listLocalDataBind.targetSeason && listLocalDataBind.targetSeason !== undefined) {

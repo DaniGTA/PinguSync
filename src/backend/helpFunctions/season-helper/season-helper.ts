@@ -41,21 +41,22 @@ class SeasonHelper {
                 prequel = searchResult.foundedSeries;
                 let searchCount = 0;
                 if (searchResult.relationExistButNotFounded) {
-                    return new SearchSeasonValueResult(new Season(-2), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                    return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                 } else {
                     const mediaTypeSeries = await series.getMediaType();
                     const alreadyCheckedPrequels: string[] = [];
-                    while (prequel && alreadyCheckedPrequels.findIndex(x=> x === prequel?.id) === -1) {
+                    while (prequel && alreadyCheckedPrequels.findIndex((x) => x === prequel?.id) === -1) {
                         alreadyCheckedPrequels.push(prequel.id);
                         const mediaTypePrequel = await prequel.getMediaType();
                         if (mediaTypePrequel === mediaTypeSeries) {
                             searchCount++;
                             const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE, seriesList);
                             if (prequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
-                                return new SearchSeasonValueResult(new Season(-2), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                                return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                             }
-                            if (prequelSeason.seasonNumber && prequelSeason.seasonError === SeasonError.NONE) {
-                                return new SearchSeasonValueResult(new Season(prequelSeason.seasonNumber + searchCount), 'PrequelTrace');
+                            const prequelSeasonNumber = prequelSeason.getSingleSeasonNumber();
+                            if (prequelSeasonNumber && prequelSeason.seasonError === SeasonError.NONE) {
+                                return new SearchSeasonValueResult(new Season([(prequelSeasonNumber + searchCount)]), 'PrequelTrace');
                             }
                         }
                         if (prequel.isAnyPrequelPresent()) {
@@ -68,15 +69,15 @@ class SeasonHelper {
                             prequel = prequelSearchResult.foundedSeries;
                         } else if (prequel.getAverageProviderInfoStatus() === ProviderInfoStatus.FULL_INFO) {
 
-                            return new SearchSeasonValueResult(new Season(searchCount), 'PrequelTrace - nomore prequel present');
+                            return new SearchSeasonValueResult(new Season([searchCount]), 'PrequelTrace - nomore prequel present');
                         } else {
                             prequel = null;
                         }
                     }
                 }
-                return new SearchSeasonValueResult(new Season(-2), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+                return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
         }
-        return new SearchSeasonValueResult(new Season(-1), 'NoPrequelAvaible', SeasonError.CANT_GET_SEASON);
+        return new SearchSeasonValueResult(new Season([-1]), 'NoPrequelAvaible', SeasonError.CANT_GET_SEASON);
     }
 
     /**
@@ -102,7 +103,7 @@ class SeasonHelper {
             sequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
-                return new SearchSeasonValueResult(new Season(-2), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                return new SearchSeasonValueResult(new Season([-2]), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
                 const alreadyCheckedSequels: string[] = [];
                 while (sequel && alreadyCheckedSequels.findIndex((x) => x === sequel?.id) === -1) {
@@ -111,10 +112,11 @@ class SeasonHelper {
                         searchCount++;
                         const sequelSeason = await sequel.getSeason(SeasonSearchMode.SEQUEL_TRACE_MODE, seriesList);
                         if (sequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
-                            return new SearchSeasonValueResult(new Season(-2), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+                            return new SearchSeasonValueResult(new Season([-2]), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                         }
-                        if (sequelSeason.seasonNumber && sequelSeason.seasonError === SeasonError.NONE) {
-                            return new SearchSeasonValueResult(new Season(sequelSeason.seasonNumber - searchCount), 'SequelTrace');
+                        const sequelSeasonNumber = sequelSeason.getSingleSeasonNumber();
+                        if (sequelSeasonNumber && sequelSeason.seasonError === SeasonError.NONE) {
+                            return new SearchSeasonValueResult(new Season([sequelSeasonNumber - searchCount]), 'SequelTrace');
                         }
                     }
                     if (sequel.isAnySequelPresent()) {
@@ -130,9 +132,9 @@ class SeasonHelper {
                     }
                 }
             }
-            return new SearchSeasonValueResult(new Season(-1), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+            return new SearchSeasonValueResult(new Season([-1]), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
         }
-        return new SearchSeasonValueResult(new Season(-2), 'NoSequelAvaible', SeasonError.CANT_GET_SEASON);
+        return new SearchSeasonValueResult(new Season([-2]), 'NoSequelAvaible', SeasonError.CANT_GET_SEASON);
     }
 
 
@@ -152,7 +154,7 @@ class SeasonHelper {
     }
 
     public isSeasonFirstSeason(season?: Season): boolean {
-        if (season?.isSeasonNumberPresent() && season.seasonNumber === 1) {
+        if (season?.isSeasonNumberPresent() && season.seasonNumbers.includes(1)) {
             if (season.seasonPart === 1 || season.seasonPart === undefined) {
                 return true;
             }
@@ -197,11 +199,8 @@ class SeasonHelper {
     public isSeasonUndefined(currentSeason?: Season): boolean {
         if (currentSeason === undefined) {
             return true;
-        } else if (currentSeason.seasonNumber === undefined) {
-            return true;
-        } else {
-            return false;
         }
+        return currentSeason.isSeasonUndefined();
     }
     /**
      * Controlls the search modes and will collect the result rate it and return it.
@@ -259,7 +258,7 @@ class SeasonHelper {
 
         try {
             if (!series.isAnyPrequelPresent() && series.isAnySequelPresent()) {
-                return new SearchSeasonValueResult(new Season(1), 'NoPrequelButSequel');
+                return new SearchSeasonValueResult(new Season([1]), 'NoPrequelButSequel');
             }
         } catch (err) {
             logger.warn(err);
@@ -273,7 +272,7 @@ class SeasonHelper {
             return sequelResult;
         }
 
-        return new SearchSeasonValueResult(new Season(-1), 'None', SeasonError.CANT_GET_SEASON);
+        return new SearchSeasonValueResult(new Season([-1]), 'None', SeasonError.CANT_GET_SEASON);
     }
 
     private isSeriesCurrentlyInTheSeasonProcess(series: Series): boolean {

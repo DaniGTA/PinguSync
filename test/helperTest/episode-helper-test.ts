@@ -56,6 +56,10 @@ describe('Episode Helper Test', () => {
         strictEqual(result.missingEpisodes, 1);
         strictEqual(result.seasonComplete, true);
         strictEqual(result.episodesFound, 1);
-        strictEqual(result.seasonNumber, 2);
+        if (result.seasonNumber) {
+            strictEqual(result.seasonNumber[0], 2);
+        } else {
+            fail();
+        }
     });
 });

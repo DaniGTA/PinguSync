@@ -1,5 +1,3 @@
-
-
 import { fail, strictEqual } from 'assert';
 import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
 import Name from '../../../src/backend/controller/objects/meta/name';

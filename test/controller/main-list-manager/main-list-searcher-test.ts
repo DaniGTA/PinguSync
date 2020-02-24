@@ -26,16 +26,16 @@ describe('MainList | Searcher tests', () => {
 
         const series1 = new Series();
         const provider1 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
-        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season(1)));
+        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([1])));
 
 
         const series2 = new Series();
         const provider2 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
-        await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season(2)));
+        await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([2])));
 
         const series3 = new Series();
         const provider3 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
-        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season(1)));
+        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season([1])));
 
         MainListManager['mainList'] = [series1, series2];
 
@@ -50,16 +50,16 @@ describe('MainList | Searcher tests', () => {
 
         const series1 = new Series();
         const provider1 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
-        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season(1)));
+        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([1])));
 
 
         const series2 = new Series();
         const provider2 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
-        await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season(2)));
+        await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([2])));
 
         const series3 = new Series();
         const provider3 = new ListProviderLocalData(1, AniListProvider.getInstance().providerName);
-        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season(1)));
+        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season([1])));
 
         MainListManager['mainList'] = [series1, series2, series3];
 

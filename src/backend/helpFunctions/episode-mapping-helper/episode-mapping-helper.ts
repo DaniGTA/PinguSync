@@ -172,25 +172,22 @@ export default class EpisodeMappingHelper {
             const currentBindingPools = providerAndSeriesPackage.series.episodeBindingPools;
             for (const episode of providerAndSeriesPackage.provider.detailEpisodeInfo) {
                 const currentDiff = cDiff;
-                if (ratedEquality.length === 0) {
+                let combineRatings = await this.getAllRelatedRatings(episode, providerAndSeriesPackage.provider, ratedEquality);
+
+                if (ratedEquality.length === 0 || combineRatings.length === 0) {
                     ratedEquality = this.getRatedEqulityOfEpisodes(packages, currentBindingPools, season, currentDiff);
                     if (ratedEquality.length === 0) {
                         break;
                     }
+                    combineRatings = await this.getAllRelatedRatings(episode, providerAndSeriesPackage.provider, ratedEquality);
                 }
 
-                const combineRatings = await this.getAllRelatedRatings(episode, providerAndSeriesPackage.provider, ratedEquality);
                 if (combineRatings.length !== 0) {
                     const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings, this.getProviderLength(packages.flatMap((x) => x.provider)));
                     for (const result of results) {
                         if (!this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(currentBindingPools, result)) {
-
                             providerAndSeriesPackage.series.addEpisodeMapping(...result.getEpisodeMappings());
-                            const ratings: EpisodeRatedEqualityContainer[] = [];
-                            for (const epsiodeBind of result.episodeBinds) {
-                                ratings.push(...this.getAllEpisodeRelatedRating(epsiodeBind.episode, ratedEquality));
-                            }
-                            listHelper.removeEntrysSync(ratings);
+                            listHelper.removeEntrysSync(ratedEquality,  result);
                         }
                     }
                 }
@@ -237,7 +234,8 @@ export default class EpisodeMappingHelper {
 
         for (let index = 0; index < lengthA; index++) {
             const episodeA = providerA.detailEpisodeInfo[index];
-            if (providerB.detailEpisodeInfo[index] !== undefined && this.isEpisodeAlreadyMappedToEpisode(episodeA, providerB.detailEpisodeInfo[index], this.currentSeries.episodeBindingPools)) {
+            if (providerB.detailEpisodeInfo[index] !== undefined &&
+                this.isEpisodeAlreadyMappedToEpisode(episodeA, providerB.detailEpisodeInfo[index], this.currentSeries.episodeBindingPools)) {
                 const difference = EpisodeHelper.getEpisodeDifference(episodeA, providerB.detailEpisodeInfo[index]);
                 if (difference > maxEpisodeDifference) {
                     maxEpisodeDifference = difference;
@@ -245,7 +243,6 @@ export default class EpisodeMappingHelper {
                 continue;
             }
             for (let index2 = 0; index2 < lengthB; index2++) {
-                
                 const episodeB = providerB.detailEpisodeInfo[index2];
                 if (this.isEpisodeAlreadyMappedToEpisode(episodeA, episodeB, this.currentSeries.episodeBindingPools)) {
                     const difference = EpisodeHelper.getEpisodeDifference(episodeA, episodeB);
@@ -347,12 +344,11 @@ export default class EpisodeMappingHelper {
                 const detailedEpB = providerB.detailEpisodeInfo[index];
                 let result = this.getRatedEqualityContainer(detailedEpA, detailedEpB, providerA, providerB, aTargetS, bTargetS, season, currentBindingPool, providerAEpDiff);
                 if (result !== undefined) {
-                    if (result.result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (result.result.matchAble !== 0  && result.result.matchAble === result.result.matches && result.result.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) ) {
+                    if (result.result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (result.result.matchAble !== 0 &&
+                        result.result.matchAble === result.result.matches &&
+                        result.result.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE)) {
                         if (fastStreakEnabled) {
                             fastCheck++;
-                        } else {
-                            fastStreakEnabled = true;
-                            fastCheck = index + 1;
                         }
                     } else if (fastStreakEnabled) {
                         if (fastCheck !== 0) {
@@ -402,18 +398,20 @@ export default class EpisodeMappingHelper {
      * @param episodeDiff
      */
     private getRatedEqualityContainer(detailedEpA: Episode, detailedEpB: Episode, providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: Season | undefined, bTargetS: Season | undefined, season: Season | undefined, currentBindingPool: EpisodeBindingPool[], episodeDiff: number) {
-        if ((!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB, currentBindingPool) && !this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA, currentBindingPool))) {
-            const result = EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
-            if (result.matches !== 0) {
+        const result = EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
+        if (result.matches !== 0) {
+            if ((!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB, currentBindingPool) &&
+                !this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA, currentBindingPool))) {
                 const epA = new EpisodeProviderBind(detailedEpA, providerA);
                 const epB = new EpisodeProviderBind(detailedEpB, providerB);
                 return new EpisodeRatedEqualityContainer(result, epA, epB);
-            }
-        } else {
-            if (this.isEpisodeAlreadyMappedToEpisode(detailedEpA, detailedEpB, currentBindingPool) && this.isEpisodeAlreadyMappedToEpisode(detailedEpB, detailedEpA, currentBindingPool)) {
-                const result = new ComperatorResult();
-                result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                return new EpisodeRatedEqualityContainer(result);
+            } else {
+                if (this.isEpisodeAlreadyMappedToEpisode(detailedEpA, detailedEpB, currentBindingPool) &&
+                    this.isEpisodeAlreadyMappedToEpisode(detailedEpB, detailedEpA, currentBindingPool)) {
+                    const trueResult = new ComperatorResult();
+                    trueResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                    return new EpisodeRatedEqualityContainer(trueResult);
+                }
             }
         }
     }

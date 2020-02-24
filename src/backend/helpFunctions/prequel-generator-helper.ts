@@ -18,15 +18,16 @@ export default class PrequelGeneratorHelper {
     }
     public async generatePrequel(series: Series, season: Season, lowerSeasonNumber = true, mediaType?: MediaType): Promise<Series | null> {
         let newSNumber;
-        if (season.isSeasonNumberPresent() && season.seasonNumber !== undefined && season.seasonNumber > 0) {
+        const currentSeasonNumber = season.getSingleSeasonNumber();
+        if (season.isSeasonNumberPresent() && currentSeasonNumber !== undefined && currentSeasonNumber > 0) {
             if (lowerSeasonNumber) {
-                newSNumber = season.seasonNumber - 1;
+                newSNumber = currentSeasonNumber - 1;
             }
             for (const localdataProvider of series.getAllProviderLocalDatas()) {
                 try {
                     if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
                         for (const id of localdataProvider.prequelIds) {
-                            return this.createPrequel(localdataProvider, id, new Season(newSNumber), mediaType);
+                            return this.createPrequel(localdataProvider, id, new Season(newSNumber ? [newSNumber] : []), mediaType);
                         }
 
                     }

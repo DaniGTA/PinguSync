@@ -147,8 +147,8 @@ describe('Series | Basic', () => {
         const provider1 = new InfoProviderLocalData(1, 'test');
         const provider2 = new InfoProviderLocalData(2, 'test');
 
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season(3)));
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season(3)));
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([3])));
+        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([3])));
 
         assert.strictEqual(series.getAllProviderBindings()[0].id, 2);
     });

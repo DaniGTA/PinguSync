@@ -8,7 +8,15 @@ module.exports = {
 	'transform': {
 		'^.+\\.(ts|tsx)$': 'ts-jest'
 	},
-	'testTimeout': 1500,
+	'reporters': [
+		'default',
+		['jest-html-reporters', {
+			'publicPath': './html-report',
+			'filename': 'report.html',
+			'expand': true
+		}]
+	],
+	'testTimeout': 3500,
 	'verbose': false,
 
 }

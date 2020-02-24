@@ -150,14 +150,14 @@ describe('Series | Merge', () => {
         const seriesA = new Series();
         const lpld = new ListProviderLocalData(2, 'Test');
         lpld.addSeriesName(new Name('TestA', 'en'));
-        await seriesA.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season(1)));
+        await seriesA.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
         const seriesB = new Series();
         const lpld2 = new ListProviderLocalData(2, 'Test');
-        await seriesB.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season(1)));
+        await seriesB.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season([1])));
 
         const merged = await seriesA.merge(seriesB);
         strictEqual((merged.getListProvidersInfos()).length, 1);
-        strictEqual(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider)?.seasonNumber, 1);
+        strictEqual(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider)?.getSingleSeasonNumber(), 1);
         return;
     });
 
