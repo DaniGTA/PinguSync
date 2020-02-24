@@ -429,8 +429,12 @@ export default class Series extends SeriesProviderExtension {
      * @param list
      * @param returnWithThis default value is: FALSE
      */
-    public async getAllRelations(list: readonly Series[] | Series[], returnWithThis = false): Promise<Series[]> {
+    public async getAllRelations(list?: readonly Series[] | Series[], returnWithThis = false): Promise<Series[]> {
         let relations = [this as Series];
+
+        if (!list) {
+            list = await MainListManager.getMainList();
+        }
 
         for (const entry2 of relations) {
             for (const entry of list) {
