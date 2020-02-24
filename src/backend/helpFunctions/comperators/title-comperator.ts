@@ -2,6 +2,7 @@ import Name from '../../controller/objects/meta/name';
 import Series from '../../controller/objects/series';
 import titleCheckHelper from '../name-helper/title-check-helper';
 import ComperatorResult from './comperator-results.ts/comperator-result';
+import SeasonComperator from './season-comperator';
 
 export default class TitleComperator {
     /**
@@ -37,13 +38,13 @@ export default class TitleComperator {
             if (comperatorResult.matches !== 0) {
                 const seasonAPromise = a.getSeason();
                 const seasonBPromise = b.getSeason();
-                const aSeasonNumber = (await seasonAPromise).seasonNumbers;
-                const bSeasonNumber = (await seasonBPromise).seasonNumbers;
-                if (aSeasonNumber === bSeasonNumber) {
+                const aSeasonNumber = (await seasonAPromise);
+                const bSeasonNumber = (await seasonBPromise);
+                if (SeasonComperator.isSameSeasonNumber(aSeasonNumber, bSeasonNumber)) {
                     comperatorResult.matches += 2;
-                } else if (aSeasonNumber === undefined && bSeasonNumber !== undefined) {
+                } else if (aSeasonNumber.isSeasonUndefined() && !bSeasonNumber.isSeasonUndefined()) {
                     comperatorResult.matches += 1;
-                } else if (bSeasonNumber === undefined && aSeasonNumber !== undefined) {
+                } else if (bSeasonNumber.isSeasonUndefined() && !aSeasonNumber.isSeasonUndefined()) {
                     comperatorResult.matches += 1;
                 }
             }

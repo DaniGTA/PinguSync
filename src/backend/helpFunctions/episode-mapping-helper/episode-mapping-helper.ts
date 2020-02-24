@@ -174,7 +174,8 @@ export default class EpisodeMappingHelper {
                 const currentDiff = cDiff;
                 let combineRatings = await this.getAllRelatedRatings(episode, providerAndSeriesPackage.provider, ratedEquality);
 
-                if (ratedEquality.length === 0 || combineRatings.length === 0) {
+
+                if (ratedEquality.length === 0) {
                     ratedEquality = this.getRatedEqulityOfEpisodes(packages, currentBindingPools, season, currentDiff);
                     if (ratedEquality.length === 0) {
                         break;
@@ -182,12 +183,13 @@ export default class EpisodeMappingHelper {
                     combineRatings = await this.getAllRelatedRatings(episode, providerAndSeriesPackage.provider, ratedEquality);
                 }
 
+
                 if (combineRatings.length !== 0) {
                     const results = await this.getBestResultsFromEpisodeRatedEqualityContainer(combineRatings, this.getProviderLength(packages.flatMap((x) => x.provider)));
                     for (const result of results) {
                         if (!this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(currentBindingPools, result)) {
                             providerAndSeriesPackage.series.addEpisodeMapping(...result.getEpisodeMappings());
-                            listHelper.removeEntrysSync(ratedEquality,  result);
+                            listHelper.removeEntrysSync(ratedEquality, result);
                         }
                     }
                 }

@@ -75,18 +75,6 @@ describe('Provider: Kitsu | Test runs', () => {
         }
     });
 
-    test('should get a series (5/6)', async () => {
-
-        const series = new Series();
-        const unkownProvider = new ListProviderLocalData(-1);
-        unkownProvider.addSeriesName(new Name('Avatar: The Last Airbender', 'en'));
-        await series.addProviderDatas(unkownProvider);
-
-        // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
-        strictEqual(result.mainProvider.providerLocalData.id, 5);
-    });
-
     test('should get a series (6/6)', async () => {
 
         const series = new Series();

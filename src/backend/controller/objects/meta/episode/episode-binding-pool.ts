@@ -16,13 +16,13 @@ export default class EpisodeBindingPool {
     public addEpisodeMappingToBindings(...episodeMappings: EpisodeMapping[]) {
         for (const episodeMapping of episodeMappings) {
             if (this.isBindingpoolHaveThisProvider(episodeMapping.provider)) {
-                break;
+                continue;
             }
             let found = false;
             for (const currentEpisodeMapping of this.bindedEpisodeMappings) {
                 if (EpisodeComperator.compareEpisodeMapping(episodeMapping, currentEpisodeMapping)) {
                     found = true;
-                    break;
+                    continue;
                 }
             }
             if (!found) {
