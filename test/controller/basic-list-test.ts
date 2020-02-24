@@ -383,8 +383,8 @@ describe('Basic List | Testrun', () => {
             const traktProviderS1 = resultS1.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             const traktProviderS2 = resultS2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             if (traktProviderS1 && traktProviderS2) {
-                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.seasonNumbers, 1);
-                strictEqual(resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.seasonNumbers, 2);
+                strictEqual(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.getSingleSeasonNumber(), 1);
+                strictEqual(resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.getSingleSeasonNumber(), 2);
             } else {
                 fail();
             }
@@ -510,11 +510,11 @@ describe('Basic List | Testrun', () => {
 
         const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series2, TraktProvider.getInstance());
 
-        strictEqual(series2.getProviderSeasonTarget(result.providerLocalData.provider)?.seasonNumbers, 2);
+        strictEqual(series2.getProviderSeasonTarget(result.providerLocalData.provider)?.getSingleSeasonNumber(), 2);
 
         const seasonTarget = series2.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
-        strictEqual(seasonTarget?.seasonNumbers, 2);
+        strictEqual(seasonTarget?.getSingleSeasonNumber(), 2);
         // tslint:disable-next-line: no-string-literal
         const provider = series2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
@@ -530,10 +530,10 @@ describe('Basic List | Testrun', () => {
                 } else if (episode.season?.getSingleSeasonNumber() === 4) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 0);
                 }
-                logger.warn(episode.episodeNumber + ' S: ' + episode.season?.seasonNumbers);
+                logger.warn(episode.episodeNumber + ' S: ' + episode.season?.getSingleSeasonNumber());
             }
             const season = series2.getProviderSeasonTarget(provider.provider);
-            strictEqual(season?.seasonNumbers, 2);
+            strictEqual(season?.getSingleSeasonNumber(), 2);
         } else {
             fail();
         }

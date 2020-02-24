@@ -18,5 +18,10 @@ module.exports = {
 	],
 	'testTimeout': 3500,
 	'verbose': false,
+	'globals': {
+		'ts-jest': {
+			babelConfig: true,
+		}
+	},
 
 }

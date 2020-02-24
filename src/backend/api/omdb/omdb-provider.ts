@@ -1,5 +1,4 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import request from 'request';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
@@ -10,6 +9,7 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
+import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 export default class OMDbProvider extends InfoProvider {
     public static instance: OMDbProvider;
     public isOffline: boolean = false;
@@ -78,39 +78,26 @@ export default class OMDbProvider extends InfoProvider {
 
 
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
-        return new Promise<any>((resolve, reject) => {
-            (async () => {
-                try {
-                    request({
-                        method,
-                        url,
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        timeout: 5000,
-                    }, (error: any, response: any, body: any) => {
-                        try {
-
-                            if (response.statusCode === 200 || response.statusCode === 201) {
-                                const data: T = JSON.parse(body) as T;
-                                resolve(data);
-                            } else {
-                                logger.error('[OMDb] status code: ' + response.statusCode);
-                                reject();
-                            }
-                        } catch (err) {
-                            logger.error(err);
-                            reject();
-                        }
-                    }).on('error', (err) => {
-                        logger.error(err);
-                        reject();
-                    });
-                } catch (err) {
-                    logger.error(err);
-                    reject();
-                }
-            })();
-        });
+        const request = {
+            method,
+            uri: url,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            timeout: 5000,
+        }
+        const response = await WebRequestManager.request(request);
+        try {
+            if (response.statusCode === 200 || response.statusCode === 201) {
+                const data: T = JSON.parse(response.body) as T;
+                return data;
+            } else {
+                logger.error('[OMDb] status code: ' + response.statusCode);
+                throw response.statusCode;
+            }
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
     }
 }

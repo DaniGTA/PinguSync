@@ -192,10 +192,10 @@ export default new class ProviderInfoDownloadHelper {
         let searchResult: MultiProviderResult[] = [];
         let resultContainer: SearchResultRatingContainer[] = [];
         const season = await series.getSeason();
-        if (!season.seasonNumbers || season.getSingleSeasonNumber() === 1 || provider.hasUniqueIdForSeasons) {
+        if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumber() === 1 || provider.hasUniqueIdForSeasons) {
             logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumbers);
-            const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); } , 1500));
-            searchResult = await Promise.race([maxRequestTime , provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumber())]);
+            const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, 1500));
+            searchResult = await Promise.race([maxRequestTime, provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumber())]);
 
             if (searchResult && searchResult.length !== 0) {
                 logger.debug('[' + provider.providerName + '] Results: ' + searchResult.length);

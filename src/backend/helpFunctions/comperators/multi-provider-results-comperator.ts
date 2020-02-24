@@ -33,7 +33,7 @@ export default class MultiProviderComperator {
                         seasonA.seasonNumbers.includes(1)) {
                         finalResult.matches += 1;
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if (!seasonA.seasonNumbers || !seasonB.seasonNumbers) {
+                    } else if (seasonA.seasonNumbers.length === 0 || seasonB.seasonNumbers.length === 0) {
 
                     } else {
                         finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
