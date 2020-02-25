@@ -341,7 +341,7 @@ export default class Series extends SeriesProviderExtension {
             const getMediaType = await newAnime.getMediaType();
             await getSeason;
             await getMediaType;
-            await new EpisodeMappingHelper(newAnime).generateEpisodeMapping();
+            await EpisodeMappingHelper.getEpisodeMappings(newAnime);
         } else if (mergeType === MergeTypes.UPDATE) {
             newAnime.addEpisodeBindingPools(...anime.episodeBindingPools, ...this.episodeBindingPools);
         }

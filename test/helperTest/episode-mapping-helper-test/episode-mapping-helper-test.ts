@@ -50,8 +50,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        const result = await episodeMappingInstance.generateEpisodeMapping();
+        const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
         // Extract results.
 
@@ -118,8 +117,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        const result = await episodeMappingInstance.generateEpisodeMapping();
+        const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
         // Extract results.
 
@@ -181,8 +179,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             // Testing
 
-            const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-            const result = await episodeMappingInstance.generateEpisodeMapping();
+            const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
             // Result checking
             for (const episode of aSeries.getAllDetailedEpisodes()) {
@@ -215,8 +212,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        const result = await episodeMappingInstance.generateEpisodeMapping();
+        const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
         // Result checking
         for (const episode of aSeries.getAllDetailedEpisodes()) {
@@ -384,7 +380,7 @@ describe('Episode mapping | Mapping Only', () => {
             ep1r.matches = 1;
             const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
             const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
-            const sorted  = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
+            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
             const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
             strictEqual(sorted[0], ep2erec);
             strictEqual(sorted[1], ep1erec);
@@ -403,19 +399,12 @@ describe('Episode mapping | Mapping Only', () => {
             const ep2erec = new EpisodeRatedEqualityContainer(ep2r);
             const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
 
-            const sorted  = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
+            const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
             const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
             strictEqual(sorted[0], ep1erec);
             strictEqual(sorted[1], ep2erec);
             strictEqual(sorted2[0], ep1erec);
             strictEqual(sorted2[1], ep2erec);
-        });
-
-        test('should get the right max episode number', async () => {
-            const episodeMappingInstance = new EpisodeMappingHelper(new Series());
-            const episodes = [new Episode(1), new Episode(2), new Episode(3)];
-            const result = episodeMappingInstance['getMaxEpisodeNumber'](episodes);
-            strictEqual(result, 3);
         });
     });
 

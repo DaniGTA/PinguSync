@@ -62,8 +62,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        const result = await episodeMappingInstance.generateEpisodeMapping();
+        const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
         // Extract results.
 
@@ -124,8 +123,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        const result = await episodeMappingInstance.generateEpisodeMapping();
+        const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
         // Extract results.
 
@@ -193,8 +191,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Testing
 
-        const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        const result = await episodeMappingInstance.generateEpisodeMapping();
+        const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
         // Extract results.
 
@@ -267,8 +264,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
             // Testing
 
-            const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-            const result = await episodeMappingInstance.generateEpisodeMapping();
+            const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
             // Extract results.
 

@@ -39,8 +39,9 @@ export default class MainListManager {
                         }
                     }
                 } else {
-                    const episodeMapping = await new EpisodeMappingHelper(series).generateEpisodeMapping();
-                    series.addEpisodeBindingPools(...episodeMapping);
+                    const instance = await EpisodeMappingHelper.getEpisodeMappings(series);
+                    //const episodeMapping = await new EpisodeMappingHelper(series).generateEpisodeMapping();
+                    series.addEpisodeBindingPools(...instance);
                     results.push(series);
                 }
                 if (results.length === 0) {

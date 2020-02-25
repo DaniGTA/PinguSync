@@ -237,6 +237,16 @@ export default abstract class ProviderLocalData {
         return this.detailEpisodeInfo;
     }
 
+    public getAllRegularEpisodes(): Episode[] {
+        const result = [];
+        for (const episode of this.detailEpisodeInfo) {
+            if (episode.type === EpisodeType.REGULAR_EPISODE || episode.type === EpisodeType.UNKOWN) {
+                result.push(episode);
+            }
+        }
+        return result;
+    }
+
     public addDetailedEpisodeInfos(...episodes: Episode[]): void {
         for (const episode of episodes) {
             episode.provider = this.provider;

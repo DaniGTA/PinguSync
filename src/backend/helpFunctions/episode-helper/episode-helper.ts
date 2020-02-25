@@ -91,6 +91,15 @@ export default class EpisodeHelper {
         return episodes.sort((a, b) => this.sortingEpisodeComperator(a, b, season));
     }
 
+    /**
+    * Checks if `a` and `b` have the same id.
+    * @param a episode a will be compared with b
+    * @param b episode b will be compared with a
+    */
+    public static isSameEpisodeID(a: Episode, b: Episode): boolean {
+        return a.id === b.id;
+    }
+
     private static sortingEpisodeComperator(a: Episode, b: Episode, season?: Season): number {
         if ((a.type === EpisodeType.SPECIAL && b.type !== EpisodeType.SPECIAL)) {
             return 1;
@@ -110,6 +119,7 @@ export default class EpisodeHelper {
             return 1;
         }
     }
+
 
 }
 
