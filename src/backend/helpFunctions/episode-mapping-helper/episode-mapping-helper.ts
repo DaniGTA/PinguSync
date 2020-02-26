@@ -12,6 +12,7 @@ import Season from '../../controller/objects/meta/season';
 import EpisodeBindingPoolHelper from '../episode-binding-pool-helper';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import logger from '../../logger/logger';
+import MainListSearcher from '../../controller/main-list-manager/main-list-searcher';
 
 export default class EpisodeMappingHelper {
     /**
@@ -19,7 +20,7 @@ export default class EpisodeMappingHelper {
      */
     public static async getEpisodeMappings(series: Series): Promise<EpisodeBindingPool[]> {
         const allProviders = series.getAllProviderLocalDatasWithSeasonInfo();
-        const allEpisodeBindingPools = (await series.getAllRelations()).flatMap(x => x.episodeBindingPools);
+        const allEpisodeBindingPools = await this.getAllEpisodeBindingsThatAreRelevant(allProviders);
         for (const provider of allProviders) {
             if (!this.detailedEpisodeIsPresent(provider.providerLocalData)) {
                 const generateEpisodes = await this.generateMissingEpisodes(provider.providerLocalData, provider.seasonTarget);
@@ -147,5 +148,30 @@ export default class EpisodeMappingHelper {
             }
         }
         return generatedEpisodes;
+    }
+
+    /**
+     * get all relevant episode bindings from other series. (On season difference it can be helpfull to get the bindings from other season to calc the episode difference)
+     */
+    private static async getAllEpisodeBindingsThatAreRelevant(providers: ProviderDataWithSeasonInfo[]): Promise<EpisodeBindingPool[]> {
+        const finalEpisodeBindingPool: EpisodeBindingPool[] = [];
+        const allProvidersWithNoUniqueIdAndDetailedEpisodes = this.getAllProvidersWithNoUniqueIdAndDetailedEpisodes(providers);
+        for (const providersWithNoUniqueIdAndDetailedEpisodes of allProvidersWithNoUniqueIdAndDetailedEpisodes) {
+            const providerId = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.id;
+            const providerName = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.provider;
+            const allSeriesWithProvider = MainListSearcher.findAllSeriesByProvider(providerId, providerName);
+            finalEpisodeBindingPool.push(...(await allSeriesWithProvider).flatMap(x => x.episodeBindingPools));
+        }
+        return finalEpisodeBindingPool;
+    }
+
+    private static getAllProvidersWithNoUniqueIdAndDetailedEpisodes(providers: ProviderDataWithSeasonInfo[]): ProviderDataWithSeasonInfo[] {
+        const allProvidersWithNoUniqueIdAndEpisodeTitles = [];
+        for (const provider of providers) {
+            if (this.detailedEpisodeIsPresent(provider.providerLocalData)) {
+                allProvidersWithNoUniqueIdAndEpisodeTitles.push(provider);
+            }
+        }
+        return allProvidersWithNoUniqueIdAndEpisodeTitles;
     }
 }

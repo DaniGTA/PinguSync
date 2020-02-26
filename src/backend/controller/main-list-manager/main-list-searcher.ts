@@ -101,20 +101,23 @@ export default class MainListSearcher {
         return foundedSameSeries;
     }
 
-    private async findSeriesByProvider(providerId: string | number, providerName: string, providerSeason: Season): Promise<Series | null> {
+    public static async findAllSeriesByProvider(providerId: string | number, providerName: string, providerSeason?: Season): Promise<Series[]> {
         const list = await MainListManager.getMainList();
+        const result = [];
         for (const entry of list) {
             const providers = entry.getAllProviderBindings();
             for (const provider of providers) {
                 if (ProviderComperator.simpleProviderIdCheck(provider.id, providerId)) {
                     if (providerName === provider.providerName) {
-                        if (SeasonComperator.isSameSeason(provider.targetSeason, providerSeason)) {
-                            return entry;
+                        if (providerSeason === undefined) {
+                            result.push(entry);
+                        } else if (SeasonComperator.isSameSeason(provider.targetSeason, providerSeason)) {
+                            result.push(entry);
                         }
                     }
                 }
             }
         }
-        return null;
+        return result;
     }
 }
