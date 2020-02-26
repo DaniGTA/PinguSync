@@ -159,7 +159,6 @@ export default class EpisodeRatedEqualityHelper {
 
     private getMaxEpisodeShiftingDifference(providerA: ProviderLocalData, providerB: ProviderLocalData): number {
         let maxEpisodeDifference = 0;
-        let providerIsMapped = false;
 
         const lengthA = providerA.detailEpisodeInfo.length;
         const lengthB = providerB.detailEpisodeInfo.length;
@@ -182,15 +181,11 @@ export default class EpisodeRatedEqualityHelper {
                         maxEpisodeDifference = difference;
                     }
                     break;
-                } else if (this.isProviderInMapping(episodeA, providerB.provider, this.targetBindingPools)) {
-                    providerIsMapped = true;
-                } else if (providerIsMapped) {
-                    const difference = EpisodeHelper.getEpisodeDifference(episodeA, episodeB);
+                } else if (this.isSameProviderNameInMapping(episodeA, providerB, this.allBindingPools)) {
+                    const difference = EpisodeHelper.getEpisodeDifference(episodeA, episodeB) + 1;
                     if (difference > maxEpisodeDifference) {
                         maxEpisodeDifference = difference;
                     }
-                    providerIsMapped = false;
-                    break;
                 }
             }
             if (index === 20 && maxEpisodeDifference === 0) {
@@ -210,11 +205,11 @@ export default class EpisodeRatedEqualityHelper {
         return false;
     }
 
-    private isProviderInMapping(episode: Episode, providerName: string, bindingPools: EpisodeBindingPool[]): boolean {
-        if (bindingPools.length !== 0 && episode.provider !== providerName) {
+    private isSameProviderNameInMapping(episode: Episode, providerB: ProviderLocalData, bindingPools: EpisodeBindingPool[]): boolean {
+        if (bindingPools.length !== 0 && episode.provider !== providerB.provider) {
             const list = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(this.getAllEpsidoeBindingPoolsThatAreRelated(), episode);
             for (const mapping of list) {
-                if (mapping.provider === providerName) {
+                if (mapping.provider === providerB.provider && (mapping.providerSeriesId !== providerB.id)) {
                     return true;
                 }
             }

@@ -19,6 +19,7 @@ export default class EpisodeMappingHelper {
      * static getEpisodeMappings
      */
     public static async getEpisodeMappings(series: Series): Promise<EpisodeBindingPool[]> {
+        const season = series.getSeason();
         const allProviders = series.getAllProviderLocalDatasWithSeasonInfo();
         const allEpisodeBindingPools = await this.getAllEpisodeBindingsThatAreRelevant(allProviders);
         for (const provider of allProviders) {
@@ -27,15 +28,16 @@ export default class EpisodeMappingHelper {
                 provider.providerLocalData.addDetailedEpisodeInfos(...generateEpisodes);
             }
         }
-
+        allProviders.sort((a) => Number(this.detailedEpisodeHasTitle(a.providerLocalData) ? -1 : 1));
         for (const providerA of allProviders) {
             const compareToProviders = this.getAllProviderThatCanBeMappedToEpisodeOfProvider(providerA, allProviders);
+            compareToProviders.sort((a) => Number(this.detailedEpisodeHasTitle(a.providerLocalData) ? -1 : 1));
             for (const providerB of compareToProviders) {
                 try {
                     const ratingInstance = new EpisodeRatedEqualityHelper(series.episodeBindingPools, allEpisodeBindingPools);
                     const packageA = new ProviderAndSeriesPackage(providerA.providerLocalData, series);
                     const packageB = new ProviderAndSeriesPackage(providerB.providerLocalData, series);
-                    const ratings = ratingInstance.getRatedEqualityFromTwoProviders(packageA, packageB);
+                    const ratings = ratingInstance.getRatedEqualityFromTwoProviders(packageA, packageB, await season);
                     const bestRatings = await EpisodeRatedEqualityContainerHelper.getBestResultsFromEpisodeRatedEqualityContainer(ratings);
                     for (const bestRating of bestRatings) {
                         if (!this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(series.episodeBindingPools, bestRating)) {
@@ -122,10 +124,10 @@ export default class EpisodeMappingHelper {
     }
 
     /**
- * This converts a episode number to a list of episodes.
- * @param provider
- * @param season
- */
+     * This converts a episode number to a list of episodes.
+     * @param provider
+     * @param season
+     */
     private static async generateMissingEpisodes(provider: ProviderLocalData, season?: Season): Promise<Episode[]> {
         const generatedEpisodes: Episode[] = [];
         if (provider.episodes) {
@@ -160,7 +162,7 @@ export default class EpisodeMappingHelper {
             const providerId = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.id;
             const providerName = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.provider;
             const allSeriesWithProvider = MainListSearcher.findAllSeriesByProvider(providerId, providerName);
-            finalEpisodeBindingPool.push(...(await allSeriesWithProvider).flatMap(x => x.episodeBindingPools));
+            finalEpisodeBindingPool.push(...(await allSeriesWithProvider).flatMap((x) => x.episodeBindingPools));
         }
         return finalEpisodeBindingPool;
     }

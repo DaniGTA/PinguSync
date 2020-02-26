@@ -255,6 +255,7 @@ describe('Episode mapping | Mapping Only', () => {
         cProvider.episodes = 3;
 
         await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(cProvider, new Season([2])));
+        await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
 
         // Testing
         // tslint:disable-next-line: no-string-literal

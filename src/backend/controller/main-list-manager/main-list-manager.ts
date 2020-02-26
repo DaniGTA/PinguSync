@@ -40,7 +40,6 @@ export default class MainListManager {
                     }
                 } else {
                     const instance = await EpisodeMappingHelper.getEpisodeMappings(series);
-                    //const episodeMapping = await new EpisodeMappingHelper(series).generateEpisodeMapping();
                     series.addEpisodeBindingPools(...instance);
                     results.push(series);
                 }

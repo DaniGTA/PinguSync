@@ -522,7 +522,8 @@ describe('Basic List | Testrun', () => {
                 if (episode.season?.getSingleSeasonNumber() === 1) {
                     notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode).length, 0);
                 } else if (episode.season?.getSingleSeasonNumber() === 2) {
-                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode).length, 0);
+                    const result = await EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
+                    notStrictEqual(result.length, 0);
                 } else if (episode.season?.getSingleSeasonNumber() === 3) {
                     const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
                     const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode).length;
