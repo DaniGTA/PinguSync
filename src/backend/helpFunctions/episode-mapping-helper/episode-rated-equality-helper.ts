@@ -26,7 +26,6 @@ export default class EpisodeRatedEqualityHelper {
         const providerA = packageA.provider;
         const providerB = packageB.provider;
 
-        const episodeDiff = this.getMaxEpisodeShiftingDifference(providerA, providerB);
 
         /**
          * Provider A targetSeason.
@@ -44,21 +43,40 @@ export default class EpisodeRatedEqualityHelper {
 
 
         if (providerB.detailEpisodeInfo.length !== 0 && providerA.detailEpisodeInfo.length !== 0) {
-            return this.performRatingEqualityOfEpisodes(providerA, providerB, aTargetS, bTargetS, season, this.targetBindingPools, episodeDiff);
+            return this.performRatingEqualityOfEpisodes(providerA, providerB, aTargetS, bTargetS, season, this.targetBindingPools, 0);
         }
         return [];
+    }
+
+    private getAllRelevantEpisodes(provider: ProviderLocalData, otherProvider: ProviderLocalData) {
+        const result = [];
+        let diff = 0;
+        let diffFound = false;
+
+        for (const detailedEpA of provider.detailEpisodeInfo) {
+            if (!this.isSameProviderNameInMapping(detailedEpA, otherProvider, this.allBindingPools)) {
+                if (!diffFound) {
+                    diff = detailedEpA.getEpNrAsNr() - otherProvider.detailEpisodeInfo[0].getEpNrAsNr();
+                }
+                diffFound = true;
+                result.push(detailedEpA);
+            }
+        }
+        return { result, diff };
     }
 
     // tslint:disable-next-line: max-line-length
     private performRatingEqualityOfEpisodes(providerA: ProviderLocalData, providerB: ProviderLocalData, aTargetS: Season | undefined, bTargetS: Season | undefined, season: Season | undefined, currentBindingPool: EpisodeBindingPool[], episodeDiff: number): EpisodeRatedEqualityContainer[] {
         const ratedEquality: EpisodeRatedEqualityContainer[] = [];
+        const allRelevantResultA = this.getAllRelevantEpisodes(providerA, providerB);
+        const allRelevantResultB = this.getAllRelevantEpisodes(providerB, providerA);
         let fastCheck = 0;
         let fastStreakEnabled = true;
-
+        episodeDiff = allRelevantResultA.diff;
         let providerAEpDiff = episodeDiff;
-        for (const detailedEpA of providerA.detailEpisodeInfo) {
-            for (let index = fastCheck; index < providerB.detailEpisodeInfo.length; index++) {
-                const detailedEpB = providerB.detailEpisodeInfo[index];
+        for (const detailedEpA of allRelevantResultA.result) {
+            for (let index = fastCheck; index < allRelevantResultB.result.length; index++) {
+                const detailedEpB = allRelevantResultB.result[index];
                 let result = this.getRatedEqualityContainer(detailedEpA, detailedEpB, providerA, providerB, aTargetS, bTargetS, season, currentBindingPool, providerAEpDiff);
                 if (result !== undefined) {
                     if (result.result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || (result.result.matchAble !== 0 &&

@@ -4,7 +4,9 @@ import Episode from './episode';
 
 export default class EpisodeMapping {
     public static readonly currentMappingVersion = 1;
-
+    /**
+     * The id of the episode.
+     */
     public readonly id: string;
     public readonly providerSeriesId: number | string;
     public readonly episodeNumber: number | string;

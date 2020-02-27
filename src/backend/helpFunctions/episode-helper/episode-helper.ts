@@ -6,6 +6,7 @@ import EpisodeComperator from '../comperators/episode-comperator';
 import SeasonComperator from '../comperators/season-comperator';
 import listHelper from '../list-helper';
 import EpisodeRelationResult from './episode-relation-result';
+import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 
 export default class EpisodeHelper {
 
@@ -83,6 +84,13 @@ export default class EpisodeHelper {
     public static getEpisodeDifference(episodeA: Episode, episodeB: Episode): number {
         if (episodeA.isEpisodeNumberARealNumber() && episodeB.isEpisodeNumberARealNumber()) {
             return episodeA.getEpNrAsNr() - episodeB.getEpNrAsNr();
+        }
+        return 0;
+    }
+
+    public static getEpisodeAndEpisodeMappingDifference(episodeA: Episode, episodeMappingB: EpisodeMapping): number {
+        if (episodeA.isEpisodeNumberARealNumber() && !isNaN(episodeMappingB.episodeNumber as number)) {
+            return episodeA.getEpNrAsNr() - (episodeMappingB.episodeNumber as number);
         }
         return 0;
     }

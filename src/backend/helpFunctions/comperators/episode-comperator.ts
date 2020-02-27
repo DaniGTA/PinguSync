@@ -204,6 +204,9 @@ export default class EpisodeComperator {
         if (aEpisodeMapping.id === aEpisode.id) {
             return true;
         } else if (aEpisodeMapping.provider === aEpisode.provider) {
+            if (aEpisodeMapping.providerSeriesId !== aEpisode.providerId) {
+                return false;
+            }
             // tslint:disable-next-line: triple-equals
             if (aEpisodeMapping.episodeNumber == aEpisode.episodeNumber && SeasonComperator.isSameSeason(aEpisodeMapping.season, aEpisode.season)) {
                 return true;

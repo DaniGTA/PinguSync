@@ -10,6 +10,7 @@ import { MediaType } from '../../../objects/meta/media-type';
 import Name from '../../../objects/meta/name';
 import Overview from '../../../objects/meta/overview';
 import { ProviderInfoStatus } from './provider-info-status';
+import EpisodeMapping from '../../../objects/meta/episode/episode-mapping';
 
 export default abstract class ProviderLocalData {
 
@@ -235,6 +236,10 @@ export default abstract class ProviderLocalData {
 
     public getDetailEpisodeInfos(): Episode[] {
         return this.detailEpisodeInfo;
+    }
+
+    public getDetailEpisodeInfosByMapping(episdoeMapping: EpisodeMapping): Episode | undefined {
+        return this.detailEpisodeInfo.find(x => x.id === episdoeMapping.id);
     }
 
     public getAllRegularEpisodes(): Episode[] {
