@@ -8,7 +8,7 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import dateHelper from '../date-helper';
 import seasonHelper from '../season-helper/season-helper';
-import ProviderDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
 import SeasonAwarenessCreatorSeasonNumber from './season-awareness-helper/season-awareness-creator-season-number';
 import SeasonAwarenessFindSeasonNumber from './season-awareness-helper/season-awareness-find-season-number';
@@ -49,8 +49,8 @@ export default class ProviderHelper {
         return series;
     }
 
-    public static async requestUpgradeAllCurrentinfos(series: Series, force: boolean): Promise<ProviderDataWithSeasonInfo[]> {
-        const resultList: ProviderDataWithSeasonInfo[] = [];
+    public static async requestUpgradeAllCurrentinfos(series: Series, force: boolean): Promise<ProviderLocalDataWithSeasonInfo[]> {
+        const resultList: ProviderLocalDataWithSeasonInfo[] = [];
         const providerLocalDatas = series.getAllProviderLocalDatas();
         for (const providerLocalData of providerLocalDatas) {
             try {
@@ -120,7 +120,7 @@ export default class ProviderHelper {
     }
 
     // tslint:disable-next-line: max-line-length
-    public static isProviderTargetAchievFailed(currentResult: ProviderDataWithSeasonInfo | null, lastLocalDataResult: ProviderDataWithSeasonInfo | null, target: ProviderInfoStatus) {
+    public static isProviderTargetAchievFailed(currentResult: ProviderLocalDataWithSeasonInfo | null, lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null, target: ProviderInfoStatus) {
         if (lastLocalDataResult && currentResult) {
             if (currentResult.providerLocalData.infoStatus > target) {
                 if (currentResult.providerLocalData.infoStatus !== lastLocalDataResult.providerLocalData.infoStatus) {
@@ -171,8 +171,8 @@ export default class ProviderHelper {
     }
 
     private static async requestProviderToTarget(provider: ExternalProvider, firstSeason: Series | null, tempSeriesCopy: Series, target: ProviderInfoStatus) {
-        let lastLocalDataResult: ProviderDataWithSeasonInfo | null = null;
-        let currentResult: ProviderDataWithSeasonInfo | null = null;
+        let lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null = null;
+        let currentResult: ProviderLocalDataWithSeasonInfo | null = null;
         let requestResult: MultiProviderResult | null = null;
         do {
             requestResult = null;
@@ -195,8 +195,8 @@ export default class ProviderHelper {
         return requestResult;
     }
 
-    private static async requestAllListProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderDataWithSeasonInfo[]> {
-        const results: ProviderDataWithSeasonInfo[] = [];
+    private static async requestAllListProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderLocalDataWithSeasonInfo[]> {
+        const results: ProviderLocalDataWithSeasonInfo[] = [];
         const tempSeriesCopy = Object.assign(new Series(), series);
         const season = series.getSeason();
         const currentProviders = series.getAllProviderLocalDatas();
@@ -230,8 +230,8 @@ export default class ProviderHelper {
         return results;
     }
 
-    private static async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus, seasonAware: boolean): Promise<ProviderDataWithSeasonInfo[]> {
-        const results: ProviderDataWithSeasonInfo[] = [];
+    private static async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus, seasonAware: boolean): Promise<ProviderLocalDataWithSeasonInfo[]> {
+        const results: ProviderLocalDataWithSeasonInfo[] = [];
         const currentProviders = series.getAllProviderLocalDatas();
         const tempSeriesCopy = Object.assign(new Series(), series);
         const infoProvidersThatNeedUpdates = this.getInfoProviderThatNeedUpdates(currentProviders);

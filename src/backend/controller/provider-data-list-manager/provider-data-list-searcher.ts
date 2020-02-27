@@ -1,5 +1,5 @@
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import LocalDataBind from '../objects/extension/provider-extension/binding/local-data-bind';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import ProviderDataListManager from './provider-data-list-manager';
@@ -61,19 +61,19 @@ export default class ProviderDataListSearcher {
         return results;
     }
 
-    public static getAllBindedProviderWithSeasonInfo(...bindings: LocalDataBind[]): ProviderDataWithSeasonInfo[] {
+    public static getAllBindedProviderLocalDataWithSeasonInfo(...bindings: LocalDataBind[]): ProviderLocalDataWithSeasonInfo[] {
         const localDataList: ProviderLocalData[] = ProviderDataListManager.getProviderDataListSync();
-        const results: ProviderDataWithSeasonInfo[] = [];
+        const results: ProviderLocalDataWithSeasonInfo[] = [];
         const len = localDataList.length;
         for (const binding of bindings) {
             if (this.isProviderLocalDataSavedIndexValid(localDataList, binding)) {
-                results.push(new ProviderDataWithSeasonInfo(localDataList[binding.lastIndex as number], binding.targetSeason));
+                results.push(new ProviderLocalDataWithSeasonInfo(localDataList[binding.lastIndex as number], binding.targetSeason));
             } else {
              for (let index = 0; index < len; index++) {
                 const localData = localDataList[index];
                 if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
                         binding.lastIndex = index;
-                        results.push(new ProviderDataWithSeasonInfo(localData, binding.targetSeason));
+                        results.push(new ProviderLocalDataWithSeasonInfo(localData, binding.targetSeason));
                         break;
                     }
                 }

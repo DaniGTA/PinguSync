@@ -3,7 +3,7 @@ import ProviderDataListSearcher from '../../../../../backend/controller/provider
 import ExternalProvider from '../../../../api/provider/external-provider';
 import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderComperator from '../../../../helpFunctions/comperators/provider-comperator';
-import ProviderDataWithSeasonInfo from '../../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import seasonHelper from '../../../../helpFunctions/season-helper/season-helper';
 import logger from '../../../../logger/logger';
 import { InfoProviderLocalData } from '../../../provider-manager/local-data/info-provider-local-data';
@@ -49,7 +49,7 @@ export default class SeriesProviderExtension {
         }
     }
 
-    public async addProviderDatasWithSeasonInfos(...localdatas: ProviderDataWithSeasonInfo[]) {
+    public async addProviderDatasWithSeasonInfos(...localdatas: ProviderLocalDataWithSeasonInfo[]) {
         logger.debug('addProviderDatasWithSeasonInfo: adding ' + localdatas.length);
         try {
             for (let index = 0; index < localdatas.length; index++) {
@@ -78,13 +78,13 @@ export default class SeriesProviderExtension {
         return realData as InfoProviderLocalData[];
     }
 
-    public getListProvidersInfosWithSeasonInfo(): ProviderDataWithSeasonInfo[] {
-        const realData = ProviderDataListSearcher.getAllBindedProviderWithSeasonInfo(...this.listProviderInfos);
+    public getListProvidersLocalDataInfosWithSeasonInfo(): ProviderLocalDataWithSeasonInfo[] {
+        const realData = ProviderDataListSearcher.getAllBindedProviderLocalDataWithSeasonInfo(...this.listProviderInfos);
         return realData;
     }
 
-    public getInfoProvidersInfosWithSeasonInfo(): ProviderDataWithSeasonInfo[] {
-        const realData = ProviderDataListSearcher.getAllBindedProviderWithSeasonInfo(...this.infoProviderInfos);
+    public getInfoProvidersLocalDataInfosWithSeasonInfo(): ProviderLocalDataWithSeasonInfo[] {
+        const realData = ProviderDataListSearcher.getAllBindedProviderLocalDataWithSeasonInfo(...this.infoProviderInfos);
         return realData;
     }
 
@@ -147,10 +147,10 @@ export default class SeriesProviderExtension {
         return localdata;
     }
 
-    public getAllProviderLocalDatasWithSeasonInfo(): ProviderDataWithSeasonInfo[] {
-        const localdata: ProviderDataWithSeasonInfo[] = [];
-        localdata.push(...this.getListProvidersInfosWithSeasonInfo());
-        localdata.push(...this.getInfoProvidersInfosWithSeasonInfo());
+    public getAllProviderLocalDatasWithSeasonInfo(): ProviderLocalDataWithSeasonInfo[] {
+        const localdata: ProviderLocalDataWithSeasonInfo[] = [];
+        localdata.push(...this.getListProvidersLocalDataInfosWithSeasonInfo());
+        localdata.push(...this.getInfoProvidersLocalDataInfosWithSeasonInfo());
         return localdata;
     }
     /**
@@ -166,8 +166,8 @@ export default class SeriesProviderExtension {
      * Get a single provider local data with the given provider.
      * @param provider the given provider.
      */
-    public getProviderLocalDataWithSeasonInfo(provider: ExternalProvider): ProviderDataWithSeasonInfo | undefined {
-        const localdata: ProviderDataWithSeasonInfo[] = this.getAllProviderLocalDatasWithSeasonInfo();
+    public getProviderLocalDataWithSeasonInfo(provider: ExternalProvider): ProviderLocalDataWithSeasonInfo | undefined {
+        const localdata: ProviderLocalDataWithSeasonInfo[] = this.getAllProviderLocalDatasWithSeasonInfo();
         return localdata.find((entry) => entry.providerLocalData.provider === provider.providerName);
     }
 }

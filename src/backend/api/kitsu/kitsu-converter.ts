@@ -15,7 +15,7 @@ import ProviderLocalData from '../../controller/provider-manager/local-data/inte
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import { StreamingProviderLocalData } from '../../controller/provider-manager/local-data/streaming-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../logger/logger';
 import AniDBProvider from '../anidb/anidb-provider';
 import AniListProvider from '../anilist/anilist-provider';
@@ -82,7 +82,7 @@ export default new class KitsuConverter {
         if (media.episodes) {
             providerInfos.addDetailedEpisodeInfos(...await this.convertKitsuEpisodesToEpisodes(media.episodes));
         }
-        let providers: Array<ProviderLocalData | ProviderDataWithSeasonInfo> = [];
+        let providers: Array<ProviderLocalData | ProviderLocalDataWithSeasonInfo> = [];
         if (media.mappings) {
             providers = await this.convertKitsuMappingsToProvider(media.mappings);
         }
@@ -91,8 +91,8 @@ export default new class KitsuConverter {
         return mpr;
     }
 
-    public async convertKitsuMappingsToProvider(mappings: IKitsuMappings[]): Promise<Array<ProviderLocalData | ProviderDataWithSeasonInfo>> {
-        const providerLocalData: Array<ProviderLocalData | ProviderDataWithSeasonInfo> = [];
+    public async convertKitsuMappingsToProvider(mappings: IKitsuMappings[]): Promise<Array<ProviderLocalData | ProviderLocalDataWithSeasonInfo>> {
+        const providerLocalData: Array<ProviderLocalData | ProviderLocalDataWithSeasonInfo> = [];
         for (const mapping of mappings) {
             try {
                 if (mapping.externalSite === 'anidb') {
@@ -142,7 +142,7 @@ export default new class KitsuConverter {
             if (result) {
                 const idSeason = result.externalId.split('/');
                 const seasonnumber = Number(idSeason[1]);
-                const localdata = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(idSeason[0], TVDBProvider), new Season(seasonnumber));
+                const localdata = new ProviderLocalDataWithSeasonInfo(new InfoProviderLocalData(idSeason[0], TVDBProvider), new Season(seasonnumber));
                 providerLocalData.push(localdata);
             }
         } catch (err) {

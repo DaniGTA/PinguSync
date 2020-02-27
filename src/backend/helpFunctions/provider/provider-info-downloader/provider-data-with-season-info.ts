@@ -1,7 +1,7 @@
 import Season from '../../../controller/objects/meta/season';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 
-export default class ProviderDataWithSeasonInfo {
+export default class ProviderLocalDataWithSeasonInfo {
     public providerLocalData: ProviderLocalData;
     public seasonTarget: Season | undefined;
 

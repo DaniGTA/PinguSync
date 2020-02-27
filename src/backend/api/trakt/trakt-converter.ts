@@ -15,7 +15,7 @@ import { ProviderInfoStatus } from '../../controller/provider-manager/local-data
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
@@ -42,7 +42,7 @@ export default new class TraktConverter {
             providerInfo.watchStatus = WatchStatus.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
             providerInfo.infoStatus = ProviderInfoStatus.BASIC_INFO;
-            result.push(new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, new Season([season.number]))));
+            result.push(new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(providerInfo, new Season([season.number]))));
         }
         return result;
     }

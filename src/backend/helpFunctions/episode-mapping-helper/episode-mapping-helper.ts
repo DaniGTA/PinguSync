@@ -1,6 +1,6 @@
 import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
 import Series from '../../controller/objects/series';
-import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import EpisodeRatedEqualityHelper from './episode-rated-equality-helper';
 import ProviderAndSeriesPackage from './provider-series-package';
@@ -52,7 +52,7 @@ export default class EpisodeMappingHelper {
         return series.episodeBindingPools;
     }
 
-    private static getAllProviderThatCanBeMappedToEpisodeOfProvider(targetProvider: ProviderDataWithSeasonInfo, allProviders: ProviderDataWithSeasonInfo[]): ProviderDataWithSeasonInfo[] {
+    private static getAllProviderThatCanBeMappedToEpisodeOfProvider(targetProvider: ProviderLocalDataWithSeasonInfo, allProviders: ProviderLocalDataWithSeasonInfo[]): ProviderLocalDataWithSeasonInfo[] {
         if (this.containsProviderEpisodes(targetProvider.providerLocalData)) {
             const allProvidersWithEpisodes = this.getAllProviderThatContainsEpisodes(allProviders);
             const providerHasEpisodeTitles = this.detailedEpisodeHasTitle(targetProvider.providerLocalData);
@@ -89,8 +89,8 @@ export default class EpisodeMappingHelper {
     }
 
 
-    private static getAllProviderThatContainsEpisodes(providers: ProviderDataWithSeasonInfo[]): ProviderDataWithSeasonInfo[] {
-        const listWithProvidersThatContainsEpisodes: ProviderDataWithSeasonInfo[] = [];
+    private static getAllProviderThatContainsEpisodes(providers: ProviderLocalDataWithSeasonInfo[]): ProviderLocalDataWithSeasonInfo[] {
+        const listWithProvidersThatContainsEpisodes: ProviderLocalDataWithSeasonInfo[] = [];
         for (const provider of providers) {
             if (this.containsProviderEpisodes(provider.providerLocalData)) {
                 listWithProvidersThatContainsEpisodes.push(provider);
@@ -155,7 +155,7 @@ export default class EpisodeMappingHelper {
     /**
      * get all relevant episode bindings from other series. (On season difference it can be helpfull to get the bindings from other season to calc the episode difference)
      */
-    private static async getAllEpisodeBindingsThatAreRelevant(providers: ProviderDataWithSeasonInfo[]): Promise<EpisodeBindingPool[]> {
+    private static async getAllEpisodeBindingsThatAreRelevant(providers: ProviderLocalDataWithSeasonInfo[]): Promise<EpisodeBindingPool[]> {
         const finalEpisodeBindingPool: EpisodeBindingPool[] = [];
         const allProvidersWithNoUniqueIdAndDetailedEpisodes = this.getAllProvidersWithNoUniqueIdAndDetailedEpisodes(providers);
         for (const providersWithNoUniqueIdAndDetailedEpisodes of allProvidersWithNoUniqueIdAndDetailedEpisodes) {
@@ -167,7 +167,7 @@ export default class EpisodeMappingHelper {
         return finalEpisodeBindingPool;
     }
 
-    private static getAllProvidersWithNoUniqueIdAndDetailedEpisodes(providers: ProviderDataWithSeasonInfo[]): ProviderDataWithSeasonInfo[] {
+    private static getAllProvidersWithNoUniqueIdAndDetailedEpisodes(providers: ProviderLocalDataWithSeasonInfo[]): ProviderLocalDataWithSeasonInfo[] {
         const allProvidersWithNoUniqueIdAndEpisodeTitles = [];
         for (const provider of providers) {
             if (this.detailedEpisodeIsPresent(provider.providerLocalData)) {

@@ -12,7 +12,7 @@ import { ProviderInfoStatus } from '../../controller/provider-manager/local-data
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../logger/logger';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
-import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from './season-search-mode';
 import SeasonSearchModeHelper from './season-search-mode-helper';
 import listHelper from '../list-helper';
@@ -178,7 +178,7 @@ class SeasonHelper {
                         const newProvider = new ListProviderLocalData(prequelId, entry.provider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
                         newProvider.sequelIds.push(entry.id as number);
-                        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(newProvider));
+                        await series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(newProvider));
                     } else if (entry instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;

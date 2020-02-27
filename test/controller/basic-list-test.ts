@@ -17,7 +17,7 @@ import { ProviderInfoStatus } from '../../src/backend/controller/provider-manage
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper';
-import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
@@ -429,7 +429,7 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(79352, TraktProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s1provider1, new Season([1])));
+        await series1.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s1provider1, new Season([1])));
 
         // s2
         const series2 = new Series();
@@ -496,13 +496,13 @@ describe('Basic List | Testrun', () => {
         const series4 = new Series();
         const s4provider1 = new ListProviderLocalData(109963, AniListProvider);
         s4provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series4.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s4provider1, new Season([4])));
+        await series4.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s4provider1, new Season([4])));
 
         // s3
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(94084, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(s3provider1, new Season([3])));
+        await series3.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s3provider1, new Season([3])));
 
         await ListController.instance.addSeriesToMainList(series1, series2);
         await ListController.instance.addSeriesToMainList(series3);

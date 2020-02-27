@@ -10,6 +10,7 @@ import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderAndSeriesPackage from './provider-series-package';
 import Episode from '../../controller/objects/meta/episode/episode';
+import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 
 
 export default class EpisodeRatedEqualityHelper {
@@ -48,7 +49,7 @@ export default class EpisodeRatedEqualityHelper {
         return [];
     }
 
-    private getAllRelevantEpisodes(provider: ProviderLocalData, otherProvider: ProviderLocalData) {
+    private getAllRelevantEpisodes(provider: ProviderLocalDataWithSeasonInfo, otherProvider: ProviderLocalData) {
         const result = [];
         let diff = 0;
         let diffFound = false;

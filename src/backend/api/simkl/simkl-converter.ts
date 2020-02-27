@@ -11,7 +11,7 @@ import { ProviderInfoStatus } from '../../controller/provider-manager/local-data
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import { StreamingProviderLocalData } from '../../controller/provider-manager/local-data/streaming-provider-local-data';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import AniDBProvider from '../anidb/anidb-provider';
 import MalProvider from '../mal/mal-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
@@ -59,7 +59,7 @@ export default class SimklConverter {
             provider.mediaType = type;
             provider.infoStatus = ProviderInfoStatus.BASIC_INFO;
             provider.rawEntry = searchResult;
-            mprList.push(new MultiProviderResult(new ProviderDataWithSeasonInfo(provider)));
+            mprList.push(new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(provider)));
         }
         return mprList;
     }
@@ -81,7 +81,7 @@ export default class SimklConverter {
         if (response.en_title) {
             provider.addSeriesName(new Name(response.en_title, 'en', NameType.OFFICIAL));
         }
-        const mprList = new MultiProviderResult(new ProviderDataWithSeasonInfo(provider), ...await this.convertAnimeIdsToProviders(response.ids));
+        const mprList = new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(provider), ...await this.convertAnimeIdsToProviders(response.ids));
         return mprList;
     }
 
@@ -138,7 +138,7 @@ export default class SimklConverter {
         return providers;
     }
 
-    private async convertAnimeIdsToProviders(animeIds: ISimklFullInfoIDS): Promise<ProviderDataWithSeasonInfo[]> {
+    private async convertAnimeIdsToProviders(animeIds: ISimklFullInfoIDS): Promise<ProviderLocalDataWithSeasonInfo[]> {
         const providers: ProviderLocalData[] = [];
         if (animeIds.allcin) {
             providers.push(new InfoProviderLocalData(animeIds.allcin, 'allcin'));
@@ -164,9 +164,9 @@ export default class SimklConverter {
         if (animeIds.wikien) {
             providers.push(new InfoProviderLocalData(animeIds.wikien, 'wikien'));
         }
-        const result: ProviderDataWithSeasonInfo[] = [];
+        const result: ProviderLocalDataWithSeasonInfo[] = [];
         for (const iterator of providers) {
-            result.push(new ProviderDataWithSeasonInfo(iterator));
+            result.push(new ProviderLocalDataWithSeasonInfo(iterator));
         }
         return result;
     }

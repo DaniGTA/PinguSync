@@ -11,17 +11,17 @@ import EpisodeHelper from '../../episode-helper/episode-helper';
 import EpisodeRelationResult from '../../episode-helper/episode-relation-result';
 import TitleHelper from '../../name-helper/title-helper';
 import ProviderHelper from '../provider-helper';
-import ProviderDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
 import SeasonAwarenessHelper from './season-awareness-helper';
 import seasonHelper from '../../season-helper/season-helper';
 import listHelper from '../../list-helper';
 
 export default class SeasonAwarenessCreatorSeasonNumber {
-    private finalList: ProviderDataWithSeasonInfo[] = [];
+    private finalList: ProviderLocalDataWithSeasonInfo[] = [];
     private seriesThatShouldAdded: Series[] = [];
-    public async requestSeasonAwareness(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[] = []): Promise<ProviderDataWithSeasonInfo[]> {
-        for (const listProvider of series.getListProvidersInfosWithSeasonInfo()) {
+    public async requestSeasonAwareness(series: Series, extraInfoProviders: ProviderLocalDataWithSeasonInfo[] = []): Promise<ProviderLocalDataWithSeasonInfo[]> {
+        for (const listProvider of series.getListProvidersLocalDataInfosWithSeasonInfo()) {
             if (ProviderList.getExternalProviderInstance(listProvider.providerLocalData).hasEpisodeTitleOnFullInfo) {
                 if (!SeasonAwarenessHelper.isProviderSeasonAware(listProvider)) {
                     try {
@@ -36,7 +36,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         return this.finalList;
     }
 
-    public async requestSeasonAwarnessForProviderLocalData(series: Series, extraInfoProviders: ProviderDataWithSeasonInfo[], providerWithoutSeasonAwarness: ProviderLocalData): Promise<void> {
+    public async requestSeasonAwarnessForProviderLocalData(series: Series, extraInfoProviders: ProviderLocalDataWithSeasonInfo[], providerWithoutSeasonAwarness: ProviderLocalData): Promise<void> {
         let finalSeason: Season | undefined;
         const targetSeason = series.getProviderSeasonTarget(providerWithoutSeasonAwarness.provider);
 
@@ -86,7 +86,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         }
     }
 
-    private async createAwareness(providerThatHasAwarenss: ProviderLocalData, providerThatDontHaveAwareness: ProviderLocalData, targetSeason: Season): Promise<ProviderDataWithSeasonInfo | undefined> {
+    private async createAwareness(providerThatHasAwarenss: ProviderLocalData, providerThatDontHaveAwareness: ProviderLocalData, targetSeason: Season): Promise<ProviderLocalDataWithSeasonInfo | undefined> {
         let currentSeasonPart;
         let currentSearchingSeason;
         let currentProviderThatHasAwareness: ProviderLocalData | undefined = { ...providerThatHasAwarenss } as ProviderLocalData;
@@ -113,13 +113,13 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                 if (result.seasonComplete) {
                     if (currentSearchingSeason !== undefined && ((targetSeason.seasonNumbers.includes(currentSearchingSeason)) ||
                         (result.seasonNumber !== undefined && listHelper.isAnyNumberListEntryInNumberList(result.seasonNumber, targetSeason.seasonNumbers)))) {
-                        const pdwsi = new ProviderDataWithSeasonInfo(providerThatDontHaveAwareness, new Season([currentSearchingSeason], currentSeasonPart));
-                        const pdwsi2 = new ProviderDataWithSeasonInfo(currentProviderThatHasAwareness, new Season([currentSearchingSeason], currentSeasonPart));
+                        const pdwsi = new ProviderLocalDataWithSeasonInfo(providerThatDontHaveAwareness, new Season([currentSearchingSeason], currentSeasonPart));
+                        const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season([currentSearchingSeason], currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);
                         return pdwsi;
                     } else if ((seasonHelper.isSeasonUndefined(targetSeason) && result.seasonComplete && result.seasonNumber !== undefined && result.seasonNumber.length !== 0)) {
-                        const pdwsi = new ProviderDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(result.seasonNumber, currentSeasonPart));
-                        const pdwsi2 = new ProviderDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(result.seasonNumber, currentSeasonPart));
+                        const pdwsi = new ProviderLocalDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(result.seasonNumber, currentSeasonPart));
+                        const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(result.seasonNumber, currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);
                         return pdwsi;
                     } else {
@@ -173,8 +173,8 @@ export default class SeasonAwarenessCreatorSeasonNumber {
 
     private async createTempSeries(listLocalData: ProviderLocalData, currentLocalData: ProviderLocalData, season: Season): Promise<Series> {
         const newSeries = new Series();
-        await newSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(listLocalData, season));
-        await newSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(currentLocalData, season));
+        await newSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(listLocalData, season));
+        await newSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(currentLocalData, season));
         return newSeries;
     }
 

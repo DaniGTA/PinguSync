@@ -9,7 +9,7 @@ import ProviderLocalData from '../../controller/provider-manager/local-data/inte
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
-import ProviderDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 import seasonHelper from '../season-helper/season-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
@@ -100,7 +100,7 @@ export default class ProviderComperator {
         return false;
     }
 
-    public static isBindingAndProviderLocalDataWithSeasonTheSame(pws: ProviderDataWithSeasonInfo, binding: LocalDataBind): boolean {
+    public static isBindingAndProviderLocalDataWithSeasonTheSame(pws: ProviderLocalDataWithSeasonInfo, binding: LocalDataBind): boolean {
         if (this.simpleProviderIdCheck(pws.providerLocalData.id, binding.id)) {
             if (pws.providerLocalData.provider === binding.providerName) {
                 if (pws.seasonTarget && binding.targetSeason) {

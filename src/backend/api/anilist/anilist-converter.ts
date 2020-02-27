@@ -10,7 +10,7 @@ import { WatchStatus } from '../../controller/objects/series';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import listHelper from '../../helpFunctions/list-helper';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import AniListProvider from './anilist-provider';
@@ -119,7 +119,7 @@ export default new class AniListConverter {
         if (typeof entry.media.episodes !== 'undefined') {
             providerInfo.episodes = entry.media.episodes;
         }
-        return new MultiProviderResult(new ProviderDataWithSeasonInfo(providerInfo, new Season(seasonNumber)));
+        return new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(providerInfo, new Season(seasonNumber)));
     }
 
     private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {

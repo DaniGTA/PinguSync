@@ -6,7 +6,7 @@ import Name from '../../controller/objects/meta/name';
 import { NameType } from '../../controller/objects/meta/name-type';
 import Overview from '../../controller/objects/meta/overview';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
-import ProviderDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { Show, Type } from './models/tvmaze-model';
@@ -53,7 +53,7 @@ export default class TVMazeConverter {
         const mpr = new MultiProviderResult(pld);
         if (show.externals.thetvdb) {
             const tvdbProvider = new InfoProviderLocalData(show.externals.thetvdb, TVDBProvider.Instance);
-            mpr.subProviders.push(new ProviderDataWithSeasonInfo(tvdbProvider));
+            mpr.subProviders.push(new ProviderLocalDataWithSeasonInfo(tvdbProvider));
         }
         return mpr;
     }

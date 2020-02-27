@@ -19,7 +19,7 @@ import SeasonComperator from '../../comperators/season-comperator';
 import listHelper from '../../list-helper';
 import TitleHelper from '../../name-helper/title-helper';
 import stringHelper from '../../string-helper';
-import ProviderDataWithSeasonInfo from './provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
 /**
@@ -117,7 +117,7 @@ export default new class ProviderInfoDownloadHelper {
         }
     }
 
-    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider): Promise<ProviderDataWithSeasonInfo> {
+    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider): Promise<ProviderLocalDataWithSeasonInfo> {
         if (!provider.hasUniqueIdForSeasons) {
             const relations = await series.getAllRelations(await MainListManager.getMainList());
             if (relations.length !== 0) {
@@ -132,9 +132,9 @@ export default new class ProviderInfoDownloadHelper {
                                 if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(mediaType, providerData.mediaType)
                                     || this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
                                     if (providerData instanceof ListProviderLocalData) {
-                                        return new ProviderDataWithSeasonInfo(providerData, seriesSeason);
+                                        return new ProviderLocalDataWithSeasonInfo(providerData, seriesSeason);
                                     } else if (providerData instanceof InfoProviderLocalData) {
-                                        return new ProviderDataWithSeasonInfo(providerData, seriesSeason);
+                                        return new ProviderLocalDataWithSeasonInfo(providerData, seriesSeason);
                                     }
                                 }
                             }

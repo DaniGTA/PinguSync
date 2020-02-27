@@ -2,11 +2,11 @@ import Series from '../../../controller/objects/series';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../../controller/provider-manager/provider-list';
 import logger from '../../../logger/logger';
-import ProviderDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 
 export default class SeasonAwarenessHelper {
 
-    public static isSeasonAware(currentProviders: ProviderDataWithSeasonInfo[]): boolean {
+    public static isSeasonAware(currentProviders: ProviderLocalDataWithSeasonInfo[]): boolean {
         let result = false;
         for (const provider of currentProviders) {
             try {
@@ -20,7 +20,7 @@ export default class SeasonAwarenessHelper {
         return result;
     }
 
-    public static isProviderSeasonAware(provider: ProviderDataWithSeasonInfo) {
+    public static isProviderSeasonAware(provider: ProviderLocalDataWithSeasonInfo) {
         if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && !(provider.seasonTarget?.seasonNumbers.includes(1))) {
             return false;
         }

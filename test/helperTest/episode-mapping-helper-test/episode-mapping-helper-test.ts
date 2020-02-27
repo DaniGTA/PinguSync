@@ -15,7 +15,7 @@ import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-map
 import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container';
 import EpisodeRatedEqualityContainerHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-container-helper';
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
-import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
 import TestProvider from '../../controller/objects/testClass/testProvider';
 import TestHelper from '../../test-helper';
@@ -37,7 +37,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.addDetailedEpisodeInfos(new Episode(2));
         aProvider.addDetailedEpisodeInfos(new Episode(3));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
         // B Site
 
@@ -46,7 +46,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
         // Testing
 
@@ -94,7 +94,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.addDetailedEpisodeInfos(new Episode(2));
         aProvider.addDetailedEpisodeInfos(new Episode(3));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
         // B Site
 
@@ -103,7 +103,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
 
         // C Site
@@ -113,7 +113,7 @@ describe('Episode mapping | Mapping Only', () => {
         cProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         cProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(cProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(cProvider, new Season([1])));
 
         // Testing
 
@@ -161,21 +161,21 @@ describe('Episode mapping | Mapping Only', () => {
             const aProvider = new InfoProviderLocalData('1', 'testA');
             aProvider.episodes = 250;
 
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([1])));
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
             // B Site
 
             const bProvider = new ListProviderLocalData('1', 'testB');
             bProvider.episodes = 250;
 
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
             // C Site
 
             const cProvider = new ListProviderLocalData('1', 'testC');
             cProvider.episodes = 250;
 
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(cProvider, new Season([1])));
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(cProvider, new Season([1])));
 
             // Testing
 
@@ -199,7 +199,7 @@ describe('Episode mapping | Mapping Only', () => {
         const aProvider = new InfoProviderLocalData('1', 'testA');
         aProvider.episodes = 3;
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
         // B Site
 
@@ -208,7 +208,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
         // Testing
 
@@ -234,7 +234,7 @@ describe('Episode mapping | Mapping Only', () => {
         aProvider.episodes = 3;
         aProvider.sequelIds.push(2);
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
         // B Site
 
@@ -246,7 +246,7 @@ describe('Episode mapping | Mapping Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(5, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(6, new Season([1])));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
 
         // Sequel
@@ -254,8 +254,8 @@ describe('Episode mapping | Mapping Only', () => {
         const cProvider = new InfoProviderLocalData(2, 'testA');
         cProvider.episodes = 3;
 
-        await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(cProvider, new Season([2])));
-        await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(cProvider, new Season([2])));
+        await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
         // Testing
         // tslint:disable-next-line: no-string-literal
@@ -286,7 +286,7 @@ describe('Episode mapping | Mapping Only', () => {
             aProvider.episodes = 3;
             aProvider.sequelIds.push(2);
 
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([1])));
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
             // B Site
 
@@ -301,15 +301,15 @@ describe('Episode mapping | Mapping Only', () => {
             bProvider.addDetailedEpisodeInfos(new Episode(8, new Season([1])));
             bProvider.addDetailedEpisodeInfos(new Episode(9, new Season([1])));
 
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
             // Sequel
 
             const cProvider = new InfoProviderLocalData(2, 'testA');
             cProvider.episodes = 3;
             cProvider.sequelIds.push(3);
-            await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(cProvider, new Season([2])));
-            await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([2])));
+            await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(cProvider, new Season([2])));
+            await sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([2])));
 
 
             // Sequel 2
@@ -317,8 +317,8 @@ describe('Episode mapping | Mapping Only', () => {
             const dProvider = new InfoProviderLocalData(3, 'testA');
             dProvider.episodes = 3;
 
-            await sequelOfSequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(dProvider, new Season([3])));
-            await sequelOfSequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([3])));
+            await sequelOfSequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(dProvider, new Season([3])));
+            await sequelOfSequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([3])));
 
 
             // Testing

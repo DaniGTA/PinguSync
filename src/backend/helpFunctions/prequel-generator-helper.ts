@@ -5,7 +5,7 @@ import ProviderLocalData from '../controller/provider-manager/local-data/interfa
 import { ListProviderLocalData } from '../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../controller/provider-manager/provider-list';
 import logger from '../logger/logger';
-import ProviderDataWithSeasonInfo from './provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderLocalDataWithSeasonInfo from './provider/provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider/provider-info-downloader/provider-info-downloaderhelper';
 import { MediaType } from '../controller/objects/meta/media-type';
 import MediaTypeComperator from './comperators/media-type-comperator';
@@ -44,9 +44,9 @@ export default class PrequelGeneratorHelper {
         const currentMediaType = mediaType ? mediaType : localdataProvider.mediaType;
         const externalProvider = ProviderList.getExternalProviderInstance(localdataProvider);
         if (localdataProvider instanceof ListProviderLocalData) {
-            newProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider));
+            newProvider = new ProviderLocalDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider));
         } else if (localdataProvider instanceof InfoProviderLocalData) {
-            newProvider = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider));
+            newProvider = new ProviderLocalDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider));
         }
         const newSeries = new Series();
         if (newProvider) {
