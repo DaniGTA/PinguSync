@@ -245,9 +245,10 @@ export default abstract class ProviderLocalData {
         return this.detailEpisodeInfo.find((x) => x.id === episdoeMapping.id);
     }
 
-    public getAllRegularEpisodes(): Episode[] {
+    public getAllRegularEpisodes(season?: Season): Episode[] {
+        const detailsEpisode = this.getAllDetailedEpisodes(season);
         const result = [];
-        for (const episode of this.detailEpisodeInfo) {
+        for (const episode of detailsEpisode) {
             if (episode.type === EpisodeType.REGULAR_EPISODE || episode.type === EpisodeType.UNKOWN) {
                 result.push(episode);
             }

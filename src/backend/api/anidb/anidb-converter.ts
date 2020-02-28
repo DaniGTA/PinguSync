@@ -119,6 +119,8 @@ export default class AniDBConverter {
     public getEpisodeType(episode: EpisodeElement): EpisodeType {
         if (episode.epno._attributes.type === '2' && episode.epno._text.charAt(0) === 'S') {
             return EpisodeType.SPECIAL;
+        } else if (episode.epno._text.charAt(0) === 'T') {
+            return EpisodeType.TRAILER;
         }
         switch (episode.epno._attributes.type) {
             case '1':

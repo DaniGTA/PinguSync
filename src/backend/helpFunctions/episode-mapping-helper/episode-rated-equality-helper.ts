@@ -43,8 +43,8 @@ export default class EpisodeRatedEqualityHelper {
         const result: Episode[] = [];
         let diff: number = 0;
         let lastSuccessFullIndex: number = 0;
-        const aNumberOfEpisodes = provider.providerLocalData.getAllDetailedEpisodes(provider.seasonTarget).length;
-        const bNumberOfEpisodes = otherProvider.providerLocalData.getAllDetailedEpisodes(otherProvider.seasonTarget);
+        const aNumberOfEpisodes = provider.providerLocalData.getAllRegularEpisodes(provider.seasonTarget).length;
+        const bNumberOfEpisodes = otherProvider.providerLocalData.getAllRegularEpisodes(otherProvider.seasonTarget);
 
         let skipNotSameSeason = false;
         if (aNumberOfEpisodes === bNumberOfEpisodes.length) {
@@ -165,17 +165,18 @@ export default class EpisodeRatedEqualityHelper {
         const bTargetS = providerBWithSeason.seasonTarget;
         const result = EpisodeComperator.compareDetailedEpisode(detailedEpA, detailedEpB, aTargetS, bTargetS, season, episodeDiff);
         if (result.matches !== 0) {
+            const epA = new EpisodeProviderBind(detailedEpA, providerA);
+            const epB = new EpisodeProviderBind(detailedEpB, providerB);
             if ((!this.episodeIsAlreadyMappedToProvider(detailedEpA, providerB, currentBindingPool) &&
                 !this.episodeIsAlreadyMappedToProvider(detailedEpB, providerA, currentBindingPool))) {
-                const epA = new EpisodeProviderBind(detailedEpA, providerA);
-                const epB = new EpisodeProviderBind(detailedEpB, providerB);
+
                 return new EpisodeRatedEqualityContainer(result, epA, epB);
             } else {
                 if (this.isEpisodeAlreadyMappedToEpisode(detailedEpA, detailedEpB, currentBindingPool) &&
                     this.isEpisodeAlreadyMappedToEpisode(detailedEpB, detailedEpA, currentBindingPool)) {
                     const trueResult = new ComperatorResult();
                     trueResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    return new EpisodeRatedEqualityContainer(trueResult);
+                    return new EpisodeRatedEqualityContainer(trueResult, epA , epB);
                 }
             }
         }
