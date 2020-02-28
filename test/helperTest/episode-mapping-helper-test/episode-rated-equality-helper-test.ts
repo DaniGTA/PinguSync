@@ -119,7 +119,7 @@ describe('Episode rated equality helper tests | Difference calc only', () => {
 
         strictEqual(resultA.result.length, 2);
         strictEqual(resultB.result.length, 2);
-        strictEqual(resultA.diff, 2);
+        strictEqual(resultA.diff, -2);
         strictEqual(resultB.diff, 2);
     });
 });

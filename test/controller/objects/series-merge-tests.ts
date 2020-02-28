@@ -43,7 +43,7 @@ describe('Series | Merge', () => {
         await seriesB.addListProvider(lpld2);
 
         const merged = await seriesA.merge(seriesB);
-        const result = await merged.getAllDetailedEpisodes();
+        const result = await merged.getAllProviderLocalDatas().flatMap(x => x.getAllDetailedEpisodes());
         strictEqual(result.length, 20);
         return;
     });

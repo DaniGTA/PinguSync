@@ -90,6 +90,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         let currentSeasonPart;
         let currentSearchingSeason;
         let currentProviderThatHasAwareness: ProviderLocalData | undefined = { ...providerThatHasAwarenss } as ProviderLocalData;
+
         while (currentProviderThatHasAwareness) {
             const currentProviderThatHasAwarenessProvider = ProviderList.getExternalProviderInstance(currentProviderThatHasAwareness);
             if (!EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.detailEpisodeInfo)) {
@@ -108,8 +109,8 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                 }
                 currentSeasonPart = this.calcNewSeasonPartNumber(result, currentSeasonPart);
                 const newSeries = [];
-                newSeries.push(await this.createTempSeries(providerThatDontHaveAwareness, currentProviderThatHasAwareness, new Season(result.seasonNumber, undefined)));
-     
+                newSeries.push(await this.createTempSeries(providerThatDontHaveAwareness, currentProviderThatHasAwareness, new Season(result.seasonNumber, currentSeasonPart)));
+
                 if (result.seasonComplete) {
                     if (currentSearchingSeason !== undefined && ((targetSeason.seasonNumbers.includes(currentSearchingSeason)) ||
                         (result.seasonNumber !== undefined && listHelper.isAnyNumberListEntryInNumberList(result.seasonNumber, targetSeason.seasonNumbers)))) {

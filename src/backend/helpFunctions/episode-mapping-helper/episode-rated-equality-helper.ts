@@ -29,8 +29,8 @@ export default class EpisodeRatedEqualityHelper {
         const providerA = packageA.provider;
         const providerB = packageB.provider;
 
-        if (providerA.seasonTarget?.seasonPart !== providerB.seasonTarget?.seasonPart) {
-            return [];
+        if ((providerA.seasonTarget?.seasonPart !== undefined && providerB.seasonTarget?.seasonPart !== undefined) && !SeasonComperator.isSameSeasonPartNumber(providerA.seasonTarget, providerB.seasonTarget)) {
+            throw new Error(`Cant get rated equality between ${providerA.providerLocalData.provider} and ${providerB.providerLocalData.provider}`);
         }
 
         if (providerB.providerLocalData.detailEpisodeInfo.length !== 0 && providerA.providerLocalData.detailEpisodeInfo.length !== 0) {
@@ -40,9 +40,9 @@ export default class EpisodeRatedEqualityHelper {
     }
 
     private getAllRelevantEpisodes(provider: ProviderLocalDataWithSeasonInfo, otherProvider: ProviderLocalDataWithSeasonInfo) {
-        const result = [];
-        let diff = 0;
-        let diffFound = false;
+        const result: Episode[] = [];
+        let diff: number = 0;
+        let lastSuccessFullIndex: number = 0;
         const aNumberOfEpisodes = provider.providerLocalData.getAllDetailedEpisodes(provider.seasonTarget).length;
         const bNumberOfEpisodes = otherProvider.providerLocalData.getAllDetailedEpisodes(otherProvider.seasonTarget);
 
@@ -51,22 +51,41 @@ export default class EpisodeRatedEqualityHelper {
             skipNotSameSeason = true;
         }
         for (const detailedEpA of provider.providerLocalData.detailEpisodeInfo) {
-            if (skipNotSameSeason && !SeasonHelper.isSeasonUndefined(detailedEpA.season)  && !SeasonComperator.isSameSeasonNumber(detailedEpA.season, provider.seasonTarget)) {
+            if (result.includes(detailedEpA)) {
+                continue;
+            }
+            if (skipNotSameSeason && !SeasonHelper.isSeasonUndefined(detailedEpA.season) && !SeasonComperator.isSameSeasonNumber(detailedEpA.season, provider.seasonTarget)) {
                 continue;
             }
             if (!this.isSameProviderNameInMapping(detailedEpA, otherProvider.providerLocalData, this.allBindingPools)) {
-                if (!diffFound) {
-                    if (skipNotSameSeason) {
-                        diff = detailedEpA.getEpNrAsNr() - otherProvider.providerLocalData.detailEpisodeInfo[0].getEpNrAsNr();
-                    } else {
-                        const lastUnmapped = this.getLastUnmappedEpisode(detailedEpA, otherProvider.providerLocalData, this.allBindingPools);
-                        if (lastUnmapped) {
-                            diff = detailedEpA.getEpNrAsNr() - lastUnmapped.getEpNrAsNr();
+                if (lastSuccessFullIndex < otherProvider.providerLocalData.detailEpisodeInfo.length) {
+                    for (let index = lastSuccessFullIndex; index < otherProvider.providerLocalData.detailEpisodeInfo.length; index++) {
+                        const detailedEpB = otherProvider.providerLocalData.detailEpisodeInfo[index];
+
+                        if (skipNotSameSeason && !SeasonHelper.isSeasonUndefined(detailedEpB.season) && !SeasonComperator.isSameSeasonNumber(detailedEpB.season, otherProvider.seasonTarget)) {
+                            lastSuccessFullIndex = index + 1;
+                            continue;
+                        }
+                        if (this.isEpisodeAlreadyMappedToEpisode(detailedEpA, detailedEpB, this.targetBindingPools)) {
+                            if (detailedEpA.isEpisodeNumberARealNumber() && detailedEpB.isEpisodeNumberARealNumber()) {
+                                diff = detailedEpA.getEpNrAsNr() - detailedEpB.getEpNrAsNr();
+                            }
+                            result.push(detailedEpA);
+                            lastSuccessFullIndex = index + 1;
+                            break;
+                        }
+                        if (!this.isSameProviderNameInMapping(detailedEpB, provider.providerLocalData, this.allBindingPools)) {
+                            result.push(detailedEpA);
+                            if (detailedEpA.isEpisodeNumberARealNumber() && detailedEpB.isEpisodeNumberARealNumber()) {
+                                diff = detailedEpA.getEpNrAsNr() - detailedEpB.getEpNrAsNr();
+                                lastSuccessFullIndex = index + 1;
+                            }
+                            break;
                         }
                     }
+                } else {
+                    result.push(detailedEpA);
                 }
-                diffFound = true;
-                result.push(detailedEpA);
             }
         }
         return { result, diff };
@@ -246,7 +265,7 @@ export default class EpisodeRatedEqualityHelper {
         return false;
     }
 
-    private getLastUnmappedEpisode(episode: Episode, providerB: ProviderLocalData, bindingPools: EpisodeBindingPool[]): Episode | undefined{
+    private getLastUnmappedEpisode(episode: Episode, providerB: ProviderLocalData, bindingPools: EpisodeBindingPool[]): Episode | undefined {
         if (bindingPools.length !== 0 && episode.provider !== providerB.provider) {
             const list = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(this.getAllEpsidoeBindingPoolsThatAreRelated(), episode);
             let found = false;

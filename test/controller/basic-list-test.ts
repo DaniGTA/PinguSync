@@ -101,7 +101,8 @@ describe('Basic List | Testrun', () => {
             // tslint:disable-next-line: no-string-literal
             const updatedProviders = MainListManager['mainList'][0].getAllProviderLocalDatas();
             // tslint:disable-next-line: no-string-literal
-            const updatedProviders2 = MainListManager['mainList'][1].getAllProviderLocalDatas();
+            const updatedSeries2 = MainListManager['mainList'][1];
+            const updatedProviders2 = updatedSeries2.getAllProviderLocalDatas();
             // provider should got been updated
 
             const anilistResult = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
@@ -120,7 +121,8 @@ describe('Basic List | Testrun', () => {
                     strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools, anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
                 }
                 for (const anilistResult2Entry of anilistResult2.detailEpisodeInfo) {
-                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools, anilistResult2Entry)[0].episodeNumber, anilistResult2Entry.episodeNumber);
+                    const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(updatedSeries2.episodeBindingPools, anilistResult2Entry);
+                    strictEqual(result[0].episodeNumber, anilistResult2Entry.episodeNumber);
                 }
                 for (const trakt of traktResult2.detailEpisodeInfo) {
                     if (trakt.type === EpisodeType.SPECIAL) {

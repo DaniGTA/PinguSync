@@ -187,7 +187,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(1, new Season([2])));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([2])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([2])));
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([2])));
 
         // Testing
 
@@ -260,7 +260,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
             bProvider.addDetailedEpisodeInfos(new Episode(1, new Season([2])));
             bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([2])));
             bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([2])));
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([2])));
+            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
 
             // Testing
 
