@@ -45,13 +45,8 @@ describe('Episode mapping | Name Mapping Tests Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1]), [new EpisodeTitle('Second round')]));
         bProvider.addDetailedEpisodeInfos(new Episode(4, new Season([1]), [new EpisodeTitle('Third rounds')]));
         await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
-
+        
         // Testing
-
-        //const episodeMappingInstance = new EpisodeMappingHelper(aSeries);
-        //const result = await EpisodeMappingHelper.getEpisodeMappings();
-
-        // Testing v2
 
         const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 

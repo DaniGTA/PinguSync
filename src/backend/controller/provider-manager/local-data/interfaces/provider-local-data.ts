@@ -1,16 +1,19 @@
+import SeasonComperator from '../../../../helpFunctions/comperators/season-comperator';
 import EpisodeHelper from '../../../../helpFunctions/episode-helper/episode-helper';
 import listHelper from '../../../../helpFunctions/list-helper';
+import SeasonHelper from '../../../../helpFunctions/season-helper/season-helper';
 import logger from '../../../../logger/logger';
 import Banner from '../../../objects/meta/banner';
 import Cover from '../../../objects/meta/cover';
 import Episode from '../../../objects/meta/episode/episode';
+import EpisodeMapping from '../../../objects/meta/episode/episode-mapping';
 import { EpisodeType } from '../../../objects/meta/episode/episode-type';
 import Genre from '../../../objects/meta/genre';
 import { MediaType } from '../../../objects/meta/media-type';
 import Name from '../../../objects/meta/name';
 import Overview from '../../../objects/meta/overview';
+import Season from '../../../objects/meta/season';
 import { ProviderInfoStatus } from './provider-info-status';
-import EpisodeMapping from '../../../objects/meta/episode/episode-mapping';
 
 export default abstract class ProviderLocalData {
 
@@ -239,7 +242,7 @@ export default abstract class ProviderLocalData {
     }
 
     public getDetailEpisodeInfosByMapping(episdoeMapping: EpisodeMapping): Episode | undefined {
-        return this.detailEpisodeInfo.find(x => x.id === episdoeMapping.id);
+        return this.detailEpisodeInfo.find((x) => x.id === episdoeMapping.id);
     }
 
     public getAllRegularEpisodes(): Episode[] {
@@ -259,5 +262,16 @@ export default abstract class ProviderLocalData {
             this.detailEpisodeInfo.push(episode);
             this.detailEpisodeInfo = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo);
         }
+    }
+
+    /**
+     *
+     */
+    public getAllDetailedEpisodes(season?: Season): Episode[] {
+        let array = this.detailEpisodeInfo;
+        if (season !== undefined && season.isSeasonNumberPresent()) {
+            array = array.filter((x) => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season));
+        }
+        return array;
     }
 }

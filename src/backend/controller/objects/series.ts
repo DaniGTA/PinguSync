@@ -30,6 +30,8 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+import SeasonHelper from '../../helpFunctions/season-helper/season-helper';
+import SeasonFindHelper from '../../helpFunctions/season-helper/season-find-helper';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
@@ -193,16 +195,6 @@ export default class Series extends SeriesProviderExtension {
         }
         return Math.max(...onlyNumbers);
     }
-
-    /**
-     *
-     */
-    public getAllDetailedEpisodes(): Episode[] {
-        const providers = this.getAllProviderLocalDatas();
-        const array = providers.flatMap((x) => x.detailEpisodeInfo);
-        return array;
-    }
-
 
     /**
      * Give an array of all episodes in numbers.
@@ -528,13 +520,13 @@ export default class Series extends SeriesProviderExtension {
     }
 
     private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {
-        const result = await seasonHelper.prepareSearchSeasonValue(this, searchMode, searchInList);
+        const result = await SeasonFindHelper.prepareSearchSeasonValue(this, searchMode, searchInList);
         if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {
             // UKNOWN SEASON
             if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
                 if (result.searchResultDetails.searchedProviders.length !== 0) {
                     logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                    const list = await seasonHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
+                    const list = await SeasonFindHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
                     await new MainListAdder().addSeries(...list);
                     logger.info('Temp Series Successfull added.');
                 }

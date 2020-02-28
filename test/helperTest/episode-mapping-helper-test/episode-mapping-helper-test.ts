@@ -182,7 +182,7 @@ describe('Episode mapping | Mapping Only', () => {
             const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
 
             // Result checking
-            for (const episode of aSeries.getAllDetailedEpisodes()) {
+            for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x=> x.getAllDetailedEpisodes())) {
                 const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, episode);
                 strictEqual(mappedTo.length, 2, episode.episodeNumber + '');
                 strictEqual(mappedTo[0].episodeNumber, episode.episodeNumber);
@@ -213,9 +213,8 @@ describe('Episode mapping | Mapping Only', () => {
         // Testing
 
         const result = await EpisodeMappingHelper.getEpisodeMappings(aSeries);
-
         // Result checking
-        for (const episode of aSeries.getAllDetailedEpisodes()) {
+        for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x=> x.getAllDetailedEpisodes())) {
             const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, episode);
 
             strictEqual(mappedTo.length, 1);
@@ -266,7 +265,7 @@ describe('Episode mapping | Mapping Only', () => {
         // Result checking
         const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
 
-        for (const episode of aSeries.getAllDetailedEpisodes()) {
+        for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x=> x.getAllDetailedEpisodes())) {
             const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
             strictEqual(mappedTo.length, 1, episode.episodeNumber + '');
             notStrictEqual(mappedTo[0].provider, episode.provider);
@@ -330,7 +329,7 @@ describe('Episode mapping | Mapping Only', () => {
             const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
 
             // Result checking
-            for (const episode of aSeries.getAllDetailedEpisodes()) {
+            for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x=> x.getAllDetailedEpisodes())) {
                 const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
 
                 strictEqual(mappedTo.length, 1, episode.episodeNumber + '');

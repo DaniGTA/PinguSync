@@ -8,6 +8,7 @@ import Series from '../../src/backend/controller/objects/series';
 import { SeasonError } from '../../src/backend/controller/objects/transfer/season-error';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import SeasonFindHelper from '../../src/backend/helpFunctions/season-helper/season-find-helper';
 import seasonHelper from '../../src/backend/helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../src/backend/helpFunctions/season-helper/season-search-mode';
 import TestProvider from '../controller/objects/testClass/testProvider';
@@ -43,7 +44,7 @@ describe('Season Helper', () => {
         b.addListProvider(listProvider2);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season, undefined);
     });
 
@@ -62,7 +63,7 @@ describe('Season Helper', () => {
         b.addListProvider(listProvider2);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.getSingleSeasonNumber(), 2);
     });
 
@@ -88,7 +89,7 @@ describe('Season Helper', () => {
         c.addListProvider(listProvider3);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
-        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.getSingleSeasonNumber(), 3);
     });
 
@@ -114,7 +115,7 @@ describe('Season Helper', () => {
         c.addListProvider(listProvider3);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
-        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.getSingleSeasonNumber(), 4);
     });
 
@@ -134,7 +135,7 @@ describe('Season Helper', () => {
         b.addListProvider(listProvider2);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
-        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.season?.getSingleSeasonNumber(), 5);
     });
 
@@ -146,7 +147,7 @@ describe('Season Helper', () => {
         a.addListProvider(listProvider);
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a];
-        const result = await seasonHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
+        const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
         strictEqual(result.seasonError, SeasonError.CANT_GET_SEASON);
     });
     describe('check if it is the first season', () => {

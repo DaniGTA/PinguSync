@@ -35,6 +35,26 @@ export default class MainListSearcher {
         return null;
     }
 
+    public static async findAllSeriesByProvider(providerId: string | number, providerName: string, providerSeason?: Season): Promise<Series[]> {
+        const list = await MainListManager.getMainList();
+        const result = [];
+        for (const entry of list) {
+            const providers = entry.getAllProviderBindings();
+            for (const provider of providers) {
+                if (ProviderComperator.simpleProviderIdCheck(provider.id, providerId)) {
+                    if (providerName === provider.providerName) {
+                        if (providerSeason === undefined) {
+                            result.push(entry);
+                        } else if (SeasonComperator.isSameSeason(provider.targetSeason, providerSeason)) {
+                            result.push(entry);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * Search the Series in the mainlist with the series id.
      *
@@ -99,25 +119,5 @@ export default class MainListSearcher {
         }
         logger.log('debug', 'Found: ' + foundedSameSeries.length);
         return foundedSameSeries;
-    }
-
-    public static async findAllSeriesByProvider(providerId: string | number, providerName: string, providerSeason?: Season): Promise<Series[]> {
-        const list = await MainListManager.getMainList();
-        const result = [];
-        for (const entry of list) {
-            const providers = entry.getAllProviderBindings();
-            for (const provider of providers) {
-                if (ProviderComperator.simpleProviderIdCheck(provider.id, providerId)) {
-                    if (providerName === provider.providerName) {
-                        if (providerSeason === undefined) {
-                            result.push(entry);
-                        } else if (SeasonComperator.isSameSeason(provider.targetSeason, providerSeason)) {
-                            result.push(entry);
-                        }
-                    }
-                }
-            }
-        }
-        return result;
     }
 }

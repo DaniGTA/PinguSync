@@ -1,9 +1,9 @@
 import Series from '../../controller/objects/series';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 
 export default class ProviderAndSeriesPackage {
 
-    public static generatePackages(providers: ProviderLocalData[], series: Series): ProviderAndSeriesPackage[] {
+    public static generatePackages(providers: ProviderLocalDataWithSeasonInfo[], series: Series): ProviderAndSeriesPackage[] {
         const resultList: ProviderAndSeriesPackage[] = [];
         for (const provider of providers) {
             resultList.push(new ProviderAndSeriesPackage(provider, series));
@@ -11,10 +11,10 @@ export default class ProviderAndSeriesPackage {
         return resultList;
     }
 
-    public provider: ProviderLocalData;
+    public provider: ProviderLocalDataWithSeasonInfo;
     public series: Series;
 
-    constructor(provider: ProviderLocalData, series: Series) {
+    constructor(provider: ProviderLocalDataWithSeasonInfo, series: Series) {
         this.provider = provider;
         this.series = series;
     }

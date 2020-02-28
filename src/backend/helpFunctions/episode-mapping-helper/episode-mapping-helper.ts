@@ -35,8 +35,8 @@ export default class EpisodeMappingHelper {
             for (const providerB of compareToProviders) {
                 try {
                     const ratingInstance = new EpisodeRatedEqualityHelper(series.episodeBindingPools, allEpisodeBindingPools);
-                    const packageA = new ProviderAndSeriesPackage(providerA.providerLocalData, series);
-                    const packageB = new ProviderAndSeriesPackage(providerB.providerLocalData, series);
+                    const packageA = new ProviderAndSeriesPackage(providerA, series);
+                    const packageB = new ProviderAndSeriesPackage(providerB, series);
                     const ratings = ratingInstance.getRatedEqualityFromTwoProviders(packageA, packageB, await season);
                     const bestRatings = await EpisodeRatedEqualityContainerHelper.getBestResultsFromEpisodeRatedEqualityContainer(ratings);
                     for (const bestRating of bestRatings) {
