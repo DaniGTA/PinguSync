@@ -4,7 +4,9 @@ import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/epi
 import listHelper from '../../helpFunctions/list-helper';
 import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
 import PrequelGeneratorHelper from '../../helpFunctions/prequel-generator-helper';
+import SeasonFindHelper from '../../helpFunctions/season-helper/season-find-helper';
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
+import SeasonHelper from '../../helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
 import stringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
@@ -18,7 +20,6 @@ import ProviderList from '../provider-manager/provider-list';
 import SeriesProviderExtension from './extension/provider-extension/series-provider-extension';
 import { MergeTypes } from './merge-types';
 import Cover from './meta/cover';
-import Episode from './meta/episode/episode';
 import EpisodeBindingPool from './meta/episode/episode-binding-pool';
 import EpisodeMapping from './meta/episode/episode-mapping';
 import { ImageSize } from './meta/image-size';
@@ -30,8 +31,6 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
-import SeasonHelper from '../../helpFunctions/season-helper/season-helper';
-import SeasonFindHelper from '../../helpFunctions/season-helper/season-find-helper';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 

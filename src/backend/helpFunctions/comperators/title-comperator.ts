@@ -1,4 +1,5 @@
 import Name from '../../controller/objects/meta/name';
+import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import titleCheckHelper from '../name-helper/title-check-helper';
 import ComperatorResult from './comperator-results.ts/comperator-result';
@@ -14,7 +15,7 @@ export default class TitleComperator {
      * @param aFirstSeason
      * @param bFirstSeason
      */
-    public static async compareTitle(a: Series, b: Series, aFirstSeason: Series | null, bFirstSeason: Series | null): Promise<ComperatorResult> {
+    public static async compareTitleOfSeries(a: Series, b: Series, aFirstSeason: Series | null, bFirstSeason: Series | null): Promise<ComperatorResult> {
         const comperatorResult = new ComperatorResult();
         const aNames = a.getAllNames();
         const bNames = b.getAllNames();

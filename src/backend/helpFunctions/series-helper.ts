@@ -60,7 +60,7 @@ class SeriesHelper {
         matchAbleScore += episodeResult.matchAble;
         matches += episodeResult.matches;
 
-        const titleResult = await TitleComperator.compareTitle(a, b, aFirstSeason, bFirstSeason);
+        const titleResult = await TitleComperator.compareTitleOfSeries(a, b, aFirstSeason, bFirstSeason);
         if (titleResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
         }

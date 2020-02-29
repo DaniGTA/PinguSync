@@ -291,6 +291,21 @@ describe('Provider: AniDB | Offline Test runs', () => {
         deepEqual(result.mainProvider.providerLocalData.id, '14819');
     });
 
+    test('should find id 11992', async () => {
+        const a = new AniDBProvider(false);
+        const lpdld = new ListProviderLocalData(21699, 'AniList');
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
+
+        const series = new Series();
+        lpdld.addSeriesName(new Name('Kono Subarashii Sekai ni Shukufuku o! 2', 'x-jap', NameType.OFFICIAL));
+        await series.addListProvider(lpdld);
+        series['cachedSeason'] = new Season(-1);
+        // tslint:disable-next-line: no-string-literal
+        const result = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(series, a);
+
+        deepEqual(result.mainProvider.providerLocalData.id, '11992');
+    });
+
 
 
     test('should not hang', async () => {

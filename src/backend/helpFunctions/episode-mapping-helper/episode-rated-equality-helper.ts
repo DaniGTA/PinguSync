@@ -5,14 +5,14 @@ import Season from '../../controller/objects/meta/season';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ComperatorResult, { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../comperators/episode-comperator';
+import SeasonComperator from '../comperators/season-comperator';
 import EpisodeBindingPoolHelper from '../episode-binding-pool-helper';
 import EpisodeHelper from '../episode-helper/episode-helper';
 import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
+import SeasonHelper from '../season-helper/season-helper';
 import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderAndSeriesPackage from './provider-series-package';
-import SeasonComperator from '../comperators/season-comperator';
-import SeasonHelper from '../season-helper/season-helper';
 
 
 export default class EpisodeRatedEqualityHelper {
@@ -29,7 +29,9 @@ export default class EpisodeRatedEqualityHelper {
         const providerA = packageA.provider;
         const providerB = packageB.provider;
 
-        if ((providerA.seasonTarget?.seasonPart !== undefined && providerB.seasonTarget?.seasonPart !== undefined) && !SeasonComperator.isSameSeasonPartNumber(providerA.seasonTarget, providerB.seasonTarget)) {
+        if ((providerA.seasonTarget?.seasonPart !== undefined &&
+            providerB.seasonTarget?.seasonPart !== undefined) &&
+            !SeasonComperator.isSameSeasonPartNumber(providerA.seasonTarget, providerB.seasonTarget)) {
             throw new Error(`Cant get rated equality between ${providerA.providerLocalData.provider} and ${providerB.providerLocalData.provider}`);
         }
 
@@ -54,7 +56,9 @@ export default class EpisodeRatedEqualityHelper {
             if (result.includes(detailedEpA)) {
                 continue;
             }
-            if (skipNotSameSeason && !SeasonHelper.isSeasonUndefined(detailedEpA.season) && !SeasonComperator.isSameSeasonNumber(detailedEpA.season, provider.seasonTarget)) {
+            if (skipNotSameSeason &&
+                !SeasonHelper.isSeasonUndefined(detailedEpA.season) &&
+                !SeasonComperator.isSameSeasonNumber(detailedEpA.season, provider.seasonTarget)) {
                 continue;
             }
             if (!this.isSameProviderNameInMapping(detailedEpA, otherProvider.providerLocalData, this.allBindingPools)) {
@@ -62,7 +66,9 @@ export default class EpisodeRatedEqualityHelper {
                     for (let index = lastSuccessFullIndex; index < otherProvider.providerLocalData.detailEpisodeInfo.length; index++) {
                         const detailedEpB = otherProvider.providerLocalData.detailEpisodeInfo[index];
 
-                        if (skipNotSameSeason && !SeasonHelper.isSeasonUndefined(detailedEpB.season) && !SeasonComperator.isSameSeasonNumber(detailedEpB.season, otherProvider.seasonTarget)) {
+                        if (skipNotSameSeason &&
+                            !SeasonHelper.isSeasonUndefined(detailedEpB.season) &&
+                            !SeasonComperator.isSameSeasonNumber(detailedEpB.season, otherProvider.seasonTarget)) {
                             lastSuccessFullIndex = index + 1;
                             continue;
                         }
@@ -180,18 +186,6 @@ export default class EpisodeRatedEqualityHelper {
                 }
             }
         }
-    }
-
-    private getAllEpisodeRelatedRatingWithRelatedProvider(episode: Episode, provider: ProviderLocalData, ratedEqualityList: EpisodeRatedEqualityContainer[]): EpisodeRatedEqualityContainer[] {
-        const result: EpisodeRatedEqualityContainer[] = [];
-        for (const rating of ratedEqualityList) {
-            if (this.hasEpisodeBindThisEpisodes(rating.episodeBinds, episode)) {
-                if (rating.episodeBinds.find((x) => x.provider.provider === provider.provider) !== undefined) {
-                    result.push(rating);
-                }
-            }
-        }
-        return result;
     }
 
     private episodeIsAlreadyMappedToProvider(episode: Episode, provider: ProviderLocalData, currentBindingPool: EpisodeBindingPool[]): boolean {

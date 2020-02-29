@@ -13,8 +13,6 @@ import TestProvider from '../objects/testClass/testProvider';
 
 
 describe('MainListPackageManager', () => {
-    const lc = new ListController(true);
-
     beforeEach(() => {
         TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal

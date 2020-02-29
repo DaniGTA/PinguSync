@@ -115,12 +115,19 @@ export default class AniDBProvider extends InfoProvider {
 
                 if (result.length !== 0) {
                     const seasonOfTitle = await Name.getSeasonNumber(result);
-                    if (!seasonOfTitle.seasonNumber) {
+                    if (season !== undefined) {
+                        if (seasonOfTitle.seasonNumber === undefined) {
+                            lastResult = result;
+                            lastSeriesDB = seriesDB;
+                        } else if (seasonOfTitle.seasonNumber === season) {
+                            return [await AniDBProvider.fillSeries(seriesDB, result)];
+                        }
+                    } else {
                         lastResult = result;
                         lastSeriesDB = seriesDB;
-                    }
-                    if (seasonOfTitle.seasonNumber === season || !season) {
-                        return [await AniDBProvider.fillSeries(seriesDB, result)];
+                        if (result.flatMap((x) => x.name).includes(searchTitle)) {
+                            return [await AniDBProvider.fillSeries(seriesDB, result)];
+                        }
                     }
                 }
             } catch (err) {
