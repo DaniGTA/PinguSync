@@ -9,13 +9,13 @@ import ProviderList from '../../../controller/provider-manager/provider-list';
 import logger from '../../../logger/logger';
 import EpisodeHelper from '../../episode-helper/episode-helper';
 import EpisodeRelationResult from '../../episode-helper/episode-relation-result';
+import listHelper from '../../list-helper';
 import TitleHelper from '../../name-helper/title-helper';
+import seasonHelper from '../../season-helper/season-helper';
 import ProviderHelper from '../provider-helper';
 import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
 import SeasonAwarenessHelper from './season-awareness-helper';
-import seasonHelper from '../../season-helper/season-helper';
-import listHelper from '../../list-helper';
 
 export default class SeasonAwarenessCreatorSeasonNumber {
     private finalList: ProviderLocalDataWithSeasonInfo[] = [];
@@ -118,7 +118,10 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                         const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season([currentSearchingSeason], currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);
                         return pdwsi;
-                    } else if ((seasonHelper.isSeasonUndefined(targetSeason) && result.seasonComplete && result.seasonNumber !== undefined && result.seasonNumber.length !== 0)) {
+                    } else if ((seasonHelper.isSeasonUndefined(targetSeason) &&
+                        result.seasonComplete &&
+                        result.seasonNumber !== undefined &&
+                        result.seasonNumber.length !== 0)) {
                         const pdwsi = new ProviderLocalDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(result.seasonNumber, currentSeasonPart));
                         const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(result.seasonNumber, currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);

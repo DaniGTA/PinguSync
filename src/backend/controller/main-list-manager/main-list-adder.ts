@@ -1,6 +1,6 @@
 import listHelper from '../../helpFunctions/list-helper';
 import ProviderHelper from '../../helpFunctions/provider/provider-helper';
-import stringHelper from '../../helpFunctions/string-helper';
+import StringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import ProviderDataListManager from '../provider-data-list-manager/provider-data-list-manager';
@@ -33,7 +33,7 @@ export default class MainListAdder {
      * @param series
      */
     public async addSeries(...series: Series[]) {
-        const trackId = stringHelper.randomString(50);
+        const trackId = StringHelper.randomString(50);
         logger.log('info', '[MainListAdder] Start adding');
         MainListAdder.instanceTracker.push(trackId);
         await this.listWorker(series);

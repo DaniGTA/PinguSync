@@ -1,9 +1,9 @@
-import stringHelper from '../../helpFunctions/string-helper';
-import Series from './series';
-import FrontendSeriesInfos from './transfer/frontend-series-infos';
-import { PreferedSeriesNameHelper } from './settings/prefered-series-name';
-import Name from './meta/name';
+import StringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
+import Name from './meta/name';
+import Series from './series';
+import { PreferedSeriesNameHelper } from './settings/prefered-series-name';
+import FrontendSeriesInfos from './transfer/frontend-series-infos';
 
 /**
  * Contains all Relations of a Series.
@@ -18,7 +18,7 @@ export default class SeriesPackage {
             }
         }
 
-        this.id = stringHelper.randomString(25);
+        this.id = StringHelper.randomString(25);
     }
 
     public getAnyCoverUrl(): string {
@@ -42,7 +42,7 @@ export default class SeriesPackage {
                     break;
                 }
             } catch (err) {
-               logger.error(err);
+                logger.error(err);
             }
             if (!preferedName) {
                 const names = relation.getAllNames();

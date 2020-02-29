@@ -1,5 +1,5 @@
 import ExternalProvider from '../../../../api/provider/external-provider';
-import stringHelper from '../../../../helpFunctions/string-helper';
+import StringHelper from '../../../../helpFunctions/string-helper';
 import Season from '../season';
 import EpisodeThumbnail from './episode-thumbnail';
 import EpisodeTitle from './episode-title';
@@ -60,7 +60,7 @@ export default class Episode {
             this.title = title;
         }
         this.lastUpdate = new Date().getTime();
-        this.id = stringHelper.randomString(20);
+        this.id = StringHelper.randomString(20);
     }
 
 

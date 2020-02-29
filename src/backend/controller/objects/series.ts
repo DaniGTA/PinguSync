@@ -8,7 +8,7 @@ import SeasonFindHelper from '../../helpFunctions/season-helper/season-find-help
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
 import SeasonHelper from '../../helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
-import stringHelper from '../../helpFunctions/string-helper';
+import StringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import MainListAdder from '../main-list-manager/main-list-adder';
 import MainListManager from '../main-list-manager/main-list-manager';
@@ -51,7 +51,7 @@ export default class Series extends SeriesProviderExtension {
     constructor() {
         super();
         // Generates randome string.
-        this.id = stringHelper.randomString(35);
+        this.id = StringHelper.randomString(35);
         this.cachedSeason = new Season();
     }
 

@@ -36,6 +36,7 @@ export default class KitsuProvider extends ListProvider {
     public providerName: string = 'Kitsu';
     public hasOAuthCode: boolean = true;
     public hasUniqueIdForSeasons = true;
+    public supportOnlyBasicLatinForNameSearch = false;
     public userData: KitsuUserData;
     public api: Kitsu;
     constructor() {

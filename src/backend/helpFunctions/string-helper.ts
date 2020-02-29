@@ -1,15 +1,15 @@
 import SeasonNumberResponse from '../controller/objects/meta/response-object/season-number-response';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
-import titleCheckHelper from './name-helper/title-check-helper';
+import TitleHelper from './name-helper/title-helper';
 
-class StringHelper {
+export default class StringHelper {
     /**
      * It reverse a string.
      * Example:
      * test -> tset
      * @param s
      */
-    public async reverseString(s: string): Promise<string> {
+    public static async reverseString(s: string): Promise<string> {
         const splitString = s.split('');
         const reversedArray = splitString.reverse();
         return reversedArray.join('');
@@ -20,7 +20,7 @@ class StringHelper {
      * [!] Dont make this async. because it will be used by construtors.
      * @param length
      */
-    public randomString(length: number = 10): string {
+    public static randomString(length: number = 10): string {
         const c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         return Array.from({ length }, (_) => c[Math.floor(Math.random() * c.length)]).join('');
     }
@@ -29,7 +29,7 @@ class StringHelper {
      * We need too clean title so that they can match like:
      * titleA! vs titleA
      */
-    public cleanString(s: string): string {
+    public static cleanString(s: string): string {
         s = s.replace(/\:/, '');
         s = s.replace('！', '! ');
         s = s.replace('!', '!');
@@ -56,7 +56,7 @@ class StringHelper {
         s = s.replace(/＊/g, '');
         return s.replace(/\ \ /g, ' ').trim();
     }
-    public async getSeasonNumberFromTitle(title: string): Promise<SeasonNumberResponse> {
+    public static async getSeasonNumberFromTitle(title: string): Promise<SeasonNumberResponse> {
         const response = new SeasonNumberResponse();
         if (title && isNaN(Number(title)) && title.length > 2) {
             let reversedTitle = '';
@@ -71,7 +71,7 @@ class StringHelper {
             if (title.toLocaleLowerCase().includes('episode')) {
                 throw new Error('That name dont have a Season');
             }
-            const seasonMarkerResult = await titleCheckHelper.getSeasonNumberBySeasonMarkerInTitle(title);
+            const seasonMarkerResult = TitleHelper.getSeasonNumberBySeasonMarkerInTitle(title);
 
             if (seasonMarkerResult.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
                 return seasonMarkerResult;
@@ -113,7 +113,7 @@ class StringHelper {
      * Check if the string contains any japanese letters.
      * @param s
      */
-    public hasKanji(s: string): boolean {
+    public static hasKanji(s: string): boolean {
         if (s) {
             const regex = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}/;
             return s.match(regex) != null;
@@ -124,7 +124,7 @@ class StringHelper {
      * Check if the string contains any korean letters.
      * @param s
      */
-    public hasHangul(s: string): boolean {
+    public static hasHangul(s: string): boolean {
         if (s) {
             const regex = /[\u3131-\uD79D]/ugi;
             return s.match(regex) != null;
@@ -136,7 +136,7 @@ class StringHelper {
      * Check if the string contains any russian letters.
      * @param s
      */
-    public hasCyrillic(s: string): boolean {
+    public static hasCyrillic(s: string): boolean {
         if (s) {
             const regex = /[\u0400-\u04FF]/;
             return s.match(regex) != null;
@@ -144,10 +144,22 @@ class StringHelper {
         return false;
     }
 
-    public isNumber(s: string): boolean {
+    /**
+     * Checks if string has only letters from the basic latin table:
+     * http://memory.loc.gov/diglib/codetables/42.html
+     * @param s string
+     */
+    public static isOnlyBasicLatin(s: string): boolean {
+        if (s) {
+            const regex = /[\u0020-\u007E]*/;
+            const result = s.match(regex) ?? [];
+            return s.length === result[0]?.length;
+        }
+        return false;
+    }
+
+    public static isNumber(s: string): boolean {
         return (s >= '0' && s <= '9');
     }
 
 }
-
-export default new StringHelper();

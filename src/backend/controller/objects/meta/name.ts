@@ -1,6 +1,6 @@
 import { AbsoluteResult } from '../../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 import listHelper from '../../../helpFunctions/list-helper';
-import stringHelper from '../../../helpFunctions/string-helper';
+import StringHelper from '../../../helpFunctions/string-helper';
 import { NameType } from './name-type';
 import SeasonNumberResponse from './response-object/season-number-response';
 import logger from '../../../logger/logger';
@@ -40,8 +40,8 @@ export default class Name {
             if (name.lang === 'x-jap' && name.nameType === NameType.MAIN) {
                 return name.name;
             }
-            if (!await stringHelper.hasKanji(name.name) && !await stringHelper.hasCyrillic(name.name)) {
-                if (!await stringHelper.hasHangul(name.name)) {
+            if (!await StringHelper.hasKanji(name.name) && !await StringHelper.hasCyrillic(name.name)) {
+                if (!await StringHelper.hasHangul(name.name)) {
                     kanjiTitle = name.name;
                 }
             }
@@ -82,7 +82,7 @@ export default class Name {
         for (const nameObj of names) {
             try {
                 if (Name.canGetValidSeasonNumberFromName(nameObj)) {
-                    const nr = await stringHelper.getSeasonNumberFromTitle(nameObj.name);
+                    const nr = await StringHelper.getSeasonNumberFromTitle(nameObj.name);
                     if (nr.seasonNumber) {
                         if (nr.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
                             return nr;

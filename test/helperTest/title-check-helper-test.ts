@@ -71,15 +71,14 @@ describe('Title Checker | Some title examples', () => {
     });
 
     test('should detect MediaType from title', async () => {
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title: Movie'), MediaType.MOVIE);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title Movie'), MediaType.MOVIE);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title Movie: Test Test'), MediaType.MOVIE);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title: Special'), MediaType.SPECIAL);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title Special'), MediaType.SPECIAL);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title: Specials'), MediaType.SPECIAL);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title Specials'), MediaType.SPECIAL);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title Test te test Specials'), MediaType.SPECIAL);
-        assert.equal(await TitleCheckHelper.getMediaTypeFromTitle('Title'), MediaType.UNKOWN);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title: Movie'), MediaType.MOVIE);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Movie'), MediaType.MOVIE);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Movie: Test Test'), MediaType.MOVIE);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title: Special'), MediaType.SPECIAL);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Special'), MediaType.SPECIAL);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title: Specials'), MediaType.SPECIAL);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Specials'), MediaType.SPECIAL);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Test te test Specials'), MediaType.SPECIAL);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title'), MediaType.UNKOWN);
     });
-
 });

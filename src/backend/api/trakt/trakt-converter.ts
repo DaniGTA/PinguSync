@@ -14,7 +14,6 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
-import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
 import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
@@ -25,6 +24,7 @@ import { Season as TrakSeason, SendEntryUpdate, Show as SendEntryShow, TraktEpis
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
+import TitleHelper from '../../helpFunctions/name-helper/title-helper';
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
@@ -150,7 +150,7 @@ export default new class TraktConverter {
     public async getDetailedEpisodeInfo(seasonInfos: ITraktShowSeasonInfo[]): Promise<Episode[]> {
         const detailedEpisodes: Episode[] = [];
         for (const seasonInfo of seasonInfos) {
-            let seasonNumber = seasonInfo.title ? await (await titleCheckHelper.getSeasonNumberBySeasonMarkerInTitle(seasonInfo.title)).seasonNumber : '';
+            let seasonNumber = seasonInfo.title ? TitleHelper.getSeasonNumberBySeasonMarkerInTitle(seasonInfo.title).seasonNumber : '';
             if (Array.isArray(seasonInfo.episodes) && seasonInfo.episodes.length !== 0) {
                 for (const episode of seasonInfo.episodes) {
                     if (seasonNumber === undefined || Number.isNaN(seasonNumber as number)) {

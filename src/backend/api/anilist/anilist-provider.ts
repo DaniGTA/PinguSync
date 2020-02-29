@@ -38,6 +38,7 @@ export default class AniListProvider extends ListProvider {
     public providerName: string = 'AniList';
     public version = 1;
     public hasOAuthCode = true;
+    public supportOnlyBasicLatinForNameSearch = false;
     public supportedMediaTypes: meta.MediaType[] = [meta.MediaType.MOVIE, meta.MediaType.ANIME, meta.MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalProvider)> = [];

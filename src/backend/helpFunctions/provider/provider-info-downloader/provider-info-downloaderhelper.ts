@@ -18,15 +18,17 @@ import ProviderComperator from '../../comperators/provider-comperator';
 import SeasonComperator from '../../comperators/season-comperator';
 import listHelper from '../../list-helper';
 import TitleHelper from '../../name-helper/title-helper';
-import stringHelper from '../../string-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
+import StringHelper from '../../string-helper';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
 export default new class ProviderInfoDownloadHelper {
     private static readonly MAX_RETRYS_FOR_NAME_SEARCH: number = 9;
+    private static readonly REQUEST_TIMEOUT_IN_MS: number = 5000; // 5000ms = 5seconds
+    private static readonly NO_INDEX = -1;
     // ---------------------------------------------------------
     // ! This function below have a big impact on this program !
     // ----------------------------------------------------------
@@ -51,12 +53,12 @@ export default new class ProviderInfoDownloadHelper {
     // tslint:disable-next-line: max-line-length
     public async downloadProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<MultiProviderResult> {
         if (await provider.isProviderAvailable()) {
-            const requestId = stringHelper.randomString(5);
+            const requestId = StringHelper.randomString(5);
             const seriesMediaType = await series.getMediaType();
 
             const allLocalProviders = series.getAllProviderLocalDatas();
             const indexOfCurrentProvider = allLocalProviders.findIndex((x) => x.provider === provider.providerName);
-            if (indexOfCurrentProvider === -1) {
+            if (indexOfCurrentProvider === ProviderInfoDownloadHelper.NO_INDEX) {
                 if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
                     try {
                         const linkResult = await this.linkProviderDataFromRelations(series, provider);
@@ -93,25 +95,27 @@ export default new class ProviderInfoDownloadHelper {
         let trys = 0;
         const alreadySearchedNames: string[] = [];
         for (const name of names) {
-            const alreadySearchedName = alreadySearchedNames.findIndex((x) => name.name === x) !== -1;
-            if (!alreadySearchedName && name.name) {
-                if (trys > ProviderInfoDownloadHelper.MAX_RETRYS_FOR_NAME_SEARCH) {
-                    break;
-                }
-                trys++;
-                try {
-                    const result = await this.getProviderLocalDataByName(series, name, provider);
-                    if (result) {
-                        logger.log('info', `[${requestId}][${provider.providerName}] ByName ${name.name} Request success 🎉`);
-                        return result;
+            if (!provider.supportOnlyBasicLatinForNameSearch || (provider.supportOnlyBasicLatinForNameSearch && StringHelper.isOnlyBasicLatin(name.name))) {
+                const alreadySearchedName = alreadySearchedNames.findIndex((x) => name.name === x) !== -1;
+                if (!alreadySearchedName && name.name) {
+                    if (trys > ProviderInfoDownloadHelper.MAX_RETRYS_FOR_NAME_SEARCH) {
+                        break;
                     }
-                } catch (err) {
-                    logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo');
-                    logger.error(err);
-                }
-                logger.warn(`[${requestId}][${provider.providerName}] ByName ${name.name} Request failed. try next...`);
+                    trys++;
+                    try {
+                        const result = await this.getProviderLocalDataByName(series, name, provider);
+                        if (result) {
+                            logger.log('info', `[${requestId}][${provider.providerName}] ByName ${name.name} Request success 🎉`);
+                            return result;
+                        }
+                    } catch (err) {
+                        logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo');
+                        logger.error(err);
+                    }
+                    logger.warn(`[${requestId}][${provider.providerName}] ByName ${name.name} Request failed. try next...`);
 
-                alreadySearchedNames.push(name.name);
+                    alreadySearchedNames.push(name.name);
+                }
             }
             logger.warn(`[${requestId}][${provider.providerName}] ByName ${name.name} Request failed. ❌`);
         }
@@ -170,7 +174,7 @@ export default new class ProviderInfoDownloadHelper {
         if (names.length !== 0) {
             try {
                 // Test
-                names.unshift(new Name(stringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
+                names.unshift(new Name(StringHelper.cleanString(names[0].name), names[0].lang + 'clean', names[0].nameType));
             } catch (err) {
                 logger.debug('[ERROR] [ProviderInfoDownloadHelper] [getNamesSortedBySearchAbleScore]:');
                 logger.debug(err);
@@ -194,7 +198,7 @@ export default new class ProviderInfoDownloadHelper {
         const season = await series.getSeason();
         if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumber() === 1 || provider.hasUniqueIdForSeasons) {
             logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumbers);
-            const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, 1500));
+            const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, ProviderInfoDownloadHelper.REQUEST_TIMEOUT_IN_MS));
             searchResult = await Promise.race([maxRequestTime, provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumber())]);
 
             if (searchResult && searchResult.length !== 0) {

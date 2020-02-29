@@ -11,6 +11,14 @@ export default abstract class ExternalProvider {
     public abstract potentialSubProviders: Array<(new () => ExternalProvider)>;
     public abstract version: number;
     public hasEpisodeTitleOnFullInfo = false;
+    /**
+     * If a series name should contain any letters that are not in the basic latin table it will not try to perform a name search.
+     * Basic Latin table (UTF-8):
+     * http://memory.loc.gov/diglib/codetables/42.html
+     *
+     * @memberof ExternalProvider
+     */
+    public supportOnlyBasicLatinForNameSearch = true;
 
     public abstract getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]>;
     public abstract getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>;

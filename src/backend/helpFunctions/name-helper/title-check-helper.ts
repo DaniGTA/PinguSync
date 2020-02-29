@@ -1,9 +1,7 @@
 import { MediaType } from '../../controller/objects/meta/media-type';
-import SeasonNumberResponse from '../../controller/objects/meta/response-object/season-number-response';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
-import stringHelper from '../string-helper';
+import StringHelper from '../string-helper';
 
 export default class TitleCheckHelper {
     public static async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
@@ -37,8 +35,8 @@ export default class TitleCheckHelper {
                         if (aName === bName) {
                             return true;
                         }
-                        aName = stringHelper.cleanString(aName);
-                        bName = stringHelper.cleanString(bName);
+                        aName = StringHelper.cleanString(aName);
+                        bName = StringHelper.cleanString(bName);
                         if (aName === bName) {
                             return true;
                         }
@@ -97,7 +95,7 @@ export default class TitleCheckHelper {
 
     public static async removeSeasonMarkesFromTitle(title: string): Promise<string> {
         if (title !== '') {
-            let reversedTitle = await stringHelper.reverseString(title);
+            let reversedTitle = await StringHelper.reverseString(title);
             const lastChar = reversedTitle.charAt(0);
             let countLastChar = 0;
             if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi)) {
@@ -109,7 +107,7 @@ export default class TitleCheckHelper {
                 return title;
             }
             if ('0123456789'.includes(lastChar)) {
-                return (await stringHelper.reverseString(reversedTitle.substr(1))).trim();
+                return (await StringHelper.reverseString(reversedTitle.substr(1))).trim();
             } else {
                 while (lastChar === reversedTitle.charAt(0)) {
                     countLastChar++;
@@ -117,37 +115,11 @@ export default class TitleCheckHelper {
                 }
 
                 if (countLastChar !== 1) {
-                    return (await stringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
+                    return (await StringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
                 }
             }
         }
         return title;
-    }
-
-    public static async getSeasonNumberBySeasonMarkerInTitle(title: string): Promise<SeasonNumberResponse> {
-        const response = new SeasonNumberResponse();
-        const regex = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s(\d{1,})($|\s))/gmi;
-        const isNumber = /^\d+$/;
-        const match = regex.exec(title);
-        if (match) {
-            if (match != null) {
-                if (isNumber.test(match[1])) {
-                    response.seasonNumber = parseInt(match[1], 10);
-                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                    return response;
-                } else if (isNumber.test(match[2])) {
-                    response.seasonNumber = parseInt(match[2], 10);
-                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                    return response;
-                } else if (isNumber.test(match[4])) {
-                    response.seasonNumber = parseInt(match[4], 10);
-                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                    return response;
-                }
-            }
-        }
-        response.absoluteResult = AbsoluteResult.ABSOLUTE_NONE;
-        return response;
     }
 
     public static getMediaTypeFromTitle(title: string): MediaType {
@@ -193,13 +165,15 @@ export default class TitleCheckHelper {
     private static async cleanStringList(nameList: string[]): Promise<string[]> {
         for (const name of nameList) {
             try {
-                let bName2 = stringHelper.cleanString(name);
+                let bName2 = StringHelper.cleanString(name);
                 bName2 = await this.removeMediaTypeFromTitle(bName2);
                 bName2 = await this.removeSeasonMarkesFromTitle(bName2);
                 if (bName2 !== name) {
                     nameList.push(bName2);
                 }
             } catch (err) {
+                logger.debug('Cant clean string list.');
+                logger.debug(err);
                 continue;
             }
         }

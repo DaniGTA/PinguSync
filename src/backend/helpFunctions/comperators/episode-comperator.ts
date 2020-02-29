@@ -4,7 +4,7 @@ import { EpisodeType } from '../../controller/objects/meta/episode/episode-type'
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import logger from '../../logger/logger';
-import stringHelper from '../string-helper';
+import StringHelper from '../string-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import SeasonComperator from './season-comperator';
 
@@ -275,8 +275,8 @@ export default class EpisodeComperator {
         textB = textB.replace(' & ', ' ');
         textA = textA.replace(' and ', ' ');
         textB = textB.replace(' and ', ' ');
-        textA = stringHelper.cleanString(textA);
-        textB = stringHelper.cleanString(textB);
+        textA = StringHelper.cleanString(textA);
+        textB = StringHelper.cleanString(textB);
         if (textA === textB) {
             return true;
         }
