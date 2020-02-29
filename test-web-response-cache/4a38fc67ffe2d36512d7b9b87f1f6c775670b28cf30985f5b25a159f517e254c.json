@@ -1,0 +1,35 @@
+{
+    "response": {
+        "statusCode": 200,
+        "body": "{\"title\":\"Clannad\",\"year\":2007,\"ids\":{\"trakt\":24724,\"slug\":\"clannad\",\"tvdb\":80644,\"imdb\":\"tt1118804\",\"tmdb\":24835,\"tvrage\":null},\"overview\":\"Tomoya Okazaki is a third year high school student resentful of his life. His mother passed away from a car accident when he was younger, causing his father to resort to alcohol and cigarettes. This results in fights between the two until Tomoya's shoulder is injured in a fight. Since then, Tomoya has had distant relationships with his father, causing him to become a delinquent over time. While on a walk to school, he meets a strange girl named Nagisa Furukawa who is a year older, but is repeating due to illness. Due to this, she is often alone as most of her friends have moved on. The two begin hanging out and slowly, as time goes by, Tomoya finds his life shifting in a new direction.\",\"first_aired\":\"2007-10-03T15:00:00.000Z\",\"airs\":{\"day\":null,\"time\":null,\"timezone\":\"Asia/Tokyo\"},\"runtime\":24,\"certification\":\"TV-PG\",\"network\":\"TBS\",\"country\":\"jp\",\"trailer\":\"http://youtube.com/watch?v=odGSQebH7tU\",\"homepage\":\"http://www.tbs.co.jp/clannad/clannad1/\",\"status\":\"ended\",\"rating\":8.50837,\"votes\":777,\"comment_count\":10,\"updated_at\":\"2020-02-26T08:30:26.000Z\",\"language\":\"ja\",\"available_translations\":[\"ar\",\"de\",\"en\",\"es\",\"fr\",\"he\",\"it\",\"ja\",\"ko\",\"pt\",\"ru\",\"sv\",\"uk\",\"zh\"],\"genres\":[\"comedy\",\"drama\",\"anime\"],\"aired_episodes\":44}",
+        "headers": {},
+        "request": {
+            "uri": {
+                "protocol": "https:",
+                "slashes": true,
+                "auth": null,
+                "host": "api.trakt.tv",
+                "port": 443,
+                "hostname": "api.trakt.tv",
+                "hash": null,
+                "search": "?extended=full",
+                "query": "extended=full",
+                "pathname": "/shows/24724",
+                "path": "/shows/24724?extended=full",
+                "href": "https://api.trakt.tv/shows/24724?extended=full"
+            },
+            "method": "GET",
+            "headers": {}
+        }
+    },
+    "options": {
+        "headers": {
+            "Authorization": "Bearer ",
+            "Content-Type": "application/json",
+            "trakt-api-key": "94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd",
+            "trakt-api-version": "2"
+        },
+        "method": "GET",
+        "uri": "https://api.trakt.tv/shows/24724?extended=full"
+    }
+}

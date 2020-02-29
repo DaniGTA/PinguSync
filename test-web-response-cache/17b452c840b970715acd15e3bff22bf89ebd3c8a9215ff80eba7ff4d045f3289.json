@@ -1,0 +1,35 @@
+{
+    "response": {
+        "statusCode": 200,
+        "body": "[{\"number\":0,\"ids\":{\"trakt\":35770,\"tvdb\":null,\"tmdb\":35035,\"tvrage\":null},\"rating\":8.05263,\"votes\":19,\"episode_count\":6,\"aired_episodes\":6,\"title\":\"Specials\",\"overview\":null,\"first_aired\":\"2007-09-14T15:00:00.000Z\",\"network\":\"TBS\"},{\"number\":1,\"ids\":{\"trakt\":35771,\"tvdb\":null,\"tmdb\":35033,\"tvrage\":null},\"rating\":7.66061,\"votes\":165,\"episode_count\":22,\"aired_episodes\":22,\"title\":\"Season 1\",\"overview\":\"Tortured by his past and pained by an uncertain future, Tomoya drifts through life with an almost overwhelming anger and emptiness. But when he meets the mysterious, beautiful, and shy Nagisa, his world seems to change. Drawn in by her gentle but lonely spirit, he begins to experience the joy life can bring. But as he discovers the reason for his newfound friend's loneliness, Tomoya also finds that life can be frighteningly fragile.\",\"first_aired\":\"2007-10-03T15:00:00.000Z\",\"network\":\"TBS\"},{\"number\":2,\"ids\":{\"trakt\":35772,\"tvdb\":0,\"tmdb\":35034,\"tvrage\":null},\"rating\":9.0,\"votes\":147,\"episode_count\":22,\"aired_episodes\":22,\"title\":\"After Story\",\"overview\":\"Events in After Story take place immediately after the first season, following Tomoya's final semester of high school. After declaring his love to Nagisa, they begin to have a close relationship. Their life together will be faced with unexpected challenges, as the truth behind the illusionary world and the city's legend come to light.\",\"first_aired\":\"2008-10-02T15:00:00.000Z\",\"network\":\"TBS\"}]",
+        "headers": {},
+        "request": {
+            "uri": {
+                "protocol": "https:",
+                "slashes": true,
+                "auth": null,
+                "host": "api.trakt.tv",
+                "port": 443,
+                "hostname": "api.trakt.tv",
+                "hash": null,
+                "search": "?extended=full",
+                "query": "extended=full",
+                "pathname": "/shows/24724/seasons",
+                "path": "/shows/24724/seasons?extended=full",
+                "href": "https://api.trakt.tv/shows/24724/seasons?extended=full"
+            },
+            "method": "GET",
+            "headers": {}
+        }
+    },
+    "options": {
+        "headers": {
+            "Authorization": "Bearer ",
+            "Content-Type": "application/json",
+            "trakt-api-key": "94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd",
+            "trakt-api-version": "2"
+        },
+        "method": "GET",
+        "uri": "https://api.trakt.tv/shows/24724/seasons?extended=full"
+    }
+}

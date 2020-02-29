@@ -16,7 +16,7 @@ import ProviderAndSeriesPackage from './provider-series-package';
 
 
 export default class EpisodeRatedEqualityHelper {
-
+    private static EPISODE_NUMBER_SEASON_TOLERANCE = 1;
     private allBindingPools: EpisodeBindingPool[] = [];
     private targetBindingPools: EpisodeBindingPool[];
 
@@ -49,7 +49,7 @@ export default class EpisodeRatedEqualityHelper {
         const bNumberOfEpisodes = otherProvider.providerLocalData.getAllRegularEpisodes(otherProvider.seasonTarget);
 
         let skipNotSameSeason = false;
-        if (aNumberOfEpisodes === bNumberOfEpisodes.length) {
+        if (Math.abs(aNumberOfEpisodes - bNumberOfEpisodes.length) <= EpisodeRatedEqualityHelper.EPISODE_NUMBER_SEASON_TOLERANCE) {
             skipNotSameSeason = true;
         }
         for (const detailedEpA of provider.providerLocalData.detailEpisodeInfo) {
@@ -182,7 +182,7 @@ export default class EpisodeRatedEqualityHelper {
                     this.isEpisodeAlreadyMappedToEpisode(detailedEpB, detailedEpA, currentBindingPool)) {
                     const trueResult = new ComperatorResult();
                     trueResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    return new EpisodeRatedEqualityContainer(trueResult, epA , epB);
+                    return new EpisodeRatedEqualityContainer(trueResult, epA, epB);
                 }
             }
         }
@@ -198,44 +198,6 @@ export default class EpisodeRatedEqualityHelper {
             }
         }
         return false;
-    }
-
-    private getMaxEpisodeShiftingDifference(providerA: ProviderLocalData, providerB: ProviderLocalData): number {
-        let maxEpisodeDifference = 0;
-
-        const lengthA = providerA.detailEpisodeInfo.length;
-        const lengthB = providerB.detailEpisodeInfo.length;
-
-        for (let index = 0; index < lengthA; index++) {
-            const episodeA = providerA.detailEpisodeInfo[index];
-            if (providerB.detailEpisodeInfo[index] !== undefined &&
-                this.isEpisodeAlreadyMappedToEpisode(episodeA, providerB.detailEpisodeInfo[index], this.targetBindingPools)) {
-                const difference = EpisodeHelper.getEpisodeDifference(episodeA, providerB.detailEpisodeInfo[index]);
-                if (difference > maxEpisodeDifference) {
-                    maxEpisodeDifference = difference;
-                }
-                continue;
-            }
-            for (let index2 = 0; index2 < lengthB; index2++) {
-                const episodeB = providerB.detailEpisodeInfo[index2];
-                if (this.isEpisodeAlreadyMappedToEpisode(episodeA, episodeB, this.targetBindingPools)) {
-                    const difference = EpisodeHelper.getEpisodeDifference(episodeA, episodeB);
-                    if (difference > maxEpisodeDifference) {
-                        maxEpisodeDifference = difference;
-                    }
-                    break;
-                } else if (this.isSameProviderNameInMapping(episodeA, providerB, this.allBindingPools)) {
-                    const difference = EpisodeHelper.getEpisodeDifference(episodeA, episodeB) + 1;
-                    if (difference > maxEpisodeDifference) {
-                        maxEpisodeDifference = difference;
-                    }
-                }
-            }
-            if (index === 20 && maxEpisodeDifference === 0) {
-                return 0;
-            }
-        }
-        return maxEpisodeDifference;
     }
 
     private isEpisodeAlreadyMappedToEpisode(episode: Episode, possibleMappedEpisode: Episode, current: EpisodeBindingPool[]): boolean {
@@ -260,42 +222,7 @@ export default class EpisodeRatedEqualityHelper {
         return false;
     }
 
-    private getLastUnmappedEpisode(episode: Episode, providerB: ProviderLocalData, bindingPools: EpisodeBindingPool[]): Episode | undefined {
-        if (bindingPools.length !== 0 && episode.provider !== providerB.provider) {
-            const list = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(this.getAllEpsidoeBindingPoolsThatAreRelated(), episode);
-            let found = false;
-            for (const mapping of list) {
-                if (mapping.provider === providerB.provider && (mapping.providerSeriesId !== providerB.id)) {
-                    found = true;
-                    continue;
-                } else if (found) {
-                    return providerB.getDetailEpisodeInfosByMapping(mapping);
-                }
-            }
-        }
-        return undefined;
-    }
-
     private getAllEpsidoeBindingPoolsThatAreRelated(): EpisodeBindingPool[] {
         return this.allBindingPools;
-    }
-
-    private hasEpisodeBindThisEpisodes(episodeBinds: EpisodeProviderBind[], ...episodes: Episode[]): boolean {
-        for (const episodeBind of episodeBinds) {
-            let result = true;
-            for (const episode of episodes) {
-                if (EpisodeHelper.isSameEpisodeID(episode, episodeBind.episode)) {
-                    result = true;
-                    break;
-                } else {
-                    result = false;
-                }
-            }
-
-            if (result) {
-                return result;
-            }
-        }
-        return false;
     }
 }

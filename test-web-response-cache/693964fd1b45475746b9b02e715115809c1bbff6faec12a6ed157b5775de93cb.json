@@ -1,0 +1,35 @@
+{
+    "response": {
+        "statusCode": 200,
+        "body": "[{\"type\":\"show\",\"score\":1000,\"show\":{\"title\":\"Clannad\",\"year\":2007,\"ids\":{\"trakt\":24724,\"slug\":\"clannad\",\"tvdb\":80644,\"imdb\":\"tt1118804\",\"tmdb\":24835,\"tvrage\":null}}},{\"type\":\"movie\",\"score\":1000,\"movie\":{\"title\":\"Clannad\",\"year\":2007,\"ids\":{\"trakt\":10167,\"slug\":\"clannad-2007\",\"imdb\":\"tt0997274\",\"tmdb\":16516}}},{\"type\":\"movie\",\"score\":248.35954,\"movie\":{\"title\":\"Clannad: Another World - Tomoyo Chapter\",\"year\":2008,\"ids\":{\"trakt\":431657,\"slug\":\"clannad-another-world-tomoyo-chapter-2008\",\"imdb\":\"tt1267316\",\"tmdb\":582082}}},{\"type\":\"show\",\"score\":210.84369,\"show\":{\"title\":\"Clannad After Story - Another World, Kyou Chapter\",\"year\":2009,\"ids\":{\"trakt\":148346,\"slug\":\"clannad-after-story-another-world-kyou-chapter\",\"tvdb\":364639,\"imdb\":null,\"tmdb\":null,\"tvrage\":null}}},{\"type\":\"movie\",\"score\":209.08,\"movie\":{\"title\":\"Clannad: After Story - Another World, Kyou Chapter\",\"year\":null,\"ids\":{\"trakt\":431239,\"slug\":\"clannad-after-story-another-world-kyou-chapter\",\"imdb\":\"tt1468303\",\"tmdb\":582081}}},{\"type\":\"show\",\"score\":3.653566,\"show\":{\"title\":\"Robin of Sherwood\",\"year\":1984,\"ids\":{\"trakt\":4464,\"slug\":\"robin-of-sherwood\",\"tvdb\":75366,\"imdb\":\"tt0086791\",\"tmdb\":4488,\"tvrage\":5023}}},{\"type\":\"show\",\"score\":1.9233145,\"show\":{\"title\":\"Maid Marian and Her Merry Men\",\"year\":1989,\"ids\":{\"trakt\":802,\"slug\":\"maid-marian-and-her-merry-men\",\"tvdb\":78765,\"imdb\":\"tt0096642\",\"tmdb\":805,\"tvrage\":4340}}},{\"type\":\"movie\",\"score\":-3.4028235e+38,\"movie\":{\"title\":\"Clannad: Pastpresent\",\"year\":1989,\"ids\":{\"trakt\":369956,\"slug\":\"clannad-pastpresent-1989\",\"imdb\":null,\"tmdb\":521779}}},{\"type\":\"movie\",\"score\":-3.4028235e+38,\"movie\":{\"title\":\"Clannad - Live At Christ Church Cathedral\",\"year\":2012,\"ids\":{\"trakt\":323985,\"slug\":\"clannad-live-at-christ-church-cathedral-2012\",\"imdb\":\"tt2229087\",\"tmdb\":476659}}},{\"type\":\"movie\",\"score\":-3.4028235e+38,\"movie\":{\"title\":\"Celtic Tides - A Musical Odyssey\",\"year\":2007,\"ids\":{\"trakt\":429279,\"slug\":\"celtic-tides-a-musical-odyssey-2007\",\"imdb\":null,\"tmdb\":579703}}},{\"type\":\"movie\",\"score\":-3.4028235e+38,\"movie\":{\"title\":\"Clannad Past Present\",\"year\":null,\"ids\":{\"trakt\":477181,\"slug\":\"clannad-past-present\",\"imdb\":null,\"tmdb\":638322}}},{\"type\":\"movie\",\"score\":-3.4028235e+38,\"movie\":{\"title\":\"The Richard Thompson Band: Live at Celtic Connections\",\"year\":2012,\"ids\":{\"trakt\":86294,\"slug\":\"the-richard-thompson-band-live-at-celtic-connections-2012\",\"imdb\":\"tt2355813\",\"tmdb\":125535}}}]",
+        "headers": {},
+        "request": {
+            "uri": {
+                "protocol": "https:",
+                "slashes": true,
+                "auth": null,
+                "host": "api.trakt.tv",
+                "port": 443,
+                "hostname": "api.trakt.tv",
+                "hash": null,
+                "search": "?query=Clannad",
+                "query": "query=Clannad",
+                "pathname": "/search/movie,show",
+                "path": "/search/movie,show?query=Clannad",
+                "href": "https://api.trakt.tv/search/movie,show?query=Clannad"
+            },
+            "method": "GET",
+            "headers": {}
+        }
+    },
+    "options": {
+        "headers": {
+            "Authorization": "Bearer ",
+            "Content-Type": "application/json",
+            "trakt-api-key": "94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd",
+            "trakt-api-version": "2"
+        },
+        "method": "GET",
+        "uri": "https://api.trakt.tv/search/movie,show?query=Clannad"
+    }
+}
