@@ -50,7 +50,11 @@ export default class EpisodeHelper {
                         }
                     }
                     if (episode.season !== undefined && episode.season.seasonNumbers !== undefined) {
-                        seasonNumbers.push(...episode.season.seasonNumbers);
+                        for (const seasonNumber of episode.season.seasonNumbers) {
+                            if (!isNaN(seasonNumber as number)) {
+                                seasonNumbers.push(Number.parseInt(seasonNumber as string));
+                            }
+                        }
                     }
                     if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {
                         numberOfRegularEpisodesFound++;
