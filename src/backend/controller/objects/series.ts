@@ -6,7 +6,6 @@ import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper
 import PrequelGeneratorHelper from '../../helpFunctions/prequel-generator-helper';
 import SeasonFindHelper from '../../helpFunctions/season-helper/season-find-helper';
 import seasonHelper from '../../helpFunctions/season-helper/season-helper';
-import SeasonHelper from '../../helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../helpFunctions/season-helper/season-search-mode';
 import StringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
@@ -221,7 +220,8 @@ export default class Series extends SeriesProviderExtension {
         if (!this.cachedSeason?.isSeasonNumberPresent) {
             this.cachedSeason = new Season(this.cachedSeason?.seasonNumbers, this.cachedSeason?.seasonPart, this.cachedSeason?.seasonError);
         }
-        if ((this.cachedSeason.seasonNumbers.length === 0 || this.cachedSeason?.getSingleSeasonNumber() === -2) && searchMode !== SeasonSearchMode.NO_SEARCH) {
+        if ((this.cachedSeason.seasonNumbers.length === 0 || this.cachedSeason?.getSingleSeasonNumberAsNumber() === -2) &&
+            searchMode !== SeasonSearchMode.NO_SEARCH) {
             this.cachedSeason = await this.prepareSeasonSearch(searchMode, allowAddNewEntry, searchInList);
         }
         if (SeasonComperator.isSameSeason(this.cachedSeason, new Season([-1]))) {
@@ -682,7 +682,8 @@ export default class Series extends SeriesProviderExtension {
                         if (latestUpdatedProvider === null) {
                             latestUpdatedProvider = provider;
                         } else {
-                            const latestExternalStatus = latestUpdatedProvider.lastExternalChange && new Date(latestUpdatedProvider.lastExternalChange).getTime() !== 0;
+                            const latestExternalStatus = latestUpdatedProvider.lastExternalChange &&
+                                new Date(latestUpdatedProvider.lastExternalChange).getTime() !== 0;
                             const providerExternalStatus = provider.lastExternalChange && new Date(provider.lastExternalChange).getTime() !== 0;
                             if (latestExternalStatus && providerExternalStatus) {
                                 if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {

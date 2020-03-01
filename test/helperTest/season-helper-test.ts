@@ -64,7 +64,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumber(), 2);
+        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 2);
     });
 
     test('should get the right season value: 3', async () => {
@@ -90,7 +90,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumber(), 3);
+        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 3);
     });
 
     test('should get the right season value: 4', async () => {
@@ -116,7 +116,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumber(), 4);
+        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 4);
     });
 
     test('should get the right season value: 5', async () => {
@@ -136,7 +136,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumber(), 5);
+        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 5);
     });
 
     test('should get none seasons', async () => {
@@ -173,7 +173,7 @@ describe('Season Helper', () => {
     });
 
     test('should be check if season is undefined (simple undefined)', async () => {
-            strictEqual(seasonHelper.isSeasonUndefined(undefined), true);
+        strictEqual(seasonHelper.isSeasonUndefined(undefined), true);
     });
 
     test('should be check if season is undefined (simple undefined season number)', async () => {

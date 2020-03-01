@@ -46,7 +46,8 @@ export default class SeasonComperator {
     public static isSameSeasonNumber(seasonA?: Season, seasonB?: Season): boolean {
         const seasonAStatus = seasonA ? seasonA.isSeasonUndefined() : true;
         const seasonBStatus = seasonB ? seasonB.isSeasonUndefined() : true;
-        if (seasonA !== undefined && seasonB !== undefined && listHelper.isAnyNumberListEntryInNumberList(seasonA?.seasonNumbers, seasonB?.seasonNumbers)) {
+        if (seasonA !== undefined && seasonB !== undefined &&
+            listHelper.isAnySeasonNumberListEntryInSeasonNumberList(seasonA?.seasonNumbers, seasonB?.seasonNumbers)) {
             return true;
         } else if (seasonBStatus && seasonAStatus) {
             return true;

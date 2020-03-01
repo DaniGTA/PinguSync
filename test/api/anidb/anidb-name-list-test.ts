@@ -18,6 +18,7 @@ import TestHelper from '../../test-helper';
 describe('Provider: AniDB | Offline Test runs', () => {
     beforeAll(() => {
         TestHelper.mustHaveBefore();
+        new AniDBProvider();
     });
 
     beforeEach(() => {

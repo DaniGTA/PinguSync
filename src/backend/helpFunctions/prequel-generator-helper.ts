@@ -18,7 +18,7 @@ export default class PrequelGeneratorHelper {
     }
     public async generatePrequel(series: Series, season: Season, lowerSeasonNumber = true, mediaType?: MediaType): Promise<Series | null> {
         let newSNumber;
-        const currentSeasonNumber = season.getSingleSeasonNumber();
+        const currentSeasonNumber = season.getSingleSeasonNumberAsNumber();
         if (season.isSeasonNumberPresent() && currentSeasonNumber !== undefined && currentSeasonNumber > 0) {
             if (lowerSeasonNumber) {
                 newSNumber = currentSeasonNumber - 1;

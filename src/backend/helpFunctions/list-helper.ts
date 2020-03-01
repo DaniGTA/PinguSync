@@ -42,7 +42,7 @@ class ListHelper {
         return false;
     }
 
-    public isAnyNumberListEntryInNumberList(array: number[], array2: number[]): boolean {
+    public isAnySeasonNumberListEntryInSeasonNumberList(array: Array<(number | string)>, array2: Array<(number | string)>): boolean {
         return array.findIndex((x) => array2.includes(x)) !== -1;
     }
 

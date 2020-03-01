@@ -163,9 +163,9 @@ export default class EpisodeComperator {
     }
 
     public static isEpisodeASeasonHigher(aEpisode: Episode, bEpisode: Episode, season?: Season): boolean {
-        const aEpisodeSeasonNumber = aEpisode.season?.getSingleSeasonNumber();
-        const bEpisodeSeasonNumber = bEpisode.season?.getSingleSeasonNumber();
-        const seasonNumber = season?.getSingleSeasonNumber();
+        const aEpisodeSeasonNumber = aEpisode.season?.getSingleSeasonNumberAsNumber();
+        const bEpisodeSeasonNumber = bEpisode.season?.getSingleSeasonNumberAsNumber();
+        const seasonNumber = season?.getSingleSeasonNumberAsNumber();
         if (aEpisodeSeasonNumber !== undefined && bEpisodeSeasonNumber !== undefined) {
             return aEpisodeSeasonNumber < bEpisodeSeasonNumber;
         } else if (aEpisode.season !== undefined && aEpisodeSeasonNumber !== undefined) {

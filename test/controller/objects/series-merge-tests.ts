@@ -157,7 +157,7 @@ describe('Series | Merge', () => {
 
         const merged = await seriesA.merge(seriesB);
         strictEqual((merged.getListProvidersInfos()).length, 1);
-        strictEqual(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider)?.getSingleSeasonNumber(), 1);
+        strictEqual(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider)?.getSingleSeasonNumberAsNumber(), 1);
         return;
     });
 

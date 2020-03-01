@@ -31,49 +31,49 @@ export default class SeasonFindHelper {
      * @param series the series where the trace should be performed.
      * @param seriesList a list where the relation should be.
      */
-     public static async searchSeasonValuePrequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
+    public static async searchSeasonValuePrequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.debug('[Season] [Search]: Prequel Trace.' + ' (' + series.id + ')');
         let prequel: Series | null = null;
         if (series.isAnyPrequelPresent() && seriesList) {
-                const searchResult = await series.getPrequel(seriesList);
-                prequel = searchResult.foundedSeries;
-                let searchCount = 0;
-                if (searchResult.relationExistButNotFounded) {
-                    return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
-                } else {
-                    const mediaTypeSeries = await series.getMediaType();
-                    const alreadyCheckedPrequels: string[] = [];
-                    while (prequel && alreadyCheckedPrequels.findIndex((x) => x === prequel?.id) === -1) {
-                        alreadyCheckedPrequels.push(prequel.id);
-                        const mediaTypePrequel = await prequel.getMediaType();
-                        if (mediaTypePrequel === mediaTypeSeries) {
-                            searchCount++;
-                            const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE, seriesList);
-                            if (prequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
-                                return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
-                            }
-                            const prequelSeasonNumber = prequelSeason.getSingleSeasonNumber();
-                            if (prequelSeasonNumber && prequelSeason.seasonError === SeasonError.NONE) {
-                                return new SearchSeasonValueResult(new Season([(prequelSeasonNumber + searchCount)]), 'PrequelTrace');
-                            }
+            const searchResult = await series.getPrequel(seriesList);
+            prequel = searchResult.foundedSeries;
+            let searchCount = 0;
+            if (searchResult.relationExistButNotFounded) {
+                return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
+            } else {
+                const mediaTypeSeries = await series.getMediaType();
+                const alreadyCheckedPrequels: string[] = [];
+                while (prequel && alreadyCheckedPrequels.findIndex((x) => x === prequel?.id) === -1) {
+                    alreadyCheckedPrequels.push(prequel.id);
+                    const mediaTypePrequel = await prequel.getMediaType();
+                    if (mediaTypePrequel === mediaTypeSeries) {
+                        searchCount++;
+                        const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE, seriesList);
+                        if (prequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
+                            return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                         }
-                        if (prequel.isAnyPrequelPresent()) {
-
-                            const prequelSearchResult = await prequel.getPrequel(seriesList);
-                            if (prequelSearchResult.relationExistButNotFounded) {
-                                prequel = null;
-                                break;
-                            }
-                            prequel = prequelSearchResult.foundedSeries;
-                        } else if (prequel.getAverageProviderInfoStatus() === ProviderInfoStatus.FULL_INFO) {
-
-                            return new SearchSeasonValueResult(new Season([searchCount]), 'PrequelTrace - nomore prequel present');
-                        } else {
-                            prequel = null;
+                        const prequelSeasonNumber = prequelSeason.getSingleSeasonNumberAsNumber();
+                        if (prequelSeasonNumber && prequelSeason.seasonError === SeasonError.NONE) {
+                            return new SearchSeasonValueResult(new Season([(prequelSeasonNumber as number + searchCount)]), 'PrequelTrace');
                         }
                     }
+                    if (prequel.isAnyPrequelPresent()) {
+
+                        const prequelSearchResult = await prequel.getPrequel(seriesList);
+                        if (prequelSearchResult.relationExistButNotFounded) {
+                            prequel = null;
+                            break;
+                        }
+                        prequel = prequelSearchResult.foundedSeries;
+                    } else if (prequel.getAverageProviderInfoStatus() === ProviderInfoStatus.FULL_INFO) {
+
+                        return new SearchSeasonValueResult(new Season([searchCount]), 'PrequelTrace - nomore prequel present');
+                    } else {
+                        prequel = null;
+                    }
                 }
-                return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
+            }
+            return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER);
         }
         return new SearchSeasonValueResult(new Season([-1]), 'NoPrequelAvaible', SeasonError.CANT_GET_SEASON);
     }
@@ -93,7 +93,7 @@ export default class SeasonFindHelper {
      * @param series the series where the trace should be performed.
      * @param seriesList a list where the relation should be.
      */
-     public static async searchSeasonValueSequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
+    public static async searchSeasonValueSequelTrace(series: Series, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.debug('[Season] [Search]: Sequel Trace.' + ' (' + series.id + ')');
         let sequel: Series | null = null;
         if (series.isAnySequelPresent() && seriesList) {
@@ -112,9 +112,9 @@ export default class SeasonFindHelper {
                         if (sequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
                             return new SearchSeasonValueResult(new Season([-2]), 'SequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
                         }
-                        const sequelSeasonNumber = sequelSeason.getSingleSeasonNumber();
+                        const sequelSeasonNumber = sequelSeason.getSingleSeasonNumberAsNumber();
                         if (sequelSeasonNumber && sequelSeason.seasonError === SeasonError.NONE) {
-                            return new SearchSeasonValueResult(new Season([sequelSeasonNumber - searchCount]), 'SequelTrace');
+                            return new SearchSeasonValueResult(new Season([sequelSeasonNumber as number - searchCount]), 'SequelTrace');
                         }
                     }
                     if (sequel.isAnySequelPresent()) {
@@ -136,7 +136,7 @@ export default class SeasonFindHelper {
     }
 
 
-     public static async prepareSearchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
+    public static async prepareSearchSeasonValue(series: Series, searchMode: SeasonSearchMode = SeasonSearchMode.ALL, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         if (this.isSeriesCurrentlyInTheSeasonProcess(series)) {
             return new SearchSeasonValueResult(new Season(undefined, undefined, SeasonError.CANT_GET_SEASON), 'None', SeasonError.CANT_GET_SEASON);
         }
@@ -156,7 +156,7 @@ export default class SeasonFindHelper {
      * So a dummy will be created where all provider data can be filled in.
      * @param localDatas
      */
-     public static async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
+    public static async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
         const result: Series[] = [];
         logger.info('[SeasonHelper] create temp series');
         for (const entry of localDatas) {
@@ -185,7 +185,7 @@ export default class SeasonFindHelper {
         return result;
     }
 
-     private static currentSeriesSeasonRequest: Series[] = [];
+    private static currentSeriesSeasonRequest: Series[] = [];
 
     /**
      * Controlls the search modes and will collect the result rate it and return it.
@@ -193,7 +193,7 @@ export default class SeasonFindHelper {
      * @param searchMode what search should be performed ? DEFAULT: `ALL`
      * @param seriesList where the relation should be, this will be needed to perform relation tracing. DEFAULT: `main list`
      */
-     private static async searchSeasonValue(series: Series, searchMode: SeasonSearchMode, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
+    private static async searchSeasonValue(series: Series, searchMode: SeasonSearchMode, seriesList?: Series[] | readonly Series[]): Promise<SearchSeasonValueResult> {
         logger.debug('[Season] [Search]: Season value.' + ' (' + series.id + ') MODE: ' + SeasonSearchMode[searchMode]);
 
         let prequelResult: SearchSeasonValueResult | undefined;
@@ -260,10 +260,10 @@ export default class SeasonFindHelper {
         return new SearchSeasonValueResult(new Season([-1]), 'None', SeasonError.CANT_GET_SEASON);
     }
 
-     private static isSeriesCurrentlyInTheSeasonProcess(series: Series): boolean {
+    private static isSeriesCurrentlyInTheSeasonProcess(series: Series): boolean {
         return SeasonFindHelper.currentSeriesSeasonRequest.findIndex((cSeries) => cSeries.id === series.id) !== -1;
     }
-     private static getSeasonPart(series: Series): number | undefined {
+    private static getSeasonPart(series: Series): number | undefined {
         for (const binding of series.getAllProviderBindings()) {
             if (binding.targetSeason?.seasonPart !== undefined) {
                 return binding.targetSeason.seasonPart;

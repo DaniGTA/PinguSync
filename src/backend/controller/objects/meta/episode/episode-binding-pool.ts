@@ -5,8 +5,11 @@ import EpisodeMapping from './episode-mapping';
 export default class EpisodeBindingPool {
     public readonly bindedEpisodeMappings: EpisodeMapping[] = [];
 
-    constructor(...episodes: EpisodeMapping[]) {
+    // tslint:disable-next-line: variable-name
+    private readonly __className: string;
 
+    constructor(...episodes: EpisodeMapping[]) {
+        this.__className = this.constructor.name;
         this.bindedEpisodeMappings.push(...episodes);
     }
     /**

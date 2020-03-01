@@ -18,10 +18,10 @@ import ProviderComperator from '../../comperators/provider-comperator';
 import SeasonComperator from '../../comperators/season-comperator';
 import listHelper from '../../list-helper';
 import TitleHelper from '../../name-helper/title-helper';
+import StringHelper from '../../string-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
-import StringHelper from '../../string-helper';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
@@ -196,10 +196,10 @@ export default new class ProviderInfoDownloadHelper {
         let searchResult: MultiProviderResult[] = [];
         let resultContainer: SearchResultRatingContainer[] = [];
         const season = await series.getSeason();
-        if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumber() === 1 || provider.hasUniqueIdForSeasons) {
+        if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumberAsNumber() === 1 || provider.hasUniqueIdForSeasons) {
             logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumbers);
             const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, ProviderInfoDownloadHelper.REQUEST_TIMEOUT_IN_MS));
-            searchResult = await Promise.race([maxRequestTime, provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumber())]);
+            searchResult = await Promise.race([maxRequestTime, provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumberAsNumber())]);
 
             if (searchResult && searchResult.length !== 0) {
                 logger.debug('[' + provider.providerName + '] Results: ' + searchResult.length);

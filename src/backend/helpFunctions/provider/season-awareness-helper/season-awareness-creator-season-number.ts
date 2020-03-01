@@ -113,7 +113,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
 
                 if (result.seasonComplete) {
                     if (currentSearchingSeason !== undefined && ((targetSeason.seasonNumbers.includes(currentSearchingSeason)) ||
-                        (result.seasonNumber !== undefined && listHelper.isAnyNumberListEntryInNumberList(result.seasonNumber, targetSeason.seasonNumbers)))) {
+                        (result.seasonNumber !== undefined && listHelper.isAnySeasonNumberListEntryInSeasonNumberList(result.seasonNumber, targetSeason.seasonNumbers)))) {
                         const pdwsi = new ProviderLocalDataWithSeasonInfo(providerThatDontHaveAwareness, new Season([currentSearchingSeason], currentSeasonPart));
                         const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season([currentSearchingSeason], currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);

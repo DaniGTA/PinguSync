@@ -1,9 +1,9 @@
 import { AbsoluteResult } from '../../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 import listHelper from '../../../helpFunctions/list-helper';
 import StringHelper from '../../../helpFunctions/string-helper';
+import logger from '../../../logger/logger';
 import { NameType } from './name-type';
 import SeasonNumberResponse from './response-object/season-number-response';
-import logger from '../../../logger/logger';
 
 export default class Name {
 

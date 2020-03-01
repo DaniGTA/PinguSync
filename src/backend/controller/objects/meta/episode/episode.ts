@@ -41,12 +41,11 @@ export default class Episode {
     public lastProviderUpdate?: number;
     public rating?: number;
     public provider?: string;
-    public providerId?: string | number
+    public providerId?: string | number;
     public providerEpisodeId?: number | string;
     public thumbnails: EpisodeThumbnail[] = [];
 
     private _season?: Season;
-
     /**
      * Only giv
      * @param episodeNumber
