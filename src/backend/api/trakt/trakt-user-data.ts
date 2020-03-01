@@ -1,12 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { TraktUserInfo } from './objects/userInfo';
-
-import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { UserData } from '../user-data';
+import { TraktUserInfo } from './objects/userInfo';
 
 export class TraktUserData extends UserData {
 
@@ -49,25 +47,12 @@ export class TraktUserData extends UserData {
         this.saveData();
 
     }
-
-
-
-    private async saveData() {
-        try {
-            const path = this.getPath();
-            logger.warn('[IO] Write trakt user file.');
-            fs.writeFileSync(path, JSON.stringify(this));
-        } catch (err) {
-            logger.error(err);
-        }
-    }
-
     protected loadData() {
         try {
-            const path = this.getPath();
-            logger.warn('[IO] Read trakt user file. ' + path);
-            if (fs.existsSync(path)) {
-                const loadedString = fs.readFileSync(path, 'UTF-8');
+            const filePath = this.getPath();
+            logger.warn('[IO] Read trakt user file. ' + filePath);
+            if (fs.existsSync(filePath)) {
+                const loadedString = fs.readFileSync(filePath, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
@@ -75,6 +60,17 @@ export class TraktUserData extends UserData {
             logger.error(err);
         }
     }
+
+    private async saveData() {
+        try {
+            const filePath = this.getPath();
+            logger.warn('[IO] Write trakt user file.');
+            fs.writeFileSync(filePath, JSON.stringify(this));
+        } catch (err) {
+            logger.error(err);
+        }
+    }
+
 
     private getPath(): string {
         try {

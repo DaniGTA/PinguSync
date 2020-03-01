@@ -1,35 +1,35 @@
 export default interface AniDBNameListXML {
-    animetitles: Animetitles;
+    animetitles: IAnimetitles;
 }
 
-interface Animetitles {
+interface IAnimetitles {
     anime: Anime[];
 }
 
 export interface Anime {
-    _attributes: Attributes2;
+    _attributes: IAttributes2;
     title: Title[];
 }
 
 export interface Title {
-    _attributes: Attributes3;
+    _attributes: IAttributes3;
     _text: string;
 }
 
-interface Attributes3 {
+interface IAttributes3 {
     'xml:lang': string;
     type: string;
 }
 
-interface Attributes2 {
+interface IAttributes2 {
     aid: string;
 }
 
-interface Declaration {
-    _attributes: Attributes;
+interface IDeclaration {
+    _attributes: IAttributes;
 }
 
-interface Attributes {
+interface IAttributes {
     version: string;
     encoding: string;
 }

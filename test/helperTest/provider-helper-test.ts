@@ -21,7 +21,7 @@ import ProviderHelper from '../../src/backend/helpFunctions/provider/provider-he
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
-
+jest.mock('../../src/backend/api/provider/external-provider');
 describe('Provider Helper Test', () => {
     beforeEach(() => {
         TestHelper.mustHaveBefore();
@@ -33,6 +33,10 @@ describe('Provider Helper Test', () => {
         MainListManager['mainList'] = [];
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);
+        const wait = jest.fn();
+        jest.fn().mockImplementation(() => {
+            return { waitUntilItCanPerfomNextRequest: wait };
+        });
     });
 
     test('It should find that it can get id from other provider', async () => {

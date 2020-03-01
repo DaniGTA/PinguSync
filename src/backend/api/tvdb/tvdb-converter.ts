@@ -6,7 +6,7 @@ import Overview from '../../controller/objects/meta/overview';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { TVDBSeries } from './models/getSeries';
-import { SeriesSearchResult } from './models/searchResults';
+import { ISeriesSearchResult } from './models/searchResults';
 import TVDBProvider from './tvdb-provider';
 
 export default class TVDBConverter {
@@ -25,7 +25,7 @@ export default class TVDBConverter {
         return infoProviderLocalData;
     }
 
-    public async convertSearchResultToProviderLocalData(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
+    public async convertSearchResultToProviderLocalData(searchResult: ISeriesSearchResult): Promise<InfoProviderLocalData> {
         if (searchResult.id) {
             const infoProviderLocalData = new InfoProviderLocalData(searchResult.id, TVDBProvider);
 
@@ -48,7 +48,7 @@ export default class TVDBConverter {
         throw new Error('[TVDBConverter] no id');
     }
 
-    public async convertSearchResultToSeries(searchResult: SeriesSearchResult): Promise<InfoProviderLocalData> {
+    public async convertSearchResultToSeries(searchResult: ISeriesSearchResult): Promise<InfoProviderLocalData> {
         const providerLocalData = await this.convertSearchResultToProviderLocalData(searchResult);
         providerLocalData.rawEntry = searchResult;
         if (searchResult.firstAired) {

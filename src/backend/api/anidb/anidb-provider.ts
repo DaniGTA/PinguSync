@@ -67,6 +67,7 @@ export default class AniDBProvider extends InfoProvider {
 
     constructor(download: boolean = true) {
         super();
+        this.requestRateLimitInMs = 2000;
         if (!AniDBProvider.instance) {
             AniDBProvider.instance = this;
             if (this.allowDownload() && download) {
@@ -108,8 +109,7 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     private async getSameTitle(searchTitle: string, nameDBList: AniDBNameListXML, season?: number) {
-        let lastResult: Name[] | null = null;
-        let lastSeriesDB: Anime | null = null;
+        const lastResults: Array<[Anime, Name[]]> = [];
         for (const seriesDB of nameDBList.animetitles.anime) {
             try {
                 const result = await AniDBProvider.checkTitles(searchTitle, seriesDB.title);
@@ -118,14 +118,12 @@ export default class AniDBProvider extends InfoProvider {
                     const seasonOfTitle = await Name.getSeasonNumber(result);
                     if (season !== undefined) {
                         if (seasonOfTitle.seasonNumber === undefined) {
-                            lastResult = result;
-                            lastSeriesDB = seriesDB;
+                            lastResults.push([seriesDB, result]);
                         } else if (seasonOfTitle.seasonNumber === season) {
                             return [await AniDBProvider.fillSeries(seriesDB, result)];
                         }
                     } else {
-                        lastResult = result;
-                        lastSeriesDB = seriesDB;
+                        lastResults.push([seriesDB, result]);
                         if (result.flatMap((x) => x.name).includes(searchTitle)) {
                             return [await AniDBProvider.fillSeries(seriesDB, result)];
                         }
@@ -135,8 +133,12 @@ export default class AniDBProvider extends InfoProvider {
                 logger.error(err);
             }
         }
-        if (lastResult && lastSeriesDB) {
-            return [await AniDBProvider.fillSeries(lastSeriesDB, lastResult)];
+        if (lastResults.length !== 0) {
+            const finalResult = [];
+            for (const lastResult of lastResults) {
+                finalResult.push(await AniDBProvider.fillSeries(lastResult[0], lastResult[1]));
+            }
+            return finalResult;
         }
         return [];
     }
@@ -205,6 +207,7 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     private async downloadFile(url: string, filePath: string): Promise<string> {
+        this.informAWebRequest();
         return new Promise<string>(async (resolve, rejects) => {
             const res = await WebRequestManager.request({ uri: url, gzip: true });
             if (res.statusCode === 200) {
@@ -221,6 +224,7 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     private async webRequest<T>(url: string): Promise<T> {
+        this.informAWebRequest();
         logger.log('info', '[AniDB] Start WebRequest');
 
         const response = await WebRequestManager.request({ method: 'GET', uri: url, gzip: true });

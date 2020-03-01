@@ -13,7 +13,7 @@ export interface IdRequestResult {
     Country: string;
     Awards: string;
     Poster: string;
-    Ratings: Rating[];
+    Ratings: IRating[];
     Metascore: string;
     imdbRating: string;
     imdbVotes: string;
@@ -23,7 +23,7 @@ export interface IdRequestResult {
     Response: string;
 }
 
-export interface Rating {
+export interface IRating {
     Source: string;
     Value: string;
 }

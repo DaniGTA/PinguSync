@@ -8,7 +8,7 @@ import InfoProvider from '../provider/info-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { TVDBSeries } from './models/getSeries';
 import { TVDBLogin } from './models/login';
-import SeriesSearchResults from './models/searchResults';
+import ISeriesSearchResults from './models/searchResults';
 import TVDBConverter from './tvdb-converter';
 import { TVDBProviderData } from './tvdb-provider-data';
 
@@ -47,7 +47,7 @@ export default class TVDBProvider extends InfoProvider {
         try {
             const tvDbConverter = new TVDBConverter();
             searchTitle = searchTitle.replace('&', 'and');
-            const data = await this.webRequest<SeriesSearchResults>(this.baseUrl + '/search/series?name=' + encodeURI(searchTitle));
+            const data = await this.webRequest<ISeriesSearchResults>(this.baseUrl + '/search/series?name=' + encodeURI(searchTitle));
 
             if (data.data) {
                 for (const searchResult of data.data) {
@@ -80,19 +80,19 @@ export default class TVDBProvider extends InfoProvider {
         } else {
             let token: string | null = null;
             const data = await WebRequestManager.request({
-                    method: 'POST',
-                    uri: TVDBProvider.Instance.baseUrl + '/login',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: `{
+                method: 'POST',
+                uri: TVDBProvider.Instance.baseUrl + '/login',
+                headers: { 'Content-Type': 'application/json' },
+                body: `{
                         "apikey": "` + TVDBProvider.Instance.apiKey + `"
                     }`,
             });
             if (data.statusCode === 200 || data.statusCode === 201) {
-                    const loginData = (JSON.parse(data.body) as TVDBLogin);
-                    token = loginData.token;
-                } else {
-                    throw new Error('[TVDB] Failed to get token');
-                }
+                const loginData = (JSON.parse(data.body) as TVDBLogin);
+                token = loginData.token;
+            } else {
+                throw new Error('[TVDB] Failed to get token');
+            }
             const dayInms = 86400000;
             TVDBProvider.Instance.apiData.setTokens(token, new Date().getTime() + dayInms);
             return token;
@@ -100,6 +100,7 @@ export default class TVDBProvider extends InfoProvider {
     }
 
     private async webRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+        this.informAWebRequest();
 
         try {
             const response = await WebRequestManager.request({

@@ -2,6 +2,7 @@
 import { MediaType } from '../../controller/objects/meta/media-type';
 import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import logger from '../../logger/logger';
 import ExternalProvider from '../provider/external-provider';
 import InfoProvider from '../provider/info-provider';
@@ -9,7 +10,7 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { SearchResults } from './models/search-results';
 import OMDbConverter from './omdb-converter';
-import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
+
 export default class OMDbProvider extends InfoProvider {
     public static instance: OMDbProvider;
     public isOffline: boolean = false;
@@ -78,14 +79,15 @@ export default class OMDbProvider extends InfoProvider {
 
 
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
+        this.informAWebRequest();
         const request = {
-            method,
-            uri: url,
             headers: {
                 'Content-Type': 'application/json',
             },
+            method,
             timeout: 5000,
-        }
+            uri: url,
+        };
         const response = await WebRequestManager.request(request);
         try {
             if (response.statusCode === 200 || response.statusCode === 201) {

@@ -33,7 +33,7 @@ describe('Season object tests', () => {
     });
 
     test('should not get the season number string', () => {
-        const undefinedSeason = new Season("test", 0, SeasonError.NONE);
+        const undefinedSeason = new Season('test', 0, SeasonError.NONE);
         strictEqual(undefinedSeason.isSeasonUndefined(), false);
         strictEqual(undefinedSeason.isSeasonNumberPresent(), false);
         strictEqual(undefinedSeason.getSingleSeasonNumberAsNumber(), undefined);

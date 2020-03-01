@@ -1,4 +1,4 @@
-import { Viewer } from './graphql/viewer';
+import { IViewer } from './graphql/viewer';
 
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
@@ -14,7 +14,7 @@ export class AniListUserData extends UserData {
     public refresh_token: string = '';
     public created_token: Date = new Date();
     public expires_in: number = 0;
-    public viewer?: Viewer;
+    public viewer?: IViewer;
     public list?: MultiProviderResult[];
     public lastListUpdate?: Date;
 
@@ -23,7 +23,7 @@ export class AniListUserData extends UserData {
         try {
             this.loadData();
         } catch (err) {
-            logger.error('[AniListUserData] '+err);
+            logger.error('[AniListUserData] ' + err);
         }
     }
 
@@ -33,7 +33,7 @@ export class AniListUserData extends UserData {
         this.saveData();
     }
 
-    public setViewer(viewer: Viewer) {
+    public setViewer(viewer: IViewer) {
         this.viewer = viewer;
         this.username = viewer.name;
         this.saveData();

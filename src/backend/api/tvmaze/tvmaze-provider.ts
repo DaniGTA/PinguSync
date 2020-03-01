@@ -55,6 +55,7 @@ export default class TVMazeProvider extends InfoProvider {
 
 
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
+        this.informAWebRequest();
         logger.log('info', '[TVMaze] Start WebRequest');
         const response = await WebRequestManager.request({
             method: method,

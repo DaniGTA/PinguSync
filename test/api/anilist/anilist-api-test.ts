@@ -13,16 +13,16 @@ describe('Provider: AniList | Test runs', () => {
     });
     test('should return headers', async () => {
         const options: (request.UriOptions & request.CoreOptions) = {
-            uri: 'https://graphql.anilist.co',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
             body: JSON.stringify({
                 query: 'query',
                 variables: 'variables',
             }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            uri: 'https://graphql.anilist.co',
         };
 
         const a = new AniListProvider();

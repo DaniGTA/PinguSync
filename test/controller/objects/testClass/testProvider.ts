@@ -22,6 +22,7 @@ export default class TestProvider extends ListProvider {
 
     constructor(providerName: string, loggedIn: boolean = true, hasUniqueIdForSeasons: boolean = false) {
         super();
+        this.requestRateLimitInMs = 0;
         this.providerName = providerName;
         this.loggedIn = loggedIn;
         this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;

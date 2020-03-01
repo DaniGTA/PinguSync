@@ -3,7 +3,6 @@ import { ListProviderLocalData } from '../../controller/provider-manager/local-d
 import ListProvider from '../provider/list-provider';
 import { TraktSearch } from './objects/search';
 import { TraktUserInfo } from './objects/userInfo';
-import { WatchedInfo } from './objects/watchedInfo';
 import { TraktUserData } from './trakt-user-data';
 
 // tslint:disable-next-line: no-implicit-dependencies
@@ -16,6 +15,7 @@ import ExternalProvider from '../provider/external-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import { FullShowInfo } from './objects/fullShowInfo';
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
+import { WatchedInfo } from './objects/watchedInfo';
 import traktConverter from './trakt-converter';
 export default class TraktProvider extends ListProvider {
 
@@ -153,7 +153,6 @@ export default class TraktProvider extends ListProvider {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            method: 'POST',
             json: {
                 client_id: this.clientId,
                 client_secret: this.clientSecret,
@@ -161,6 +160,7 @@ export default class TraktProvider extends ListProvider {
                 grant_type: 'authorization_code',
                 redirect_uri: this.redirectUri,
             },
+            method: 'POST',
             uri: 'https://api.trakt.tv/oauth/token',
         };
         const response = await WebRequestManager.request(options);
@@ -175,6 +175,7 @@ export default class TraktProvider extends ListProvider {
     }
 
     private async traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+        this.informAWebRequest();
         logger.log('info', '[Trakt] Start WebRequest ♗');
 
         const response = await WebRequestManager.request({

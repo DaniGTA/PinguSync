@@ -30,7 +30,7 @@ export default new class ProviderInfoDownloadHelper {
     private static readonly REQUEST_TIMEOUT_IN_MS: number = 5000; // 5000ms = 5seconds
     private static readonly NO_INDEX = -1;
     // ---------------------------------------------------------
-    // ! This function below have a big impact on this program !
+    // ! These functions below have a big impact on this program !
     // ----------------------------------------------------------
 
     public async checkListProviderId(a: Series, b: Series): Promise<SameIdAndUniqueId> {
@@ -74,6 +74,7 @@ export default new class ProviderInfoDownloadHelper {
                 }
             } else {
                 try {
+                    await provider.waitUntilItCanPerfomNextRequest();
                     const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
                     logger.log('info', '[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
                     const id = result.mainProvider.providerLocalData.id.toString();
@@ -198,6 +199,7 @@ export default new class ProviderInfoDownloadHelper {
         const season = await series.getSeason();
         if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumberAsNumber() === 1 || provider.hasUniqueIdForSeasons) {
             logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumbers);
+            await provider.waitUntilItCanPerfomNextRequest();
             const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, ProviderInfoDownloadHelper.REQUEST_TIMEOUT_IN_MS));
             searchResult = await Promise.race([maxRequestTime, provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumberAsNumber())]);
 

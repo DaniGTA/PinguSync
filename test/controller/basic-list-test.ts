@@ -24,7 +24,7 @@ import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provid
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
 import TestHelper from '../test-helper';
-
+jest.mock('../../src/backend/api/provider/external-provider');
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
 
@@ -33,9 +33,17 @@ describe('Basic List | Testrun', () => {
         const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
         if (!anilistInstance) { fail(); }
         anilistInstance.isUserLoggedIn = async () => true;
+        anilistInstance['requestRateLimitInMs'] = 0;
         const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
+        traktInstance['requestRateLimitInMs'] = 0;
+
+        const wait = jest.fn();
+        jest.fn().mockImplementation(() => {
+            return { waitUntilItCanPerfomNextRequest: wait };
+        });
+
     });
 
     beforeEach(() => {
@@ -544,7 +552,7 @@ describe('Basic List | Testrun', () => {
         }
     }, 4000);
 
-    test('should get series and should map episodes right', async () => {
+    test('should get series and should map episodes right (Series: Clannad) (Has different max episode number on S1)', async () => {
         const provider = new ListProviderLocalData(2167, AniListProvider);
         provider.addSeriesName(new Name('Clannad', 'en', NameType.OFFICIAL));
 
@@ -572,6 +580,77 @@ describe('Basic List | Testrun', () => {
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
             strictEqual(epMapping.bindedEpisodeMappings.length, 2);
+            for (const ep of epMapping.bindedEpisodeMappings) {
+                for (const ep2 of epMapping.bindedEpisodeMappings) {
+                    strictEqual(ep.episodeNumber, ep2.episodeNumber);
+                }
+            }
+        }
+    });
+
+
+    test('should get series and should map episodes right (Series: Nanbaka)', async () => {
+        const provider = new ListProviderLocalData(110252, TraktProvider);
+
+        const series = new Series();
+        await series.addProviderDatas(provider);
+        const adderInstance = new MainListAdder();
+
+        // Test
+
+        await adderInstance.addSeries(series);
+
+        // Result checking
+        const mainList = await MainListManager.getMainList();
+        strictEqual(mainList.length, 1);
+
+        const resultSeries = mainList[0];
+
+        const bindings = resultSeries.getListProvidersInfos();
+        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
+        strictEqual(bindings[1].id, 21051);
+
+        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
+        strictEqual(bindings[0].id, 110252);
+
+        const epMappings = resultSeries.episodeBindingPools;
+        for (const epMapping of epMappings) {
+            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
+            for (const ep of epMapping.bindedEpisodeMappings) {
+                for (const ep2 of epMapping.bindedEpisodeMappings) {
+                    strictEqual(ep.episodeNumber, ep2.episodeNumber);
+                }
+            }
+        }
+    });
+
+    test('should get series and should map episodes right (Series: When they Cry)', async () => {
+        const provider = new ListProviderLocalData(61179, TraktProvider);
+
+        const series = new Series();
+        await series.addProviderDatas(provider);
+        const adderInstance = new MainListAdder();
+
+        // Test
+
+        await adderInstance.addSeries(series);
+
+        // Result checking
+        const mainList = await MainListManager.getMainList();
+        strictEqual(mainList.length, 1);
+
+        const resultSeries = mainList[0];
+
+        const bindings = resultSeries.getListProvidersInfos();
+        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
+        strictEqual(bindings[1].id, 934);
+
+        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
+        strictEqual(bindings[0].id, 61179);
+
+        const epMappings = resultSeries.episodeBindingPools;
+        for (const epMapping of epMappings) {
+            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);

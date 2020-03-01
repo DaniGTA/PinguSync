@@ -1,6 +1,6 @@
 export enum MediaType {
-    //Japanese Anime
-    ANIME = "ANIME",
-    //Asian comic
-    MANGA = "MANGA"
+    // Japanese Anime
+    ANIME = 'ANIME',
+    // Asian comic
+    MANGA = 'MANGA',
 }

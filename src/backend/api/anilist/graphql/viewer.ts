@@ -1,24 +1,24 @@
 
-export interface Avatar {
+export interface IAvatar {
     large: string;
 }
 
-export interface Options {
+export interface IOptions {
     titleLanguage: string;
     displayAdultContent: boolean;
 }
 
-export interface MediaListOptions {
+export interface IMediaListOptions {
     scoreFormat: string;
 }
 
-export interface Viewer {
+export interface IViewer {
     id: number;
     name: string;
-    avatar: Avatar;
+    avatar: IAvatar;
     unreadNotificationCount: number;
     donatorTier: number;
     updatedAt: number;
-    options: Options;
-    mediaListOptions: MediaListOptions;
+    options: IOptions;
+    mediaListOptions: IMediaListOptions;
 }

@@ -22,7 +22,7 @@ import saveMediaListEntryGql from './graphql/saveMediaListEntry.gql';
 import { SearchSeries } from './graphql/searchSeries';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import { MediaListCollection } from './graphql/seriesList';
-import { Viewer } from './graphql/viewer';
+import { IViewer } from './graphql/viewer';
 
 export default class AniListProvider extends ListProvider {
 
@@ -133,7 +133,7 @@ export default class AniListProvider extends ListProvider {
         const query = getViewerGql;
         const options = this.getGraphQLOptions(query);
         this.webRequest<any>(options).then((value) => {
-            const data = value.Viewer as Viewer;
+            const data = value.Viewer as IViewer;
             that.userData.setViewer(data);
         });
     }
@@ -210,7 +210,6 @@ export default class AniListProvider extends ListProvider {
 
     public async getUserSeriesList(): Promise<MediaListCollection> {
         if (this.userData.viewer) {
-            const _this = this;
             // Here we define our query as a multi-line string
             // Storing it in a separate .graphql/.gql file is also possible
             const query = GetUserSeriesListGql;
@@ -228,6 +227,8 @@ export default class AniListProvider extends ListProvider {
     }
 
     private async webRequest<T>(options: (request.UriOptions & request.CoreOptions)): Promise<T> {
+        this.informAWebRequest();
+
         logger.log('info', '[AniList] Start WebRequest');
 
         const response = await WebRequestManager.request(options);

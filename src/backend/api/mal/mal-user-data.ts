@@ -1,11 +1,11 @@
 import * as fs from 'fs';
+import { LoginData } from 'node-myanimelist/typings/methods/poly/noApiLogin';
 import * as path from 'path';
-
 import Series from '../../controller/objects/series';
 import PathHelper from '../../helpFunctions/path-helper';
 import logger from '../../logger/logger';
 import { UserData } from '../user-data';
-import { LoginData } from 'node-myanimelist/typings/methods/poly/noApiLogin';
+
 
 export class MalUserData extends UserData {
 
@@ -29,28 +29,28 @@ export class MalUserData extends UserData {
         this.loginData = loginData;
         this.saveData();
     }
-
-    private async saveData() {
-        try {
-           logger.debug('[IO] Write mal user file.');
-           fs.writeFileSync(this.getPath(), JSON.stringify(this));
-        } catch (err) {
-           logger.error(err);
-        }
-    }
-
     protected loadData() {
         try {
-           logger.debug('[IO] Read mal user file.');
-           if (fs.existsSync(this.getPath())) {
+            logger.debug('[IO] Read mal user file.');
+            if (fs.existsSync(this.getPath())) {
                 const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
             }
         } catch (err) {
-           logger.error(err);
+            logger.error(err);
         }
     }
+
+    private async saveData() {
+        try {
+            logger.debug('[IO] Write mal user file.');
+            fs.writeFileSync(this.getPath(), JSON.stringify(this));
+        } catch (err) {
+            logger.error(err);
+        }
+    }
+
 
     private getPath(): string {
         try {

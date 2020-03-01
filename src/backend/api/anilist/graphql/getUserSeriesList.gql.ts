@@ -11,7 +11,7 @@ query ($id: Int!, $listType: MediaType) {
     }
     user {
       id
-      name 
+      name
       avatar {
         large
       }

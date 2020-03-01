@@ -1,6 +1,6 @@
 export interface AniDBAnimeFullInfo {
     _declaration: Declaration;
-    anime:        AniDBAnimeAnime;
+    anime: AniDBAnimeAnime;
 }
 
 export interface Declaration {
@@ -8,33 +8,33 @@ export interface Declaration {
 }
 
 export interface DeclarationAttributes {
-    version:  string;
+    version: string;
     encoding: string;
 }
 
 export interface AniDBAnimeAnime {
-    _attributes:      PurpleAttributes;
-    type:             Description;
-    episodecount:     Description;
-    startdate:        Description;
-    enddate:          Description;
-    titles:           Titles;
-    relatedanime?:    Relatedanime;
+    _attributes: PurpleAttributes;
+    type: Description;
+    episodecount: Description;
+    startdate: Description;
+    enddate: Description;
+    titles: Titles;
+    relatedanime?: Relatedanime;
     recommendations?: Recommendations;
-    url?:             Description;
-    creators?:        Creators;
-    description?:     Description;
-    ratings:          Ratings;
-    picture:          Description;
-    resources:        AnimeResources;
-    tags?:            Tags;
-    characters?:      Characters;
-    episodes:         Episodes;
-    similaranime?:    Similaranime;
+    url?: Description;
+    creators?: Creators;
+    description?: Description;
+    ratings: Ratings;
+    picture: Description;
+    resources: AnimeResources;
+    tags?: Tags;
+    characters?: Characters;
+    episodes: Episodes;
+    similaranime?: Similaranime;
 }
 
 export interface PurpleAttributes {
-    id:         string;
+    id: string;
     restricted: string;
 }
 
@@ -43,31 +43,31 @@ export interface Characters {
 }
 
 export interface Character {
-    _attributes:   CharacterAttributes;
-    rating?:       Rating;
-    name:          Description;
-    gender:        Description;
+    _attributes: CharacterAttributes;
+    rating?: Rating;
+    name: Description;
+    gender: Description;
     charactertype: Charactertype;
-    description?:  Description;
-    picture?:      Description;
-    seiyuu?:       SeiyuuElement[] | SeiyuuElement;
+    description?: Description;
+    picture?: Description;
+    seiyuu?: SeiyuuElement[] | SeiyuuElement;
 }
 
 export interface CharacterAttributes {
-    id:     string;
-    type:   PurpleType;
+    id: string;
+    type: PurpleType;
     update: Date;
 }
 
 export enum PurpleType {
-    AppearsIn = "appears in",
-    MainCharacterIn = "main character in",
-    SecondaryCastIn = "secondary cast in",
+    AppearsIn = 'appears in',
+    MainCharacterIn = 'main character in',
+    SecondaryCastIn = 'secondary cast in',
 }
 
 export interface Charactertype {
     _attributes: CharactertypeAttributes;
-    _text:       Text;
+    _text: Text;
 }
 
 export interface CharactertypeAttributes {
@@ -75,9 +75,9 @@ export interface CharactertypeAttributes {
 }
 
 export enum Text {
-    Character = "Character",
-    Mecha = "Mecha",
-    Organization = "Organization",
+    Character = 'Character',
+    Mecha = 'Mecha',
+    Organization = 'Organization',
 }
 
 export interface Description {
@@ -86,7 +86,7 @@ export interface Description {
 
 export interface Rating {
     _attributes: RatingAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface RatingAttributes {
@@ -95,11 +95,11 @@ export interface RatingAttributes {
 
 export interface SeiyuuElement {
     _attributes: SeiyuuAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface SeiyuuAttributes {
-    id:      string;
+    id: string;
     picture: string;
 }
 
@@ -109,11 +109,11 @@ export interface Creators {
 
 export interface AttributeInfo {
     _attributes: NameAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface NameAttributes {
-    id:   string;
+    id: string;
     type: string;
 }
 
@@ -123,23 +123,23 @@ export interface Episodes {
 
 export interface EpisodeElement {
     _attributes: EpisodeAttributes;
-    epno:        Epno;
-    length:      Description;
-    airdate?:    Description;
-    rating?:     Rating;
-    title:       TitleTitle[] | TitleTitle;
-    summary?:    Description;
-    resources?:  EpisodeResources;
+    epno: Epno;
+    length: Description;
+    airdate?: Description;
+    rating?: Rating;
+    title: TitleTitle[] | TitleTitle;
+    summary?: Description;
+    resources?: EpisodeResources;
 }
 
 export interface EpisodeAttributes {
-    id:     string;
+    id: string;
     update: Date;
 }
 
 export interface Epno {
     _attributes: EpnoAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface EpnoAttributes {
@@ -151,7 +151,7 @@ export interface EpisodeResources {
 }
 
 export interface ResourcesResourceClass {
-    _attributes:    EpnoAttributes;
+    _attributes: EpnoAttributes;
     externalentity: PurpleExternalentity;
 }
 
@@ -161,39 +161,39 @@ export interface PurpleExternalentity {
 
 export interface TitleTitle {
     _attributes: FluffyAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface FluffyAttributes {
-    "xml:lang": XMLLang;
+    'xml:lang': XMLLang;
 }
 
 export enum XMLLang {
-    Ar = "ar",
-    En = "en",
-    Fr = "fr",
-    Ja = "ja",
-    Th = "th",
-    XJat = "x-jat",
+    Ar = 'ar',
+    En = 'en',
+    Fr = 'fr',
+    Ja = 'ja',
+    Th = 'th',
+    XJat = 'x-jat',
 }
 
 export interface PurpleEpisode {
     _attributes: EpisodeAttributes;
-    epno:        Epno;
-    length:      Description;
-    title:       TitleTitle;
-    airdate?:    Description;
+    epno: Epno;
+    length: Description;
+    title: TitleTitle;
+    airdate?: Description;
 }
 
 export interface Ratings {
     permanent: Permanent;
     temporary: Permanent;
-    review?:   Permanent;
+    review?: Permanent;
 }
 
 export interface Permanent {
     _attributes: PermanentAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface PermanentAttributes {
@@ -201,7 +201,7 @@ export interface PermanentAttributes {
 }
 
 export interface Recommendations {
-    _attributes:    RecommendationsAttributes;
+    _attributes: RecommendationsAttributes;
     recommendation: RecommendationElement[] | RecommendationElement;
 }
 
@@ -211,18 +211,18 @@ export interface RecommendationsAttributes {
 
 export interface RecommendationElement {
     _attributes: RecommendationAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface RecommendationAttributes {
     type: FluffyType;
-    uid:  string;
+    uid: string;
 }
 
 export enum FluffyType {
-    ForFans = "For Fans",
-    MustSee = "Must See",
-    Recommended = "Recommended",
+    ForFans = 'For Fans',
+    MustSee = 'Must See',
+    Recommended = 'Recommended',
 }
 
 export interface Relatedanime {
@@ -234,7 +234,7 @@ export interface AnimeResources {
 }
 
 export interface ResourceElement {
-    _attributes:    EpnoAttributes;
+    _attributes: EpnoAttributes;
     externalentity: ExternalentityElement[] | FluffyExternalentity;
 }
 
@@ -244,11 +244,11 @@ export interface ExternalentityElement {
 
 export interface FluffyExternalentity {
     identifier?: Description[] | Description;
-    url?:        Description;
+    url?: Description;
 }
 
 export interface PurpleResource {
-    _attributes:    EpnoAttributes;
+    _attributes: EpnoAttributes;
     externalentity: ExternalentityElement;
 }
 
@@ -258,13 +258,13 @@ export interface Similaranime {
 
 export interface AnimeElement {
     _attributes: TentacledAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface TentacledAttributes {
-    id:       string;
+    id: string;
     approval: string;
-    total:    string;
+    total: string;
 }
 
 export interface Tags {
@@ -272,21 +272,21 @@ export interface Tags {
 }
 
 export interface Tag {
-    _attributes:  TagAttributes;
-    name:         Description;
+    _attributes: TagAttributes;
+    name: Description;
     description?: Description;
-    picurl?:      Description;
+    picurl?: Description;
 }
 
 export interface TagAttributes {
-    id:            string;
-    parentid?:     string;
-    infobox?:      string;
-    weight:        string;
-    localspoiler:  string;
+    id: string;
+    parentid?: string;
+    infobox?: string;
+    weight: string;
+    localspoiler: string;
     globalspoiler: string;
-    verified:      string;
-    update:        Date;
+    verified: string;
+    update: Date;
 }
 
 export interface Titles {
@@ -295,17 +295,17 @@ export interface Titles {
 
 export interface TitlesTitle {
     _attributes: StickyAttributes;
-    _text:       string;
+    _text: string;
 }
 
 export interface StickyAttributes {
-    "xml:lang": string;
-    type:       TentacledType;
+    'xml:lang': string;
+    type: TentacledType;
 }
 
 export enum TentacledType {
-    Main = "main",
-    Official = "official",
-    Short = "short",
-    Synonym = "synonym",
+    Main = 'main',
+    Official = 'official',
+    Short = 'short',
+    Synonym = 'synonym',
 }

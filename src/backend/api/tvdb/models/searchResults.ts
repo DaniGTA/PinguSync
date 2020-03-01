@@ -1,15 +1,15 @@
-export default interface SeriesSearchResults {
-    data?: SeriesSearchResult[];
+export default interface ISeriesSearchResults {
+    data?: ISeriesSearchResult[];
 }
 
-export interface SeriesSearchResult {
-    aliases?: string[],
-    banner?: string,
-    firstAired?: string,
-    id?: string,
-    network?: string,
-    overview?: string,
-    seriesName?: string,
-    slug?: string,
-    status?: string,
+export interface ISeriesSearchResult {
+    aliases?: string[];
+    banner?: string;
+    firstAired?: string;
+    id?: string;
+    network?: string;
+    overview?: string;
+    seriesName?: string;
+    slug?: string;
+    status?: string;
 }
