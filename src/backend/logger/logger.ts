@@ -5,15 +5,16 @@ const logFormat = winston.format.printf((info) => {
 });
 let errorsFormat;
 try {
-  errorsFormat = winston.format.errors({ stack: true })
+  errorsFormat = winston.format.errors({ stack: true });
   logger = winston.createLogger({
-    level: 'info',
     format: winston.format.combine(winston.format.combine(winston.format.colorize(), logFormat, errorsFormat)),
+    level: 'info',
     transports: [
-          new winston.transports.Console({ level: 'info' }),
-      ],
-      
+      new winston.transports.Console({ level: 'info' }),
+    ],
   });
-}catch(err){}
+} catch (err) {
+  logger.debug(err);
+}
 
 export default logger;

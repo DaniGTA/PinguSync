@@ -14,5 +14,8 @@
         "pass"
     ],
     "discord.enabled": false,
-    "typescript.tsdk": "node_modules\\typescript\\lib"
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "eslint.lintTask.enable": true,
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true
+
 }

@@ -75,7 +75,7 @@ export default class AniDBProvider extends InfoProvider {
                 try {
                     AniDBProvider.anidbNameManager.updateOnlyData(this.convertXmlToJson());
                 } catch (err) {
-                    logger.error('Error at AniDBProvider.constructor:')
+                    logger.error('Error at AniDBProvider.constructor:');
                     logger.error(err);
                 }
             }

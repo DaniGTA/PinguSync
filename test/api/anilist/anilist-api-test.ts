@@ -33,8 +33,4 @@ describe('Provider: AniList | Test runs', () => {
         assert.equal(options.uri, result.uri);
         return;
     });
-    test('should get a series (1/1)', async () => {
-
-    });
-
 });

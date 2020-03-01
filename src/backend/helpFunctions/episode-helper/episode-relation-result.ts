@@ -1,5 +1,4 @@
 export default class EpisodeRelationResult {
-    private toleranze = 1;
 
     public seasonNumber: number[] | undefined;
     public episodes: number;
@@ -9,6 +8,7 @@ export default class EpisodeRelationResult {
     public maxEpisodeNumberFound: number;
     public maxDifference: number;
 
+    private toleranze = 1;
     constructor(seasonNumber: number[] | undefined, episodes: number, episodesFound: number, maxEpisodeNumberFound: number, maxDifference: number) {
         this.seasonNumber = seasonNumber;
         this.episodesFound = episodesFound;

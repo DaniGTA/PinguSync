@@ -27,7 +27,7 @@ export default class AniDBNameManager {
             logger.log('info', '[Save] -> AniDB -> Names');
             fs.writeFileSync(this.getPath(), JSON.stringify(this));
         } catch (err) {
-            logger.error('Error at AniDBNameManager.save:')
+            logger.error('Error at AniDBNameManager.save:');
             logger.error(err);
         }
     }
@@ -43,7 +43,7 @@ export default class AniDBNameManager {
                 }
             }
         } catch (err) {
-            logger.error('Error at AniDBNameManager.load:')
+            logger.error('Error at AniDBNameManager.load:');
             logger.error(err);
         }
     }

@@ -141,7 +141,7 @@ export default class AniDBConverter {
                 try {
                     subProviders.push(await this.getResourceInfoProvider(resource));
                 } catch (err) {
-                    logger.error('Error at AniDBConverter.getSubProviders #1')
+                    logger.error('Error at AniDBConverter.getSubProviders #1');
                     logger.error(err);
                 }
             }

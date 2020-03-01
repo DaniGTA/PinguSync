@@ -1,4 +1,5 @@
 import Episode from '../../controller/objects/meta/episode/episode';
+import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
@@ -6,7 +7,6 @@ import EpisodeComperator from '../comperators/episode-comperator';
 import SeasonComperator from '../comperators/season-comperator';
 import listHelper from '../list-helper';
 import EpisodeRelationResult from './episode-relation-result';
-import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
 
 export default class EpisodeHelper {
 
@@ -52,7 +52,7 @@ export default class EpisodeHelper {
                     if (episode.season !== undefined && episode.season.seasonNumbers !== undefined) {
                         for (const seasonNumber of episode.season.seasonNumbers) {
                             if (!isNaN(seasonNumber as number)) {
-                                seasonNumbers.push(Number.parseInt(seasonNumber as string));
+                                seasonNumbers.push(Number.parseInt(seasonNumber as string, 10));
                             }
                         }
                     }
@@ -104,10 +104,10 @@ export default class EpisodeHelper {
     }
 
     /**
-    * Checks if `a` and `b` have the same id.
-    * @param a episode a will be compared with b
-    * @param b episode b will be compared with a
-    */
+     * Checks if `a` and `b` have the same id.
+     * @param a episode a will be compared with b
+     * @param b episode b will be compared with a
+     */
     public static isSameEpisodeID(a: Episode, b: Episode): boolean {
         return a.id === b.id;
     }

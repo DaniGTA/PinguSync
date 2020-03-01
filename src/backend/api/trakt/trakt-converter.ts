@@ -14,6 +14,7 @@ import { InfoProviderLocalData } from '../../controller/provider-manager/local-d
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
+import TitleHelper from '../../helpFunctions/name-helper/title-helper';
 import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../logger/logger';
 import MultiProviderResult from '../provider/multi-provider-result';
@@ -24,7 +25,6 @@ import { Season as TrakSeason, SendEntryUpdate, Show as SendEntryShow, TraktEpis
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
-import TitleHelper from '../../helpFunctions/name-helper/title-helper';
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];
@@ -184,7 +184,7 @@ export default new class TraktConverter {
     public async convertAnimeToSendRemoveEntryShow(series: Series, removeEpisode: number): Promise<SendEntryUpdate> {
         const currentProvider = series.getListProvidersInfos().find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
         const seriesSeason = (await series.getSeason());
-       
+
         if (typeof currentProvider !== 'undefined' && seriesSeason.isSeasonNumberPresent()) {
 
             const episodes: TraktEpisode[] = [];
@@ -200,7 +200,7 @@ export default new class TraktConverter {
             for (const seasonNumber of seriesSeason.seasonNumbers) {
                 const season: TrakSeason = {
                     episodes,
-                    number: seasonNumber,
+                    number: Number.parseInt(seasonNumber as string, 10),
                 };
 
                 sendEntryShow.seasons.push(season);
@@ -210,13 +210,13 @@ export default new class TraktConverter {
             };
             return sendEntryUpdate;
         }
-    
+
         throw new Error('failed convert');
     }
 
     public async convertAnimeToSendEntryShow(series: Series, newWatchprogress: number): Promise<SendEntryUpdate> {
         const currentProvider = series.getListProvidersInfos().find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
-        let seasonNumbers = (await series.getSeason()).seasonNumbers;
+        const seasonNumbers = (await series.getSeason()).seasonNumbers;
         if (currentProvider && seasonNumbers) {
 
             const episodes: TraktEpisode[] = [];
@@ -243,7 +243,7 @@ export default new class TraktConverter {
                 for (const seasonNumber of seasonNumbers) {
                     const season: TrakSeason = {
                         episodes,
-                        number: seasonNumber,
+                        number: Number.parseInt(seasonNumber as string, 10),
                     };
 
                     sendEntryShow.seasons.push(season);
