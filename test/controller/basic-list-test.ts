@@ -39,8 +39,12 @@ describe('Basic List | Testrun', () => {
 
         const anidb = ProviderList.getExternalProviderInstanceByProviderName(ProviderNameManager.getProviderName(AniDBProvider)) as AniDBProvider;
         if (anidb) {
-            await anidb['getAniDBNameListXML']();
-            anidb['convertXmlToJson']();
+            try {
+                await anidb['getAniDBNameListXML']();
+                anidb['convertXmlToJson']();
+            } catch (err) {
+                logger.error('Failed to load json from xml (AniDB)');
+            }
         }
     });
 
