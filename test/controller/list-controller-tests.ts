@@ -13,9 +13,11 @@ import TestProvider from './objects/testClass/testProvider';
 // tslint:disable: no-string-literal
 describe('ListController | Combine', () => {
     const lc = new ListController(true);
+    beforeAll(() => {
+        TestHelper.mustHaveBefore();
+    });
 
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = [
             new TestProvider('Test'),
             new TestProvider(''),

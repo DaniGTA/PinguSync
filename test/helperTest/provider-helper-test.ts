@@ -19,27 +19,40 @@ import ProviderNameManager from '../../src/backend/controller/provider-manager/p
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
 import ProviderHelper from '../../src/backend/helpFunctions/provider/provider-helper';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import logger from '../../src/backend/logger/logger';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
 jest.mock('../../src/backend/api/provider/external-provider');
+// tslint:disable: no-string-literal
 describe('Provider Helper Test', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         TestHelper.mustHaveBefore();
-        const anidb = new AniDBProvider();
-        await anidb['getAniDBNameListXML']();
-        anidb['convertXmlToJson']();
-        // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
-        // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3'), anidb];
-        // tslint:disable-next-line: no-string-literal
-        MainListManager['mainList'] = [];
-        // tslint:disable-next-line: no-unused-expression
-        new ListController(true);
+        try {
+            const anidb = new AniDBProvider();
+            await anidb['getAniDBNameListXML']();
+            anidb['convertXmlToJson']();
+        } catch (err) {
+            logger.error(err);
+        }
         const wait = jest.fn();
         jest.fn().mockImplementation(() => {
             return { waitUntilItCanPerfomNextRequest: wait };
         });
+    });
+
+    beforeEach(() => {
+
+        ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
+        // tslint:disable-next-line: no-string-literal
+        ProviderList['loadedInfoProvider'] = [
+            new TestInfoProvider('test1'),
+            new TestInfoProvider('test2'), new TestInfoProvider('test3'),
+            new AniDBProvider(false)];
+        // tslint:disable-next-line: no-string-literal
+        MainListManager['mainList'] = [];
+        // tslint:disable-next-line: no-unused-expression
+        new ListController(true);
+
     });
 
     test('It should find that it can get id from other provider', async () => {
