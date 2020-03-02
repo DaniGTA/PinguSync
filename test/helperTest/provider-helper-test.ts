@@ -33,6 +33,10 @@ describe('Provider Helper Test', () => {
         MainListManager['mainList'] = [];
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);
+
+        const anidb = new AniDBProvider();
+        await anidb['getAniDBNameListXML']();
+        anidb['convertXmlToJson']();
     });
 
     test('It should find that it can get id from other provider', async () => {
