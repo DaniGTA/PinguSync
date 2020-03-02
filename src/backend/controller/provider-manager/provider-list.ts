@@ -47,17 +47,18 @@ export default class ProviderList extends ProviderLoader {
         } else {
             providerName = localdata.provider;
         }
-        for (const provider of ProviderList.getListProviderList()) {
-            if (provider.providerName === providerName) {
-                return provider;
-            }
-        }
-        for (const provider of ProviderList.getInfoProviderList()) {
-            if (provider.providerName === providerName) {
-                return provider;
-            }
+        const result = this.getExternalProviderInstanceByProviderName(providerName);
+        if (result) {
+            return result;
         }
         throw new Error('[ProviderList] NoProviderFound: ' + providerName);
     }
 
+    public static getExternalProviderInstanceByProviderName(providerName: string): ExternalProvider | undefined {
+        for (const provider of ProviderList.getAllProviderLists()) {
+            if (provider.providerName === providerName) {
+                return provider;
+            }
+        }
+    }
 }

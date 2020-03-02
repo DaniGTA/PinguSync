@@ -23,12 +23,15 @@ import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
 jest.mock('../../src/backend/api/provider/external-provider');
 describe('Provider Helper Test', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         TestHelper.mustHaveBefore();
+        const anidb = new AniDBProvider();
+        await anidb['getAniDBNameListXML']();
+        anidb['convertXmlToJson']();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3'), new AniDBProvider()];
+        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3'), anidb];
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
         // tslint:disable-next-line: no-unused-expression
@@ -144,7 +147,7 @@ describe('Provider Helper Test', () => {
 
         const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
         if (anidbProvider) {
-            strictEqual(anidbProvider.id, '13658');
+            equal(anidbProvider.id, '13658');
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.getSingleSeasonNumberAsNumber(), 3);
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart, 2);
 

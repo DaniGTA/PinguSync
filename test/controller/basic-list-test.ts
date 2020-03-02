@@ -28,7 +28,7 @@ jest.mock('../../src/backend/api/provider/external-provider');
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
 
-    beforeAll(() => {
+    beforeAll(async () => {
         TestHelper.mustHaveBefore();
         const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
         if (!anilistInstance) { fail(); }
@@ -37,13 +37,22 @@ describe('Basic List | Testrun', () => {
         const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
-        traktInstance['requestRateLimitInMs'] = 0;
 
         const wait = jest.fn();
         jest.fn().mockImplementation(() => {
             return { waitUntilItCanPerfomNextRequest: wait };
         });
 
+        ProviderList.getInfoProviderList();
+        const anidb = ProviderList.getExternalProviderInstanceByProviderName(ProviderNameManager.getProviderName(AniDBProvider)) as AniDBProvider;
+        if (anidb) {
+            try {
+                await anidb['getAniDBNameListXML']();
+                anidb['convertXmlToJson']();
+            } catch (err) {
+                logger.error('Failed to load json from xml (AniDB)');
+            }
+        }
     });
 
     beforeEach(() => {

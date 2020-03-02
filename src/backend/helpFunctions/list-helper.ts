@@ -53,7 +53,7 @@ class ListHelper {
             if (i > -1) {
                 array.splice(i, 1);
             } else {
-                logger.error('[ListHelper] Item doesnt exist in List!');
+                logger.debug('[ListHelper] Item doesnt exist in List!');
             }
         }
         return array;
@@ -66,7 +66,7 @@ class ListHelper {
                 if (i > -1) {
                     array.splice(i, 1);
                 } else {
-                    logger.error('[ListHelper] Item doesnt exist in List! (SYNC)');
+                    logger.debug('[ListHelper] Item doesnt exist in List! (SYNC)');
                 }
             }
         }
