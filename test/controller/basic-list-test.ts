@@ -28,7 +28,7 @@ import TestHelper from '../test-helper';
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
 
-    beforeAll(() => {
+    beforeAll(async () => {
         TestHelper.mustHaveBefore();
         const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
         if (!anilistInstance) { fail(); }
@@ -36,6 +36,10 @@ describe('Basic List | Testrun', () => {
         const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
+
+        const anidb = new AniDBProvider();
+        await anidb['getAniDBNameListXML']();
+        anidb['convertXmlToJson']();
     });
 
     beforeEach(() => {

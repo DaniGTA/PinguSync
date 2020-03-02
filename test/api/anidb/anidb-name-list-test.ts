@@ -16,9 +16,11 @@ import TestHelper from '../../test-helper';
 
 
 describe('Provider: AniDB | Offline Test runs', () => {
-    beforeAll(() => {
+    beforeAll(async () => {
         TestHelper.mustHaveBefore();
-        new AniDBProvider();
+        const anidb = new AniDBProvider();
+        await anidb['getAniDBNameListXML']();
+        anidb['convertXmlToJson']();
     });
 
     beforeEach(() => {
