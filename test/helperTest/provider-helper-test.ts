@@ -23,7 +23,7 @@ import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import TestHelper from '../test-helper';
 
 describe('Provider Helper Test', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
