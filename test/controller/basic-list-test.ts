@@ -36,7 +36,7 @@ describe('Basic List | Testrun', () => {
         const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
-
+        ProviderList.getInfoProviderList();
         const anidb = ProviderList.getExternalProviderInstanceByProviderName(ProviderNameManager.getProviderName(AniDBProvider)) as AniDBProvider;
         if (anidb) {
             try {
