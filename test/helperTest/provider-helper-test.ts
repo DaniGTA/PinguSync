@@ -25,18 +25,17 @@ import TestHelper from '../test-helper';
 describe('Provider Helper Test', () => {
     beforeEach(async () => {
         TestHelper.mustHaveBefore();
+        const anidb = new AniDBProvider();
+        await anidb['getAniDBNameListXML']();
+        anidb['convertXmlToJson']();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3'), new AniDBProvider()];
+        ProviderList['loadedInfoProvider'] = [new TestInfoProvider('test1'), new TestInfoProvider('test2'), new TestInfoProvider('test3'), anidb];
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);
-
-        const anidb = new AniDBProvider();
-        await anidb['getAniDBNameListXML']();
-        anidb['convertXmlToJson']();
     });
 
     test('It should find that it can get id from other provider', async () => {

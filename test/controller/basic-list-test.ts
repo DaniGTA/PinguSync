@@ -37,7 +37,7 @@ describe('Basic List | Testrun', () => {
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
 
-        const anidb = new AniDBProvider();
+        const anidb = ProviderList.getExternalProviderInstanceByProviderName(ProviderNameManager.getProviderName(AniDBProvider));
         await anidb['getAniDBNameListXML']();
         anidb['convertXmlToJson']();
     });
