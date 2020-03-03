@@ -19,8 +19,10 @@ describe('Provider: AniDB | Offline Test runs', () => {
     beforeAll(async () => {
         TestHelper.mustHaveBefore();
         const anidb = new AniDBProvider();
-        await anidb['getAniDBNameListXML']();
-        anidb['convertXmlToJson']();
+        try {
+            await anidb['getAniDBNameListXML']();
+            anidb['convertXmlToJson']();
+        } catch (err) { }
     });
 
     beforeEach(() => {
