@@ -20,28 +20,28 @@ export default class MultiProviderComperator {
         const seasonA = await series.getSeason();
         const seasonB = await tempSeries.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);
 
-        finalResult.matchAble += 2;
+        finalResult.matchAble += 3;
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
             finalResult.matches += 2;
-            if (ProviderList.getExternalProviderInstance(result.mainProvider.providerLocalData).hasUniqueIdForSeasons) {
-                if (seasonA.seasonError !== SeasonError.CANT_GET_SEASON) {
-                    finalResult.matchAble += 2;
-                    if (SeasonComperator.isSameSeason(seasonA, seasonB)) {
-                        finalResult.matches += 2;
-                        finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if ((seasonB.seasonError === SeasonError.CANT_GET_SEASON || seasonB.seasonError === SeasonError.NONE) &&
-                        seasonA.seasonNumbers.includes(1)) {
-                        finalResult.matches += 1;
-                        finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                    } else if (seasonA.seasonNumbers.length === 0 || seasonB.seasonNumbers.length === 0) {
-
-                    } else {
-                        finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
-                    }
-                }
-            } else {
-                finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+            if (await this.isSeriesNameAbsoluteSame(series, tempSeries)) {
+                finalResult.matches++;
             }
+            if (seasonA.seasonError !== SeasonError.CANT_GET_SEASON) {
+                finalResult.matchAble += 2;
+                if (SeasonComperator.isSameSeason(seasonA, seasonB)) {
+                    finalResult.matches += 2;
+                    finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                } else if ((seasonB.seasonError === SeasonError.CANT_GET_SEASON || seasonB.seasonError === SeasonError.NONE) &&
+                    seasonA.seasonNumbers.includes(1)) {
+                    finalResult.matches += 1;
+                    finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
+                } else if (seasonA.seasonNumbers.length === 0 || seasonB.seasonNumbers.length === 0) {
+
+                } else {
+                    finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+                }
+            }
+
         } else {
             finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
         }
@@ -78,5 +78,15 @@ export default class MultiProviderComperator {
             logger.debug('[MultiProviderComperator] not the same series' + result.mainProvider.providerLocalData.getAllNames()[0].name + '(' + result.mainProvider.providerLocalData.provider + ')' + ' &' + series.getAllNames()[0].name);
         }
         return finalResult;
+    }
+
+    private static async isSeriesNameAbsoluteSame(seriesA: Series, seriesB: Series): Promise<boolean> {
+        const nameAProcess = seriesA.getAllNamesUnique();
+        const nameBProcess = seriesB.getAllNamesUnique();
+
+        const nameAList = await nameAProcess;
+        const nameBList = await nameBProcess;
+
+        return !!nameAList.find((nameA) => nameBList.findIndex((nameB) => nameA.name === nameB.name) !== -1);
     }
 }
