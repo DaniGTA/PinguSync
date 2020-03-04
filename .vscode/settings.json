@@ -15,4 +15,7 @@
     ],
     "discord.enabled": false,
     "typescript.tsdk": "node_modules\\typescript\\lib",
+    "debug.javascript.usePreview": true,
+    "debug.node.useV3": true,
+    "debug.chrome.useV3": true,
 }
