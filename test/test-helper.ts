@@ -27,5 +27,13 @@ export default class TestHelper {
         ProviderDataListManager['providerDataList'] = [];
 
         WebRequestManager.request = ResponseHelper.mockRequest;
+
+        jest.mock('../src/backend/api/anidb/anidb-provider', () => {
+            // tslint:disable-next-line: only-arrow-functions
+            return function () {
+                // tslint:disable-next-line: no-empty
+                return { getData: () => { } };
+            };
+        });
     }
 }

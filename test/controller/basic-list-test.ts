@@ -38,12 +38,10 @@ describe('Basic List | Testrun', () => {
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
 
-        const wait = jest.fn();
         jest.fn().mockImplementation(() => {
-            return { waitUntilItCanPerfomNextRequest: wait };
+            return { waitUntilItCanPerfomNextRequest: jest.fn() };
         });
 
-        ProviderList.getInfoProviderList();
         const anidb = ProviderList.getExternalProviderInstanceByProviderName(ProviderNameManager.getProviderName(AniDBProvider)) as AniDBProvider;
         if (anidb) {
             try {

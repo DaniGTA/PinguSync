@@ -89,13 +89,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
     test('it should get a series by trakt id', async () => {
         const a = new KitsuProvider();
-        try {
-            const result = await a['getByTraktId'](94084);
-            logger.info(result);
-        } catch (err) {
-            logger.error(err);
-            fail();
-        }
-
+        const result = await a['getByTraktId'](94084);
+        strictEqual(result.data[0].id, "87492");
     });
 });

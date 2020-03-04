@@ -20,9 +20,12 @@ describe('Provider: AniDB | Offline Test runs', () => {
         TestHelper.mustHaveBefore();
         const anidb = new AniDBProvider();
         try {
+            // tslint:disable: no-string-literal
             await anidb['getAniDBNameListXML']();
             anidb['convertXmlToJson']();
-        } catch (err) { }
+        } catch (err) {
+            logger.error(err);
+        }
     });
 
     beforeEach(() => {
