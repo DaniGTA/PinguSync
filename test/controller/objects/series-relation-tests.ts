@@ -7,13 +7,11 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestHelper from '../../test-helper';
 import TestProvider from './testClass/testProvider';
 
 describe('Series | Relations', () => {
 
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         const testprovider = new TestProvider('Test');
         testprovider.hasUniqueIdForSeasons = false;
         // tslint:disable-next-line: no-string-literal

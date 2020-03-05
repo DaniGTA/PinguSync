@@ -3,11 +3,10 @@ import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import SeasonComperator from '../../../src/backend/helpFunctions/comperators/season-comperator';
-import TestHelper from '../../test-helper';
+
 
 describe('Season Comperator tests', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
     test('should equals true (same season)', () => {
         const season1 = new Season([1]);

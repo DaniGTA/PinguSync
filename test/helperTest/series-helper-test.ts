@@ -13,13 +13,12 @@ import ProviderList from '../../src/backend/controller/provider-manager/provider
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import TestProvider from '../controller/objects/testClass/testProvider';
-import TestHelper from '../test-helper';
+
 
 
 describe('Series Helper', () => {
 
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal

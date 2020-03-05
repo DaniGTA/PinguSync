@@ -5,14 +5,11 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-man
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import TestProvider from '../controller/objects/testClass/testProvider';
-import TestHelper from '../test-helper';
+
 
 
 // tslint:disable: no-string-literal
 describe('Provider Helper | Examples', () => {
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
     beforeEach(() => {
 
         ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
@@ -80,7 +77,4 @@ describe('Provider Helper | Examples', () => {
         const result = await providerInfoDownloaderhelper.checkListProviderId(series, seriesB);
         equal(result.sameId, false);
     });
-
-
-
 });

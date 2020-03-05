@@ -2,11 +2,10 @@ import { strictEqual } from 'assert';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import MediaTypeComperator from '../../../src/backend/helpFunctions/comperators/media-type-comperator';
-import TestHelper from '../../test-helper';
+
 
 describe('Media Type Comperator | Testrun', () => {
     beforeAll(() => {
-        TestHelper.mustHaveBefore();
     });
     test('should be both detected as normal series', async () => {
         const mediaTypeA = MediaType.UNKOWN_SERIES;

@@ -3,12 +3,10 @@ import MainListManager from '../../../src/backend/controller/main-list-manager/m
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import TestHelper from '../../test-helper';
 import TestProvider from '../objects/testClass/testProvider';
 
 describe('MainListPackageManager', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
         // tslint:disable-next-line: no-string-literal

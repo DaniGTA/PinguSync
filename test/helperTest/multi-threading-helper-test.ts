@@ -1,11 +1,10 @@
 import { strictEqual } from 'assert';
 import MultiThreadingHelper from '../../src/backend/helpFunctions/multi-threading-helper';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
-import TestHelper from '../test-helper';
+
 
 describe('Multithreading | Testrun', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
     test('test delegate function', async () => {
 

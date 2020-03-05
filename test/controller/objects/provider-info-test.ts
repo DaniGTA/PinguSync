@@ -3,12 +3,9 @@ import * as assert from 'assert';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import TestHelper from '../../test-helper';
 
 describe('Provider | Watchlist & Merge', () => {
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
+
     test('should add to watchlist', async () => {
         const providerInfo = new ListProviderLocalData(-1);
         providerInfo.addOneWatchedEpisode(1);

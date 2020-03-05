@@ -4,13 +4,12 @@ import EpisodeBindingPool from '../../src/backend/controller/objects/meta/episod
 import EpisodeMapping from '../../src/backend/controller/objects/meta/episode/episode-mapping';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper';
-import TestHelper from '../test-helper';
+
 import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
 
 describe('Episode binding pool helper tests | Testrun', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
     test('should get all binded episode from an episode', async () => {
         const episode = new Episode(1);

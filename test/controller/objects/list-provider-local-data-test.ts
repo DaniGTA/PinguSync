@@ -9,12 +9,8 @@ import WatchProgress from '../../../src/backend/controller/objects/meta/watch-pr
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import TestHelper from '../../test-helper';
 
 describe('listProviderLocalData tests', () => {
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
     test('should merge two', async () => {
         const a = new ListProviderLocalData(1);
         a.episodes = 13;

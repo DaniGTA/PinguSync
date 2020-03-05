@@ -1,16 +1,11 @@
 
-import assert, { strictEqual } from 'assert';
+import assert from 'assert';
 import request from 'request';
 import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
-import TestHelper from '../../test-helper';
 
 
 // tslint:disable: no-string-literal
 describe('Provider: AniList | Test runs', () => {
-    const anilistProvider = new AniListProvider();
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
     test('should return headers', async () => {
         const options: (request.UriOptions & request.CoreOptions) = {
             body: JSON.stringify({

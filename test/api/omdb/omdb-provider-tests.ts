@@ -7,13 +7,9 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import TestProvider from '../../controller/objects/testClass/testProvider';
-import TestHelper from '../../test-helper';
 // tslint:disable: no-string-literal
 describe('Provider: OMDb | Test runs', () => {
     const omdbProvider = new OMDbProvider();
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
 
     beforeEach(() => {
         ProviderList['loadedListProvider'] = [new TestProvider('', true, true)];

@@ -3,11 +3,10 @@ import Episode from '../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../src/backend/controller/objects/meta/episode/episode-title';
 import Season from '../../src/backend/controller/objects/meta/season';
 import EpisodeHelper from '../../src/backend/helpFunctions/episode-helper/episode-helper';
-import TestHelper from '../test-helper';
+
 
 describe('Episode Helper Test', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
 
     test('should detect episode title', () => {

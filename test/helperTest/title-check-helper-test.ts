@@ -1,13 +1,9 @@
 import * as assert from 'assert';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
 import TitleCheckHelper from '../../src/backend/helpFunctions/name-helper/title-check-helper';
-import TestHelper from '../test-helper';
-describe('Title Checker | Some title examples', () => {
-    beforeEach(() => {
-        TestHelper.mustHaveBefore();
-    });
 
-    test('should match', async () => {
+describe('Title Checker | Some title examples', () => {
+    test('should match all titles with checkNames', async () => {
         assert.equal(await TitleCheckHelper.checkNames(['Title: Check, It`s a Test` but` its still a test!'], ['Title ~Check, It’s a test but’ its still a test!~']), true);
         assert.equal(await TitleCheckHelper.checkNames(['Kiniro Mosaic'], ['Kin`iro Mosaic', 'Kiniro Mosaic', 'Kinmosa', 'Kinmoza!', 'きんいろモザイク']), true);
         assert.equal(await TitleCheckHelper.checkNames(['この素晴らしい世界に祝福を！紅伝説'], ['この素晴らしい世界に祝福を! 紅伝説']), true);
@@ -68,6 +64,7 @@ describe('Title Checker | Some title examples', () => {
         assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title: Specials'), 'Title');
         assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title Specials'), 'Title');
         assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title Movie: Test Test'), 'Title: Test Test');
+        assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title (tv))'), 'Title');
     });
 
     test('should detect MediaType from title', async () => {
@@ -80,5 +77,6 @@ describe('Title Checker | Some title examples', () => {
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Specials'), MediaType.SPECIAL);
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Test te test Specials'), MediaType.SPECIAL);
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title'), MediaType.UNKOWN);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title (tv))'), MediaType.UNKOWN_SERIES);
     });
 });

@@ -7,12 +7,11 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../../src/backend/helpFunctions/comperators/provider-comperator';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestHelper from '../../test-helper';
+
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 
 describe('Provider Comperator | Testrun', () => {
     beforeAll(() => {
-        TestHelper.mustHaveBefore();
     });
     test('should be absolute false (same provider and wrong id)', async () => {
         const instance = new ProviderComperator(new Series(), new Series());

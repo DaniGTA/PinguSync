@@ -10,6 +10,7 @@ import MediaTypeComperator from './media-type-comperator';
 import ProviderComperator from './provider-comperator';
 import ReleaseYearComperator from './release-year-comperator';
 import SeasonComperator from './season-comperator';
+import StringHelper from '../string-helper';
 
 export default class MultiProviderComperator {
     public static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult> {
@@ -20,7 +21,7 @@ export default class MultiProviderComperator {
         const seasonA = await series.getSeason();
         const seasonB = await tempSeries.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);
 
-        finalResult.matchAble += 3;
+        finalResult.matchAble += 4;
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
             finalResult.matches += 2;
             if (await this.isSeriesNameAbsoluteSame(series, tempSeries)) {
@@ -35,8 +36,6 @@ export default class MultiProviderComperator {
                     seasonA.seasonNumbers.includes(1)) {
                     finalResult.matches += 1;
                     finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                } else if (seasonA.seasonNumbers.length === 0 || seasonB.seasonNumbers.length === 0) {
-
                 } else {
                     finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                 }
@@ -87,6 +86,9 @@ export default class MultiProviderComperator {
         const nameAList = await nameAProcess;
         const nameBList = await nameBProcess;
 
-        return !!nameAList.find((nameA) => nameBList.findIndex((nameB) => nameA.name === nameB.name) !== -1);
+        const cleanedStringListA = nameAList.flatMap((x) => StringHelper.cleanString(x.name));
+        const cleanedStringListB = nameBList.flatMap((x) => StringHelper.cleanString(x.name));
+
+        return !!cleanedStringListA.find((nameA) => cleanedStringListB.findIndex((nameB) => nameA === nameB) !== -1);
     }
 }

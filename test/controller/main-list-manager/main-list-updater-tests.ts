@@ -6,13 +6,11 @@ import WatchProgress from '../../../src/backend/controller/objects/meta/watch-pr
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import TestHelper from '../../test-helper';
 import TestProvider from '../objects/testClass/testProvider';
 
 
 describe('MainList | Entry update tests', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
         // tslint:disable-next-line: no-string-literal

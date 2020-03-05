@@ -3,15 +3,11 @@ import MainListManager from '../../../src/backend/controller/main-list-manager/m
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 import SeasonSearchModeHelper from '../../../src/backend/helpFunctions/season-helper/season-search-mode-helper';
-import TestHelper from '../../test-helper';
 
 
 
 // tslint:disable: no-string-literal
 describe('Season Search Mode Helper Test | Examples', () => {
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
     beforeEach(() => {
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal

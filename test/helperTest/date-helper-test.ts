@@ -5,11 +5,10 @@ import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
-import TestHelper from '../test-helper';
+
 
 describe('Date Helper Test', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider()];
         // tslint:disable-next-line: no-string-literal

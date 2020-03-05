@@ -1,11 +1,10 @@
 import { strictEqual } from 'assert';
 import Season from '../../../../src/backend/controller/objects/meta/season';
 import { SeasonError } from '../../../../src/backend/controller/objects/transfer/season-error';
-import TestHelper from '../../../test-helper';
+
 
 describe('Season object tests', () => {
     beforeAll(() => {
-        TestHelper.mustHaveBefore();
     });
 
     test('season should not be defined', () => {

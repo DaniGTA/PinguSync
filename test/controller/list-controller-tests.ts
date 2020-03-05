@@ -8,14 +8,10 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-man
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
-import TestHelper from '../test-helper';
 import TestProvider from './objects/testClass/testProvider';
 // tslint:disable: no-string-literal
 describe('ListController | Combine', () => {
     const lc = new ListController(true);
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
 
     beforeEach(() => {
         ProviderList['loadedListProvider'] = [

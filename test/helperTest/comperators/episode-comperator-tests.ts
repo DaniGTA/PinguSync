@@ -8,11 +8,10 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../../../src/backend/helpFunctions/comperators/episode-comperator';
 import TestProvider from '../../controller/objects/testClass/testProvider';
-import TestHelper from '../../test-helper';
+
 // tslint:disable: no-string-literal
 describe('Episode comperator | Full test', () => {
     beforeAll(() => {
-        TestHelper.mustHaveBefore();
     });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal

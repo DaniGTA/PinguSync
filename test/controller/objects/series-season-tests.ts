@@ -6,14 +6,15 @@ import { ProviderInfoStatus } from '../../../src/backend/controller/provider-man
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
-import TestHelper from '../../test-helper';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 
 
 describe('Series | Season', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
+        MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
     });
-
     test('should return season 1', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData(1, 'TestA');

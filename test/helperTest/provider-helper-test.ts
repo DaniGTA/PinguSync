@@ -21,12 +21,12 @@ import ProviderHelper from '../../src/backend/helpFunctions/provider/provider-he
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../src/backend/logger/logger';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
-import TestHelper from '../test-helper';
+import ProviderDataListManager from '../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+
 jest.mock('../../src/backend/api/provider/external-provider');
 // tslint:disable: no-string-literal
 describe('Provider Helper Test', () => {
     beforeAll(async () => {
-        TestHelper.mustHaveBefore();
         try {
             const anidb = new AniDBProvider();
             await anidb['getAniDBNameListXML']();
@@ -50,6 +50,7 @@ describe('Provider Helper Test', () => {
             new AniDBProvider(false)];
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);
 

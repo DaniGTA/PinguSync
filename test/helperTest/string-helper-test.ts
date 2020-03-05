@@ -1,9 +1,8 @@
 import { equal, notEqual, rejects, strictEqual } from 'assert';
 import StringHelper from '../../src/backend/helpFunctions/string-helper';
-import TestHelper from '../test-helper';
+
 describe('String Helper', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
     test('should generate a randome string', async () => {
         notEqual(StringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');

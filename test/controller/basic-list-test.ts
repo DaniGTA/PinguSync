@@ -23,13 +23,11 @@ import ProviderLocalDataWithSeasonInfo from '../../src/backend/helpFunctions/pro
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
-import TestHelper from '../test-helper';
-jest.mock('../../src/backend/api/provider/external-provider');
+import ProviderDataListManager from '../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
 
     beforeAll(async () => {
-        TestHelper.mustHaveBefore();
         const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
         if (!anilistInstance) { fail(); }
         anilistInstance.isUserLoggedIn = async () => true;
@@ -37,10 +35,6 @@ describe('Basic List | Testrun', () => {
         const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
-
-        jest.fn().mockImplementation(() => {
-            return { waitUntilItCanPerfomNextRequest: jest.fn() };
-        });
 
         const anidb = ProviderList.getExternalProviderInstanceByProviderName(ProviderNameManager.getProviderName(AniDBProvider)) as AniDBProvider;
         if (anidb) {
@@ -55,6 +49,7 @@ describe('Basic List | Testrun', () => {
 
     beforeEach(() => {
         MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
     });
 
     test('should find other provider and mapping them.', async () => {

@@ -12,12 +12,10 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import logger from '../../../src/backend/logger/logger';
-import TestHelper from '../../test-helper';
 
 
 describe('Provider: AniDB | Offline Test runs', () => {
     beforeAll(async () => {
-        TestHelper.mustHaveBefore();
         const anidb = new AniDBProvider();
         try {
             // tslint:disable: no-string-literal

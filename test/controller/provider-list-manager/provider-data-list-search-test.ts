@@ -3,11 +3,10 @@ import ProviderDataListManager from '../../../src/backend/controller/provider-da
 import ProviderDataListSearcher from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-searcher';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import TestHelper from '../../test-helper';
+
 
 describe('Provider data list searcher tests', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         // tslint:disable: no-string-literal
         ProviderList['loadedListProvider'] = [];
         ProviderList['loadedInfoProvider'] = [];

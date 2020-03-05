@@ -1,11 +1,10 @@
 import { strictEqual } from 'assert';
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../../src/backend/controller/objects/meta/name-type';
-import TestHelper from '../../../test-helper';
+
 
 describe('Season object tests', () => {
     beforeAll(() => {
-        TestHelper.mustHaveBefore();
     });
 
     test('should get season number out of name list', async () => {

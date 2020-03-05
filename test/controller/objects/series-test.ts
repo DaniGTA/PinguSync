@@ -5,12 +5,14 @@ import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestHelper from '../../test-helper';
+import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 
 describe('Series | Basic', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
-    });
+        MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
+    })
     test('should have a id', async () => {
         const series = new Series();
         assert.notEqual(series.id.length, 0);

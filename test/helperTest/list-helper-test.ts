@@ -4,12 +4,11 @@ import Name from '../../src/backend/controller/objects/meta/name';
 import WatchProgress from '../../src/backend/controller/objects/meta/watch-progress';
 import Series from '../../src/backend/controller/objects/series';
 import listHelper from '../../src/backend/helpFunctions/list-helper';
-import TestHelper from '../test-helper';
+
 
 
 describe('List Helper', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
     test('should clean array', async () => {
         const arr = await listHelper.cleanArray([null, undefined, '']);

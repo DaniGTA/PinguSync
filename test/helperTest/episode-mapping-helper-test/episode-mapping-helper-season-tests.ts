@@ -11,20 +11,21 @@ import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';
-import TestHelper from '../../test-helper';
+import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+
 
 
 
 
 describe('Episode mapping | Season Mapping Tests Only', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
-        // tslint:disable-next-line: no-string-literal
+        // tslint:disable: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
     });
 
     test('should map episode with right season (1/3)', async () => {

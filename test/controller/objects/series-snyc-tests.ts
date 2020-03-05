@@ -5,13 +5,8 @@ import assert from 'assert';
 import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import TestHelper from '../../test-helper';
 
 describe('Series | Sync', () => {
-    beforeEach(() => {
-        TestHelper.mustHaveBefore();
-    });
-
     test('can sync (1/3)', async () => {
         const anime = new Series();
         ProviderList.getListProviderList().push(new TestProvider('CanSync121'));

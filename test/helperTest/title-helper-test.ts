@@ -1,10 +1,9 @@
 import { strictEqual } from 'assert';
 import TitleHelper from '../../src/backend/helpFunctions/name-helper/title-helper';
-import TestHelper from '../test-helper';
+
 
 describe('Title Checker | Some title examples', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
     });
 
     describe('should get season number by title', () => {
@@ -19,5 +18,11 @@ describe('Title Checker | Some title examples', () => {
         test('marked nd title with season number in it', () => {
             strictEqual(TitleHelper.getSeasonNumberBySeasonMarkerInTitle('Title 2nd').seasonNumber, 2);
         });
+
+        test('marked slug nd title with season number in it', () => {
+            strictEqual(TitleHelper.getSeasonNumberBySeasonMarkerInTitle('test-2nd-season').seasonNumber, 2);
+        });
+
+
     });
 });

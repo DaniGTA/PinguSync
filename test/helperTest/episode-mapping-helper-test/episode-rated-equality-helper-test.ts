@@ -12,11 +12,9 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import EpisodeRatedEqualityHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-helper';
 import ProviderLocalDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';
-import TestHelper from '../../test-helper';
 
 describe('Episode rated equality helper tests | Difference calc only', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         // tslint:disable: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
         ProviderList['loadedInfoProvider'] = [];

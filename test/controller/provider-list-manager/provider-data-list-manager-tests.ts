@@ -4,12 +4,11 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/provider-
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import TestHelper from '../../test-helper';
+
 import TestProvider from '../objects/testClass/testProvider';
 // tslint:disable: no-string-literal
 describe('Provider data manager list tests', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
         ProviderList['loadedInfoProvider'] = [];
     });

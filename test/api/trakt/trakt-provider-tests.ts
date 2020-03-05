@@ -6,15 +6,18 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import TestProvider from '../../controller/objects/testClass/testProvider';
-import TestHelper from '../../test-helper';
+import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 // tslint:disable: no-string-literal
 describe('Provider: Trakt | Tests runs', () => {
     const traktProvider = new TraktProvider();
 
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         ProviderList['loadedListProvider'] = [new TestProvider('', true, true), new TraktProvider()];
         ProviderList['loadedInfoProvider'] = undefined;
+        MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
     });
 
     test('should get a series (2/5)', async () => {
@@ -22,6 +25,7 @@ describe('Provider: Trakt | Tests runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Seitokai Yakuindomo＊', 'en'));
+
         await series.addProviderDatas(unkownProvider);
 
         const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProvider);
@@ -40,9 +44,9 @@ describe('Provider: Trakt | Tests runs', () => {
     });
 
     test('should get a series (4/5)', async () => {
-
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
+        unkownProvider.mediaType = MediaType.ANIME;
         unkownProvider.addSeriesName(new Name('Little Witch Academia', 'en'));
         await series.addProviderDatas(unkownProvider);
 
@@ -54,6 +58,7 @@ describe('Provider: Trakt | Tests runs', () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
+        unkownProvider.releaseYear = 2005;
         unkownProvider.addSeriesName(new Name('Avatar: The Last Airbender', 'en'));
         await series.addProviderDatas(unkownProvider);
 

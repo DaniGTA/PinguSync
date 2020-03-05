@@ -1,3 +1,6 @@
+"use strict";
+
+
 module.exports = {
 	'roots': [
 		'<rootDir>'
@@ -23,5 +26,6 @@ module.exports = {
 			babelConfig: true,
 		}
 	},
-	'testEnvironment': './test/test-environment.ts'
+	'testEnvironment': 'node',
+	'setupFilesAfterEnv': ['<rootDir>/test/test-helper.ts'],
 }

@@ -11,18 +11,19 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import SeasonAwarenessHelper from '../../../src/backend/helpFunctions/provider/season-awareness-helper/season-awareness-helper';
-import TestHelper from '../../test-helper';
+import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+
 
 
 describe('Season Awareness Test', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [new AniDBProvider()];
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
         // tslint:disable-next-line: no-unused-expression
         new ListController(true);
     });

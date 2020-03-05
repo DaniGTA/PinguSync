@@ -207,29 +207,21 @@ export default new class ProviderInfoDownloadHelper {
                 logger.debug('[' + provider.providerName + '] Results: ' + searchResult.length);
                 for (const result of searchResult) {
                     const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
-                    resultContainer.push(new SearchResultRatingContainer(mpcr, result));
+                    if (mpcr.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
+                        resultContainer.push(new SearchResultRatingContainer(mpcr, result));
+                    }
                 }
                 if (resultContainer.length !== 0) {
-                    resultContainer = resultContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
-                    for (const containerItem of resultContainer) {
-                        if (containerItem.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
-                            const id = containerItem.result.mainProvider.providerLocalData.id.toString();
-                            const mediaType = await series.getMediaType();
-                            const providerName = provider.providerName;
-                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, providerName, name, true, mediaType, id);
-                            return containerItem.result;
-                        }
+                    const bestResult = this.getBestResultOutOFSearchResultRatingContainer(resultContainer);
+                    if (bestResult) {
+                        logger.log('info', '[' + provider.providerName + '] Request success 🎉');
+                        const id = bestResult.result.mainProvider.providerLocalData.id.toString();
+                        const mediaType = await series.getMediaType();
+                        const providerName = provider.providerName;
+                        ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, providerName, name, true, mediaType, id);
+                        return bestResult.result;
                     }
-                    for (const containerItem of resultContainer) {
-                        if (containerItem.resultRating.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
-                            logger.log('info', '[' + provider.providerName + '] Request success 🎉');
-                            const id = containerItem.result.mainProvider.providerLocalData.id.toString();
-                            const mediaType = await series.getMediaType();
-                            const providerName = provider.providerName;
-                            ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, providerName, name, true, mediaType, id);
-                            return containerItem.result;
-                        }
-                    }
+
                 }
             } else {
                 logger.warn('[' + provider.providerName + '] No results to name: ' + name.name);
@@ -240,5 +232,37 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('[' + provider.providerName + '] [getSeriesByName]: No result with the name: ' + name.name);
     }
 
+    private getBestResultOutOFSearchResultRatingContainer(searchResultRatingContainer: SearchResultRatingContainer[]): SearchResultRatingContainer | undefined {
+        let bestSearchResult: SearchResultRatingContainer | undefined;
+
+        searchResultRatingContainer = this.sortBestResultRatingContainer(searchResultRatingContainer);
+
+        if (searchResultRatingContainer.length !== 0) {
+            for (const searchResultRating of searchResultRatingContainer) {
+                if (searchResultRating.resultRating.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
+                    return searchResultRating;
+                }
+                if (bestSearchResult === undefined || this.hasSearchResultABetterMatchesThenB(searchResultRating, bestSearchResult)) {
+                    bestSearchResult = searchResultRating;
+                }
+            }
+        }
+
+        const bestSearchResultCount = searchResultRatingContainer.filter(x => x.resultRating.matches === bestSearchResult?.resultRating.matches).length;
+        if (bestSearchResultCount !== 1) {
+            return;
+        }
+        return bestSearchResult;
+    }
+
+    private sortBestResultRatingContainer(searchResultRatingContainer: SearchResultRatingContainer[]): SearchResultRatingContainer[] {
+        return searchResultRatingContainer.sort((a, b) => b.resultRating.matches - a.resultRating.matches);
+
+    }
+
+    private hasSearchResultABetterMatchesThenB(searchResultA: SearchResultRatingContainer, searchResultB: SearchResultRatingContainer): boolean {
+        return (searchResultA.resultRating.matches > searchResultB.resultRating.matches && searchResultA.resultRating.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE)
+    }
 }();
+
 

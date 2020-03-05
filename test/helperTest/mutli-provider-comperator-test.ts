@@ -13,13 +13,11 @@ import { AbsoluteResult } from '../../src/backend/helpFunctions/comperators/comp
 import MultiProviderComperator from '../../src/backend/helpFunctions/comperators/multi-provider-results-comperator';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../controller/objects/testClass/testProvider';
-import TestHelper from '../test-helper';
+
 
 describe('Multi-Provider-Comperator | Examples', () => {
     beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
-    beforeEach(() => {
+    }); beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
         // tslint:disable-next-line: no-string-literal

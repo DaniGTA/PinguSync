@@ -6,12 +6,14 @@ import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../../src/backend/logger/logger';
-import TestHelper from '../../test-helper';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 
 
 describe('Series | Merge', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
+        MainListManager['mainList'] = [];
+        ProviderDataListManager['providerDataList'] = [];
     });
     test('should merge episode', async () => {
         const seriesA = new Series();

@@ -7,11 +7,10 @@ import Series from '../../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestHelper from '../../../test-helper';
+
 
 describe('Series provider extension tests', () => {
     beforeAll(() => {
-        TestHelper.mustHaveBefore();
     });
 
     test('should add providers with season info to series', async () => {

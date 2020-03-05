@@ -1,14 +1,11 @@
 import { strictEqual } from 'assert';
 import TestProvider from '../../controller/objects/testClass/testProvider';
-import TestHelper from '../../test-helper';
 
 describe('External provider tests', () => {
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
-
     test('should wait 50ms for next request', async () => {
         const provider = new TestProvider('a');
+        jest.restoreAllMocks();
+        provider.waitUntilItCanPerfomNextRequest();
         // tslint:disable-next-line: no-string-literal
         provider['requestRateLimitInMs'] = 50;
         provider.informAWebRequest();

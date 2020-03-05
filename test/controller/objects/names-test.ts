@@ -1,13 +1,8 @@
 import * as assert from 'assert';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import stringHelper from '../../../src/backend/helpFunctions/string-helper';
-import TestHelper from '../../test-helper';
-
 
 describe('Name | Season + lang detection', () => {
-    beforeAll(() => {
-        TestHelper.mustHaveBefore();
-    });
     test('should detect kanji', async () => {
         assert.equal(await stringHelper.hasKanji('テスト'), true);
         assert.equal(await stringHelper.hasKanji('test'), false);
@@ -24,17 +19,17 @@ describe('Name | Season + lang detection', () => {
         try {
             await stringHelper.getSeasonNumberFromTitle('Gintama.: Shirogane no Tamashii-hen - Kouhan-sen');
             assert.fail();
-        // tslint:disable-next-line: no-empty
+            // tslint:disable-next-line: no-empty
         } catch (err) { }
         try {
             await stringHelper.getSeasonNumberFromTitle('Gintama.: Silver Soul Arc - Second Half War');
             assert.fail();
-        // tslint:disable-next-line: no-empty
+            // tslint:disable-next-line: no-empty
         } catch (err) { }
         try {
             await stringHelper.getSeasonNumberFromTitle('銀魂. 銀ノ魂篇2');
             assert.fail();
-        // tslint:disable-next-line: no-empty
+            // tslint:disable-next-line: no-empty
         } catch (err) { }
         return;
     });

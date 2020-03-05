@@ -1,11 +1,5 @@
 import MainListPackageManager from '../../../src/backend/controller/main-list-manager/main-list-package-manager';
-
-import ListController from '../../../src/backend/controller/list-controller';
-
-import TestHelper from '../../test-helper';
-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-
 import { strictEqual } from 'assert';
 import Series from '../../../src/backend/controller/objects/series';
 import TestProvider from '../objects/testClass/testProvider';
@@ -14,7 +8,6 @@ import TestProvider from '../objects/testClass/testProvider';
 
 describe('MainListPackageManager', () => {
     beforeEach(() => {
-        TestHelper.mustHaveBefore();
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
         // tslint:disable-next-line: no-string-literal
