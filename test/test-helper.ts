@@ -12,28 +12,6 @@ export default class TestHelper {
      * Adds a caching system for webrequests
      */
     public static mustHaveBefore() {
-        // tslint:disable-next-line: no-unused-expression
-        new ListController(true);
-        MainListManager['listLoaded'] = true;
-        MainListLoader['loadData'] = () => [];
-        MainListManager['mainList'] = [];
-        // tslint:disable-next-line: no-empty
-        MainListLoader['saveData'] = async () => { };
 
-        ProviderDataListManager['listLoaded'] = true;
-        // tslint:disable-next-line: no-empty
-        ProviderDataListLoader['saveData'] = async () => { };
-        ProviderDataListLoader['loadData'] = () => [];
-        ProviderDataListManager['providerDataList'] = [];
-
-        WebRequestManager.request = ResponseHelper.mockRequest;
-
-        jest.mock('../src/backend/api/anidb/anidb-provider', () => {
-            // tslint:disable-next-line: only-arrow-functions
-            return function () {
-                // tslint:disable-next-line: no-empty
-                return { getData: () => { } };
-            };
-        });
     }
 }

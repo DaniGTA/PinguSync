@@ -23,4 +23,5 @@ module.exports = {
 			babelConfig: true,
 		}
 	},
+	'testEnvironment': './test/test-environment.ts'
 }
