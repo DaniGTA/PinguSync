@@ -34,7 +34,9 @@ const anidb = new AniDBProvider();
 if (existsSync('./anidb-anime-titles.xml.gz')) {
     if (!existsSync('./anidb-anime-titles.xml')) {
         logger.info('Generate ANIDB xml');
-        anidb['getAniDBNameListXML']();
+        anidb['getAniDBNameListXML']().then(() => {
+            anidb['convertXmlToJson']();
+        })
     }
 
     if (!existsSync('./anidb-config.json')) {
