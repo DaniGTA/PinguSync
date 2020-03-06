@@ -259,6 +259,20 @@ describe('Provider: AniDB | Offline Test runs', () => {
         deepEqual(result[0].mainProvider.providerLocalData.id, '14416');
     });
 
+
+    test('should find id 10182', async () => {
+        const a = new AniDBProvider(false);
+        const lpdld = new ListProviderLocalData(20458, 'AniList');
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
+
+        const series = new Series();
+        lpdld.addSeriesName(new Name('Mahouka Koukou no Rettousei', NameType.MAIN));
+        await series.addListProvider(lpdld);
+        const result = await a.getMoreSeriesInfoByName('Mahouka Koukou no Rettousei');
+
+        deepEqual(result[0].mainProvider.providerLocalData.id, '10182');
+    });
+
     test('should find id 5544', async () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(997, 'AniList');

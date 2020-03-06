@@ -15,7 +15,12 @@ export default class ResponseHelper {
             return new Promise<request.Response>((resolve, rejects) => {
                 try {
                     request(options, (errormsg: any, response: request.Response, body: any) => {
-                        ResponseHelper.cacheNewRequest(response, options, requestId);
+                        if (response.statusCode === 200 || response.statusCode === 404) {
+                            ResponseHelper.cacheNewRequest(response, options, requestId);
+                        } else {
+                            logger.error(`[MockRequestError] Request on url: ${response.url} with status code: ${response.statusCode}`);
+                            logger.error(`[MockRequestError] Request: ${response.url} will not be cached`);
+                        }
                         resolve(response);
                     }).on('error', (err) => {
                         logger.error(err);
@@ -58,6 +63,6 @@ export default class ResponseHelper {
     }
 
     private static loadCache(id: string): request.Response {
-        return (JSON.parse(readFileSync(this.cacheFolderName + id + '.json', 'UTF-8'))).response as request.Response ;
+        return (JSON.parse(readFileSync(this.cacheFolderName + id + '.json', 'UTF-8'))).response as request.Response;
     }
 }

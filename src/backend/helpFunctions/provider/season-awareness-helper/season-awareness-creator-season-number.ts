@@ -49,11 +49,13 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         const externalProviders = this.getAllExternalProvidersThatCanHelpToCreateSeasonAwarness();
 
         for (const externalProvider of externalProviders) {
-            const providerLocalData = await this.getValidProviderLocalData(allProviders, series, externalProvider);
-            if (providerLocalData) {
-                const result = await this.createAwareness(providerLocalData, providerWithoutSeasonAwarness, finalSeason);
-                if (result) {
-                    return;
+            if (providerWithoutSeasonAwarness.provider !== externalProvider.providerName) {
+                const providerLocalData = await this.getValidProviderLocalData(allProviders, series, externalProvider);
+                if (providerLocalData) {
+                    const result = await this.createAwareness(providerLocalData, providerWithoutSeasonAwarness, finalSeason);
+                    if (result) {
+                        return;
+                    }
                 }
             }
         }

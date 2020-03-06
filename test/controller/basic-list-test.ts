@@ -527,16 +527,16 @@ describe('Basic List | Testrun', () => {
         if (provider != null) {
             for (const episode of provider.detailEpisodeInfo) {
                 if (episode.season?.getSingleSeasonNumberAsNumber() === 1) {
-                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode).length, 0);
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode).length, 3);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
                     const s1BindedEpisodeResult = await EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
-                    notStrictEqual(s1BindedEpisodeResult.length, 0);
+                    strictEqual(s1BindedEpisodeResult.length, 3);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
                     const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
                     const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode).length;
-                    notStrictEqual(len, 0);
+                    strictEqual(len, 3);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 4) {
-                    notStrictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 0);
+                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode).length, 3);
                 }
                 logger.warn(episode.episodeNumber + ' S: ' + episode.season?.getSingleSeasonNumberAsNumber());
             }
@@ -653,4 +653,82 @@ describe('Basic List | Testrun', () => {
             }
         }
     });
+
+    test('should get series and should map episodes right (Series: The Melancholy of Haruhi Suzumiya)', async () => {
+        const provider = new ListProviderLocalData(60988, TraktProvider);
+
+        const series = new Series();
+        await series.addProviderDatas(provider);
+        const adderInstance = new MainListAdder();
+
+        // Test
+
+        await adderInstance.addSeries(series);
+
+        // Result checking
+        const mainList = await MainListManager.getMainList();
+        strictEqual(mainList.length, 2);
+
+        const resultSeries = mainList[0];
+
+        const bindings = resultSeries.getListProvidersInfos();
+        strictEqual(bindings.length, 2);
+
+        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
+        strictEqual(bindings[1].id, 849);
+
+        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
+        strictEqual(bindings[0].id, 60988);
+
+        const epMappings = resultSeries.episodeBindingPools;
+        strictEqual(epMappings.length, 28);
+        for (const epMapping of epMappings) {
+            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
+            for (const ep of epMapping.bindedEpisodeMappings) {
+                for (const ep2 of epMapping.bindedEpisodeMappings) {
+                    strictEqual(ep.episodeNumber, ep2.episodeNumber);
+                }
+            }
+        }
+    });
+
+    test('should get series and should map episodes right (Series: The Melancholy of Haruhi Suzumiya)', async () => {
+        const provider = new ListProviderLocalData(97794, TraktProvider);
+
+        const series = new Series();
+        await series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(provider, new Season(1)));
+        const adderInstance = new MainListAdder();
+
+        // Test
+
+        await adderInstance.addSeries(series);
+
+        // Result checking
+        const mainList = await MainListManager.getMainList();
+        strictEqual(mainList.length, 2);
+
+        const resultSeries = mainList[0];
+
+        const bindings = resultSeries.getListProvidersInfos();
+        strictEqual(bindings.length, 2);
+
+        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
+        strictEqual(bindings[1].id, 21131);
+
+        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
+        strictEqual(bindings[0].id, 97794);
+
+        const epMappings = resultSeries.episodeBindingPools;
+        strictEqual(epMappings.length, 24);
+        for (const epMapping of epMappings) {
+            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
+            for (const ep of epMapping.bindedEpisodeMappings) {
+                for (const ep2 of epMapping.bindedEpisodeMappings) {
+                    strictEqual(ep.episodeNumber, ep2.episodeNumber);
+                }
+            }
+        }
+    });
+
+    test.todo('Trakt id: 65266 (All season seperate)');
 });

@@ -23,6 +23,7 @@ import { SearchSeries } from './graphql/searchSeries';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import { MediaListCollection } from './graphql/seriesList';
 import { IViewer } from './graphql/viewer';
+import timeHelper from '../../helpFunctions/time-helper';
 
 export default class AniListProvider extends ListProvider {
 
@@ -237,8 +238,12 @@ export default class AniListProvider extends ListProvider {
         if (response.statusCode === 200) {
             const rawdata = JSON.parse(response.body);
             return rawdata.data as T;
+        } else if (response.statusCode === 429) {
+            timeHelper.delay(2000);
+            return this.webRequest(options);
         } else {
             throw new Error('Wrong Status Code: ' + response.statusCode);
+
         }
 
     }

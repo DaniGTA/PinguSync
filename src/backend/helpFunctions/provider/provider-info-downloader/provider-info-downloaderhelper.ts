@@ -26,7 +26,7 @@ import SearchResultRatingContainer from './search-result-rating-container';
  * Controlls provider request, text search, search result rating, data updates
  */
 export default new class ProviderInfoDownloadHelper {
-    private static readonly MAX_RETRYS_FOR_NAME_SEARCH: number = 9;
+    private static readonly MAX_RETRYS_FOR_NAME_SEARCH: number = 5;
     private static readonly REQUEST_TIMEOUT_IN_MS: number = 5000; // 5000ms = 5seconds
     private static readonly NO_INDEX = -1;
     // ---------------------------------------------------------
@@ -64,11 +64,13 @@ export default new class ProviderInfoDownloadHelper {
                         const linkResult = await this.linkProviderDataFromRelations(series, provider);
                         return new MultiProviderResult(linkResult);
                     } catch (err) { logger.debug(err); }
+
                     const names = await this.getNamesSortedBySearchAbleScore(series);
                     const result = await this.downloadProviderSeriesInfoBySeriesName(names, series, provider, requestId);
                     if (result) {
                         return result;
                     }
+
                 } else {
                     throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'MediaType not supported: .' + seriesMediaType);
                 }
@@ -104,7 +106,7 @@ export default new class ProviderInfoDownloadHelper {
                     }
                     trys++;
                     try {
-                        const result = await this.getProviderLocalDataByName(series, name, provider);
+                        const result = await this.getProviderLocalDataByName(series, name, provider, trys);
                         if (result) {
                             logger.log('info', `[${requestId}][${provider.providerName}] ByName ${name.name} Request success 🎉`);
                             return result;
@@ -193,7 +195,7 @@ export default new class ProviderInfoDownloadHelper {
      * @param name Searched name.
      * @param provider In this provider the search will be performed.
      */
-    private async getProviderLocalDataByName(series: Series, name: Name, provider: ExternalProvider): Promise<MultiProviderResult> {
+    private async getProviderLocalDataByName(series: Series, name: Name, provider: ExternalProvider, trys: number): Promise<MultiProviderResult> {
         const resultContainer: SearchResultRatingContainer[] = [];
         let searchResult: MultiProviderResult[] = [];
         const season = await series.getSeason();
@@ -218,7 +220,7 @@ export default new class ProviderInfoDownloadHelper {
                         const id = bestResult.result.mainProvider.providerLocalData.id.toString();
                         const mediaType = await series.getMediaType();
                         const providerName = provider.providerName;
-                        ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', 0, providerName, name, true, mediaType, id);
+                        ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', trys, providerName, name, true, mediaType, id);
                         return bestResult.result;
                     }
 

@@ -75,6 +75,7 @@ export default class TVDBProvider extends InfoProvider {
     }
 
     private async getAccessKey(): Promise<string> {
+        this.informAWebRequest();
         if (TVDBProvider.Instance.apiData.accessToken && TVDBProvider.Instance.apiData.expiresIn && new Date().getTime() < TVDBProvider.Instance.apiData.expiresIn) {
             return TVDBProvider.Instance.apiData.accessToken;
         } else {

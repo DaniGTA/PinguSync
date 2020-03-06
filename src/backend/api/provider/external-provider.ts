@@ -22,7 +22,7 @@ export default abstract class ExternalProvider {
     public abstract potentialSubProviders: Array<(new () => ExternalProvider)>;
     public abstract version: number;
 
-    protected requestRateLimitInMs = 250;
+    protected requestRateLimitInMs = 400;
 
     private lastRequestTimestamp = 0;
     private requestCounter = 0;
