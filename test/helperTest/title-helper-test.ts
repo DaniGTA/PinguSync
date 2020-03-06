@@ -3,9 +3,6 @@ import TitleHelper from '../../src/backend/helpFunctions/name-helper/title-helpe
 
 
 describe('Title Checker | Some title examples', () => {
-    beforeEach(() => {
-    });
-
     describe('should get season number by title', () => {
         test('marked season title with season number in it', () => {
             strictEqual(TitleHelper.getSeasonNumberBySeasonMarkerInTitle('Title Season 2').seasonNumber, 2);
@@ -22,7 +19,5 @@ describe('Title Checker | Some title examples', () => {
         test('marked slug nd title with season number in it', () => {
             strictEqual(TitleHelper.getSeasonNumberBySeasonMarkerInTitle('test-2nd-season').seasonNumber, 2);
         });
-
-
     });
 });

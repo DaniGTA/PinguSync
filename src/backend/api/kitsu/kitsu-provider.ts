@@ -64,7 +64,7 @@ export default class KitsuProvider extends ListProvider {
         try {
             let searchResults = await this.search(seriesName);
             if (searchResults.data.length === 0) {
-                timeHelper.delay(1000);
+                timeHelper.delay(500);
                 searchResults = await this.search(seriesName);
             }
             for (const result of searchResults.data) {

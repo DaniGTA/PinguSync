@@ -64,10 +64,11 @@ describe('Title Checker | Some title examples', () => {
         assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title: Specials'), 'Title');
         assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title Specials'), 'Title');
         assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title Movie: Test Test'), 'Title: Test Test');
-        assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title (tv))'), 'Title');
+        assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title (tv)'), 'Title');
+        assert.equal(await TitleCheckHelper.removeMediaTypeFromTitle('Title (TV)'), 'Title');
     });
 
-    test('should detect MediaType from title', async () => {
+    test('should detect MediaType from title', () => {
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title: Movie'), MediaType.MOVIE);
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Movie'), MediaType.MOVIE);
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Movie: Test Test'), MediaType.MOVIE);
@@ -77,6 +78,9 @@ describe('Title Checker | Some title examples', () => {
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Specials'), MediaType.SPECIAL);
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title Test te test Specials'), MediaType.SPECIAL);
         assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title'), MediaType.UNKOWN);
-        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title (tv))'), MediaType.UNKOWN_SERIES);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title (tv)'), MediaType.UNKOWN_SERIES);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('Title (TV)'), MediaType.UNKOWN_SERIES);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('title-tv'), MediaType.UNKOWN_SERIES);
+        assert.equal(TitleCheckHelper.getMediaTypeFromTitle('titletv'), MediaType.UNKOWN);
     });
 });

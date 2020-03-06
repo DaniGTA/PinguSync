@@ -123,39 +123,67 @@ export default class TitleCheckHelper {
     }
 
     public static getMediaTypeFromTitle(title: string): MediaType {
-        if (title.match(/(:|: | )Movie(\W|$|\_)/)) {
+        if (this.hasTitleMovieInformation(title)) {
             return MediaType.MOVIE;
         }
 
-        if (title.match(/(:|: | )Gekijouban(\W|$|\_)/)) {
-            return MediaType.MOVIE;
-        }
-
-
-        if (title.match(/(:|: | )Specials(\W|$|\_)/)) {
+        if (this.hasTitleSpecialInformation(title)) {
             return MediaType.SPECIAL;
         }
 
-        if (title.match(/(:|: | )Special(\W|$|\_)/)) {
-            return MediaType.SPECIAL;
+        if (this.hasTitleSeriesInformation(title)) {
+            return MediaType.UNKOWN_SERIES;
         }
-
-        if (title.match(/(:|: | )OVA(\W|$|\_)/)) {
-            return MediaType.SPECIAL;
-        }
-
         return MediaType.UNKOWN;
     }
 
     public static async removeMediaTypeFromTitle(title: string): Promise<string> {
-        title = title.replace(/ Movie:/g, ':');
-        title = title.replace(/Movie/g, '');
-        title = title.replace(/Specials/g, '');
-        title = title.replace(/Special/g, '');
-        title = title.replace(/ Gekijouban:/g, ':');
-        title = title.replace(/Gekijouban/g, '');
-        title = title.replace(/:\s*$/gm, '');
+        title = title.replace(/ Movie:/gi, ':');
+        title = title.replace(/Movie/gi, '');
+        title = title.replace(/Specials/gi, '');
+        title = title.replace(/Special/gi, '');
+        title = title.replace(/ Gekijouban:/gi, ':');
+        title = title.replace(/Gekijouban/gi, '');
+        title = title.replace(/\(tv\)/gi, '');
+        title = title.replace(/:\s*$/gmi, '');
         return title.trim();
+    }
+
+    private static hasTitleSeriesInformation(title: string): boolean {
+        if (title.match(/(-|:|: | )TV(\W|$|\_)/i)) {
+            return true;
+        }
+
+        if (title.match(/(:|: | )\(tv\)(\W|$|\_)/i)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static hasTitleMovieInformation(title: string): boolean {
+        if (title.match(/(-|:|: | )Movie(\W|$|\_)/i)) {
+            return true;
+        }
+
+        if (title.match(/(:|: | )Gekijouban(\W|$|\_)/i)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static hasTitleSpecialInformation(title: string): boolean {
+        if (title.match(/(:|: | )OVA(\W|$|\_)/i)) {
+            return true;
+        }
+
+        if (title.match(/(:|: | )Specials(\W|$|\_)/i)) {
+            return true;
+        }
+
+        if (title.match(/(:|: | )Special(\W|$|\_)/i)) {
+            return true;
+        }
+        return false;
     }
     /**
      * Clean all strings and add cleaned string to the list.

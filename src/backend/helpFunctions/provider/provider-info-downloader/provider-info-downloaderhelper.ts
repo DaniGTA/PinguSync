@@ -194,8 +194,8 @@ export default new class ProviderInfoDownloadHelper {
      * @param provider In this provider the search will be performed.
      */
     private async getProviderLocalDataByName(series: Series, name: Name, provider: ExternalProvider): Promise<MultiProviderResult> {
+        const resultContainer: SearchResultRatingContainer[] = [];
         let searchResult: MultiProviderResult[] = [];
-        let resultContainer: SearchResultRatingContainer[] = [];
         const season = await series.getSeason();
         if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumberAsNumber() === 1 || provider.hasUniqueIdForSeasons) {
             logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumbers);
@@ -248,7 +248,7 @@ export default new class ProviderInfoDownloadHelper {
             }
         }
 
-        const bestSearchResultCount = searchResultRatingContainer.filter(x => x.resultRating.matches === bestSearchResult?.resultRating.matches).length;
+        const bestSearchResultCount = searchResultRatingContainer.filter((x) => x.resultRating.matches === bestSearchResult?.resultRating.matches).length;
         if (bestSearchResultCount !== 1) {
             return;
         }
@@ -261,7 +261,8 @@ export default new class ProviderInfoDownloadHelper {
     }
 
     private hasSearchResultABetterMatchesThenB(searchResultA: SearchResultRatingContainer, searchResultB: SearchResultRatingContainer): boolean {
-        return (searchResultA.resultRating.matches > searchResultB.resultRating.matches && searchResultA.resultRating.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE)
+        return (searchResultA.resultRating.matches > searchResultB.resultRating.matches &&
+            searchResultA.resultRating.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE);
     }
 }();
 

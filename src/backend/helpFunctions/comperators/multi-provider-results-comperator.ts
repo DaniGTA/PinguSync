@@ -1,16 +1,15 @@
 import MultiProviderResult from '../../api/provider/multi-provider-result';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
-import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import titleCheckHelper from '../name-helper/title-check-helper';
 import { SeasonSearchMode } from '../season-helper/season-search-mode';
+import StringHelper from '../string-helper';
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result';
 import MediaTypeComperator from './media-type-comperator';
 import ProviderComperator from './provider-comperator';
 import ReleaseYearComperator from './release-year-comperator';
 import SeasonComperator from './season-comperator';
-import StringHelper from '../string-helper';
 
 export default class MultiProviderComperator {
     public static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult> {
@@ -36,8 +35,6 @@ export default class MultiProviderComperator {
                     seasonA.seasonNumbers.includes(1)) {
                     finalResult.matches += 1;
                     finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
-                } else {
-                    finalResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                 }
             }
 

@@ -4,6 +4,7 @@ import StringHelper from '../../../helpFunctions/string-helper';
 import logger from '../../../logger/logger';
 import { NameType } from './name-type';
 import SeasonNumberResponse from './response-object/season-number-response';
+import TitleHelper from '../../../helpFunctions/name-helper/title-helper';
 
 export default class Name {
 
@@ -83,11 +84,16 @@ export default class Name {
             try {
                 if (Name.canGetValidSeasonNumberFromName(nameObj)) {
                     const nr = await StringHelper.getSeasonNumberFromTitle(nameObj.name);
-                    if (nr.seasonNumber) {
+                    if (nr.seasonNumber !== undefined) {
                         if (nr.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
                             return nr;
                         }
                         seasonsDetected.push(nr);
+                    }
+                } else {
+                    const seasonNumber = TitleHelper.getSeasonNumberBySeasonMarkerInTitle(nameObj.name);
+                    if (seasonNumber.seasonNumber !== undefined) {
+                        seasonsDetected.push(seasonNumber);
                     }
                 }
             } catch (err) {
