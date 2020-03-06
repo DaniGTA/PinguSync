@@ -19,7 +19,6 @@ import ProviderNameManager from '../../src/backend/controller/provider-manager/p
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
 import ProviderHelper from '../../src/backend/helpFunctions/provider/provider-helper';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import logger from '../../src/backend/logger/logger';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 import ProviderDataListManager from '../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 
@@ -31,6 +30,8 @@ describe('Provider Helper Test', () => {
         jest.fn().mockImplementation(() => {
             return { waitUntilItCanPerfomNextRequest: wait };
         });
+        const anidbNameManagerInstance = AniDBProvider['anidbNameManager'];
+        anidbNameManagerInstance.data = new AniDBProvider()['convertXmlToJson']();
     });
 
     beforeEach(() => {

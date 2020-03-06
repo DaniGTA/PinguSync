@@ -7,8 +7,6 @@ import ProviderDataListLoader from '../src/backend/controller/provider-data-list
 import ProviderDataListManager from '../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 import WebRequestManager from '../src/backend/controller/web-request-manager/web-request-manager';
 import ResponseHelper from './response-helper';
-import { existsSync } from 'fs';
-import logger from '../src/backend/logger/logger';
 
 // tslint:disable: no-string-literal
 MainListManager['listLoaded'] = true;
@@ -30,17 +28,3 @@ jest.spyOn(ExternalProvider.prototype, 'waitUntilItCanPerfomNextRequest').mockIm
 
 // tslint:disable-next-line: no-unused-expression
 new ListController(true);
-const anidb = new AniDBProvider();
-if (existsSync('./anidb-anime-titles.xml.gz')) {
-    if (!existsSync('./anidb-anime-titles.xml')) {
-        logger.info('Generate ANIDB xml');
-        anidb['getAniDBNameListXML']().then(() => {
-            anidb['convertXmlToJson']();
-        })
-    }
-
-    if (!existsSync('./anidb-config.json')) {
-        logger.info('Generate ANIDB xml');
-        anidb['convertXmlToJson']();
-    }
-}
