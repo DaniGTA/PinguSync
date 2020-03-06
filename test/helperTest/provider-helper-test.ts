@@ -27,13 +27,6 @@ jest.mock('../../src/backend/api/provider/external-provider');
 // tslint:disable: no-string-literal
 describe('Provider Helper Test', () => {
     beforeAll(async () => {
-        try {
-            const anidb = new AniDBProvider();
-            await anidb['getAniDBNameListXML']();
-            anidb['convertXmlToJson']();
-        } catch (err) {
-            logger.error(err);
-        }
         const wait = jest.fn();
         jest.fn().mockImplementation(() => {
             return { waitUntilItCanPerfomNextRequest: wait };

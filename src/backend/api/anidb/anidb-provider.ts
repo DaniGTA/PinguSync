@@ -192,16 +192,12 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     private convertXmlToJson(filePath = './anidb-anime-titles.xml') {
-        try {
-            if (existsSync(filePath)) {
-                const data = readFileSync(filePath, 'UTF-8');
-                const json = xml2json(data, { compact: true, spaces: 0 });
-                if (json) {
-                    return JSON.parse(json) as AniDBNameListXML;
-                }
+        if (existsSync(filePath)) {
+            const data = readFileSync(filePath, 'UTF-8');
+            const json = xml2json(data, { compact: true, spaces: 0 });
+            if (json) {
+                return JSON.parse(json) as AniDBNameListXML;
             }
-        } catch (err) {
-            logger.error(err);
         }
         throw new Error('convert from ' + filePath + ' to JSON has failed');
     }
