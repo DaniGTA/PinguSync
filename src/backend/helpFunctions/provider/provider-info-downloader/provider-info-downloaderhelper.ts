@@ -22,6 +22,7 @@ import StringHelper from '../../string-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
+import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
@@ -57,8 +58,10 @@ export default new class ProviderInfoDownloadHelper {
             const seriesMediaType = await series.getMediaType();
 
             const allLocalProviders = series.getAllProviderLocalDatas();
-            const indexOfCurrentProvider = allLocalProviders.findIndex((x) => x.provider === provider.providerName);
-            if (indexOfCurrentProvider === ProviderInfoDownloadHelper.NO_INDEX) {
+
+            const providerLocalForIdRequest = this.getProviderLocalForIdRequest(provider, allLocalProviders);
+
+            if (!providerLocalForIdRequest) {
                 if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
                     try {
                         const linkResult = await this.linkProviderDataFromRelations(series, provider);
@@ -76,19 +79,13 @@ export default new class ProviderInfoDownloadHelper {
                 }
             } else {
                 try {
-                    await provider.waitUntilItCanPerfomNextRequest();
-                    const result = await provider.getFullInfoById(allLocalProviders[indexOfCurrentProvider] as InfoProviderLocalData);
-                    logger.log('info', '[' + requestId + '][' + provider.providerName + '] ID Request success 🎉');
-                    const id = result.mainProvider.providerLocalData.id.toString();
-                    // tslint:disable-next-line: max-line-length
-                    ProviderSearchResultManager.addNewSearchResult(1, requestId, 0, provider.providerName, new Name('id', 'id'), true, seriesMediaType, id);
-                    return result;
+                    return this.getIdRequestResult(provider, providerLocalForIdRequest);
                 } catch (err) {
                     throw new Error('[' + provider.providerName + '] Unkown error: ' + err);
                 }
             }
 
-            logger.warn(`[${requestId}][${provider.providerName}] Request failed ❌❌❌❌❌❌`);
+            logger.warn(`[${requestId}][${provider.providerName}] Request failed ❌`);
             throw new Error(`[${requestId}][${provider.providerName}] No series info found by names.`);
         }
         throw new Error(`[${provider.providerName}] Provider is not available!`);
@@ -121,6 +118,28 @@ export default new class ProviderInfoDownloadHelper {
                 }
             }
             logger.warn(`[${requestId}][${provider.providerName}] ByName ${name.name} Request failed. ❌`);
+        }
+    }
+
+    private async getIdRequestResult(provider: ExternalProvider, providerLocalData: ProviderLocalData): Promise<MultiProviderResult> {
+        await provider.waitUntilItCanPerfomNextRequest();
+        return provider.getFullInfoById(providerLocalData);
+    }
+
+    private getProviderLocalForIdRequest(targetProvider: ExternalProvider, allCurrentProviders: ProviderLocalData[]): ProviderLocalData | undefined {
+        for (const currentProvider of allCurrentProviders) {
+            if (currentProvider.provider === targetProvider.providerName) {
+                return currentProvider;
+            }
+        }
+
+        for (const supportedProvider of targetProvider.supportedOtherProvider) {
+            const providerName = ProviderNameManager.getProviderName(supportedProvider);
+            for (const currentProvider of allCurrentProviders) {
+                if (providerName === currentProvider.provider) {
+                    return currentProvider;
+                }
+            }
         }
     }
 
@@ -195,7 +214,7 @@ export default new class ProviderInfoDownloadHelper {
      * @param name Searched name.
      * @param provider In this provider the search will be performed.
      */
-    private async getProviderLocalDataByName(series: Series, name: Name, provider: ExternalProvider, trys: number): Promise<MultiProviderResult> {
+    private async getProviderLocalDataByName(series: Series, name: Name, provider: ExternalProvider, trys: number = 0): Promise<MultiProviderResult> {
         const resultContainer: SearchResultRatingContainer[] = [];
         let searchResult: MultiProviderResult[] = [];
         const season = await series.getSeason();

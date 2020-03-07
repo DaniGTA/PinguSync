@@ -8,6 +8,8 @@ import SimklProvider from '../../api/simkl/simkl-provider';
 import TraktProvider from '../../api/trakt/trakt-provider';
 import TVDBProvider from '../../api/tvdb/tvdb-provider';
 import TVMazeProvider from '../../api/tvmaze/tvmaze-provider';
+import ExternalProvider from '../../api/provider/external-provider';
+import logger from '../../logger/logger';
 
 export default class ProviderLoader {
     /**
@@ -15,25 +17,30 @@ export default class ProviderLoader {
      * rather than static members which are resolved during load time
      * in order to avoid circular-dependency problems.
      */
+    protected static listOfListProviders: Array<(new () => ListProvider)> = [KitsuProvider, AniListProvider, TraktProvider, SimklProvider];
+    protected static listOfInfoProviders: Array<(new () => InfoProvider)> = [AniDBProvider, TVMazeProvider, OMDbProvider, TVDBProvider];
 
     protected static loadedListProvider: ListProvider[] | undefined;
     protected static loadedInfoProvider: InfoProvider[] | undefined;
 
     protected static loadListProviderList(): ListProvider[] {
-        return [
-            new KitsuProvider(),
-            new AniListProvider(),
-            new TraktProvider(),
-            new SimklProvider(),
-        ];
+        return this.loadProviderList(this.listOfListProviders);
     }
 
     protected static loadInfoProviderList(): InfoProvider[] {
-        return [
-            new AniDBProvider(),
-            new TVMazeProvider(),
-            new OMDbProvider(),
-            new TVDBProvider(),
-        ];
+        return this.loadProviderList(this.listOfInfoProviders);
+    }
+
+    protected static loadProviderList<T>(listOfProviders: Array<(new () => T)>): T[] {
+        const loadedList = [];
+        for (const provider of listOfProviders) {
+            try {
+                loadedList.push(new provider());
+            } catch (err) {
+                logger.error('FAILED TO LOAD PROVIDER: ' + provider);
+                logger.error(err);
+            }
+        }
+        return loadedList;
     }
 }

@@ -2,7 +2,6 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import logger from '../../logger/logger';
 import Episode from '../objects/meta/episode/episode';
-import EpisodeMapping from '../objects/meta/episode/episode-mapping';
 import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
@@ -21,21 +20,7 @@ export default class ProviderDataListLoader {
                 logger.log('info', 'Items loaded: ' + loadedData.length);
                 for (let index = 0; index < loadedData.length; index++) {
                     const loadedDataEntry = loadedData[index];
-                    loadedDataEntry.lastUpdate = new Date(loadedDataEntry.lastUpdate);
-                    loadedDataEntry.lastExternalChange = new Date(loadedDataEntry.lastExternalChange);
-                    for (let index2 = 0; index2 < loadedDataEntry.detailEpisodeInfo.length; index2++) {
-                        const x = loadedDataEntry.detailEpisodeInfo[index2];
-
-                        loadedDataEntry.detailEpisodeInfo[index2] = Object.assign(new Episode(x.episodeNumber, x.season, x.title), x);
-                    }
-
-                    if (loadedData[index].instanceName === 'ListProviderLocalData') {
-                        loadedData[index] = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
-                    } else if (loadedData[index].instanceName === 'InfoProviderLocalData') {
-                        loadedData[index] = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
-                    } else {
-                        logger.debug('[ProviderDataListLoader] Object cant be assigned');
-                    }
+                    loadedData[index] = this.createProviderLocalDataInstance(loadedDataEntry);
                 }
                 return loadedData;
             } else {
@@ -56,6 +41,25 @@ export default class ProviderDataListLoader {
         logger.log('info', 'Save list: ' + list.length);
         logger.log('info', this.getPath());
         writeFileSync(this.getPath(), JSON.stringify(list));
+    }
+
+    private static createProviderLocalDataInstance(loadedDataEntry: ProviderLocalData): ProviderLocalData {
+        loadedDataEntry.lastUpdate = new Date(loadedDataEntry.lastUpdate);
+        loadedDataEntry.lastExternalChange = new Date(loadedDataEntry.lastExternalChange);
+        for (let index2 = 0; index2 < loadedDataEntry.detailEpisodeInfo.length; index2++) {
+            const x = loadedDataEntry.detailEpisodeInfo[index2];
+
+            loadedDataEntry.detailEpisodeInfo[index2] = Object.assign(new Episode(x.episodeNumber, x.season, x.title), x);
+        }
+
+        if (loadedDataEntry.instanceName === 'ListProviderLocalData') {
+            loadedDataEntry = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
+        } else if (loadedDataEntry.instanceName === 'InfoProviderLocalData') {
+            loadedDataEntry = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
+        } else {
+            logger.debug('[ProviderDataListLoader] Object cant be assigned');
+        }
+        return loadedDataEntry;
     }
 
     private static getPath(): string {

@@ -1,68 +1,118 @@
 import { createHash } from 'crypto';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'fs';
-import request from 'request';
+import ExternalProvider from '../src/backend/api/provider/external-provider';
+import MultiProviderResult from '../src/backend/api/provider/multi-provider-result';
+import ProviderLocalData from '../src/backend/controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../src/backend/controller/provider-manager/provider-list';
+import ProviderNameManager from '../src/backend/controller/provider-manager/provider-name-manager';
 import logger from '../src/backend/logger/logger';
+import ProviderDataListLoader from '../src/backend/controller/provider-data-list-manager/provider-data-list-loader';
+
 export default class ResponseHelper {
 
-    public static async mockRequest(options: (request.UriOptions & request.CoreOptions)): Promise<request.Response> {
-        const requestId = ResponseHelper.generateRequestId(options);
-        if (ResponseHelper.isRequestCached(requestId)) {
-            return ResponseHelper.loadCache(requestId);
-        } else {
-            logger.info('[MocketRequest] Request is not cached and will be performed. Make sure you have all needed api keys.');
-            // tslint:disable-next-line: max-line-length
-            logger.info('[MocketRequest] If you added the api keys after the request pls deleted ' + requestId + '.json in the folder: ' + ResponseHelper.cacheFolderName);
-            return new Promise<request.Response>((resolve, rejects) => {
-                try {
-                    request(options, (errormsg: any, response: request.Response, body: any) => {
-                        if (response.statusCode === 200 || response.statusCode === 404) {
-                            ResponseHelper.cacheNewRequest(response, options, requestId);
-                        } else {
-                            logger.error(`[MockRequestError] Request on url: ${response.url} with status code: ${response.statusCode}`);
-                            logger.error(`[MockRequestError] Request: ${response.url} will not be cached`);
-                        }
-                        resolve(response);
-                    }).on('error', (err) => {
-                        logger.error(err);
-                        rejects();
-                    });
-                } catch (err) {
-                    logger.error(err);
-                    rejects();
-                }
-            });
+    public static mockRequest(): void {
+        // tslint:disable: no-string-literal
+        for (const provider of ProviderList['listOfListProviders']) {
+            if (provider) {
+                this.mockGetByNameRequest(provider);
+                this.mockGetByIdRequest(provider);
+            }
         }
+        for (const provider of ProviderList['listOfInfoProviders']) {
+            if (provider) {
+                this.mockGetByNameRequest(provider);
+                this.mockGetByIdRequest(provider);
+            }
+        }
+        ProviderList['loadedListProvider'] = undefined;
+        ProviderList['loadedInfoProvider'] = undefined;
     }
+    private static mockGetByNameRequest(provider: (new () => ExternalProvider)) {
+        const spyGetInfoByName = jest.spyOn(provider.prototype, 'getMoreSeriesInfoByName');
+        const spyGetInfoByNameMock = async (searchTitle: string, season: number): Promise<MultiProviderResult[]> => {
+            const requestId = this.generateRequestId(provider, (searchTitle + season));
+            logger.info('[RequestMocker] Request cached id:' + requestId);
+
+            if (ResponseHelper.isRequestCached(requestId)) {
+                const resultList = this.loadCache(requestId) as MultiProviderResult[];
+                for (let response of resultList) {
+                    response = Object.assign(new MultiProviderResult(response.mainProvider), response);
+                    response.mainProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](response.mainProvider.providerLocalData);
+                    for (let subProvider of response.subProviders) {
+                        subProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](subProvider.providerLocalData);
+                    }
+                }
+                return resultList;
+            } else {
+                spyGetInfoByName.mockRestore();
+                const result = await new provider().getMoreSeriesInfoByName(searchTitle, season);
+                this.cacheNewRequest((searchTitle + ' ,s:' + season), result, requestId);
+                this.mockGetByNameRequest(provider);
+                return result;
+            }
+        };
+        spyGetInfoByName.mockImplementation(spyGetInfoByNameMock as unknown as any);
+    }
+
+    private static mockGetByIdRequest(provider: (new () => ExternalProvider)) {
+        const spyGetInfoById = jest.spyOn(provider.prototype, 'getFullInfoById').mockImplementation(jest.fn());
+        const spyGetInfoByIdMock = jest.fn().mockImplementation(async (providerLocalData: ProviderLocalData): Promise<MultiProviderResult> => {
+            const requestId = this.generateRequestId(provider, (providerLocalData.provider + providerLocalData.id));
+            logger.info('[RequestMocker] Request cached id:' + requestId);
+
+            if (ResponseHelper.isRequestCached(requestId)) {
+                const response = this.loadCache(requestId) as MultiProviderResult;
+                response.mainProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](response.mainProvider.providerLocalData);
+                const result = Object.assign(new MultiProviderResult(response.mainProvider), response);
+                return result;
+            } else {
+                spyGetInfoById.mockRestore();
+                const result = await new provider().getFullInfoById(providerLocalData);
+                this.cacheNewRequest((providerLocalData.provider + ', id: ' + providerLocalData.id), result, requestId);
+                this.mockGetByIdRequest(provider);
+                return result;
+            }
+        });
+        spyGetInfoById.mockImplementation(spyGetInfoByIdMock);
+    }
+
     private static cacheFolderName = './test-web-response-cache/';
 
-    private static generateRequestId(options: (request.UriOptions & request.CoreOptions)): string {
-        // reset headers
-        const copy = { ...options };
-        copy.headers = {};
+    private static generateRequestId(provider: (new () => ExternalProvider), string: string): string {
+        const providerName = ProviderNameManager.getProviderName(provider);
+        const providerVersion = ProviderNameManager.getProviderVersion(provider);
 
-        const text = JSON.stringify(copy);
-        return createHash('sha256').update(text).digest('hex');
+        logger.info(`[RequestMocker] Generate mock id for: ${providerName} (v:${providerVersion})`);
+
+        const text = JSON.stringify(providerName + providerVersion + string);
+        return providerName + '_v' + providerVersion + '_hash' + createHash('sha256').update(text).digest('hex');
     }
 
     private static isRequestCached(id: string): boolean {
         return existsSync(this.cacheFolderName + id + '.json');
     }
 
-    private static cacheNewRequest(response: request.Response, options: (request.UriOptions & request.CoreOptions), id: string): void {
+    private static cacheNewRequest(request: string, response: any, id: string): void {
+        logger.info('[RequestMocker] create cache for id:' + id);
+
         if (response !== undefined) {
-            response.headers = {};
-            response.request.headers = {};
-            const fileContent = JSON.stringify({ response, options });
             try {
-                statSync(this.cacheFolderName);
-            } catch (e) {
-                mkdirSync(this.cacheFolderName);
+                const fileContent = JSON.stringify({ request, response });
+                try {
+                    statSync(this.cacheFolderName);
+                } catch (e) {
+                    mkdirSync(this.cacheFolderName);
+                }
+                writeFileSync(this.cacheFolderName + id + '.json', fileContent);
+            } catch (err) {
+                logger.error(`Caching failed for id: ${id} failed`);
+                logger.error(err);
             }
-            writeFileSync(this.cacheFolderName + id + '.json', fileContent);
         }
     }
 
-    private static loadCache(id: string): request.Response {
-        return (JSON.parse(readFileSync(this.cacheFolderName + id + '.json', 'UTF-8'))).response as request.Response;
+    private static loadCache(id: string): any {
+        logger.info('[RequestMocker] load cache for id:' + id);
+        return (JSON.parse(readFileSync(this.cacheFolderName + id + '.json', 'UTF-8'))).response;
     }
 }

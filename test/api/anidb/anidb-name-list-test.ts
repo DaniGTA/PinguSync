@@ -15,13 +15,14 @@ import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/pro
 import logger from '../../../src/backend/logger/logger';
 
 
+// tslint:disable: no-string-literal
 describe('Provider: AniDB | Offline Test runs', () => {
     beforeAll(() => {
         const anidbNameManagerInstance = AniDBProvider['anidbNameManager'];
         anidbNameManagerInstance.data = new AniDBProvider()['convertXmlToJson']();
-    })
+    });
+
     beforeEach(() => {
-        // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new AniListProvider()];
         ProviderDataListManager['providerDataList'] = [];
     });

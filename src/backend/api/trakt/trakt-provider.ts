@@ -9,10 +9,12 @@ import { TraktUserData } from './trakt-user-data';
 import { MediaType } from '../../controller/objects/meta/media-type';
 import WatchProgress from '../../controller/objects/meta/watch-progress';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
 import logger from '../../logger/logger';
 import ExternalProvider from '../provider/external-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
+import TVDBProvider from '../tvdb/tvdb-provider';
 import { FullShowInfo } from './objects/fullShowInfo';
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { WatchedInfo } from './objects/watchedInfo';
@@ -28,8 +30,8 @@ export default class TraktProvider extends ListProvider {
     }
     private static instance: TraktProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
+    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [TVDBProvider];
+    public potentialSubProviders: Array<(new () => ExternalProvider)> = [TVDBProvider];
     public hasUniqueIdForSeasons: boolean = false;
     public hasEpisodeTitleOnFullInfo = true;
     public providerName: string = 'Trakt';
@@ -85,6 +87,10 @@ export default class TraktProvider extends ListProvider {
                     const fullSeasonInfo = traktConverter.combineSeasonInfoAndSeasonEpisodeInfo(seasonInfo, seasonEpisodeInfo);
                     return traktConverter.convertFullShowInfoToLocalData(res, MediaType.UNKOWN_SERIES, fullSeasonInfo);
                 }
+            } else if (provider.provider === ProviderNameManager.getProviderName(TVDBProvider)) {
+                const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/search/tvdb/' + provider.id + '?extended=full');
+
+
             }
         } catch (err) {
             logger.error('[TRAKT] ID REQUEST FAILED');

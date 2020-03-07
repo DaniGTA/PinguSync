@@ -1,0 +1,162 @@
+{
+    "request": "AniList, id: 101167",
+    "response": {
+        "subProviders": [],
+        "mainProvider": {
+            "providerLocalData": {
+                "version": 1,
+                "infoStatus": 0,
+                "provider": "AniList",
+                "lastUpdate": "2020-03-07T18:38:06.084Z",
+                "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                "covers": [
+                    {
+                        "url": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx101167-KqJJuolEz91W.jpg",
+                        "size": 2
+                    },
+                    {
+                        "url": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx101167-KqJJuolEz91W.jpg",
+                        "size": 3
+                    }
+                ],
+                "banners": [
+                    {
+                        "url": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/101167-VirZ21Z7DGZk.jpg",
+                        "size": 2
+                    }
+                ],
+                "mediaType": "ANIME",
+                "isNSFW": false,
+                "genres": [],
+                "detailEpisodeInfo": [],
+                "sequelIds": [
+                    112124
+                ],
+                "prequelIds": [
+                    20920
+                ],
+                "alternativeIds": [
+                    85161
+                ],
+                "names": [
+                    {
+                        "name": "Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka II",
+                        "lang": "x-jap",
+                        "nameType": "official"
+                    },
+                    {
+                        "name": "Is It Wrong to Try to Pick Up Girls in a Dungeon? II",
+                        "lang": "unknown",
+                        "nameType": "main"
+                    },
+                    {
+                        "name": "ダンジョンに出会いを求めるのは間違っているだろうかⅡ",
+                        "lang": "jap",
+                        "nameType": "unkown"
+                    }
+                ],
+                "overviews": [
+                    {
+                        "content": "The second season of <i>Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka</i>.",
+                        "lang": "eng"
+                    }
+                ],
+                "id": 101167,
+                "instanceName": "ListProviderLocalData",
+                "canUpdateWatchProgress": false,
+                "customList": false,
+                "customListName": "",
+                "releaseYear": 2019,
+                "rawEntry": {
+                    "Media": {
+                        "id": 101167,
+                        "idMal": 37347,
+                        "title": {
+                            "romaji": "Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka II",
+                            "english": "Is It Wrong to Try to Pick Up Girls in a Dungeon? II",
+                            "native": "ダンジョンに出会いを求めるのは間違っているだろうかⅡ",
+                            "userPreferred": "Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka II"
+                        },
+                        "startDate": {
+                            "year": 2019,
+                            "month": 7,
+                            "day": 13
+                        },
+                        "endDate": {
+                            "year": 2019,
+                            "month": 9,
+                            "day": 28
+                        },
+                        "coverImage": {
+                            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx101167-KqJJuolEz91W.jpg",
+                            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx101167-KqJJuolEz91W.jpg"
+                        },
+                        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/101167-VirZ21Z7DGZk.jpg",
+                        "format": "TV",
+                        "type": "ANIME",
+                        "status": "FINISHED",
+                        "episodes": 12,
+                        "chapters": null,
+                        "volumes": null,
+                        "season": "SUMMER",
+                        "description": "The second season of <i>Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka</i>.",
+                        "averageScore": 72,
+                        "meanScore": 72,
+                        "genres": [
+                            "Action",
+                            "Adventure",
+                            "Comedy",
+                            "Fantasy",
+                            "Romance"
+                        ],
+                        "synonyms": [
+                            "Danmachi II",
+                            "ダンジョンに出会いを求めるのは間違っているだろうか2",
+                            "Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka 2",
+                            "Dungeon ni Deai o Motomeru no wa Machigatte Iru Darouka: Familia Myth II"
+                        ],
+                        "nextAiringEpisode": null,
+                        "relations": {
+                            "edges": [
+                                {
+                                    "relationType": "ADAPTATION"
+                                },
+                                {
+                                    "relationType": "PREQUEL"
+                                },
+                                {
+                                    "relationType": "ALTERNATIVE"
+                                },
+                                {
+                                    "relationType": "SEQUEL"
+                                },
+                                {
+                                    "relationType": "SIDE_STORY"
+                                }
+                            ],
+                            "nodes": [
+                                {
+                                    "id": 85162
+                                },
+                                {
+                                    "id": 20920
+                                },
+                                {
+                                    "id": 85161
+                                },
+                                {
+                                    "id": 112124
+                                },
+                                {
+                                    "id": 112125
+                                }
+                            ]
+                        }
+                    }
+                },
+                "score": 72,
+                "episodes": 12
+            }
+        }
+    }
+}

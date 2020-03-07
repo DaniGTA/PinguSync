@@ -692,7 +692,7 @@ describe('Basic List | Testrun', () => {
         }
     });
 
-    test('should get series and should map episodes right (Series: The Melancholy of Haruhi Suzumiya)', async () => {
+    test('should get series and should map episodes right from Trakt (Series: Gakusen Toshi Asterisk S1)', async () => {
         const provider = new ListProviderLocalData(97794, TraktProvider);
 
         const series = new Series();
@@ -705,23 +705,25 @@ describe('Basic List | Testrun', () => {
 
         // Result checking
         const mainList = await MainListManager.getMainList();
-        strictEqual(mainList.length, 2);
+        strictEqual(mainList.length, 1);
 
         const resultSeries = mainList[0];
 
-        const bindings = resultSeries.getListProvidersInfos();
+        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
         strictEqual(bindings.length, 2);
 
-        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
-        strictEqual(bindings[1].id, 21131);
+        strictEqual(bindings[1].providerLocalData.provider, ProviderNameManager.getProviderName(AniListProvider));
+        strictEqual(bindings[1].providerLocalData.id, 21131);
 
-        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(bindings[0].id, 97794);
+        strictEqual(bindings[0].providerLocalData.provider, ProviderNameManager.getProviderName(TraktProvider));
+        strictEqual(bindings[0].providerLocalData.id, 97794);
+        strictEqual(bindings[0]?.seasonTarget?.seasonNumbers[0], 1);
+        strictEqual(bindings[9]?.seasonTarget?.seasonPart, 2);
 
         const epMappings = resultSeries.episodeBindingPools;
-        strictEqual(epMappings.length, 24);
+        strictEqual(epMappings.length, 12);
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
+            strictEqual(epMapping.bindedEpisodeMappings.length, 2);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);
@@ -730,5 +732,45 @@ describe('Basic List | Testrun', () => {
         }
     });
 
+    test('should get series and should map episodes right from AniList (Series: Gakusen Toshi Asterisk S1)', async () => {
+        const provider = new ListProviderLocalData(21390, AniListProvider);
+
+        const series = new Series();
+        await series.addProviderDatas(provider);
+        const adderInstance = new MainListAdder();
+
+        // Test
+
+        await adderInstance.addSeries(series);
+
+        // Result checking
+        const mainList = await MainListManager.getMainList();
+        strictEqual(mainList.length, 1);
+
+        const resultSeries = mainList[0];
+
+        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
+        strictEqual(bindings.length, 2);
+
+        strictEqual(bindings[0]?.providerLocalData.provider, ProviderNameManager.getProviderName(AniListProvider));
+        strictEqual(bindings[0]?.providerLocalData.id, 21390);
+
+        strictEqual(bindings[1]?.providerLocalData.provider, ProviderNameManager.getProviderName(TraktProvider));
+        strictEqual(bindings[1]?.providerLocalData.id, 97794);
+        strictEqual(bindings[1]?.seasonTarget?.seasonNumbers, [1]);
+        strictEqual(bindings[1]?.seasonTarget?.seasonPart, 2);
+
+
+        const epMappings = resultSeries.episodeBindingPools;
+        strictEqual(epMappings.length, 12);
+        for (const epMapping of epMappings) {
+            strictEqual(epMapping.bindedEpisodeMappings.length, 2);
+            for (const ep of epMapping.bindedEpisodeMappings) {
+                for (const ep2 of epMapping.bindedEpisodeMappings) {
+                    strictEqual(ep.episodeNumber, ep2.episodeNumber);
+                }
+            }
+        }
+    });
     test.todo('Trakt id: 65266 (All season seperate)');
 });

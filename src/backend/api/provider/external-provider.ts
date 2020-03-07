@@ -1,6 +1,6 @@
 
 import { MediaType } from '../../controller/objects/meta/media-type';
-import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import timeHelper from '../../helpFunctions/time-helper';
 import MultiProviderResult from './multi-provider-result';
 
@@ -28,7 +28,7 @@ export default abstract class ExternalProvider {
     private requestCounter = 0;
 
     public abstract getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]>;
-    public abstract getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult>;
+    public abstract getFullInfoById(provider: ProviderLocalData): Promise<MultiProviderResult>;
     public abstract isProviderAvailable(): Promise<boolean>;
 
     public async waitUntilItCanPerfomNextRequest(): Promise<void> {

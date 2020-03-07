@@ -13,6 +13,7 @@ import providerInfoDownloaderhelper from './provider-info-downloader/provider-in
 import SeasonAwarenessCreatorSeasonNumber from './season-awareness-helper/season-awareness-creator-season-number';
 import SeasonAwarenessFindSeasonNumber from './season-awareness-helper/season-awareness-find-season-number';
 import SeasonAwarenessHelper from './season-awareness-helper/season-awareness-helper';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 
 
 export default class ProviderHelper {
@@ -392,10 +393,13 @@ export default class ProviderHelper {
         for (const provider of ProviderList.getAllProviderLists()) {
             for (const supportProvider of provider.potentialSubProviders) {
                 try {
-                    const instance = (supportProvider as any).getInstance();
-                    if (instance.getInstance().providerName === targetProvider.providerName) {
-                        providerThatProvidersId.push(instance);
-                        break;
+                    const providerName = ProviderNameManager.getProviderName(supportProvider);
+                    if (providerName === targetProvider.providerName) {
+                        const instance = ProviderList.getExternalProviderInstanceByProviderName(providerName);
+                        if (instance) {
+                            providerThatProvidersId.push(instance);
+                            break;
+                        }
                     }
                 } catch (err) {
                     logger.debug(err);
@@ -409,7 +413,7 @@ export default class ProviderHelper {
         if (currentProvider.infoStatus !== ProviderInfoStatus.FULL_INFO) {
             for (const supportedProvider of ProviderList.getExternalProviderInstance(currentProvider).potentialSubProviders) {
                 try {
-                    if ((supportedProvider as any).getInstance().providerName === targetProvider.providerName) {
+                    if (ProviderNameManager.getProviderName(supportedProvider) === targetProvider.providerName) {
                         return true;
                     }
                 } catch (err) {

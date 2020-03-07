@@ -23,7 +23,7 @@ describe('Provider: Kitsu | Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('', true, true), kitsuProvider];
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedInfoProvider'] = undefined;
+        ProviderList['loadedInfoProvider'] = [];
         ProviderDataListManager['providerDataList'] = [];
     });
 

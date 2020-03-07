@@ -5,9 +5,9 @@ import MainListLoader from '../src/backend/controller/main-list-manager/main-lis
 import MainListManager from '../src/backend/controller/main-list-manager/main-list-manager';
 import ProviderDataListLoader from '../src/backend/controller/provider-data-list-manager/provider-data-list-loader';
 import ProviderDataListManager from '../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
-import WebRequestManager from '../src/backend/controller/web-request-manager/web-request-manager';
 import ResponseHelper from './response-helper';
 
+ResponseHelper.mockRequest();
 // tslint:disable: no-string-literal
 MainListManager['listLoaded'] = true;
 MainListLoader['loadData'] = () => [];
@@ -20,8 +20,6 @@ ProviderDataListManager['listLoaded'] = true;
 ProviderDataListLoader['saveData'] = async () => { };
 ProviderDataListLoader['loadData'] = () => [];
 ProviderDataListManager['providerDataList'] = [];
-
-WebRequestManager.request = ResponseHelper.mockRequest;
 
 jest.spyOn<any, any>(AniDBProvider.prototype, 'getData').mockImplementation(jest.fn());
 jest.spyOn(ExternalProvider.prototype, 'waitUntilItCanPerfomNextRequest').mockImplementation(jest.fn());
