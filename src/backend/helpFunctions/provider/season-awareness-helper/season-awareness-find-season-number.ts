@@ -33,11 +33,17 @@ export default class SeasonAwarenessFindSeasonNumber {
         }
         throw new Error('No season found');
     }
-
+    /**
+     * TODO Should generate parts.
+     * @param otherProvider where the season is present.
+     * @param targetLocalDataProvider where the season is missing.
+     */
     private static calcSeasonForTargetProvider(otherProvider: ProviderLocalData, targetLocalDataProvider: ProviderLocalData): Season {
         const result = EpisodeHelper.calculateRelationBetweenEpisodes(targetLocalDataProvider.detailEpisodeInfo, otherProvider.detailEpisodeInfo);
-        if (result.seasonNumber !== undefined && result.episodesFound !== 0) {
+        if (result.seasonNumber !== undefined && result.seasonComplete) {
             return new Season(result.seasonNumber);
+        } else if (result.seasonNumber?.length === 1) {
+
         } else {
             logger.error('SEASON IS NOT COMPLETE CANT EXTRACT SEASON NUMBER !!!');
             throw new Error('Failed to get Season');

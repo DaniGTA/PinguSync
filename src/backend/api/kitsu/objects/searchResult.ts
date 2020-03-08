@@ -328,7 +328,7 @@ export interface IKitsuEpisode {
     seasonNumber: number;
     synopsis: string;
     thumbnail: IKitsuEpisodeThumbnail[];
-    titles: IKitsuEpisodeTitle[];
+    titles: IKitsuEpisodeTitle[] | IKitsuEpisodeTitle;
     type: string;
     updatedAt: string;
 }

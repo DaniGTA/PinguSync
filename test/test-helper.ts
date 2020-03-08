@@ -20,8 +20,7 @@ ProviderDataListManager['listLoaded'] = true;
 ProviderDataListLoader['saveData'] = async () => { };
 ProviderDataListLoader['loadData'] = () => [];
 ProviderDataListManager['providerDataList'] = [];
-
-jest.spyOn<any, any>(AniDBProvider.prototype, 'getData').mockImplementation(jest.fn());
+AniDBProvider.prototype['downloadFile'] = async () => { throw new Error('Cant request file in test.'); };
 jest.spyOn(ExternalProvider.prototype, 'waitUntilItCanPerfomNextRequest').mockImplementation(jest.fn());
 
 // tslint:disable-next-line: no-unused-expression

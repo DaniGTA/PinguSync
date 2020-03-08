@@ -7,18 +7,21 @@ import ProviderList from '../src/backend/controller/provider-manager/provider-li
 import ProviderNameManager from '../src/backend/controller/provider-manager/provider-name-manager';
 import logger from '../src/backend/logger/logger';
 import ProviderDataListLoader from '../src/backend/controller/provider-data-list-manager/provider-data-list-loader';
+import ProviderLoader from '../src/backend/controller/provider-manager/provider-loader';
+import Season from '../src/backend/controller/objects/meta/season';
 
 export default class ResponseHelper {
 
     public static mockRequest(): void {
+        const loader = new ProviderLoader();
         // tslint:disable: no-string-literal
-        for (const provider of ProviderList['listOfListProviders']) {
+        for (const provider of loader['listOfListProviders']) {
             if (provider) {
                 this.mockGetByNameRequest(provider);
                 this.mockGetByIdRequest(provider);
             }
         }
-        for (const provider of ProviderList['listOfInfoProviders']) {
+        for (const provider of loader['listOfListProviders']) {
             if (provider) {
                 this.mockGetByNameRequest(provider);
                 this.mockGetByIdRequest(provider);
@@ -39,9 +42,11 @@ export default class ResponseHelper {
                     let response = resultList[index];
                     response = Object.assign(new MultiProviderResult(response.mainProvider), response);
                     response.mainProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](response.mainProvider.providerLocalData);
+                    response.mainProvider.seasonTarget = Object.assign(new Season(), response.mainProvider.seasonTarget);
                     for (let index = 0; index < response.subProviders.length; index++) {
                         let subProvider = response.subProviders[index];
                         subProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](subProvider.providerLocalData);
+                        subProvider.seasonTarget = Object.assign(new Season(), subProvider.seasonTarget);
                         response.subProviders[index] = subProvider;
                     }
                     resultList[index] = response;
@@ -67,9 +72,11 @@ export default class ResponseHelper {
             if (ResponseHelper.isRequestCached(requestId)) {
                 const response = this.loadCache(requestId) as MultiProviderResult;
                 response.mainProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](response.mainProvider.providerLocalData);
+                response.mainProvider.seasonTarget = Object.assign(new Season(), response.mainProvider.seasonTarget);
                 for (let index = 0; index < response.subProviders.length; index++) {
                     let subProvider = response.subProviders[index];
                     subProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](subProvider.providerLocalData);
+                    subProvider.seasonTarget = Object.assign(new Season(), subProvider.seasonTarget);
                     response.subProviders[index] = subProvider;
                 }
                 const result = Object.assign(new MultiProviderResult(response.mainProvider), response);

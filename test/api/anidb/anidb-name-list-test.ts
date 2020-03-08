@@ -13,12 +13,13 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import logger from '../../../src/backend/logger/logger';
+import AniDBHelper from '../../../src/backend/api/anidb/anidb-helper';
 
 
 // tslint:disable: no-string-literal
 describe('Provider: AniDB | Offline Test runs', () => {
     beforeAll(() => {
-        const anidbNameManagerInstance = AniDBProvider['anidbNameManager'];
+        const anidbNameManagerInstance = AniDBHelper['anidbNameManager'];
         anidbNameManagerInstance.data = new AniDBProvider()['convertXmlToJson']();
     });
 

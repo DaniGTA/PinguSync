@@ -71,7 +71,7 @@ export default class AniDBConverter {
             const mpr = new MultiProviderResult(ipld, ...await this.getSubProviders(fullInfo.anime));
             return mpr;
         }
-        throw new Error('no anime present');
+        throw new Error('no anime present ' + (fullInfo as any).error._text);
     }
 
     public async getDetailEpisodeInfo(anime: AniDBAnimeAnime): Promise<Episode[]> {

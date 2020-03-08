@@ -5,15 +5,16 @@ import Series from '../../controller/objects/series';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../controller/provider-manager/provider-list';
+import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 import logger from '../../logger/logger';
 import dateHelper from '../date-helper';
+import listHelper from '../list-helper';
 import seasonHelper from '../season-helper/season-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
 import SeasonAwarenessCreatorSeasonNumber from './season-awareness-helper/season-awareness-creator-season-number';
 import SeasonAwarenessFindSeasonNumber from './season-awareness-helper/season-awareness-find-season-number';
 import SeasonAwarenessHelper from './season-awareness-helper/season-awareness-helper';
-import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
 
 
 export default class ProviderHelper {
@@ -31,9 +32,8 @@ export default class ProviderHelper {
                 const upgradedinfos = await this.requestUpgradeAllCurrentinfos(series, force);
                 await series.addProviderDatasWithSeasonInfos(...upgradedinfos);
             }
+
             const infoProviders = await this.requestAllInfoProviderInfos(series, force, target, seasonAware);
-
-
             if (!seasonAware) {
                 const instance = new SeasonAwarenessCreatorSeasonNumber();
                 const providers = await instance.requestSeasonAwareness(series, infoProviders);
@@ -44,6 +44,9 @@ export default class ProviderHelper {
 
             const listProviders = await this.requestAllListProviderInfos(series, force, target);
             await series.addProviderDatasWithSeasonInfos(...listProviders);
+
+            const seasonFilledResults = await this.generateSeasonTarget(series, series.getAllProviderLocalDatasWithSeasonInfo());
+            series.addProviderDatasWithSeasonInfos(...seasonFilledResults);
 
             series.lastInfoUpdate = Date.now();
         }
@@ -104,16 +107,12 @@ export default class ProviderHelper {
         }
 
         if (localDatas.length === 0) {
-            const providersThatCanProvideId = this.getProvidersThatCanProviderProviderId(provider);
-            for (const providerThatCanProvideId of providersThatCanProvideId) {
-                try {
-                    const result = await this.requestProviderInfo(series, providerThatCanProvideId, force, target);
-                    if (result.length !== 0) {
-                        localDatas.push(...result);
-                        break;
-                    }
-                } catch (err) {
-                    logger.error(err);
+            const requestResultByOtherProvider = await this.getProviderByOtherProviders(series, provider);
+            if (requestResultByOtherProvider) {
+                await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResultByOtherProvider.getAllProvidersWithSeason());
+                const requestResultByOtherProviderAsSource = await this.requestProviderToTarget(provider, firstSeason, tempSeriesCopy, target);
+                if (requestResultByOtherProviderAsSource) {
+                    localDatas.push(requestResultByOtherProviderAsSource);
                 }
             }
         }
@@ -162,13 +161,60 @@ export default class ProviderHelper {
             const tempSeries = new Series();
             await tempSeries.addProviderDatas(...currentLocalDatas);
             const infoResult = await this.requestProviderInfo(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-            if (infoResult && infoResult.length !== 0) {
-                return infoResult[0].mainProvider.providerLocalData;
+            for (const result of infoResult) {
+                for (const provider of result.getAllProviders()) {
+                    if (provider.provider === providerInstance.providerName) {
+                        return provider;
+                    }
+                }
             }
         } catch (err) {
             logger.error(err);
         }
         return currentLocalDatas.find((x) => x.provider === providerInstance.providerName);
+    }
+
+    private static async getProviderByOtherProviders(series: Series, targetProvider: ExternalProvider): Promise<MultiProviderResult | undefined> {
+        const providersThatCanProvideId = this.getProvidersThatCanProviderProviderId(targetProvider);
+        for (const providerThatCanProvideId of providersThatCanProvideId) {
+            try {
+                const finalResult = await this.getProviderByTargetProvider(series, providerThatCanProvideId, targetProvider);
+                if (finalResult) {
+                    return finalResult;
+                }
+            } catch (err) {
+                logger.error(err);
+            }
+        }
+    }
+
+    private static async getProviderByTargetProvider(series: Series, providerForRequest: ExternalProvider, providerAsGoal: ExternalProvider): Promise<MultiProviderResult | undefined> {
+        const result = await this.requestProviderInfo(series, providerForRequest, false, ProviderInfoStatus.FULL_INFO);
+        if (result.length !== 0) {
+            const finalResult = this.extractTargetProviderFromMultiProviderResults(providerAsGoal, result);
+            if (finalResult) {
+                return finalResult;
+            }
+        }
+    }
+
+    private static extractTargetProviderFromMultiProviderResults(targetProvider: ExternalProvider, results: MultiProviderResult[]): MultiProviderResult | undefined {
+        for (const multiProviderResults of results) {
+            const listOfAllProviders = [...multiProviderResults.getAllProviders()];
+            const finalResult = this.extractTargetProviderFromProviderLocalDatas(targetProvider, listOfAllProviders);
+            if (finalResult) {
+                return finalResult;
+            }
+        }
+    }
+
+    private static extractTargetProviderFromProviderLocalDatas(targetProvider: ExternalProvider, listOfAllProviders: ProviderLocalData[]): MultiProviderResult | undefined {
+        for (const provider of listOfAllProviders) {
+            if (provider.provider === targetProvider.providerName) {
+                const subProviderList = listHelper.removeEntrysSync(listOfAllProviders, provider);
+                return new MultiProviderResult(provider, ...subProviderList);
+            }
+        }
     }
 
     private static async requestProviderToTarget(provider: ExternalProvider, firstSeason: Series | null, tempSeriesCopy: Series, target: ProviderInfoStatus) {
@@ -199,7 +245,6 @@ export default class ProviderHelper {
     private static async requestAllListProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus): Promise<ProviderLocalDataWithSeasonInfo[]> {
         const results: ProviderLocalDataWithSeasonInfo[] = [];
         const tempSeriesCopy = Object.assign(new Series(), series);
-        const season = series.getSeason();
         const currentProviders = series.getAllProviderLocalDatas();
 
         const providersThatNeedUpdates = await this.getProvidersThatNeedUpdates(currentProviders, target);
@@ -208,24 +253,30 @@ export default class ProviderHelper {
                 const providerLocalData = tempSeriesCopy.getListProvidersInfos().find((x) => x.provider === providerThatNeedUpdate.providerName);
                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.ADVANCED_BASIC_INFO || !providerLocalData) {
                     const requestResults = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                    for (const result of requestResults) {
-                        try {
-                            if (!providerThatNeedUpdate.hasUniqueIdForSeasons && !seasonHelper.isSeasonFirstSeason(await season) && requestResults.length !== 0) {
-                                result.mainProvider.seasonTarget = await SeasonAwarenessFindSeasonNumber.getSeasonForProvider(tempSeriesCopy, result.mainProvider.providerLocalData);
-                            } else if (seasonHelper.isSeasonUndefined(result.mainProvider.seasonTarget)) {
-                                result.mainProvider.seasonTarget = await season;
-                            }
-                        } catch (err) {
-                            logger.error(err);
-                        }
-                        await tempSeriesCopy.addProviderDatasWithSeasonInfos(...result.getAllProvidersWithSeason());
-                        results.push(...result.getAllProvidersWithSeason());
-                    }
+
+                    await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResults.flatMap((x) => x.getAllProvidersWithSeason()));
+                    results.push(...requestResults.flatMap((x) => x.getAllProvidersWithSeason()));
                     series.resetCache();
                     tempSeriesCopy.resetCache();
                 }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #2: ' + err);
+            }
+        }
+        return results;
+    }
+
+    private static async generateSeasonTarget(series: Series, providerResults: ProviderLocalDataWithSeasonInfo[]): Promise<ProviderLocalDataWithSeasonInfo[]> {
+        const results = [];
+        for (const result of providerResults) {
+            try {
+                const instance = ProviderList.getExternalProviderInstanceByProviderName(result.providerLocalData.provider);
+                if (!instance?.hasUniqueIdForSeasons && instance?.hasEpisodeTitleOnFullInfo) {
+                    result.seasonTarget = await SeasonAwarenessFindSeasonNumber.getSeasonForProvider(series, result.providerLocalData);
+                    results.push(result);
+                }
+            } catch (err) {
+                logger.error(err);
             }
         }
         return results;

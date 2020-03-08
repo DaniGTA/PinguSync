@@ -29,7 +29,7 @@ export default class KitsuProvider extends ListProvider {
         return KitsuProvider.instance;
     }
     private static instance: KitsuProvider;
-    public version = 1;
+    public version = 2;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalProvider)> = [MalProvider, TraktProvider, AniDBProvider, AniListProvider];
@@ -37,6 +37,7 @@ export default class KitsuProvider extends ListProvider {
     public hasOAuthCode: boolean = true;
     public hasUniqueIdForSeasons = true;
     public supportOnlyBasicLatinForNameSearch = false;
+    public hasEpisodeTitleOnFullInfo = true;
     public userData: KitsuUserData;
     public api: Kitsu;
     constructor() {
@@ -83,7 +84,7 @@ export default class KitsuProvider extends ListProvider {
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName) {
-            const getResult = ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
+            const getResult = await ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
             return kitsuConverter.convertMediaToAnime(getResult.data);
         }
         throw new Error('[Kitsu] Cant handle this provider id');

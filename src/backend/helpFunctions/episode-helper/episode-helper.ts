@@ -25,18 +25,31 @@ export default class EpisodeHelper {
         const seasonNumbers: number[] = [];
         let numberOfRegularEpisodesFound = 0;
         let numberOfSpecialEpisodesFound = 0;
-        let maxEpisodeNumber = 0;
+        let maxEpisodeNumberOfCurrentSeason = 0;
+        let minEpisodeNumberOfCurrentSeason: number | undefined;
+        let minEpisodeNumberOfSeasonHolder: number | undefined;
+        let maxEpisodeNumberOfSeasonHolder = 0;
         let maxDifference = 0;
         for (const episode of seasonHolder) {
+            const episodeNumber = episode.episodeNumber as unknown as number;
             for (const newEpisodes of currentSeason) {
                 const result = EpisodeComperator.compareEpisodeTitle(episode, newEpisodes);
                 if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                     const newEpisodeNumber = newEpisodes.episodeNumber as unknown as number;
                     if (!isNaN(newEpisodeNumber as unknown as number)) {
-                        if (newEpisodeNumber > maxEpisodeNumber) {
-                            maxEpisodeNumber = newEpisodeNumber;
+                        if (newEpisodeNumber > maxEpisodeNumberOfCurrentSeason) {
+                            maxEpisodeNumberOfCurrentSeason = newEpisodeNumber;
                         }
-                        const episodeNumber = episode.episodeNumber as unknown as number;
+                        if (minEpisodeNumberOfCurrentSeason === undefined || newEpisodeNumber < minEpisodeNumberOfCurrentSeason) {
+                            minEpisodeNumberOfCurrentSeason = newEpisodeNumber;
+                        }
+
+                        if (episodeNumber > maxEpisodeNumberOfSeasonHolder) {
+                            maxEpisodeNumberOfSeasonHolder = episodeNumber;
+                        }
+                        if (minEpisodeNumberOfSeasonHolder === undefined || episodeNumber < minEpisodeNumberOfSeasonHolder) {
+                            minEpisodeNumberOfSeasonHolder = episodeNumber;
+                        }
                         if (!isNaN(episode.episodeNumber as unknown as number)) {
                             let diff: number | null = null;
                             if (episodeNumber > newEpisodeNumber) {
@@ -70,7 +83,10 @@ export default class EpisodeHelper {
         for (const season of finalSeasonNumbers) {
             maxEpisodes += this.getRegularEpisodeCountOfSeason(seasonHolder, new Season([season]));
         }
-        return new EpisodeRelationResult(finalSeasonNumbers, maxEpisodes, numberOfRegularEpisodesFound, maxEpisodeNumber, maxDifference);
+        const epResult = new EpisodeRelationResult(finalSeasonNumbers, maxEpisodes, numberOfRegularEpisodesFound, maxEpisodeNumberOfCurrentSeason, maxDifference);
+        epResult.maxEpisodeNumberOfSeasonHolder = maxEpisodeNumberOfSeasonHolder;
+        epResult.minEpisodeNumberOfSeasonHolder = minEpisodeNumberOfSeasonHolder;
+        epResult.minEpisodeNumberOfCurrentSeason = minEpisodeNumberOfCurrentSeason;
     }
 
     public static getRegularEpisodeCountOfSeason(episodes: Episode[], seasonNumber: Season): number {

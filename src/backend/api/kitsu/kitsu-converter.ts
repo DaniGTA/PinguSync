@@ -24,7 +24,8 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import TraktProvider from '../trakt/trakt-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import KitsuProvider from './kitsu-provider';
-import { IKitsuEpisode, IKitsuMappings, IMedia } from './objects/searchResult';
+import { IKitsuEpisode, IKitsuMappings, IMedia, IKitsuEpisodeTitle } from './objects/searchResult';
+import { isArray } from 'util';
 
 export default new class KitsuConverter {
     public async convertMediaToAnime(media: IMedia, fullInfo: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<MultiProviderResult> {
@@ -146,15 +147,27 @@ export default new class KitsuConverter {
         for (const episode of episodes) {
             const episodeTitles = [];
             if (episode.titles) {
-                for (const title of episode.titles) {
+                if (isArray(episode.titles)) {
+                    for (const title of episode.titles) {
+                        if (title.en_jp) {
+                            episodeTitles.push(new EpisodeTitle(title.en_jp, 'en_jp'));
+                        } else if (title.en_us) {
+                            episodeTitles.push(new EpisodeTitle(title.en_us, 'en_us'));
+                        } else if (title.ja_jp) {
+                            episodeTitles.push(new EpisodeTitle(title.ja_jp, 'jap'));
+                        }
+                    }
+                } else {
+                    const title = episode.titles as IKitsuEpisodeTitle;
                     if (title.en_jp) {
                         episodeTitles.push(new EpisodeTitle(title.en_jp, 'en_jp'));
-                    } else if (title.en_us) {
+                    }
+                    if (title.en_us) {
                         episodeTitles.push(new EpisodeTitle(title.en_us, 'en_us'));
-                    } else if (title.ja_jp) {
+                    }
+                    if (title.ja_jp) {
                         episodeTitles.push(new EpisodeTitle(title.ja_jp, 'jap'));
                     }
-
                 }
             }
             const episodeThumbnails = [];

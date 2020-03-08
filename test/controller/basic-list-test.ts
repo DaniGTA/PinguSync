@@ -1,4 +1,5 @@
 import { fail, notEqual, notStrictEqual, strictEqual } from 'assert';
+import AniDBHelper from '../../src/backend/api/anidb/anidb-helper';
 import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
 import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
@@ -35,7 +36,7 @@ describe('Basic List | Testrun', () => {
         const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
         if (!traktInstance) { fail(); }
         traktInstance.isUserLoggedIn = async () => true;
-        const anidbNameManagerInstance = AniDBProvider['anidbNameManager'];
+        const anidbNameManagerInstance = AniDBHelper['anidbNameManager'];
         anidbNameManagerInstance.data = new AniDBProvider()['convertXmlToJson']();
 
     });
@@ -736,7 +737,7 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, 21131);
+        strictEqual(aniListBinding?.providerLocalData.id, "21131");
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
