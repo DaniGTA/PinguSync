@@ -737,7 +737,7 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, "21131");
+        strictEqual(aniListBinding?.providerLocalData.id, '21131');
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);

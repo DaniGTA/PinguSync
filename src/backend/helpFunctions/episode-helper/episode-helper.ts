@@ -87,6 +87,7 @@ export default class EpisodeHelper {
         epResult.maxEpisodeNumberOfSeasonHolder = maxEpisodeNumberOfSeasonHolder;
         epResult.minEpisodeNumberOfSeasonHolder = minEpisodeNumberOfSeasonHolder;
         epResult.minEpisodeNumberOfCurrentSeason = minEpisodeNumberOfCurrentSeason;
+        return epResult;
     }
 
     public static getRegularEpisodeCountOfSeason(episodes: Episode[], seasonNumber: Season): number {
