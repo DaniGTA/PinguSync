@@ -35,12 +35,16 @@ export default class ResponseHelper {
 
             if (ResponseHelper.isRequestCached(requestId)) {
                 const resultList = this.loadCache(requestId) as MultiProviderResult[];
-                for (let response of resultList) {
+                for (let index = 0; index < resultList.length; index++) {
+                    let response = resultList[index];
                     response = Object.assign(new MultiProviderResult(response.mainProvider), response);
                     response.mainProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](response.mainProvider.providerLocalData);
-                    for (let subProvider of response.subProviders) {
+                    for (let index = 0; index < response.subProviders.length; index++) {
+                        let subProvider = response.subProviders[index];
                         subProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](subProvider.providerLocalData);
+                        response.subProviders[index] = subProvider;
                     }
+                    resultList[index] = response;
                 }
                 return resultList;
             } else {
@@ -63,6 +67,11 @@ export default class ResponseHelper {
             if (ResponseHelper.isRequestCached(requestId)) {
                 const response = this.loadCache(requestId) as MultiProviderResult;
                 response.mainProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](response.mainProvider.providerLocalData);
+                for (let index = 0; index < response.subProviders.length; index++) {
+                    let subProvider = response.subProviders[index];
+                    subProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](subProvider.providerLocalData);
+                    response.subProviders[index] = subProvider;
+                }
                 const result = Object.assign(new MultiProviderResult(response.mainProvider), response);
                 return result;
             } else {

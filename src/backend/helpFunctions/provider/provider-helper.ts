@@ -391,18 +391,20 @@ export default class ProviderHelper {
     private static getProvidersThatCanProviderProviderId(targetProvider: ExternalProvider): ExternalProvider[] {
         const providerThatProvidersId: ExternalProvider[] = [];
         for (const provider of ProviderList.getAllProviderLists()) {
-            for (const supportProvider of provider.potentialSubProviders) {
-                try {
-                    const providerName = ProviderNameManager.getProviderName(supportProvider);
-                    if (providerName === targetProvider.providerName) {
-                        const instance = ProviderList.getExternalProviderInstanceByProviderName(providerName);
-                        if (instance) {
-                            providerThatProvidersId.push(instance);
-                            break;
+            if (provider.providerName !== targetProvider.providerName) {
+                for (const supportProvider of provider.potentialSubProviders) {
+                    try {
+                        const providerName = ProviderNameManager.getProviderName(supportProvider);
+                        if (providerName === targetProvider.providerName) {
+                            const instance = ProviderList.getExternalProviderInstanceByProviderName(provider.providerName);
+                            if (instance) {
+                                providerThatProvidersId.push(instance);
+                                break;
+                            }
                         }
+                    } catch (err) {
+                        logger.debug(err);
                     }
-                } catch (err) {
-                    logger.debug(err);
                 }
             }
         }

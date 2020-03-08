@@ -1,0 +1,49 @@
+{
+    "request": "Vinland Saga ,s:undefined",
+    "response": [
+        {
+            "subProviders": [],
+            "mainProvider": {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 2,
+                    "provider": "omdb",
+                    "lastUpdate": "2020-03-07T19:14:26.335Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [
+                        {
+                            "url": "https://m.media-amazon.com/images/M/MV5BN2UwOTMwMjMtZTE5MS00YmY4LTg4YjAtZDE3ZTg3YTU5MmQ2XkEyXkFqcGdeQXVyODEyMDIxNDY@._V1_SX300.jpg",
+                            "size": 1
+                        }
+                    ],
+                    "banners": [],
+                    "mediaType": "SERIES",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [
+                        {
+                            "name": "Vinland Saga",
+                            "lang": "en",
+                            "nameType": "official"
+                        }
+                    ],
+                    "overviews": [],
+                    "id": "tt10233448",
+                    "instanceName": "InfoProviderLocalData",
+                    "rawEntry": {
+                        "Title": "Vinland Saga",
+                        "Year": "2019–",
+                        "imdbID": "tt10233448",
+                        "Type": "series",
+                        "Poster": "https://m.media-amazon.com/images/M/MV5BN2UwOTMwMjMtZTE5MS00YmY4LTg4YjAtZDE3ZTg3YTU5MmQ2XkEyXkFqcGdeQXVyODEyMDIxNDY@._V1_SX300.jpg"
+                    },
+                    "releaseYear": null
+                }
+            }
+        }
+    ]
+}

@@ -13,6 +13,7 @@ import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
+import ProviderDataListManager from '../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -23,7 +24,6 @@ import ProviderLocalDataWithSeasonInfo from '../../src/backend/helpFunctions/pro
 import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
-import ProviderDataListManager from '../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
 
@@ -565,12 +565,17 @@ describe('Basic List | Testrun', () => {
 
         const resultSeries = mainList[0];
 
-        const bindings = resultSeries.getListProvidersInfos();
-        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(AniListProvider));
-        strictEqual(bindings[0].id, 2167);
+        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
 
-        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(bindings[1].id, 24724);
+        const aniListName = ProviderNameManager.getProviderName(AniListProvider);
+        const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
+        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
+        strictEqual(aniListBinding?.providerLocalData.id, 2167);
+
+        const traktName = ProviderNameManager.getProviderName(TraktProvider);
+        const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
+        strictEqual(traktBinding?.providerLocalData.provider, traktName);
+        strictEqual(traktBinding?.providerLocalData.id, '24724');
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
@@ -601,12 +606,18 @@ describe('Basic List | Testrun', () => {
 
         const resultSeries = mainList[0];
 
-        const bindings = resultSeries.getListProvidersInfos();
-        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
-        strictEqual(bindings[1].id, 21051);
+        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
 
-        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(bindings[0].id, 110252);
+        const aniListName = ProviderNameManager.getProviderName(AniListProvider);
+        const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
+        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
+        strictEqual(aniListBinding?.providerLocalData.id, 21051);
+
+        const traktName = ProviderNameManager.getProviderName(TraktProvider);
+        const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
+        strictEqual(traktBinding?.providerLocalData.provider, traktName);
+        strictEqual(traktBinding?.providerLocalData.id, 110252);
+
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
@@ -636,12 +647,17 @@ describe('Basic List | Testrun', () => {
 
         const resultSeries = mainList[0];
 
-        const bindings = resultSeries.getListProvidersInfos();
-        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
-        strictEqual(bindings[1].id, 934);
+        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
 
-        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(bindings[0].id, 61179);
+        const aniListName = ProviderNameManager.getProviderName(AniListProvider);
+        const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
+        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
+        strictEqual(aniListBinding?.providerLocalData.id, '934');
+
+        const traktName = ProviderNameManager.getProviderName(TraktProvider);
+        const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
+        strictEqual(traktBinding?.providerLocalData.provider, traktName);
+        strictEqual(traktBinding?.providerLocalData.id, 61179);
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
@@ -671,14 +687,19 @@ describe('Basic List | Testrun', () => {
 
         const resultSeries = mainList[0];
 
-        const bindings = resultSeries.getListProvidersInfos();
+        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
         strictEqual(bindings.length, 2);
 
-        strictEqual(bindings[1].provider, ProviderNameManager.getProviderName(AniListProvider));
-        strictEqual(bindings[1].id, 849);
+        const aniListName = ProviderNameManager.getProviderName(AniListProvider);
+        const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
+        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
+        strictEqual(aniListBinding?.providerLocalData.id, 849);
 
-        strictEqual(bindings[0].provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(bindings[0].id, 60988);
+        const traktName = ProviderNameManager.getProviderName(TraktProvider);
+        const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
+        strictEqual(traktBinding?.providerLocalData.provider, traktName);
+        strictEqual(traktBinding?.providerLocalData.id, 60988);
+
 
         const epMappings = resultSeries.episodeBindingPools;
         strictEqual(epMappings.length, 28);
@@ -692,7 +713,7 @@ describe('Basic List | Testrun', () => {
         }
     });
 
-    test('should get series and should map episodes right from Trakt (Series: Gakusen Toshi Asterisk S1)', async () => {
+    test('should get series and should map episodes right from Trakt (Series: Gakusen Toshi Asterisk S2)', async () => {
         const provider = new ListProviderLocalData(97794, TraktProvider);
 
         const series = new Series();
@@ -712,13 +733,17 @@ describe('Basic List | Testrun', () => {
         const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
         strictEqual(bindings.length, 2);
 
-        strictEqual(bindings[1].providerLocalData.provider, ProviderNameManager.getProviderName(AniListProvider));
-        strictEqual(bindings[1].providerLocalData.id, 21131);
+        const aniListName = ProviderNameManager.getProviderName(AniListProvider);
+        const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
+        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
+        strictEqual(aniListBinding?.providerLocalData.id, 21131);
 
-        strictEqual(bindings[0].providerLocalData.provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(bindings[0].providerLocalData.id, 97794);
-        strictEqual(bindings[0]?.seasonTarget?.seasonNumbers[0], 1);
-        strictEqual(bindings[9]?.seasonTarget?.seasonPart, 2);
+        const traktName = ProviderNameManager.getProviderName(TraktProvider);
+        const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
+        strictEqual(traktBinding?.providerLocalData.provider, traktName);
+        strictEqual(traktBinding?.providerLocalData.id, 97794);
+        strictEqual(traktBinding?.seasonTarget?.seasonNumbers[0], 1);
+        strictEqual(traktBinding?.seasonTarget?.seasonPart, 2);
 
         const epMappings = resultSeries.episodeBindingPools;
         strictEqual(epMappings.length, 12);
@@ -750,15 +775,18 @@ describe('Basic List | Testrun', () => {
         const resultSeries = mainList[0];
 
         const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
-        strictEqual(bindings.length, 2);
 
-        strictEqual(bindings[0]?.providerLocalData.provider, ProviderNameManager.getProviderName(AniListProvider));
-        strictEqual(bindings[0]?.providerLocalData.id, 21390);
+        const aniListName = ProviderNameManager.getProviderName(AniListProvider);
+        const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
+        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
+        strictEqual(aniListBinding?.providerLocalData.id, 21390);
 
-        strictEqual(bindings[1]?.providerLocalData.provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(bindings[1]?.providerLocalData.id, 97794);
-        strictEqual(bindings[1]?.seasonTarget?.seasonNumbers, [1]);
-        strictEqual(bindings[1]?.seasonTarget?.seasonPart, 2);
+        const traktName = ProviderNameManager.getProviderName(TraktProvider);
+        const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
+        strictEqual(traktBinding?.providerLocalData.provider, ProviderNameManager.getProviderName(TraktProvider));
+        strictEqual(traktBinding?.providerLocalData.id, 97794);
+        strictEqual(traktBinding?.seasonTarget?.seasonNumbers, [1]);
+        strictEqual(traktBinding?.seasonTarget?.seasonPart, 2);
 
 
         const epMappings = resultSeries.episodeBindingPools;

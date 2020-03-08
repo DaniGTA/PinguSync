@@ -1,0 +1,149 @@
+{
+    "request": "AniList, id: 21699",
+    "response": {
+        "subProviders": [],
+        "mainProvider": {
+            "providerLocalData": {
+                "version": 1,
+                "infoStatus": 0,
+                "provider": "AniList",
+                "lastUpdate": "2020-03-07T19:17:13.756Z",
+                "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                "covers": [
+                    {
+                        "url": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21699-SsHmJeQ7d0FK.jpg",
+                        "size": 2
+                    },
+                    {
+                        "url": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx21699-SsHmJeQ7d0FK.jpg",
+                        "size": 3
+                    }
+                ],
+                "banners": [
+                    {
+                        "url": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/21699-XOn3cvDFszZ3.jpg",
+                        "size": 2
+                    }
+                ],
+                "mediaType": "ANIME",
+                "isNSFW": false,
+                "genres": [],
+                "detailEpisodeInfo": [],
+                "sequelIds": [
+                    102976
+                ],
+                "prequelIds": [
+                    21202
+                ],
+                "alternativeIds": [],
+                "names": [
+                    {
+                        "name": "Kono Subarashii Sekai ni Shukufuku wo! 2",
+                        "lang": "x-jap",
+                        "nameType": "official"
+                    },
+                    {
+                        "name": "KONOSUBA -God's blessing on this wonderful world! 2",
+                        "lang": "unknown",
+                        "nameType": "main"
+                    },
+                    {
+                        "name": "この素晴らしい世界に祝福を！2",
+                        "lang": "jap",
+                        "nameType": "unkown"
+                    }
+                ],
+                "overviews": [
+                    {
+                        "content": "When Kazuma Satou died, he was given two choices: pass on to heaven or be revived in a fantasy world. After choosing the new world, the goddess Aqua tasked him with defeating the Demon King, and let him choose any weapon to aid him. Unfortunately, Kazuma chose to bring Aqua herself and has regretted the decision ever since then.\n<br><br>\nNot only is he stuck with a useless deity turned party archpriest, the pair also has to make enough money for living expenses. To add to their problems, their group continued to grow as more problematic adventurers joined their ranks. Their token spellcaster, Megumin, is an explosion magic specialist who can only cast one spell once per day and refuses to learn anything else. There is also their stalwart crusader, Lalatina \"Darkness\" Dustiness Ford, a helpless masochist who makes Kazuma look pure in comparison.\n<br><br>\n<i>Kono Subarashii Sekai ni Shukufuku wo! 2</i> continues to follow Kazuma and the rest of his party through countless more adventures as they struggle to earn money and have to deal with one another's problematic personalities. However, things rarely go as planned, and they are often sidetracked by their own idiotic tendencies.\n<br><br>\n[Written by MAL Rewrite]",
+                        "lang": "eng"
+                    }
+                ],
+                "id": 21699,
+                "instanceName": "ListProviderLocalData",
+                "canUpdateWatchProgress": false,
+                "customList": false,
+                "customListName": "",
+                "releaseYear": 2017,
+                "rawEntry": {
+                    "Media": {
+                        "id": 21699,
+                        "idMal": 32937,
+                        "title": {
+                            "romaji": "Kono Subarashii Sekai ni Shukufuku wo! 2",
+                            "english": "KONOSUBA -God's blessing on this wonderful world! 2",
+                            "native": "この素晴らしい世界に祝福を！2",
+                            "userPreferred": "Kono Subarashii Sekai ni Shukufuku wo! 2"
+                        },
+                        "startDate": {
+                            "year": 2017,
+                            "month": 1,
+                            "day": 12
+                        },
+                        "endDate": {
+                            "year": 2017,
+                            "month": 3,
+                            "day": 16
+                        },
+                        "coverImage": {
+                            "large": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx21699-SsHmJeQ7d0FK.jpg",
+                            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx21699-SsHmJeQ7d0FK.jpg"
+                        },
+                        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/21699-XOn3cvDFszZ3.jpg",
+                        "format": "TV",
+                        "type": "ANIME",
+                        "status": "FINISHED",
+                        "episodes": 10,
+                        "chapters": null,
+                        "volumes": null,
+                        "season": "WINTER",
+                        "description": "When Kazuma Satou died, he was given two choices: pass on to heaven or be revived in a fantasy world. After choosing the new world, the goddess Aqua tasked him with defeating the Demon King, and let him choose any weapon to aid him. Unfortunately, Kazuma chose to bring Aqua herself and has regretted the decision ever since then.\n<br><br>\nNot only is he stuck with a useless deity turned party archpriest, the pair also has to make enough money for living expenses. To add to their problems, their group continued to grow as more problematic adventurers joined their ranks. Their token spellcaster, Megumin, is an explosion magic specialist who can only cast one spell once per day and refuses to learn anything else. There is also their stalwart crusader, Lalatina \"Darkness\" Dustiness Ford, a helpless masochist who makes Kazuma look pure in comparison.\n<br><br>\n<i>Kono Subarashii Sekai ni Shukufuku wo! 2</i> continues to follow Kazuma and the rest of his party through countless more adventures as they struggle to earn money and have to deal with one another's problematic personalities. However, things rarely go as planned, and they are often sidetracked by their own idiotic tendencies.\n<br><br>\n[Written by MAL Rewrite]",
+                        "averageScore": 82,
+                        "meanScore": 82,
+                        "genres": [
+                            "Adventure",
+                            "Comedy",
+                            "Fantasy"
+                        ],
+                        "synonyms": [
+                            "Konosuba 2"
+                        ],
+                        "nextAiringEpisode": null,
+                        "relations": {
+                            "edges": [
+                                {
+                                    "relationType": "PREQUEL"
+                                },
+                                {
+                                    "relationType": "ADAPTATION"
+                                },
+                                {
+                                    "relationType": "SIDE_STORY"
+                                },
+                                {
+                                    "relationType": "SEQUEL"
+                                }
+                            ],
+                            "nodes": [
+                                {
+                                    "id": 21202
+                                },
+                                {
+                                    "id": 86238
+                                },
+                                {
+                                    "id": 97996
+                                },
+                                {
+                                    "id": 102976
+                                }
+                            ]
+                        }
+                    }
+                },
+                "score": 82,
+                "episodes": 10
+            }
+        }
+    }
+}
