@@ -1,3 +1,4 @@
+import AniDBProvider from '../../api/anidb/anidb-provider';
 import AniListProvider from '../../api/anilist/anilist-provider';
 import KitsuProvider from '../../api/kitsu/kitsu-provider';
 import OMDbProvider from '../../api/omdb/omdb-provider';
@@ -7,7 +8,6 @@ import SimklProvider from '../../api/simkl/simkl-provider';
 import TraktProvider from '../../api/trakt/trakt-provider';
 import TVDBProvider from '../../api/tvdb/tvdb-provider';
 import TVMazeProvider from '../../api/tvmaze/tvmaze-provider';
-import AniDBProvider from '../../api/anidb/anidb-provider';
 import logger from '../../logger/logger';
 
 export default class ProviderLoader {

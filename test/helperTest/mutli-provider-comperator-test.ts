@@ -16,8 +16,7 @@ import TestProvider from '../controller/objects/testClass/testProvider';
 
 
 describe('Multi-Provider-Comperator | Examples', () => {
-    beforeAll(() => {
-    }); beforeEach(() => {
+    beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
         // tslint:disable-next-line: no-string-literal

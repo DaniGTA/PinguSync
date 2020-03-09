@@ -60,8 +60,10 @@ export default class ProviderHelper {
             try {
                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !providerLocalData) {
                     const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
-                    const infoResult = await this.requestProviderInfo(series, providerInstance, force, ProviderInfoStatus.FULL_INFO);
-                    resultList.push(...infoResult.flatMap((x) => x.getAllProvidersWithSeason()));
+                    const infoResult = await this.requestProviderInfoUpgrade(series, providerInstance, force, ProviderInfoStatus.FULL_INFO);
+                    if (infoResult) {
+                        resultList.push(...infoResult.getAllProvidersWithSeason());
+                    }
                 }
             } catch (err) {
                 logger.error('Error at ProviderHelper.requestUpgradeAllCurrentinfos');
@@ -75,7 +77,7 @@ export default class ProviderHelper {
      * requestProviderInfo
      */
     // tslint:disable-next-line: max-line-length
-    public static async requestProviderInfo(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult[]> {
+    public static async requestProviderInfoUpgrade(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult | undefined> {
         logger.debug('Start request for Provider: ');
         const localDatas: MultiProviderResult[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
@@ -116,7 +118,7 @@ export default class ProviderHelper {
                 }
             }
         }
-        return localDatas;
+        return this.extractTargetProviderFromMultiProviderResults(provider, ...localDatas);
     }
 
     // tslint:disable-next-line: max-line-length
@@ -156,13 +158,13 @@ export default class ProviderHelper {
         return relevantList;
     }
 
-    public static async simpleProviderInfoRequest(currentLocalDatas: ProviderLocalData[], providerInstance: ExternalProvider): Promise<ProviderLocalData | undefined> {
+    public static async simpleProviderLocalDataUpgradeRequest(currentLocalDatas: ProviderLocalData[], providerInstance: ExternalProvider): Promise<ProviderLocalData | undefined> {
         try {
             const tempSeries = new Series();
             await tempSeries.addProviderDatas(...currentLocalDatas);
-            const infoResult = await this.requestProviderInfo(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-            for (const result of infoResult) {
-                for (const provider of result.getAllProviders()) {
+            const infoResult = await this.requestProviderInfoUpgrade(tempSeries, providerInstance, false, ProviderInfoStatus.FULL_INFO);
+            if (infoResult) {
+                for (const provider of infoResult.getAllProviders()) {
                     if (provider.provider === providerInstance.providerName) {
                         return provider;
                     }
@@ -189,8 +191,8 @@ export default class ProviderHelper {
     }
 
     private static async getProviderByTargetProvider(series: Series, providerForRequest: ExternalProvider, providerAsGoal: ExternalProvider): Promise<MultiProviderResult | undefined> {
-        const result = await this.requestProviderInfo(series, providerForRequest, false, ProviderInfoStatus.FULL_INFO);
-        if (result.length !== 0) {
+        const result = await this.requestProviderInfoUpgrade(series, providerForRequest, false, ProviderInfoStatus.FULL_INFO);
+        if (result) {
             const finalResult = this.extractTargetProviderFromMultiProviderResults(providerAsGoal, result);
             if (finalResult) {
                 return finalResult;
@@ -198,7 +200,7 @@ export default class ProviderHelper {
         }
     }
 
-    private static extractTargetProviderFromMultiProviderResults(targetProvider: ExternalProvider, results: MultiProviderResult[]): MultiProviderResult | undefined {
+    private static extractTargetProviderFromMultiProviderResults(targetProvider: ExternalProvider, ...results: MultiProviderResult[]): MultiProviderResult | undefined {
         for (const multiProviderResults of results) {
             const listOfAllProviders = [...multiProviderResults.getAllProviders()];
             const finalResult = this.extractTargetProviderFromProviderLocalDatas(targetProvider, listOfAllProviders);
@@ -208,6 +210,11 @@ export default class ProviderHelper {
         }
     }
 
+    /**
+     * The target provider will be moved to the main provider and all others will be assigned to the subProviderList
+     * @param targetProvider 
+     * @param listOfAllProviders 
+     */
     private static extractTargetProviderFromProviderLocalDatas(targetProvider: ExternalProvider, listOfAllProviders: ProviderLocalData[]): MultiProviderResult | undefined {
         for (const provider of listOfAllProviders) {
             if (provider.provider === targetProvider.providerName) {
@@ -252,12 +259,13 @@ export default class ProviderHelper {
             try {
                 const providerLocalData = tempSeriesCopy.getListProvidersInfos().find((x) => x.provider === providerThatNeedUpdate.providerName);
                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.ADVANCED_BASIC_INFO || !providerLocalData) {
-                    const requestResults = await this.requestProviderInfo(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-
-                    await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResults.flatMap((x) => x.getAllProvidersWithSeason()));
-                    results.push(...requestResults.flatMap((x) => x.getAllProvidersWithSeason()));
-                    series.resetCache();
-                    tempSeriesCopy.resetCache();
+                    const requestResults = await this.requestProviderInfoUpgrade(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                    if (requestResults) {
+                        await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResults?.getAllProvidersWithSeason());
+                        results.push(...requestResults.getAllProvidersWithSeason());
+                        series.resetCache();
+                        tempSeriesCopy.resetCache();
+                    }
                 }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #2: ' + err);
@@ -290,10 +298,12 @@ export default class ProviderHelper {
         for (const infoProvider of infoProvidersThatNeedUpdates) {
             try {
                 if (seasonAware) {
-                    const result = await this.requestProviderInfo(tempSeriesCopy, infoProvider, force, target);
-                    const allResults = result.flatMap((x) => x.getAllProvidersWithSeason());
-                    results.push(...allResults);
-                    tempSeriesCopy.addProviderDatasWithSeasonInfos(...allResults);
+                    const result = await this.requestProviderInfoUpgrade(tempSeriesCopy, infoProvider, force, target);
+                    if (result) {
+                        const allResults = result.getAllProvidersWithSeason();
+                        results.push(...allResults);
+                        tempSeriesCopy.addProviderDatasWithSeasonInfos(...allResults);
+                    }
                 }
             } catch (err) {
                 logger.error('[ProviderHelper] requestFullProviderUpdate #1: ' + err);

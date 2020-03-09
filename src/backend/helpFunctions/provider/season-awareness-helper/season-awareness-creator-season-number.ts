@@ -8,7 +8,6 @@ import { ListProviderLocalData } from '../../../controller/provider-manager/loca
 import ProviderList from '../../../controller/provider-manager/provider-list';
 import logger from '../../../logger/logger';
 import EpisodeHelper from '../../episode-helper/episode-helper';
-import EpisodeRelationResult from '../../episode-helper/episode-relation-result';
 import listHelper from '../../list-helper';
 import TitleHelper from '../../name-helper/title-helper';
 import seasonHelper from '../../season-helper/season-helper';
@@ -16,6 +15,7 @@ import ProviderHelper from '../provider-helper';
 import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
 import SeasonAwarenessHelper from './season-awareness-helper';
+import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser';
 
 export default class SeasonAwarenessCreatorSeasonNumber {
     private finalList: ProviderLocalDataWithSeasonInfo[] = [];
@@ -67,7 +67,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
             providerLocalData = await this.getProviderLocalDataFromFirstSeason(series, externalProvider);
         }
         if (!providerLocalData) {
-            providerLocalData = await ProviderHelper.simpleProviderInfoRequest(allProviders, externalProvider);
+            providerLocalData = await ProviderHelper.simpleProviderLocalDataUpgradeRequest(allProviders, externalProvider);
         }
         if (!providerLocalData) {
             let names = series.getAllNames();
@@ -97,36 +97,36 @@ export default class SeasonAwarenessCreatorSeasonNumber {
             const currentProviderThatHasAwarenessProvider = ProviderList.getExternalProviderInstance(currentProviderThatHasAwareness);
             if (!EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.detailEpisodeInfo)) {
                 // tslint:disable-next-line: max-line-length
-                const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderInfoRequest([currentProviderThatHasAwareness], currentProviderThatHasAwarenessProvider);
+                const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([currentProviderThatHasAwareness], currentProviderThatHasAwarenessProvider);
                 if (result !== undefined) {
                     currentProviderThatHasAwareness = result;
                 }
             }
             if (EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.detailEpisodeInfo)) {
-                const result = EpisodeHelper.calculateRelationBetweenEpisodes(providerThatDontHaveAwareness.detailEpisodeInfo, currentProviderThatHasAwareness.detailEpisodeInfo);
-                if (result.seasonNumber && result.seasonNumber.length !== 0) {
-                    currentSearchingSeason = result.seasonNumber[result.seasonNumber.length - 1];
+                const result = new EpisodeRelationAnalyser(providerThatDontHaveAwareness.detailEpisodeInfo, currentProviderThatHasAwareness.detailEpisodeInfo);
+                if (result.finalSeasonNumbers && result.finalSeasonNumbers.length !== 0) {
+                    currentSearchingSeason = result.seasonNumbers[result.finalSeasonNumbers.length - 1];
                 } else {
                     currentSearchingSeason = undefined;
                 }
                 currentSeasonPart = this.calcNewSeasonPartNumber(result, currentSeasonPart);
                 const newSeries = [];
-                newSeries.push(await this.createTempSeries(providerThatDontHaveAwareness, currentProviderThatHasAwareness, new Season(result.seasonNumber, currentSeasonPart)));
+                newSeries.push(await this.createTempSeries(providerThatDontHaveAwareness, currentProviderThatHasAwareness, new Season(result.finalSeasonNumbers, currentSeasonPart)));
 
                 if (result.seasonComplete) {
                     if (currentSearchingSeason !== undefined && ((targetSeason.seasonNumbers.includes(currentSearchingSeason)) ||
-                        (result.seasonNumber !== undefined &&
-                            listHelper.isAnySeasonNumberListEntryInSeasonNumberList(result.seasonNumber, targetSeason.seasonNumbers)))) {
+                        (result.finalSeasonNumbers !== undefined &&
+                            listHelper.isAnySeasonNumberListEntryInSeasonNumberList(result.finalSeasonNumbers, targetSeason.seasonNumbers)))) {
                         const pdwsi = new ProviderLocalDataWithSeasonInfo(providerThatDontHaveAwareness, new Season([currentSearchingSeason], currentSeasonPart));
                         const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season([currentSearchingSeason], currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);
                         return pdwsi;
                     } else if ((seasonHelper.isSeasonUndefined(targetSeason) &&
                         result.seasonComplete &&
-                        result.seasonNumber !== undefined &&
-                        result.seasonNumber.length !== 0)) {
-                        const pdwsi = new ProviderLocalDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(result.seasonNumber, currentSeasonPart));
-                        const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(result.seasonNumber, currentSeasonPart));
+                        result.finalSeasonNumbers !== undefined &&
+                        result.finalSeasonNumbers.length !== 0)) {
+                        const pdwsi = new ProviderLocalDataWithSeasonInfo(providerThatDontHaveAwareness, new Season(result.finalSeasonNumbers, currentSeasonPart));
+                        const pdwsi2 = new ProviderLocalDataWithSeasonInfo(currentProviderThatHasAwareness, new Season(result.finalSeasonNumbers, currentSeasonPart));
                         this.finalList.push(pdwsi, pdwsi2);
                         return pdwsi;
                     } else {
@@ -162,7 +162,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         return undefined;
     }
 
-    private calcNewSeasonPartNumber(result: EpisodeRelationResult, currentSeasonPart?: number): number | undefined {
+    private calcNewSeasonPartNumber(result: EpisodeRelationAnalyser, currentSeasonPart?: number): number | undefined {
         if (result.seasonComplete) {
             if (currentSeasonPart !== undefined) {
                 currentSeasonPart++;

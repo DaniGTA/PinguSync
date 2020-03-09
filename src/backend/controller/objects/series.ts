@@ -235,7 +235,10 @@ export default class Series extends SeriesProviderExtension {
         }
     }
 
-    public async getPrequel(searchInList: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+    public async getPrequel(searchInList?: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+        if (!searchInList) {
+            searchInList = await MainListManager.getMainList();
+        }
         logger.debug('[Season] [Serve]: Last Prequel');
         const searchedProviders: ProviderLocalData[] = [];
         try {

@@ -1,0 +1,210 @@
+{
+    "request": "Clannad ,s:undefined",
+    "response": [
+        {
+            "subProviders": [],
+            "mainProvider": {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 2,
+                    "provider": "anidb",
+                    "lastUpdate": "2020-03-09T15:28:55.126Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [],
+                    "banners": [],
+                    "mediaType": "UNKOWN",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [
+                        {
+                            "name": "Clannad",
+                            "lang": "de",
+                            "nameType": "official"
+                        },
+                        {
+                            "name": "CLANNAD",
+                            "lang": "zh-Hans",
+                            "nameType": "official"
+                        },
+                        {
+                            "name": "Clannad 1",
+                            "lang": "x-jat",
+                            "nameType": "short"
+                        },
+                        {
+                            "name": "Clannad TV",
+                            "lang": "ja",
+                            "nameType": "short"
+                        },
+                        {
+                            "name": "Кланад",
+                            "lang": "bg",
+                            "nameType": "syn"
+                        },
+                        {
+                            "name": "Кланнад",
+                            "lang": "ru",
+                            "nameType": "syn"
+                        },
+                        {
+                            "name": "خانواده",
+                            "lang": "fa",
+                            "nameType": "official"
+                        },
+                        {
+                            "name": "كلاناد",
+                            "lang": "ar",
+                            "nameType": "syn"
+                        },
+                        {
+                            "name": "کلاناد",
+                            "lang": "fa",
+                            "nameType": "syn"
+                        },
+                        {
+                            "name": "แคลนนาด",
+                            "lang": "th",
+                            "nameType": "official"
+                        },
+                        {
+                            "name": "클라나드",
+                            "lang": "ko",
+                            "nameType": "official"
+                        },
+                        {
+                            "name": "クラナド",
+                            "lang": "ja",
+                            "nameType": "syn"
+                        }
+                    ],
+                    "overviews": [],
+                    "id": "5101",
+                    "instanceName": "InfoProviderLocalData",
+                    "rawEntry": {
+                        "_attributes": {
+                            "aid": "5101"
+                        },
+                        "title": [
+                            {
+                                "_attributes": {
+                                    "xml:lang": "de",
+                                    "type": "official"
+                                },
+                                "_text": "Clannad"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "zh-Hans",
+                                    "type": "official"
+                                },
+                                "_text": "CLANNAD"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "en",
+                                    "type": "official"
+                                },
+                                "_text": "Clannad"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "ja",
+                                    "type": "official"
+                                },
+                                "_text": "CLANNAD"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "main",
+                                    "xml:lang": "x-jat"
+                                },
+                                "_text": "Clannad"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "short",
+                                    "xml:lang": "x-jat"
+                                },
+                                "_text": "Clannad 1"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "ja",
+                                    "type": "short"
+                                },
+                                "_text": "Clannad TV"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "syn",
+                                    "xml:lang": "bg"
+                                },
+                                "_text": "Кланад"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "syn",
+                                    "xml:lang": "ru"
+                                },
+                                "_text": "Кланнад"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "bg",
+                                    "type": "syn"
+                                },
+                                "_text": "Кланнад"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "official",
+                                    "xml:lang": "fa"
+                                },
+                                "_text": "خانواده"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "syn",
+                                    "xml:lang": "ar"
+                                },
+                                "_text": "كلاناد"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "fa",
+                                    "type": "syn"
+                                },
+                                "_text": "کلاناد"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "th",
+                                    "type": "official"
+                                },
+                                "_text": "แคลนนาด"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "ko",
+                                    "type": "official"
+                                },
+                                "_text": "클라나드"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "ja",
+                                    "type": "syn"
+                                },
+                                "_text": "クラナド"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

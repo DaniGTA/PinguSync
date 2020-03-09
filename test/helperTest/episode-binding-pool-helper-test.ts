@@ -9,8 +9,6 @@ import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
 
 describe('Episode binding pool helper tests | Testrun', () => {
-    beforeEach(() => {
-    });
     test('should get all binded episode from an episode', async () => {
         const episode = new Episode(1);
         const episodeMapping1 = new EpisodeMapping(episode, new ListProviderLocalData(1, 'a'));
@@ -55,7 +53,7 @@ describe('Episode binding pool helper tests | Testrun', () => {
         const episode1 = new Episode(2);
         episode1.provider = 'a';
         const episode2 = new Episode(2);
-        episode2.provider = 'b'
+        episode2.provider = 'b';
         const episodeMapping1 = new EpisodeMapping(episode1, new ListProviderLocalData(1, 'a'));
         const episodeMapping2 = new EpisodeMapping(episode2, new ListProviderLocalData(1, 'b'));
 

@@ -3,9 +3,10 @@ import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../../controller/provider-manager/provider-list';
-import EpisodeHelper from '../../episode-helper/episode-helper';
 import ProviderHelper from '../provider-helper';
 import SeasonAwarenessHelper from './season-awareness-helper';
+import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser';
+import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
 
 export default class SeasonAwarenessFindSeasonNumber {
     public static async  getSeasonForProvider(series: Series, localData: ProviderLocalData): Promise<Season> {
@@ -20,12 +21,19 @@ export default class SeasonAwarenessFindSeasonNumber {
 
     private static async searchSeasonForProvider(series: Series, existingLocalDataProvider: ProviderLocalData): Promise<Season> {
         const otherProviders = SeasonAwarenessHelper.getOtherProvidersWithSeasonAwareness(series, existingLocalDataProvider);
-        for (const otherProvider of otherProviders) {
+        for (let otherProvider of otherProviders) {
+            const providerInstance = ProviderList.getExternalProviderInstance(otherProvider);
             try {
-                const providerInstance = ProviderList.getExternalProviderInstance(otherProvider);
-                const updatedOtherProvide = await ProviderHelper.simpleProviderInfoRequest([otherProvider], providerInstance) as ProviderLocalData | null;
+                if (otherProvider.detailEpisodeInfo.length === 0) {
+                    const maybeFullInfoResult = await ProviderHelper.requestProviderInfoUpgrade(series, providerInstance, false, ProviderInfoStatus.FULL_INFO);
+                    if (maybeFullInfoResult) {
+                        otherProvider = maybeFullInfoResult.mainProvider.providerLocalData;
+                        series.addProviderDatas(...maybeFullInfoResult.getAllProviders());
+                    }
+                }
+                const updatedOtherProvide = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([otherProvider], providerInstance) as ProviderLocalData | null;
                 if (updatedOtherProvide) {
-                    return this.calcSeasonForTargetProvider(updatedOtherProvide, existingLocalDataProvider);
+                    return await this.calcSeasonForTargetProvider(series, updatedOtherProvide, existingLocalDataProvider);
                 }
             } catch (err) {
                 logger.error(err);
@@ -38,15 +46,24 @@ export default class SeasonAwarenessFindSeasonNumber {
      * @param otherProvider where the season is present.
      * @param targetLocalDataProvider where the season is missing.
      */
-    private static calcSeasonForTargetProvider(otherProvider: ProviderLocalData, targetLocalDataProvider: ProviderLocalData): Season {
-        const result = EpisodeHelper.calculateRelationBetweenEpisodes(targetLocalDataProvider.detailEpisodeInfo, otherProvider.detailEpisodeInfo);
-        if (result.seasonNumber !== undefined && result.seasonComplete) {
-            return new Season(result.seasonNumber);
-        } else if (result.seasonNumber?.length === 1) {
-
+    private static async calcSeasonForTargetProvider(series: Series, otherProvider: ProviderLocalData, targetLocalDataProvider: ProviderLocalData): Promise<Season> {
+        const result = new EpisodeRelationAnalyser(targetLocalDataProvider.detailEpisodeInfo, otherProvider.detailEpisodeInfo);
+        if (result.finalSeasonNumbers !== undefined && result.seasonComplete) {
+            return new Season(result.finalSeasonNumbers);
+        } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder !== 1) {
+            const prequel = await series.getPrequel();
+            if (prequel.foundedSeries) {
+                const prequelSeason = await this.searchSeasonForProvider(prequel.foundedSeries, targetLocalDataProvider);
+                if (prequelSeason.seasonPart !== undefined) {
+                    return new Season(result.finalSeasonNumbers, prequelSeason.seasonPart++);
+                }
+            }
+        } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder === 1) {
+            return new Season(result.finalSeasonNumbers, 1);
         } else {
             logger.error('SEASON IS NOT COMPLETE CANT EXTRACT SEASON NUMBER !!!');
             throw new Error('Failed to get Season');
         }
+        throw new Error('Failed to calc season for target provider: ' + targetLocalDataProvider.provider);
     }
 }

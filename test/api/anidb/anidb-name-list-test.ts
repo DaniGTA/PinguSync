@@ -1,5 +1,6 @@
 
 import { deepEqual, fail } from 'assert';
+import AniDBHelper from '../../../src/backend/api/anidb/anidb-helper';
 import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
@@ -13,7 +14,6 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import logger from '../../../src/backend/logger/logger';
-import AniDBHelper from '../../../src/backend/api/anidb/anidb-helper';
 
 
 // tslint:disable: no-string-literal

@@ -11,13 +11,13 @@ import TestProvider from '../controller/objects/testClass/testProvider';
 // tslint:disable: no-string-literal
 describe('Provider Helper | Examples', () => {
     beforeEach(() => {
-
         ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [];
     });
+
     test('should check list provider id true', async () => {
         // Series A
         const series = new Series();

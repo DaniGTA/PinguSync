@@ -4,9 +4,6 @@ import { SeasonError } from '../../../../src/backend/controller/objects/transfer
 
 
 describe('Season object tests', () => {
-    beforeAll(() => {
-    });
-
     test('season should not be defined', () => {
         const undefinedSeason = new Season();
         strictEqual(undefinedSeason.isSeasonUndefined(), true);

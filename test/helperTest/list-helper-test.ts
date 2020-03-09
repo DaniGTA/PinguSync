@@ -8,8 +8,6 @@ import listHelper from '../../src/backend/helpFunctions/list-helper';
 
 
 describe('List Helper', () => {
-    beforeEach(() => {
-    });
     test('should clean array', async () => {
         const arr = await listHelper.cleanArray([null, undefined, '']);
         assert.equal(arr.length, 0);

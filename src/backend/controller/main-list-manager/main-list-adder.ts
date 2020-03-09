@@ -111,7 +111,7 @@ export default class MainListAdder {
             for (const provider of allProviders) {
                 if (!ProviderHelper.hasSeriesProvider(relatedSeries, provider)) {
                     if (!provider.hasUniqueIdForSeasons) {
-                        await ProviderHelper.requestProviderInfo(relatedSeries, provider, false, ProviderInfoStatus.ONLY_ID);
+                        await ProviderHelper.requestProviderInfoUpgrade(relatedSeries, provider, false, ProviderInfoStatus.ONLY_ID);
                     }
                 }
             }

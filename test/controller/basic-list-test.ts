@@ -1,4 +1,4 @@
-import { fail, notEqual, notStrictEqual, strictEqual } from 'assert';
+import { fail, notEqual, notStrictEqual, strictEqual, equal } from 'assert';
 import AniDBHelper from '../../src/backend/api/anidb/anidb-helper';
 import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
 import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
@@ -571,12 +571,12 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, 2167);
+        equal(aniListBinding?.providerLocalData.id, 2167);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
         strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        strictEqual(traktBinding?.providerLocalData.id, '24724');
+        equal(traktBinding?.providerLocalData.id, '24724');
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
@@ -612,12 +612,12 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, 21051);
+        equal(aniListBinding?.providerLocalData.id, 21051);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
         strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        strictEqual(traktBinding?.providerLocalData.id, 110252);
+        equal(traktBinding?.providerLocalData.id, 110252);
 
 
         const epMappings = resultSeries.episodeBindingPools;
@@ -653,12 +653,12 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, '934');
+        equal(aniListBinding?.providerLocalData.id, '934');
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
         strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        strictEqual(traktBinding?.providerLocalData.id, 61179);
+        equal(traktBinding?.providerLocalData.id, 61179);
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
@@ -694,12 +694,12 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, 849);
+        equal(aniListBinding?.providerLocalData.id, 849);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
         strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        strictEqual(traktBinding?.providerLocalData.id, 60988);
+        equal(traktBinding?.providerLocalData.id, 60988);
 
 
         const epMappings = resultSeries.episodeBindingPools;
@@ -737,14 +737,14 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, '21131');
+        equal(aniListBinding?.providerLocalData.id, '21131');
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
         strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        strictEqual(traktBinding?.providerLocalData.id, 97794);
+        equal(traktBinding?.providerLocalData.id, 97794);
         strictEqual(traktBinding?.seasonTarget?.seasonNumbers[0], 1);
-        strictEqual(traktBinding?.seasonTarget?.seasonPart, 2);
+        strictEqual(traktBinding?.seasonTarget?.seasonPart, 1);
 
         const epMappings = resultSeries.episodeBindingPools;
         strictEqual(epMappings.length, 12);
@@ -780,12 +780,12 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        strictEqual(aniListBinding?.providerLocalData.id, 21390);
+        equal(aniListBinding?.providerLocalData.id, 21390);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
         strictEqual(traktBinding?.providerLocalData.provider, ProviderNameManager.getProviderName(TraktProvider));
-        strictEqual(traktBinding?.providerLocalData.id, 97794);
+        equal(traktBinding?.providerLocalData.id, 97794);
         strictEqual(traktBinding?.seasonTarget?.seasonNumbers, [1]);
         strictEqual(traktBinding?.seasonTarget?.seasonPart, 2);
 

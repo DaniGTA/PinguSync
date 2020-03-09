@@ -4,8 +4,6 @@ import stringHelper from '../../src/backend/helpFunctions/string-helper';
 
 
 describe('Multithreading | Testrun', () => {
-    beforeEach(() => {
-    });
     test('test delegate function', async () => {
 
         const testAsyncFunction = async (x: number, y: number) => stringHelper.getSeasonNumberFromTitle('test 2');
