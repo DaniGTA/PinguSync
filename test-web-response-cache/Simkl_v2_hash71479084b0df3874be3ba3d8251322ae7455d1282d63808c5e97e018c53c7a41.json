@@ -1,0 +1,733 @@
+{
+    "request": "Simkl, id: 421390",
+    "response": {
+        "subProviders": [
+            {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 3,
+                    "provider": "allcin",
+                    "lastUpdate": "2020-03-13T22:00:59.661Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [],
+                    "banners": [],
+                    "mediaType": "UNKOWN",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [],
+                    "overviews": [],
+                    "id": "351065",
+                    "instanceName": "InfoProviderLocalData"
+                }
+            },
+            {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 3,
+                    "provider": "anidb",
+                    "lastUpdate": "2020-03-13T22:00:59.661Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [],
+                    "banners": [],
+                    "mediaType": "UNKOWN",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [],
+                    "overviews": [],
+                    "id": "10846",
+                    "instanceName": "InfoProviderLocalData"
+                }
+            },
+            {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 3,
+                    "provider": "ann",
+                    "lastUpdate": "2020-03-13T22:00:59.661Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [],
+                    "banners": [],
+                    "mediaType": "UNKOWN",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [],
+                    "overviews": [],
+                    "id": "16305",
+                    "instanceName": "InfoProviderLocalData"
+                }
+            },
+            {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 3,
+                    "provider": "Mal",
+                    "lastUpdate": "2020-03-13T22:00:59.661Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [],
+                    "banners": [],
+                    "mediaType": "UNKOWN",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [],
+                    "overviews": [],
+                    "id": "27655",
+                    "instanceName": "ListProviderLocalData",
+                    "canUpdateWatchProgress": false,
+                    "customList": false,
+                    "customListName": ""
+                }
+            },
+            {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 3,
+                    "provider": "wikien",
+                    "lastUpdate": "2020-03-13T22:00:59.661Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [],
+                    "banners": [],
+                    "mediaType": "UNKOWN",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [],
+                    "overviews": [],
+                    "id": "Aldnoah.Zero",
+                    "instanceName": "InfoProviderLocalData"
+                }
+            }
+        ],
+        "mainProvider": {
+            "providerLocalData": {
+                "version": 2,
+                "infoStatus": 0,
+                "provider": "Simkl",
+                "lastUpdate": "2020-03-13T22:00:59.659Z",
+                "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                "covers": [
+                    {
+                        "url": "https://simkl.net/posters/20/2027250b084030ff3_m.webp",
+                        "size": 0
+                    },
+                    {
+                        "url": "https://simkl.net/posters/20/2027250b084030ff3_ca.webp",
+                        "size": 3
+                    },
+                    {
+                        "url": "https://simkl.net/posters/20/2027250b084030ff3_c.webp",
+                        "size": 4
+                    },
+                    {
+                        "url": "https://simkl.net/posters/20/2027250b084030ff3_cm.webp",
+                        "size": 5
+                    },
+                    {
+                        "url": "https://simkl.net/posters/20/2027250b084030ff3_s.webp",
+                        "size": 6
+                    }
+                ],
+                "banners": [],
+                "mediaType": "ANIME",
+                "isNSFW": false,
+                "genres": [
+                    {
+                        "weight": 0,
+                        "genre": "Action",
+                        "verifid": false,
+                        "spoiler": false
+                    },
+                    {
+                        "weight": 0,
+                        "genre": "Sci-Fi",
+                        "verifid": false,
+                        "spoiler": false
+                    }
+                ],
+                "detailEpisodeInfo": [
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 1,
+                        "lastUpdate": 1584136859659,
+                        "id": "HxTq5U0jlasAAMgIUtkk",
+                        "providerEpisodeId": 1407294,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 2,
+                        "lastUpdate": 1584136859659,
+                        "id": "nUb4qtdhtB7DqL2Ahe0S",
+                        "providerEpisodeId": 1407300,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 3,
+                        "lastUpdate": 1584136859660,
+                        "id": "EPulo1K0cfnnwPOhmCu3",
+                        "providerEpisodeId": 1407298,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 4,
+                        "lastUpdate": 1584136859660,
+                        "id": "zl6rz3HdeLwRAljX8lw1",
+                        "providerEpisodeId": 1407296,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 5,
+                        "lastUpdate": 1584136859660,
+                        "id": "hbBuBINCSoaHotnZg9cR",
+                        "providerEpisodeId": 1407308,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 6,
+                        "lastUpdate": 1584136859660,
+                        "id": "jmTGQls0mdcRYd3ew7pH",
+                        "providerEpisodeId": 1407306,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 7,
+                        "lastUpdate": 1584136859660,
+                        "id": "HCOiYW2eTZqf7eR94Dng",
+                        "providerEpisodeId": 1407304,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 8,
+                        "lastUpdate": 1584136859660,
+                        "id": "zkHGBWHtJao8JTunEVTd",
+                        "providerEpisodeId": 1407302,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 9,
+                        "lastUpdate": 1584136859660,
+                        "id": "ZTaSc9peImRwB66AMIK0",
+                        "providerEpisodeId": 1428724,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 10,
+                        "lastUpdate": 1584136859660,
+                        "id": "jgPj0YSXnI9ZTcHnad45",
+                        "providerEpisodeId": 1428722,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 11,
+                        "lastUpdate": 1584136859660,
+                        "id": "XorUxCd0Od9xHANw7HRU",
+                        "providerEpisodeId": 1428720,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    },
+                    {
+                        "type": 0,
+                        "streamingProviders": [],
+                        "title": [
+                            {
+                                "lang": "en"
+                            }
+                        ],
+                        "thumbnails": [
+                            {
+                                "size": 2,
+                                "fullLink": "https://simkl.in/episodes/null_w.jpg"
+                            },
+                            {
+                                "size": 3,
+                                "fullLink": "https://simkl.in/episodes/null_c.jpg"
+                            },
+                            {
+                                "size": 4,
+                                "fullLink": "https://simkl.in/episodes/null_m.jpg"
+                            }
+                        ],
+                        "episodeNumber": 12,
+                        "lastUpdate": 1584136859660,
+                        "id": "zS8XeduMGEK8ySDG8GcG",
+                        "providerEpisodeId": 1428718,
+                        "airDate": null,
+                        "provider": "Simkl",
+                        "providerId": 421390
+                    }
+                ],
+                "sequelIds": [],
+                "prequelIds": [],
+                "alternativeIds": [],
+                "names": [
+                    {
+                        "name": "Aldnoah.Zero",
+                        "lang": "unkown",
+                        "nameType": "main"
+                    }
+                ],
+                "overviews": [
+                    {
+                        "content": "Humanity has clearly split into two and currently there is no way these groups will once again unite. Humanity celebrates this transient time of peace as they slowly dismiss from their minds the scars their ancestors bore in the past. No one realized that with one little push their world can fall to its destruction.",
+                        "lang": "en"
+                    }
+                ],
+                "id": 421390,
+                "instanceName": "ListProviderLocalData",
+                "canUpdateWatchProgress": false,
+                "customList": false,
+                "customListName": "",
+                "country": null,
+                "episodes": 12,
+                "publicScore": 6.9,
+                "rawEntry": {
+                    "title": "Aldnoah.Zero",
+                    "year": 2015,
+                    "type": "anime",
+                    "ids": {
+                        "simkl": 421390,
+                        "slug": "aldnoahzero",
+                        "anidb": "10846",
+                        "ann": "16305",
+                        "mal": "27655",
+                        "offjp": "http://www.aldnoahzero.com/",
+                        "wikien": "Aldnoah.Zero",
+                        "wikijp": "アルドノア・ゼロ",
+                        "allcin": "351065"
+                    },
+                    "en_title": null,
+                    "season": "2",
+                    "rank": 2524,
+                    "poster": "20/2027250b084030ff3",
+                    "fanart": null,
+                    "first_aired": "2015-01-11T04:00:00.000Z",
+                    "airs": {
+                        "day": "Sunday",
+                        "time": "12:00 AM",
+                        "timezone": "Asia/Tokyo"
+                    },
+                    "runtime": 25,
+                    "certification": null,
+                    "overview": "Humanity has clearly split into two and currently there is no way these groups will once again unite. Humanity celebrates this transient time of peace as they slowly dismiss from their minds the scars their ancestors bore in the past. No one realized that with one little push their world can fall to its destruction.",
+                    "genres": [
+                        "Action",
+                        "Sci-Fi"
+                    ],
+                    "country": null,
+                    "total_episodes": 12,
+                    "status": "ended",
+                    "network": null,
+                    "anime_type": "tv",
+                    "ratings": {
+                        "simkl": {
+                            "rating": 6.9,
+                            "votes": 197
+                        },
+                        "mal": {
+                            "rating": 7,
+                            "votes": 144781,
+                            "rank": 3440
+                        }
+                    },
+                    "trailers": [
+                        {
+                            "name": null,
+                            "youtube": "AEn7nqWONC0",
+                            "size": 720
+                        }
+                    ],
+                    "users_recommendations": [
+                        {
+                            "title": "Guilty Crown",
+                            "en_title": null,
+                            "year": 2011,
+                            "poster": "36/369693fc0b686ec",
+                            "anime_type": "tv",
+                            "users_percent": "27%",
+                            "users_count": 3,
+                            "ids": {
+                                "simkl": 38542,
+                                "slug": "guilty-crown"
+                            }
+                        },
+                        {
+                            "title": "Macross Frontier",
+                            "en_title": null,
+                            "year": 2007,
+                            "poster": "49/49510e2b74135c6",
+                            "anime_type": "tv",
+                            "users_percent": "18%",
+                            "users_count": 2,
+                            "ids": {
+                                "simkl": 37984,
+                                "slug": "macross-frontier"
+                            }
+                        },
+                        {
+                            "title": "Kidou Senshi Gundam SEED",
+                            "en_title": "Mobile Suit Gundam SEED",
+                            "year": 2002,
+                            "poster": "18/180272411c5001d",
+                            "anime_type": "tv",
+                            "users_percent": "9%",
+                            "users_count": 1,
+                            "ids": {
+                                "simkl": 38848,
+                                "slug": "kidou-senshi-gundam-seed"
+                            }
+                        },
+                        {
+                            "title": "Captain Earth",
+                            "en_title": null,
+                            "year": 2014,
+                            "poster": "70/7063746fba05f97e",
+                            "anime_type": "tv",
+                            "users_percent": "9%",
+                            "users_count": 1,
+                            "ids": {
+                                "simkl": 45954,
+                                "slug": "captain-earth"
+                            }
+                        },
+                        {
+                            "title": "Uchuu Senkan Yamato 2199",
+                            "en_title": "Star Blazers 2199",
+                            "year": 2012,
+                            "poster": "77/7774229023e1f036",
+                            "anime_type": "ova",
+                            "users_percent": "9%",
+                            "users_count": 1,
+                            "ids": {
+                                "simkl": 40387,
+                                "slug": "uchuu-senkan-yamato-2199"
+                            }
+                        },
+                        {
+                            "title": "Kidou Senshi Gundam AGE",
+                            "en_title": "Mobile Suit Gundam AGE",
+                            "year": 2011,
+                            "poster": "83/838055b4dd41281",
+                            "anime_type": "tv",
+                            "users_percent": "9%",
+                            "users_count": 1,
+                            "ids": {
+                                "simkl": 37995,
+                                "slug": "kidou-senshi-gundam-age"
+                            }
+                        },
+                        {
+                            "title": "Code Geass: Hangyaku no Lelouch",
+                            "en_title": "Code Geass: Lelouch of the Rebellion",
+                            "year": 2006,
+                            "poster": "46/4675694acbe6293c9",
+                            "anime_type": "tv",
+                            "users_percent": "9%",
+                            "users_count": 1,
+                            "ids": {
+                                "simkl": 40180,
+                                "slug": "code-geass-hangyaku-no-lelouch"
+                            }
+                        },
+                        {
+                            "title": "Code Geass: Hangyaku no Lelouch R2",
+                            "en_title": "Code Geass: Lelouch of the Rebellion R2",
+                            "year": 2008,
+                            "poster": "71/7110239b514391caf",
+                            "anime_type": "tv",
+                            "users_percent": "9%",
+                            "users_count": 1,
+                            "ids": {
+                                "simkl": 41541,
+                                "slug": "code-geass-hangyaku-no-lelouch-r2"
+                            }
+                        }
+                    ],
+                    "relations": [
+                        {
+                            "title": "Aldnoah.Zero",
+                            "en_title": null,
+                            "year": 2014,
+                            "poster": "76/76838079503d53a9",
+                            "anime_type": "tv",
+                            "relation_type": "prequel",
+                            "is_direct": true,
+                            "ids": {
+                                "simkl": 47812,
+                                "slug": "aldnoahzero"
+                            }
+                        }
+                    ]
+                },
+                "releaseYear": 2015
+            }
+        }
+    }
+}

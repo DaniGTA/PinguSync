@@ -172,10 +172,15 @@ export default new class KitsuConverter {
             }
             const episodeThumbnails = [];
             if (episode.thumbnail) {
-                for (const thumbnail of episode.thumbnail) {
-                    if (thumbnail.original) {
-                        episodeThumbnails.push(new EpisodeThumbnail(thumbnail.original, ImageSize.ORIGINAL));
+                if (Array.isArray(episode.thumbnail)) {
+                    for (const thumbnail of episode.thumbnail) {
+                        if (thumbnail.original) {
+                            episodeThumbnails.push(new EpisodeThumbnail(thumbnail.original, ImageSize.ORIGINAL));
+                        }
                     }
+                } else {
+                    episodeThumbnails.push(new EpisodeThumbnail((episode as any).thumbnail.original, ImageSize.ORIGINAL));
+
                 }
             }
 

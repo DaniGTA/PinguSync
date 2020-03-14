@@ -88,8 +88,19 @@ export default class TraktProvider extends ListProvider {
                     return traktConverter.convertFullShowInfoToLocalData(res, MediaType.UNKOWN_SERIES, fullSeasonInfo);
                 }
             } else if (provider.provider === ProviderNameManager.getProviderName(TVDBProvider)) {
-                const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/search/tvdb/' + provider.id + '?extended=full');
-
+                const res = await this.traktRequest<TraktSearch[]>('https://api.trakt.tv/search/tvdb/' + provider.id + '?extended=full');
+                for (const result of res) {
+                    try {
+                        if (result.show) {
+                            return await traktConverter.convertShowToLocalData(result.show);
+                        }
+                        if (result.movie) {
+                            return await traktConverter.convertMovieToLocalData(result.movie);
+                        }
+                    } catch (err) {
+                        logger.error(err);
+                    }
+                }
 
             }
         } catch (err) {

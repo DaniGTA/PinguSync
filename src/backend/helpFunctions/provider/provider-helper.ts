@@ -46,7 +46,7 @@ export default class ProviderHelper {
             await series.addProviderDatasWithSeasonInfos(...listProviders);
 
             const seasonFilledResults = await this.generateSeasonTarget(series, series.getAllProviderLocalDatasWithSeasonInfo());
-            series.addProviderDatasWithSeasonInfos(...seasonFilledResults);
+            await series.addProviderDatasWithSeasonInfos(...seasonFilledResults);
 
             series.lastInfoUpdate = Date.now();
         }
@@ -78,7 +78,7 @@ export default class ProviderHelper {
      */
     // tslint:disable-next-line: max-line-length
     public static async requestProviderInfoUpgrade(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult | undefined> {
-        logger.debug('Start request for Provider: ');
+        logger.debug('Start request for Provider: ' + provider.providerName);
         const localDatas: MultiProviderResult[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
         const tempSeriesCopy = Object.assign(new Series(), series);
@@ -95,7 +95,7 @@ export default class ProviderHelper {
 
         let firstSeason: Series | null = null;
         const season = (await series.getSeason()).seasonNumbers;
-        if (season.includes(1) && season !== undefined) {
+        if (season.includes(1) && season.length === 0) {
             try {
                 firstSeason = await series.getFirstSeason();
             } catch (err) {

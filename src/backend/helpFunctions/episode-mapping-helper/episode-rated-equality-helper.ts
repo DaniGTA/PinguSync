@@ -13,6 +13,7 @@ import SeasonHelper from '../season-helper/season-helper';
 import EpisodeProviderBind from './episode-provider-bind';
 import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import ProviderAndSeriesPackage from './provider-series-package';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 
 
 export default class EpisodeRatedEqualityHelper {
@@ -83,7 +84,9 @@ export default class EpisodeRatedEqualityHelper {
                         if (!this.isSameProviderNameInMapping(detailedEpB, provider.providerLocalData, this.allBindingPools)) {
                             result.push(detailedEpA);
                             if (detailedEpA.isEpisodeNumberARealNumber() && detailedEpB.isEpisodeNumberARealNumber()) {
-                                diff = detailedEpA.getEpNrAsNr() - detailedEpB.getEpNrAsNr();
+                                if (detailedEpB.type !== EpisodeType.SPECIAL && detailedEpA.type !== EpisodeType.SPECIAL) {
+                                    diff = detailedEpA.getEpNrAsNr() - detailedEpB.getEpNrAsNr();
+                                }
                                 lastSuccessFullIndex = index + 1;
                             }
                             break;

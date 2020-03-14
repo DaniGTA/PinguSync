@@ -225,7 +225,7 @@ export default class ProviderComperator {
         if (result) {
             return this.compareProviderAWithProviderB(providerA, result);
         }
-        throw new Error('provider cant be compared (other series dont have this provider)');
+        throw new Error('provider cant be compared (other series dont have provider: ' + providerA.provider + ')');
     }
 
     private compareProviderAWithProviderB(providerA: ProviderLocalData, providerB: ProviderLocalData): ComperatorResult {
@@ -245,7 +245,7 @@ export default class ProviderComperator {
                     if (!seasonHelper.isSeasonUndefined(this.aSeriesSeason) && SeasonComperator.isSameSeason(this.aSeriesSeason, this.bSeriesSeason)) {
                         comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     } else if (!seasonHelper.isSeasonUndefined(this.aSeriesSeason) && !seasonHelper.isSeasonUndefined(this.bSeriesSeason)) {
-                         comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
+                        comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                     } else {
                         comperatorResult.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
                     }

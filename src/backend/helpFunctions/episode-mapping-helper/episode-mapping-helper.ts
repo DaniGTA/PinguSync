@@ -29,7 +29,8 @@ export default class EpisodeMappingHelper {
             }
         }
         allProviders.sort((a) => Number(this.detailedEpisodeHasTitle(a.providerLocalData) ? -1 : 1));
-        for (const providerA of allProviders) {
+        for (let index = 0; index < allProviders.length; index++) {
+            const providerA = allProviders[index];
             const compareToProviders = this.getAllProviderThatCanBeMappedToEpisodeOfProvider(providerA, allProviders);
             compareToProviders.sort((a) => Number(this.detailedEpisodeHasTitle(a.providerLocalData) ? -1 : 1));
             for (const providerB of compareToProviders) {
@@ -68,13 +69,16 @@ export default class EpisodeMappingHelper {
                 }
             }
             if (preResult.length === 0) {
-                return allProvidersWithEpisodes.filter(x => x.providerLocalData.provider !== targetProvider.providerLocalData.provider);
+                return this.filterOneSpecificProviderOutOfTheGivenProviderList(targetProvider, allProvidersWithEpisodes);
             }
-            return preResult;
+            return this.filterOneSpecificProviderOutOfTheGivenProviderList(targetProvider, preResult);
         }
         return [];
     }
 
+    private static filterOneSpecificProviderOutOfTheGivenProviderList(targetProvider: ProviderLocalDataWithSeasonInfo, providerList: ProviderLocalDataWithSeasonInfo[]) {
+        return providerList.filter((x) => x.providerLocalData.provider !== targetProvider.providerLocalData.provider);
+    }
 
     private static isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(episodeBindingPools: EpisodeBindingPool[], episodeRatedEqualityContainer: EpisodeRatedEqualityContainer): boolean {
         const episodeBinds = episodeRatedEqualityContainer.episodeBinds;

@@ -7,6 +7,9 @@ import ProviderHelper from '../provider-helper';
 import SeasonAwarenessHelper from './season-awareness-helper';
 import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser';
 import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
+import RelationSearchResults from '../../../controller/objects/transfer/relation-search-results';
+import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 
 export default class SeasonAwarenessFindSeasonNumber {
     public static async  getSeasonForProvider(series: Series, localData: ProviderLocalData): Promise<Season> {
@@ -55,7 +58,16 @@ export default class SeasonAwarenessFindSeasonNumber {
             if (prequel.foundedSeries) {
                 const prequelSeason = await this.searchSeasonForProvider(prequel.foundedSeries, targetLocalDataProvider);
                 if (prequelSeason.seasonPart !== undefined) {
-                    return new Season(result.finalSeasonNumbers, prequelSeason.seasonPart++);
+                    return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart);
+                }
+            } else {
+                const tempPrequel = await this.createTempPrequelFromRelationSearchResults(prequel);
+                if (tempPrequel) {
+                    await tempPrequel.addProviderDatas(targetLocalDataProvider);
+                    const prequelSeason = await this.searchSeasonForProvider(tempPrequel, targetLocalDataProvider);
+                    if (prequelSeason.seasonPart !== undefined) {
+                        return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart);
+                    }
                 }
             }
         } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder === 1) {
@@ -65,5 +77,24 @@ export default class SeasonAwarenessFindSeasonNumber {
             throw new Error('Failed to get Season');
         }
         throw new Error('Failed to calc season for target provider: ' + targetLocalDataProvider.provider);
+    }
+
+    private static async createTempPrequelFromRelationSearchResults(searchResult: RelationSearchResults): Promise<Series | undefined> {
+        const tempPrequel = new Series();
+        for (const provider of searchResult.searchedProviders) {
+            let prequelProvider: ProviderLocalData | undefined;
+            if (provider instanceof ListProviderLocalData) {
+                prequelProvider = new ListProviderLocalData(provider.prequelIds[0], provider.provider);
+            } else if (provider instanceof InfoProviderLocalData) {
+                prequelProvider = new InfoProviderLocalData(provider.prequelIds[0], provider.provider);
+            }
+            if (prequelProvider) {
+                await tempPrequel.addProviderDatas(prequelProvider);
+            }
+        }
+        if (tempPrequel.getAllProviderBindings().length !== 0) {
+            return tempPrequel;
+        }
+        return undefined;
     }
 }

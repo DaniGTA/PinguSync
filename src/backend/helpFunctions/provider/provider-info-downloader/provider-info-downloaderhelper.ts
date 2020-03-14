@@ -9,6 +9,7 @@ import ProviderDataListSearcher from '../../../controller/provider-data-list-man
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
+import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
 import ProviderSearchResultManager from '../../../controller/stats-manager/models/provider-search-result-manager';
 import logger from '../../../logger/logger';
 import { AbsoluteResult } from '../../comperators/comperator-results.ts/comperator-result';
@@ -22,7 +23,6 @@ import StringHelper from '../../string-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
-import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
@@ -53,30 +53,13 @@ export default new class ProviderInfoDownloadHelper {
 
     // tslint:disable-next-line: max-line-length
     public async downloadProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<MultiProviderResult> {
+        const requestId = StringHelper.randomString(5);
         if (await provider.isProviderAvailable()) {
-            const requestId = StringHelper.randomString(5);
-            const seriesMediaType = await series.getMediaType();
-
             const allLocalProviders = series.getAllProviderLocalDatas();
-
             const providerLocalForIdRequest = this.getProviderLocalForIdRequest(provider, allLocalProviders);
 
             if (!providerLocalForIdRequest) {
-                if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
-                    try {
-                        const linkResult = await this.linkProviderDataFromRelations(series, provider);
-                        return new MultiProviderResult(linkResult);
-                    } catch (err) { logger.debug(err); }
-
-                    const names = await this.getNamesSortedBySearchAbleScore(series);
-                    const result = await this.downloadProviderSeriesInfoBySeriesName(names, series, provider, requestId);
-                    if (result) {
-                        return result;
-                    }
-
-                } else {
-                    throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'MediaType not supported: .' + seriesMediaType);
-                }
+                return this.downloadProviderSeriesInfoWithoutId(series, provider);
             } else {
                 try {
                     return this.getIdRequestResult(provider, providerLocalForIdRequest);
@@ -84,11 +67,40 @@ export default new class ProviderInfoDownloadHelper {
                     throw new Error('[' + provider.providerName + '] Unkown error: ' + err);
                 }
             }
-
-            logger.warn(`[${requestId}][${provider.providerName}] Request failed ❌`);
-            throw new Error(`[${requestId}][${provider.providerName}] No series info found by names.`);
         }
-        throw new Error(`[${provider.providerName}] Provider is not available!`);
+        throw new Error('[' + requestId + ']' + `[${provider.providerName}] Provider is not available!`);
+    }
+
+    public async downloadProviderSeriesInfoWithoutId(series: Series, provider: ExternalProvider, requestId?: string): Promise<MultiProviderResult> {
+        const seriesMediaType = await series.getMediaType();
+        let result: MultiProviderResult | undefined;
+        if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
+            result = await this.getProviderSeriesInfoByRelation(series, provider);
+            if (result) {
+                return result;
+            }
+
+            result = await this.getProviderSeriesInfoBySeriesName(series, provider, requestId);
+            if (result) {
+                return result;
+            } else {
+                throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'No result without ID');
+            }
+        } else {
+            throw new Error('[' + requestId + '][' + provider.providerName + ']' + 'MediaType not supported: .' + seriesMediaType);
+        }
+    }
+
+    public async getProviderSeriesInfoByRelation(series: Series, provider: ExternalProvider): Promise<MultiProviderResult | undefined> {
+        try {
+            const linkResult = await this.linkProviderDataFromRelations(series, provider);
+            return new MultiProviderResult(linkResult);
+        } catch (err) { logger.debug(err); }
+    }
+
+    public async getProviderSeriesInfoBySeriesName(series: Series, provider: ExternalProvider, requestId?: string): Promise<MultiProviderResult | undefined> {
+        const names = await this.getNamesSortedBySearchAbleScore(series);
+        return this.downloadProviderSeriesInfoBySeriesName(names, series, provider, requestId);
     }
 
     public async downloadProviderSeriesInfoBySeriesName(names: Name[], series: Series, provider: ExternalProvider, requestId?: string): Promise<MultiProviderResult | undefined> {
@@ -172,7 +184,7 @@ export default new class ProviderInfoDownloadHelper {
                 }
             }
         }
-        throw new Error('no result');
+        throw new Error('no result found in: linkProviderDataFromRelations for provider: ' + provider.providerName);
     }
 
     private hasProviderLocalDataSeasonTargetInfos(provider: ProviderLocalData, seasonTarget: Season): boolean {

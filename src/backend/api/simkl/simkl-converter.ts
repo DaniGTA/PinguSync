@@ -1,4 +1,8 @@
 import Cover from '../../controller/objects/meta/cover';
+import Episode from '../../controller/objects/meta/episode/episode';
+import EpisodeThumbnail from '../../controller/objects/meta/episode/episode-thumbnail';
+import EpisodeTitle from '../../controller/objects/meta/episode/episode-title';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Genre from '../../controller/objects/meta/genre';
 import { ImageSize } from '../../controller/objects/meta/image-size';
 import { MediaType } from '../../controller/objects/meta/media-type';
@@ -12,10 +16,12 @@ import ProviderLocalData from '../../controller/provider-manager/local-data/inte
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import { StreamingProviderLocalData } from '../../controller/provider-manager/local-data/streaming-provider-local-data';
 import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import logger from '../../logger/logger';
 import AniDBProvider from '../anidb/anidb-provider';
 import MalProvider from '../mal/mal-provider';
 import MultiProviderResult from '../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
+import { ISimklEpisodeInfo } from './objects/simklEpisodeInfo';
 import { ISimklFullInfoAnimeResponse, ISimklFullInfoIDS } from './objects/simklFullInfoAnimeResponse';
 import { IMovieIDS, ISimklFullInfoMovieResponse } from './objects/simklFullInfoMovieResponse';
 import { ISeriesIDS, ISimklFullInfoSeriesResponse } from './objects/simklFullInfoSeriesResponse';
@@ -64,24 +70,24 @@ export default class SimklConverter {
         return mprList;
     }
 
-    public async convertFullAnimeInfoToProviderLocalData(response: ISimklFullInfoAnimeResponse): Promise<MultiProviderResult> {
-
+    public async convertFullAnimeInfoToProviderLocalData(response: ISimklFullInfoAnimeResponse, episodeResponse: ISimklEpisodeInfo[]): Promise<MultiProviderResult> {
         const provider = new ListProviderLocalData(response.ids.simkl, SimklProvider.instance);
-        provider.mediaType = await this.convertAnimeTypeToMediaType(response.anime_type);
+        provider.mediaType = this.convertAnimeTypeToMediaType(response.anime_type);
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         provider.country = response.country;
-        provider.covers = await this.convertPosterIdToCover(response.poster);
-        provider.genres = await this.convertSimklGenresToGenres(response.genres);
+        provider.covers = this.convertPosterIdToCover(response.poster);
+        provider.genres = this.convertSimklGenresToGenres(response.genres);
         provider.episodes = response.total_episodes;
         provider.publicScore = response.ratings.simkl.rating;
         provider.rawEntry = response;
         provider.releaseYear = response.year;
         provider.addOverview(new Overview(response.overview, 'en'));
         provider.addSeriesName(new Name(response.title, 'unkown', NameType.MAIN));
+        provider.addDetailedEpisodeInfos(...this.convertSimklEpisodesToDetailedEpisodes(episodeResponse));
         if (response.en_title) {
             provider.addSeriesName(new Name(response.en_title, 'en', NameType.OFFICIAL));
         }
-        const mprList = new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(provider), ...await this.convertAnimeIdsToProviders(response.ids));
+        const mprList = new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(provider), ...this.convertAnimeIdsToProviders(response.ids));
         return mprList;
     }
 
@@ -90,8 +96,8 @@ export default class SimklConverter {
         provider.mediaType = MediaType.MOVIE;
         provider.country = response.country;
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
-        provider.covers = await this.convertPosterIdToCover(response.poster);
-        provider.genres = await this.convertSimklGenresToGenres(response.genres);
+        provider.covers = this.convertPosterIdToCover(response.poster);
+        provider.genres = this.convertSimklGenresToGenres(response.genres);
         provider.publicScore = response.ratings.simkl.rating;
         provider.rawEntry = response;
         provider.releaseYear = response.year;
@@ -106,8 +112,8 @@ export default class SimklConverter {
         provider.mediaType = MediaType.SERIES;
         provider.country = response.country;
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
-        provider.covers = await this.convertPosterIdToCover(response.poster);
-        provider.genres = await this.convertSimklGenresToGenres(response.genres);
+        provider.covers = this.convertPosterIdToCover(response.poster);
+        provider.genres = this.convertSimklGenresToGenres(response.genres);
         provider.episodes = response.total_episodes;
         provider.publicScore = response.ratings.simkl.rating;
         provider.rawEntry = response;
@@ -132,13 +138,70 @@ export default class SimklConverter {
 
         return providers;
     }
-
     private async convertMovieIdsToProviders(animeIds: IMovieIDS): Promise<ProviderLocalData[]> {
+
         const providers: ProviderLocalData[] = [];
         return providers;
     }
 
-    private async convertAnimeIdsToProviders(animeIds: ISimklFullInfoIDS): Promise<ProviderLocalDataWithSeasonInfo[]> {
+    private convertSimklEpisodesToDetailedEpisodes(episodeResponse: ISimklEpisodeInfo[]): Episode[] {
+        const result: Episode[] = [];
+        for (const simklEpisode of episodeResponse) {
+            result.push(this.convertSimklEpisodeToDetailedEpisode(simklEpisode));
+        }
+        return result;
+    }
+
+    private convertSimklEpisodeToDetailedEpisode(simklEpisode: ISimklEpisodeInfo): Episode {
+        const episode = new Episode(simklEpisode.episode ?? '');
+        if (simklEpisode.title) {
+            const episodeTitle = new EpisodeTitle(simklEpisode.title, 'en');
+            episode.title.push(episodeTitle);
+        }
+        if (simklEpisode.description) {
+            episode.summery = simklEpisode.description;
+        }
+        episode.thumbnails.push(...this.convertSimklEpisodeImgToEpisodeThumbnail(simklEpisode));
+        episode.providerEpisodeId = simklEpisode.ids.simkl_id;
+        episode.type = this.convertSimklEpisodeTypeToEpisodeType(simklEpisode);
+        episode.airDate = new Date(simklEpisode.date);
+        return episode;
+    }
+
+    private convertSimklEpisodeTypeToEpisodeType(simklEpisode: ISimklEpisodeInfo): EpisodeType {
+        if (simklEpisode.type === 'episode') {
+            return EpisodeType.REGULAR_EPISODE;
+        } else if (simklEpisode.type === 'special') {
+            return EpisodeType.SPECIAL;
+        } else {
+            logger.warn('[SIMKL CONVERTER] Cant convert simkl episode type ' + simklEpisode.type + ' to EpisodeType');
+            return EpisodeType.UNKOWN;
+        }
+    }
+
+    /**
+     * img size can be: 600x338 on _w or 210x118 on _c or 112x63 on _m
+     * img Format can be: .jpg or .webp
+     * @param simklEpisode a single simkl episode
+     * @returns 3 sizes of the same episode thumbnail or 0 if the episode dont have a thumbnail.
+     */
+    private convertSimklEpisodeImgToEpisodeThumbnail(simklEpisode: ISimklEpisodeInfo): EpisodeThumbnail[] {
+        if (simklEpisode.img) {
+            const url = 'https://simkl.in/episodes/';
+            const largeImgSize = '_w'; // 600x338
+            const mediumImgSize = '_c'; // 210x118
+            const smallImgSize = '_m'; // 112x63
+            const imgFormat = '.jpg';
+            const large = new EpisodeThumbnail(url + simklEpisode.img + largeImgSize + imgFormat, ImageSize.LARGE);
+            const medium = new EpisodeThumbnail(url + simklEpisode.img + mediumImgSize + imgFormat, ImageSize.MEDIUM);
+            const small = new EpisodeThumbnail(url + simklEpisode.img + smallImgSize + imgFormat, ImageSize.SMALL);
+            return [large, medium, small];
+        }
+        return [];
+    }
+
+
+    private convertAnimeIdsToProviders(animeIds: ISimklFullInfoIDS): ProviderLocalDataWithSeasonInfo[] {
         const providers: ProviderLocalData[] = [];
         if (animeIds.allcin) {
             providers.push(new InfoProviderLocalData(animeIds.allcin, 'allcin'));
@@ -171,7 +234,7 @@ export default class SimklConverter {
         return result;
     }
 
-    private async convertSimklGenresToGenres(simklGenres: string[]): Promise<Genre[]> {
+    private convertSimklGenresToGenres(simklGenres: string[]): Genre[] {
         const genres = [];
         if (simklGenres && Array.isArray(simklGenres)) {
             for (const simklGenre of simklGenres) {
@@ -181,19 +244,20 @@ export default class SimklConverter {
         return genres;
     }
 
-    private async convertPosterIdToCover(posterId: string): Promise<Cover[]> {
+    private convertPosterIdToCover(posterId: string): Cover[] {
         const covers: Cover[] = [];
+        const url = 'https://simkl.net/posters/';
         if (posterId) {
-            covers.push(new Cover('https://simkl.net/posters/' + posterId + '_m.webp', ImageSize.MAX));
-            covers.push(new Cover('https://simkl.net/posters/' + posterId + '_ca.webp', ImageSize.MEDIUM));
-            covers.push(new Cover('https://simkl.net/posters/' + posterId + '_c.webp', ImageSize.SMALL));
-            covers.push(new Cover('https://simkl.net/posters/' + posterId + '_cm.webp', ImageSize.TINY));
-            covers.push(new Cover('https://simkl.net/posters/' + posterId + '_s.webp', ImageSize.VERYTINY));
+            covers.push(new Cover(url + posterId + '_m.webp', ImageSize.MAX));
+            covers.push(new Cover(url + posterId + '_ca.webp', ImageSize.MEDIUM));
+            covers.push(new Cover(url + posterId + '_c.webp', ImageSize.SMALL));
+            covers.push(new Cover(url + posterId + '_cm.webp', ImageSize.TINY));
+            covers.push(new Cover(url + posterId + '_s.webp', ImageSize.VERYTINY));
         }
         return covers;
     }
 
-    private async convertAnimeTypeToMediaType(animeType: string): Promise<MediaType> {
+    private convertAnimeTypeToMediaType(animeType: string): MediaType {
         switch (animeType) {
             case 'tv':
                 return MediaType.ANIME;

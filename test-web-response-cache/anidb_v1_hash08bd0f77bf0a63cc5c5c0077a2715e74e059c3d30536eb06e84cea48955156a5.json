@@ -1,0 +1,110 @@
+{
+    "request": "Kiniro Mosaic ,s:1",
+    "response": [
+        {
+            "subProviders": [],
+            "mainProvider": {
+                "providerLocalData": {
+                    "version": 1,
+                    "infoStatus": 2,
+                    "provider": "anidb",
+                    "lastUpdate": "2020-03-10T21:32:45.069Z",
+                    "lastExternalChange": "1970-01-01T00:00:00.000Z",
+                    "covers": [],
+                    "banners": [],
+                    "mediaType": "UNKOWN",
+                    "isNSFW": false,
+                    "genres": [],
+                    "detailEpisodeInfo": [],
+                    "sequelIds": [],
+                    "prequelIds": [],
+                    "alternativeIds": [],
+                    "names": [
+                        {
+                            "name": "Kin`iro Mosaic",
+                            "lang": "x-jat",
+                            "nameType": "main"
+                        },
+                        {
+                            "name": "Kiniro Mosaic",
+                            "lang": "x-jat",
+                            "nameType": "syn"
+                        },
+                        {
+                            "name": "Kinmosa",
+                            "lang": "x-jat",
+                            "nameType": "short"
+                        },
+                        {
+                            "name": "Kinmoza!",
+                            "lang": "en",
+                            "nameType": "official"
+                        },
+                        {
+                            "name": "きんいろモザイク",
+                            "lang": "ja",
+                            "nameType": "official"
+                        },
+                        {
+                            "name": "黄金拼图",
+                            "lang": "zh-Hans",
+                            "nameType": "official"
+                        }
+                    ],
+                    "overviews": [],
+                    "id": "9579",
+                    "instanceName": "InfoProviderLocalData",
+                    "rawEntry": {
+                        "_attributes": {
+                            "aid": "9579"
+                        },
+                        "title": [
+                            {
+                                "_attributes": {
+                                    "xml:lang": "x-jat",
+                                    "type": "main"
+                                },
+                                "_text": "Kin`iro Mosaic"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "syn",
+                                    "xml:lang": "x-jat"
+                                },
+                                "_text": "Kiniro Mosaic"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "x-jat",
+                                    "type": "short"
+                                },
+                                "_text": "Kinmosa"
+                            },
+                            {
+                                "_attributes": {
+                                    "xml:lang": "en",
+                                    "type": "official"
+                                },
+                                "_text": "Kinmoza!"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "official",
+                                    "xml:lang": "ja"
+                                },
+                                "_text": "きんいろモザイク"
+                            },
+                            {
+                                "_attributes": {
+                                    "type": "official",
+                                    "xml:lang": "zh-Hans"
+                                },
+                                "_text": "黄金拼图"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

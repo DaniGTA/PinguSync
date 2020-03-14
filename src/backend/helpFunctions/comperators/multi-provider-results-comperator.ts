@@ -10,6 +10,7 @@ import MediaTypeComperator from './media-type-comperator';
 import ProviderComperator from './provider-comperator';
 import ReleaseYearComperator from './release-year-comperator';
 import SeasonComperator from './season-comperator';
+import Name from '../../controller/objects/meta/name';
 
 export default class MultiProviderComperator {
     public static async compareMultiProviderWithSeries(series: Series, result: MultiProviderResult): Promise<ComperatorResult> {
@@ -20,11 +21,11 @@ export default class MultiProviderComperator {
         const seasonA = await series.getSeason();
         const seasonB = await tempSeries.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);
 
-        finalResult.matchAble += 4;
+        finalResult.matchAble += 6;
         if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
             finalResult.matches += 2;
             if (await this.isSeriesNameAbsoluteSame(series, tempSeries)) {
-                finalResult.matches++;
+                finalResult.matches += 2;
             }
             if (seasonA.seasonError !== SeasonError.CANT_GET_SEASON) {
                 finalResult.matchAble += 2;
@@ -77,11 +78,13 @@ export default class MultiProviderComperator {
     }
 
     private static async isSeriesNameAbsoluteSame(seriesA: Series, seriesB: Series): Promise<boolean> {
-        const nameAProcess = seriesA.getAllNamesUnique();
-        const nameBProcess = seriesB.getAllNamesUnique();
+        const nameAProcess = seriesA.getAllNamesSeasonAware();
+        const nameBProcess = seriesB.getAllNamesSeasonAware();
 
-        const nameAList = await nameAProcess;
-        const nameBList = await nameBProcess;
+        return this.isNameListAbsoluteSame(nameAProcess, nameBProcess);
+    }
+
+    private static async isNameListAbsoluteSame(nameAList: Name[], nameBList: Name[]): Promise<boolean> {
 
         const cleanedStringListA = nameAList.flatMap((x) => StringHelper.cleanString(x.name));
         const cleanedStringListB = nameBList.flatMap((x) => StringHelper.cleanString(x.name));
