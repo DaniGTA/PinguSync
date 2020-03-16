@@ -531,7 +531,7 @@ describe('Basic List | Testrun', () => {
                     strictEqual(s1Result.length, 2);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
                     const s1BindedEpisodeResult = await EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
-                    strictEqual(s1BindedEpisodeResult.length, 4);
+                    strictEqual(s1BindedEpisodeResult.length, 3);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
                     const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
                     const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
@@ -730,7 +730,6 @@ describe('Basic List | Testrun', () => {
         const resultSeries = mainList[0];
 
         const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo();
-        strictEqual(bindings.length, 2);
 
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
@@ -791,7 +790,8 @@ describe('Basic List | Testrun', () => {
         const epMappings = resultSeries.episodeBindingPools;
         strictEqual(epMappings.length, 12);
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 5);
+            const stra = epMapping.bindedEpisodeMappings.find((x) => x.provider === aniListName);
+            notStrictEqual(stra, undefined);
         }
     });
     test.todo('Trakt id: 65266 (All season seperate)');

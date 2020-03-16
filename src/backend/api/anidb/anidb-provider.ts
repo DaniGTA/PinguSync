@@ -19,7 +19,7 @@ import AniDBNameListXML, { Anime, Title } from './objects/anidbNameListXML';
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
 
-
+    public requestRateLimitInMs = 2500;
     public providerName: string = 'anidb';
     public version: number = 1;
     public isOffline = true;
@@ -32,7 +32,6 @@ export default class AniDBProvider extends InfoProvider {
 
     constructor(download: boolean = true) {
         super();
-        this.requestRateLimitInMs = 2000;
         if (!AniDBProvider.instance) {
             AniDBProvider.instance = this;
             if (this.allowDownload() && download) {

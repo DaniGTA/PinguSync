@@ -7,6 +7,7 @@ import Series, { WatchStatus } from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import WebRequestManager from '../../controller/web-request-manager/web-request-manager';
+import timeHelper from '../../helpFunctions/time-helper';
 import logger from '../../logger/logger';
 import ExternalProvider from '../provider/external-provider';
 import ListProvider from '../provider/list-provider';
@@ -23,7 +24,6 @@ import { SearchSeries } from './graphql/searchSeries';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import { MediaListCollection } from './graphql/seriesList';
 import { IViewer } from './graphql/viewer';
-import timeHelper from '../../helpFunctions/time-helper';
 
 export default class AniListProvider extends ListProvider {
 
@@ -128,6 +128,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public getUserInfo() {
+        this.informAWebRequest();
         const that = this;
         // Here we define our query as a multi-line string
         // Storing it in a separate .graphql/.gql file is also possible

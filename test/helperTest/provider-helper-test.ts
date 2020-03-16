@@ -21,6 +21,8 @@ import ProviderNameManager from '../../src/backend/controller/provider-manager/p
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
 import ProviderHelper from '../../src/backend/helpFunctions/provider/provider-helper';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import ProviderInfoHelper from '../../src/backend/helpFunctions/provider/provider-info-helper';
+import ProviderListHelper from '../../src/backend/helpFunctions/provider/provider-list-helper';
 import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
 
 jest.mock('../../src/backend/api/provider/external-provider');
@@ -76,7 +78,7 @@ describe('Provider Helper Test', () => {
         await series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
         await series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
         // tslint:disable-next-line: no-string-literal
-        const result = await ProviderHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
+        const result = await ProviderInfoHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         equal(result.length, 2);
     });
 
@@ -107,7 +109,7 @@ describe('Provider Helper Test', () => {
         currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
 
         // tslint:disable-next-line: no-string-literal
-        providersThatNeedsAUpdate.sort((a, b) => ProviderHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+        providersThatNeedsAUpdate.sort((a, b) => ProviderListHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });
@@ -123,7 +125,7 @@ describe('Provider Helper Test', () => {
         currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
 
         // tslint:disable-next-line: no-string-literal
-        providersThatNeedsAUpdate.sort((a, b) => ProviderHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+        providersThatNeedsAUpdate.sort((a, b) => ProviderListHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });
@@ -140,7 +142,7 @@ describe('Provider Helper Test', () => {
         currentProviderData.push(new ListProviderLocalData(1, TraktProvider));
 
         // tslint:disable-next-line: no-string-literal
-        providersThatNeedsAUpdate.sort((a, b) => ProviderHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
+        providersThatNeedsAUpdate.sort((a, b) => ProviderListHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
         strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
     });

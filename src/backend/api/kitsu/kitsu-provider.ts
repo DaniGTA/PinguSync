@@ -6,7 +6,6 @@ import Series from '../../controller/objects/series';
 import { InfoProviderLocalData } from '../../controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
-import timeHelper from '../../helpFunctions/time-helper';
 import logger from '../../logger/logger';
 import AniDBProvider from '../anidb/anidb-provider';
 import AniListProvider from '../anilist/anilist-provider';
@@ -65,7 +64,7 @@ export default class KitsuProvider extends ListProvider {
         try {
             let searchResults = await this.search(seriesName);
             if (searchResults.data.length === 0) {
-                timeHelper.delay(500);
+                this.waitUntilItCanPerfomNextRequest();
                 searchResults = await this.search(seriesName);
             }
             for (const result of searchResults.data) {
@@ -84,6 +83,7 @@ export default class KitsuProvider extends ListProvider {
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName) {
+            this.informAWebRequest();
             const getResult = await ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
             return kitsuConverter.convertMediaToAnime(getResult.data);
         }
@@ -104,6 +104,7 @@ export default class KitsuProvider extends ListProvider {
     }
 
     private async search(s: string): Promise<ISearchResult> {
+        this.informAWebRequest();
         return ((this.api.get('anime', {
             filter: {
                 text: s,
@@ -114,6 +115,7 @@ export default class KitsuProvider extends ListProvider {
     }
 
     private async getByTraktId(traktId: string | number) {
+        this.informAWebRequest();
         return ((this.api.get('mappings', {
             filter: {
                 externalId: traktId,

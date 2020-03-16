@@ -2,29 +2,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Electron: Main",
-            "type": "node",
-            "request": "launch",
-            "protocol": "auto",
-            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
-            "windows": {
-                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
-            },
-            "preLaunchTask": "electron-debug",
-            "internalConsoleOptions": "openOnSessionStart",
-            "env": {
-                "NODE_ENV": "development"
-            },
-            "args": [
-                "."
-            ],
-            "outFiles": [
-                "${workspaceFolder}/dist_electron/**/*.js"
-            ],
-            "outputCapture": "std",
-            "autoAttachChildProcesses": true,
-            "smartStep": true,
-            "timeout": 45000,
+        "name": "Debug Main Process",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceFolder}",
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+        "windows": {
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+        },
+        "args" : ["."],
+        "outputCapture": "std"
         },
         {
             "name": "Electron: Renderer",

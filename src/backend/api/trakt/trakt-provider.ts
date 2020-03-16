@@ -82,7 +82,9 @@ export default class TraktProvider extends ListProvider {
                     return (traktConverter.convertFullShowInfoToLocalData(res, MediaType.MOVIE));
                 } else {
                     const res = await this.traktRequest<FullShowInfo>('https://api.trakt.tv/shows/' + provider.id + '?extended=full');
+                    this.waitUntilItCanPerfomNextRequest();
                     const seasonEpisodeInfo = await this.traktRequest<ITraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes');
+                    this.waitUntilItCanPerfomNextRequest();
                     const seasonInfo = await this.traktRequest<ITraktShowSeasonInfo[]>('https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=full');
                     const fullSeasonInfo = traktConverter.combineSeasonInfoAndSeasonEpisodeInfo(seasonInfo, seasonEpisodeInfo);
                     return traktConverter.convertFullShowInfoToLocalData(res, MediaType.UNKOWN_SERIES, fullSeasonInfo);
@@ -105,7 +107,7 @@ export default class TraktProvider extends ListProvider {
             }
         } catch (err) {
             logger.error('[TRAKT] ID REQUEST FAILED');
-            logger.error(err);
+            throw err;
         }
         throw new Error('[Trakt] Cant handle this Provider id');
     }
@@ -180,6 +182,7 @@ export default class TraktProvider extends ListProvider {
             method: 'POST',
             uri: 'https://api.trakt.tv/oauth/token',
         };
+        this.informAWebRequest();
         const response = await WebRequestManager.request(options);
 
         if (response.body.access_token) {

@@ -34,6 +34,7 @@ export default class SimklProvider extends ListProvider {
     public version = 2;
     public hasOAuthCode = true;
     public hasUniqueIdForSeasons = true;
+    public requestRateLimitInMs = 1500;
 
     private clientSecret = 'bca301dbc53ad518f9e90abd38642a76dbd531c4d588e7e84fadd416b4ae1253';
     private clientID = '9fda12e10ec09721e9231e5323b150a77d4d095eb009097f452aafd76c3bd3d9';
@@ -51,13 +52,14 @@ export default class SimklProvider extends ListProvider {
         try {
             endResults.push(...await this.animeTextSearch(seriesName));
         } catch (err) { logger.debug(err); }
+        await this.waitUntilItCanPerfomNextRequest();
         try {
             endResults.push(...await this.tvTextSearch(seriesName));
         } catch (err) { logger.debug(err); }
+        await this.waitUntilItCanPerfomNextRequest();
         try {
             endResults.push(...await this.movieTextSearch(seriesName));
         } catch (err) { logger.debug(err); }
-
 
         return endResults;
     }
@@ -157,6 +159,7 @@ export default class SimklProvider extends ListProvider {
     }
 
     private async simklRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+        this.informAWebRequest();
         if (!await this.isProviderAvailable()) {
             throw new Error('timeout active');
         }

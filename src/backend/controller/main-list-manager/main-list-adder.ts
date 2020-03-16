@@ -89,7 +89,7 @@ export default class MainListAdder {
                         await MainListManager.addSerieToMainList(series);
                     }
                     addCounter++;
-                    logger.log('info', '[MainListAdder] Adding Series to list. Progress: ' + addCounter);
+                    logger.log('info', '[MainListAdder] Adding Series to list. Progress: ' + addCounter + '/' + list.length);
                 } catch (err) {
                     logger.error('[MainListAdder] [listWorker]: (error below)');
                     logger.error(err);

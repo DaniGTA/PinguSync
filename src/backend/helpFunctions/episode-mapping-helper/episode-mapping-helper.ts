@@ -1,18 +1,18 @@
-import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
-import Series from '../../controller/objects/series';
-import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import EpisodeRatedEqualityHelper from './episode-rated-equality-helper';
-import ProviderAndSeriesPackage from './provider-series-package';
-import EpisodeRatedEqualityContainerHelper from './episode-rated-equality-container-helper';
+import MainListSearcher from '../../controller/main-list-manager/main-list-searcher';
 import Episode from '../../controller/objects/meta/episode/episode';
-import EpisodeComperator from '../comperators/episode-comperator';
+import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
-import EpisodeBindingPoolHelper from '../episode-binding-pool-helper';
-import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
+import Series from '../../controller/objects/series';
+import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import logger from '../../logger/logger';
-import MainListSearcher from '../../controller/main-list-manager/main-list-searcher';
+import EpisodeComperator from '../comperators/episode-comperator';
+import EpisodeBindingPoolHelper from '../episode-binding-pool-helper';
+import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
+import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
+import EpisodeRatedEqualityContainerHelper from './episode-rated-equality-container-helper';
+import EpisodeRatedEqualityHelper from './episode-rated-equality-helper';
+import ProviderAndSeriesPackage from './provider-series-package';
 
 export default class EpisodeMappingHelper {
     /**
