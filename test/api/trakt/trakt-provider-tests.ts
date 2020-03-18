@@ -1,5 +1,5 @@
 import { notStrictEqual, strictEqual } from 'assert';
-import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
+import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../src/backend/controller/objects/meta/name';

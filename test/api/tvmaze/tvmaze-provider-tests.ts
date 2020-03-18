@@ -1,7 +1,7 @@
 
 
 import { strictEqual } from 'assert';
-import TVMazeProvider from '../../../src/backend/api/tvmaze/tvmaze-provider';
+import TVMazeProvider from '../../../src/backend/api/information-providers/tvmaze/tvmaze-provider';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';

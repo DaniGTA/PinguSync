@@ -1,6 +1,7 @@
 import { strictEqual } from 'assert';
-import { ISimklEpisodeInfo } from '../../../src/backend/api/simkl/objects/simklEpisodeInfo';
-import SimklConverter from '../../../src/backend/api/simkl/simkl-converter';
+
+import { ISimklEpisodeInfo } from '../../../src/backend/api/information-providers/simkl/objects/simklEpisodeInfo';
+import SimklConverter from '../../../src/backend/api/information-providers/simkl/simkl-converter';
 import { EpisodeType } from '../../../src/backend/controller/objects/meta/episode/episode-type';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 

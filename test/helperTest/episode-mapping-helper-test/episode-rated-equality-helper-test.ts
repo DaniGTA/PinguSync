@@ -1,6 +1,7 @@
 import { strictEqual } from 'assert';
-import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
-import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
+
+import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
+import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeBindingPool from '../../../src/backend/controller/objects/meta/episode/episode-binding-pool';

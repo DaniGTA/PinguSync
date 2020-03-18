@@ -4,9 +4,6 @@ import { NameType } from '../../../../src/backend/controller/objects/meta/name-t
 
 
 describe('Season object tests', () => {
-    beforeAll(() => {
-    });
-
     test('should get season number out of name list', async () => {
         const name = new Name('Test 2', 'en', NameType.MAIN);
         strictEqual((await Name.getSeasonNumber([name])).seasonNumber, 2);

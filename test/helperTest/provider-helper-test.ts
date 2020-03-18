@@ -1,12 +1,13 @@
 import { equal, strictEqual } from 'assert';
-import AniDBHelper from '../../src/backend/api/anidb/anidb-helper';
-import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
-import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
-import KitsuProvider from '../../src/backend/api/kitsu/kitsu-provider';
-import MalProvider from '../../src/backend/api/mal/mal-provider';
+
+import AniDBHelper from '../../src/backend/api/information-providers/anidb/anidb-helper';
+import AniDBProvider from '../../src/backend/api/information-providers/anidb/anidb-provider';
+import AniListProvider from '../../src/backend/api/information-providers/anilist/anilist-provider';
+import KitsuProvider from '../../src/backend/api/information-providers/kitsu/kitsu-provider';
+import MalProvider from '../../src/backend/api/information-providers/mal/mal-provider';
+import TraktProvider from '../../src/backend/api/information-providers/trakt/trakt-provider';
 import ExternalProvider from '../../src/backend/api/provider/external-provider';
 import ListProvider from '../../src/backend/api/provider/list-provider';
-import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';

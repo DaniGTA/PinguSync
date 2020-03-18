@@ -1,23 +1,22 @@
 import { strictEqual } from 'assert';
-import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
-import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
-import MalProvider from '../../../src/backend/api/mal/mal-provider';
-import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
+
+import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
+import KitsuProvider from '../../../src/backend/api/information-providers/kitsu/kitsu-provider';
+import MalProvider from '../../../src/backend/api/information-providers/mal/mal-provider';
+import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
 import ListController from '../../../src/backend/controller/list-controller';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Season from '../../../src/backend/controller/objects/meta/season';
+import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import SeasonAwarenessHelper from '../../../src/backend/helpFunctions/provider/season-awareness-helper/season-awareness-helper';
-import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
-
-
 
 describe('Season Awareness Test', () => {
     beforeEach(() => {
-        // tslint:disable-next-line: no-string-literal
+        // tslint:disable: no-string-literal
         ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [new AniDBProvider()];

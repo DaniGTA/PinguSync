@@ -1,13 +1,13 @@
-import AniDBProvider from '../../api/anidb/anidb-provider';
-import AniListProvider from '../../api/anilist/anilist-provider';
-import KitsuProvider from '../../api/kitsu/kitsu-provider';
-import OMDbProvider from '../../api/omdb/omdb-provider';
+import AniDBProvider from '../../api/information-providers/anidb/anidb-provider';
+import AniListProvider from '../../api/information-providers/anilist/anilist-provider';
+import KitsuProvider from '../../api/information-providers/kitsu/kitsu-provider';
+import OMDbProvider from '../../api/information-providers/omdb/omdb-provider';
+import SimklProvider from '../../api/information-providers/simkl/simkl-provider';
+import TraktProvider from '../../api/information-providers/trakt/trakt-provider';
+import TVDBProvider from '../../api/information-providers/tvdb/tvdb-provider';
+import TVMazeProvider from '../../api/information-providers/tvmaze/tvmaze-provider';
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
-import SimklProvider from '../../api/simkl/simkl-provider';
-import TraktProvider from '../../api/trakt/trakt-provider';
-import TVDBProvider from '../../api/tvdb/tvdb-provider';
-import TVMazeProvider from '../../api/tvmaze/tvmaze-provider';
 import logger from '../../logger/logger';
 
 export default class ProviderLoader {

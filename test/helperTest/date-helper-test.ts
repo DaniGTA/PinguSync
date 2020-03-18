@@ -1,6 +1,5 @@
-import { equal } from 'assert';
-import KitsuProvider from '../../src/backend/api/kitsu/kitsu-provider';
-import MalProvider from '../../src/backend/api/mal/mal-provider';
+import KitsuProvider from '../../src/backend/api/information-providers/kitsu/kitsu-provider';
+import MalProvider from '../../src/backend/api/information-providers/mal/mal-provider';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import ProviderList from '../../src/backend/controller/provider-manager/provider-list';

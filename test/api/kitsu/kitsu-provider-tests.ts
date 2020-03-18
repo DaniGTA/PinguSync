@@ -1,5 +1,5 @@
-import { fail, strictEqual } from 'assert';
-import KitsuProvider from '../../../src/backend/api/kitsu/kitsu-provider';
+import { strictEqual } from 'assert';
+import KitsuProvider from '../../../src/backend/api/information-providers/kitsu/kitsu-provider';
 import ExternalProvider from '../../../src/backend/api/provider/external-provider';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../src/backend/controller/objects/meta/name';

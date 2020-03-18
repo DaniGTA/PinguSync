@@ -1,8 +1,8 @@
 
 import { deepEqual, fail } from 'assert';
-import AniDBHelper from '../../../src/backend/api/anidb/anidb-helper';
-import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
-import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
+import AniDBHelper from '../../../src/backend/api/information-providers/anidb/anidb-helper';
+import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
+import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../src/backend/controller/objects/meta/name-type';

@@ -1,10 +1,10 @@
-import { fail, notEqual, notStrictEqual, strictEqual, equal } from 'assert';
-import AniDBHelper from '../../src/backend/api/anidb/anidb-helper';
-import AniDBProvider from '../../src/backend/api/anidb/anidb-provider';
-import AniListProvider from '../../src/backend/api/anilist/anilist-provider';
+import { equal, fail, notEqual, notStrictEqual, strictEqual } from 'assert';
+import AniDBHelper from '../../src/backend/api/information-providers/anidb/anidb-helper';
+import AniDBProvider from '../../src/backend/api/information-providers/anidb/anidb-provider';
+import AniListProvider from '../../src/backend/api/information-providers/anilist/anilist-provider';
+import TraktProvider from '../../src/backend/api/information-providers/trakt/trakt-provider';
+import TVDBProvider from '../../src/backend/api/information-providers/tvdb/tvdb-provider';
 import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
-import TraktProvider from '../../src/backend/api/trakt/trakt-provider';
-import TVDBProvider from '../../src/backend/api/tvdb/tvdb-provider';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';

@@ -7,6 +7,7 @@ import ProviderList from '../../controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ProviderHelper from './provider-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
+import ExternalInformationProvider from '../../api/provider/external-information-provider';
 
 export default class ProviderListHelper {
     /**
@@ -56,10 +57,10 @@ export default class ProviderListHelper {
         return results;
     }
 
-    private static async getProvidersThatNeedUpdates(currentProviderData: ProviderLocalData[], target: ProviderInfoStatus): Promise<ExternalProvider[]> {
-        const allProviders = ProviderList.getAllProviderLists();
+    private static async getProvidersThatNeedUpdates(currentProviderData: ProviderLocalData[], target: ProviderInfoStatus): Promise<ExternalInformationProvider[]> {
+        const allProviders = ProviderList.getAllExternalInformationProvider();
         const relevantList = await this.getAllRelevantListProviders(currentProviderData);
-        const providersThatNeedsAUpdate: ExternalProvider[] = [];
+        const providersThatNeedsAUpdate: ExternalInformationProvider[] = [];
 
         for (const provider of allProviders) {
             if (relevantList.find((x) => x.providerName === provider.providerName)) {

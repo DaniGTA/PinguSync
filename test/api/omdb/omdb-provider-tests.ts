@@ -1,5 +1,5 @@
 import { strictEqual } from 'assert';
-import OMDbProvider from '../../../src/backend/api/omdb/omdb-provider';
+import OMDbProvider from '../../../src/backend/api/information-providers/omdb/omdb-provider';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';

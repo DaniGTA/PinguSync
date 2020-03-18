@@ -1,6 +1,7 @@
 import { deepEqual } from 'assert';
-import AniDBProvider from '../../../src/backend/api/anidb/anidb-provider';
-import AniDBNameListXML from '../../../src/backend/api/anidb/objects/anidbNameListXML';
+import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
+import AniDBNameListXML from '../../../src/backend/api/information-providers/anidb/objects/anidbNameListXML';
+
 
 describe('Provider: AniDB | Convert tests', () => {
     test('xml to json', async () => {

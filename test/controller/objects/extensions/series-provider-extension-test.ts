@@ -1,5 +1,5 @@
 import { strictEqual } from 'assert';
-import TraktProvider from '../../../../src/backend/api/trakt/trakt-provider';
+import TraktProvider from '../../../../src/backend/api/information-providers/trakt/trakt-provider';
 import InfoLocalDataBind from '../../../../src/backend/controller/objects/extension/provider-extension/binding/info-local-data-bind';
 import ListLocalDataBind from '../../../../src/backend/controller/objects/extension/provider-extension/binding/list-local-data-bind';
 import Season from '../../../../src/backend/controller/objects/meta/season';
@@ -10,9 +10,6 @@ import ProviderDataWithSeasonInfo from '../../../../src/backend/helpFunctions/pr
 
 
 describe('Series provider extension tests', () => {
-    beforeAll(() => {
-    });
-
     test('should add providers with season info to series', async () => {
         const series = new Series();
 

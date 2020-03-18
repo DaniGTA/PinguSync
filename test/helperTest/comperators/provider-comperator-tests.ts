@@ -1,5 +1,5 @@
 import { strictEqual } from 'assert';
-import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
+import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
@@ -8,11 +8,7 @@ import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/c
 import ProviderComperator from '../../../src/backend/helpFunctions/comperators/provider-comperator';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-
 describe('Provider Comperator | Testrun', () => {
-    beforeAll(() => {
-    });
     test('should be absolute false (same provider and wrong id)', async () => {
         const instance = new ProviderComperator(new Series(), new Series());
 
@@ -60,12 +56,14 @@ describe('Provider Comperator | Testrun', () => {
     test('should be false (same provider and same id and wrong season (Season binded on Series))', async () => {
 
         const series1 = new Series();
+        // tslint:disable-next-line: no-string-literal
         series1['cachedSeason'] = new Season(1);
         const providerA = new ListProviderLocalData(2, TraktProvider);
         providerA.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
         await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerA));
 
         const series2 = new Series();
+        // tslint:disable-next-line: no-string-literal
         series2['cachedSeason'] = new Season(2);
         const providerB = new ListProviderLocalData(2, TraktProvider);
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;

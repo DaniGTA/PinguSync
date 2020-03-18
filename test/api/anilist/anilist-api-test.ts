@@ -1,7 +1,7 @@
 
 import assert from 'assert';
 import request from 'request';
-import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
+import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
 
 
 // tslint:disable: no-string-literal

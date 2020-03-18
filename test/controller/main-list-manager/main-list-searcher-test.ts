@@ -1,13 +1,14 @@
 import { strictEqual } from 'assert';
-import AniListProvider from '../../../src/backend/api/anilist/anilist-provider';
+import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
+import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
 import MultiProviderResult from '../../../src/backend/api/provider/multi-provider-result';
-import TraktProvider from '../../../src/backend/api/trakt/trakt-provider';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListSearcher from '../../../src/backend/controller/main-list-manager/main-list-searcher';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import ProviderNameManager from '../../../src/backend/controller/provider-manager/provider-name-manager';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../objects/testClass/testProvider';
 
@@ -23,16 +24,16 @@ describe('MainList | Searcher tests', () => {
         const searcher = new MainListSearcher();
 
         const series1 = new Series();
-        const provider1 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
+        const provider1 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
         await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([1])));
 
 
         const series2 = new Series();
-        const provider2 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
+        const provider2 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
         await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([2])));
 
         const series3 = new Series();
-        const provider3 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
+        const provider3 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
         await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season([1])));
 
         MainListManager['mainList'] = [series1, series2];
@@ -47,21 +48,21 @@ describe('MainList | Searcher tests', () => {
         ProviderList['loadedListProvider'] = [new TraktProvider(), new AniListProvider()];
 
         const series1 = new Series();
-        const provider1 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
+        const provider1 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
         await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([1])));
 
 
         const series2 = new Series();
-        const provider2 = new ListProviderLocalData(1, TraktProvider.getInstance().providerName);
+        const provider2 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
         await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([2])));
 
         const series3 = new Series();
-        const provider3 = new ListProviderLocalData(1, AniListProvider.getInstance().providerName);
+        const provider3 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(AniListProvider));
         await series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season([1])));
 
         MainListManager['mainList'] = [series1, series2, series3];
 
-        const search = new MultiProviderResult(new ListProviderLocalData(1, TraktProvider.getInstance().providerName));
+        const search = new MultiProviderResult(new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider)));
         const result = await MainListSearcher.findSeriesWithMultiProviderResult(search);
         strictEqual(result, series1);
 
