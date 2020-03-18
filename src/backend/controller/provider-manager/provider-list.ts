@@ -4,6 +4,7 @@ import ListProvider from '../../api/provider/list-provider';
 import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import ProviderLocalData from './local-data/interfaces/provider-local-data';
 import ProviderLoader from './provider-loader';
+import ExternalInformationProvider from '../../api/provider/external-information-provider';
 
 export default class ProviderList extends ProviderLoader {
     /**
@@ -36,11 +37,15 @@ export default class ProviderList extends ProviderLoader {
         return [...this.getInfoProviderList(), ...this.getListProviderList()];
     }
 
+    public static getAllExternalInformationProvider(): ExternalInformationProvider[] {
+        return [...this.getInfoProviderList(), ...this.getListProviderList()];
+    }
+
     /**
      * Get the current static instance of the api.
      * @param localdata
      */
-    public static getExternalProviderInstance(localdata: ProviderLocalData | ProviderLocalDataWithSeasonInfo): ExternalProvider {
+    public static getExternalProviderInstance(localdata: ProviderLocalData | ProviderLocalDataWithSeasonInfo): ExternalInformationProvider {
         let providerName = '';
         if (localdata instanceof ProviderLocalDataWithSeasonInfo) {
             providerName = localdata.providerLocalData.provider;
@@ -49,13 +54,13 @@ export default class ProviderList extends ProviderLoader {
         }
         const result = this.getExternalProviderInstanceByProviderName(providerName);
         if (result) {
-            return result;
+            return result as ExternalInformationProvider;
         }
         throw new Error('[ProviderList] NoProviderFound: ' + providerName);
     }
 
-    public static getExternalProviderInstanceByProviderName(providerName: string): ExternalProvider | undefined {
-        for (const provider of ProviderList.getAllProviderLists()) {
+    public static getExternalProviderInstanceByProviderName(providerName: string): ExternalInformationProvider | undefined {
+        for (const provider of ProviderList.getAllExternalInformationProvider()) {
             if (provider.providerName === providerName) {
                 return provider;
             }

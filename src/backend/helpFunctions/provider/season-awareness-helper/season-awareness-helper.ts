@@ -3,6 +3,9 @@ import ProviderLocalData from '../../../controller/provider-manager/local-data/i
 import ProviderList from '../../../controller/provider-manager/provider-list';
 import logger from '../../../logger/logger';
 import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
+import RelationSearchResults from '../../../controller/objects/transfer/relation-search-results';
+import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 
 export default class SeasonAwarenessHelper {
 
@@ -11,7 +14,7 @@ export default class SeasonAwarenessHelper {
         for (const provider of currentProviders) {
             try {
                 if (SeasonAwarenessHelper.isProviderSeasonAware(provider)) {
-                    result =  true;
+                    result = true;
                 }
             } catch (err) {
                 logger.debug(err);
@@ -21,6 +24,7 @@ export default class SeasonAwarenessHelper {
     }
 
     public static isProviderSeasonAware(provider: ProviderLocalDataWithSeasonInfo) {
+
         if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && !(provider.seasonTarget?.seasonNumbers.includes(1))) {
             return false;
         }
@@ -42,5 +46,49 @@ export default class SeasonAwarenessHelper {
             }
         }
         return collectedProviders;
+    }
+
+    public static async createTempPrequelFromRelationSearchResults(searchResult: RelationSearchResults): Promise<Series | undefined> {
+        const tempPrequel = new Series();
+        const allPrequelProviders = this.getAllProviderWithLocalData(searchResult.searchedProviders);
+
+        if (allPrequelProviders.length !== 0) {
+            await tempPrequel.addProviderDatas(...allPrequelProviders);
+        }
+
+        if (tempPrequel.getAllProviderBindings().length !== 0) {
+            return tempPrequel;
+        }
+        return undefined;
+    }
+
+    public static async createTempPrequelFromLocalData(providerLocalDatas: ProviderLocalData[]): Promise<Series | undefined> {
+        const tempPrequel = new Series();
+        const allPrequelProviders = this.getAllProviderWithLocalData(providerLocalDatas);
+
+        if (allPrequelProviders.length !== 0) {
+            await tempPrequel.addProviderDatas(...allPrequelProviders);
+        }
+
+        if (tempPrequel.getAllProviderBindings().length !== 0) {
+            return tempPrequel;
+        }
+        return undefined;
+    }
+
+    public static getAllProviderWithLocalData(providerLocalDatas: ProviderLocalData[]): ProviderLocalData[] {
+        const allPrequelProviders = [];
+        for (const provider of providerLocalDatas) {
+            let prequelProvider: ProviderLocalData | undefined;
+            if (provider instanceof ListProviderLocalData) {
+                prequelProvider = new ListProviderLocalData(provider.prequelIds[0], provider.provider);
+            } else if (provider instanceof InfoProviderLocalData) {
+                prequelProvider = new InfoProviderLocalData(provider.prequelIds[0], provider.provider);
+            }
+            if (prequelProvider) {
+                allPrequelProviders.push(prequelProvider);
+            }
+        }
+        return allPrequelProviders;
     }
 }

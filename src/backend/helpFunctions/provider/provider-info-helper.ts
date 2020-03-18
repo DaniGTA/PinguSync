@@ -101,7 +101,7 @@ export default class ProviderInfoHelper {
             }
         }
         const maxEpisodeNumber = this.getFromAllProviderLocalDataMaxEpisodeNumber(allNonSeasonAwareProviderLocalDatas);
-        const maxSeasonNumber: number = this.getFromAllProviderLocalDataMaxSeasonNumber(allSeasonAwareProviderLocalDatas);
+        const maxSeasonNumber: number = this.getFromAllProviderLocalDataMaxSeasonNumber(allNonSeasonAwareProviderLocalDatas);
 
         if (maxSeasonNumber !== 1) {
             return true;

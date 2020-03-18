@@ -1,3 +1,4 @@
+import { isArray } from 'util';
 import Banner from '../../controller/objects/meta/banner';
 import Cover from '../../controller/objects/meta/cover';
 import Episode from '../../controller/objects/meta/episode/episode';
@@ -24,8 +25,7 @@ import MultiProviderResult from '../provider/multi-provider-result';
 import TraktProvider from '../trakt/trakt-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import KitsuProvider from './kitsu-provider';
-import { IKitsuEpisode, IKitsuMappings, IMedia, IKitsuEpisodeTitle } from './objects/searchResult';
-import { isArray } from 'util';
+import { IKitsuEpisode, IKitsuEpisodeTitle, IKitsuMappings, IMedia } from './objects/searchResult';
 
 export default new class KitsuConverter {
     public async convertMediaToAnime(media: IMedia, fullInfo: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<MultiProviderResult> {

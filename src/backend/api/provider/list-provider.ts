@@ -2,10 +2,10 @@ import WatchProgress from '../../controller/objects/meta/watch-progress';
 import Series from '../../controller/objects/series';
 import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
 import { UserData } from '../user-data';
-import ExternalProvider from './external-provider';
+import ExternalInformationProvider from './external-information-provider';
 import MultiProviderResult from './multi-provider-result';
 
-export default abstract class ListProvider extends ExternalProvider {
+export default abstract class ListProvider extends ExternalInformationProvider {
     public abstract hasOAuthCode: boolean;
     public abstract userData: UserData;
     public abstract getAllSeries(disableCache?: boolean): Promise<MultiProviderResult[]>;

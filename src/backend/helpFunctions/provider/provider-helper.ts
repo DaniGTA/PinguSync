@@ -1,3 +1,4 @@
+import ExternalInformationProvider from '../../api/provider/external-information-provider';
 import ExternalProvider from '../../api/provider/external-provider';
 import MultiProviderResult from '../../api/provider/multi-provider-result';
 import Series from '../../controller/objects/series';
@@ -80,7 +81,7 @@ export default class ProviderHelper {
      * requestProviderInfo
      */
     // tslint:disable-next-line: max-line-length
-    public static async requestProviderInfoUpgrade(series: Series, provider: ExternalProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult | undefined> {
+    public static async requestProviderInfoUpgrade(series: Series, provider: ExternalInformationProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult | undefined> {
         logger.debug('Start request for Provider: ' + provider.providerName);
         const localDatas: MultiProviderResult[] = [];
         const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
@@ -95,10 +96,8 @@ export default class ProviderHelper {
                 logger.error(err);
             }
         }
-
         let firstSeason: Series | null = null;
-        const season = (await series.getSeason()).seasonNumbers;
-        if (season.includes(1) && season.length === 0) {
+        if (!provider.hasUniqueIdForSeasons) {
             try {
                 firstSeason = await series.getFirstSeason();
             } catch (err) {
@@ -139,7 +138,7 @@ export default class ProviderHelper {
         }
         return false;
     }
-    public static async simpleProviderLocalDataUpgradeRequest(currentLocalDatas: ProviderLocalData[], providerInstance: ExternalProvider): Promise<ProviderLocalData | undefined> {
+    public static async simpleProviderLocalDataUpgradeRequest(currentLocalDatas: ProviderLocalData[], providerInstance: ExternalInformationProvider): Promise<ProviderLocalData | undefined> {
         try {
             const tempSeries = new Series();
             await tempSeries.addProviderDatas(...currentLocalDatas);
@@ -186,7 +185,7 @@ export default class ProviderHelper {
         return true;
     }
 
-    private static async getProviderByOtherProviders(series: Series, targetProvider: ExternalProvider): Promise<MultiProviderResult | undefined> {
+    private static async getProviderByOtherProviders(series: Series, targetProvider: ExternalInformationProvider): Promise<MultiProviderResult | undefined> {
         const providersThatCanProvideId = this.getProvidersThatCanProviderProviderId(targetProvider);
         for (const providerThatCanProvideId of providersThatCanProvideId) {
             try {
@@ -200,7 +199,7 @@ export default class ProviderHelper {
         }
     }
 
-    private static async getProviderByTargetProvider(series: Series, providerForRequest: ExternalProvider, providerAsGoal: ExternalProvider): Promise<MultiProviderResult | undefined> {
+    private static async getProviderByTargetProvider(series: Series, providerForRequest: ExternalInformationProvider, providerAsGoal: ExternalProvider): Promise<MultiProviderResult | undefined> {
         const result = await this.requestProviderInfoUpgrade(series, providerForRequest, false, ProviderInfoStatus.FULL_INFO);
         if (result) {
             const finalResult = this.extractTargetProviderFromMultiProviderResults(providerAsGoal, result);
@@ -234,7 +233,7 @@ export default class ProviderHelper {
         }
     }
 
-    private static async requestProviderToTarget(provider: ExternalProvider, firstSeason: Series | null, tempSeriesCopy: Series, target: ProviderInfoStatus) {
+    private static async requestProviderToTarget(provider: ExternalInformationProvider, firstSeason: Series | null, tempSeriesCopy: Series, target: ProviderInfoStatus) {
         let lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null = null;
         let currentResult: ProviderLocalDataWithSeasonInfo | null = null;
         let requestResult: MultiProviderResult | null = null;
@@ -295,8 +294,8 @@ export default class ProviderHelper {
      * @param avaibleProviders
      * @param targetProvider
      */
-    private static getAvaibleProvidersThatCanProvideProviderId(avaibleProviders: ProviderLocalData[], targetProvider: ExternalProvider): ExternalProvider[] {
-        const result: ExternalProvider[] = [];
+    private static getAvaibleProvidersThatCanProvideProviderId(avaibleProviders: ProviderLocalData[], targetProvider: ExternalProvider): ExternalInformationProvider[] {
+        const result: ExternalInformationProvider[] = [];
         for (const provider of avaibleProviders) {
             try {
                 if (provider.provider !== targetProvider.providerName) {
@@ -320,9 +319,9 @@ export default class ProviderHelper {
      * Get all providers that can give the id of the target provider.
      * @param targetProvider
      */
-    private static getProvidersThatCanProviderProviderId(targetProvider: ExternalProvider): ExternalProvider[] {
-        const providerThatProvidersId: ExternalProvider[] = [];
-        for (const provider of ProviderList.getAllProviderLists()) {
+    private static getProvidersThatCanProviderProviderId(targetProvider: ExternalInformationProvider): ExternalInformationProvider[] {
+        const providerThatProvidersId: ExternalInformationProvider[] = [];
+        for (const provider of ProviderList.getAllExternalInformationProvider()) {
             if (provider.providerName !== targetProvider.providerName) {
                 for (const supportProvider of provider.potentialSubProviders) {
                     try {

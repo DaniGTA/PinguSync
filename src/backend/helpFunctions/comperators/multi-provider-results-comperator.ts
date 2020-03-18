@@ -72,8 +72,14 @@ export default class MultiProviderComperator {
                 }
             }
         } else {
-            logger.debug('[MultiProviderComperator] not the same series' + result.mainProvider.providerLocalData.getAllNames()[0].name + '(' + result.mainProvider.providerLocalData.provider + ')' + ' &' + series.getAllNames()[0].name);
+            try {
+                logger.debug('[MultiProviderComperator] not the same series' + result.mainProvider.providerLocalData.getAllNames()[0].name + '(' + result.mainProvider.providerLocalData.provider + ')' + ' &' + series.getAllNames()[0].name);
+            } catch (err) {
+                logger.debug('[MultiProviderComperator] cant print error msg.');
+                logger.debug(err);
+            }
         }
+
         return finalResult;
     }
 

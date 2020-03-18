@@ -292,6 +292,20 @@ describe('Provider: AniDB | Offline Test runs', () => {
         deepEqual(result.mainProvider.providerLocalData.id, '5544');
     });
 
+    test('should find id 11673', async () => {
+        const a = new AniDBProvider(false);
+        const lpdld = new ListProviderLocalData(108928, 'AniList');
+        lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
+        lpdld.addSeriesName(new Name('Gakusen Toshi Asterisk 2', 'en', NameType.MAIN));
+        const series = new Series();
+        series['cachedSeason'] = new Season(2);
+        await series.addListProvider(lpdld);
+        // tslint:disable-next-line: no-string-literal
+        const result = await providerInfoDownloaderhelper['getProviderLocalDataByName'](series, new Name('Gakusen Toshi Asterisk 2', 'en', NameType.MAIN), a, 1);
+
+        deepEqual(result.mainProvider.providerLocalData.id, '11673');
+    });
+
     test('should find id 14819', async () => {
         const a = new AniDBProvider(false);
         const lpdld = new ListProviderLocalData(108928, 'AniList');

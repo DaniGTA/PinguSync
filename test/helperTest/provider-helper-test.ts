@@ -158,9 +158,9 @@ describe('Provider Helper Test', () => {
 
         const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
         if (anidbProvider) {
-            equal(anidbProvider.id, '13658');
+            equal(anidbProvider.id, '10901');
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.getSingleSeasonNumberAsNumber(), 3);
-            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart, 2);
+            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart, 1);
 
         } else {
             fail();

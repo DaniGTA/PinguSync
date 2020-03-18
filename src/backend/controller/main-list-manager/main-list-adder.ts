@@ -1,4 +1,5 @@
 import listHelper from '../../helpFunctions/list-helper';
+import NewProviderHelper from '../../helpFunctions/provider/new-provider-helper';
 import ProviderHelper from '../../helpFunctions/provider/provider-helper';
 import StringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
@@ -69,7 +70,7 @@ export default class MainListAdder {
                     const entry = await searcher.quickFindSameSeriesInMainList(series);
                     if (entry.length === 0) {
                         logger.debug('[MainListAdder] Add non existing Series.');
-                        const filledSeries = await ProviderHelper.requestFullProviderUpdate(series);
+                        const filledSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(series);
                         if (filledSeries.lastInfoUpdate === 0) {
                             logger.error('[ERROR] Series no last info update!');
                         }
@@ -101,20 +102,5 @@ export default class MainListAdder {
         logger.log('info', 'Added ' + addCounter + ' to mainList');
         logger.log('info', 'End waitlist worker');
         return;
-    }
-
-    private async syncRelationWithNewProviders(series: Series) {
-        const list = await MainListManager.getMainList();
-        const allRelations = await series.getAllRelations(list, false);
-        const allProviders = ProviderList.getAllProviderLists();
-        for (const relatedSeries of allRelations) {
-            for (const provider of allProviders) {
-                if (!ProviderHelper.hasSeriesProvider(relatedSeries, provider)) {
-                    if (!provider.hasUniqueIdForSeasons) {
-                        await ProviderHelper.requestProviderInfoUpgrade(relatedSeries, provider, false, ProviderInfoStatus.ONLY_ID);
-                    }
-                }
-            }
-        }
     }
 }

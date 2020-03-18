@@ -10,6 +10,7 @@ import providerInfoDownloaderhelper from './provider/provider-info-downloader/pr
 import { MediaType } from '../controller/objects/meta/media-type';
 import MediaTypeComperator from './comperators/media-type-comperator';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+import NewProviderHelper from './provider/new-provider-helper';
 
 export default class PrequelGeneratorHelper {
     private series: Series;
@@ -27,7 +28,7 @@ export default class PrequelGeneratorHelper {
                 try {
                     if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
                         for (const id of localdataProvider.prequelIds) {
-                            return this.createPrequel(localdataProvider, id, new Season(newSNumber ? [newSNumber] : []), mediaType);
+                            return await this.createPrequel(localdataProvider, id, new Season(newSNumber), mediaType);
                         }
 
                     }
@@ -48,11 +49,11 @@ export default class PrequelGeneratorHelper {
         } else if (localdataProvider instanceof InfoProviderLocalData) {
             newProvider = new ProviderLocalDataWithSeasonInfo(new InfoProviderLocalData(id, localdataProvider.provider));
         }
-        const newSeries = new Series();
+        let newSeries = new Series();
         if (newProvider) {
-            const providerResult = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(newSeries, externalProvider);
-            await newSeries.addProviderDatasWithSeasonInfos(providerResult.mainProvider);
-            const mediaTypeComperatorResult = await MediaTypeComperator.comperaMediaType(providerResult.mainProvider.providerLocalData.mediaType, currentMediaType);
+            await newSeries.addProviderDatasWithSeasonInfos(newProvider);
+            newSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(newSeries);
+            const mediaTypeComperatorResult = await MediaTypeComperator.comperaMediaType(await newSeries.getMediaType(), currentMediaType);
             if (mediaTypeComperatorResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
                 return this.generatePrequel(newSeries, season, false, currentMediaType);
             }

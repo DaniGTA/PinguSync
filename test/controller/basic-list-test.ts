@@ -531,7 +531,8 @@ describe('Basic List | Testrun', () => {
                     strictEqual(s1Result.length, 2);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
                     const s1BindedEpisodeResult = await EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
-                    strictEqual(s1BindedEpisodeResult.length, 3);
+                    const relevantResult = s1BindedEpisodeResult.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+                    notStrictEqual(relevantResult, undefined);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
                     const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
                     const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
@@ -546,7 +547,9 @@ describe('Basic List | Testrun', () => {
                     strictEqual(len.length, 2);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 4) {
                     const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode);
-                    strictEqual(result.length, 2);
+                    const relevantResult = result.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+                    notStrictEqual(relevantResult, undefined);
+
                 }
                 logger.warn(episode.episodeNumber + ' S: ' + episode.season?.getSingleSeasonNumberAsNumber());
             }
@@ -661,7 +664,7 @@ describe('Basic List | Testrun', () => {
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
+            strictEqual(epMapping.bindedEpisodeMappings.length, 4);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);
@@ -703,7 +706,8 @@ describe('Basic List | Testrun', () => {
         const epMappings = resultSeries.episodeBindingPools;
         strictEqual(epMappings.length, 14);
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 4);
+            const relevantResult = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+            notStrictEqual(relevantResult, undefined);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);
@@ -746,7 +750,7 @@ describe('Basic List | Testrun', () => {
         const epMappings = resultSeries.episodeBindingPools;
         strictEqual(epMappings.length, 12);
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
+            strictEqual(epMapping.bindedEpisodeMappings.length, 4);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);

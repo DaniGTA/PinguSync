@@ -29,7 +29,7 @@ export default class AniDBProvider extends InfoProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalProvider)> = [MalProvider];
-
+    public requireGetMoreSeriesInfoByNameInternetAccess = false;
     constructor(download: boolean = true) {
         super();
         if (!AniDBProvider.instance) {

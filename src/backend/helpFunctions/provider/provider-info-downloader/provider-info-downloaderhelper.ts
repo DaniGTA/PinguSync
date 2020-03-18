@@ -1,3 +1,4 @@
+import ExternalInformationProvider from '../../../api/provider/external-information-provider';
 import ExternalProvider from '../../../api/provider/external-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import MainListManager from '../../../controller/main-list-manager/main-list-manager';
@@ -52,7 +53,7 @@ export default new class ProviderInfoDownloadHelper {
     }
 
     // tslint:disable-next-line: max-line-length
-    public async downloadProviderSeriesInfo(series: Series, provider: ExternalProvider): Promise<MultiProviderResult> {
+    public async downloadProviderSeriesInfo(series: Series, provider: ExternalInformationProvider): Promise<MultiProviderResult> {
         const requestId = StringHelper.randomString(5);
         if (await provider.isProviderAvailable()) {
             const allLocalProviders = series.getAllProviderLocalDatas();
@@ -71,7 +72,7 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('[' + requestId + ']' + `[${provider.providerName}] Provider is not available!`);
     }
 
-    public async downloadProviderSeriesInfoWithoutId(series: Series, provider: ExternalProvider, requestId?: string): Promise<MultiProviderResult> {
+    public async downloadProviderSeriesInfoWithoutId(series: Series, provider: ExternalInformationProvider, requestId?: string): Promise<MultiProviderResult> {
         const seriesMediaType = await series.getMediaType();
         let result: MultiProviderResult | undefined;
         if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
@@ -91,19 +92,19 @@ export default new class ProviderInfoDownloadHelper {
         }
     }
 
-    public async getProviderSeriesInfoByRelation(series: Series, provider: ExternalProvider): Promise<MultiProviderResult | undefined> {
+    public async getProviderSeriesInfoByRelation(series: Series, provider: ExternalInformationProvider): Promise<MultiProviderResult | undefined> {
         try {
             const linkResult = await this.linkProviderDataFromRelations(series, provider);
             return new MultiProviderResult(linkResult);
         } catch (err) { logger.debug(err); }
     }
 
-    public async getProviderSeriesInfoBySeriesName(series: Series, provider: ExternalProvider, requestId?: string): Promise<MultiProviderResult | undefined> {
+    public async getProviderSeriesInfoBySeriesName(series: Series, provider: ExternalInformationProvider, requestId?: string): Promise<MultiProviderResult | undefined> {
         const names = await this.getNamesSortedBySearchAbleScore(series);
         return this.downloadProviderSeriesInfoBySeriesName(names, series, provider, requestId);
     }
 
-    public async downloadProviderSeriesInfoBySeriesName(names: Name[], series: Series, provider: ExternalProvider, requestId?: string): Promise<MultiProviderResult | undefined> {
+    public async downloadProviderSeriesInfoBySeriesName(names: Name[], series: Series, provider: ExternalInformationProvider, requestId?: string): Promise<MultiProviderResult | undefined> {
         let trys = 0;
         const alreadySearchedNames: string[] = [];
         for (const name of names) {
@@ -133,12 +134,14 @@ export default new class ProviderInfoDownloadHelper {
         }
     }
 
-    private async getIdRequestResult(provider: ExternalProvider, providerLocalData: ProviderLocalData): Promise<MultiProviderResult> {
-        await provider.waitUntilItCanPerfomNextRequest();
+    private async getIdRequestResult(provider: ExternalInformationProvider, providerLocalData: ProviderLocalData): Promise<MultiProviderResult> {
+        if (provider.requireGetFullByIdInternetAccess) {
+            await provider.waitUntilItCanPerfomNextRequest();
+        }
         return provider.getFullInfoById(providerLocalData);
     }
 
-    private getProviderLocalForIdRequest(targetProvider: ExternalProvider, allCurrentProviders: ProviderLocalData[]): ProviderLocalData | undefined {
+    private getProviderLocalForIdRequest(targetProvider: ExternalInformationProvider, allCurrentProviders: ProviderLocalData[]): ProviderLocalData | undefined {
         for (const currentProvider of allCurrentProviders) {
             if (currentProvider.provider === targetProvider.providerName) {
                 return currentProvider;
@@ -155,7 +158,7 @@ export default new class ProviderInfoDownloadHelper {
         }
     }
 
-    private async linkProviderDataFromRelations(series: Series, provider: ExternalProvider): Promise<ProviderLocalDataWithSeasonInfo> {
+    private async linkProviderDataFromRelations(series: Series, provider: ExternalInformationProvider): Promise<ProviderLocalDataWithSeasonInfo> {
         if (!provider.hasUniqueIdForSeasons) {
             const relations = await series.getAllRelations(await MainListManager.getMainList());
             if (relations.length !== 0) {
@@ -226,38 +229,13 @@ export default new class ProviderInfoDownloadHelper {
      * @param name Searched name.
      * @param provider In this provider the search will be performed.
      */
-    private async getProviderLocalDataByName(series: Series, name: Name, provider: ExternalProvider, trys: number = 0): Promise<MultiProviderResult> {
-        const resultContainer: SearchResultRatingContainer[] = [];
-        let searchResult: MultiProviderResult[] = [];
+    private async getProviderLocalDataByName(series: Series, name: Name, provider: ExternalInformationProvider, trys: number = 0): Promise<MultiProviderResult> {
         const season = await series.getSeason();
         if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumberAsNumber() === 1 || provider.hasUniqueIdForSeasons) {
             logger.log('info', '[' + provider.providerName + '] Request (Search series info by name) with value: ' + name.name + ' | S' + season.seasonNumbers);
-            await provider.waitUntilItCanPerfomNextRequest();
-            const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, ProviderInfoDownloadHelper.REQUEST_TIMEOUT_IN_MS));
-            searchResult = await Promise.race([maxRequestTime, provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumberAsNumber())]);
-
-            if (searchResult && searchResult.length !== 0) {
-                logger.debug('[' + provider.providerName + '] Results: ' + searchResult.length);
-                for (const result of searchResult) {
-                    const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
-                    if (mpcr.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
-                        resultContainer.push(new SearchResultRatingContainer(mpcr, result));
-                    }
-                }
-                if (resultContainer.length !== 0) {
-                    const bestResult = this.getBestResultOutOFSearchResultRatingContainer(resultContainer);
-                    if (bestResult) {
-                        logger.log('info', '[' + provider.providerName + '] Request success 🎉');
-                        const id = bestResult.result.mainProvider.providerLocalData.id.toString();
-                        const mediaType = await series.getMediaType();
-                        const providerName = provider.providerName;
-                        ProviderSearchResultManager.addNewSearchResult(searchResult.length, 'requestId', trys, providerName, name, true, mediaType, id);
-                        return bestResult.result;
-                    }
-
-                }
-            } else {
-                logger.warn('[' + provider.providerName + '] No results to name: ' + name.name);
+            const result = await this.getMoreSeriesInfoByNameResults(series, name, provider, season, trys);
+            if (result) {
+                return result;
             }
         } else {
             logger.warn('[' + provider.providerName + '] Season number problem. On name: ' + name.name + ' SeasonNumber: ' + season.seasonNumbers);
@@ -265,7 +243,38 @@ export default new class ProviderInfoDownloadHelper {
         throw new Error('[' + provider.providerName + '] [getSeriesByName]: No result with the name: ' + name.name);
     }
 
-    private getBestResultOutOFSearchResultRatingContainer(searchResultRatingContainer: SearchResultRatingContainer[]): SearchResultRatingContainer | undefined {
+    private async getMoreSeriesInfoByNameResults(series: Series, name: Name, provider: ExternalInformationProvider, season: Season, trys: number = 0) {
+        let searchResult: MultiProviderResult[] = [];
+        if (provider.requireGetMoreSeriesInfoByNameInternetAccess) {
+            await provider.waitUntilItCanPerfomNextRequest();
+        }
+        const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, ProviderInfoDownloadHelper.REQUEST_TIMEOUT_IN_MS));
+        searchResult = await Promise.race([maxRequestTime, provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumberAsNumber())]);
+        return this.processResultsOfGetMoreSeriesInfoByName(searchResult, provider, series, trys);
+    }
+
+    private async processResultsOfGetMoreSeriesInfoByName(searchResult: MultiProviderResult[], provider: ExternalInformationProvider, series: Series, trys: number = 0) {
+        const resultContainer: SearchResultRatingContainer[] = [];
+        if (searchResult && searchResult.length !== 0) {
+            logger.debug('[' + provider.providerName + '] Results: ' + searchResult.length);
+            for (const result of searchResult) {
+                const mpcr = await MultiProviderComperator.compareMultiProviderWithSeries(series, result);
+                if (mpcr.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
+                    resultContainer.push(new SearchResultRatingContainer(mpcr, result));
+                }
+            }
+            if (resultContainer.length !== 0) {
+                const bestResult = this.getBestResultOutOfSearchResultRatingContainer(resultContainer);
+                if (bestResult) {
+                    logger.log('info', '[' + provider.providerName + '] Request success 🎉');
+                    return bestResult.result;
+                }
+
+            }
+        }
+    }
+
+    private getBestResultOutOfSearchResultRatingContainer(searchResultRatingContainer: SearchResultRatingContainer[]): SearchResultRatingContainer | undefined {
         let bestSearchResult: SearchResultRatingContainer | undefined;
 
         searchResultRatingContainer = this.sortBestResultRatingContainer(searchResultRatingContainer);
