@@ -1,14 +1,14 @@
 
 
 import { strictEqual } from 'assert';
-import TVMazeProvider from '../../../src/backend/api/information-providers/tvmaze/tvmaze-provider';
-import Name from '../../../src/backend/controller/objects/meta/name';
-import Series from '../../../src/backend/controller/objects/series';
-import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
-import TestProvider from '../../controller/objects/testClass/testProvider';
+import TVMazeProvider from '../../../../src/backend/api/information-providers/tvmaze/tvmaze-provider';
+import Name from '../../../../src/backend/controller/objects/meta/name';
+import Series from '../../../../src/backend/controller/objects/series';
+import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
+import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestProvider from '../../../controller/objects/testClass/testProvider';
 
 // tslint:disable: no-string-literal
 describe('Provider: TVMaze | Test runs', () => {

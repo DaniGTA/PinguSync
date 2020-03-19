@@ -11,6 +11,7 @@ import EpisodeStatsHelper from '../episode-helper/episode-stats-helper';
 import ProviderHelper from './provider-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import ProviderListHelper from './provider-list-helper';
+import ExternalInformationProvider from '../../api/provider/external-information-provider';
 
 export default class ProviderInfoHelper {
     public static async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus, seasonAware: boolean): Promise<ProviderLocalDataWithSeasonInfo[]> {
@@ -50,10 +51,10 @@ export default class ProviderInfoHelper {
     }
 
 
-    private static async getInfoProviderThatNeedUpdates(currentProviders: ProviderLocalData[]): Promise<ExternalProvider[]> {
+    private static async getInfoProviderThatNeedUpdates(currentProviders: ProviderLocalData[]): Promise<ExternalInformationProvider[]> {
         const allInfoProviders = ProviderList.getInfoProviderList();
         const allRelevantListProviders = await ProviderListHelper.getAllRelevantListProviders();
-        const infoProviderThatNeedUpdate: ExternalProvider[] = [];
+        const infoProviderThatNeedUpdate: ExternalInformationProvider[] = [];
         if (this.needInfoProviders(currentProviders)) {
             for (const provider of allInfoProviders) {
                 let isProviderAlreadyUpToDate = false;

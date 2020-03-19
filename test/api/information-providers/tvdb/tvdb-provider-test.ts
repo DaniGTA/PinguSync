@@ -1,5 +1,5 @@
 import { notStrictEqual } from 'assert';
-import TVDBProvider from '../../../src/backend/api/information-providers/tvdb/tvdb-provider';
+import TVDBProvider from '../../../../src/backend/api/information-providers/tvdb/tvdb-provider';
 describe('Provider: TVDB | Test runs', () => {
     test('should get access key', async () => {
         const x = new TVDBProvider();

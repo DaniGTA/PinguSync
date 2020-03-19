@@ -1,13 +1,14 @@
 
 import { MediaType } from '../../controller/objects/meta/media-type';
 import timeHelper from '../../helpFunctions/time-helper';
+import ExternalInformationProvider from './external-information-provider';
 
 export default abstract class ExternalProvider {
     public abstract providerName: string;
 
     public abstract supportedMediaTypes: MediaType[];
-    public abstract supportedOtherProvider: Array<(new () => ExternalProvider)>;
-    public abstract potentialSubProviders: Array<(new () => ExternalProvider)>;
+    public abstract supportedOtherProvider: Array<(new () => ExternalInformationProvider)>;
+    public abstract potentialSubProviders: Array<(new () => ExternalInformationProvider)>;
     public abstract version: number;
 
     protected requestRateLimitInMs = 400;

@@ -1,3 +1,4 @@
+import ExternalInformationProvider from '../../../../src/backend/api/provider/external-information-provider';
 import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { UserData } from '../../../../src/backend/api/user-data';
@@ -8,8 +9,8 @@ import { ListProviderLocalData } from '../../../../src/backend/controller/provid
 
 
 export default class TestProvider extends ListProvider {
-    public potentialSubProviders: Array<new () => import('../../../../src/backend/api/provider/external-provider').default> = [];
-    public supportedOtherProvider: Array<new () => import('../../../../src/backend/api/provider/external-provider').default> = [];
+    public potentialSubProviders: Array<new () => ExternalInformationProvider> = [];
+    public supportedOtherProvider: Array<new () => ExternalInformationProvider> = [];
 
     public version = 1;
     public hasUniqueIdForSeasons = false;

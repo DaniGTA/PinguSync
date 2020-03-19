@@ -1,14 +1,14 @@
 import { notStrictEqual, strictEqual } from 'assert';
-import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
-import Name from '../../../src/backend/controller/objects/meta/name';
-import Series from '../../../src/backend/controller/objects/series';
-import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
-import TestProvider from '../../controller/objects/testClass/testProvider';
+import TraktProvider from '../../../../src/backend/api/information-providers/trakt/trakt-provider';
+import MainListManager from '../../../../src/backend/controller/main-list-manager/main-list-manager';
+import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
+import Name from '../../../../src/backend/controller/objects/meta/name';
+import Series from '../../../../src/backend/controller/objects/series';
+import ProviderDataListManager from '../../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
+import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestProvider from '../../../controller/objects/testClass/testProvider';
 // tslint:disable: no-string-literal
 describe('Provider: Trakt | Tests runs', () => {
     const traktProvider = new TraktProvider();

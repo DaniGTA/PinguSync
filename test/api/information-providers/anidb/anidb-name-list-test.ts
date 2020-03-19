@@ -1,19 +1,19 @@
 
 import { deepEqual, fail } from 'assert';
-import AniDBHelper from '../../../src/backend/api/information-providers/anidb/anidb-helper';
-import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
-import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
-import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
-import Name from '../../../src/backend/controller/objects/meta/name';
-import { NameType } from '../../../src/backend/controller/objects/meta/name-type';
-import Season from '../../../src/backend/controller/objects/meta/season';
-import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
-import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
-import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
-import logger from '../../../src/backend/logger/logger';
+import AniDBHelper from '../../../../src/backend/api/information-providers/anidb/anidb-helper';
+import AniDBProvider from '../../../../src/backend/api/information-providers/anidb/anidb-provider';
+import AniListProvider from '../../../../src/backend/api/information-providers/anilist/anilist-provider';
+import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
+import Name from '../../../../src/backend/controller/objects/meta/name';
+import { NameType } from '../../../../src/backend/controller/objects/meta/name-type';
+import Season from '../../../../src/backend/controller/objects/meta/season';
+import Series, { WatchStatus } from '../../../../src/backend/controller/objects/series';
+import ProviderDataListManager from '../../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import { ProviderInfoStatus } from '../../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
+import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import logger from '../../../../src/backend/logger/logger';
 
 
 // tslint:disable: no-string-literal

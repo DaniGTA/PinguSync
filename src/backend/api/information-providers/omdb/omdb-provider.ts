@@ -4,7 +4,7 @@ import Series from '../../../controller/objects/series';
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
-import ExternalProvider from '../../provider/external-provider';
+import ExternalInformationProvider from '../../provider/external-information-provider';
 import InfoProvider from '../../provider/info-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
@@ -18,8 +18,8 @@ export default class OMDbProvider extends InfoProvider {
     public providerName: string = 'omdb';
     public hasUniqueIdForSeasons: boolean = false;
     public supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
+    public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
     public version: number = 1;
     public apikey = '728e1e03';
     constructor() {

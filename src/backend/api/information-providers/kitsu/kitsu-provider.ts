@@ -7,12 +7,13 @@ import { InfoProviderLocalData } from '../../../controller/provider-manager/loca
 import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../../logger/logger';
-import AniDBProvider from '../anidb/anidb-provider';
-import AniListProvider from '../anilist/anilist-provider';
-import MalProvider from '../mal/mal-provider';
+import ExternalInformationProvider from '../../provider/external-information-provider';
 import ExternalProvider from '../../provider/external-provider';
 import ListProvider from '../../provider/list-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
+import AniDBProvider from '../anidb/anidb-provider';
+import AniListProvider from '../anilist/anilist-provider';
+import MalProvider from '../mal/mal-provider';
 import TraktProvider from '../trakt/trakt-provider';
 import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
@@ -30,8 +31,8 @@ export default class KitsuProvider extends ListProvider {
     private static instance: KitsuProvider;
     public version = 2;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [MalProvider, TraktProvider, AniDBProvider, AniListProvider];
+    public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [MalProvider, TraktProvider, AniDBProvider, AniListProvider];
     public providerName: string = 'Kitsu';
     public hasOAuthCode: boolean = true;
     public hasUniqueIdForSeasons = true;

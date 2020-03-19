@@ -1,0 +1,43 @@
+{
+    "data": [
+        {
+            "sources": [
+                "https://anidb.net/anime/4563",
+                "https://anilist.co/anime/1535",
+                "https://kitsu.io/anime/1376",
+                "https://myanimelist.net/anime/1535",
+                "https://notify.moe/anime/0-A-5Fimg"
+            ],
+            "title": "Death Note",
+            "type": "TV",
+            "episodes": 37,
+            "status": "FINISHED",
+            "picture": "https://cdn.myanimelist.net/images/anime/9/9453.jpg",
+            "thumbnail": "https://cdn.myanimelist.net/images/anime/9/9453t.jpg",
+            "synonyms": [
+                "Caderno da Morte",
+                "DEATH NOTE",
+                "DN",
+                "Death Note",
+                "Death Note - A hal\u00e1llista",
+                "Death Note - Carnetul mor\u0163ii",
+                "Death Note - Z\u00e1pisn\u00edk smrti",
+                "Mirties U\u017era\u0161ai",
+                "Notatnik \u015bmierci",
+                "Notes \u015amierci",
+                "Quaderno della Morte",
+                "Sveska Smrti",
+                "\u00d6l\u00fcm Defteri",
+                "\u03a4\u03b5\u03c4\u03c1\u03ac\u03b4\u03b9\u03bf \u0398\u03b1\u03bd\u03ac\u03c4\u03bf\u03c5"
+            ],
+            "relations": [
+                "https://anidb.net/anime/8146",
+                "https://anidb.net/anime/8147",
+                "https://anilist.co/anime/2994",
+                "https://kitsu.io/anime/2707",
+                "https://myanimelist.net/anime/2994",
+                "https://notify.moe/anime/DBBU5Kimg"
+            ]
+        }
+    ]
+}

@@ -1,14 +1,15 @@
 import { createHash } from 'crypto';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'fs';
+import ExternalInformationProvider from '../src/backend/api/provider/external-information-provider';
 import ExternalProvider from '../src/backend/api/provider/external-provider';
 import MultiProviderResult from '../src/backend/api/provider/multi-provider-result';
+import Season from '../src/backend/controller/objects/meta/season';
+import ProviderDataListLoader from '../src/backend/controller/provider-data-list-manager/provider-data-list-loader';
 import ProviderLocalData from '../src/backend/controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../src/backend/controller/provider-manager/provider-list';
+import ProviderLoader from '../src/backend/controller/provider-manager/provider-loader';
 import ProviderNameManager from '../src/backend/controller/provider-manager/provider-name-manager';
 import logger from '../src/backend/logger/logger';
-import ProviderDataListLoader from '../src/backend/controller/provider-data-list-manager/provider-data-list-loader';
-import ProviderLoader from '../src/backend/controller/provider-manager/provider-loader';
-import Season from '../src/backend/controller/objects/meta/season';
 
 export default class ResponseHelper {
 
@@ -30,7 +31,7 @@ export default class ResponseHelper {
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
     }
-    private static mockGetByNameRequest(provider: (new () => ExternalProvider)) {
+    private static mockGetByNameRequest(provider: (new () => ExternalInformationProvider)) {
         const spyGetInfoByName = jest.spyOn(provider.prototype, 'getMoreSeriesInfoByName');
         const spyGetInfoByNameMock = async (searchTitle: string, season: number): Promise<MultiProviderResult[]> => {
             const requestId = this.generateRequestId(provider, (searchTitle + season));
@@ -63,7 +64,7 @@ export default class ResponseHelper {
         spyGetInfoByName.mockImplementation(spyGetInfoByNameMock as unknown as any);
     }
 
-    private static mockGetByIdRequest(provider: (new () => ExternalProvider)) {
+    private static mockGetByIdRequest(provider: (new () => ExternalInformationProvider)) {
         const spyGetInfoById = jest.spyOn(provider.prototype, 'getFullInfoById').mockImplementation(jest.fn());
         const spyGetInfoByIdMock = jest.fn().mockImplementation(async (providerLocalData: ProviderLocalData): Promise<MultiProviderResult> => {
             const requestId = this.generateRequestId(provider, (providerLocalData.provider + providerLocalData.id));

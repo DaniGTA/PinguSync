@@ -54,7 +54,7 @@ export default class NewProviderHelper {
         const providerThatSupportOfflineNameSearch = [];
         const allInfoProviders = ProviderList.getInfoProviderList();
         for (const provider of allInfoProviders) {
-            if (!provider.requireGetMoreSeriesInfoByNameInternetAccess) {
+            if (!provider.requireInternetAccessGetMoreSeriesInfoByName) {
                 providerThatSupportOfflineNameSearch.push(provider);
             }
         }

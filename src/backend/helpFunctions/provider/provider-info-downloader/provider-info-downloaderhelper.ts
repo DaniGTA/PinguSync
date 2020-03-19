@@ -135,7 +135,7 @@ export default new class ProviderInfoDownloadHelper {
     }
 
     private async getIdRequestResult(provider: ExternalInformationProvider, providerLocalData: ProviderLocalData): Promise<MultiProviderResult> {
-        if (provider.requireGetFullByIdInternetAccess) {
+        if (provider.requireInternetAccessForGetFullById) {
             await provider.waitUntilItCanPerfomNextRequest();
         }
         return provider.getFullInfoById(providerLocalData);
@@ -245,7 +245,7 @@ export default new class ProviderInfoDownloadHelper {
 
     private async getMoreSeriesInfoByNameResults(series: Series, name: Name, provider: ExternalInformationProvider, season: Season, trys: number = 0) {
         let searchResult: MultiProviderResult[] = [];
-        if (provider.requireGetMoreSeriesInfoByNameInternetAccess) {
+        if (provider.requireInternetAccessGetMoreSeriesInfoByName) {
             await provider.waitUntilItCanPerfomNextRequest();
         }
         const maxRequestTime = new Promise<MultiProviderResult[]>((resolve) => setTimeout(() => { logger.error('[Request] TIMEOUT'); resolve([]); }, ProviderInfoDownloadHelper.REQUEST_TIMEOUT_IN_MS));

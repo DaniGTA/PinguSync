@@ -1,10 +1,10 @@
-import ExternalProvider from './external-provider';
 import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ExternalProvider from './external-provider';
 import MultiProviderResult from './multi-provider-result';
 
 export default abstract class ExternalInformationProvider extends ExternalProvider {
-    public requireGetMoreSeriesInfoByNameInternetAccess = true;
-    public requireGetFullByIdInternetAccess = true;
+    public requireInternetAccessGetMoreSeriesInfoByName = true;
+    public requireInternetAccessForGetFullById = true;
     public hasEpisodeTitleOnFullInfo = false;
     /**
      * If a series name should contain any letters that are not in the basic latin table it will not try to perform a name search.

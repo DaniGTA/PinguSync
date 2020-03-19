@@ -1,10 +1,11 @@
+import ExternalInformationProvider from '../../api/provider/external-information-provider';
+import ExternalMappingProvider from '../../api/provider/external-mapping-provider';
 import ExternalProvider from '../../api/provider/external-provider';
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
 import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import ProviderLocalData from './local-data/interfaces/provider-local-data';
 import ProviderLoader from './provider-loader';
-import ExternalInformationProvider from '../../api/provider/external-information-provider';
 
 export default class ProviderList extends ProviderLoader {
     /**
@@ -30,11 +31,28 @@ export default class ProviderList extends ProviderLoader {
             return this.loadedInfoProvider;
         }
     }
+
+    /**
+     * Get all External Providers that can Support
+     */
+    public static getMappingProviderList(): ExternalMappingProvider[] {
+        if (!this.loadedMappingProvider) {
+            this.loadedMappingProvider = this.loadMappingProviderList();
+            return this.loadedMappingProvider;
+        } else {
+            return this.loadedMappingProvider;
+        }
+    }
+
     /**
      * Get all External Providers that have a supported api.
      */
     public static getAllProviderLists(): ExternalProvider[] {
-        return [...this.getInfoProviderList(), ...this.getListProviderList()];
+        return [
+            ...this.getInfoProviderList(),
+            ...this.getListProviderList(),
+            ...this.getMappingProviderList(),
+        ];
     }
 
     public static getAllExternalInformationProvider(): ExternalInformationProvider[] {
@@ -65,5 +83,32 @@ export default class ProviderList extends ProviderLoader {
                 return provider;
             }
         }
+    }
+
+    /**
+     * Get the provider name from a mapped list.
+     * @param providerClass class object.
+     */
+    public static getProviderNameByClass(providerClass: (new () => ExternalProvider)): string {
+        const result = this.providerNameList.get(providerClass);
+        if (result) {
+            return result;
+        }
+        throw new
+            Error('Failed to get provider name by class for provider: ' + providerClass.name);
+    }
+
+    /**
+     * Get a active instance from the loaded list with the class object.
+     * @param providerClass class object.
+     */
+    public static getProviderInstanceByClass(providerClass: (new () => ExternalProvider)): ExternalProvider {
+        const providerName = this.getProviderNameByClass(providerClass);
+        for (const providerInstance of this.getAllProviderLists()) {
+            if (providerInstance.providerName === providerName) {
+                return providerInstance;
+            }
+        }
+        throw new Error('Failed to get provider instance by class for provider: ' + providerClass.name + ' (' + providerName + ')');
     }
 }

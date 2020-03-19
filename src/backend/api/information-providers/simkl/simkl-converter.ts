@@ -17,9 +17,9 @@ import { ListProviderLocalData } from '../../../controller/provider-manager/loca
 import { StreamingProviderLocalData } from '../../../controller/provider-manager/local-data/streaming-provider-local-data';
 import ProviderLocalDataWithSeasonInfo from '../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../../logger/logger';
+import MultiProviderResult from '../../provider/multi-provider-result';
 import AniDBProvider from '../anidb/anidb-provider';
 import MalProvider from '../mal/mal-provider';
-import MultiProviderResult from '../../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { ISimklEpisodeInfo } from './objects/simklEpisodeInfo';
 import { ISimklFullInfoAnimeResponse, ISimklFullInfoIDS } from './objects/simklFullInfoAnimeResponse';

@@ -1,5 +1,4 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import request from 'request';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import WatchProgress from '../../../controller/objects/meta/watch-progress';
 import Series from '../../../controller/objects/series';
@@ -7,11 +6,11 @@ import { InfoProviderLocalData } from '../../../controller/provider-manager/loca
 import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
-import AniDBProvider from '../anidb/anidb-provider';
-import MalProvider from '../mal/mal-provider';
-import ExternalProvider from '../../provider/external-provider';
+import ExternalInformationProvider from '../../provider/external-information-provider';
 import ListProvider from '../../provider/list-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
+import AniDBProvider from '../anidb/anidb-provider';
+import MalProvider from '../mal/mal-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import CodeResponse from './objects/codeResponse';
 import { ISimklEpisodeInfo } from './objects/simklEpisodeInfo';
@@ -28,8 +27,8 @@ export default class SimklProvider extends ListProvider {
     public static instance: SimklProvider;
     public userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [TVDBProvider, AniDBProvider, MalProvider];
+    public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [TVDBProvider, AniDBProvider, MalProvider];
     public providerName = 'Simkl';
     public version = 2;
     public hasOAuthCode = true;

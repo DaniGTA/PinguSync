@@ -9,6 +9,7 @@ import { ListProviderLocalData } from '../../../controller/provider-manager/loca
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import timeHelper from '../../../helpFunctions/time-helper';
 import logger from '../../../logger/logger';
+import ExternalInformationProvider from '../../provider/external-information-provider';
 import ExternalProvider from '../../provider/external-provider';
 import ListProvider from '../../provider/list-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
@@ -41,8 +42,8 @@ export default class AniListProvider extends ListProvider {
     public hasOAuthCode = true;
     public supportOnlyBasicLatinForNameSearch = false;
     public supportedMediaTypes: meta.MediaType[] = [meta.MediaType.MOVIE, meta.MediaType.ANIME, meta.MediaType.SPECIAL];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
+    public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
     public userData: AniListUserData;
     private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';
     private clientId = '389';

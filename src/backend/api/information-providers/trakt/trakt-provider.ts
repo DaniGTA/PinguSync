@@ -12,7 +12,7 @@ import { InfoProviderLocalData } from '../../../controller/provider-manager/loca
 import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
-import ExternalProvider from '../../provider/external-provider';
+import ExternalInformationProvider from '../../provider/external-information-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { FullShowInfo } from './objects/fullShowInfo';
@@ -30,8 +30,8 @@ export default class TraktProvider extends ListProvider {
     }
     private static instance: TraktProvider;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [TVDBProvider];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [TVDBProvider];
+    public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [TVDBProvider];
+    public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [TVDBProvider];
     public hasUniqueIdForSeasons: boolean = false;
     public hasEpisodeTitleOnFullInfo = true;
     public providerName: string = 'Trakt';

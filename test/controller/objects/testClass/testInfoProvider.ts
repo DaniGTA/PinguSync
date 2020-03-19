@@ -1,3 +1,4 @@
+import ExternalInformationProvider from '../../../../src/backend/api/provider/external-information-provider';
 import ExternalProvider from '../../../../src/backend/api/provider/external-provider';
 import InfoProvider from '../../../../src/backend/api/provider/info-provider';
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
@@ -10,8 +11,8 @@ import { ListProviderLocalData } from '../../../../src/backend/controller/provid
 
 export default class TestInfoProvider extends InfoProvider {
     public isOffline: boolean = false;
-    public potentialSubProviders: Array<new () => ExternalProvider> = [];
-    public supportedOtherProvider: Array<new () => ExternalProvider> = [];
+    public potentialSubProviders: Array<new () => ExternalInformationProvider> = [];
+    public supportedOtherProvider: Array<new () => ExternalInformationProvider> = [];
 
     public version = 1;
     public hasUniqueIdForSeasons = false;

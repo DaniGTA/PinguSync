@@ -4,7 +4,7 @@ import { InfoProviderLocalData } from '../../../controller/provider-manager/loca
 import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
-import ExternalProvider from '../../provider/external-provider';
+import ExternalInformationProvider from '../../provider/external-information-provider';
 import InfoProvider from '../../provider/info-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import { Search, Show } from './models/tvmaze-model';
@@ -17,8 +17,8 @@ export default class TVMazeProvider extends InfoProvider {
     public providerName: string = 'tvmaze';
     public hasUniqueIdForSeasons: boolean = false;
     public supportedMediaTypes: MediaType[] = [MediaType.SERIES, MediaType.ANIME];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [];
+    public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
     public version: number = 1;
     constructor() {
         super();

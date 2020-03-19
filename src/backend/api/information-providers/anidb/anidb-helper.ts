@@ -1,9 +1,9 @@
-import AniDBNameManager from './anidb-name-manager';
-import { Anime, Title } from './objects/anidbNameListXML';
 import Name from '../../../controller/objects/meta/name';
+import TitleCheckHelper from '../../../helpFunctions/name-helper/title-check-helper';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import AniDBConverter from './anidb-converter';
-import TitleCheckHelper from '../../../helpFunctions/name-helper/title-check-helper';
+import AniDBNameManager from './anidb-name-manager';
+import { Anime, Title } from './objects/anidbNameListXML';
 
 export default class AniDBHelper {
     public static anidbNameManager: AniDBNameManager = new AniDBNameManager();

@@ -8,14 +8,14 @@ import { InfoProviderLocalData } from '../../../controller/provider-manager/loca
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import MultiThreadingHelper from '../../../helpFunctions/multi-threading-helper';
 import logger from '../../../logger/logger';
-import MalProvider from '../mal/mal-provider';
-import ExternalProvider from '../../provider/external-provider';
+import ExternalInformationProvider from '../../provider/external-information-provider';
 import InfoProvider from '../../provider/info-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
+import MalProvider from '../mal/mal-provider';
 import AniDBConverter from './anidb-converter';
 import AniDBHelper from './anidb-helper';
 import { AniDBAnimeFullInfo } from './objects/anidbFullInfoXML';
-import AniDBNameListXML, { Anime, Title } from './objects/anidbNameListXML';
+import AniDBNameListXML, { Anime } from './objects/anidbNameListXML';
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
 
@@ -27,9 +27,9 @@ export default class AniDBProvider extends InfoProvider {
     public hasEpisodeTitleOnFullInfo = true;
     public supportOnlyBasicLatinForNameSearch = false;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
-    public supportedOtherProvider: Array<(new () => ExternalProvider)> = [];
-    public potentialSubProviders: Array<(new () => ExternalProvider)> = [MalProvider];
-    public requireGetMoreSeriesInfoByNameInternetAccess = false;
+    public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
+    public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [MalProvider];
+    public requireInternetAccessGetMoreSeriesInfoByName = false;
     constructor(download: boolean = true) {
         super();
         if (!AniDBProvider.instance) {

@@ -1,15 +1,15 @@
 import { strictEqual } from 'assert';
-import KitsuProvider from '../../../src/backend/api/information-providers/kitsu/kitsu-provider';
-import ExternalProvider from '../../../src/backend/api/provider/external-provider';
-import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
-import Name from '../../../src/backend/controller/objects/meta/name';
-import Season from '../../../src/backend/controller/objects/meta/season';
-import Series from '../../../src/backend/controller/objects/series';
-import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import providerInfoDownloaderhelper from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
-import TestProvider from '../../controller/objects/testClass/testProvider';
+import KitsuProvider from '../../../../src/backend/api/information-providers/kitsu/kitsu-provider';
+import ExternalProvider from '../../../../src/backend/api/provider/external-provider';
+import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
+import Name from '../../../../src/backend/controller/objects/meta/name';
+import Season from '../../../../src/backend/controller/objects/meta/season';
+import Series from '../../../../src/backend/controller/objects/series';
+import ProviderDataListManager from '../../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
+import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import TestProvider from '../../../controller/objects/testClass/testProvider';
 
 // tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {

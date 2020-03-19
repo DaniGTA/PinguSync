@@ -23,6 +23,7 @@
     "@types/sinon": "^7.5.2",
     "core-js": "^3.6.4",
     "kitsu": "^8.1.1",
+    "moment": "^2.24.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.4",
     "net": "^1.0.2",

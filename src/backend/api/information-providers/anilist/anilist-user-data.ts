@@ -2,7 +2,6 @@ import { IViewer } from './graphql/viewer';
 
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
-import Series from '../../../controller/objects/series';
 import PathHelper from '../../../helpFunctions/path-helper';
 import logger from '../../../logger/logger';
 import MultiProviderResult from '../../provider/multi-provider-result';
