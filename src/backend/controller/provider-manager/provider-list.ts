@@ -71,7 +71,7 @@ export default class ProviderList extends ProviderLoader {
             providerName = localdata.provider;
         }
         const result = this.getExternalProviderInstanceByProviderName(providerName);
-        if (result) {
+        if (result !== undefined) {
             return result as ExternalInformationProvider;
         }
         throw new Error('[ProviderList] NoProviderFound: ' + providerName);
@@ -90,8 +90,11 @@ export default class ProviderList extends ProviderLoader {
      * @param providerClass class object.
      */
     public static getProviderNameByClass(providerClass: (new () => ExternalProvider)): string {
+        if (!this.loadedInfoProvider || !this.loadedListProvider || !this.loadedMappingProvider) {
+            this.getAllProviderLists();
+        }
         const result = this.providerNameList.get(providerClass);
-        if (result) {
+        if (result !== undefined) {
             return result;
         }
         throw new
@@ -102,11 +105,11 @@ export default class ProviderList extends ProviderLoader {
      * Get a active instance from the loaded list with the class object.
      * @param providerClass class object.
      */
-    public static getProviderInstanceByClass(providerClass: (new () => ExternalProvider)): ExternalProvider {
+    public static getProviderInstanceByClass<T extends ExternalProvider>(providerClass: (new () => T)): T {
         const providerName = this.getProviderNameByClass(providerClass);
         for (const providerInstance of this.getAllProviderLists()) {
             if (providerInstance.providerName === providerName) {
-                return providerInstance;
+                return providerInstance as T;
             }
         }
         throw new Error('Failed to get provider instance by class for provider: ' + providerClass.name + ' (' + providerName + ')');

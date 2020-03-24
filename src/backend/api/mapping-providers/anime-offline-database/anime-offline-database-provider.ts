@@ -8,8 +8,8 @@ import MalProvider from '../../information-providers/mal/mal-provider';
 import ExternalInformationProvider from '../../provider/external-information-provider';
 import ExternalMappingProvider from '../../provider/external-mapping-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
-import AnimeOfflineDatabaseManager from './anime-offline-database-manager';
 import AnimeOfflineDatabaseConverter from './anime-offline-database-converter';
+import AnimeOfflineDatabaseManager from './anime-offline-database-manager';
 
 export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvider {
     public providerName: string = 'AnimeOfflineDatabase';
@@ -21,7 +21,7 @@ export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvide
 
     public async getMappings(provider: ProviderLocalData): Promise<MultiProviderResult> {
         const providerInstance = ProviderList.getExternalProviderInstance(provider);
-        const databaseEntry = AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(provider);
+        const databaseEntry = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(provider);
         if (databaseEntry) {
             const result = AnimeOfflineDatabaseConverter.convertDatabaseEntryToMultiProviderResult(databaseEntry, providerInstance);
             if (result) {

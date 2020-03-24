@@ -528,10 +528,11 @@ describe('Basic List | Testrun', () => {
             for (const episode of provider.detailEpisodeInfo) {
                 if (episode.season?.getSingleSeasonNumberAsNumber() === 1) {
                     const s1Result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode);
-                    strictEqual(s1Result.length, 2);
+                    const relevantResult = s1Result.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+                    notStrictEqual(relevantResult, undefined);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
-                    const s1BindedEpisodeResult = await EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
-                    const relevantResult = s1BindedEpisodeResult.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+                    const s2BindedEpisodeResult = await EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
+                    const relevantResult = s2BindedEpisodeResult.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider));
                     notStrictEqual(relevantResult, undefined);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
                     const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
@@ -624,7 +625,8 @@ describe('Basic List | Testrun', () => {
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 3);
+            const relevantResult = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+            notStrictEqual(relevantResult, undefined);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);
@@ -664,7 +666,8 @@ describe('Basic List | Testrun', () => {
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 4);
+            const relevantResult = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+            notStrictEqual(relevantResult, undefined);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);
@@ -716,7 +719,7 @@ describe('Basic List | Testrun', () => {
         }
     });
 
-    test('should get series and should map episodes right from Trakt (Series: Gakusen Toshi Asterisk S2)', async () => {
+    test('should get series and should map episodes right from Trakt (Series: Gakusen Toshi Asterisk S1)', async () => {
         const provider = new ListProviderLocalData(97794, TraktProvider);
 
         const series = new Series();
@@ -750,7 +753,11 @@ describe('Basic List | Testrun', () => {
         const epMappings = resultSeries.episodeBindingPools;
         strictEqual(epMappings.length, 12);
         for (const epMapping of epMappings) {
-            strictEqual(epMapping.bindedEpisodeMappings.length, 4);
+            const anistListMapping = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
+            const traktListMapping = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
+
+            notStrictEqual(anistListMapping, undefined);
+            notStrictEqual(traktListMapping, undefined);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     strictEqual(ep.episodeNumber, ep2.episodeNumber);
@@ -759,7 +766,7 @@ describe('Basic List | Testrun', () => {
         }
     });
 
-    test('should get series and should map episodes right from AniList (Series: Gakusen Toshi Asterisk S1)', async () => {
+    test('should get series and should map episodes right from AniList (Series: Gakusen Toshi Asterisk S2)', async () => {
         const provider = new ListProviderLocalData(21390, AniListProvider);
 
         const series = new Series();
@@ -772,7 +779,6 @@ describe('Basic List | Testrun', () => {
 
         // Result checking
         const mainList = await MainListManager.getMainList();
-        strictEqual(mainList.length, 1);
 
         const resultSeries = mainList[0];
 

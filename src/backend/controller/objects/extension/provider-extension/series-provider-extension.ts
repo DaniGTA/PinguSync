@@ -21,6 +21,11 @@ export default class SeriesProviderExtension {
     protected listProviderInfos: ListLocalDataBind[] = [];
     protected infoProviderInfos: InfoLocalDataBind[] = [];
 
+    public clearAllBindings() {
+        this.listProviderInfos = [];
+        this.infoProviderInfos = [];
+    }
+
     /**
      * Prevents too have double entrys of the same provider.
      * @param infoProviders
@@ -132,7 +137,7 @@ export default class SeriesProviderExtension {
                 if (existingBinding.targetSeason !== listLocalDataBind.targetSeason && listLocalDataBind.targetSeason !== undefined) {
                     this.listProviderInfos[existingBindingIndex] = listLocalDataBind;
                 } else if (seasonHelper.isSeasonUndefined(existingBinding.targetSeason)) {
-                     this.listProviderInfos[existingBindingIndex] = listLocalDataBind;
+                    this.listProviderInfos[existingBindingIndex] = listLocalDataBind;
                 }
             } else {
                 this.listProviderInfos.push(listLocalDataBind);

@@ -1,17 +1,30 @@
+import ExternalInformationProvider from '../../../api/provider/external-information-provider';
+import ExternalMappingProvider from '../../../api/provider/external-mapping-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import Series from '../../../controller/objects/series';
-import ExternalMappingProvider from '../../../api/provider/external-mapping-provider';
-import ExternalProvider from '../../../api/provider/external-provider';
-import ExternalInformationProvider from '../../../api/provider/external-information-provider';
 import ProviderList from '../../../controller/provider-manager/provider-list';
+import logger from '../../../logger/logger';
 
 export default class ProviderMappingDownloadHelper {
     public static async getMappingForSeries(series: Series): Promise<MultiProviderResult[]> {
+        const result = [];
         const allLocalDatas = series.getAllProviderLocalDatas();
         for (const localData of allLocalDatas) {
-            const providerInstance = ProviderList.getExternalProviderInstance(localData);
-            const relevantMappingProviders = this.getAllAvailableMappingProviderThatSupportProvider(providerInstance);
+            try {
+                const providerInstance = ProviderList.getExternalProviderInstance(localData);
+                const relevantMappingProviders = this.getAllAvailableMappingProviderThatSupportProvider(providerInstance);
+                for (const mappingProvider of relevantMappingProviders) {
+                    try {
+                        result.push(await mappingProvider.getMappings(localData));
+                    } catch (err) {
+                        logger.error(err);
+                    }
+                }
+            } catch (err) {
+                logger.error(err);
+            }
         }
+        return result;
     }
 
     /**

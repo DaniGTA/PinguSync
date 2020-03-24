@@ -1,4 +1,4 @@
-import { createWriteStream } from 'fs';
+import { createWriteStream, writeFileSync } from 'fs';
 import moment from 'moment';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../../controller/provider-manager/provider-list';
@@ -20,7 +20,8 @@ export default class AnimeOfflineDatabaseManager {
         }
     }
 
-    public static getMappingFromProviderLocalData(providerLocalData: ProviderLocalData): IDatabaseEntry | undefined {
+    public static async getMappingFromProviderLocalData(providerLocalData: ProviderLocalData): Promise<IDatabaseEntry | undefined> {
+        await this.checkDatabaseStatus();
         const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
         for (const databaseEntry of this.LOCAL_DATA.database.data) {
             if (this.databaseEntryHasSameIdAsProviderLocalData(databaseEntry, providerInstance, providerLocalData)) {
@@ -31,7 +32,7 @@ export default class AnimeOfflineDatabaseManager {
 
     private static readonly LOCAL_DATA: AnimeOfflineDatabaseProviderData = new AnimeOfflineDatabaseProviderData();
     private static readonly UPDATE_INTERVAL_IN_DAYS: number = 7;
-    private static readonly DATABASE_URL = 'https://github.com/manami-project/anime-offline-database/blob/master/anime-offline-database.json';
+    private static readonly DATABASE_URL = 'https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.json';
     private static readonly DATABASE_PATH = './anime-offline-database.json';
 
     private static databaseEntryHasSameIdAsProviderLocalData(databaseEntry: IDatabaseEntry, providerInstance: ExternalInformationProvider, providerLocalData: ProviderLocalData): boolean {
@@ -71,8 +72,7 @@ export default class AnimeOfflineDatabaseManager {
     private static async downloadDatabase(): Promise<IAnimeOfflineDatabase> {
         const res = await WebRequestManager.request({ uri: AnimeOfflineDatabaseManager.DATABASE_URL });
         if (res.statusCode === 200) {
-            const file = createWriteStream(AnimeOfflineDatabaseManager.DATABASE_PATH);
-            res.body.pipe(file);
+            writeFileSync(AnimeOfflineDatabaseManager.DATABASE_PATH, res.body);
             return JSON.parse(res.body) as IAnimeOfflineDatabase;
         } else {
             throw new Error('[AnimeOfflineDatabase] Database download failed status code: ' + res.statusCode);

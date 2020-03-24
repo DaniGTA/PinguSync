@@ -5,16 +5,18 @@ import Series from '../../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
+import ProviderLoader from '../../../../src/backend/controller/provider-manager/provider-loader';
 import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import TestProvider from '../../../controller/objects/testClass/testProvider';
+import OmdbTestProvider from './omdb-test-provider';
 // tslint:disable: no-string-literal
 describe('Provider: OMDb | Test runs', () => {
     const omdbProvider = new OMDbProvider();
 
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider('', true, true)];
-        ProviderList['loadedInfoProvider'] = undefined;
-        ProviderList['loadedInfoProvider'] = [omdbProvider];
+        ProviderList['loadedListProvider'] = ProviderList['loadProviderList']([OmdbTestProvider]);
+        ProviderList['loadedInfoProvider'] = ProviderList['loadProviderList']([OMDbProvider]);
+        ProviderList['loadedMappingProvider'] = [];
     });
 
     test('should get a series (1/1)', async () => {

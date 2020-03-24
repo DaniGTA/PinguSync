@@ -32,31 +32,31 @@ describe('AnimeOfflineDatabaseManager | basic test', () => {
             ProviderList['loadedListProvider'] = undefined;
 
         });
-        test('should find IDatabaseEntry with aniDB id', () => {
+        test('should find IDatabaseEntry with aniDB id', async () => {
             const providerLocalData = new InfoProviderLocalData('4563', AniDBProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
-            const r = AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
+            const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
             strictEqual(r?.episodes, 37);
         });
 
-        test('should find IDatabaseEntry with aniList id', () => {
+        test('should find IDatabaseEntry with aniList id', async () => {
             const providerLocalData = new ListProviderLocalData(1535, AniListProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
-            const r = AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
+            const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
             strictEqual(r?.episodes, 37);
         });
 
-        test('should find IDatabaseEntry with kitsu id', () => {
+        test('should find IDatabaseEntry with kitsu id', async () => {
             const providerLocalData = new ListProviderLocalData(1376, KitsuProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
-            const r = AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
+            const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
             strictEqual(r?.episodes, 37);
         });
 
-        test('should find IDatabaseEntry with mal id', () => {
+        test('should find IDatabaseEntry with mal id', async () => {
             const providerLocalData = new ListProviderLocalData(1535, MalProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
-            const r = AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
+            const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
             strictEqual(r?.episodes, 37);
         });
     });

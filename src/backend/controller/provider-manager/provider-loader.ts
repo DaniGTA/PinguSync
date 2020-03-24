@@ -9,10 +9,10 @@ import TVDBProvider from '../../api/information-providers/tvdb/tvdb-provider';
 import TVMazeProvider from '../../api/information-providers/tvmaze/tvmaze-provider';
 import AnimeOfflineDatabaseProvider from '../../api/mapping-providers/anime-offline-database/anime-offline-database-provider';
 import ExternalMappingProvider from '../../api/provider/external-mapping-provider';
+import ExternalProvider from '../../api/provider/external-provider';
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
 import logger from '../../logger/logger';
-import ExternalProvider from '../../api/provider/external-provider';
 
 export default class ProviderLoader {
 

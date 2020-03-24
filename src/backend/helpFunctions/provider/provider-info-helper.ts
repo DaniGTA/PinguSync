@@ -1,3 +1,4 @@
+import ExternalInformationProvider from '../../api/provider/external-information-provider';
 import ExternalProvider from '../../api/provider/external-provider';
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
@@ -11,7 +12,6 @@ import EpisodeStatsHelper from '../episode-helper/episode-stats-helper';
 import ProviderHelper from './provider-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import ProviderListHelper from './provider-list-helper';
-import ExternalInformationProvider from '../../api/provider/external-information-provider';
 
 export default class ProviderInfoHelper {
     public static async requestAllInfoProviderInfos(series: Series, force: boolean, target: ProviderInfoStatus, seasonAware: boolean): Promise<ProviderLocalDataWithSeasonInfo[]> {

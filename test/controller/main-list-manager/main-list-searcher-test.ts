@@ -11,12 +11,13 @@ import ProviderList from '../../../src/backend/controller/provider-manager/provi
 import ProviderNameManager from '../../../src/backend/controller/provider-manager/provider-name-manager';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../objects/testClass/testProvider';
+import ProviderLoader from '../../../src/backend/controller/provider-manager/provider-loader';
 
 // tslint:disable: no-string-literal
 describe('MainList | Searcher tests', () => {
 
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
+        (ProviderLoader.prototype as any).listOfListProviders = [TestProvider];
         ProviderList['loadedInfoProvider'] = [];
     });
 

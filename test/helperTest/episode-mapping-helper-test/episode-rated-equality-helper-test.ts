@@ -10,6 +10,7 @@ import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/e
 import Season from '../../../src/backend/controller/objects/meta/season';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import ProviderLoader from '../../../src/backend/controller/provider-manager/provider-loader';
 import EpisodeRatedEqualityHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-helper';
 import ProviderLocalDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';
@@ -17,7 +18,7 @@ import TestProvider from '../../controller/objects/testClass/testProvider';
 describe('Episode rated equality helper tests | Difference calc only', () => {
     beforeEach(() => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
+        (ProviderLoader.prototype as any).listOfListProviders = [TestProvider, AniListProvider];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     });

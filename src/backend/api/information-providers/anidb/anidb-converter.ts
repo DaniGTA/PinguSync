@@ -17,6 +17,8 @@ import MultiProviderResult from '../../provider/multi-provider-result';
 import AniDBProvider from './anidb-provider';
 import { AniDBAnimeAnime, AniDBAnimeFullInfo, AttributeInfo, EpisodeElement, ExternalentityElement, FluffyExternalentity, ResourceElement } from './objects/anidbFullInfoXML';
 import { Anime } from './objects/anidbNameListXML';
+import MalProvider from '../mal/mal-provider';
+import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
 
 export default class AniDBConverter {
     public async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {
@@ -210,7 +212,7 @@ export default class AniDBConverter {
                     subipld = new InfoProviderLocalData(id, 'ANN');
                     break;
                 case '2':
-                    subipld = new InfoProviderLocalData(id, 'MAL');
+                    subipld = new ListProviderLocalData(id, MalProvider);
                     break;
                 case '3':
                     subipld = new InfoProviderLocalData(id, 'AnimeNfo');

@@ -18,15 +18,21 @@ export default class AnimeOfflineDatabaseProviderData {
 
     public async updateDatabase(database: IAnimeOfflineDatabase) {
         this.database = database;
-        await this.saveData();
+        await this.updateLastTimestamp(Date.now());
     }
 
     private loadDatabase(): void {
         logger.info('[AnimeOfflineDatabaseProviderData] Loading database from file');
-        if (existsSync(this.getPath())) {
-            const loadedString = readFileSync(this.getPath(), 'UTF-8');
-            const loadedData = JSON.parse(loadedString) as this;
-            Object.assign(this, loadedData);
+        const path = this.getPath();
+        if (existsSync(path)) {
+            try {
+                const loadedString = readFileSync(path, 'UTF-8');
+                const loadedData = JSON.parse(loadedString) as this;
+                Object.assign(this, loadedData);
+            } catch (err) {
+                logger.error(err);
+                this.saveData();
+            }
         }
     }
 
@@ -40,7 +46,12 @@ export default class AnimeOfflineDatabaseProviderData {
     }
 
     private getPath(): string {
-        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-        return path.join(new PathHelper().getAppPath(), 'anime_offline_database_data.json');
+        try {
+            const userDataPath = './';
+            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+            return path.join(userDataPath, 'anime_offline_database_data.json');
+        } catch (err) {
+            throw err;
+        }
     }
 }

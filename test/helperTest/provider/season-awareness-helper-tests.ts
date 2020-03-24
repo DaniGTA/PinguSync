@@ -4,6 +4,8 @@ import AniDBProvider from '../../../src/backend/api/information-providers/anidb/
 import KitsuProvider from '../../../src/backend/api/information-providers/kitsu/kitsu-provider';
 import MalProvider from '../../../src/backend/api/information-providers/mal/mal-provider';
 import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
+import InfoProvider from '../../../src/backend/api/provider/info-provider';
+import ListProvider from '../../../src/backend/api/provider/list-provider';
 import ListController from '../../../src/backend/controller/list-controller';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Season from '../../../src/backend/controller/objects/meta/season';
@@ -16,11 +18,9 @@ import SeasonAwarenessHelper from '../../../src/backend/helpFunctions/provider/s
 
 describe('Season Awareness Test', () => {
     beforeEach(() => {
-        // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new KitsuProvider(), new MalProvider(), new TraktProvider()];
-        // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedInfoProvider'] = [new AniDBProvider()];
-        // tslint:disable-next-line: no-string-literal
+        // tslint:disable no-string-literal
+        ProviderList['loadedListProvider'] = ProviderList['loadProviderList']([KitsuProvider, MalProvider, TraktProvider] as Array<(new () => ListProvider)>);
+        ProviderList['loadedInfoProvider'] = ProviderList['loadProviderList']([AniDBProvider] as Array<(new () => InfoProvider)>);
         MainListManager['mainList'] = [];
         ProviderDataListManager['providerDataList'] = [];
         // tslint:disable-next-line: no-unused-expression

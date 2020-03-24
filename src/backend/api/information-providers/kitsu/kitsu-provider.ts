@@ -8,7 +8,6 @@ import { ProviderInfoStatus } from '../../../controller/provider-manager/local-d
 import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../../logger/logger';
 import ExternalInformationProvider from '../../provider/external-information-provider';
-import ExternalProvider from '../../provider/external-provider';
 import ListProvider from '../../provider/list-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import AniDBProvider from '../anidb/anidb-provider';

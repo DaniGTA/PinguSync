@@ -24,6 +24,7 @@ import StringHelper from '../../string-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
+import MediaTypeHelper from '../../media-type-helper';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */
@@ -75,7 +76,7 @@ export default new class ProviderInfoDownloadHelper {
     public async downloadProviderSeriesInfoWithoutId(series: Series, provider: ExternalInformationProvider, requestId?: string): Promise<MultiProviderResult> {
         const seriesMediaType = await series.getMediaType();
         let result: MultiProviderResult | undefined;
-        if (seriesMediaType === MediaType.UNKOWN || provider.supportedMediaTypes.includes(seriesMediaType)) {
+        if (MediaTypeHelper.providerSupportMediaType(provider, seriesMediaType)) {
             result = await this.getProviderSeriesInfoByRelation(series, provider);
             if (result) {
                 return result;

@@ -31,6 +31,8 @@ export default class ResponseHelper {
         ProviderList['loadedListProvider'] = undefined;
         ProviderList['loadedInfoProvider'] = undefined;
     }
+
+    private static cacheFolderName = './test-web-response-cache/';
     private static mockGetByNameRequest(provider: (new () => ExternalInformationProvider)) {
         const spyGetInfoByName = jest.spyOn(provider.prototype, 'getMoreSeriesInfoByName');
         const spyGetInfoByNameMock = async (searchTitle: string, season: number): Promise<MultiProviderResult[]> => {
@@ -92,8 +94,6 @@ export default class ResponseHelper {
         });
         spyGetInfoById.mockImplementation(spyGetInfoByIdMock);
     }
-
-    private static cacheFolderName = './test-web-response-cache/';
 
     private static generateRequestId(provider: (new () => ExternalProvider), string: string): string {
         const providerName = ProviderNameManager.getProviderName(provider);

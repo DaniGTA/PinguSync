@@ -1,6 +1,7 @@
 import { strictEqual } from 'assert';
 import KitsuProvider from '../../../../src/backend/api/information-providers/kitsu/kitsu-provider';
 import ExternalProvider from '../../../../src/backend/api/provider/external-provider';
+import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Season from '../../../../src/backend/controller/objects/meta/season';
@@ -9,8 +10,7 @@ import ProviderDataListManager from '../../../../src/backend/controller/provider
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
-import TestProvider from '../../../controller/objects/testClass/testProvider';
-
+import KitsuTestProvider from './kitsu-test-provider';
 // tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {
     const kitsuProvider = new KitsuProvider();
@@ -20,8 +20,8 @@ describe('Provider: Kitsu | Test runs', () => {
     });
 
     beforeEach(() => {
-        // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('', true, true), kitsuProvider];
+        ProviderList['loadedListProvider'] = ProviderList['loadProviderList']([KitsuProvider, KitsuTestProvider] as Array<(new () => ListProvider)>);
+        ProviderList['loadedMappingProvider'] = [];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         ProviderDataListManager['providerDataList'] = [];
