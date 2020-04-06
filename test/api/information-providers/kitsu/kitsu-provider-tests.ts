@@ -6,7 +6,7 @@ import { MediaType } from '../../../../src/backend/controller/objects/meta/media
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Season from '../../../../src/backend/controller/objects/meta/season';
 import Series from '../../../../src/backend/controller/objects/series';
-import ProviderDataListManager from '../../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
@@ -81,7 +81,7 @@ describe('Provider: Kitsu | Test runs', () => {
         strictEqual(kitsuResult.providerLocalData.id, '12272');
     }, 5000);
 
-    test('should get the series', async () => {
+    test('should get the series: 1555', async () => {
 
 
         const series = new Series();
@@ -96,6 +96,21 @@ describe('Provider: Kitsu | Test runs', () => {
 
         strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
         strictEqual(kitsuResult.providerLocalData.id, '1555');
+    }, 5000);
+
+    test('should get the series: 11578', async () => {
+
+
+        const series = new Series();
+        const unkownProvider = new ListProviderLocalData(11578, KitsuProvider);
+        await series.addProviderDatas(unkownProvider);
+
+        // tslint:disable-next-line: no-string-literal
+        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
+        const kitsuResult = result.mainProvider;
+
+        strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
+        strictEqual(kitsuResult.providerLocalData.id, '11578');
     }, 5000);
 
     test('it should get a series by trakt id', async () => {

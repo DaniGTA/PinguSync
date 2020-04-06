@@ -8,7 +8,7 @@ import Name from '../../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../../src/backend/controller/objects/meta/name-type';
 import Season from '../../../../src/backend/controller/objects/meta/season';
 import Series, { WatchStatus } from '../../../../src/backend/controller/objects/series';
-import ProviderDataListManager from '../../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import { ProviderInfoStatus } from '../../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';

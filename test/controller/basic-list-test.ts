@@ -14,7 +14,7 @@ import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
-import ProviderDataListManager from '../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListManager from '../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
@@ -465,7 +465,7 @@ describe('Basic List | Testrun', () => {
                 logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
             }
             const season = MainListManager['mainList'][2].getProviderSeasonTarget(provider.provider);
-            strictEqual(season?.getSingleSeasonNumberAsNumber(), 3);
+            strictEqual(season?.getSingleSeasonNumberAsNumber(), 2);
         } else {
             fail();
         }

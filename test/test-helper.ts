@@ -3,8 +3,8 @@ import ExternalProvider from '../src/backend/api/provider/external-provider';
 import ListController from '../src/backend/controller/list-controller';
 import MainListLoader from '../src/backend/controller/main-list-manager/main-list-loader';
 import MainListManager from '../src/backend/controller/main-list-manager/main-list-manager';
-import ProviderDataListLoader from '../src/backend/controller/provider-data-list-manager/provider-data-list-loader';
-import ProviderDataListManager from '../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListLoader from '../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-loader';
+import ProviderDataListManager from '../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import ResponseHelper from './response-helper';
 
 ResponseHelper.mockRequest();

@@ -22,11 +22,10 @@ export default class SeasonAwarenessPathController {
     }
 
     public async getProviderLocalDataWithSeason(targetSeason: Season | undefined): Promise<Season | undefined> {
-        let currentProviderThatHasAwareness: ProviderLocalData | undefined = { ...this.providerWithAwareness } as ProviderLocalData;
-        currentProviderThatHasAwareness = await SeasonAwarenessHelper.updateProvider(currentProviderThatHasAwareness);
+        this.providerWithAwareness = await SeasonAwarenessHelper.updateProvider(this.providerWithAwareness);
 
-        if (EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.detailEpisodeInfo)) {
-            const result = new EpisodeRelationAnalyser(this.providerWithoutAwarness.detailEpisodeInfo, currentProviderThatHasAwareness.detailEpisodeInfo);
+        if (EpisodeHelper.hasEpisodeNames(this.providerWithAwareness.detailEpisodeInfo)) {
+            const result = new EpisodeRelationAnalyser(this.providerWithoutAwarness.detailEpisodeInfo, this.providerWithAwareness.detailEpisodeInfo);
             const seasonResult = await this.seasonAwarenessChoicePath(result, targetSeason);
             return seasonResult;
         }
@@ -53,7 +52,12 @@ export default class SeasonAwarenessPathController {
             } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder !== 1) {
                 const prequelSeason = await SeasonAwarenessPrequelPathController.processPrequel(this.providerWithAwareness,
                     this.providerWithoutAwarness, new Season(result.finalSeasonNumbers));
-                if (SeasonComperator.isSameSeasonNumber(prequelSeason[0].seasonTarget, new Season(result.finalSeasonNumbers))) {
+                const prequel = prequelSeason.find((x) => x.providerLocalData.provider === this.providerWithAwareness.provider);
+
+                if (prequel && SeasonComperator.isSameSeasonNumber(prequel.seasonTarget, new Season(result.finalSeasonNumbers))) {
+                    if (targetSeason) {
+                        this.providerWithAwareness = prequel.providerLocalData;
+                    }
                     let newSeasonpart = prequelSeason[0].seasonTarget?.seasonPart;
                     if (newSeasonpart !== undefined) {
                         newSeasonpart++;
@@ -73,8 +77,12 @@ export default class SeasonAwarenessPathController {
                 this.providerWithAwareness,
                 this.providerWithoutAwarness,
                 targetSeason);
+            const sequel = sequelResult.find((x) => x.providerLocalData.provider === this.providerWithAwareness.provider);
+            if (sequel) {
+                this.providerWithAwareness = sequel.providerLocalData;
+            }
             if (sequelResult[0].seasonTarget?.seasonPart === undefined || sequelResult[0].seasonTarget?.seasonPart === 1) {
-                return new Season((sequelResult[0].seasonTarget?.getSingleSeasonNumberAsNumber() as number));
+                return sequelResult[0].seasonTarget;
             } else {
                 return new Season(sequelResult[0].seasonTarget.seasonNumbers, 1 - sequelResult[0].seasonTarget.seasonPart);
             }
@@ -90,9 +98,19 @@ export default class SeasonAwarenessPathController {
             return true;
         } else if (singleSeasonNumber && result.maxSeasonNumber && singleSeasonNumber > result.maxSeasonNumber) {
             const tempTargetSeason = new Season(singleSeasonNumber - 1);
-            if (result.minEpisodeNumberOfSeasonHolder !== 1 && SeasonComperator.isSameSeasonNumber(new Season(result.finalSeasonNumbers), tempTargetSeason)) {
+            if (!this.isFirstEpisode(result.minEpisodeNumberOfSeasonHolder) &&
+                SeasonComperator.isSameSeasonNumber(new Season(result.finalSeasonNumbers), tempTargetSeason)) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private isFirstEpisode(minEpisodeNumberOfSeasonHolder: number | undefined): boolean {
+        if (minEpisodeNumberOfSeasonHolder === 1) {
+            return true;
+        } else if (minEpisodeNumberOfSeasonHolder === 2) {
+            return true;
         }
         return false;
     }

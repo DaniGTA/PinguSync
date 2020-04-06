@@ -12,7 +12,7 @@ import SeasonFindHelper from '../../src/backend/helpFunctions/season-helper/seas
 import seasonHelper from '../../src/backend/helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../src/backend/helpFunctions/season-helper/season-search-mode';
 import TestProvider from '../controller/objects/testClass/testProvider';
-import ProviderDataListManager from '../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListManager from '../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 
 
 describe('Season Helper', () => {

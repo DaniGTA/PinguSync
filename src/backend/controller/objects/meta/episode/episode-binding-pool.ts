@@ -1,11 +1,15 @@
+import { jsonArrayMember, jsonMember, jsonObject } from 'typedjson';
 import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator';
 import Episode from './episode';
 import EpisodeMapping from './episode-mapping';
 
+@jsonObject
 export default class EpisodeBindingPool {
+    @jsonArrayMember(EpisodeMapping)
     public readonly bindedEpisodeMappings: EpisodeMapping[] = [];
 
     // tslint:disable-next-line: variable-name
+    @jsonMember
     private readonly __className: string;
 
     constructor(...episodes: EpisodeMapping[]) {

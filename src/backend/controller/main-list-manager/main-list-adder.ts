@@ -1,12 +1,9 @@
 import listHelper from '../../helpFunctions/list-helper';
 import NewProviderHelper from '../../helpFunctions/provider/new-provider-helper';
-import ProviderHelper from '../../helpFunctions/provider/provider-helper';
 import StringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
-import ProviderDataListManager from '../provider-data-list-manager/provider-data-list-manager';
-import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
-import ProviderList from '../provider-manager/provider-list';
+import ProviderDataListManager from '../provider-controller/provider-data-list-manager/provider-data-list-manager';
 import MainListManager from './main-list-manager';
 import MainListSearcher from './main-list-searcher';
 import AdderProviderCache from './object-adder/adder-provider-cache';
@@ -90,6 +87,7 @@ export default class MainListAdder {
                         await MainListManager.addSerieToMainList(series);
                     }
                     addCounter++;
+                    await this.requestSave();
                     logger.log('info', '[MainListAdder] Adding Series to list. Progress: ' + addCounter + '/' + list.length);
                 } catch (err) {
                     logger.error('[MainListAdder] [listWorker]: (error below)');
@@ -102,5 +100,10 @@ export default class MainListAdder {
         logger.log('info', 'Added ' + addCounter + ' to mainList');
         logger.log('info', 'End waitlist worker');
         return;
+    }
+
+    private async requestSave() {
+        await ProviderDataListManager.requestSaveProviderList();
+        await MainListManager.requestSaveMainList();
     }
 }

@@ -1,9 +1,7 @@
-import { createWriteStream, writeFileSync } from 'fs';
 import moment from 'moment';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../../controller/provider-manager/provider-list';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
-import logger from '../../../logger/logger';
 import AniDBProvider from '../../information-providers/anidb/anidb-provider';
 import AniListProvider from '../../information-providers/anilist/anilist-provider';
 import KitsuProvider from '../../information-providers/kitsu/kitsu-provider';
@@ -33,7 +31,6 @@ export default class AnimeOfflineDatabaseManager {
     private static readonly LOCAL_DATA: AnimeOfflineDatabaseProviderData = new AnimeOfflineDatabaseProviderData();
     private static readonly UPDATE_INTERVAL_IN_DAYS: number = 7;
     private static readonly DATABASE_URL = 'https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.json';
-    private static readonly DATABASE_PATH = './anime-offline-database.json';
 
     private static databaseEntryHasSameIdAsProviderLocalData(databaseEntry: IDatabaseEntry, providerInstance: ExternalInformationProvider, providerLocalData: ProviderLocalData): boolean {
         // tslint:disable: triple-equals
@@ -72,7 +69,6 @@ export default class AnimeOfflineDatabaseManager {
     private static async downloadDatabase(): Promise<IAnimeOfflineDatabase> {
         const res = await WebRequestManager.request({ uri: AnimeOfflineDatabaseManager.DATABASE_URL });
         if (res.statusCode === 200) {
-            writeFileSync(AnimeOfflineDatabaseManager.DATABASE_PATH, res.body);
             return JSON.parse(res.body) as IAnimeOfflineDatabase;
         } else {
             throw new Error('[AnimeOfflineDatabase] Database download failed status code: ' + res.statusCode);

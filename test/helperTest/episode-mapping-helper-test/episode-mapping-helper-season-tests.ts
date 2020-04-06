@@ -4,6 +4,7 @@ import Episode from '../../../src/backend/controller/objects/meta/episode/episod
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
+import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
@@ -11,7 +12,6 @@ import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';
-import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
 
 
 
@@ -286,45 +286,32 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
             const bEpisodeInfo3s2 = bProvider.detailEpisodeInfo[8];
 
             // Result checking
-            if (!(
-                aEpisodeInfo1 &&
-                aEpisodeInfo2 &&
-                aEpisodeInfo3 &&
-                bEpisodeInfo1s0 &&
-                bEpisodeInfo2s0 &&
-                bEpisodeInfo3s0 &&
-                bEpisodeInfo1s1 &&
-                bEpisodeInfo2s1 &&
-                bEpisodeInfo3s1 &&
-                bEpisodeInfo1s2 &&
-                bEpisodeInfo2s2 &&
-                bEpisodeInfo3s2)) {
-                fail('not all episodes found in the result');
-            } else {
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1).length, 1, 'Episode A1 mapping length should be 1');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2).length, 1, 'Episode A2 mapping length should be 1');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3).length, 1, 'Episode A3 mapping length should be 1');
 
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1)[0].id, bEpisodeInfo1s1.id, 'Episode A1 should have id mapped to Episode B1S1');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2)[0].id, bEpisodeInfo2s1.id, 'Episode A2 should have id mapped to Episode B2S1');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3)[0].id, bEpisodeInfo3s1.id, 'Episode A3 should have id mapped to Episode B3S1');
+            const eph = EpisodeBindingPoolHelper;
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1).length, 1, 'Episode A1 mapping length should be 1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2).length, 1, 'Episode A2 mapping length should be 1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3).length, 1, 'Episode A3 mapping length should be 1');
 
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s0).length, 0, 'Episode B1S0 mapping length should be 0');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s0).length, 0, 'Episode B2S0 mapping length should be 0');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s0).length, 0, 'Episode B3S0 mapping length should be 0');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo1)[0].id, bEpisodeInfo1s1?.id, 'Episode A1 should have id mapped to Episode B1S1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo2)[0].id, bEpisodeInfo2s1?.id, 'Episode A2 should have id mapped to Episode B2S1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, aEpisodeInfo3)[0].id, bEpisodeInfo3s1?.id, 'Episode A3 should have id mapped to Episode B3S1');
 
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s1).length, 1, 'Episode B1S1 mapping length should be 1');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s1).length, 1, 'Episode B2S1 mapping length should be 1');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s1).length, 1, 'Episode B3S1 mapping length should be 1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s0)?.length, 0, 'Episode B1S0 mapping length should be 0');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s0)?.length, 0, 'Episode B2S0 mapping length should be 0');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s0)?.length, 0, 'Episode B3S0 mapping length should be 0');
 
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s2).length, 0, 'Episode B1S2 mapping length should be 0');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s2).length, 0, 'Episode B2S2 mapping length should be 0');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s2).length, 0, 'Episode B3S2 mapping length should be 0');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s1)?.length, 1, 'Episode B1S1 mapping length should be 1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s1)?.length, 1, 'Episode B2S1 mapping length should be 1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s1)?.length, 1, 'Episode B3S1 mapping length should be 1');
 
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s1)[0].id, aEpisodeInfo1.id, 'Episode B1S1 should have id mapped to Episode A1');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s1)[0].id, aEpisodeInfo2.id, 'Episode B2S1 should have id mapped to Episode A2');
-                strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s1)[0].id, aEpisodeInfo3.id, 'Episode B3S1 should have id mapped to Episode A3');
-            }
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s2)?.length, 0, 'Episode B1S2 mapping length should be 0');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s2)?.length, 0, 'Episode B2S2 mapping length should be 0');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s2)?.length, 0, 'Episode B3S2 mapping length should be 0');
+
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo1s1)[0]?.id, aEpisodeInfo1?.id, 'Episode B1S1 should have id mapped to Episode A1');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo2s1)[0]?.id, aEpisodeInfo2?.id, 'Episode B2S1 should have id mapped to Episode A2');
+            strictEqual(eph.getAllBindedEpisodesOfEpisode(result, bEpisodeInfo3s1)[0]?.id, aEpisodeInfo3?.id, 'Episode B3S1 should have id mapped to Episode A3');
+
         },
     );
 });

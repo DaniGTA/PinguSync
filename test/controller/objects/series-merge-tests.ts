@@ -7,7 +7,7 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../../src/backend/logger/logger';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 
 
 describe('Series | Merge', () => {

@@ -5,7 +5,7 @@ import MainListManager from '../../../../src/backend/controller/main-list-manage
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Series from '../../../../src/backend/controller/objects/series';
-import ProviderDataListManager from '../../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';

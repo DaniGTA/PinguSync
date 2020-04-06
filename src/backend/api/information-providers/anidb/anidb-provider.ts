@@ -19,7 +19,7 @@ import AniDBNameListXML, { Anime } from './objects/anidbNameListXML';
 export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
 
-    public requestRateLimitInMs = 2500;
+    public requestRateLimitInMs = 3000;
     public providerName: string = 'anidb';
     public version: number = 1;
     public isOffline = true;

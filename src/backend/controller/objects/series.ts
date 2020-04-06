@@ -1,3 +1,4 @@
+import { jsonArrayMember, jsonMember, jsonObject } from 'typedjson';
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
@@ -30,21 +31,31 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+
+@jsonObject
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
+    @jsonMember
     public packageId: string = '';
+
+    @jsonMember
     public id: string = '';
+    @jsonMember
     public lastUpdate: number = Date.now();
+    @jsonMember
     public lastInfoUpdate: number = 0;
-
+    @jsonArrayMember(EpisodeBindingPool)
     public episodeBindingPools: EpisodeBindingPool[] = [];
-
+    @jsonMember
     private cachedSeason?: Season;
+    @jsonMember
     private cachedMediaType?: MediaType;
+    @jsonMember
     private seasonDetectionType: string = '';
+    @jsonMember
     private canSync: boolean | null = null;
-
+    @jsonMember
     private firstSeasonSeriesId?: string;
 
     constructor() {

@@ -9,6 +9,7 @@ import ProviderNameManager from '../../controller/provider-manager/provider-name
 import logger from '../../logger/logger';
 import dateHelper from '../date-helper';
 import listHelper from '../list-helper';
+import SeasonHelper from '../season-helper/season-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
 import ProviderMappingDownloadHelper from './provider-info-downloader/provider-mapping-download-helper';
@@ -17,7 +18,6 @@ import ProviderListHelper from './provider-list-helper';
 import SeasonAwarenessCreatorSeasonNumber from './season-awareness-helper/season-awareness-creator-season-number';
 import SeasonAwarenessFindSeasonNumber from './season-awareness-helper/season-awareness-find-season-number';
 import SeasonAwarenessHelper from './season-awareness-helper/season-awareness-helper';
-import SeasonHelper from '../season-helper/season-helper';
 
 
 export default class ProviderHelper {

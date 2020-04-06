@@ -5,6 +5,7 @@ import { MergeTypes } from '../objects/merge-types';
 import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
 import MainListSearcher from './main-list-searcher';
+import MainListSaver from './main-list-saver';
 export default class MainListManager {
 
     /**
@@ -121,7 +122,7 @@ export default class MainListManager {
                     this.secondList.shift();
                 }
             }
-            await MainListLoader.saveData(MainListManager.mainList);
+            await MainListSaver.saveMainList(MainListManager.mainList);
             logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length);
         } catch (err) {
             logger.error('Error at MainListManager.finishListFilling');
@@ -188,7 +189,7 @@ export default class MainListManager {
     }
 
     public static async requestSaveMainList() {
-        MainListLoader.saveData(await this.getMainList());
+        MainListSaver.saveMainList(await this.getMainList());
     }
 
     private static mainList: Series[] = [];

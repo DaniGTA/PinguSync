@@ -21,7 +21,7 @@ export default class ProviderMappingDownloadHelper {
                     }
                 }
             } catch (err) {
-                logger.error(err);
+                logger.debug(err);
             }
         }
         return result;

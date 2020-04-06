@@ -1,6 +1,7 @@
 <template>
   <div v-if="seriesPackage" class="main-list-entry-content">
     <div>{{name}}</div>
+    <div>{{cover}}</div>
     <img v-lazy.container="cover" class="series-cover" />
     <button @click="clog(seriesPackage)">Log</button>
     <button @click="removeSeriesPackage(seriesPackage)">Delete Package</button>
@@ -15,7 +16,7 @@
       <Promised
         :promise="canSync(item)"
         v-slot:combined="{ isPending, isDelayOver, data, error }"
-      >{{ data }}</Promised>
+      >{{ data }} {{ error }}</Promised>
       <div
         v-for="listProvider of item.listProviderInfosBinded"
         v-bind:key="listProvider.provider+item.id"
@@ -162,10 +163,9 @@ export default class ListEntry extends Vue {
     App.workerController.send('request-info-refresh', seriesPackage.id);
   }
 
-  public async getSeason(series: FrontendSeriesInfos): Promise<number | undefined> {
+  public async getSeason(series: FrontendSeriesInfos): Promise<number | string | undefined> {
     series = Object.assign(new FrontendSeriesInfos(), series);
-    return (await series.getSeason(SeasonSearchMode.NO_SEARCH, []))
-      .seasonNumber;
+    return (await series.getSeason(SeasonSearchMode.NO_SEARCH, [])).seasonNumbers[0];
   }
   public async canSync(series: FrontendSeriesInfos): Promise<boolean> {
     series = Object.assign(new FrontendSeriesInfos(), series);

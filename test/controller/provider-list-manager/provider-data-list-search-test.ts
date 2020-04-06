@@ -1,6 +1,6 @@
 import { notStrictEqual, strictEqual } from 'assert';
-import ProviderDataListManager from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-manager';
-import ProviderDataListSearcher from '../../../src/backend/controller/provider-data-list-manager/provider-data-list-searcher';
+import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
+import ProviderDataListSearcher from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-searcher';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
 

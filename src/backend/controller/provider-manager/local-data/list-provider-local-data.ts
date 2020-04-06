@@ -39,7 +39,7 @@ export class ListProviderLocalData extends ProviderLocalData {
     public canUpdateWatchProgress = false;
 
     public watchStatus?: WatchStatus;
-    public watchProgress?: WatchProgress[];
+    public watchProgress: WatchProgress[] = [];
 
     public customList: boolean = false;
     public customListName = '';

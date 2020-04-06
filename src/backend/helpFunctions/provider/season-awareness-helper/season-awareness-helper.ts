@@ -8,6 +8,7 @@ import { ListProviderLocalData } from '../../../controller/provider-manager/loca
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 import EpisodeHelper from '../../episode-helper/episode-helper';
 import ProviderHelper from '../provider-helper';
+import ProviderDataListAdder from '../../../controller/provider-controller/provider-data-list-manager/provider-data-list-adder';
 
 export default class SeasonAwarenessHelper {
 
@@ -101,6 +102,7 @@ export default class SeasonAwarenessHelper {
             // tslint:disable-next-line: max-line-length
             const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([currentProviderThatHasAwareness], currentProviderThatHasAwarenessProvider);
             if (result !== undefined) {
+                await new ProviderDataListAdder().addNewProviderData(result);
                 currentProviderThatHasAwareness = result;
             }
         }

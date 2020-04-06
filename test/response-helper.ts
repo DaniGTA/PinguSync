@@ -4,7 +4,7 @@ import ExternalInformationProvider from '../src/backend/api/provider/external-in
 import ExternalProvider from '../src/backend/api/provider/external-provider';
 import MultiProviderResult from '../src/backend/api/provider/multi-provider-result';
 import Season from '../src/backend/controller/objects/meta/season';
-import ProviderDataListLoader from '../src/backend/controller/provider-data-list-manager/provider-data-list-loader';
+import ProviderDataListLoader from '../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-loader';
 import ProviderLocalData from '../src/backend/controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../src/backend/controller/provider-manager/provider-list';
 import ProviderLoader from '../src/backend/controller/provider-manager/provider-loader';

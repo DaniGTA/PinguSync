@@ -1,17 +1,14 @@
 import ExternalInformationProvider from '../../../api/provider/external-information-provider';
-import ExternalProvider from '../../../api/provider/external-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import MainListManager from '../../../controller/main-list-manager/main-list-manager';
-import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
-import ProviderDataListSearcher from '../../../controller/provider-data-list-manager/provider-data-list-searcher';
+import ProviderDataListSearcher from '../../../controller/provider-controller/provider-data-list-manager/provider-data-list-searcher';
 import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
 import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
-import ProviderSearchResultManager from '../../../controller/stats-manager/models/provider-search-result-manager';
 import logger from '../../../logger/logger';
 import { AbsoluteResult } from '../../comperators/comperator-results.ts/comperator-result';
 import MediaTypeComperator from '../../comperators/media-type-comperator';
@@ -19,12 +16,12 @@ import MultiProviderComperator from '../../comperators/multi-provider-results-co
 import ProviderComperator from '../../comperators/provider-comperator';
 import SeasonComperator from '../../comperators/season-comperator';
 import listHelper from '../../list-helper';
+import MediaTypeHelper from '../../media-type-helper';
 import TitleHelper from '../../name-helper/title-helper';
 import StringHelper from '../../string-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-data-with-season-info';
 import SameIdAndUniqueId from './same-id-and-unique-id';
 import SearchResultRatingContainer from './search-result-rating-container';
-import MediaTypeHelper from '../../media-type-helper';
 /**
  * Controlls provider request, text search, search result rating, data updates
  */

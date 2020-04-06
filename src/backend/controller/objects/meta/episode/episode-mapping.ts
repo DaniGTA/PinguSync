@@ -1,20 +1,29 @@
+import { jsonMember, jsonObject } from 'typedjson';
 import ProviderLocalData from '../../../provider-manager/local-data/interfaces/provider-local-data';
 import Season from '../season';
 import Episode from './episode';
 
+@jsonObject()
 export default class EpisodeMapping {
     public static readonly currentMappingVersion = 1;
     /**
      * The id of the episode.
      */
+    @jsonMember
     public readonly id: string;
+    @jsonMember
     public readonly providerSeriesId: number | string;
+    @jsonMember
     public readonly episodeNumber: number | string;
+    @jsonMember
     public readonly provider: string;
+    @jsonMember
     public readonly lastMappingUpdate: number;
+    @jsonMember
     public readonly mappingVersion: number;
-
+    @jsonMember
     public readonly providerEpisodeId?: number | string;
+    @jsonMember
     public readonly season?: Season;
 
     constructor(episode: Episode, provider: ProviderLocalData) {

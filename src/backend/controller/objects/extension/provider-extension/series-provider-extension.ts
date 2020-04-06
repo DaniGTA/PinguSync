@@ -1,11 +1,12 @@
-import ProviderDataListAdder from '../../../../../backend/controller/provider-data-list-manager/provider-data-list-adder';
-import ProviderDataListSearcher from '../../../../../backend/controller/provider-data-list-manager/provider-data-list-searcher';
+import { jsonArrayMember } from 'typedjson';
 import ExternalProvider from '../../../../api/provider/external-provider';
 import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderComperator from '../../../../helpFunctions/comperators/provider-comperator';
 import ProviderLocalDataWithSeasonInfo from '../../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import seasonHelper from '../../../../helpFunctions/season-helper/season-helper';
 import logger from '../../../../logger/logger';
+import ProviderDataListAdder from '../../../provider-controller/provider-data-list-manager/provider-data-list-adder';
+import ProviderDataListSearcher from '../../../provider-controller/provider-data-list-manager/provider-data-list-searcher';
 import { InfoProviderLocalData } from '../../../provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../provider-manager/local-data/list-provider-local-data';
 import Season from '../../meta/season';
@@ -16,9 +17,9 @@ import SeriesProviderExtensionInstanceCheck from './series-provider-extension-in
 
 
 export default class SeriesProviderExtension {
-
-
+    @jsonArrayMember(ListLocalDataBind)
     protected listProviderInfos: ListLocalDataBind[] = [];
+    @jsonArrayMember(InfoLocalDataBind)
     protected infoProviderInfos: InfoLocalDataBind[] = [];
 
     public clearAllBindings() {
