@@ -5,8 +5,12 @@ import MainListPath from './main-list-path';
 
 export default class MainListSaver {
     public static saveMainList(series: Series[]) {
-        logger.log('info', 'Save list: ' + series.length);
-        logger.log('info', MainListPath.getPath());
-        writeFileSync(MainListPath.getPath(), JSON.stringify(series));
+        try {
+            logger.log('info', 'Save list: ' + series.length);
+            logger.log('info', 'Saved list at: ' + MainListPath.getPath());
+            writeFileSync(MainListPath.getPath(), JSON.stringify(series));
+        } catch (err) {
+            logger.error(err);
+        }
     }
 }

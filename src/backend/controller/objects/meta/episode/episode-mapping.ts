@@ -9,21 +9,21 @@ export default class EpisodeMapping {
     /**
      * The id of the episode.
      */
-    @jsonMember
+
     public readonly id: string;
-    @jsonMember
+
     public readonly providerSeriesId: number | string;
-    @jsonMember
+
     public readonly episodeNumber: number | string;
-    @jsonMember
+
     public readonly provider: string;
-    @jsonMember
+
     public readonly lastMappingUpdate: number;
-    @jsonMember
+
     public readonly mappingVersion: number;
-    @jsonMember
+
     public readonly providerEpisodeId?: number | string;
-    @jsonMember
+
     public readonly season?: Season;
 
     constructor(episode: Episode, provider: ProviderLocalData) {
@@ -40,5 +40,11 @@ export default class EpisodeMapping {
         // Meta data
         this.mappingVersion = EpisodeMapping.currentMappingVersion;
         this.lastMappingUpdate = new Date().getTime();
+    }
+
+    public loadPrototypes() {
+        if (this.season) {
+            Object.setPrototypeOf(this.season, Season.prototype);
+        }
     }
 }

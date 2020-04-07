@@ -2,7 +2,6 @@ import { existsSync, readFileSync } from 'fs';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import MainListPath from './main-list-path';
-import { TypedJSON } from 'typedjson';
 export default class MainListLoader {
     /**
      * Load json data from file.
@@ -38,12 +37,8 @@ export default class MainListLoader {
     }
 
     private static convertJSONToSeries(jsonEntity: any): Series {
-        const serializer = new TypedJSON(Series);
-        const object = new Series();
-
-        const json = serializer.stringify(object);
-        const object2 = serializer.parse(json) as Series;
-
-        return object2;
+        const series: Series = Object.setPrototypeOf(jsonEntity, Series.prototype);
+        series.loadPrototypes();
+        return series;
     }
 }

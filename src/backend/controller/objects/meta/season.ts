@@ -1,8 +1,6 @@
 
-import { jsonArrayMember, jsonMember, jsonObject } from 'typedjson';
 import { SeasonError } from '../transfer/season-error';
 
-@jsonObject()
 export default class Season {
     /**
      * Some providers have season numbers like 1 or T1 or S1.
@@ -10,11 +8,8 @@ export default class Season {
      * @type {(Array<(number | string)>)}
      * @memberof Season
      */
-    @jsonArrayMember(String)
     public seasonNumbers: Array<(number | string)> = [];
-    @jsonMember
     public seasonPart?: number;
-    @jsonMember({ constructor: Number })
     public seasonError: SeasonError;
 
     constructor(seasonNumbers?: (Array<(number | string)> | (number | string)), seasonPart?: number, seasonError: SeasonError = SeasonError.NONE) {

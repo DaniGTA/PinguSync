@@ -1,21 +1,25 @@
-import { jsonArrayMember, jsonMember, jsonObject } from 'typedjson';
 import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator';
 import Episode from './episode';
 import EpisodeMapping from './episode-mapping';
 
-@jsonObject
 export default class EpisodeBindingPool {
-    @jsonArrayMember(EpisodeMapping)
     public readonly bindedEpisodeMappings: EpisodeMapping[] = [];
 
     // tslint:disable-next-line: variable-name
-    @jsonMember
     private readonly __className: string;
 
     constructor(...episodes: EpisodeMapping[]) {
         this.__className = this.constructor.name;
         this.bindedEpisodeMappings.push(...episodes);
     }
+
+    public loadPrototypes() {
+        for (let index = 0; index < this.bindedEpisodeMappings.length; index++) {
+            Object.setPrototypeOf(this.bindedEpisodeMappings[index], EpisodeMapping.prototype);
+            this.bindedEpisodeMappings[index].loadPrototypes();
+        }
+    }
+
     /**
      * Checks if episodeMapping already exists in pool.
      * @param episodeMappings

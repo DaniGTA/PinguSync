@@ -30,3 +30,4 @@ module.exports = {
 	'setupFilesAfterEnv': ['<rootDir>/test/test-helper.ts'],
 	'maxWorkers': 4
 }
+

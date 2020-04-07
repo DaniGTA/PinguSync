@@ -31,31 +31,22 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+import InfoLocalDataBind from './extension/provider-extension/binding/info-local-data-bind';
+import ListLocalDataBind from './extension/provider-extension/binding/list-local-data-bind';
 
-@jsonObject
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
-    @jsonMember
     public packageId: string = '';
 
-    @jsonMember
     public id: string = '';
-    @jsonMember
     public lastUpdate: number = Date.now();
-    @jsonMember
     public lastInfoUpdate: number = 0;
-    @jsonArrayMember(EpisodeBindingPool)
     public episodeBindingPools: EpisodeBindingPool[] = [];
-    @jsonMember
     private cachedSeason?: Season;
-    @jsonMember
     private cachedMediaType?: MediaType;
-    @jsonMember
     private seasonDetectionType: string = '';
-    @jsonMember
     private canSync: boolean | null = null;
-    @jsonMember
     private firstSeasonSeriesId?: string;
 
     constructor() {
@@ -63,6 +54,23 @@ export default class Series extends SeriesProviderExtension {
         // Generates randome string.
         this.id = StringHelper.randomString(35);
         this.cachedSeason = new Season();
+    }
+
+    public loadPrototypes() {
+        for (let index = 0; index < this.episodeBindingPools.length; index++) {
+            Object.setPrototypeOf(this.episodeBindingPools[index], EpisodeBindingPool.prototype);
+            this.episodeBindingPools[index].loadPrototypes();
+        }
+        for (let index = 0; index < this.listProviderInfos.length; index++) {
+            Object.setPrototypeOf(this.listProviderInfos[index], ListLocalDataBind.prototype);
+            this.listProviderInfos[index].loadPrototypes();
+        }
+        for (let index = 0; index < this.infoProviderInfos.length; index++) {
+            Object.setPrototypeOf(this.infoProviderInfos[index], InfoLocalDataBind.prototype);
+            this.infoProviderInfos[index].loadPrototypes();
+        }
+        Object.setPrototypeOf(this.cachedSeason, Season.prototype);
+
     }
 
     public async resetCache() {

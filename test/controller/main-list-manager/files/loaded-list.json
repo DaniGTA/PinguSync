@@ -1,0 +1,35 @@
+[
+    {
+        "listProviderInfos": [
+            {
+                "instanceName": "ListLocalDataBind",
+                "id": 2,
+                "providerName": "Test"
+            }
+        ],
+        "infoProviderInfos": [
+            {
+                "instanceName": "InfoLocalDataBind",
+                "id": 1,
+                "providerName": "Test",
+                "targetSeason": {
+                    "seasonNumbers": [
+                        1
+                    ],
+                    "seasonError": 0
+                }
+            }
+        ],
+        "packageId": "",
+        "id": "5aVozvlDV7g2OLFG4YpiaOlEGpTqzk21ZWu",
+        "lastUpdate": 1586264791919,
+        "lastInfoUpdate": 0,
+        "episodeBindingPools": [],
+        "seasonDetectionType": "",
+        "canSync": null,
+        "cachedSeason": {
+            "seasonNumbers": [],
+            "seasonError": 0
+        }
+    }
+]

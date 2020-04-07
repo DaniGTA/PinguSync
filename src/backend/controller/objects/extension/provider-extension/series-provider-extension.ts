@@ -1,4 +1,3 @@
-import { jsonArrayMember } from 'typedjson';
 import ExternalProvider from '../../../../api/provider/external-provider';
 import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderComperator from '../../../../helpFunctions/comperators/provider-comperator';
@@ -17,9 +16,7 @@ import SeriesProviderExtensionInstanceCheck from './series-provider-extension-in
 
 
 export default class SeriesProviderExtension {
-    @jsonArrayMember(ListLocalDataBind)
     protected listProviderInfos: ListLocalDataBind[] = [];
-    @jsonArrayMember(InfoLocalDataBind)
     protected infoProviderInfos: InfoLocalDataBind[] = [];
 
     public clearAllBindings() {
