@@ -1,6 +1,6 @@
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import AniDBProvider from '../../information-providers/anidb/anidb-provider';
 import AniListProvider from '../../information-providers/anilist/anilist-provider';
 import KitsuProvider from '../../information-providers/kitsu/kitsu-provider';

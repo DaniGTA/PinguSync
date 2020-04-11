@@ -1,4 +1,4 @@
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 export default class MultiProviderResult {

@@ -7,7 +7,7 @@ import { MediaFormat } from '../../../src/backend/api/information-providers/anil
 import { MediaListCollection } from '../../../src/backend/api/information-providers/anilist/graphql/seriesList';
 import { MediaType } from '../../../src/backend/controller/objects/meta/media-type';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 
 // tslint:disable: no-string-literal
 describe('Provider: AniList | Converter tests', () => {

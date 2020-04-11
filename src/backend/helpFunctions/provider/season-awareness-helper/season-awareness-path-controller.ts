@@ -1,5 +1,5 @@
 import Season from '../../../controller/objects/meta/season';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import logger from '../../../logger/logger';
 import SeasonComperator from '../../comperators/season-comperator';
 import EpisodeHelper from '../../episode-helper/episode-helper';

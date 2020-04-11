@@ -1,17 +1,18 @@
 import { strictEqual } from 'assert';
+import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
-import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
+import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
-import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 
 
 describe('Series | Season', () => {
     beforeEach(() => {
+        // tslint:disable: no-string-literal
         MainListManager['mainList'] = [];
         ProviderDataListManager['providerDataList'] = [];
     });

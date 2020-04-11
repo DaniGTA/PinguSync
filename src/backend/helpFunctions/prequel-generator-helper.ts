@@ -1,16 +1,15 @@
+import { MediaType } from '../controller/objects/meta/media-type';
 import Season from '../controller/objects/meta/season';
 import Series from '../controller/objects/series';
-import { InfoProviderLocalData } from '../controller/provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../controller/provider-manager/provider-list';
+import { InfoProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../controller/provider-controller/provider-manager/provider-list';
 import logger from '../logger/logger';
-import ProviderLocalDataWithSeasonInfo from './provider/provider-info-downloader/provider-data-with-season-info';
-import providerInfoDownloaderhelper from './provider/provider-info-downloader/provider-info-downloaderhelper';
-import { MediaType } from '../controller/objects/meta/media-type';
-import MediaTypeComperator from './comperators/media-type-comperator';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
+import MediaTypeComperator from './comperators/media-type-comperator';
 import NewProviderHelper from './provider/new-provider-helper';
+import ProviderLocalDataWithSeasonInfo from './provider/provider-info-downloader/provider-data-with-season-info';
 
 export default class PrequelGeneratorHelper {
     private series: Series;
@@ -43,7 +42,7 @@ export default class PrequelGeneratorHelper {
     private async createPrequel(localdataProvider: ProviderLocalData, id: number | string, season: Season, mediaType?: MediaType): Promise<Series | null> {
         let newProvider = null;
         const currentMediaType = mediaType ? mediaType : localdataProvider.mediaType;
-        const externalProvider = ProviderList.getExternalProviderInstance(localdataProvider);
+        const externalProvider = ProviderList.getProviderInstanceByLocalData(localdataProvider);
         if (localdataProvider instanceof ListProviderLocalData) {
             newProvider = new ProviderLocalDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider));
         } else if (localdataProvider instanceof InfoProviderLocalData) {

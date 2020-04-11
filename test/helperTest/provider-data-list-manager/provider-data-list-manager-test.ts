@@ -4,8 +4,8 @@ import Episode from '../../../src/backend/controller/objects/meta/episode/episod
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
-import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 
 // tslint:disable: no-string-literal
 describe('Provider data list manager tests', () => {

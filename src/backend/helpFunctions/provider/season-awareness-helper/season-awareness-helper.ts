@@ -1,14 +1,14 @@
 import Series from '../../../controller/objects/series';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../../controller/provider-manager/provider-list';
-import logger from '../../../logger/logger';
-import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 import RelationSearchResults from '../../../controller/objects/transfer/relation-search-results';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
+import ProviderDataListAdder from '../../../controller/provider-controller/provider-data-list-manager/provider-data-list-adder';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
+import logger from '../../../logger/logger';
 import EpisodeHelper from '../../episode-helper/episode-helper';
 import ProviderHelper from '../provider-helper';
-import ProviderDataListAdder from '../../../controller/provider-controller/provider-data-list-manager/provider-data-list-adder';
+import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
 
 export default class SeasonAwarenessHelper {
 
@@ -27,8 +27,8 @@ export default class SeasonAwarenessHelper {
     }
 
     public static isProviderSeasonAware(provider: ProviderLocalDataWithSeasonInfo) {
-
-        if (!ProviderList.getExternalProviderInstance(provider.providerLocalData).hasUniqueIdForSeasons && !(provider.seasonTarget?.seasonNumbers.includes(1))) {
+        if (!ProviderList.getProviderInstanceByLocalData(provider.providerLocalData).hasUniqueIdForSeasons &&
+            !(provider.seasonTarget?.seasonNumbers.includes(1))) {
             return false;
         }
         return true;
@@ -40,7 +40,7 @@ export default class SeasonAwarenessHelper {
         for (const providerLocalData of allProviders) {
             if (providerLocalData.provider !== filterOut.provider) {
                 try {
-                    if (ProviderList.getExternalProviderInstance(providerLocalData).hasEpisodeTitleOnFullInfo) {
+                    if (ProviderList.getProviderInstanceByLocalData(providerLocalData).hasEpisodeTitleOnFullInfo) {
                         collectedProviders.push(providerLocalData);
                     }
                 } catch (err) {
@@ -98,7 +98,7 @@ export default class SeasonAwarenessHelper {
     public static async updateProvider(providerLocalData: ProviderLocalData): Promise<ProviderLocalData> {
         let currentProviderThatHasAwareness = providerLocalData;
         if (!EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.detailEpisodeInfo)) {
-            const currentProviderThatHasAwarenessProvider = ProviderList.getExternalProviderInstance(currentProviderThatHasAwareness);
+            const currentProviderThatHasAwarenessProvider = ProviderList.getProviderInstanceByLocalData(currentProviderThatHasAwareness);
             // tslint:disable-next-line: max-line-length
             const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([currentProviderThatHasAwareness], currentProviderThatHasAwarenessProvider);
             if (result !== undefined) {

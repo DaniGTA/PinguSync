@@ -1,6 +1,6 @@
 import { MediaType } from '../../../controller/objects/meta/media-type';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../../controller/provider-manager/provider-list';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
 import AniDBProvider from '../../information-providers/anidb/anidb-provider';
 import AniListProvider from '../../information-providers/anilist/anilist-provider';
 import KitsuProvider from '../../information-providers/kitsu/kitsu-provider';
@@ -20,7 +20,7 @@ export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvide
     public version: number = 1;
 
     public async getMappings(provider: ProviderLocalData): Promise<MultiProviderResult> {
-        const providerInstance = ProviderList.getExternalProviderInstance(provider);
+        const providerInstance = ProviderList.getProviderInstanceByLocalData(provider);
         const databaseEntry = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(provider);
         if (databaseEntry) {
             const result = AnimeOfflineDatabaseConverter.convertDatabaseEntryToMultiProviderResult(databaseEntry, providerInstance);

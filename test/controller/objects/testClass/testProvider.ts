@@ -4,8 +4,8 @@ import MultiProviderResult from '../../../../src/backend/api/provider/multi-prov
 import { UserData } from '../../../../src/backend/api/user-data';
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
 import Series from '../../../../src/backend/controller/objects/series';
-import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 
 
 export default class TestProvider extends ListProvider {

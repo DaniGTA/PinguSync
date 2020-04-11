@@ -10,18 +10,18 @@ import Name from '../../../controller/objects/meta/name';
 import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
 import Season from '../../../controller/objects/meta/season';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
-import { StreamingProviderLocalData } from '../../../controller/provider-manager/local-data/streaming-provider-local-data';
-import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import { StreamingProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/streaming-provider-local-data';
+import ProviderNameManager from '../../../controller/provider-controller/provider-manager/provider-name-manager';
 import ProviderLocalDataWithSeasonInfo from '../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../../logger/logger';
+import MultiProviderResult from '../../provider/multi-provider-result';
 import AniDBProvider from '../anidb/anidb-provider';
 import AniListProvider from '../anilist/anilist-provider';
 import MalProvider from '../mal/mal-provider';
-import MultiProviderResult from '../../provider/multi-provider-result';
 import TraktProvider from '../trakt/trakt-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import KitsuProvider from './kitsu-provider';
@@ -184,7 +184,7 @@ export default new class KitsuConverter {
                 }
             }
 
-            const detailedEpisode = new Episode(episode.number, new Season(episode.seasonNumber), episodeTitles);
+            const detailedEpisode = new Episode(episode.number, undefined, episodeTitles);
             detailedEpisode.airDate = new Date(episode.airdate);
             detailedEpisode.duration = episode.length;
             detailedEpisode.lastProviderUpdate = new Date(episode.updatedAt).getTime();

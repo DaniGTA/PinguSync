@@ -1,24 +1,22 @@
-import Series from '../../../controller/objects/series';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
-import ListProvider from '../../provider/list-provider';
-import { TraktSearch } from './objects/search';
-import { TraktUserInfo } from './objects/userInfo';
-import { TraktUserData } from './trakt-user-data';
-
-// tslint:disable-next-line: no-implicit-dependencies
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import WatchProgress from '../../../controller/objects/meta/watch-progress';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
-import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
+import Series from '../../../controller/objects/series';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderNameManager from '../../../controller/provider-controller/provider-manager/provider-name-manager';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
 import ExternalInformationProvider from '../../provider/external-information-provider';
+import ListProvider from '../../provider/list-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { FullShowInfo } from './objects/fullShowInfo';
+import { TraktSearch } from './objects/search';
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
+import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
 import traktConverter from './trakt-converter';
+import { TraktUserData } from './trakt-user-data';
 export default class TraktProvider extends ListProvider {
 
     public static getInstance() {

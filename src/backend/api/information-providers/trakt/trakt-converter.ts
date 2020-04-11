@@ -10,10 +10,10 @@ import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
 import Season from '../../../controller/objects/meta/season';
 import Series, { WatchStatus } from '../../../controller/objects/series';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
-import ProviderNameManager from '../../../controller/provider-manager/provider-name-manager';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderNameManager from '../../../controller/provider-controller/provider-manager/provider-name-manager';
 import TitleHelper from '../../../helpFunctions/name-helper/title-helper';
 import ProviderLocalDataWithSeasonInfo from '../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../../logger/logger';
@@ -25,6 +25,7 @@ import { Season as TrakSeason, SendEntryUpdate, Show as SendEntryShow, TraktEpis
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
+
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
         const result = [];

@@ -6,13 +6,14 @@ import InfoProvider from '../../../../src/backend/api/provider/info-provider';
 import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Series from '../../../../src/backend/controller/objects/series';
-import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
-import ProviderLoader from '../../../../src/backend/controller/provider-manager/provider-loader';
-import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
+import ProviderLoader from '../../../../src/backend/controller/provider-controller/provider-manager/provider-loader';
+import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
 import TestProvider from '../../../controller/objects/testClass/testProvider';
 import TVMazeTestProvider from './tvmaze-tets-provider';
+import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
 
 // tslint:disable: no-string-literal
 describe('Provider: TVMaze | Test runs', () => {
@@ -31,7 +32,7 @@ describe('Provider: TVMaze | Test runs', () => {
         unkownProvider.addSeriesName(new Name('Sankarea', 'en'));
         await series.addProviderDatas(unkownProvider);
 
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, providerInstance);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, providerInstance);
         strictEqual(result.getAllProviders().length, 2);
         return;
     });

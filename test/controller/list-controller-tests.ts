@@ -4,8 +4,8 @@ import MainListManager from '../../src/backend/controller/main-list-manager/main
 import Name from '../../src/backend/controller/objects/meta/name';
 import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
-import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
 import TestProvider from './objects/testClass/testProvider';

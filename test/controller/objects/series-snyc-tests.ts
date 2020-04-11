@@ -3,8 +3,8 @@ import TestProvider from './testClass/testProvider';
 
 import assert from 'assert';
 import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 
 describe('Series | Sync', () => {
     test('can sync (1/3)', async () => {

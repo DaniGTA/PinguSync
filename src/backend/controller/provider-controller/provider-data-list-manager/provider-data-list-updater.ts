@@ -1,4 +1,4 @@
-import ProviderLocalData from '../../provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 
 export default class ProviderDataListUpdater {
     /**

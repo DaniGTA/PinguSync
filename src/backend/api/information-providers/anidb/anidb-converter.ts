@@ -1,4 +1,3 @@
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 
 import Cover from '../../../controller/objects/meta/cover';
 import Episode from '../../../controller/objects/meta/episode/episode';
@@ -10,15 +9,16 @@ import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../../logger/logger';
 import MultiProviderResult from '../../provider/multi-provider-result';
+import MalProvider from '../mal/mal-provider';
 import AniDBProvider from './anidb-provider';
 import { AniDBAnimeAnime, AniDBAnimeFullInfo, AttributeInfo, EpisodeElement, ExternalentityElement, FluffyExternalentity, ResourceElement } from './objects/anidbFullInfoXML';
 import { Anime } from './objects/anidbNameListXML';
-import MalProvider from '../mal/mal-provider';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
 
 export default class AniDBConverter {
     public async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {

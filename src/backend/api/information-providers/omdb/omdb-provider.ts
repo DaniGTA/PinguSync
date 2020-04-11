@@ -1,7 +1,7 @@
 // tslint:disable-next-line: no-implicit-dependencies
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import Series from '../../../controller/objects/series';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
 import ExternalInformationProvider from '../../provider/external-information-provider';

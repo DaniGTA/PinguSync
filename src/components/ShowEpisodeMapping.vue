@@ -42,8 +42,8 @@ import { Promised } from "vue-promised";
 import SeriesPackage from "../backend/controller/objects/series-package";
 import WatchProgress from "../backend/controller/objects/meta/watch-progress";
 import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
-import { ListProviderLocalData } from "../backend/controller/provider-manager/local-data/list-provider-local-data";
-import ProviderLocalData from "../backend/controller/provider-manager/local-data/interfaces/provider-local-data";
+import { ListProviderLocalData } from "../backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data";
+import ProviderLocalData from "../backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data";
 Vue.component("Promised", Promised);
 Vue.use(VueLazyload);
 

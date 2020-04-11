@@ -6,9 +6,9 @@ import KitsuProvider from '../../../../src/backend/api/information-providers/kit
 import MalProvider from '../../../../src/backend/api/information-providers/mal/mal-provider';
 import AnimeOfflineDatabaseManager from '../../../../src/backend/api/mapping-providers/anime-offline-database/anime-offline-database-manager';
 import { IAnimeOfflineDatabase } from '../../../../src/backend/api/mapping-providers/anime-offline-database/objects/database-entry';
-import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
+import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 
 describe('AnimeOfflineDatabaseManager | basic test', () => {
     // tslint:disable: no-string-literal
@@ -26,7 +26,7 @@ describe('AnimeOfflineDatabaseManager | basic test', () => {
         strictEqual(result, true);
     });
     describe('getMappingFromProviderLocalData tests', () => {
-        const database: IAnimeOfflineDatabase = JSON.parse(readFileSync('./test/api/mapping-providers/anime-offline-database/data/anime-offline-database.json', 'UTF-8')) as IAnimeOfflineDatabase;;
+        const database: IAnimeOfflineDatabase = JSON.parse(readFileSync('./test/api/mapping-providers/anime-offline-database/data/anime-offline-database.json', 'UTF-8')) as IAnimeOfflineDatabase;
         beforeAll(() => {
             ProviderList['loadedInfoProvider'] = undefined;
             ProviderList['loadedListProvider'] = undefined;

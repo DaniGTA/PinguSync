@@ -1,5 +1,5 @@
 import Season from '../../../controller/objects/meta/season';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 
 export default class ProviderLocalDataWithSeasonInfo {
     public providerLocalData: ProviderLocalData;

@@ -1,4 +1,4 @@
-import ProviderLocalData from '../../../../provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../../../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import Season from '../../../meta/season';
 
 export default abstract class LocalDataBind {

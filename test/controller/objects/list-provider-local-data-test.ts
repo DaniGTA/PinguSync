@@ -7,8 +7,8 @@ import { ImageSize } from '../../../src/backend/controller/objects/meta/image-si
 import Season from '../../../src/backend/controller/objects/meta/season';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
-import { ProviderInfoStatus } from '../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 
 describe('listProviderLocalData tests', () => {
     test('should merge two', async () => {

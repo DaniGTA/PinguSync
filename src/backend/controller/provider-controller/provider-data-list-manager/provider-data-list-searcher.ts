@@ -1,7 +1,7 @@
 import ProviderComperator from '../../../helpFunctions/comperators/provider-comperator';
 import ProviderLocalDataWithSeasonInfo from '../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import LocalDataBind from '../../objects/extension/provider-extension/binding/local-data-bind';
-import ProviderLocalData from '../../provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import ProviderDataListManager from './provider-data-list-manager';
 
 export default class ProviderDataListSearcher {

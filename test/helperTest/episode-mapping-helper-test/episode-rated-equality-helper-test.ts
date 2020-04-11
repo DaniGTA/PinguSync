@@ -8,9 +8,9 @@ import EpisodeBindingPool from '../../../src/backend/controller/objects/meta/epi
 import EpisodeMapping from '../../../src/backend/controller/objects/meta/episode/episode-mapping';
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
 import Season from '../../../src/backend/controller/objects/meta/season';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import ProviderLoader from '../../../src/backend/controller/provider-manager/provider-loader';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
+import ProviderLoader from '../../../src/backend/controller/provider-controller/provider-manager/provider-loader';
 import EpisodeRatedEqualityHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-helper';
 import ProviderLocalDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../../controller/objects/testClass/testProvider';

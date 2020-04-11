@@ -9,11 +9,12 @@ import { NameType } from '../../../../src/backend/controller/objects/meta/name-t
 import Season from '../../../../src/backend/controller/objects/meta/season';
 import Series, { WatchStatus } from '../../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
-import { ProviderInfoStatus } from '../../../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
-import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import { ProviderInfoStatus } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import logger from '../../../../src/backend/logger/logger';
+import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
+import DownloadProviderLocalDataWithoutId from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-without-id';
 
 
 // tslint:disable: no-string-literal
@@ -187,7 +188,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         lpdld.addSeriesName(new Name('男子高校生の日常', 'jap', NameType.MAIN));
         await series.addListProvider(lpdld);
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, a);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
         deepEqual(result.mainProvider.providerLocalData.id, '8729');
     });
 
@@ -206,7 +207,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         try {
             // tslint:disable-next-line: no-string-literal
-            await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, a);
+            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
             fail();
         } catch (err) {
             logger.error(err);
@@ -287,7 +288,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         lpdld.addSeriesName(new Name('ペルソナ 〜トリニティ・ソウル〜', 'jap', NameType.UNKNOWN));
         await series.addListProvider(lpdld);
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderLocalDataByName'](series, new Name('Persona Trinity Soul', 'x-japclean'), a);
+        const result = await new DownloadProviderLocalDataWithoutId(series, a)['getProviderLocalDataByName'](new Name('Persona Trinity Soul', 'x-japclean'));
 
         deepEqual(result.mainProvider.providerLocalData.id, '5544');
     });
@@ -301,7 +302,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         series['cachedSeason'] = new Season(2);
         await series.addListProvider(lpdld);
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['getProviderLocalDataByName'](series, new Name('Gakusen Toshi Asterisk 2', 'en', NameType.MAIN), a, 1);
+        const result = await new DownloadProviderLocalDataWithoutId(series, a)['getProviderLocalDataByName'](new Name('Gakusen Toshi Asterisk 2', 'en', NameType.MAIN), 1);
 
         deepEqual(result.mainProvider.providerLocalData.id, '11673');
     });
@@ -317,7 +318,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         lpdld.addSeriesName(new Name('ペルソナ 〜トリニティ・ソウル〜', 'jap', NameType.UNKNOWN));
         await series.addListProvider(lpdld);
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(series, a);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
 
         deepEqual(result.mainProvider.providerLocalData.id, '14819');
     });
@@ -332,7 +333,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         series['cachedSeason'] = new Season(-1);
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(series, a);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
 
         deepEqual(result.mainProvider.providerLocalData.id, '11992');
     });
@@ -352,7 +353,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         await series.addListProvider(lpdld);
         try {
             // tslint:disable-next-line: no-string-literal
-            await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, a);
+            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
             fail();
         } catch (err) {
             logger.error(err);

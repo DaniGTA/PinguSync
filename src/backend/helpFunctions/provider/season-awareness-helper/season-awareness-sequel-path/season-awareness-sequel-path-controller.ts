@@ -1,9 +1,9 @@
 import MainListAdder from '../../../../controller/main-list-manager/main-list-adder';
 import Season from '../../../../controller/objects/meta/season';
 import Series from '../../../../controller/objects/series';
-import { InfoProviderLocalData } from '../../../../controller/provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../../../controller/provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../../../logger/logger';
 import EpisodeRelationAnalyser from '../../../episode-helper/episode-relation-analyser';
 import ProviderLocalDataWithSeasonInfo from '../../provider-info-downloader/provider-data-with-season-info';

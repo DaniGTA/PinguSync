@@ -1,7 +1,7 @@
 import Season from '../../../../controller/objects/meta/season';
-import { InfoProviderLocalData } from '../../../../controller/provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../../../controller/provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../../../logger/logger';
 import SeasonComperator from '../../../comperators/season-comperator';
 import EpisodeRelationAnalyser from '../../../episode-helper/episode-relation-analyser';

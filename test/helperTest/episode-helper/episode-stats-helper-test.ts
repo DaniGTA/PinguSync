@@ -1,8 +1,8 @@
 import { strictEqual } from 'assert';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
-import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import EpisodeStatsHelper from '../../../src/backend/helpFunctions/episode-helper/episode-stats-helper';
 import Season from '../../../src/backend/controller/objects/meta/season';
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import EpisodeStatsHelper from '../../../src/backend/helpFunctions/episode-helper/episode-stats-helper';
 
 describe('Episode stats helper', () => {
     test('should get max episode from episode list', () => {

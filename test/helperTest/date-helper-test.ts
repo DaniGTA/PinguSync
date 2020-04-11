@@ -2,7 +2,7 @@ import KitsuProvider from '../../src/backend/api/information-providers/kitsu/kit
 import MalProvider from '../../src/backend/api/information-providers/mal/mal-provider';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import ProviderList from '../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import dateHelper from '../../src/backend/helpFunctions/date-helper';
 
 

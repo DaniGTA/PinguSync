@@ -1,9 +1,7 @@
-import { jsonMember, jsonObject } from 'typedjson';
-import ProviderLocalData from '../../../provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import Season from '../season';
 import Episode from './episode';
 
-@jsonObject()
 export default class EpisodeMapping {
     public static readonly currentMappingVersion = 1;
     /**

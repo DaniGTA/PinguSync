@@ -1,19 +1,16 @@
 import logger from '../../../../backend/logger/logger';
 import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../../controller/provider-manager/provider-list';
+import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
+import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser';
 import ProviderHelper from '../provider-helper';
 import SeasonAwarenessHelper from './season-awareness-helper';
-import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser';
-import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import RelationSearchResults from '../../../controller/objects/transfer/relation-search-results';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
 
 export default class SeasonAwarenessFindSeasonNumber {
     public static async  getSeasonForProvider(series: Series, localData: ProviderLocalData): Promise<Season> {
-        const externalProviderInstance = ProviderList.getExternalProviderInstance(localData);
+        const externalProviderInstance = ProviderList.getProviderInstanceByLocalData(localData);
         if (localData) {
             if (externalProviderInstance.hasEpisodeTitleOnFullInfo) {
                 return this.searchSeasonForProvider(series, localData);
@@ -25,7 +22,7 @@ export default class SeasonAwarenessFindSeasonNumber {
     private static async searchSeasonForProvider(series: Series, existingLocalDataProvider: ProviderLocalData): Promise<Season> {
         const otherProviders = SeasonAwarenessHelper.getOtherProvidersWithSeasonAwareness(series, existingLocalDataProvider);
         for (let otherProvider of otherProviders) {
-            const providerInstance = ProviderList.getExternalProviderInstance(otherProvider);
+            const providerInstance = ProviderList.getProviderInstanceByLocalData(otherProvider);
             try {
                 if (otherProvider.detailEpisodeInfo.length === 0) {
                     const maybeFullInfoResult = await ProviderHelper.requestProviderInfoUpgrade(series, providerInstance, false, ProviderInfoStatus.FULL_INFO);

@@ -2,11 +2,12 @@ import ExternalInformationProvider from '../../api/provider/external-information
 import ExternalProvider from '../../api/provider/external-provider';
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
+import FailedProviderRequest from '../../controller/objects/meta/failed-provider-request';
 import Series from '../../controller/objects/series';
-import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../controller/provider-manager/provider-list';
-import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
+import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
+import ProviderNameManager from '../../controller/provider-controller/provider-manager/provider-name-manager';
 import logger from '../../logger/logger';
 import EpisodeStatsHelper from '../episode-helper/episode-stats-helper';
 import ProviderHelper from './provider-helper';
@@ -34,6 +35,9 @@ export default class ProviderInfoHelper {
                     }
                 }
             } catch (err) {
+                if (!isNaN(err)) {
+                    new FailedProviderRequest(infoProvider, err);
+                }
                 logger.error('[ProviderHelper] requestFullProviderUpdate #1: ' + err);
             }
         }
@@ -90,7 +94,7 @@ export default class ProviderInfoHelper {
         const allSeasonAwareProviderLocalDatas = [];
         for (const currentProvider of currentProviders) {
             try {
-                const instance = ProviderList.getExternalProviderInstance(currentProvider);
+                const instance = ProviderList.getProviderInstanceByLocalData(currentProvider);
                 if (instance.hasUniqueIdForSeasons) {
                     allSeasonAwareProviderLocalDatas.push(currentProvider);
                 } else {

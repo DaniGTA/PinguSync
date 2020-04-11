@@ -1,18 +1,15 @@
 import MainListSearcher from '../../controller/main-list-manager/main-list-searcher';
-import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
-import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
-import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import logger from '../../logger/logger';
-import EpisodeComperator from '../comperators/episode-comperator';
 import EpisodeBindingPoolHelper from '../episode-binding-pool-helper';
 import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
-import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
+import EpisodeGeneratorHelper from './episode-generator-helper';
 import EpisodeRatedEqualityContainerHelper from './episode-rated-equality-container-helper';
 import EpisodeRatedEqualityHelper from './episode-rated-equality-helper';
-import ProviderAndSeriesPackage from './provider-series-package';
+import EpisodeRatedEqualityContainer from './objects/episode-rated-equality-container';
+import ProviderAndSeriesPackage from './objects/provider-series-package';
 
 export default class EpisodeMappingHelper {
     /**
@@ -24,7 +21,7 @@ export default class EpisodeMappingHelper {
         const allEpisodeBindingPools = await this.getAllEpisodeBindingsThatAreRelevant(allProviders);
         for (const provider of allProviders) {
             if (!this.detailedEpisodeIsPresent(provider.providerLocalData)) {
-                const generateEpisodes = await this.generateMissingEpisodes(provider.providerLocalData, provider.seasonTarget);
+                const generateEpisodes = await EpisodeGeneratorHelper.generateMissingEpisodes(provider.providerLocalData, provider.seasonTarget);
                 provider.providerLocalData.addDetailedEpisodeInfos(...generateEpisodes);
             }
         }
@@ -128,36 +125,8 @@ export default class EpisodeMappingHelper {
     }
 
     /**
-     * This converts a episode number to a list of episodes.
-     * @param provider
-     * @param season
-     */
-    private static async generateMissingEpisodes(provider: ProviderLocalData, season?: Season): Promise<Episode[]> {
-        const generatedEpisodes: Episode[] = [];
-        if (provider.episodes) {
-            const numberOfMissingEpisodes = provider.episodes - provider.getDetailedEpisodeLength();
-            for (let episode = 1; episode <= numberOfMissingEpisodes; episode++) {
-                let episodeFounded = false;
-                for (const detailedEpisode of provider.detailEpisodeInfo) {
-                    if (EpisodeComperator.isEpisodeSameAsDetailedEpisode(episode, detailedEpisode, season)) {
-                        episodeFounded = true;
-                        break;
-                    }
-                }
-                if (!episodeFounded) {
-                    const tempEpisode = new Episode(episode);
-                    tempEpisode.provider = provider.provider;
-                    tempEpisode.providerId = provider.id;
-                    tempEpisode.type = EpisodeType.REGULAR_EPISODE;
-                    generatedEpisodes.push(tempEpisode);
-                }
-            }
-        }
-        return generatedEpisodes;
-    }
-
-    /**
-     * get all relevant episode bindings from other series. (On season difference it can be helpfull to get the bindings from other season to calc the episode difference)
+     * get all relevant episode bindings from other series.
+     * (On season difference it can be helpfull to get the bindings from other season to calc the episode difference)
      */
     private static async getAllEpisodeBindingsThatAreRelevant(providers: ProviderLocalDataWithSeasonInfo[]): Promise<EpisodeBindingPool[]> {
         const finalEpisodeBindingPool: EpisodeBindingPool[] = [];

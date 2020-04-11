@@ -5,7 +5,7 @@ import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalDataWithSeasonInfo from '../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import TVDBProvider from '../tvdb/tvdb-provider';

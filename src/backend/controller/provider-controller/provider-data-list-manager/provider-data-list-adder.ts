@@ -1,5 +1,5 @@
 import AdderProviderCache from '../../main-list-manager/object-adder/adder-provider-cache';
-import ProviderLocalData from '../../provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import ProviderDataListManager from './provider-data-list-manager';
 
 export default class ProviderDataListAdder {

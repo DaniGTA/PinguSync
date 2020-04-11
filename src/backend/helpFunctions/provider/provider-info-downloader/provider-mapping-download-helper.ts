@@ -2,7 +2,7 @@ import ExternalInformationProvider from '../../../api/provider/external-informat
 import ExternalMappingProvider from '../../../api/provider/external-mapping-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import Series from '../../../controller/objects/series';
-import ProviderList from '../../../controller/provider-manager/provider-list';
+import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../../logger/logger';
 
 export default class ProviderMappingDownloadHelper {
@@ -11,7 +11,7 @@ export default class ProviderMappingDownloadHelper {
         const allLocalDatas = series.getAllProviderLocalDatas();
         for (const localData of allLocalDatas) {
             try {
-                const providerInstance = ProviderList.getExternalProviderInstance(localData);
+                const providerInstance = ProviderList.getProviderInstanceByLocalData(localData);
                 const relevantMappingProviders = this.getAllAvailableMappingProviderThatSupportProvider(providerInstance);
                 for (const mappingProvider of relevantMappingProviders) {
                     try {

@@ -1,6 +1,6 @@
-import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
 import sortHelper from '../sort-helper';
 import listHelper from '../list-helper';
+import EpisodeRatedEqualityContainer from './objects/episode-rated-equality-container';
 
 export default class EpisodeRatedEqualityContainerHelper {
     public static async sortingEpisodeRatedEqualityContainerByResultPoints(aEp: EpisodeRatedEqualityContainer, bEp: EpisodeRatedEqualityContainer) {

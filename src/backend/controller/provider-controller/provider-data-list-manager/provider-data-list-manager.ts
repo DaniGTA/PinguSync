@@ -1,9 +1,9 @@
 import listHelper from '../../../helpFunctions/list-helper';
 import logger from '../../../logger/logger';
 import SeriesProviderExtensionInstanceCheck from '../../objects/extension/provider-extension/series-provider-extension-instance-check';
-import { InfoProviderLocalData } from '../../provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../../provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
 import ProviderDataListLoader from './provider-data-list-loader';
 import ProviderDataListSearcher from './provider-data-list-searcher';
 

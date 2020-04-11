@@ -2,22 +2,19 @@ import ExternalInformationProvider from '../../api/provider/external-information
 import ExternalProvider from '../../api/provider/external-provider';
 import MultiProviderResult from '../../api/provider/multi-provider-result';
 import Series from '../../controller/objects/series';
-import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../controller/provider-manager/provider-list';
-import ProviderNameManager from '../../controller/provider-manager/provider-name-manager';
+import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
+import ProviderNameManager from '../../controller/provider-controller/provider-manager/provider-name-manager';
 import logger from '../../logger/logger';
 import dateHelper from '../date-helper';
 import listHelper from '../list-helper';
 import SeasonHelper from '../season-helper/season-helper';
+import providerInfoDownloaderhelper from './provider-info-downloader/download-provider-local-data-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
-import providerInfoDownloaderhelper from './provider-info-downloader/provider-info-downloaderhelper';
 import ProviderMappingDownloadHelper from './provider-info-downloader/provider-mapping-download-helper';
-import ProviderInfoHelper from './provider-info-helper';
-import ProviderListHelper from './provider-list-helper';
-import SeasonAwarenessCreatorSeasonNumber from './season-awareness-helper/season-awareness-creator-season-number';
 import SeasonAwarenessFindSeasonNumber from './season-awareness-helper/season-awareness-find-season-number';
-import SeasonAwarenessHelper from './season-awareness-helper/season-awareness-helper';
+import { FailedRequestError } from '../../controller/objects/meta/failed-request';
 
 
 export default class ProviderHelper {
@@ -26,49 +23,13 @@ export default class ProviderHelper {
         return series.getAllProviderLocalDatas().findIndex((existingProvider) => existingProvider.provider === provider.providerName) !== -1;
     }
 
-    public static async requestFullProviderUpdate(series: Series, target: ProviderInfoStatus = ProviderInfoStatus.BASIC_INFO, force = false): Promise<Series> {
-        if (this.canUpdateSeries(series) || force) {
-            const seasonAware = SeasonAwarenessHelper.isSeasonAware(series.getAllProviderLocalDatasWithSeasonInfo());
-
-            const hadSeriesNames = this.hasSeriesASeriesNames(series);
-            if (!hadSeriesNames) {
-                const upgradedinfos = await this.requestUpgradeAllCurrentinfos(series, force);
-                await series.addProviderDatasWithSeasonInfos(...upgradedinfos);
-            }
-
-            const proivderLocalDataFromMappings = await this.requestAllMappingProvider(series);
-            await series.addProviderDatasWithSeasonInfos(...proivderLocalDataFromMappings);
-
-            const basicListProviders = await ProviderListHelper.requestAllListProviderInfos(series, force, target);
-            await series.addProviderDatasWithSeasonInfos(...basicListProviders);
-
-            const infoProviders = await ProviderInfoHelper.requestAllInfoProviderInfos(series, force, target, seasonAware);
-            if (!seasonAware) {
-                const instance = new SeasonAwarenessCreatorSeasonNumber();
-                const providers = await instance.requestSeasonAwareness(series, infoProviders);
-                await series.addProviderDatasWithSeasonInfos(...providers);
-            } else {
-                await series.addProviderDatasWithSeasonInfos(...infoProviders);
-            }
-
-            const listProviders = await ProviderListHelper.requestAllListProviderInfos(series, force, target);
-            await series.addProviderDatasWithSeasonInfos(...listProviders);
-
-            const seasonFilledResults = await this.generateSeasonTarget(series, series.getAllProviderLocalDatasWithSeasonInfo());
-            await series.addProviderDatasWithSeasonInfos(...seasonFilledResults);
-
-            series.lastInfoUpdate = Date.now();
-        }
-        return series;
-    }
-
     public static async requestUpgradeAllCurrentinfos(series: Series, force: boolean): Promise<ProviderLocalDataWithSeasonInfo[]> {
         const resultList: ProviderLocalDataWithSeasonInfo[] = [];
         const providerLocalDatas = series.getAllProviderLocalDatas();
         for (const providerLocalData of providerLocalDatas) {
             try {
                 if (providerLocalData && providerLocalData.infoStatus > ProviderInfoStatus.FULL_INFO || !providerLocalData) {
-                    const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
+                    const providerInstance = ProviderList.getProviderInstanceByLocalData(providerLocalData);
                     const infoResult = await this.requestProviderInfoUpgrade(series, providerInstance, force, ProviderInfoStatus.FULL_INFO);
                     if (infoResult) {
                         resultList.push(...infoResult.getAllProvidersWithSeason());
@@ -97,6 +58,7 @@ export default class ProviderHelper {
     // tslint:disable-next-line: max-line-length
     public static async requestProviderInfoUpgrade(series: Series, provider: ExternalInformationProvider, force: boolean, target: ProviderInfoStatus): Promise<MultiProviderResult | undefined> {
         logger.debug('Start request for Provider: ' + provider.providerName);
+        let responseError = null;
         const localDatas: MultiProviderResult[] = [];
         const tempSeriesCopy = Object.assign(new Series(), series);
         const currentLocalData = series.getAllProviderLocalDatasWithSeasonInfo().find((entry) => entry.providerLocalData.provider === provider.providerName);
@@ -105,7 +67,7 @@ export default class ProviderHelper {
             const idProviders = this.getAvaibleProvidersThatCanProvideProviderId(series.getAllProviderLocalDatas(), provider);
             for (const idProvider of idProviders) {
                 try {
-                    const idProviderResult = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(tempSeriesCopy, idProvider);
+                    const idProviderResult = await providerInfoDownloaderhelper.downloadProviderLocalData(tempSeriesCopy, idProvider);
                     localDatas.push(idProviderResult);
                     await tempSeriesCopy.addProviderDatasWithSeasonInfos(...idProviderResult.getAllProvidersWithSeason());
                 } catch (err) {
@@ -121,10 +83,15 @@ export default class ProviderHelper {
                 }
             }
         }
-        const requestResult = await this.requestProviderToTarget(provider, firstSeason, series, target);
+        let requestResult;
+        try {
+            requestResult = await this.requestProviderToTarget(provider, firstSeason, series, target);
 
-        if (requestResult) {
-            localDatas.push(requestResult);
+            if (requestResult) {
+                localDatas.push(requestResult);
+            }
+        } catch (err) {
+            responseError = err;
         }
 
         if (localDatas.length === 0) {
@@ -143,6 +110,9 @@ export default class ProviderHelper {
                 const mainProvider = new ProviderLocalDataWithSeasonInfo(requestResult?.mainProvider.providerLocalData, currentLocalData?.seasonTarget);
                 result = new MultiProviderResult(mainProvider, ...result.subProviders);
             }
+        }
+        if (!result?.mainProvider && responseError) {
+            throw responseError;
         }
         return result;
     }
@@ -190,7 +160,7 @@ export default class ProviderHelper {
      */
     public static isTheLocalDataStillUpToDate(localData: ProviderLocalData): boolean {
         try {
-            const instance = ProviderList.getExternalProviderInstance(localData);
+            const instance = ProviderList.getProviderInstanceByLocalData(localData);
             if (instance) {
                 const localDataLastUpdate = new Date(localData.lastUpdate);
                 const outdate = dateHelper.addDays(localDataLastUpdate, 30);
@@ -245,8 +215,8 @@ export default class ProviderHelper {
 
     /**
      * The target provider will be moved to the main provider and all others will be assigned to the subProviderList
-     * @param targetProvider 
-     * @param listOfAllProviders 
+     * @param targetProvider
+     * @param listOfAllProviders
      */
     private static extractTargetProviderFromProviderLocalDatas(targetProvider: ExternalProvider, listOfAllProviders: ProviderLocalData[]): MultiProviderResult | undefined {
         for (const provider of listOfAllProviders) {
@@ -267,15 +237,24 @@ export default class ProviderHelper {
                 if (currentResult) {
                     lastLocalDataResult = currentResult;
                 }
-                if (firstSeason !== null && !provider.hasUniqueIdForSeasons) {
-                    requestResult = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(firstSeason, provider);
+                try {
+                    if (firstSeason !== null && !provider.hasUniqueIdForSeasons) {
+                        requestResult = await providerInfoDownloaderhelper.downloadProviderLocalData(firstSeason, provider);
+                    }
+                } catch (err) {
+                    if (err !== FailedRequestError.ProviderNoResult) {
+                        throw err;
+                    }
                 }
                 if (requestResult === null) {
-                    requestResult = await providerInfoDownloaderhelper.downloadProviderSeriesInfo(tempSeriesCopy, provider);
+                    requestResult = await providerInfoDownloaderhelper.downloadProviderLocalData(tempSeriesCopy, provider);
                 }
                 currentResult = requestResult.mainProvider;
                 await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResult.getAllProvidersWithSeason());
             } catch (err) {
+                if (!isNaN(err)) {
+                    throw err;
+                }
                 logger.error(err);
             }
         } while (this.isProviderTargetAchievFailed(currentResult, lastLocalDataResult, target));
@@ -325,7 +304,7 @@ export default class ProviderHelper {
                 if (provider.provider !== targetProvider.providerName) {
                     if (this.canGetTargetIdFromCurrentProvider(provider, targetProvider)) {
                         try {
-                            const instance = ProviderList.getExternalProviderInstance(provider);
+                            const instance = ProviderList.getProviderInstanceByLocalData(provider);
                             result.push(instance);
                         } catch (err) {
                             logger.error(err);
@@ -368,7 +347,7 @@ export default class ProviderHelper {
 
     private static canGetTargetIdFromCurrentProvider(currentProvider: ProviderLocalData, targetProvider: ExternalProvider): boolean {
         if (currentProvider.infoStatus !== ProviderInfoStatus.FULL_INFO) {
-            for (const supportedProvider of ProviderList.getExternalProviderInstance(currentProvider).potentialSubProviders) {
+            for (const supportedProvider of ProviderList.getProviderInstanceByLocalData(currentProvider).potentialSubProviders) {
                 try {
                     if (ProviderNameManager.getProviderName(supportedProvider) === targetProvider.providerName) {
                         return true;

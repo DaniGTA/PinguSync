@@ -7,9 +7,9 @@ import Name from '../../../../src/backend/controller/objects/meta/name';
 import Season from '../../../../src/backend/controller/objects/meta/season';
 import Series from '../../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
-import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
-import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
+import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
 import KitsuTestProvider from './kitsu-test-provider';
 // tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {
@@ -35,7 +35,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, '6521');
     });
 
@@ -48,7 +48,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, '8061');
     });
 
@@ -61,7 +61,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         strictEqual(result.mainProvider.providerLocalData.id, '10857');
     });
 
@@ -74,7 +74,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         const kitsuResult = result.mainProvider;
 
         strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
@@ -91,7 +91,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         const kitsuResult = result.mainProvider;
 
         strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
@@ -106,7 +106,7 @@ describe('Provider: Kitsu | Test runs', () => {
         await series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
-        const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, kitsuProvider);
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         const kitsuResult = result.mainProvider;
 
         strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);

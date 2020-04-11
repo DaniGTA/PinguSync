@@ -6,12 +6,12 @@ import MainListManager from '../../../src/backend/controller/main-list-manager/m
 import MainListSearcher from '../../../src/backend/controller/main-list-manager/main-list-searcher';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
-import ProviderNameManager from '../../../src/backend/controller/provider-manager/provider-name-manager';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
+import ProviderLoader from '../../../src/backend/controller/provider-controller/provider-manager/provider-loader';
+import ProviderNameManager from '../../../src/backend/controller/provider-controller/provider-manager/provider-name-manager';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestProvider from '../objects/testClass/testProvider';
-import ProviderLoader from '../../../src/backend/controller/provider-manager/provider-loader';
 
 // tslint:disable: no-string-literal
 describe('MainList | Searcher tests', () => {

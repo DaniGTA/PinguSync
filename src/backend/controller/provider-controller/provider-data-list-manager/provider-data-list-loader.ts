@@ -2,9 +2,9 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import logger from '../../../logger/logger';
 import Episode from '../../objects/meta/episode/episode';
-import { InfoProviderLocalData } from '../../provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../../provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
 export default class ProviderDataListLoader {
     /**
      * Load json data from file.

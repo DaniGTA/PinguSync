@@ -1,4 +1,3 @@
-import { jsonArrayMember, jsonMember, jsonObject } from 'typedjson';
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
@@ -13,10 +12,12 @@ import logger from '../../logger/logger';
 import MainListAdder from '../main-list-manager/main-list-adder';
 import MainListManager from '../main-list-manager/main-list-manager';
 import MainListSearcher from '../main-list-manager/main-list-searcher';
-import { ProviderInfoStatus } from '../provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../provider-manager/provider-list';
+import { ProviderInfoStatus } from '../provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../provider-controller/provider-manager/provider-list';
+import InfoLocalDataBind from './extension/provider-extension/binding/info-local-data-bind';
+import ListLocalDataBind from './extension/provider-extension/binding/list-local-data-bind';
 import SeriesProviderExtension from './extension/provider-extension/series-provider-extension';
 import { MergeTypes } from './merge-types';
 import Cover from './meta/cover';
@@ -31,8 +32,6 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
-import InfoLocalDataBind from './extension/provider-extension/binding/info-local-data-bind';
-import ListLocalDataBind from './extension/provider-extension/binding/list-local-data-bind';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -70,7 +69,6 @@ export default class Series extends SeriesProviderExtension {
             this.infoProviderInfos[index].loadPrototypes();
         }
         Object.setPrototypeOf(this.cachedSeason, Season.prototype);
-
     }
 
     public async resetCache() {
@@ -118,7 +116,7 @@ export default class Series extends SeriesProviderExtension {
         const names = [];
         for (const provider of this.getAllProviderLocalDatasWithSeasonInfo()) {
             try {
-                const instance = ProviderList.getExternalProviderInstance(provider);
+                const instance = ProviderList.getProviderInstanceByLocalData(provider);
                 if (!instance.hasUniqueIdForSeasons) {
                     if (!SeasonComperator.isSameSeason(provider.seasonTarget, new Season([1]))) {
                         continue;
@@ -577,7 +575,7 @@ export default class Series extends SeriesProviderExtension {
                     if (providerA.provider === providerB.provider) {
                         const providerBTargetSeason = providerBWithSeason.seasonTarget;
                         const simpleProviderCheckResult = ProviderComperator.simpleProviderIdCheck(providerA.id, providerB.id);
-                        if (simpleProviderCheckResult && ProviderList.getExternalProviderInstance(providerB).hasUniqueIdForSeasons) {
+                        if (simpleProviderCheckResult && ProviderList.getProviderInstanceByLocalData(providerB).hasUniqueIdForSeasons) {
                             throw new Error('[Series] Not the relation was found but the Series himself. SKIPPING SEARCH. SeriesID: ' + this.id);
                         } else if (simpleProviderCheckResult && !SeasonComperator.isSameSeason(providerATargetSeason, providerBTargetSeason)) {
                             return a;

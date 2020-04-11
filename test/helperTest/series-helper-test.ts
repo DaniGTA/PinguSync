@@ -6,10 +6,10 @@ import Name from '../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../src/backend/controller/objects/meta/name-type';
 import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
-import { InfoProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../src/backend/controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../src/backend/controller/provider-manager/provider-list';
+import { InfoProviderLocalData } from '../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import TestProvider from '../controller/objects/testClass/testProvider';
@@ -17,9 +17,6 @@ import TestProvider from '../controller/objects/testClass/testProvider';
 
 
 describe('Series Helper', () => {
-
-    beforeEach(() => {
-    });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('test', true, false), new TestProvider('test2', true, true)];

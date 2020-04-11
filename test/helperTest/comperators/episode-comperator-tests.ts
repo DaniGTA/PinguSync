@@ -4,7 +4,7 @@ import Episode from '../../../src/backend/controller/objects/meta/episode/episod
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
 import { EpisodeType } from '../../../src/backend/controller/objects/meta/episode/episode-type';
 import Season from '../../../src/backend/controller/objects/meta/season';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../../../src/backend/helpFunctions/comperators/episode-comperator';
 import TestProvider from '../../controller/objects/testClass/testProvider';

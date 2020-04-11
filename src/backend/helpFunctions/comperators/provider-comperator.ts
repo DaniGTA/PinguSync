@@ -4,10 +4,10 @@ import { MediaType } from '../../controller/objects/meta/media-type';
 import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import { SeasonError } from '../../controller/objects/transfer/season-error';
-import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../controller/provider-manager/provider-list';
+import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 import seasonHelper from '../season-helper/season-helper';
@@ -56,7 +56,7 @@ export default class ProviderComperator {
                     }
 
                     try {
-                        if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
+                        if (ProviderList.getProviderInstanceByLocalData(aProvider).hasUniqueIdForSeasons) {
                             return ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id);
                         } else {
                             const mediaTypeResult = await MediaTypeComperator.comperaMediaType(aMediaType, bMediaType);
@@ -118,7 +118,7 @@ export default class ProviderComperator {
             for (const bProvider of b) {
                 if (aProvider.provider === bProvider.provider) {
                     try {
-                        if (ProviderList.getExternalProviderInstance(aProvider).hasUniqueIdForSeasons) {
+                        if (ProviderList.getProviderInstanceByLocalData(aProvider).hasUniqueIdForSeasons) {
                             return ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id);
                         } else {
                             if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id)) {
@@ -238,7 +238,7 @@ export default class ProviderComperator {
             const providerASeason = this.aSeries.getProviderSeasonTarget(providerA.provider);
             const providerBSeason = this.bSeries.getProviderSeasonTarget(providerB.provider);
             try {
-                if (ProviderList.getExternalProviderInstance(providerA).hasUniqueIdForSeasons) {
+                if (ProviderList.getProviderInstanceByLocalData(providerA).hasUniqueIdForSeasons) {
                     comperatorResult.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     // tslint:disable-next-line: no-empty
                 } else if (seasonHelper.isSeasonUndefined(providerASeason) && seasonHelper.isSeasonUndefined(providerBSeason)) {

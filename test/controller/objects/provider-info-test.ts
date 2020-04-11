@@ -2,7 +2,7 @@
 import * as assert from 'assert';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
 import { WatchStatus } from '../../../src/backend/controller/objects/series';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 
 describe('Provider | Watchlist & Merge', () => {
 

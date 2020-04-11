@@ -9,8 +9,9 @@ import MainListPackageManager from './main-list-manager/main-list-package-manage
 import MainListEntryUpdater from './main-list-manager/main-list-updater';
 import WatchProgress from './objects/meta/watch-progress';
 import Series from './objects/series';
-import { ProviderInfoStatus } from './provider-manager/local-data/interfaces/provider-info-status';
-import ProviderList from './provider-manager/provider-list';
+import { ProviderInfoStatus } from './provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderList from './provider-controller/provider-manager/provider-list';
+
 export default class ListController {
 
     public static instance: ListController | null = null;

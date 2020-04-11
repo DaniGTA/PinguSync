@@ -2,7 +2,7 @@ import { strictEqual } from 'assert';
 import Episode from '../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeBindingPool from '../../src/backend/controller/objects/meta/episode/episode-binding-pool';
 import EpisodeMapping from '../../src/backend/controller/objects/meta/episode/episode-mapping';
-import { ListProviderLocalData } from '../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { ListProviderLocalData } from '../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper';
 
 import Season from '../../src/backend/controller/objects/meta/season';

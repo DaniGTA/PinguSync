@@ -3,15 +3,15 @@ import ExternalProvider from '../../../api/provider/external-provider';
 import MainListAdder from '../../../controller/main-list-manager/main-list-adder';
 import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../../controller/provider-manager/provider-list';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../../logger/logger';
 import EpisodeHelper from '../../episode-helper/episode-helper';
 import TitleHelper from '../../name-helper/title-helper';
 import seasonHelper from '../../season-helper/season-helper';
 import ProviderHelper from '../provider-helper';
+import DownloadProviderLocalDataWithoutId from '../provider-info-downloader/download-provider-local-data-without-id';
 import ProviderLocalDataWithSeasonInfo from '../provider-info-downloader/provider-data-with-season-info';
-import providerInfoDownloaderhelper from '../provider-info-downloader/provider-info-downloaderhelper';
 import SeasonAwarenessHelper from './season-awareness-helper';
 import SeasonAwarenessPathController from './season-awareness-path-controller';
 
@@ -22,7 +22,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         const finalResult: ProviderLocalDataWithSeasonInfo[] = [];
         for (const listProvider of series.getListProvidersLocalDataInfosWithSeasonInfo()) {
             try {
-                if (ProviderList.getExternalProviderInstance(listProvider.providerLocalData).hasEpisodeTitleOnFullInfo) {
+                if (ProviderList.getProviderInstanceByLocalData(listProvider.providerLocalData).hasEpisodeTitleOnFullInfo) {
                     if (!SeasonAwarenessHelper.isProviderSeasonAware(listProvider)) {
                         const result = await this.requestSeasonAwarnessForProviderLocalData(series, extraInfoProviders, listProvider.providerLocalData);
                         if (result) {
@@ -46,7 +46,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
 
         if (!EpisodeHelper.hasEpisodeNames(providerWithoutSeasonAwarness.detailEpisodeInfo)) {
             // tslint:disable-next-line: max-line-length
-            const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([providerWithoutSeasonAwarness], ProviderList.getExternalProviderInstance(providerWithoutSeasonAwarness));
+            const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([providerWithoutSeasonAwarness], ProviderList.getProviderInstanceByLocalData(providerWithoutSeasonAwarness));
             if (result !== undefined) {
                 providerWithoutSeasonAwarness = result;
             }
@@ -83,7 +83,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         if (!providerLocalData) {
             let names = series.getAllNames();
             names = TitleHelper.getAllNamesSortedBySearchAbleScore(names);
-            const result = await providerInfoDownloaderhelper.downloadProviderSeriesInfoBySeriesName(names, series, externalProvider);
+            const result = await new DownloadProviderLocalDataWithoutId(series, externalProvider).downloadProviderSeriesInfoBySeriesName(names);
             providerLocalData = result?.mainProvider.providerLocalData;
         }
         return providerLocalData;

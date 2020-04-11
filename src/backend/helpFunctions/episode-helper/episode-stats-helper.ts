@@ -1,5 +1,5 @@
 import Episode from '../../controller/objects/meta/episode/episode';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 
 /**
  * Helps to get stats like max episode number or max season number.

@@ -1,8 +1,8 @@
 import Episode from '../../controller/objects/meta/episode/episode';
 import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
 import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ComperatorResult, { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../comperators/episode-comperator';
 import SeasonComperator from '../comperators/season-comperator';
@@ -10,10 +10,10 @@ import EpisodeBindingPoolHelper from '../episode-binding-pool-helper';
 import EpisodeHelper from '../episode-helper/episode-helper';
 import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info';
 import SeasonHelper from '../season-helper/season-helper';
-import EpisodeProviderBind from './episode-provider-bind';
-import EpisodeRatedEqualityContainer from './episode-rated-equality-container';
-import ProviderAndSeriesPackage from './provider-series-package';
-import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
+import EpisodeProviderBind from './objects/episode-provider-bind';
+import EpisodeRatedEqualityContainer from './objects/episode-rated-equality-container';
+import ProviderAndSeriesPackage from './objects/provider-series-package';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 
 
 export default class EpisodeRatedEqualityHelper {

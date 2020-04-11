@@ -3,9 +3,10 @@ import Kitsu from 'kitsu';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import WatchProgress from '../../../controller/objects/meta/watch-progress';
 import Series from '../../../controller/objects/series';
-import { InfoProviderLocalData } from '../../../controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../controller/provider-manager/local-data/list-provider-local-data';
+
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../../logger/logger';
 import ExternalInformationProvider from '../../provider/external-information-provider';
 import ListProvider from '../../provider/list-provider';
@@ -28,7 +29,7 @@ export default class KitsuProvider extends ListProvider {
         return KitsuProvider.instance;
     }
     private static instance: KitsuProvider;
-    public version = 2;
+    public version = 3;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [MalProvider, TraktProvider, AniDBProvider, AniListProvider];

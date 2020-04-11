@@ -1,7 +1,7 @@
 
 import { strictEqual } from 'assert';
 import Cover from '../../../src/backend/controller/objects/meta/cover';
-import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 
 
 describe('infoProviderLocalData tests', () => {

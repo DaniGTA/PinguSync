@@ -6,9 +6,9 @@ import { MediaType } from '../../../../src/backend/controller/objects/meta/media
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Series from '../../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
-import { ListProviderLocalData } from '../../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../../src/backend/controller/provider-manager/provider-list';
-import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
+import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
 import TestProvider from '../../../controller/objects/testClass/testProvider';
 import TraktTestProvider from './trakt-test-provider';
 // tslint:disable: no-string-literal
@@ -33,7 +33,7 @@ describe('Provider: Trakt | Tests runs', () => {
 
             await series.addProviderDatas(unkownProvider);
 
-            const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProviderInstance);
+            const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
             strictEqual(result.getAllProviders().length, 2);
         });
 
@@ -43,7 +43,7 @@ describe('Provider: Trakt | Tests runs', () => {
             unkownProvider.addSeriesName(new Name('The Asterisk War: The Academy City on the Water', 'en'));
             await series.addProviderDatas(unkownProvider);
 
-            const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProviderInstance);
+            const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
             strictEqual(result.getAllProviders().length, 2);
         });
 
@@ -55,7 +55,7 @@ describe('Provider: Trakt | Tests runs', () => {
             unkownProvider.addSeriesName(new Name('Little Witch Academia', 'en'));
             await series.addProviderDatas(unkownProvider);
 
-            const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProviderInstance);
+            const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
             strictEqual(result.getAllProviders().length, 2);
         });
 
@@ -67,7 +67,7 @@ describe('Provider: Trakt | Tests runs', () => {
             unkownProvider.addSeriesName(new Name('Avatar: The Last Airbender', 'en'));
             await series.addProviderDatas(unkownProvider);
 
-            const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProviderInstance);
+            const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
             strictEqual(result.getAllProviders().length, 2);
         });
 
@@ -80,7 +80,7 @@ describe('Provider: Trakt | Tests runs', () => {
             await series.addProviderDatas(unkownProvider);
 
 
-            const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProviderInstance);
+            const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
             strictEqual(result.mainProvider.providerLocalData.releaseYear, 2013);
             strictEqual(result.mainProvider.providerLocalData.id, 72367);
         });
@@ -92,7 +92,7 @@ describe('Provider: Trakt | Tests runs', () => {
             await series.addProviderDatas(unkownProvider);
 
 
-            const result = await providerInfoDownloaderhelper['downloadProviderSeriesInfo'](series, traktProviderInstance);
+            const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
             strictEqual(result.mainProvider.providerLocalData.id, 103803);
             notStrictEqual(result.mainProvider.providerLocalData.detailEpisodeInfo.length, 0);
         });

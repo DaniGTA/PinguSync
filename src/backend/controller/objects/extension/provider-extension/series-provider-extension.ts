@@ -1,27 +1,34 @@
 import ExternalProvider from '../../../../api/provider/external-provider';
-import ProviderLocalData from '../../../../controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderComperator from '../../../../helpFunctions/comperators/provider-comperator';
 import ProviderLocalDataWithSeasonInfo from '../../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import seasonHelper from '../../../../helpFunctions/season-helper/season-helper';
 import logger from '../../../../logger/logger';
 import ProviderDataListAdder from '../../../provider-controller/provider-data-list-manager/provider-data-list-adder';
 import ProviderDataListSearcher from '../../../provider-controller/provider-data-list-manager/provider-data-list-searcher';
-import { InfoProviderLocalData } from '../../../provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../../provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { ListProviderLocalData } from '../../../provider-controller/provider-manager/local-data/list-provider-local-data';
 import Season from '../../meta/season';
 import InfoLocalDataBind from './binding/info-local-data-bind';
 import ListLocalDataBind from './binding/list-local-data-bind';
 import LocalDataBind from './binding/local-data-bind';
 import SeriesProviderExtensionInstanceCheck from './series-provider-extension-instance-check';
+import FailedProviderRequest from '../../meta/failed-provider-request';
 
 
 export default class SeriesProviderExtension {
     protected listProviderInfos: ListLocalDataBind[] = [];
     protected infoProviderInfos: InfoLocalDataBind[] = [];
 
+    protected failedProviderRequest: FailedProviderRequest[] = [];
+
     public clearAllBindings() {
         this.listProviderInfos = [];
         this.infoProviderInfos = [];
+    }
+
+    public addFailedRequest(failedRequest: FailedProviderRequest): void {
+        this.failedProviderRequest.push(failedRequest);
     }
 
     /**

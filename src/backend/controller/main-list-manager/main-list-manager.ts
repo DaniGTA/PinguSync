@@ -4,8 +4,8 @@ import logger from '../../logger/logger';
 import { MergeTypes } from '../objects/merge-types';
 import Series from '../objects/series';
 import MainListLoader from './main-list-loader';
-import MainListSearcher from './main-list-searcher';
 import MainListSaver from './main-list-saver';
+import MainListSearcher from './main-list-searcher';
 export default class MainListManager {
 
     /**

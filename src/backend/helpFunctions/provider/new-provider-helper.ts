@@ -2,11 +2,13 @@ import ExternalInformationProvider from '../../api/provider/external-information
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
 import MultiProviderResult from '../../api/provider/multi-provider-result';
+import FailedProviderRequest from '../../controller/objects/meta/failed-provider-request';
 import Series from '../../controller/objects/series';
-import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../controller/provider-manager/provider-list';
+import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
+import ProviderComperator from '../comperators/provider-comperator';
 import ProviderHelper from './provider-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import ProviderMappingDownloadHelper from './provider-info-downloader/provider-mapping-download-helper';
@@ -23,9 +25,7 @@ export default class NewProviderHelper {
 
         const offlineProviders = this.getAllOfflineInfoProviders();
         const offlineProviderResults = await this.getAllRequestResultsFromListOfProviders(series, offlineProviders, ProviderInfoStatus.BASIC_INFO);
-        for (const offlineProviderResult of offlineProviderResults) {
-            await series.addProviderDatasWithSeasonInfos(...offlineProviderResult.getAllProvidersWithSeason());
-        }
+        series = await this.addRequestResultToSeries(series, offlineProviderResults);
 
         if (proivderLocalDataFromMappings.length === 0) {
             proivderLocalDataFromMappings = await this.requestAllMappingProvider(series);
@@ -34,9 +34,7 @@ export default class NewProviderHelper {
 
         const missingProviders = await this.missingRelevantProviders(series, ProviderInfoStatus.ADVANCED_BASIC_INFO);
         const missingProviderResults = await this.getAllRequestResultsFromListOfProviders(series, missingProviders, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-        for (const missingProviderResult of missingProviderResults) {
-            await series.addProviderDatasWithSeasonInfos(...missingProviderResult.getAllProvidersWithSeason());
-        }
+        series = await this.addRequestResultToSeries(series, missingProviderResults);
 
         if (proivderLocalDataFromMappings.length === 0) {
             proivderLocalDataFromMappings = await this.requestAllMappingProvider(series);
@@ -60,9 +58,7 @@ export default class NewProviderHelper {
         if (clearedBindings) {
             const missingProviders2 = await this.missingRelevantProviders(series, ProviderInfoStatus.ADVANCED_BASIC_INFO);
             const missingProviderResults2 = await this.getAllRequestResultsFromListOfProviders(series, missingProviders2, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-            for (const missingProviderResult of missingProviderResults2) {
-                await series.addProviderDatasWithSeasonInfos(...missingProviderResult.getAllProvidersWithSeason());
-            }
+            series = await this.addRequestResultToSeries(series, missingProviderResults2);
         }
 
         return series;
@@ -81,10 +77,24 @@ export default class NewProviderHelper {
         return result;
     }
 
-    private static isProviderLocalDataProviderAndIdInList(providerLocalDataWithSeasonList: ProviderLocalDataWithSeasonInfo[], providerLocalDataWithSeason: ProviderLocalDataWithSeasonInfo) {
+    private static async addRequestResultToSeries(series: Series, results: Array<MultiProviderResult | FailedProviderRequest>): Promise<Series> {
+        for (const result of results) {
+            if (result instanceof FailedProviderRequest) {
+                series.addFailedRequest(result);
+            } else if (result instanceof MultiProviderResult) {
+                await series.addProviderDatasWithSeasonInfos(...result.getAllProvidersWithSeason());
+            }
+        }
+        return series;
+    }
+
+    private static isProviderLocalDataProviderAndIdInList(
+        providerLocalDataWithSeasonList: ProviderLocalDataWithSeasonInfo[],
+        providerLocalDataWithSeason: ProviderLocalDataWithSeasonInfo) {
         for (const providerLocalDataWithSeasonEntry of providerLocalDataWithSeasonList) {
             if (providerLocalDataWithSeasonEntry.providerLocalData.provider === providerLocalDataWithSeason.providerLocalData.provider) {
-                if (providerLocalDataWithSeasonEntry.providerLocalData.id == providerLocalDataWithSeason.providerLocalData.id) {
+                if (ProviderComperator.simpleProviderIdCheck(providerLocalDataWithSeasonEntry.providerLocalData.id,
+                    providerLocalDataWithSeason.providerLocalData.id)) {
                     return true;
                 }
             }
@@ -95,7 +105,7 @@ export default class NewProviderHelper {
     private static anyIdChangeForUniqueIds(series: Series, providerLocalDatas: ProviderLocalDataWithSeasonInfo[]): boolean {
         const oldProviderLocalDatas = series.getAllProviderLocalDatas();
         for (const providerLocalData of providerLocalDatas) {
-            const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
+            const providerInstance = ProviderList.getProviderInstanceByLocalData(providerLocalData);
             if (providerInstance.hasUniqueIdForSeasons) {
                 const oldLocalData = oldProviderLocalDatas.find((x) => x.provider === providerInstance.providerName);
                 if (oldLocalData) {
@@ -107,8 +117,8 @@ export default class NewProviderHelper {
         return false;
     }
 
-    private static async getAllRequestResultsFromListOfProviders(series: Series, providers: ExternalInformationProvider[], target: ProviderInfoStatus): Promise<MultiProviderResult[]> {
-        const results = [];
+    private static async getAllRequestResultsFromListOfProviders(series: Series, providers: ExternalInformationProvider[], target: ProviderInfoStatus): Promise<Array<MultiProviderResult | FailedProviderRequest>> {
+        const results: Array<MultiProviderResult | FailedProviderRequest> = [];
         for (const provider of providers) {
             try {
                 const result = await ProviderHelper.requestProviderInfoUpgrade(series, provider, false, target);
@@ -116,6 +126,9 @@ export default class NewProviderHelper {
                     results.push(result);
                 }
             } catch (err) {
+                if (!isNaN(err)) {
+                    results.push(new FailedProviderRequest(provider, err));
+                }
                 logger.debug(err);
             }
         }

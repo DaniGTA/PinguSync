@@ -1,6 +1,6 @@
 import { equal } from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
-import ProviderList from '../../../src/backend/controller/provider-manager/provider-list';
+import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 import SeasonSearchModeHelper from '../../../src/backend/helpFunctions/season-helper/season-search-mode-helper';
 

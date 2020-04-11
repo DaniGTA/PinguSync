@@ -44,7 +44,7 @@ import VueLazyload from "vue-lazyload";
 import { Promised } from "vue-promised";
 import WatchProgress from "../backend/controller/objects/meta/watch-progress";
 import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
-import { ListProviderLocalData } from "../backend/controller/provider-manager/local-data/list-provider-local-data";
+import { ListProviderLocalData } from "../backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data";
 import ShowEpisodeMapping from "./ShowEpisodeMapping.vue";
 import SeriesPackage from '../backend/controller/objects/series-package';
 

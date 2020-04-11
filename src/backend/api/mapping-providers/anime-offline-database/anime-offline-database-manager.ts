@@ -1,6 +1,6 @@
 import moment from 'moment';
-import ProviderLocalData from '../../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../../controller/provider-manager/provider-list';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import AniDBProvider from '../../information-providers/anidb/anidb-provider';
 import AniListProvider from '../../information-providers/anilist/anilist-provider';
@@ -20,7 +20,7 @@ export default class AnimeOfflineDatabaseManager {
 
     public static async getMappingFromProviderLocalData(providerLocalData: ProviderLocalData): Promise<IDatabaseEntry | undefined> {
         await this.checkDatabaseStatus();
-        const providerInstance = ProviderList.getExternalProviderInstance(providerLocalData);
+        const providerInstance = ProviderList.getProviderInstanceByLocalData(providerLocalData);
         for (const databaseEntry of this.LOCAL_DATA.database.data) {
             if (this.databaseEntryHasSameIdAsProviderLocalData(databaseEntry, providerInstance, providerLocalData)) {
                 return databaseEntry;

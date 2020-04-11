@@ -1,4 +1,4 @@
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ExternalProvider from './external-provider';
 import MultiProviderResult from './multi-provider-result';
 

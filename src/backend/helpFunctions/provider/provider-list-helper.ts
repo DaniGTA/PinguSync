@@ -1,13 +1,13 @@
+import ExternalInformationProvider from '../../api/provider/external-information-provider';
 import ExternalProvider from '../../api/provider/external-provider';
 import ListProvider from '../../api/provider/list-provider';
 import Series from '../../controller/objects/series';
-import { ProviderInfoStatus } from '../../controller/provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../../controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../controller/provider-manager/provider-list';
+import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ProviderHelper from './provider-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
-import ExternalInformationProvider from '../../api/provider/external-information-provider';
 
 export default class ProviderListHelper {
     /**

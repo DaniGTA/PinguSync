@@ -5,8 +5,8 @@ import { NameType } from '../../../src/backend/controller/objects/meta/name-type
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
-import { InfoProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-manager/local-data/list-provider-local-data';
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 
@@ -15,7 +15,7 @@ describe('Series | Basic', () => {
         // tslint:disable: no-string-literal
         MainListManager['mainList'] = [];
         ProviderDataListManager['providerDataList'] = [];
-    })
+    });
     test('should have a id', async () => {
         const series = new Series();
         assert.notEqual(series.id.length, 0);
