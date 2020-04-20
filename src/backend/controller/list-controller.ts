@@ -11,6 +11,7 @@ import WatchProgress from './objects/meta/watch-progress';
 import Series from './objects/series';
 import { ProviderInfoStatus } from './provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderList from './provider-controller/provider-manager/provider-list';
+import NewProviderHelper from '../helpFunctions/provider/new-provider-helper';
 
 export default class ListController {
 
@@ -62,7 +63,7 @@ export default class ListController {
     public async updateWatchProgressTo(anime: Series, watchProgess: number) {
         if (anime.getListProvidersInfos().length < ProviderList.getListProviderList().length / 2) {
             try {
-                await ProviderHelper.requestFullProviderUpdate(anime, ProviderInfoStatus.FULL_INFO);
+                await NewProviderHelper.getAllRelevantProviderInfosForSeries(anime);
             } catch (err) {
                 logger.error('[ListController] [updateWatchProgressTo]: (see error next line)');
                 logger.error('[ListController] [updateWatchProgressTo]: Update watch progress');
@@ -105,7 +106,7 @@ export default class ListController {
             if (index !== -1) {
                 try {
                     const mainList = await MainListManager.getMainList();
-                    const result = await ProviderHelper.requestFullProviderUpdate((mainList)[index], ProviderInfoStatus.FULL_INFO, true);
+                    const result = await NewProviderHelper.getAllRelevantProviderInfosForSeries((mainList)[index]);
                     this.addSeriesToMainList(result);
                 } catch (err) {
                     logger.error('[ListController] [forceRefreshProviderInfo]: (see error next line)');

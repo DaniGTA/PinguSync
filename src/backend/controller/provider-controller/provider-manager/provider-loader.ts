@@ -36,6 +36,7 @@ export default class ProviderLoader {
         }
         return loadedList;
     }
+
     /**
      * Use private static getters that call to memoized fns lazily
      * rather than static members which are resolved during load time

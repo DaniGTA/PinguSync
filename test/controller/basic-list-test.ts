@@ -21,24 +21,22 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-con
 import ProviderList from '../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderNameManager from '../../src/backend/controller/provider-controller/provider-manager/provider-name-manager';
 import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper';
+import DownloadProviderLocalDataWithoutId from '../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-without-id';
 import ProviderLocalDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import providerInfoDownloaderhelper from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-info-downloaderhelper';
 import seriesHelper from '../../src/backend/helpFunctions/series-helper';
 import logger from '../../src/backend/logger/logger';
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
 
     beforeAll(async () => {
-        const anilistInstance = ProviderList.getListProviderList().find((x) => x.providerName === AniListProvider.getInstance().providerName);
+        const anilistInstance = ProviderList.getProviderInstanceByClass(AniListProvider);
         if (!anilistInstance) { fail(); }
-        anilistInstance.isUserLoggedIn = async () => true;
-        anilistInstance['requestRateLimitInMs'] = 0;
-        const traktInstance = ProviderList.getListProviderList().find((x) => x.providerName === TraktProvider.getInstance().providerName);
+        jest.spyOn(anilistInstance, 'isUserLoggedIn').mockImplementation(async () => true);
+        const traktInstance = ProviderList.getProviderInstanceByClass(TraktProvider);
         if (!traktInstance) { fail(); }
-        traktInstance.isUserLoggedIn = async () => true;
+        jest.spyOn(traktInstance, 'isUserLoggedIn').mockImplementation(async () => true);
         const anidbNameManagerInstance = AniDBHelper['anidbNameManager'];
         anidbNameManagerInstance.data = new AniDBProvider()['convertXmlToJson']();
-
     });
 
     beforeEach(() => {
@@ -515,7 +513,7 @@ describe('Basic List | Testrun', () => {
         await ListController.instance.addSeriesToMainList(series3);
         await ListController.instance.addSeriesToMainList(series4);
 
-        const result = await providerInfoDownloaderhelper['linkProviderDataFromRelations'](series2, TraktProvider.getInstance());
+        const result = await new DownloadProviderLocalDataWithoutId(series2, ProviderList.getProviderInstanceByClass(TraktProvider))['linkProviderDataFromRelations']();
 
         strictEqual(series2.getProviderSeasonTarget(result.providerLocalData.provider)?.getSingleSeasonNumberAsNumber(), 2);
 

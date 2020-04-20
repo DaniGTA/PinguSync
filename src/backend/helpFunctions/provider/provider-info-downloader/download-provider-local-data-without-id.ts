@@ -85,8 +85,8 @@ export default class DownloadProviderLocalDataWithoutId {
                 }
             }
             logger.warn(`[${this.requestId}][${this.provider.providerName}] ByName ${name.name} Request failed. ❌`);
-            throw FailedRequestError.ProviderNoResult;
         }
+        throw FailedRequestError.ProviderNoResult;
     }
 
     private async getProviderSeriesInfoByRelation(): Promise<MultiProviderResult | undefined> {

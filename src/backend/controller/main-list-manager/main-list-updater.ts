@@ -14,21 +14,10 @@ export default class MainListEntryUpdater {
     public async updateSeries(...providers: MultiProviderResult[]) {
         const notFounded: Series[] = [];
         for (const provider of providers) {
-            const searchResult = await MainListSearcher.findSeriesWithMultiProviderResult(provider);
-            if (searchResult) {
-                await searchResult.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
-                await MainListManager.updateSerieInList(searchResult);
-            } else {
-                logger.info('Add new series. Reason: Provider not found in mainlist');
-                const newSeries = new Series();
-                await newSeries.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
-                notFounded.push(newSeries);
-            }
+            const newSeries = new Series();
+            await newSeries.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
+            notFounded.push(newSeries);
         }
-        if (notFounded.length !== 0) {
-            await new MainListAdder().addSeries(...notFounded);
-        } else {
-            await MainListManager.requestSaveMainList();
-        }
+        await new MainListAdder().addSeries(...notFounded);
     }
 }

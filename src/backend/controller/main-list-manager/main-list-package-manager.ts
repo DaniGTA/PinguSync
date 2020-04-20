@@ -1,30 +1,29 @@
-import listHelper from '../../helpFunctions/list-helper';
-import seriesHelper from '../../helpFunctions/series-helper';
+import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
+import SeriesHelper from '../../helpFunctions/series-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import SeriesPackage from '../objects/series-package';
 import MainListManager from './main-list-manager';
-import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
 export default class MainListPackageManager {
     public async getIndexFromPackageId(packageId: string, list: readonly Series[] | Series[]): Promise<number> {
         return list.findIndex((x) => packageId === x.id);
     }
 
     public async getSeriesPackages(list: readonly Series[] | Series[]): Promise<SeriesPackage[]> {
-        let tempList = [...list];
+        const tempList = [...list];
 
         const seriesPackageList: SeriesPackage[] = [];
 
         for (const entryList of tempList) {
             try {
-                if (seriesPackageList.findIndex(x => x.id === entryList.packageId) === -1) {
+                if (seriesPackageList.findIndex((x) => x.id === entryList.packageId) === -1) {
                     const tempPackage = await this.createSeriesPackage(entryList, tempList);
                     for (const entry of tempPackage.allRelations) {
                         for (const entry2 of tempPackage.allRelations) {
                             const seasonA = entry.getSeason();
                             const seasonB = entry2.getSeason();
                             if (SeasonComperator.isSameSeason(await seasonA, await seasonB) && entry.id !== entry2.id) {
-                                const result = await seriesHelper.isSameSeries(entry, entry2);
+                                const result = await SeriesHelper.isSameSeries(entry, entry2);
                                 if (result) {
                                     logger.warn('Same season in package. Detected as same series:' + result);
                                 }

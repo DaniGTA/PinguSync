@@ -8,6 +8,7 @@ import MainListManager from './main-list-manager';
 import MainListSearcher from './main-list-searcher';
 import AdderProviderCache from './object-adder/adder-provider-cache';
 import AdderProviderCacheManager from './object-adder/adder-provider-cache-manager';
+import SeriesHelper from '../../helpFunctions/series-helper';
 export default class MainListAdder {
     /**
      * Stores all adding instances.
@@ -64,27 +65,18 @@ export default class MainListAdder {
             if (MainListAdder.currentlyAdding.length === 0 || !await listHelper.isAnyListEntryInList(MainListAdder.currentlyAdding, providerCache)) {
                 MainListAdder.currentlyAdding.push(...providerCache);
                 try {
-                    const entry = await searcher.quickFindSameSeriesInMainList(series);
-                    if (entry.length === 0) {
+                    const entrys = await searcher.quickFindSameSeriesInMainList(series);
+                    if (entrys.length === 0) {
                         logger.debug('[MainListAdder] Add non existing Series.');
                         const filledSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(series);
                         if (filledSeries.lastInfoUpdate === 0) {
                             logger.error('[ERROR] Series no last info update!');
                         }
                         await MainListManager.addSerieToMainList(filledSeries);
-                    } else if (entry.length === 1) {
-                        try {
-                            logger.log('info', '[MainListAdder] Add existing Series.');
-                            series.id = entry[0].id;
-                            await MainListManager.updateSerieInList(series);
-                        } catch (err) {
-                            logger.error(err);
-                        }
                     } else {
-                        logger.log('info', '[MainListAdder] Add multi existing Series.');
-                        const rdmProvider = series.getAllProviderLocalDatas()[0];
-                        logger.warn('[WARNING] Found more results from main list from one Series! ' + rdmProvider.provider + ': ' + rdmProvider.id);
-                        await MainListManager.addSerieToMainList(series);
+                        for (const entry of entrys) {
+                            await this.updateExistingEntry(series, entry);
+                        }
                     }
                     addCounter++;
                     await this.requestSave();
@@ -96,10 +88,24 @@ export default class MainListAdder {
                 await listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache);
             }
         }
-
         logger.log('info', 'Added ' + addCounter + ' to mainList');
         logger.log('info', 'End waitlist worker');
         return;
+    }
+
+    private async updateExistingEntry(series: Series, existingEntry: Series) {
+        try {
+            logger.log('info', '[MainListAdder] Add existing Series.');
+            series.id = existingEntry.id;
+            if (SeriesHelper.canUpdateSeries(series, existingEntry)) {
+                const updateExistingEntry = await NewProviderHelper.getAllRelevantProviderInfosForSeries(existingEntry);
+                await MainListManager.updateSerieInList(updateExistingEntry);
+            }
+
+            await MainListManager.updateSerieInList(series);
+        } catch (err) {
+            logger.error(err);
+        }
     }
 
     private async requestSave() {

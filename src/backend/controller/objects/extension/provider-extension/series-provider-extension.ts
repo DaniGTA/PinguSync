@@ -8,12 +8,12 @@ import ProviderDataListSearcher from '../../../provider-controller/provider-data
 import { InfoProviderLocalData } from '../../../provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../provider-controller/provider-manager/local-data/list-provider-local-data';
+import FailedProviderRequest from '../../meta/failed-provider-request';
 import Season from '../../meta/season';
 import InfoLocalDataBind from './binding/info-local-data-bind';
 import ListLocalDataBind from './binding/list-local-data-bind';
 import LocalDataBind from './binding/local-data-bind';
 import SeriesProviderExtensionInstanceCheck from './series-provider-extension-instance-check';
-import FailedProviderRequest from '../../meta/failed-provider-request';
 
 
 export default class SeriesProviderExtension {
@@ -29,6 +29,10 @@ export default class SeriesProviderExtension {
 
     public addFailedRequest(failedRequest: FailedProviderRequest): void {
         this.failedProviderRequest.push(failedRequest);
+    }
+
+    public getAllErrosForOneProvider(provider: ExternalProvider): FailedProviderRequest[] {
+        return this.failedProviderRequest.filter((failedRequest) => failedRequest.providerName === provider.providerName);
     }
 
     /**

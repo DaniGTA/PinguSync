@@ -2,7 +2,7 @@ import MultiProviderResult from '../../api/provider/multi-provider-result';
 import { AbsoluteResult } from '../../helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
-import seriesHelper from '../../helpFunctions/series-helper';
+import SeriesHelper from '../../helpFunctions/series-helper';
 import logger from '../../logger/logger';
 import Season from '../objects/meta/season';
 import Series from '../objects/series';
@@ -94,7 +94,7 @@ export default class MainListSearcher {
             if (listEntry.id === entry.id) {
                 foundedSameSeries.push(listEntry);
             } else {
-                if (await seriesHelper.isSameSeries(listEntry, entry)) {
+                if (await SeriesHelper.isSameSeries(listEntry, entry)) {
                     foundedSameSeries.push(listEntry);
                 }
             }

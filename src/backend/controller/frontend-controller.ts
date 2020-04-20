@@ -7,7 +7,7 @@ import MainListPackageManager from './main-list-manager/main-list-package-manage
 import Series from './objects/series';
 import SeriesPackage from './objects/series-package';
 import IUpdateList from './objects/update-list';
-import ProviderList from './provider-manager/provider-list';
+import ProviderList from './provider-controller/provider-manager/provider-list';
 
 class FrontendController {
 

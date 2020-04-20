@@ -2,6 +2,7 @@ import ExternalInformationProvider from '../../api/provider/external-information
 import ExternalProvider from '../../api/provider/external-provider';
 import InfoProvider from '../../api/provider/info-provider';
 import ListProvider from '../../api/provider/list-provider';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import FailedProviderRequest from '../../controller/objects/meta/failed-provider-request';
 import Series from '../../controller/objects/series';
 import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
@@ -11,6 +12,7 @@ import ProviderNameManager from '../../controller/provider-controller/provider-m
 import logger from '../../logger/logger';
 import EpisodeStatsHelper from '../episode-helper/episode-stats-helper';
 import ProviderHelper from './provider-helper';
+import DownloadProviderLocalDataToTargetHelper from './provider-info-downloader/download-provider-local-data-to-target-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 import ProviderListHelper from './provider-list-helper';
 
@@ -24,8 +26,8 @@ export default class ProviderInfoHelper {
         for (const infoProvider of infoProvidersThatNeedUpdates) {
             try {
                 if (seasonAware && (!hasAlreadyFullEpisodeInfo) && this.shouldUpdateProviderLocalData(infoProvider, tempSeriesCopy)) {
-                    const result = await ProviderHelper.requestProviderInfoUpgrade(tempSeriesCopy, infoProvider, force, target);
-                    if (result) {
+                    const result = await new DownloadProviderLocalDataToTargetHelper(tempSeriesCopy, infoProvider, target).upgradeToTarget();
+                    if (result && result instanceof MultiProviderResult) {
                         if (infoProvider.hasEpisodeTitleOnFullInfo) {
                             hasAlreadyFullEpisodeInfo = true;
                         }

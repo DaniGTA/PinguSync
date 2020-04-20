@@ -23,7 +23,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         for (const listProvider of series.getListProvidersLocalDataInfosWithSeasonInfo()) {
             try {
                 if (ProviderList.getProviderInstanceByLocalData(listProvider.providerLocalData).hasEpisodeTitleOnFullInfo) {
-                    if (!SeasonAwarenessHelper.isProviderSeasonAware(listProvider)) {
+                    if (SeasonAwarenessHelper.canCreateSeasonAwareness(listProvider)) {
                         const result = await this.requestSeasonAwarnessForProviderLocalData(series, extraInfoProviders, listProvider.providerLocalData);
                         if (result) {
                             finalResult.push(...result);

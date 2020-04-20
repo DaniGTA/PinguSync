@@ -26,9 +26,18 @@ export default class SeasonAwarenessHelper {
         return result;
     }
 
+    public static canCreateSeasonAwareness(provider: ProviderLocalDataWithSeasonInfo): boolean {
+        if (!ProviderList.getProviderInstanceByLocalData(provider.providerLocalData).hasUniqueIdForSeasons) {
+            if (provider.seasonTarget?.seasonNumbers.length === 0 || provider.seasonTarget?.seasonPart === undefined) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static isProviderSeasonAware(provider: ProviderLocalDataWithSeasonInfo) {
-        if (!ProviderList.getProviderInstanceByLocalData(provider.providerLocalData).hasUniqueIdForSeasons &&
-            !(provider.seasonTarget?.seasonNumbers.includes(1))) {
+        if (!ProviderList.getProviderInstanceByLocalData(provider.providerLocalData).hasUniqueIdForSeasons) {
             return false;
         }
         return true;

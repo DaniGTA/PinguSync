@@ -1,5 +1,4 @@
 import { equal, strictEqual } from 'assert';
-
 import AniDBHelper from '../../../src/backend/api/information-providers/anidb/anidb-helper';
 import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
 import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
@@ -12,6 +11,8 @@ import ListProvider from '../../../src/backend/api/provider/list-provider';
 import ListController from '../../../src/backend/controller/list-controller';
 import MainListAdder from '../../../src/backend/controller/main-list-manager/main-list-adder';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
+import FailedProviderRequest from '../../../src/backend/controller/objects/meta/failed-provider-request';
+import { FailedRequestError } from '../../../src/backend/controller/objects/meta/failed-request';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
@@ -20,8 +21,7 @@ import ProviderLocalData from '../../../src/backend/controller/provider-controll
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderNameManager from '../../../src/backend/controller/provider-controller/provider-manager/provider-name-manager';
-import dateHelper from '../../../src/backend/helpFunctions/date-helper';
-import ProviderHelper from '../../../src/backend/helpFunctions/provider/provider-helper';
+import NewProviderHelper from '../../../src/backend/helpFunctions/provider/new-provider-helper';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import ProviderInfoHelper from '../../../src/backend/helpFunctions/provider/provider-info-helper';
 import ProviderListHelper from '../../../src/backend/helpFunctions/provider/provider-list-helper';
@@ -56,25 +56,41 @@ describe('Provider Helper Test', () => {
         new ListController(true);
 
     });
+    describe('Test function: canUpdateAnyProvider()', () => {
+        test('should be true', async () => {
+            const series = new Series();
+            const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1);
+            providerLocalData.version--;
 
-    test('It should find that it can get id from other provider', async () => {
-        // Series A
-        const series = new Series();
-        const listProvider = new ListProviderLocalData(1, 'Kitsu');
-        await series.addProviderDatas(listProvider);
-        // tslint:disable-next-line: no-string-literal
-        const pList = ProviderList['loadedListProvider'];
-        let provider: ListProvider | null = null;
-        if (pList && pList[1]) {
-            provider = pList[1];
-        }
-        let result: boolean = false;
-        if (provider) {
-            // tslint:disable-next-line: no-string-literal
-            result = ProviderHelper['canGetTargetIdFromCurrentProvider'](listProvider, provider);
-        }
-        equal(result, true);
+            await series.addInfoProvider(providerLocalData);
+
+            const result = NewProviderHelper.canUpdateAnyProvider(series);
+            strictEqual(result, true);
+        });
+        test('should be false', async () => {
+            const series = new Series();
+            const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1);
+
+            await series.addInfoProvider(providerLocalData);
+
+            const result = NewProviderHelper.canUpdateAnyProvider(series);
+            strictEqual(result, false);
+        });
+
+        test('should be false (provider has error)', async () => {
+            const series = new Series();
+            series.addFailedRequest(
+                new FailedProviderRequest(ProviderList.getProviderInstanceByClass(TestInfoProvider1), FailedRequestError.ProviderNotAvailble));
+            const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1);
+            providerLocalData.version--;
+
+            await series.addInfoProvider(providerLocalData);
+
+            const result = NewProviderHelper.canUpdateAnyProvider(series);
+            strictEqual(result, false);
+        });
     });
+
 
     test('It should get all list provider that need a update', async () => {
         // Series A
@@ -84,22 +100,6 @@ describe('Provider Helper Test', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await ProviderInfoHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         equal(result.length, 2);
-    });
-
-    test('should update series', async () => {
-        const series = new Series();
-        series.lastInfoUpdate = dateHelper.removeDays(new Date(), 31).getTime();
-        // tslint:disable-next-line: no-string-literal
-        const result1 = ProviderHelper['canUpdateSeries'](series);
-        strictEqual(result1, true);
-    });
-
-    test('should not update series', async () => {
-        const series = new Series();
-        series.lastInfoUpdate = dateHelper.removeDays(new Date(), 15).getTime();
-        // tslint:disable-next-line: no-string-literal
-        const result1 = ProviderHelper['canUpdateSeries'](series);
-        strictEqual(result1, false);
     });
 
     test('should sort provider that need updates right (1/3)', async () => {

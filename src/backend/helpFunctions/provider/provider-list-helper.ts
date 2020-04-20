@@ -1,12 +1,14 @@
 import ExternalInformationProvider from '../../api/provider/external-information-provider';
 import ExternalProvider from '../../api/provider/external-provider';
 import ListProvider from '../../api/provider/list-provider';
+import MultiProviderResult from '../../api/provider/multi-provider-result';
 import Series from '../../controller/objects/series';
 import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import ProviderHelper from './provider-helper';
+import DownloadProviderLocalDataToTargetHelper from './provider-info-downloader/download-provider-local-data-to-target-helper';
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info';
 
 export default class ProviderListHelper {
@@ -42,8 +44,8 @@ export default class ProviderListHelper {
             try {
                 const providerLocalData = tempSeriesCopy.getListProvidersInfos().find((x) => x.provider === providerThatNeedUpdate.providerName);
                 if (providerLocalData && providerLocalData.infoStatus > target || !providerLocalData) {
-                    const requestResults = await ProviderHelper.requestProviderInfoUpgrade(tempSeriesCopy, providerThatNeedUpdate, force, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                    if (requestResults) {
+                    const requestResults = await new DownloadProviderLocalDataToTargetHelper(tempSeriesCopy, providerThatNeedUpdate, ProviderInfoStatus.ADVANCED_BASIC_INFO).upgradeToTarget();
+                    if (requestResults instanceof MultiProviderResult) {
                         await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResults?.getAllProvidersWithSeason());
                         results.push(...requestResults.getAllProvidersWithSeason());
                         series.resetCache();

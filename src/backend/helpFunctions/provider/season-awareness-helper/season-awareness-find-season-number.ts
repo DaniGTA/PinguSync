@@ -1,4 +1,5 @@
 import logger from '../../../../backend/logger/logger';
+import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
@@ -6,6 +7,7 @@ import ProviderLocalData from '../../../controller/provider-controller/provider-
 import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
 import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser';
 import ProviderHelper from '../provider-helper';
+import DownloadProviderLocalDataToTargetHelper from '../provider-info-downloader/download-provider-local-data-to-target-helper';
 import SeasonAwarenessHelper from './season-awareness-helper';
 
 export default class SeasonAwarenessFindSeasonNumber {
@@ -25,13 +27,15 @@ export default class SeasonAwarenessFindSeasonNumber {
             const providerInstance = ProviderList.getProviderInstanceByLocalData(otherProvider);
             try {
                 if (otherProvider.detailEpisodeInfo.length === 0) {
-                    const maybeFullInfoResult = await ProviderHelper.requestProviderInfoUpgrade(series, providerInstance, false, ProviderInfoStatus.FULL_INFO);
-                    if (maybeFullInfoResult) {
+                    const maybeFullInfoResult =
+                        await new DownloadProviderLocalDataToTargetHelper(series, providerInstance, ProviderInfoStatus.FULL_INFO).upgradeToTarget();
+                    if (maybeFullInfoResult instanceof MultiProviderResult) {
                         otherProvider = maybeFullInfoResult.mainProvider.providerLocalData;
                         series.addProviderDatas(...maybeFullInfoResult.getAllProviders());
                     }
                 }
-                const updatedOtherProvide = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([otherProvider], providerInstance) as ProviderLocalData | null;
+                const updatedOtherProvide =
+                    await ProviderHelper.simpleProviderLocalDataUpgradeRequest([otherProvider], providerInstance) as ProviderLocalData | null;
                 if (updatedOtherProvide) {
                     return await this.calcSeasonForTargetProvider(series, updatedOtherProvide, existingLocalDataProvider);
                 }

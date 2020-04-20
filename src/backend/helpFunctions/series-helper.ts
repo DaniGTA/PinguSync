@@ -7,13 +7,14 @@ import RelationComperator from './comperators/relation-comperator';
 import ReleaseYearComperator from './comperators/release-year-comperator';
 import SeasonComperator from './comperators/season-comperator';
 import TitleComperator from './comperators/title-comperator';
-class SeriesHelper {
+import NewProviderHelper from './provider/new-provider-helper';
+export default class SeriesHelper {
     /**
      * Calculate the value
      * @param a
      * @param b
      */
-    public async isSameSeries(a: Series, b: Series): Promise<boolean> {
+    public static async isSameSeries(a: Series, b: Series): Promise<boolean> {
 
         let matches: number = 0;
         let matchAbleScore: number = 0;
@@ -72,6 +73,12 @@ class SeriesHelper {
         }
         return matches >= matchAbleScore / 1.39;
     }
-}
 
-export default new SeriesHelper();
+    public static canUpdateSeries(newSeries: Series, oldSeries: Series): boolean {
+        if (NewProviderHelper.canUpdateAnyProvider(oldSeries)) {
+            return true;
+        }
+
+        return false;
+    }
+}
