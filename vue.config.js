@@ -1,15 +1,19 @@
 // eslint-disable-next-line no-undef
 module.exports = {
-	configureWebpack: {
+    configureWebpack: {
 		devtool: 'source-map',
 	},
-	pluginOptions: {
+
+    pluginOptions: {
 		electronBuilder: {
 			// List native deps here if they don't work
 			externals: ['dom'],
 		}
 	},
-	chainWebpack: (config) => {
+
+    chainWebpack: (config) => {
 		config.output.globalObject('this')
-	}
+	},
+
+    runtimeCompiler: true
 }

@@ -1,5 +1,6 @@
 import listHelper from '../../helpFunctions/list-helper';
 import NewProviderHelper from '../../helpFunctions/provider/new-provider-helper';
+import SeriesHelper from '../../helpFunctions/series-helper';
 import StringHelper from '../../helpFunctions/string-helper';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
@@ -8,7 +9,6 @@ import MainListManager from './main-list-manager';
 import MainListSearcher from './main-list-searcher';
 import AdderProviderCache from './object-adder/adder-provider-cache';
 import AdderProviderCacheManager from './object-adder/adder-provider-cache-manager';
-import SeriesHelper from '../../helpFunctions/series-helper';
 export default class MainListAdder {
     /**
      * Stores all adding instances.
@@ -79,7 +79,6 @@ export default class MainListAdder {
                         }
                     }
                     addCounter++;
-                    await this.requestSave();
                     logger.log('info', '[MainListAdder] Adding Series to list. Progress: ' + addCounter + '/' + list.length);
                 } catch (err) {
                     logger.error('[MainListAdder] [listWorker]: (error below)');

@@ -4,6 +4,7 @@
         "es6": true
     },
     "extends": [
+        "@vue/typescript",
         "eslint:recommended",
         "plugin:vue/essential"
     ],
@@ -16,13 +17,10 @@
         "sourceType": "module"
     },
     "plugins": [
-        "vue"
+        "vue",
+        "@typescript-eslint/eslint-plugin"
     ],
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
         "linebreak-style": [
             "error",
             "windows"
