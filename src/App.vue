@@ -1,41 +1,48 @@
 <template>
   <div id="app">
-    <FirstExperienceScreen />
-    <!-- <Providers /> -->
-    <!-- <MainList /> -->
+    <router-view></router-view>
+    <VersionView />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import Providers from './components/Providers.vue'
-import MainList from './components/MainList.vue'
-import FirstExperienceScreen from './components/start-screen/FirstExperienceScreen.vue'
-import { ipcRenderer } from 'electron'
-import WorkerController from './backend/communication/ipc-renderer-controller'
+import { Component, Vue } from 'vue-property-decorator';
+import Providers from './components/Providers.vue';
+import MainList from './components/MainList.vue';
+import FirstExperienceScreen from './components/start-screen/FirstExperienceScreen.vue';
+import VersionView from './components/system/VersionView.vue';
+
+import { ipcRenderer } from 'electron';
+import WorkerController from './backend/communication/ipc-renderer-controller';
 
 @Component({
 	components: {
 		Providers,
 		MainList,
-		FirstExperienceScreen,
+    FirstExperienceScreen,
+    VersionView,
 	},
 })
 export default class App extends Vue {
   static workerController: WorkerController = new WorkerController(ipcRenderer);
   constructor() {
-  	super()
+  	super();
   	ipcRenderer.on(
   		'path',
   		(event: Electron.IpcRendererEvent, string: string) => {
-  			App.workerController.send('path', string)
+  			App.workerController.send('path', string);
   		}
-  	)
+  	);
   	App.workerController.on('get-path', () => {
-  		ipcRenderer.send('get-path')
-  	})
+  		ipcRenderer.send('get-path');
+  	});
 
-  	ipcRenderer.send('get-path')
+    ipcRenderer.send('get-path');
+    
+  }
+
+  mounted(){
+    this.$router.push('setup');
   }
 }
 </script>
@@ -54,7 +61,8 @@ export default class App extends Vue {
 #app::after {
   content: "";
   background: url("assets/background/1.jpg");
-  opacity: 0.33;
+  background-size: cover;
+  opacity: 0.5;
   top: 0;
   left: 0;
   bottom: 0;

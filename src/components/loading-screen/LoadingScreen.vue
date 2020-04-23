@@ -11,10 +11,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import LoadingAnimation from './LoadingAnimation.vue'
-import LoadingTitle from './LoadingTitle.vue'
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import LoadingAnimation from './LoadingAnimation.vue';
+import LoadingTitle from './LoadingTitle.vue';
 
 @Component({
 	components: {
@@ -24,7 +24,7 @@ import LoadingTitle from './LoadingTitle.vue'
 })
 export default class LoadingScreen extends Vue {
     loadingText = 'Loading...';
-    loadingTitle= 'Willkomen auf AtsuList'
+    loadingTitle= 'Willkommen auf AtsuListManager'
 }
 </script>
 
@@ -42,8 +42,9 @@ export default class LoadingScreen extends Vue {
 
 .loading-space {
     width: 100%;
-    background: #20303e;
     margin: auto;
+    background: rgba(0, 0, 0, 0.801);
+
 }
 
 .loading-text {

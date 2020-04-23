@@ -30,8 +30,10 @@
             "single"
         ],
         "semi": [
-            "error",
-            "never"
+            "warn"
+        ],
+        "no-mixed-spaces-and-tabs": [
+            "off"
         ]
     }
 }
