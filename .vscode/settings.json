@@ -16,4 +16,5 @@
     "discord.enabled": false,
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "debug.javascript.usePreview": true,
+    "eslint.enable": true,
 }

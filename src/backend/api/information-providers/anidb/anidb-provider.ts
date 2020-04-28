@@ -20,8 +20,8 @@ export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
 
     public requestRateLimitInMs = 3000;
-    public providerName: string = 'anidb';
-    public version: number = 1;
+    public providerName = 'anidb';
+    public version = 1;
     public isOffline = true;
     public hasUniqueIdForSeasons = true;
     public hasEpisodeTitleOnFullInfo = true;
@@ -30,7 +30,7 @@ export default class AniDBProvider extends InfoProvider {
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [MalProvider];
     public requireInternetAccessGetMoreSeriesInfoByName = false;
-    constructor(download: boolean = true) {
+    constructor(download = true) {
         super();
         if (!AniDBProvider.instance) {
             AniDBProvider.instance = this;
@@ -72,7 +72,7 @@ export default class AniDBProvider extends InfoProvider {
         return true;
     }
 
-    private async getSameTitle(searchTitle: string, nameDBList: AniDBNameListXML, season?: number) {
+    private async getSameTitle(searchTitle: string, nameDBList: AniDBNameListXML, season?: number): Promise<MultiProviderResult[]> {
         const lastResults: Array<[Anime, Name[]]> = [];
         for (const seriesDB of nameDBList.animetitles.anime) {
             try {
@@ -166,7 +166,7 @@ export default class AniDBProvider extends InfoProvider {
         throw new Error('convert from ' + filePath + ' to JSON has failed');
     }
 
-    private async downloadFile(url: string, filePath: string): Promise<string> {
+    private downloadFile(url: string, filePath: string): Promise<string> {
         this.informAWebRequest();
         return new Promise<string>(async (resolve, rejects) => {
             const res = await WebRequestManager.request({ uri: url, gzip: true });

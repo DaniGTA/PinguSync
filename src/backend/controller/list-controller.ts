@@ -1,7 +1,7 @@
 import ListProvider from '../api/provider/list-provider';
 import MultiProviderResult from '../api/provider/multi-provider-result';
 import ProviderComperator from '../helpFunctions/comperators/provider-comperator';
-import ProviderHelper from '../helpFunctions/provider/provider-helper';
+import NewProviderHelper from '../helpFunctions/provider/new-provider-helper';
 import logger from '../logger/logger';
 import MainListAdder from './main-list-manager/main-list-adder';
 import MainListManager from './main-list-manager/main-list-manager';
@@ -9,9 +9,7 @@ import MainListPackageManager from './main-list-manager/main-list-package-manage
 import MainListEntryUpdater from './main-list-manager/main-list-updater';
 import WatchProgress from './objects/meta/watch-progress';
 import Series from './objects/series';
-import { ProviderInfoStatus } from './provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderList from './provider-controller/provider-manager/provider-list';
-import NewProviderHelper from '../helpFunctions/provider/new-provider-helper';
 
 export default class ListController {
 

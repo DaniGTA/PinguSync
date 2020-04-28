@@ -1,4 +1,3 @@
-
 import Cover from '../../../controller/objects/meta/cover';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../../controller/objects/meta/episode/episode-title';
@@ -21,8 +20,7 @@ import { AniDBAnimeAnime, AniDBAnimeFullInfo, AttributeInfo, EpisodeElement, Ext
 import { Anime } from './objects/anidbNameListXML';
 
 export default class AniDBConverter {
-    public async convertAnimeToLocalData(anime: Anime): Promise<MultiProviderResult> {
-
+    public convertAnimeToLocalData(anime: Anime): MultiProviderResult {
         const ipld = new InfoProviderLocalData(anime._attributes.aid, AniDBProvider);
         ipld.rawEntry = anime;
         ipld.version = AniDBProvider.instance.version;
@@ -30,16 +28,16 @@ export default class AniDBConverter {
         return new MultiProviderResult(ipld);
     }
 
-    public async convertFullInfoToProviderLocalData(fullInfo: AniDBAnimeFullInfo): Promise<MultiProviderResult> {
+    public convertFullInfoToProviderLocalData(fullInfo: AniDBAnimeFullInfo): MultiProviderResult {
         if (fullInfo.anime) {
             const ipld = new InfoProviderLocalData(fullInfo.anime._attributes.id, AniDBProvider);
             for (const title of fullInfo.anime.titles.title) {
-                ipld.addSeriesName(new Name(title._text, title._attributes['xml:lang'], await this.convertToNameType(title._attributes.type)));
+                ipld.addSeriesName(new Name(title._text, title._attributes['xml:lang'], this.convertToNameType(title._attributes.type)));
             }
             ipld.infoStatus = ProviderInfoStatus.FULL_INFO;
             ipld.releaseYear = new Date(fullInfo.anime.startdate._text).getFullYear();
             ipld.rawEntry = fullInfo;
-            ipld.mediaType = await this.convertToMediaType(fullInfo.anime.type._text);
+            ipld.mediaType = this.convertToMediaType(fullInfo.anime.type._text);
             if (fullInfo.anime.description) {
                 ipld.addOverview(new Overview(fullInfo.anime.description._text, 'en'));
             }
@@ -68,15 +66,15 @@ export default class AniDBConverter {
 
             ipld.genres = this.getGenres(fullInfo.anime);
             ipld.episodes = Number(fullInfo.anime.episodecount._text);
-            ipld.addDetailedEpisodeInfos(...await this.getDetailEpisodeInfo(fullInfo.anime));
+            ipld.addDetailedEpisodeInfos(...this.getDetailEpisodeInfo(fullInfo.anime));
             ipld.covers.push(new Cover('https://cdn.anidb.net/images/main/' + fullInfo.anime.picture._text, ImageSize.ORIGINAL));
-            const mpr = new MultiProviderResult(ipld, ...await this.getSubProviders(fullInfo.anime));
+            const mpr = new MultiProviderResult(ipld, ...this.getSubProviders(fullInfo.anime));
             return mpr;
         }
         throw new Error('no anime present ' + (fullInfo as any).error._text);
     }
 
-    public async getDetailEpisodeInfo(anime: AniDBAnimeAnime): Promise<Episode[]> {
+    public getDetailEpisodeInfo(anime: AniDBAnimeAnime): Episode[] {
         const episodes: Episode[] = [];
         if (anime.episodes.episode && Array.isArray(anime.episodes.episode)) {
             for (const episode of anime.episodes.episode) {
@@ -119,9 +117,9 @@ export default class AniDBConverter {
     }
 
     public getEpisodeType(episode: EpisodeElement): EpisodeType {
-        if (episode.epno._attributes.type === '2' && episode.epno._text.charAt(0) === 'S') {
+        if (episode.epno._attributes.type === '2' && episode.epno._text.startsWith('S')) {
             return EpisodeType.SPECIAL;
-        } else if (episode.epno._text.charAt(0) === 'T') {
+        } else if (episode.epno._text.startsWith('T')) {
             return EpisodeType.TRAILER;
         }
         switch (episode.epno._attributes.type) {
@@ -136,12 +134,12 @@ export default class AniDBConverter {
         }
     }
 
-    public async getSubProviders(anime: AniDBAnimeAnime): Promise<ProviderLocalData[]> {
+    public getSubProviders(anime: AniDBAnimeAnime): ProviderLocalData[] {
         const subProviders = [];
         if (Array.isArray(anime.resources.resource)) {
             for (const resource of anime.resources.resource) {
                 try {
-                    subProviders.push(await this.getResourceInfoProvider(resource));
+                    subProviders.push(this.getResourceInfoProvider(resource));
                 } catch (err) {
                     logger.error('Error at AniDBConverter.getSubProviders #1');
                     logger.error(err);
@@ -203,9 +201,9 @@ export default class AniDBConverter {
     // Type 28 is Crunchyroll
     //
     // Type 32 is Amazon
-    public async getResourceInfoProvider(resource: ResourceElement): Promise<ProviderLocalData> {
+    public getResourceInfoProvider(resource: ResourceElement): ProviderLocalData {
         let subipld = null;
-        const id = await this.getIDResourceFromEntity(resource.externalentity);
+        const id = this.getIDResourceFromEntity(resource.externalentity);
         if (id) {
             switch (resource._attributes.type) {
                 case '1':
@@ -269,7 +267,7 @@ export default class AniDBConverter {
         throw new Error('no provider with that type found: ' + resource._attributes.type);
     }
 
-    public async getIDResourceFromEntity(input: ExternalentityElement[] | FluffyExternalentity): Promise<number | string> {
+    public getIDResourceFromEntity(input: ExternalentityElement[] | FluffyExternalentity): number | string {
         if (Array.isArray(input)) {
             return input[0].identifier._text;
         } else {
@@ -282,7 +280,7 @@ export default class AniDBConverter {
         throw new Error('no id');
     }
 
-    public async convertToMediaType(s: string): Promise<MediaType> {
+    public convertToMediaType(s: string): MediaType {
         switch (s) {
             case 'TV Series':
                 return MediaType.ANIME;
@@ -295,7 +293,7 @@ export default class AniDBConverter {
         }
     }
 
-    public async convertToNameType(s: string) {
+    public convertToNameType(s: string): NameType {
         switch (s) {
             case 'main':
                 return NameType.MAIN;

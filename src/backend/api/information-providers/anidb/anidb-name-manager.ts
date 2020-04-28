@@ -10,19 +10,19 @@ export default class AniDBNameManager {
         this.loadData();
     }
 
-    public updateData(time: Date, data?: AniDBNameListXML) {
+    public updateData(time: Date, data?: AniDBNameListXML): void {
         logger.log('info', '[update] -> anidb -> data');
         this.lastDownloadTime = time;
         this.data = data;
         this.saveData();
     }
 
-    public updateOnlyData(data?: AniDBNameListXML) {
+    public updateOnlyData(data?: AniDBNameListXML): void {
         this.data = data;
         this.saveData();
     }
 
-    private async saveData() {
+    private async saveData(): Promise<void> {
         try {
             logger.log('info', '[Save] -> AniDB -> Names');
             fs.writeFileSync(this.getPath(), JSON.stringify(this));

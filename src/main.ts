@@ -4,12 +4,11 @@ import Router from 'vue-router';
 import App from './App.vue';
 
 import { dom, library } from '@fortawesome/fontawesome-svg-core';
-import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';
 
 
-library.add(faUserSecret);
-library.add(fab)
+library.add(fas);
 
 dom.watch();
 

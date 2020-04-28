@@ -35,8 +35,8 @@ export default class AniListProvider extends ListProvider {
         return AniListProvider.instance;
     }
     private static instance: AniListProvider;
-    public hasUniqueIdForSeasons: boolean = true;
-    public providerName: string = 'AniList';
+    public hasUniqueIdForSeasons = true;
+    public providerName = 'AniList';
     public version = 1;
     public hasOAuthCode = true;
     public supportOnlyBasicLatinForNameSearch = false;
@@ -60,7 +60,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
-        const searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: seriesName, type: 'ANIME' })) as SearchSeries;
+        const searchResults: SearchSeries = await this.webRequest(this.getGraphQLOptions(searchSeriesGql, { query: seriesName, type: 'ANIME' }));
         const endResult: MultiProviderResult[] = [];
         for (const result of searchResults.Page.media) {
             try {
@@ -78,7 +78,7 @@ export default class AniListProvider extends ListProvider {
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName && provider.id) {
-            const fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' })) as GetSeriesByID;
+            const fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' }));
 
             return new MultiProviderResult(await aniListConverter.convertExtendedInfoToAnime(fullInfo));
         }
@@ -117,7 +117,7 @@ export default class AniListProvider extends ListProvider {
                 logger.log('info', 'body:', body); // Print the HTML for the Google homepage.
                 if (body.access_token) {
                     that.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
-                    that.userData.created_token = new Date();
+                    that.userData.createdToken = new Date();
                     that.getUserInfo();
                     resolve();
                 } else {
@@ -129,18 +129,17 @@ export default class AniListProvider extends ListProvider {
 
     public getUserInfo() {
         this.informAWebRequest();
-        const that = this;
         // Here we define our query as a multi-line string
         // Storing it in a separate .graphql/.gql file is also possible
         const query = getViewerGql;
         const options = this.getGraphQLOptions(query);
         this.webRequest<any>(options).then((value) => {
             const data = value.Viewer as IViewer;
-            that.userData.setViewer(data);
+            this.userData.setViewer(data);
         });
     }
 
-    public async getAllSeries(disableCache: boolean = false): Promise<MultiProviderResult[]> {
+    public async getAllSeries(disableCache = false): Promise<MultiProviderResult[]> {
         logger.log('info', '[Request] -> AniList -> AllSeries');
         if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
             logger.log('info', '[LoadCache] -> AniList -> AllSeries');
@@ -149,7 +148,7 @@ export default class AniListProvider extends ListProvider {
             const seriesList: MultiProviderResult[] = [];
             const data = await this.getUserSeriesList();
             for (const list of data.lists) {
-                const watchStatus = await this.convertListNameToWatchStatus(list.name);
+                const watchStatus = this.convertListNameToWatchStatus(list.name);
                 for (const entry of list.entries) {
                     seriesList.push(await aniListConverter.convertListEntryToAnime(entry, watchStatus));
                 }
@@ -160,7 +159,7 @@ export default class AniListProvider extends ListProvider {
         }
     }
 
-    public async convertListNameToWatchStatus(name: string): Promise<WatchStatus> {
+    public convertListNameToWatchStatus(name: string): WatchStatus {
         let watchStatus = WatchStatus.CURRENT;
         switch (name) {
             case 'Planning':

@@ -24,7 +24,7 @@ import WorkerController from './backend/communication/ipc-renderer-controller';
 	},
 })
 export default class App extends Vue {
-  static workerController: WorkerController = new WorkerController(ipcRenderer);
+  static workerController: WorkerController = new WorkerController();
   constructor() {
   	super();
   	ipcRenderer.on(
@@ -41,7 +41,7 @@ export default class App extends Vue {
     
   }
 
-  mounted(){
+  mounted(): void{
     this.$router.push('setup');
   }
 }
@@ -50,7 +50,30 @@ export default class App extends Vue {
 <style>
 @font-face {
   font-family: "Roboto";
-  src: url("assets/fonts/roboto/Roboto-Medium.ttf");
+  src: url("assets/fonts/roboto/Roboto-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("assets/fonts/roboto/Roboto-Thin.ttf");
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("assets/fonts/roboto/Roboto-Light.ttf");
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url("assets/fonts/roboto/Roboto-Medium.ttf");
+    font-weight: 300;
+    font-style: normal;
 }
 
 #app {
@@ -74,7 +97,6 @@ export default class App extends Vue {
 body {
   margin: 0;
   width: 100%;
-  height: 100%;
 }
 
 html {

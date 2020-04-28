@@ -8,11 +8,11 @@ import MultiProviderResult from '../../provider/multi-provider-result';
 import { UserData } from '../../user-data';
 
 export class AniListUserData extends UserData {
-    public username: string = '';
-    public access_token: string = '';
-    public refresh_token: string = '';
-    public created_token: Date = new Date();
-    public expires_in: number = 0;
+    public username = '';
+    public access_token = '';
+    public refresh_token = '';
+    public createdToken: Date = new Date();
+    public expires_in = 0;
     public viewer?: IViewer;
     public list?: MultiProviderResult[];
     public lastListUpdate?: Date;
@@ -67,9 +67,9 @@ export class AniListUserData extends UserData {
 
 
 
-    private async saveData() {
+    private saveData(): void {
         logger.warn('[IO] Write anilist user file.');
-        writeFileSync(await this.getPath(), JSON.stringify(this));
+        writeFileSync(this.getPath(), JSON.stringify(this));
     }
 
     private getPath(): string {

@@ -23,10 +23,10 @@
 import { ipcRenderer, ipcMain } from 'electron';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import App from "../App.vue";
-import ListEntry from "./ListEntry.vue";
+import App from '../App.vue';
+import ListEntry from './ListEntry.vue';
 
-import Series from "../backend/controller/objects/series";
+import Series from '../backend/controller/objects/series';
 import SeriesPackage from '../backend/controller/objects/series-package';
 import IUpdateList from '../backend/controller/objects/update-list';
 
@@ -44,7 +44,7 @@ export default class MainList extends Vue {
     super();
     const that = this;
     MainList.instance = this;
-    App.workerController.on("series-list", async (data: SeriesPackage[]) => {
+    App.workerController.on('series-list', async (data: SeriesPackage[]) => {
       let x: number = 0;
       that.mainList = [];
       console.log(data);
@@ -59,11 +59,11 @@ export default class MainList extends Vue {
         } catch (err) {}
       }
 
-      console.log("Data size: " + data.length);
-      console.log("Showed size: " + x);
+      console.log('Data size: ' + data.length);
+      console.log('Showed size: ' + x);
     });
 
-    App.workerController.on("update-series-list", (data: IUpdateList) => {
+    App.workerController.on('update-series-list', (data: IUpdateList) => {
       console.log(data);
       that.$set(
         that.mainList,
@@ -72,8 +72,8 @@ export default class MainList extends Vue {
       );
     });
 
-    App.workerController.on("series-list-remove-entry", (data: number) => {
-      console.log("Remove entry: " + data);
+    App.workerController.on('series-list-remove-entry', (data: number) => {
+      console.log('Remove entry: ' + data);
       that.$delete(that.mainList, data);
     });
   }

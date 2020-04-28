@@ -43,7 +43,7 @@ export default class LoadingScreen extends Vue {
 .loading-space {
     width: 100%;
     margin: auto;
-    background: rgba(0, 0, 0, 0.801);
+    background: rgba(0, 0, 0, 0.8);
 
 }
 

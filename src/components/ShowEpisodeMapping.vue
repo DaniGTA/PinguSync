@@ -8,7 +8,7 @@
           <template
             v-for="pool of series.episodeBindingPools"
           >
-            <table style="width:100%">
+            <table class="episode-table">
               <tr>
                 <th>Provider</th>
                 <th>Provider ID</th>
@@ -32,25 +32,25 @@
 </template>
 
 <script lang="ts">
-import { ipcRenderer, ipcMain } from "electron";
-import { Component, Prop, Vue, PropSync, Watch } from "vue-property-decorator";
-import App from "../App.vue";
+import { ipcRenderer, ipcMain } from 'electron';
+import { Component, Prop, Vue, PropSync, Watch } from 'vue-property-decorator';
+import App from '../App.vue';
 
-import Series from "../backend/controller/objects/series";
-import VueLazyload from "vue-lazyload";
-import { Promised } from "vue-promised";
-import SeriesPackage from "../backend/controller/objects/series-package";
-import WatchProgress from "../backend/controller/objects/meta/watch-progress";
-import { SeasonSearchMode } from "../backend/helpFunctions/season-helper/season-search-mode";
-import { ListProviderLocalData } from "../backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data";
-import ProviderLocalData from "../backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data";
-Vue.component("Promised", Promised);
+import Series from '../backend/controller/objects/series';
+import VueLazyload from 'vue-lazyload';
+import { Promised } from 'vue-promised';
+import SeriesPackage from '../backend/controller/objects/series-package';
+import WatchProgress from '../backend/controller/objects/meta/watch-progress';
+import { SeasonSearchMode } from '../backend/helpFunctions/season-helper/season-search-mode';
+import { ListProviderLocalData } from '../backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderLocalData from '../backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+Vue.component('Promised', Promised);
 Vue.use(VueLazyload);
 
 @Component
 export default class ListEntry extends Vue {
-  @PropSync("sSeries", { type: Series }) public series!: Series | null;
-  @Watch("sSeries", { immediate: true, deep: true })
+  @PropSync('sSeries', { type: Series }) public series!: Series | null;
+  @Watch('sSeries', { immediate: true, deep: true })
   public onChildChanged(val: Series, oldVal: Series) {
     if (val) {
       this.localData = val.getAllProviderLocalDatas();
@@ -85,7 +85,9 @@ export default class ListEntry extends Vue {
   display: table-cell;
   vertical-align: middle;
 }
-
+.episode-table{
+  width:100%;
+}
 .modal-container {
   margin: 0px auto;
   padding: 20px 30px;

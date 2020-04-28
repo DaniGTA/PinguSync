@@ -2,6 +2,7 @@ import ListProvider from '../api/provider/list-provider';
 import ICommunication from '../communication/icommunication';
 import IPCBackgroundController from '../communication/ipc-background-controller';
 import logger from '../logger/logger';
+import FrontendProviderController from './frontend/providers/frontend-provider-controller';
 import ListController from './list-controller';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
 import Series from './objects/series';
@@ -9,7 +10,7 @@ import SeriesPackage from './objects/series-package';
 import IUpdateList from './objects/update-list';
 import ProviderList from './provider-controller/provider-manager/provider-list';
 
-class FrontendController {
+export default class FrontendController {
 
     public static getInstance(): FrontendController {
         return FrontendController.instance;
@@ -26,7 +27,9 @@ class FrontendController {
     private static instance: FrontendController;
 
     // tslint:disable-next-line: no-object-literal-type-assertion
-    private communcation: ICommunication = new IPCBackgroundController({} as Electron.WebContents); constructor(webcontents?: Electron.WebContents) {
+    private communcation: ICommunication = new IPCBackgroundController({} as Electron.WebContents);
+
+    constructor(webcontents?: Electron.WebContents) {
         logger.log('info', 'Load list controller');
         // tslint:disable-next-line: no-unused-expression
         new ListController();
@@ -37,8 +40,10 @@ class FrontendController {
 
 
 
-    public mainInit(webcontents: Electron.WebContents) {
+    public mainInit(webcontents: Electron.WebContents): void {
         this.communcation = new IPCBackgroundController(webcontents);
+        // tslint:disable-next-line: no-unused-expression
+        new FrontendProviderController(webcontents);
         // tslint:disable-next-line: no-this-assignment
         const that = this;
 
@@ -53,7 +58,7 @@ class FrontendController {
                             await pl.logInUser(code);
                             that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                         } catch (err) {
-                            logger.error('Error at FrontendController.mainInit #1')
+                            logger.error('Error at FrontendController.mainInit #1');
                             logger.error(err);
                         }
                     });
@@ -65,7 +70,7 @@ class FrontendController {
                     try {
                         that.communcation.send(pl.providerName.toLocaleLowerCase() + '-auth-status', await pl.isUserLoggedIn());
                     } catch (err) {
-                        logger.error('Error at FrontendController.mainInit #2')
+                        logger.error('Error at FrontendController.mainInit #2');
                         logger.error(err);
                     }
                 });
@@ -166,5 +171,3 @@ class FrontendController {
         }
     }
 }
-
-export default FrontendController;

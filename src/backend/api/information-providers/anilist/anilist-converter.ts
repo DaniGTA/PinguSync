@@ -32,7 +32,7 @@ export default new class AniListConverter {
         if (medium.title.native) {
             provider.addSeriesName(new Name(medium.title.native, 'jap'));
         }
-        provider.mediaType = await this.convertTypeToMediaType(medium.format);
+        provider.mediaType = this.convertTypeToMediaType(medium.format);
         provider.covers.push(new Cover(medium.coverImage.large, ImageSize.LARGE));
         provider.covers.push(new Cover(medium.coverImage.medium, ImageSize.MEDIUM));
         provider.releaseYear = medium.startDate.year;
@@ -60,7 +60,7 @@ export default new class AniListConverter {
             provider.addSeriesName(new Name(info.Media.title.native, 'jap'));
         }
         provider.addSeriesName(new Name(info.Media.title.userPreferred, 'userPreferred'));
-        provider.mediaType = await this.convertTypeToMediaType(info.Media.format);
+        provider.mediaType = this.convertTypeToMediaType(info.Media.format);
         provider.covers.push(new Cover(info.Media.coverImage.large, ImageSize.LARGE));
         provider.covers.push(new Cover(info.Media.coverImage.medium, ImageSize.MEDIUM));
         provider.releaseYear = info.Media.startDate.year;
@@ -86,7 +86,7 @@ export default new class AniListConverter {
             providerInfo.addSeriesName(new Name(entry.media.title.native, 'jap'));
         }
         providerInfo.releaseYear = entry.media.startDate.year;
-        providerInfo.mediaType = await this.convertTypeToMediaType(entry.media.format);
+        providerInfo.mediaType = this.convertTypeToMediaType(entry.media.format);
 
         try {
             if (entry.media.relations.edges.findIndex((x) => x.relationType === MediaRelation.PREQUEL) === -1) {
@@ -122,7 +122,7 @@ export default new class AniListConverter {
         return new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(providerInfo, new Season(seasonNumber)));
     }
 
-    private async convertTypeToMediaType(type: MediaFormat): Promise<MediaType> {
+    private convertTypeToMediaType(type: MediaFormat): MediaType {
         if (type === MediaFormat.MOVIE) {
             return MediaType.MOVIE;
         } else if (type === MediaFormat.TV || type === MediaFormat.TV_SHORT) {

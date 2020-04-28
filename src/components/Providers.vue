@@ -25,7 +25,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { ipcRenderer } from 'electron';
-import MainList from './MainList.vue';
 import App from '../App.vue';
 import AuthModal from './AuthModal.vue';
 
