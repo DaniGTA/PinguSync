@@ -1,7 +1,7 @@
 <template>
   <div class="provider-setup-settings">
     <div v-if="syncedSelectedProvider" class="provider-setup-entry">
-      <ProviderSetupHeader :provider="syncedSelectedProvider" class="provider-setup-header"  :key="syncedSelectedProvider"/>
+      <ProviderSetupHeader :provider="syncedSelectedProvider" class="provider-setup-header" :isProviderLoggedIn="isLoggedIn" :key="syncedSelectedProvider"/>
       <MultiProviderLoginView v-if="!isLoggedIn" class="setup" :provider="syncedSelectedProvider" :key="syncedSelectedProvider" />
       <ProviderSettings v-if="isLoggedIn" :provider="syncedSelectedProvider" :key="syncedSelectedProvider" />
     </div>
@@ -25,6 +25,8 @@ import WorkerController from '../../../backend/communication/ipc-renderer-contro
 import ListProvider from '../../../backend/api/provider/list-provider';
 import ProviderSettings from './provider-settings/ProviderSettings.vue';
 import UpdateProviderLoginStatus from '../../../backend/controller/frontend/providers/model/update-provider-login-status';
+import { chOnce } from '../../../backend/communication/channels';
+import { chListener } from '../../../backend/communication/listener-channels';
 @Component({
 	components: {
     ProviderImageBlock,
@@ -51,8 +53,8 @@ export default class ProviderSetup extends Vue {
         }
         if(val){
           console.log('listen for auth status');
-          this.updateLoginStatus(await this.workerController.getOnce('provider-auth-status', val.providerName));
-          this.workerController.on('provider-any-login-status-changed', (x) => this.anyUpdateLoginStatus(x));
+          this.updateLoginStatus(await this.workerController.getOnce(chOnce.GetAllListProviders, val.providerName));
+          this.workerController.on(chListener.OnLoggedInStatusChange, (x) => this.anyUpdateLoginStatus(x));
           console.log('listen for auth status finished');
         }
       } catch(err){

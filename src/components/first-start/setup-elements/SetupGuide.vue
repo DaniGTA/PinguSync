@@ -1,12 +1,24 @@
+<i18n>
+{
+  "en": {
+    "provider-login-description": "Bei mindestens einem Provider anmelden.",
+    "provider-setup-description": "Ein Provider einstellen",
+    "provider-setup-more-description": "Weitere Provider einrichten.",
+    "title": "Einrichtung",
+    "complete-setup": "Complete Setup"
+  }
+}
+</i18n>
+
 <template>
   <div class="setup-guide">
-    <h2 class="setup-title">{{title}}</h2>
+    <h2 class="setup-title">{{$t('title')}}</h2>
     <div class="setup-steps">
-      <SetupGuideEntry v-bind:required = "true"  v-bind:description = "providerLoginDescription" v-bind:syncCompleted.sync= "anyConnectedProvider" />
-      <SetupGuideEntry v-bind:required = "false" v-bind:description = "providerSetupDescription" />
-      <SetupGuideEntry v-bind:required = "false" v-bind:description = "setupMoreProvidersDescription" />
+      <SetupGuideEntry v-bind:required = "true" :completed="anyConnectedProvider"  v-bind:description = "$t('provider-login-description')" v-bind:syncCompleted.sync= "anyConnectedProvider" />
+      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('provider-setup-description')" />
+      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('provider-setup-more-description')" />
     </div>
-    <button  class="setup-confirm-button">Einrichtung Abschließen</button>
+    <button class="setup-confirm-button">{{$t('complete-setup')}}</button>
   </div>
 </template>
 
@@ -17,6 +29,7 @@ import SetupGuideEntry from './SetupGuideEntry.vue';
 import WorkerController from '../../../backend/communication/ipc-renderer-controller';
 import { chOnce } from '../../../backend/communication/channels';
 import UpdateProviderLoginStatus from '../../../backend/controller/frontend/providers/model/update-provider-login-status';
+import { chListener } from '../../../backend/communication/listener-channels';
 
 @Component({
 	components: {
@@ -26,19 +39,12 @@ import UpdateProviderLoginStatus from '../../../backend/controller/frontend/prov
 export default class SetupGuide extends Vue {
 
   public workerController: WorkerController = new WorkerController();
-
-
-  title = 'Einrichtung';
   
   anyConnectedProvider = false;
 
-  providerLoginDescription = 'Bei mindestens einem Provider anmelden.';
-  providerSetupDescription = 'Ein Provider einstellen';
-  setupMoreProvidersDescription = 'Weitere Provider einrichten.';
-
   async mounted(): Promise<void> {
     this.anyConnectedProvider = await this.workerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
-    this.workerController.on('provider-any-login-status-changed', (data: UpdateProviderLoginStatus)=> this.providerLoginStatusChange(data.isLoggedIn));
+    this.workerController.on(chListener.OnLoggedInStatusChange, (data: UpdateProviderLoginStatus)=> this.providerLoginStatusChange(data.isLoggedIn));
   }
 
   async providerLoginStatusChange(isLoggedIn: boolean): Promise<void>{

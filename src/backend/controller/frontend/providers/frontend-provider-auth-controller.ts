@@ -6,6 +6,9 @@ import ProviderList from '../../provider-controller/provider-manager/provider-li
 import { shell } from 'electron';
 import FrontendDefaultLogin from './model/frontend-default-login';
 import UpdateProviderLoginStatus from './model/update-provider-login-status';
+import { chSend } from '../../../communication/send-only-channels';
+import { chOnce } from '../../../communication/channels';
+import { chListener } from '../../../communication/listener-channels';
 
 export default class FrontendProviderAuthController {
     /**
@@ -29,11 +32,11 @@ export default class FrontendProviderAuthController {
     private init(): void {
         this.com.on('oauth-login-provider', (providerName) => this.oAuthLogin(providerName));
         this.com.on('default-login-provider', (data) => this.defaultLogin(data));
-        this.com.on('logout-provider', (providerName) => this.logoutProvider(providerName));
-
-        this.com.on('provider-auth-status',
+        this.com.on(chSend.LogoutUser, (providerName) => this.logoutProvider(providerName));
+        this.com.on(chOnce.IsAnyProviderLoggedIn, async () => this.com.send(chOnce.IsAnyProviderLoggedIn, await this.isAnyProviderLoggedIn()));
+        this.com.on(chOnce.GetLoggedInStatus,
             (providerName) => this.isUserLoggedIn(providerName).then(
-                (data) => this.com.send('provider-auth-status', data)
+                (data) => this.com.send(chOnce.GetLoggedInStatus, data)
             )
         );
     }
@@ -44,7 +47,16 @@ export default class FrontendProviderAuthController {
             provider.logoutUser();
             this.sendLoginStatus(provider);
         }
+    }
 
+    private async isAnyProviderLoggedIn(): Promise<boolean> {
+        const allListProviders = ProviderList.getListProviderList();
+        for (const listProvider of allListProviders) {
+            if (await listProvider.isUserLoggedIn()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private async isUserLoggedIn(providerName: string): Promise<boolean> {
@@ -75,6 +87,6 @@ export default class FrontendProviderAuthController {
     private async sendLoginStatus(provider: ListProvider): Promise<void> {
         const newStatus = await provider.isUserLoggedIn();
         const data: UpdateProviderLoginStatus = { providerName: provider.providerName, isLoggedIn: newStatus };
-        this.com.send('provider-any-login-status-changed', data);
+        this.com.send(chListener.OnLoggedInStatusChange, data);
     }
 }
