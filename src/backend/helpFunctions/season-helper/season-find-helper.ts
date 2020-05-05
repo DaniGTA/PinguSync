@@ -35,7 +35,7 @@ export default class SeasonFindHelper {
         logger.debug('[Season] [Search]: Prequel Trace.' + ' (' + series.id + ')');
         let prequel: Series | null = null;
         if (series.isAnyPrequelPresent() && seriesList) {
-            const searchResult = await series.getPrequel(seriesList);
+            const searchResult = series.getPrequel(seriesList);
             prequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
@@ -54,12 +54,12 @@ export default class SeasonFindHelper {
                         }
                         const prequelSeasonNumber = prequelSeason.getSingleSeasonNumberAsNumber();
                         if (prequelSeasonNumber && prequelSeason.seasonError === SeasonError.NONE) {
-                            return new SearchSeasonValueResult(new Season([(prequelSeasonNumber as number + searchCount)]), 'PrequelTrace');
+                            return new SearchSeasonValueResult(new Season([(prequelSeasonNumber + searchCount)]), 'PrequelTrace');
                         }
                     }
                     if (prequel.isAnyPrequelPresent()) {
 
-                        const prequelSearchResult = await prequel.getPrequel(seriesList);
+                        const prequelSearchResult = prequel.getPrequel(seriesList);
                         if (prequelSearchResult.relationExistButNotFounded) {
                             prequel = null;
                             break;
@@ -97,7 +97,7 @@ export default class SeasonFindHelper {
         logger.debug('[Season] [Search]: Sequel Trace.' + ' (' + series.id + ')');
         let sequel: Series | null = null;
         if (series.isAnySequelPresent() && seriesList) {
-            const searchResult = await series.getSequel(seriesList);
+            const searchResult = series.getSequel(seriesList);
             sequel = searchResult.foundedSeries;
             let searchCount = 0;
             if (searchResult.relationExistButNotFounded) {
@@ -114,12 +114,12 @@ export default class SeasonFindHelper {
                         }
                         const sequelSeasonNumber = sequelSeason.getSingleSeasonNumberAsNumber();
                         if (sequelSeasonNumber && sequelSeason.seasonError === SeasonError.NONE) {
-                            return new SearchSeasonValueResult(new Season([sequelSeasonNumber as number - searchCount]), 'SequelTrace');
+                            return new SearchSeasonValueResult(new Season([sequelSeasonNumber - searchCount]), 'SequelTrace');
                         }
                     }
                     if (sequel.isAnySequelPresent()) {
 
-                        const sequelSearchResult = await sequel.getSequel(seriesList);
+                        const sequelSearchResult = sequel.getSequel(seriesList);
                         if (sequelSearchResult.relationExistButNotFounded) {
                             sequel = null;
                             break;
@@ -143,10 +143,10 @@ export default class SeasonFindHelper {
         SeasonFindHelper.currentSeriesSeasonRequest.push(series);
         try {
             const result = await this.searchSeasonValue(series, searchMode, seriesList);
-            SeasonFindHelper.currentSeriesSeasonRequest = listHelper.removeEntrysSync(SeasonFindHelper.currentSeriesSeasonRequest, series);
+            SeasonFindHelper.currentSeriesSeasonRequest = listHelper.removeEntrys(SeasonFindHelper.currentSeriesSeasonRequest, series);
             return result;
         } catch (err) {
-            listHelper.removeEntrysSync(SeasonFindHelper.currentSeriesSeasonRequest, series);
+            listHelper.removeEntrys(SeasonFindHelper.currentSeriesSeasonRequest, series);
             throw new Error(err);
         }
     }
@@ -201,7 +201,7 @@ export default class SeasonFindHelper {
         let numberFromName: SeasonNumberResponse | undefined;
 
         if (!seriesList) {
-            seriesList = await MainListManager.getMainList();
+            seriesList = MainListManager.getMainList();
         }
 
         const seasonPart = this.getSeasonPart(series);

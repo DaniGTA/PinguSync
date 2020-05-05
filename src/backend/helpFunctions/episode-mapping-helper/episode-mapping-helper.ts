@@ -21,7 +21,7 @@ export default class EpisodeMappingHelper {
         const allEpisodeBindingPools = await this.getAllEpisodeBindingsThatAreRelevant(allProviders);
         for (const provider of allProviders) {
             if (!this.detailedEpisodeIsPresent(provider.providerLocalData)) {
-                const generateEpisodes = await EpisodeGeneratorHelper.generateMissingEpisodes(provider.providerLocalData, provider.seasonTarget);
+                const generateEpisodes = EpisodeGeneratorHelper.generateMissingEpisodes(provider.providerLocalData, provider.seasonTarget);
                 provider.providerLocalData.addDetailedEpisodeInfos(...generateEpisodes);
             }
         }
@@ -73,7 +73,7 @@ export default class EpisodeMappingHelper {
         return [];
     }
 
-    private static filterOneSpecificProviderOutOfTheGivenProviderList(targetProvider: ProviderLocalDataWithSeasonInfo, providerList: ProviderLocalDataWithSeasonInfo[]) {
+    private static filterOneSpecificProviderOutOfTheGivenProviderList(targetProvider: ProviderLocalDataWithSeasonInfo, providerList: ProviderLocalDataWithSeasonInfo[]): ProviderLocalDataWithSeasonInfo[] {
         return providerList.filter((x) => x.providerLocalData.provider !== targetProvider.providerLocalData.provider);
     }
 
@@ -107,15 +107,15 @@ export default class EpisodeMappingHelper {
         return false;
     }
 
-    private static detailedEpisodeIsPresent(localData: ProviderLocalData) {
+    private static detailedEpisodeIsPresent(localData: ProviderLocalData): boolean {
         return localData.detailEpisodeInfo.length !== 0;
     }
 
-    private static episodesArePresent(localData: ProviderLocalData) {
+    private static episodesArePresent(localData: ProviderLocalData): boolean {
         return localData.episodes !== undefined;
     }
 
-    private static detailedEpisodeHasTitle(localData: ProviderLocalData) {
+    private static detailedEpisodeHasTitle(localData: ProviderLocalData): boolean {
         for (const episode of localData.detailEpisodeInfo) {
             if (episode.title.length !== 0) {
                 return true;
@@ -135,7 +135,7 @@ export default class EpisodeMappingHelper {
             const providerId = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.id;
             const providerName = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.provider;
             const allSeriesWithProvider = MainListSearcher.findAllSeriesByProvider(providerId, providerName);
-            finalEpisodeBindingPool.push(...(await allSeriesWithProvider).flatMap((x) => x.episodeBindingPools));
+            finalEpisodeBindingPool.push(...(allSeriesWithProvider).flatMap((x) => x.episodeBindingPools));
         }
         return finalEpisodeBindingPool;
     }

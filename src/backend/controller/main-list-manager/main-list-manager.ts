@@ -15,7 +15,7 @@ export default class MainListManager {
      * @param notfiyRenderer
      */
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
-        await this.checkIfListIsLoaded();
+        this.checkIfListIsLoaded();
         const searcher = new MainListSearcher();
         const results = [];
         if (series.getAllProviderBindings().length !== 0) {
@@ -34,7 +34,7 @@ export default class MainListManager {
 
                             logger.log('info', '[MainList] Duplicate found: merging...');
                             series = await series.merge(entry, false);
-                            await MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
+                            MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
                         } catch (err) {
                             logger.error(err);
                         }
@@ -62,9 +62,9 @@ export default class MainListManager {
         }
     }
 
-    public static async updateSerieInList(series: Series) {
+    public static async updateSerieInList(series: Series): Promise<void> {
         logger.info('[MainList] Update series in mainlist ' + series.id);
-        const mainIndex = await this.getIndexFromSeries(series, MainListManager.mainList);
+        const mainIndex = this.getIndexFromSeries(series, MainListManager.mainList);
         if (mainIndex !== -1) {
             let outdatedSeries = MainListManager.mainList[mainIndex];
             if (typeof outdatedSeries.merge !== 'function') {
@@ -75,7 +75,7 @@ export default class MainListManager {
             MainListManager.mainList[mainIndex] = tempSeries;
         }
         if (MainListManager.listMaintance) {
-            const seconListIndex = await this.getIndexFromSeries(series, MainListManager.secondList);
+            const seconListIndex = this.getIndexFromSeries(series, MainListManager.secondList);
             if (seconListIndex !== -1) {
                 let outdatedSecondListSeries = MainListManager.secondList[seconListIndex];
                 if (typeof outdatedSecondListSeries.merge !== 'function') {
@@ -108,7 +108,7 @@ export default class MainListManager {
                     /**
                      * Reset Cache and reload it
                      */
-                    await entry.resetCache();
+                    entry.resetCache();
                     try {
                         await entry.getSeason();
                     } catch (ignore) {
@@ -122,7 +122,7 @@ export default class MainListManager {
                     this.secondList.shift();
                 }
             }
-            await MainListSaver.saveMainList(MainListManager.mainList);
+            MainListSaver.saveMainList(MainListManager.mainList);
             logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length);
         } catch (err) {
             logger.error('Error at MainListManager.finishListFilling');
@@ -132,30 +132,30 @@ export default class MainListManager {
     }
 
 
-    public static async removeSeriesFromMainList(series: Series, notifyRenderer = false): Promise<boolean> {
+    public static removeSeriesFromMainList(series: Series, notifyRenderer = false): boolean {
         let result = false;
         if (this.listMaintance) {
-            const result1 = await this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
-            const result2 = await this.removeSeriesFromList(series, notifyRenderer, MainListManager.secondList);
+            const result1 = this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
+            const result2 = this.removeSeriesFromList(series, notifyRenderer, MainListManager.secondList);
             return (result1 || result2);
         } else {
-            result = await this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
+            result = this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
         }
         return result;
     }
 
-    public static async removeSeriesFromList(series: Series, notifyRenderer = false, list?: Series[]): Promise<boolean> {
-        await this.checkIfListIsLoaded();
+    public static removeSeriesFromList(series: Series, notifyRenderer = false, list?: Series[]): boolean {
+        this.checkIfListIsLoaded();
         if (!list) {
-            list = await this.getMainList();
+            list = this.getMainList();
         }
         logger.log('info', '[MainList] Remove Item in mainlist: ' + series.id);
-        const index = await MainListManager.getIndexFromSeries(series, list);
+        const index = MainListManager.getIndexFromSeries(series, list);
         if (index !== -1) {
             const oldSize = list.length;
             let ref = list;
-            ref = await listHelper.removeEntrys(ref, ref[index]);
-            await this.requestSaveMainList();
+            ref = listHelper.removeEntrys(ref, ref[index]);
+            this.requestSaveMainList();
             return oldSize !== ref.length;
         }
         return false;
@@ -164,8 +164,8 @@ export default class MainListManager {
     /**
      * Retunrs all series but in the maintaince phase it can return dublicated entrys.
      */
-    public static async getMainList(): Promise<Series[]> {
-        await this.checkIfListIsLoaded();
+    public static getMainList(): Series[] {
+        this.checkIfListIsLoaded();
         if (this.listMaintance) {
             const arr = [...MainListManager.secondList, ...MainListManager.mainList];
             logger.log('info', '[MainList] TempList served: (size= ' + arr.length + ')');
@@ -180,16 +180,16 @@ export default class MainListManager {
      * INFO: In the maintance phase the index number can be valid very shortly.
      * @param anime
      */
-    public static async getIndexFromSeries(anime: Series, seriesList?: Series[] | readonly Series[]): Promise<number> {
+    public static getIndexFromSeries(anime: Series, seriesList?: Series[] | readonly Series[]): number {
         if (seriesList) {
             return (seriesList).findIndex((x) => anime.id === x.id);
         } else {
-            return (await MainListManager.getMainList()).findIndex((x) => anime.id === x.id);
+            return (MainListManager.getMainList()).findIndex((x) => anime.id === x.id);
         }
     }
 
-    public static async requestSaveMainList() {
-        MainListSaver.saveMainList(await this.getMainList());
+    public static requestSaveMainList(): void {
+        MainListSaver.saveMainList(this.getMainList());
     }
 
     private static mainList: Series[] = [];
@@ -197,7 +197,7 @@ export default class MainListManager {
     private static listMaintance = false;
     private static secondList: Series[] = [];
 
-    private static async checkIfListIsLoaded() {
+    private static checkIfListIsLoaded(): void {
         if (!MainListManager.listLoaded) {
             MainListManager.mainList = MainListLoader.loadData();
             MainListManager.listLoaded = true;

@@ -25,6 +25,16 @@ import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
 
 export default class SimklProvider extends ListProvider {
+    public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
+        throw new Error('Method not implemented.');
+    }
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        throw new Error('Method not implemented.');
+    }
+
     public static instance: SimklProvider;
     public userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
@@ -32,19 +42,29 @@ export default class SimklProvider extends ListProvider {
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [TVDBProvider, AniDBProvider, MalProvider];
     public providerName = 'Simkl';
     public version = 2;
-    public hasOAuthCode = true;
+    public hasOAuthLogin = true;
+    public hasDefaultLogin = false;
     public hasUniqueIdForSeasons = true;
     public requestRateLimitInMs = 1500;
 
     private clientSecret = 'bca301dbc53ad518f9e90abd38642a76dbd531c4d588e7e84fadd416b4ae1253';
     private clientID = '9fda12e10ec09721e9231e5323b150a77d4d095eb009097f452aafd76c3bd3d9';
-    private redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
+    private redirectUri = 'http://localhost:3000/callback';
     private apiUrl = 'https://api.simkl.com/';
     private timeout?: number;
     private simklConverter = new SimklConverter();
     constructor() {
         super();
         SimklProvider.instance = this;
+    }
+    public async addOAuthCode(code: string): Promise<boolean> {
+        const result = await this.simklRequest<CodeResponse>(this.apiUrl + 'oauth/pin/' + code + '?client_id=' + this.clientID);
+        if (result.access_token) {
+            this.userData.setAccessToken(result.access_token);
+            return true;
+        }
+
+        return false;
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
@@ -94,24 +114,18 @@ export default class SimklProvider extends ListProvider {
         const result = await this.simklRequest<UserListResponse>(this.apiUrl + 'sync/all-items/anime/?extended=full');
         const resultList: MultiProviderResult[] = [];
         for (const anime of result.anime) {
-
+            // TODO
         }
         for (const anime of result.movies) {
-
+            // TODO
         }
         for (const anime of result.shows) {
-
+            // TODO
         }
         return resultList;
     }
     public async logInUser(code: string): Promise<boolean> {
-        const result = await this.simklRequest<CodeResponse>(this.apiUrl + 'oauth/pin/' + code + '?client_id=' + this.clientID);
-        if (result.access_token) {
-            this.userData;
-            return true;
-        }
-
-        return false;
+        throw new Error('Userlogin not supported');
 
     }
     public async isUserLoggedIn(): Promise<boolean> {

@@ -14,6 +14,9 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import SetupGuideEntry from './SetupGuideEntry.vue';
+import WorkerController from '../../../backend/communication/ipc-renderer-controller';
+import { chOnce } from '../../../backend/communication/channels';
+import UpdateProviderLoginStatus from '../../../backend/controller/frontend/providers/model/update-provider-login-status';
 
 @Component({
 	components: {
@@ -21,13 +24,30 @@ import SetupGuideEntry from './SetupGuideEntry.vue';
 	}
 })
 export default class SetupGuide extends Vue {
+
+  public workerController: WorkerController = new WorkerController();
+
+
   title = 'Einrichtung';
   
   anyConnectedProvider = false;
 
   providerLoginDescription = 'Bei mindestens einem Provider anmelden.';
   providerSetupDescription = 'Ein Provider einstellen';
-  setupMoreProvidersDescription = 'Weitere Provider einrichten.'
+  setupMoreProvidersDescription = 'Weitere Provider einrichten.';
+
+  async mounted(): Promise<void> {
+    this.anyConnectedProvider = await this.workerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
+    this.workerController.on('provider-any-login-status-changed', (data: UpdateProviderLoginStatus)=> this.providerLoginStatusChange(data.isLoggedIn));
+  }
+
+  async providerLoginStatusChange(isLoggedIn: boolean): Promise<void>{
+    if(isLoggedIn){
+      this.anyConnectedProvider = true;
+    } else {
+      this.anyConnectedProvider = await this.workerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
+    }
+  }
 }
 </script>
 

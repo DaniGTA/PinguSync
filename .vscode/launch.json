@@ -2,35 +2,33 @@
     "version": "0.2.0",
     "configurations": [
         {
-        "name": "Electron: Main",
-        "type": "node",
-        "request": "launch",
-        "cwd": "${workspaceFolder}",
-        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
-        "windows": {
-            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
-        },
-        "args" : ["."],
-        "outputCapture": "std"
+            "name": "Electron: Main",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+            },
+            "runtimeArgs": [
+                "--enable-logging",
+                "--remote-debugging-port=9223",
+            ],
+            "args" : ["."],
+            "outputCapture": "std"
         },
         {
             "name": "Electron: Renderer",
             "type": "chrome",
             "request": "attach",
             "port": 9223,
-            "urlFilter": "http://localhost:*",
-            "timeout": 45000,
-            "webRoot": "${workspaceFolder}/src",
+            "timeout": 30000,
+            "webRoot": "${workspaceFolder}",
             "sourceMapPathOverrides": {
-                "webpack:///./src/*": "${webRoot}/*"
-            },
+                "webpack:///./*": "${webRoot}/*"
+            }
         },
-        {
-            "type": "electron",
-            "request": "launch",
-            "name": "Launch this",
-            "sourceMaps": true
-        },
+
         {
             "name": "Debug Jest Tests",
             "type": "node",

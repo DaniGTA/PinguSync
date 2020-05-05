@@ -35,7 +35,7 @@ export default class ProviderExtractor {
                     try {
                         const providerName = ProviderNameManager.getProviderName(supportProvider);
                         if (providerName === targetProvider.providerName) {
-                            const instance = ProviderList.getExternalProviderInstanceByProviderName(provider.providerName);
+                            const instance = ProviderList.getProviderInstanceByProviderName(provider.providerName);
                             if (instance) {
                                 providerThatProvidersId.push(instance);
                                 break;
@@ -59,7 +59,7 @@ export default class ProviderExtractor {
         targetProvider: ExternalProvider, listOfAllProviders: ProviderLocalData[]): MultiProviderResult | undefined {
         for (const provider of listOfAllProviders) {
             if (provider.provider === targetProvider.providerName) {
-                const subProviderList = listHelper.removeEntrysSync(listOfAllProviders, provider);
+                const subProviderList = listHelper.removeEntrys(listOfAllProviders, provider);
                 return new MultiProviderResult(provider, ...subProviderList);
             }
         }

@@ -158,7 +158,7 @@ export default new class KitsuConverter {
                         }
                     }
                 } else {
-                    const title = episode.titles as IKitsuEpisodeTitle;
+                    const title = episode.titles;
                     if (title.en_jp) {
                         episodeTitles.push(new EpisodeTitle(title.en_jp, 'en_jp'));
                     }

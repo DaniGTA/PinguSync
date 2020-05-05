@@ -25,7 +25,7 @@ export default class MainListLoader {
         }
         return [];
     }
-    private static convertJSONArrayToSeriesArray(jsonEntityArray: any) {
+    private static convertJSONArrayToSeriesArray(jsonEntityArray: any): Series[] {
         const seriesArray: Series[] = [];
         if (Array.isArray(jsonEntityArray)) {
             for (const jsonEntity of jsonEntityArray) {

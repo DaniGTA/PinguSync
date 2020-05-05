@@ -36,15 +36,15 @@ import { SeasonError } from './transfer/season-error';
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
 
-    public packageId: string = '';
+    public packageId = '';
 
-    public id: string = '';
+    public id = '';
     public lastUpdate: number = Date.now();
-    public lastInfoUpdate: number = 0;
+    public lastInfoUpdate = 0;
     public episodeBindingPools: EpisodeBindingPool[] = [];
     private cachedSeason?: Season;
     private cachedMediaType?: MediaType;
-    private seasonDetectionType: string = '';
+    private seasonDetectionType = '';
     private canSync: boolean | null = null;
     private firstSeasonSeriesId?: string;
 
@@ -55,7 +55,7 @@ export default class Series extends SeriesProviderExtension {
         this.cachedSeason = new Season();
     }
 
-    public loadPrototypes() {
+    public loadPrototypes(): void {
         for (let index = 0; index < this.episodeBindingPools.length; index++) {
             Object.setPrototypeOf(this.episodeBindingPools[index], EpisodeBindingPool.prototype);
             this.episodeBindingPools[index].loadPrototypes();
@@ -71,7 +71,7 @@ export default class Series extends SeriesProviderExtension {
         Object.setPrototypeOf(this.cachedSeason, Season.prototype);
     }
 
-    public async resetCache() {
+    public resetCache(): void {
         this.cachedMediaType = undefined;
         this.cachedSeason = undefined;
         this.seasonDetectionType = '';
@@ -112,7 +112,7 @@ export default class Series extends SeriesProviderExtension {
         return names;
     }
 
-    public getAllNamesSeasonAware() {
+    public getAllNamesSeasonAware(): Name[] {
         const names = [];
         for (const provider of this.getAllProviderLocalDatasWithSeasonInfo()) {
             try {
@@ -153,7 +153,7 @@ export default class Series extends SeriesProviderExtension {
         }
     }
 
-    public addEpisodeBindingPools(...bindingPools: EpisodeBindingPool[]) {
+    public addEpisodeBindingPools(...bindingPools: EpisodeBindingPool[]): void {
         for (const bindingPool of bindingPools) {
             this.addEpisodeMapping(...bindingPool.bindedEpisodeMappings);
         }
@@ -204,7 +204,7 @@ export default class Series extends SeriesProviderExtension {
         logger.debug('[Episode] [Serve]: Serve Max Episodes');
         const providers = this.getAllProviderLocalDatas();
         const array = (providers.flatMap((x) => x.episodes) as number[]);
-        const onlyNumbers = array.filter((v) => Number.isInteger(v as number));
+        const onlyNumbers = array.filter((v) => Number.isInteger(v));
         if (onlyNumbers.length === 0) {
             throw new Error('[Series] no episode found SeriesID: ' + this.id);
         }
@@ -234,6 +234,7 @@ export default class Series extends SeriesProviderExtension {
      */
     public async getSeason(searchMode: SeasonSearchMode = SeasonSearchMode.ALL, searchInList?: readonly Series[] | Series[], allowAddNewEntry = true): Promise<Season> {
         logger.debug('[Season] [Serve]: Serve Season');
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         if (!this.cachedSeason?.isSeasonNumberPresent) {
             this.cachedSeason = new Season(this.cachedSeason?.seasonNumbers, this.cachedSeason?.seasonPart, this.cachedSeason?.seasonError);
         }
@@ -252,9 +253,9 @@ export default class Series extends SeriesProviderExtension {
         }
     }
 
-    public async getPrequel(searchInList?: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+    public getPrequel(searchInList?: readonly Series[] | Series[]): RelationSearchResults {
         if (!searchInList) {
-            searchInList = await MainListManager.getMainList();
+            searchInList = MainListManager.getMainList();
         }
         logger.debug('[Season] [Serve]: Last Prequel');
         const searchedProviders: ProviderLocalData[] = [];
@@ -280,9 +281,9 @@ export default class Series extends SeriesProviderExtension {
         return new RelationSearchResults(null, ...searchedProviders);
     }
 
-    public async getSequel(searchInList?: readonly Series[] | Series[]): Promise<RelationSearchResults> {
+    public getSequel(searchInList?: readonly Series[] | Series[]): RelationSearchResults {
         if (!searchInList) {
-            searchInList = await MainListManager.getMainList();
+            searchInList = MainListManager.getMainList();
         }
         if (!searchInList) {
             throw new Error('no searchList for sequel search ');
@@ -349,7 +350,7 @@ export default class Series extends SeriesProviderExtension {
         logger.debug('[Series] Merged Providers  | SeriesID: ' + this.id);
         if (mergeType === MergeTypes.UPGRADE) {
             const getSeason = newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
-            const getMediaType = await newAnime.getMediaType();
+            const getMediaType = newAnime.getMediaType();
             await getSeason;
             await getMediaType;
             await EpisodeMappingHelper.getEpisodeMappings(newAnime);
@@ -404,10 +405,10 @@ export default class Series extends SeriesProviderExtension {
         }
 
         if (!list) {
-            list = await MainListManager.getMainList();
+            list = MainListManager.getMainList();
         }
         if (this.firstSeasonSeriesId) {
-            const result = await new MainListSearcher().findSeriesBySeriesId(this.firstSeasonSeriesId);
+            const result = new MainListSearcher().findSeriesBySeriesId(this.firstSeasonSeriesId);
             if (result) {
                 return result;
             } else {
@@ -444,7 +445,7 @@ export default class Series extends SeriesProviderExtension {
         let relations = [this as Series];
 
         if (!list) {
-            list = await MainListManager.getMainList();
+            list = MainListManager.getMainList();
         }
 
         for (const entry2 of relations) {
@@ -459,7 +460,7 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         if (!returnWithThis) {
-            relations = await listHelper.removeEntrys(relations, this);
+            relations = listHelper.removeEntrys(relations, this);
         }
 
         return relations;
@@ -487,7 +488,7 @@ export default class Series extends SeriesProviderExtension {
             this.cachedMediaType = MediaType.UNKOWN;
             return MediaType.UNKOWN;
         } else {
-            const result = await listHelper.findMostFrequent(collectedMediaTypes);
+            const result = listHelper.findMostFrequent(collectedMediaTypes);
             if (result) {
                 this.cachedMediaType = result;
                 return result;
@@ -501,7 +502,7 @@ export default class Series extends SeriesProviderExtension {
      * Get from all providers the release date.
      * They can have difference.
      */
-    public async getAllReleaseYears(): Promise<number[]> {
+    public getAllReleaseYears(): number[] {
         const collectedReleaseYears: number[] = [];
         for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.releaseYear !== undefined) {
@@ -514,12 +515,12 @@ export default class Series extends SeriesProviderExtension {
     /**
      * Get the release year that fit to this series at most.
      */
-    public async getReleaseYear(): Promise<number | undefined> {
-        const collectedReleaseYears: number[] = await this.getAllReleaseYears();
+    public getReleaseYear(): number | undefined {
+        const collectedReleaseYears: number[] = this.getAllReleaseYears();
         if (collectedReleaseYears.length === 0) {
             return;
         } else {
-            const result = await listHelper.findMostFrequent(collectedReleaseYears);
+            const result = listHelper.findMostFrequent(collectedReleaseYears);
             if (result) {
                 return result;
             }

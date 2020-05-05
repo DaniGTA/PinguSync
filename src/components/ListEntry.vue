@@ -56,8 +56,8 @@ Vue.use(VueLazyload);
 export default class ListEntry extends Vue {
   @PropSync('sPackage', { type: SeriesPackage }) public seriesPackage!: SeriesPackage;
   public watchProgress: WatchProgress = new WatchProgress(0);
-  public cover: string = '';
-  public name: string = '?';
+  public cover = '';
+  public name = '?';
   public showModal = false;
   public currentSelect: FrontendSeriesInfos | null = null;
   @Watch('sPackage', { immediate: true, deep: true })
@@ -74,7 +74,6 @@ export default class ListEntry extends Vue {
   }
   public constructor() {
   	super();
-  	const that = this;
   }
 
   public clog(a: SeriesPackage) {
@@ -102,7 +101,9 @@ export default class ListEntry extends Vue {
   		try {
   			const number = await animeObject.getLastWatchProgress();
   			return number.episode;
-  		} catch (err) {}
+  		} catch (err) {
+        console.error(err);
+      }
   	}
   	return 0;
   }

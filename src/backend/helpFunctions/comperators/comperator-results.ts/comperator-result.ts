@@ -1,10 +1,3 @@
-export default class ComperatorResult {
-    public matchAble: number = 0;
-    public matches: number = 0;
-    public isAbsolute: AbsoluteResult = AbsoluteResult.ABSOLUTE_NONE;
-}
-
-
 export enum AbsoluteResult {
     ABSOLUTE_NONE,
     ABSOLUTE_FALSE,
@@ -13,4 +6,10 @@ export enum AbsoluteResult {
      * At this state it cant be absolute true.
      */
     NOT_ABSOLUTE_TRUE,
+}
+
+export default class ComperatorResult {
+    public matchAble = 0;
+    public matches = 0;
+    public isAbsolute: AbsoluteResult = AbsoluteResult.ABSOLUTE_NONE;
 }

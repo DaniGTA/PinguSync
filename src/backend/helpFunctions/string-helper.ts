@@ -9,7 +9,7 @@ export default class StringHelper {
      * test -> tset
      * @param s
      */
-    public static async reverseString(s: string): Promise<string> {
+    public static reverseString(s: string): string {
         const splitString = s.split('');
         const reversedArray = splitString.reverse();
         return reversedArray.join('');
@@ -20,9 +20,9 @@ export default class StringHelper {
      * [!] Dont make this async. because it will be used by construtors.
      * @param length
      */
-    public static randomString(length: number = 10): string {
+    public static randomString(length = 10): string {
         const c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        return Array.from({ length }, (_) => c[Math.floor(Math.random() * c.length)]).join('');
+        return Array.from({ length }, () => c[Math.floor(Math.random() * c.length)]).join('');
     }
 
     /**
@@ -30,11 +30,11 @@ export default class StringHelper {
      * titleA! vs titleA
      */
     public static cleanString(s: string): string {
-        s = s.replace(/\:/, '');
+        s = s.replace(/:/, '');
         s = s.replace('！', '! ');
         s = s.replace('!', '!');
         if ((s.match(/!/g) || []).length === 1) {
-            s = s.replace(/\!/, '');
+            s = s.replace(/!/, '');
         }
         if ((s.match(/\?/g) || []).length === 1) {
             s = s.replace(/\?/, '');
@@ -43,29 +43,29 @@ export default class StringHelper {
         s = s.replace(' -', ' ');
         // title-A => title A
         // Remove text decorations.
-        s = s.replace(/\-/g, ' ');
-        s = s.replace(/\’/g, '');
-        s = s.replace(/\'/g, '');
-        s = s.replace(/\'/g, '');
+        s = s.replace(/-/g, ' ');
+        s = s.replace(/’/g, '');
+        s = s.replace(/'/g, '');
+        s = s.replace(/'/g, '');
         s = s.replace(/\./g, '');
-        s = s.replace(/\`/g, '');
-        s = s.replace(/\~/g, '');
-        s = s.replace(/\,/g, '');
-        s = s.replace(/\³/g, '3');
-        s = s.replace(/\²/g, '2');
+        s = s.replace(/`/g, '');
+        s = s.replace(/~/g, '');
+        s = s.replace(/,/g, '');
+        s = s.replace(/³/g, '3');
+        s = s.replace(/²/g, '2');
         s = s.replace(/＊/g, '');
-        return s.replace(/\ \ /g, ' ').trim();
+        return s.replace(/ {2}/g, ' ').trim();
     }
-    public static async getSeasonNumberFromTitle(title: string): Promise<SeasonNumberResponse> {
+    public static getSeasonNumberFromTitle(title: string): SeasonNumberResponse {
         const response = new SeasonNumberResponse();
         if (title && isNaN(Number(title)) && title.length > 2) {
             let reversedTitle = '';
             let countLastChar = 0;
-            if (title.match(/part.*\d{1,}/i)) {
+            if (/part.*\d{1,}/i.exec(title) !== null) {
                 title = title.replace(/part.*\d{1,}/i, '').trim();
-                reversedTitle = await this.reverseString(title);
+                reversedTitle = this.reverseString(title);
             } else {
-                reversedTitle = await this.reverseString(title);
+                reversedTitle = this.reverseString(title);
             }
 
             if (title.toLocaleLowerCase().includes('episode')) {
@@ -116,7 +116,7 @@ export default class StringHelper {
     public static hasKanji(s: string): boolean {
         if (s) {
             const regex = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]{1,}/;
-            return s.match(regex) != null;
+            return regex.exec(s) != null;
         }
         return false;
     }
@@ -139,7 +139,7 @@ export default class StringHelper {
     public static hasCyrillic(s: string): boolean {
         if (s) {
             const regex = /[\u0400-\u04FF]/;
-            return s.match(regex) != null;
+            return regex.exec(s) != null;
         }
         return false;
     }
@@ -152,7 +152,7 @@ export default class StringHelper {
     public static isOnlyBasicLatin(s: string): boolean {
         if (s) {
             const regex = /[\u0020-\u007E]*/;
-            const result = s.match(regex) ?? [];
+            const result = regex.exec(s) ?? [];
             return s.length === result[0]?.length;
         }
         return false;

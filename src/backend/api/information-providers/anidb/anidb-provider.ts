@@ -50,6 +50,7 @@ export default class AniDBProvider extends InfoProvider {
     public async getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
         const nameDBList = AniDBHelper.anidbNameManager.data;
         if (nameDBList) {
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             return MultiThreadingHelper.runFunctionInWorker(this.getSameTitle, searchTitle, nameDBList, season);
         }
         throw new Error('nothing found');
@@ -127,7 +128,7 @@ export default class AniDBProvider extends InfoProvider {
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
-    private getData() {
+    private getData(): void {
         logger.warn('[ANIDB] Download anime names.');
         this.downloadFile('http://anidb.net/api/anime-titles.xml.gz', './anidb-anime-titles.xml.gz').then(async (value) => {
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML());
@@ -168,6 +169,7 @@ export default class AniDBProvider extends InfoProvider {
 
     private downloadFile(url: string, filePath: string): Promise<string> {
         this.informAWebRequest();
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise<string>(async (resolve, rejects) => {
             const res = await WebRequestManager.request({ uri: url, gzip: true });
             if (res.statusCode === 200) {

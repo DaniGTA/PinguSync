@@ -1,9 +1,9 @@
 <template>
     <div v-if="provider" class="provider-login-choice">
-        <div class="default-login">
+        <div class="default-login" v-if="provider.hasDefaultLogin">
             <ProviderLogin :provider="provider" />
         </div>
-        <div class="oauth-login">
+        <div class="oauth-login" v-if="provider.hasOAuthLogin">
             <ProviderOAuthLogin :provider="provider" />
         </div>
     </div>

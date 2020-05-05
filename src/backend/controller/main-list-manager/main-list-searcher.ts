@@ -18,9 +18,9 @@ export default class MainListSearcher {
      *
      * Technicly it only checks: is same season ? is same id ? is same provider ?
      */
-    public static async findSeriesWithMultiProviderResult(providerResults: MultiProviderResult): Promise<Series | null> {
+    public static findSeriesWithMultiProviderResult(providerResults: MultiProviderResult): Series | null {
         logger.debug('serch series with multiprovider result');
-        const series = await MainListManager.getMainList();
+        const series = MainListManager.getMainList();
         for (const serie of series) {
             try {
                 if (ProviderComperator.seriesHaveProviders(providerResults, serie)) {
@@ -35,8 +35,8 @@ export default class MainListSearcher {
         return null;
     }
 
-    public static async findAllSeriesByProvider(providerId: string | number, providerName: string, providerSeason?: Season): Promise<Series[]> {
-        const list = await MainListManager.getMainList();
+    public static findAllSeriesByProvider(providerId: string | number, providerName: string, providerSeason?: Season): Series[] {
+        const list = MainListManager.getMainList();
         const result = [];
         for (const entry of list) {
             const providers = entry.getAllProviderBindings();
@@ -62,8 +62,8 @@ export default class MainListSearcher {
      *
      * @param id the series id.
      */
-    public async findSeriesBySeriesId(id: string): Promise<Series | null> {
-        const series = await MainListManager.getMainList();
+    public findSeriesBySeriesId(id: string): Series | null {
+        const series = MainListManager.getMainList();
         for (const serie of series) {
             if (serie.id === id) {
                 return serie;
@@ -77,14 +77,14 @@ export default class MainListSearcher {
      * @param series
      */
     public async findSameSeriesInMainList(series: Series): Promise<Series[]> {
-        return this.findSameSeriesInList(series, await MainListManager.getMainList());
+        return this.findSameSeriesInList(series, MainListManager.getMainList());
     }
     /**
      * Search with id and it will look on other meta data if it is a same series already in the mainlist
      * @param series
      */
     public async quickFindSameSeriesInMainList(series: Series): Promise<Series[]> {
-        return this.quickFindSameSeriesInList(series, await MainListManager.getMainList());
+        return this.quickFindSameSeriesInList(series, MainListManager.getMainList());
     }
 
     public async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {

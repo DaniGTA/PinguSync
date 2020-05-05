@@ -13,7 +13,6 @@ import SetupGuide from './setup-elements/SetupGuide.vue';
 import ProviderSelector from './provider-setup/ProviderSelector.vue';
 import ProviderSetup from './provider-setup/ProviderSetup.vue';
 import ListProvider from '../../backend/api/provider/list-provider';
-import { ProvideReactive } from 'vue-property-decorator';
 @Component({
 	components: {
         SetupGuide,
@@ -24,7 +23,7 @@ import { ProvideReactive } from 'vue-property-decorator';
 export default class SetupView extends Vue {
   selectedProvider: null | ListProvider = null;
 
-  onSelection(value: null | ListProvider){
+  onSelection(value: null | ListProvider): void {
     this.selectedProvider = value;
   }
 }

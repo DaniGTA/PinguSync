@@ -46,20 +46,7 @@ class ListHelper {
         return array.findIndex((x) => array2.includes(x)) !== -1;
     }
 
-
-    public async removeEntrys<T>(array: T[], ...entrys: T[] | readonly T[]): Promise<T[]> {
-        for (const entry of entrys) {
-            const i = array.findIndex((listEntry) => this.objectsEquals(listEntry, entry));
-            if (i > -1) {
-                array.splice(i, 1);
-            } else {
-                logger.debug('[ListHelper] Item doesnt exist in List!');
-            }
-        }
-        return array;
-    }
-
-    public removeEntrysSync<T>(array: T[], ...entrys: T[] | readonly T[]): T[] {
+    public removeEntrys<T>(array: T[], ...entrys: T[] | readonly T[]): T[] {
         if (Array.isArray(array) && array.length !== 0) {
             for (const entry of entrys) {
                 const i: number = array.findIndex((listEntry) => this.objectsEquals(listEntry, entry));
@@ -74,7 +61,7 @@ class ListHelper {
     }
 
 
-    public async shuffle<T>(list: T[]): Promise<T[]> {
+    public shuffle<T>(list: T[]): T[] {
         let m = list.length, t, i;
 
         // While there remain elements to shuffle…
@@ -92,7 +79,7 @@ class ListHelper {
         return list;
     }
 
-    public async findMostFrequent<T>(arr: T[]): Promise<T | undefined> {
+    public findMostFrequent<T>(arr: T[]): T | undefined {
         if (arr === void 0) {
             arr = [];
         } else if (arr.length === 0) {
@@ -102,7 +89,7 @@ class ListHelper {
         }
         let max = 0;
         let mostCommonNumber: T | undefined;
-        let i: number = 0;
+        let i = 0;
         for (i = 0; i < arr.length - 1; i++) {
             let current1 = 1;
             let j = 0;
@@ -153,13 +140,10 @@ class ListHelper {
         return arr.filter((s, index, array) => array.findIndex((item) => (s.name.toLocaleLowerCase() === item.name.toLocaleLowerCase())) === index);
     }
 
-    public async is<T>(obj: any, type: { prototype: T }): Promise<T>;
     public async is(obj: any, type: any): Promise<boolean> {
         const objType: string = typeof obj;
         const typeString = type.toString();
-        const nameRegex: RegExp = /Arguments|Function|String|Number|Date|Array|Boolean|RegExp/;
-
-        let typeName: string;
+        const nameRegex = /Arguments|Function|String|Number|Date|Array|Boolean|RegExp/;
 
         if (obj && objType === 'object') {
             return obj instanceof type;
@@ -169,7 +153,7 @@ class ListHelper {
             return type.name.toLowerCase() === objType;
         }
 
-        typeName = typeString.match(nameRegex);
+        const typeName = typeString.match(nameRegex);
         if (typeName) {
             return typeName[0].toLowerCase() === objType;
         }
@@ -216,8 +200,8 @@ class ListHelper {
             let aName = aNames[0].name;
             let bName = bNames[0].name;
             try {
-                aName = await Name.getRomajiName(aNames);
-                bName = await Name.getRomajiName(bNames);
+                aName = Name.getRomajiName(aNames);
+                bName = Name.getRomajiName(bNames);
             } catch (err) {
                 logger.error(err);
             }
@@ -284,7 +268,7 @@ class ListHelper {
 
         // recursive object equality check
         const p = Object.keys(x);
-        return Object.keys(y).every((i) => p.indexOf(i) !== -1) &&
+        return Object.keys(y).every((i) => p.includes(i)) &&
             p.every((i) => this.objectsEquals(x[i], y[i]));
     }
 }

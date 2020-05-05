@@ -4,7 +4,6 @@ import Series from '../controller/objects/series';
 import { InfoProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../controller/provider-controller/provider-manager/provider-list';
 import logger from '../logger/logger';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
 import MediaTypeComperator from './comperators/media-type-comperator';
@@ -42,7 +41,6 @@ export default class PrequelGeneratorHelper {
     private async createPrequel(localdataProvider: ProviderLocalData, id: number | string, season: Season, mediaType?: MediaType): Promise<Series | null> {
         let newProvider = null;
         const currentMediaType = mediaType ? mediaType : localdataProvider.mediaType;
-        const externalProvider = ProviderList.getProviderInstanceByLocalData(localdataProvider);
         if (localdataProvider instanceof ListProviderLocalData) {
             newProvider = new ProviderLocalDataWithSeasonInfo(new ListProviderLocalData(id, localdataProvider.provider));
         } else if (localdataProvider instanceof InfoProviderLocalData) {
@@ -52,7 +50,7 @@ export default class PrequelGeneratorHelper {
         if (newProvider) {
             await newSeries.addProviderDatasWithSeasonInfos(newProvider);
             newSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(newSeries);
-            const mediaTypeComperatorResult = await MediaTypeComperator.comperaMediaType(await newSeries.getMediaType(), currentMediaType);
+            const mediaTypeComperatorResult = MediaTypeComperator.comperaMediaType(await newSeries.getMediaType(), currentMediaType);
             if (mediaTypeComperatorResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
                 return this.generatePrequel(newSeries, season, false, currentMediaType);
             }

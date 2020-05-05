@@ -8,10 +8,10 @@ import { UserData } from '../../user-data';
 
 export class KitsuUserData extends UserData {
 
-    public accessToken: string = '';
-    public refreshToken: string = '';
-    public expiresIn: number = 0;
-    public username: string = '';
+    public accessToken = '';
+    public refreshToken = '';
+    public expiresIn = 0;
+    public username = '';
     public list: Series[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
@@ -37,7 +37,7 @@ export class KitsuUserData extends UserData {
         this.saveData();
     }
 
-    protected loadData() {
+    protected loadData(): void {
         try {
             logger.warn('[IO] Read kitsu user file.');
             if (fs.existsSync(this.getPath())) {
@@ -50,7 +50,7 @@ export class KitsuUserData extends UserData {
         }
     }
 
-    private async saveData() {
+    private async saveData(): Promise<void> {
         try {
             logger.warn('[IO] Write kitsu user file.');
             fs.writeFileSync(this.getPath(), JSON.stringify(this));
@@ -61,11 +61,7 @@ export class KitsuUserData extends UserData {
 
 
     private getPath(): string {
-        try {
-            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(new PathHelper().getAppPath(), 'kitsu_config.json');
-        } catch (err) {
-            throw err;
-        }
+        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+        return path.join(new PathHelper().getAppPath(), 'kitsu_config.json');
     }
 }

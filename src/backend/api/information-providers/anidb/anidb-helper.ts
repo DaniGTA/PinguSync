@@ -11,7 +11,7 @@ export default class AniDBHelper {
 
     public static async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {
         const converter = new AniDBConverter();
-        const localdata = await converter.convertAnimeToLocalData(seriesDB);
+        const localdata = converter.convertAnimeToLocalData(seriesDB);
         localdata.mainProvider.providerLocalData.addSeriesName(...result);
         return localdata;
     }
@@ -25,16 +25,16 @@ export default class AniDBHelper {
             stringTitles.push(titles._text);
         }
 
-        if (await TitleCheckHelper.checkNames([name], stringTitles)) {
+        if ( TitleCheckHelper.checkNames([name], stringTitles)) {
             if (Array.isArray(titles)) {
                 for (const title of titles) {
                     if (title._text) {
-                        const nameType = await converter.convertToNameType(title._attributes.type);
+                        const nameType = converter.convertToNameType(title._attributes.type);
                         resultNames.push(new Name(title._text, title._attributes['xml:lang'], nameType));
                     }
                 }
             } else {
-                const nameType = await converter.convertToNameType(titles._attributes.type);
+                const nameType = converter.convertToNameType(titles._attributes.type);
                 resultNames.push(new Name(titles._text, titles._attributes['xml:lang'], nameType));
             }
             return resultNames;

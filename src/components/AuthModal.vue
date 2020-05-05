@@ -13,34 +13,33 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, PropSync } from "vue-property-decorator";
-import { ipcRenderer } from "electron";
-import MainList from "./MainList.vue";
-import App from "../App.vue";
+import { Component, Prop, Vue, PropSync } from 'vue-property-decorator';
+import { ipcRenderer } from 'electron';
+import MainList from './MainList.vue';
+import App from '../App.vue';
 
 @Component
 export default class Providers extends Vue {
-  @PropSync("currentSelectedProvider", { type: String })
+  @PropSync('currentSelectedProvider', { type: String })
   cSelectedProvider!: string;
-  code: string = "";
+  code = '';
   $refs!: {
     authModal: HTMLElement;
   };
   constructor() {
     super();
-    const that = this;
   }
 
-  closeModal() {
-    this.cSelectedProvider = "";
-    this.code = "";
+  closeModal(): void {
+    this.cSelectedProvider = '';
+    this.code = '';
   }
 
   sendCode(code: string) {
     if (code) {
       const providerAuthName =
-        this.cSelectedProvider.toLocaleLowerCase() + "-auth-code";
-      console.log("Auth Provider:" + providerAuthName + " with code: " + code);
+        this.cSelectedProvider.toLocaleLowerCase() + '-auth-code';
+      console.log('Auth Provider:' + providerAuthName + ' with code: ' + code);
       App.workerController.send(providerAuthName, code);
       this.closeModal();
     }

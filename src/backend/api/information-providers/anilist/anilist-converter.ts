@@ -18,8 +18,37 @@ import { GetSeriesByID } from './graphql/getSeriesByID';
 import { MediaFormat } from './graphql/mediaFormat';
 import { Medium } from './graphql/searchSeries';
 import { Entry, MediaRelation, Relation } from './graphql/seriesList';
+import { GetUserSeriesListInfo } from './graphql/getUserSeriesList';
+import ProviderUserList from '../../../controller/objects/provider-user-list';
+import { ListType } from '../../../controller/settings/models/provider/list-types';
 
 export default new class AniListConverter {
+
+    public convertUserSeriesListToProviderList(rawData: GetUserSeriesListInfo): ProviderUserList[] {
+        const allProviderUserList: ProviderUserList[] = [];
+        for (const entry of rawData.MediaListCollection.lists) {
+            const pul = new ProviderUserList(entry.name, this.convertStatusToUserListType(entry.status));
+            pul.custom = entry.isCustomList;
+            allProviderUserList.push(pul);
+        }
+        return allProviderUserList;
+    }
+
+    public convertStatusToUserListType(status: string): ListType {
+        switch (status) {
+            case 'PAUSED':
+                return ListType.Paused;
+            case 'DROPPED':
+                return ListType.Dropped;
+            case 'COMPLETED':
+                return ListType.Completed;
+            case 'CURRENT':
+                return ListType.Watching;
+            default:
+                return ListType.Unknown;
+        }
+    }
+
     public async convertMediaToLocalData(medium: Medium): Promise<ListProviderLocalData> {
         let provider = new ListProviderLocalData(medium.id, AniListProvider.getInstance());
 

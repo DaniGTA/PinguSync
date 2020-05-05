@@ -45,6 +45,7 @@ export default abstract class ProviderLocalData {
     private static mergeBasicEntrys(a: ProviderLocalData, b: ProviderLocalData): ProviderLocalData {
         const finalProvider: any = a;
         for (const key in b) {
+            // eslint-disable-next-line no-prototype-builtins
             if (b.hasOwnProperty(key)) {
                 const keyValue = (b as any)[key];
                 if (Array.isArray(keyValue)) {
@@ -188,7 +189,7 @@ export default abstract class ProviderLocalData {
      * Prevents too have double entrys for same name.
      * @param infoProvider
      */
-    public addSeriesName(...names: Name[]) {
+    public addSeriesName(...names: Name[]): void {
         for (const name of names) {
             if (name && name.name && name.name !== 'null') {
                 if (this.names.findIndex((x) => x.name === name.name && x.lang === x.lang) === -1) {

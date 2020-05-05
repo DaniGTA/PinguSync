@@ -9,7 +9,7 @@ export default class IPCBackgroundController implements ICommunication {
         this.webcontents = webcontents;
     }
 
-    public send(channel: string, data?: any) {
+    public send(channel: string, data?: any): void {
         let success = false;
         while (!success) {
             try {
@@ -17,16 +17,15 @@ export default class IPCBackgroundController implements ICommunication {
                 logger.log('info', 'worker send: ' + channel);
                 success = true;
             } catch (err) {
-                this.webcontents.send(channel);
                 logger.log('info', err);
             }
         }
     }
 
-    public async on(channel: string, f: (data: any) => void) {
+    public async on(channel: string, f: ((data: any) => void) | ((data: any) => Promise<void>)): Promise<void> {
         ipcMain.on(channel, (event: Electron.IpcMainEvent, data: any) => {
-           logger.log('info', 'recieved: ' + channel);
-           try {
+            logger.log('info', 'recieved: ' + channel);
+            try {
                 f(JSON.parse(data));
             } catch (err) {
                 f(data);

@@ -9,19 +9,32 @@ import { ListProviderLocalData } from '../../../../src/backend/controller/provid
 
 
 export default class TestProvider extends ListProvider {
+    public hasOAuthLogin = false;
+    public addOAuthCode(code: string): Promise<boolean> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        throw new Error('Method not implemented.');
+    }
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public getAllLists(): Promise<import('../../../../src/backend/controller/objects/provider-user-list').default[]> {
+        throw new Error('Method not implemented.');
+    }
     public potentialSubProviders: Array<new () => ExternalInformationProvider> = [];
     public supportedOtherProvider: Array<new () => ExternalInformationProvider> = [];
 
     public version = 1;
     public hasUniqueIdForSeasons = false;
-    public providerName: string = '';
-    public hasOAuthCode: boolean = true;
+    public providerName = '';
+    public hasOAuthCode = true;
     public loggedIn: boolean;
     // tslint:disable-next-line: no-object-literal-type-assertion
     public userData: UserData = {} as UserData;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
 
-    constructor(providerName: string, loggedIn: boolean = true, hasUniqueIdForSeasons: boolean = false) {
+    constructor(providerName: string, loggedIn = true, hasUniqueIdForSeasons = false) {
         super();
         this.requestRateLimitInMs = 0;
         this.providerName = providerName;

@@ -5,8 +5,8 @@ import ProviderLocalData from '../provider-manager/local-data/interfaces/provide
 import ProviderDataListManager from './provider-data-list-manager';
 
 export default class ProviderDataListSearcher {
-    public static async getOneProviderLocalData(id: string | number, providerName: string): Promise<ProviderLocalData | null> {
-        const localDataList = await ProviderDataListManager.getProviderDataList();
+    public static getOneProviderLocalData(id: string | number, providerName: string): ProviderLocalData | null {
+        const localDataList = ProviderDataListManager.getProviderDataList();
         for (const entry of localDataList) {
             if (this.isProviderLocalDataTheSearchResult(entry, id, providerName)) {
                 return entry;

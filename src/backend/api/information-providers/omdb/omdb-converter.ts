@@ -5,12 +5,12 @@ import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
+import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import { IdRequestResult } from './models/id-request-result';
 import { Search } from './models/search-results';
 import OMDbProvider from './omdb-provider';
-import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 
 export default class OMDbConverter {
 

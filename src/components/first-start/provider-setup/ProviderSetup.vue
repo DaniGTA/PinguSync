@@ -1,9 +1,9 @@
 <template>
   <div class="provider-setup-settings">
     <div v-if="syncedSelectedProvider" class="provider-setup-entry">
-      <ProviderSetupHeader :provider="syncedSelectedProvider" class="provider-setup-header">
-      </ProviderSetupHeader>
-      <MultiProviderLoginView class="setup" :provider="syncedSelectedProvider" />
+      <ProviderSetupHeader :provider="syncedSelectedProvider" class="provider-setup-header"  :key="syncedSelectedProvider"/>
+      <MultiProviderLoginView v-if="!isLoggedIn" class="setup" :provider="syncedSelectedProvider" :key="syncedSelectedProvider" />
+      <ProviderSettings v-if="isLoggedIn" :provider="syncedSelectedProvider" :key="syncedSelectedProvider" />
     </div>
     <template v-else>
       <ProviderSetupPlaceholder />
@@ -14,25 +14,61 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { PropSync } from 'vue-property-decorator';
+import { PropSync, Watch } from 'vue-property-decorator';
 import ProviderList from '../../../backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderImageBlock from './provider-elements/ProviderImageBlock.vue';
 import MultiProviderLoginView from './provider-login-elements/MultiProviderLoginView.vue';
 import ProviderSetupPlaceholder from './ProviderSetupPlaceholder.vue';
 import ProviderUserInformation from './ProviderUserInformation.vue';
 import ProviderSetupHeader from './ProviderSetupHeader.vue';
+import WorkerController from '../../../backend/communication/ipc-renderer-controller';
+import ListProvider from '../../../backend/api/provider/list-provider';
+import ProviderSettings from './provider-settings/ProviderSettings.vue';
+import UpdateProviderLoginStatus from '../../../backend/controller/frontend/providers/model/update-provider-login-status';
 @Component({
 	components: {
     ProviderImageBlock,
     MultiProviderLoginView,
     ProviderSetupPlaceholder,
     ProviderUserInformation,
-    ProviderSetupHeader
+    ProviderSetupHeader,
+    ProviderSettings
 	}
 })
-export default class ProviderSettings extends Vue {
+export default class ProviderSetup extends Vue {
+    public workerController: WorkerController = new WorkerController();
+
     @PropSync('selectedProvider', { type: ProviderList }) 
-    public syncedSelectedProvider!: ProviderList;
+    public syncedSelectedProvider!: ListProvider;
+
+    public isLoggedIn = false;
+
+    @Watch('selectedProvider', { immediate: true, deep: true })
+    async onSelectionChange(val: ListProvider, oldVal: ListProvider): Promise<void>{
+      try{
+        if(oldVal){
+          this.workerController.removeListener('provider-any-login-status-changed', (x) => this.anyUpdateLoginStatus(x));
+        }
+        if(val){
+          console.log('listen for auth status');
+          this.updateLoginStatus(await this.workerController.getOnce('provider-auth-status', val.providerName));
+          this.workerController.on('provider-any-login-status-changed', (x) => this.anyUpdateLoginStatus(x));
+          console.log('listen for auth status finished');
+        }
+      } catch(err){
+        console.log(err);
+      }
+    }
+
+    anyUpdateLoginStatus(data: UpdateProviderLoginStatus): void {
+      if(data.providerName === this.syncedSelectedProvider.providerName){
+        this.isLoggedIn = data.isLoggedIn;
+      }
+    }
+
+    updateLoginStatus(newLoggedInStatus: boolean): void {
+      this.isLoggedIn = newLoggedInStatus;
+    }
 }
 </script>
 

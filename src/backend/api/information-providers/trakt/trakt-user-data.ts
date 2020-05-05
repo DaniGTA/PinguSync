@@ -8,10 +8,10 @@ import { TraktUserInfo } from './objects/userInfo';
 
 export class TraktUserData extends UserData {
 
-    public accessToken: string = '';
-    public refreshToken: string = '';
-    public expiresIn: number = 0;
-    public username: string = '';
+    public accessToken = '';
+    public refreshToken = '';
+    public expiresIn = 0;
+    public username = '';
     public userInfo: TraktUserInfo | null = null;
     public list: MultiProviderResult[] | undefined;
     public lastListUpdate: Date | undefined;
@@ -21,33 +21,33 @@ export class TraktUserData extends UserData {
     }
 
 
-    public updateList(list: MultiProviderResult[]) {
+    public updateList(list: MultiProviderResult[]): void {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();
     }
 
-    public removeTokens() {
+    public removeTokens(): void {
         this.accessToken = '';
         this.refreshToken = '';
         this.expiresIn = 0;
         this.saveData();
     }
 
-    public setTokens(accessToken: string, refreshToken: string, expiresIn: number) {
+    public setTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;
         this.saveData();
     }
 
-    public setUserData(userData: TraktUserInfo) {
+    public setUserData(userData: TraktUserInfo): void {
         this.userInfo = userData;
         this.username = userData.user.name;
         this.saveData();
 
     }
-    protected loadData() {
+    protected loadData(): void {
         try {
             const filePath = this.getPath();
             logger.warn('[IO] Read trakt user file. ' + filePath);
@@ -61,7 +61,7 @@ export class TraktUserData extends UserData {
         }
     }
 
-    private async saveData() {
+    private saveData(): void {
         try {
             const filePath = this.getPath();
             logger.warn('[IO] Write trakt user file.');
@@ -73,11 +73,8 @@ export class TraktUserData extends UserData {
 
 
     private getPath(): string {
-        try {
-            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(new PathHelper().getAppPath(), 'trakt_config.json');
-        } catch (err) {
-            throw err;
-        }
+        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+        return path.join(new PathHelper().getAppPath(), 'trakt_config.json');
+
     }
 }

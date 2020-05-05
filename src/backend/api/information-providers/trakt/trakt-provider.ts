@@ -18,8 +18,17 @@ import { WatchedInfo } from './objects/watchedInfo';
 import traktConverter from './trakt-converter';
 import { TraktUserData } from './trakt-user-data';
 export default class TraktProvider extends ListProvider {
+    public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
+        throw new Error('Method not implemented.');
+    }
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        throw new Error('Method not implemented.');
+    }
 
-    public static getInstance() {
+    public static getInstance(): TraktProvider {
         if (!TraktProvider.instance) {
             TraktProvider.instance = new TraktProvider();
             // ... any one time initialization goes here ...
@@ -30,16 +39,17 @@ export default class TraktProvider extends ListProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [TVDBProvider];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [TVDBProvider];
-    public hasUniqueIdForSeasons: boolean = false;
+    public hasUniqueIdForSeasons = false;
     public hasEpisodeTitleOnFullInfo = true;
-    public providerName: string = 'Trakt';
-    public hasOAuthCode = true;
+    public providerName = 'Trakt';
+    public hasOAuthLogin = true;
+    public hasDefaultLogin = false;
     public userData: TraktUserData;
     public version = 1;
 
     private clientSecret = '9968dd9718a5aa812431980a045999547eefa48be7e0e9c638e329e5f9d6a0b2';
     private clientId = '94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd';
-    private redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
+    private redirectUri = 'http://localhost:3000/callback';
     constructor() {
         super();
         if (TraktProvider.instance) {
@@ -48,6 +58,37 @@ export default class TraktProvider extends ListProvider {
             TraktProvider.instance = this;
             this.userData = new TraktUserData();
         }
+    }
+    public async addOAuthCode(code: string): Promise<boolean> {
+        const options = {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            json: {
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                client_id: this.clientId,
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                client_secret: this.clientSecret,
+                code,  // The Authorization Code received previously
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                grant_type: 'authorization_code',
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                redirect_uri: this.redirectUri,
+            },
+            method: 'POST',
+            uri: 'https://api.trakt.tv/oauth/token',
+        };
+        this.informAWebRequest();
+        const response = await WebRequestManager.request(options);
+
+        if (response.body.access_token) {
+            const body = response.body;
+            this.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
+            this.getUserInfo();
+            return true;
+        }
+        return false;
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
@@ -116,7 +157,7 @@ export default class TraktProvider extends ListProvider {
     public async isUserLoggedIn(): Promise<boolean> {
         return this.userData.accessToken !== '';
     }
-    public async getAllSeries(disableCache: boolean = false): Promise<MultiProviderResult[]> {
+    public async getAllSeries(disableCache = false): Promise<MultiProviderResult[]> {
         logger.log('info', '[Request] -> Trakt -> AllSeries');
         if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
             return this.userData.list;
@@ -164,32 +205,7 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async logInUser(code: string): Promise<boolean> {
-        const that = this;
-        const options = {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            json: {
-                client_id: this.clientId,
-                client_secret: this.clientSecret,
-                code,  // The Authorization Code received previously
-                grant_type: 'authorization_code',
-                redirect_uri: this.redirectUri,
-            },
-            method: 'POST',
-            uri: 'https://api.trakt.tv/oauth/token',
-        };
-        this.informAWebRequest();
-        const response = await WebRequestManager.request(options);
-
-        if (response.body.access_token) {
-            const body = response.body;
-            that.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
-            that.getUserInfo();
-            return true;
-        }
-        return false;
+        throw new Error('cant login user with credentials');
     }
 
     private async traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {

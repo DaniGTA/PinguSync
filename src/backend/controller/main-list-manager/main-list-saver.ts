@@ -4,7 +4,7 @@ import Series from '../objects/series';
 import MainListPath from './main-list-path';
 
 export default class MainListSaver {
-    public static saveMainList(series: Series[]) {
+    public static saveMainList(series: Series[]): void {
         try {
             logger.log('info', 'Save list: ' + series.length);
             logger.log('info', 'Saved list at: ' + MainListPath.getPath());

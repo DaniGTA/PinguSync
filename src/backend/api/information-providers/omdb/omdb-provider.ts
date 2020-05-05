@@ -13,14 +13,14 @@ import OMDbConverter from './omdb-converter';
 
 export default class OMDbProvider extends InfoProvider {
     public static instance: OMDbProvider;
-    public isOffline: boolean = false;
-    public hasOAuthCode: boolean = false;
-    public providerName: string = 'omdb';
-    public hasUniqueIdForSeasons: boolean = false;
+    public isOffline = false;
+    public hasOAuthCode = false;
+    public providerName = 'omdb';
+    public hasUniqueIdForSeasons = false;
     public supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
-    public version: number = 1;
+    public version = 1;
     public apikey = '728e1e03';
     constructor() {
         super();

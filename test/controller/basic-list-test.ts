@@ -28,7 +28,7 @@ import logger from '../../src/backend/logger/logger';
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
 
-    beforeAll(async () => {
+    beforeAll(() => {
         const anilistInstance = ProviderList.getProviderInstanceByClass(AniListProvider);
         if (!anilistInstance) { fail(); }
         jest.spyOn(anilistInstance, 'isUserLoggedIn').mockImplementation(async () => true);

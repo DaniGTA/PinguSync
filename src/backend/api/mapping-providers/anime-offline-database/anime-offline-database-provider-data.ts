@@ -6,17 +6,17 @@ import { IAnimeOfflineDatabase } from './objects/database-entry';
 
 export default class AnimeOfflineDatabaseProviderData {
     public database: IAnimeOfflineDatabase = { data: [] };
-    public lastDatabaseDownloadTimestamp: number = 0;
+    public lastDatabaseDownloadTimestamp = 0;
     constructor() {
         this.loadDatabase();
     }
 
-    public async updateLastTimestamp(timestamp: number) {
+    public async updateLastTimestamp(timestamp: number): Promise<void> {
         this.lastDatabaseDownloadTimestamp = timestamp;
         await this.saveData();
     }
 
-    public async updateDatabase(database: IAnimeOfflineDatabase) {
+    public async updateDatabase(database: IAnimeOfflineDatabase): Promise<void> {
         this.database = database;
         await this.updateLastTimestamp(Date.now());
     }
@@ -36,7 +36,7 @@ export default class AnimeOfflineDatabaseProviderData {
         }
     }
 
-    private async saveData() {
+    private async saveData(): Promise<void> {
         try {
             logger.info('[AnimeOfflineDatabaseProviderData] Write user data to hard drive');
             writeFileSync(this.getPath(), JSON.stringify(this));
@@ -46,12 +46,8 @@ export default class AnimeOfflineDatabaseProviderData {
     }
 
     private getPath(): string {
-        try {
-            const userDataPath = './';
-            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(userDataPath, 'anime_offline_database_data.json');
-        } catch (err) {
-            throw err;
-        }
+        const userDataPath = './';
+        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+        return path.join(userDataPath, 'anime_offline_database_data.json');
     }
 }

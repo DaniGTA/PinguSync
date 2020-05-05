@@ -31,7 +31,7 @@ export default class EpisodeRatedEqualityContainerHelper {
         while (sorted.length !== 0) {
             const bestResult = sorted[0];
             results.push(bestResult);
-            sorted = listHelper.removeEntrysSync(sorted, ...this.getAllRatingsThatAreRelatedToRating(bestResult, sorted))
+            sorted = listHelper.removeEntrys(sorted, ...this.getAllRatingsThatAreRelatedToRating(bestResult, sorted));
         }
         if (results.length !== 0) {
             return results;

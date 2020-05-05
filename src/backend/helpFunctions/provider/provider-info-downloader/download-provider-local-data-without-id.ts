@@ -103,7 +103,7 @@ export default class DownloadProviderLocalDataWithoutId {
 
     private async linkProviderDataFromRelations(): Promise<ProviderLocalDataWithSeasonInfo> {
         if (!this.provider.hasUniqueIdForSeasons) {
-            const relations = await this.series.getAllRelations(await MainListManager.getMainList());
+            const relations = await this.series.getAllRelations(MainListManager.getMainList());
             if (relations.length !== 0) {
                 for (const relation of relations) {
                     try {

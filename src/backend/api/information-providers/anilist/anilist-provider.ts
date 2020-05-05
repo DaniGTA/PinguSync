@@ -24,10 +24,24 @@ import { SearchSeries } from './graphql/searchSeries';
 import searchSeriesGql from './graphql/searchSeries.gql';
 import { MediaListCollection } from './graphql/seriesList';
 import { IViewer } from './graphql/viewer';
+import ProviderUserList from '../../../controller/objects/provider-user-list';
+import getUserSeriesListInfoGql from './graphql/getUserSeriesListInfo.gql';
+import { GetUserSeriesListInfo } from './graphql/getUserSeriesList';
 
 export default class AniListProvider extends ListProvider {
+    public async getAllLists(): Promise<ProviderUserList[]> {
+        const rawdata = await this.webRequest<GetUserSeriesListInfo>(this.getGraphQLOptions(getUserSeriesListInfoGql, { id: this.userData.viewer?.id, listType: 'ANIME' }));
+        return aniListConverter.convertUserSeriesListToProviderList(rawdata);
+    }
 
-    public static getInstance() {
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        this.userData.setTokens('', '', 0);
+    }
+
+    public static getInstance(): AniListProvider {
         if (!AniListProvider.instance) {
             AniListProvider.instance = new AniListProvider();
             // ... any one time initialization goes here ...
@@ -38,7 +52,8 @@ export default class AniListProvider extends ListProvider {
     public hasUniqueIdForSeasons = true;
     public providerName = 'AniList';
     public version = 1;
-    public hasOAuthCode = true;
+    public hasOAuthLogin = true;
+    public hasDefaultLogin = false;
     public supportOnlyBasicLatinForNameSearch = false;
     public supportedMediaTypes: meta.MediaType[] = [meta.MediaType.MOVIE, meta.MediaType.ANIME, meta.MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
@@ -46,7 +61,7 @@ export default class AniListProvider extends ListProvider {
     public userData: AniListUserData;
     private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';
     private clientId = '389';
-    private redirectUri = 'https://anilist.co/api/v2/oauth/pin';
+    private redirectUri = 'http://localhost:3000/callback';
 
     constructor() {
         super();
@@ -56,6 +71,39 @@ export default class AniListProvider extends ListProvider {
         } else {
             AniListProvider.instance = this;
             this.userData = new AniListUserData();
+        }
+    }
+
+    public async addOAuthCode(code: string): Promise<boolean> {
+        const options = {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            json: {
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                client_id: this.clientId,
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                client_secret: this.clientSecret,
+                code, // The Authorization Code received previously
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                grant_type: 'authorization_code',
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                redirect_uri: this.redirectUri,
+            },
+            method: 'POST',
+            uri: 'https://anilist.co/api/v2/oauth/token',
+        };
+
+        const body = await this.webRequest<any>(options);
+
+        if (body.access_token) {
+            this.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
+            this.userData.createdToken = new Date();
+            this.getUserInfo();
+            return true;
+        } else {
+            throw new Error();
         }
     }
 
@@ -93,41 +141,11 @@ export default class AniListProvider extends ListProvider {
         return this.userData.access_token !== '';
     }
 
-    public logInUser(code: string): Promise<boolean> {
-        const that = this;
-        const options = {
-            uri: 'https://anilist.co/api/v2/oauth/token',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            json: {
-                grant_type: 'authorization_code',
-                'client_id': this.clientId,
-                client_secret: this.clientSecret,
-                redirect_uri: this.redirectUri,
-                code, // The Authorization Code received previously
-            },
-        };
-        return new Promise<boolean>((resolve, reject) => {
-            request(options, (error: any, response: any, body: any) => {
-                logger.log('info', 'error:', error); // Print the error if one occurred
-                logger.log('info', 'statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                logger.log('info', 'body:', body); // Print the HTML for the Google homepage.
-                if (body.access_token) {
-                    that.userData.setTokens(body.access_token, body.refresh_token, body.expires_in);
-                    that.userData.createdToken = new Date();
-                    that.getUserInfo();
-                    resolve();
-                } else {
-                    reject();
-                }
-            });
-        });
+    public logInUser(): Promise<boolean> {
+        throw new Error('Default login not support by AniList');
     }
 
-    public getUserInfo() {
+    public getUserInfo(): void {
         this.informAWebRequest();
         // Here we define our query as a multi-line string
         // Storing it in a separate .graphql/.gql file is also possible

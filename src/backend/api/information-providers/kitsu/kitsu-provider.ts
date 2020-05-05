@@ -20,8 +20,17 @@ import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
 export default class KitsuProvider extends ListProvider {
+    public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
+        throw new Error('Method not implemented.');
+    }
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        throw new Error('Method not implemented.');
+    }
 
-    public static getInstance() {
+    public static getInstance(): KitsuProvider {
         if (!KitsuProvider.instance) {
             KitsuProvider.instance = new KitsuProvider();
             // ... any one time initialization goes here ...
@@ -33,8 +42,9 @@ export default class KitsuProvider extends ListProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [MalProvider, TraktProvider, AniDBProvider, AniListProvider];
-    public providerName: string = 'Kitsu';
-    public hasOAuthCode: boolean = true;
+    public providerName = 'Kitsu';
+    public hasOAuthLogin = false;
+    public hasDefaultLogin = false;
     public hasUniqueIdForSeasons = true;
     public supportOnlyBasicLatinForNameSearch = false;
     public hasEpisodeTitleOnFullInfo = true;
@@ -48,6 +58,9 @@ export default class KitsuProvider extends ListProvider {
         } else {
             this.userData = new KitsuUserData();
         }
+    }
+    public addOAuthCode(): Promise<boolean> {
+        throw new Error('Method not implemented.');
     }
     public removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error('Method not implemented.');

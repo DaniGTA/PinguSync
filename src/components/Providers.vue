@@ -35,17 +35,16 @@ import AuthModal from './AuthModal.vue';
 })
 export default class Providers extends Vue {
   @Prop() public providerList: string[] = [];
-  public currentSelectedProvider: string = '';
-  public code: string = '';
+  public currentSelectedProvider = '';
+  public code = '';
   public $refs!: {
     authModal: HTMLElement;
   };
   constructor() {
     super();
-    const that = this;
     App.workerController.on('all-providers', (data: string[]) => {
-      that.providerList = [];
-      that.providerList.push(...data);
+      this.providerList = [];
+      this.providerList.push(...data);
       App.workerController.send('get-series-list');
     });
     App.workerController.send('get-all-providers');
@@ -69,14 +68,13 @@ export default class Providers extends Vue {
   }
 
   public checkLogin(providerName: string) {
-    const that = this;
     App.workerController.on(
       providerName.toLocaleLowerCase() + '-auth-status',
       (status: boolean) => {
-        const button = (that.$refs as any)[
+        const button = (this.$refs as any)[
           providerName + '-button'
         ][0] as HTMLElement;
-        const img = (that.$refs as any)[
+        const img = (this.$refs as any)[
           providerName + '-img'
         ][0] as HTMLElement;
         console.log(button);

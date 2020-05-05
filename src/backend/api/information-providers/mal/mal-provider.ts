@@ -12,8 +12,17 @@ import MultiProviderResult from '../../provider/multi-provider-result';
 import malConverter from './mal-converter';
 import { MalUserData } from './mal-user-data';
 export default class MalProvider extends ListProvider {
+    public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
+        throw new Error('Method not implemented.');
+    }
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        throw new Error('Method not implemented.');
+    }
 
-    public static getInstance() {
+    public static getInstance(): MalProvider {
         if (!MalProvider.instance) {
             MalProvider.instance = new MalProvider();
             // ... any one time initialization goes here ...
@@ -25,8 +34,8 @@ export default class MalProvider extends ListProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
-    public providerName: string = 'Mal';
-    public hasOAuthCode: boolean = false;
+    public providerName = 'Mal';
+    public hasOAuthLogin = false;
     public hasUniqueIdForSeasons = true;
     public userData: MalUserData;
     private api = new ScraperClient();
@@ -34,6 +43,9 @@ export default class MalProvider extends ListProvider {
     constructor() {
         super();
         this.userData = new MalUserData();
+    }
+    public addOAuthCode(): Promise<boolean> {
+        throw new Error('OAuth not support by ' + this.providerName);
     }
 
     public removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {

@@ -11,7 +11,6 @@
 import { Prop } from 'vue-property-decorator';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { PropSync } from 'vue-property-decorator';
 import ProviderImageBlock from './provider-elements/ProviderImageBlock.vue';
 import ProviderUserInformation from './ProviderUserInformation.vue';
 import ListProvider from '../../../backend/api/provider/list-provider';
@@ -25,8 +24,8 @@ import ListProvider from '../../../backend/api/provider/list-provider';
 export default class ProviderSetupHeader extends Vue {
     @Prop({required: true})
     provider!: ListProvider;
-
-    showText = false;
+    @Prop({default: false})
+    showText!: boolean;
 }
 </script>
 

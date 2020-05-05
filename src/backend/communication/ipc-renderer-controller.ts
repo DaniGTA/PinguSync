@@ -1,14 +1,12 @@
 import { ipcRenderer } from 'electron';
-import logger from '../logger/logger';
-
 
 export default class WorkerController {
     constructor() {
-        logger.log('info', 'IPC RENDERER LOADED');
+        console.log('info', 'IPC RENDERER LOADED');
     }
     public send(channel: string, data?: any): void {
+        console.log('info', 'frontend send: ' + channel);
         ipcRenderer.send(channel, data);
-        logger.log('info', 'frontend send: ' + channel);
     }
 
     public on(channel: string, f: (data: any) => void): void {
@@ -17,21 +15,27 @@ export default class WorkerController {
         });
     }
 
+    public removeListener(channel: string, f: (data: any) => void) {
+        ipcRenderer.removeListener('channel', f);
+    }
+
     /**
      * @param channel will be use for recieving data and send data.
      * @param sendData data that will be send with the send request.
      */
     public async getOnce<T>(channel: string, sendData?: any): Promise<T> {
-        this.send(channel, sendData);
-        return new Promise<T>((resolve, reject) => {
+        const promise = new Promise<T>((resolve, reject) => {
             try {
+                console.log('info', 'frontend list once: ' + channel);
                 ipcRenderer.once(channel, (event: Electron.IpcRendererEvent, data: T) => {
-                    logger.log('info', 'frontend recieved: ' + channel);
+                    console.log('info', 'frontend recieved: ' + channel);
                     resolve(data as unknown as T);
                 });
             } catch (err) {
                 reject(err);
             }
         });
+        this.send(channel, sendData);
+        return await promise;
     }
 }

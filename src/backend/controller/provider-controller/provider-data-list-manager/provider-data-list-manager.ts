@@ -34,7 +34,7 @@ export default class ProviderDataListManager {
      * need test.
      * @param provider
      */
-    public static async updateProviderInList(provider: ProviderLocalData) {
+    public static async updateProviderInList(provider: ProviderLocalData): Promise<void> {
         const providerIndex = ProviderDataListSearcher.getIndexByProviderLD(provider);
         if (providerIndex != null) {
             const oldProvider = this.providerDataList[providerIndex];
@@ -55,40 +55,40 @@ export default class ProviderDataListManager {
     /**
      * Refresh cached data and clean up double entrys.
      */
-    public static async finishListFilling() {
+    public static finishListFilling(): void {
         logger.log('info', '[ProviderList] Cleanup Mainlist');
         ProviderDataListManager.listMaintance = true;
         ProviderDataListManager.listMaintance = false;
     }
 
 
-    public static async removeSeriesFromMainList(providerLocalData: ProviderLocalData, notifyRenderer = false): Promise<boolean> {
+    public static removeSeriesFromMainList(providerLocalData: ProviderLocalData, notifyRenderer = false): boolean {
         let result = false;
         if (this.listMaintance) {
-            const result1 = await this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.providerDataList);
-            const result2 = await this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.secondList);
+            const result1 = this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.providerDataList);
+            const result2 = this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.secondList);
             return (result1 || result2);
         } else {
-            result = await this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.providerDataList);
+            result = this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.providerDataList);
         }
         return result;
     }
 
-    public static async removeSeriesFromList(provider: ProviderLocalData, notifyRenderer = false, list?: ProviderLocalData[]): Promise<boolean> {
-        await this.checkIfListIsLoaded();
+    public static removeSeriesFromList(provider: ProviderLocalData, notifyRenderer = false, list?: ProviderLocalData[]): boolean {
+        this.checkIfListIsLoaded();
         if (!list) {
-            list = await this.getProviderDataList();
+            list = this.getProviderDataList();
         }
         logger.log('info', '[ProviderList] Remove Item in mainlist: ' + provider.id + '(' + provider.provider + ')');
-        const index = await ProviderDataListManager.getIndexFromProviderLocalData(provider, list);
+        const index = ProviderDataListManager.getIndexFromProviderLocalData(provider, list);
         if (index !== -1) {
             const oldSize = list.length;
             let ref = list;
-            ref = await listHelper.removeEntrys(ref, ref[index]);
+            ref = listHelper.removeEntrys(ref, ref[index]);
             if (notifyRenderer) {
                 // FrontendController.getInstance().removeEntryFromList(index);
             }
-            await this.requestSaveProviderList();
+            this.requestSaveProviderList();
             return oldSize !== ref.length;
         }
         return false;
@@ -97,7 +97,7 @@ export default class ProviderDataListManager {
     /**
      * Retunrs all provider local data but in the maintaince phase it can return dublicated entrys.
      */
-    public static async getProviderDataList(): Promise<ProviderLocalData[]> {
+    public static getProviderDataList(): ProviderLocalData[] {
         this.checkIfListIsLoaded();
         if (this.listMaintance) {
             const arr = [...ProviderDataListManager.secondList, ...ProviderDataListManager.providerDataList];
@@ -127,16 +127,16 @@ export default class ProviderDataListManager {
      * INFO: In the maintance phase the index number can be valid very shortly.
      * @param anime
      */
-    public static async getIndexFromProviderLocalData(anime: ProviderLocalData, seriesList?: ProviderLocalData[] | readonly ProviderLocalData[]): Promise<number> {
+    public static getIndexFromProviderLocalData(anime: ProviderLocalData, seriesList?: ProviderLocalData[] | readonly ProviderLocalData[]): number {
         if (seriesList) {
             return (seriesList).findIndex((x) => anime.id === x.id);
         } else {
-            return (await ProviderDataListManager.getProviderDataList()).findIndex((x) => anime.id === x.id);
+            return (ProviderDataListManager.getProviderDataList()).findIndex((x) => anime.id === x.id);
         }
     }
 
-    public static async requestSaveProviderList() {
-        ProviderDataListLoader.saveData(await this.getProviderDataList());
+    public static requestSaveProviderList(): void {
+        ProviderDataListLoader.saveData(this.getProviderDataList());
     }
 
     private static providerDataList: ProviderLocalData[] = [];
@@ -144,7 +144,7 @@ export default class ProviderDataListManager {
     private static listMaintance = false;
     private static secondList: ProviderLocalData[] = [];
 
-    private static checkIfListIsLoaded() {
+    private static checkIfListIsLoaded(): void {
         if (!ProviderDataListManager.listLoaded) {
             ProviderDataListManager.providerDataList = ProviderDataListLoader.loadData();
             ProviderDataListManager.listLoaded = true;

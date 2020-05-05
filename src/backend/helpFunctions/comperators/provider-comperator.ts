@@ -59,7 +59,7 @@ export default class ProviderComperator {
                         if (ProviderList.getProviderInstanceByLocalData(aProvider).hasUniqueIdForSeasons) {
                             return ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id);
                         } else {
-                            const mediaTypeResult = await MediaTypeComperator.comperaMediaType(aMediaType, bMediaType);
+                            const mediaTypeResult = MediaTypeComperator.comperaMediaType(aMediaType, bMediaType);
                             if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id) &&
                                 mediaTypeResult.isAbsolute !== AbsoluteResult.ABSOLUTE_FALSE) {
                                 if (aSeries && !aSeason) {
@@ -107,29 +107,6 @@ export default class ProviderComperator {
                     return SeasonComperator.isSameSeason(pws.seasonTarget, binding.targetSeason);
                 } else {
                     return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static async simpleProviderSameIdAndSameSeasonCheckWithSeason(a: ProviderLocalData[], b: ProviderLocalData[], aSeason?: Season, bSeason?: Season): Promise<boolean> {
-        for (const aProvider of a) {
-            for (const bProvider of b) {
-                if (aProvider.provider === bProvider.provider) {
-                    try {
-                        if (ProviderList.getProviderInstanceByLocalData(aProvider).hasUniqueIdForSeasons) {
-                            return ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id);
-                        } else {
-                            if (ProviderComperator.simpleProviderIdCheck(aProvider.id, bProvider.id)) {
-                                if (SeasonComperator.isSameSeason(aSeason, bSeason) && aSeason?.seasonError === SeasonError.NONE) {
-                                    return true;
-                                }
-                            }
-                        }
-                    } catch (err) {
-                        logger.warn(err);
-                    }
                 }
             }
         }

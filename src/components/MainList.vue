@@ -42,21 +42,22 @@ export default class MainList extends Vue {
 
   constructor() {
     super();
-    const that = this;
     MainList.instance = this;
     App.workerController.on('series-list', async (data: SeriesPackage[]) => {
-      let x: number = 0;
-      that.mainList = [];
+      let x = 0;
+      this.mainList = [];
       console.log(data);
       for (let entry of data) {
         try {
-          if (that.mainList.findIndex(x => x.id === entry.id) === -1) {
+          if (this.mainList.findIndex(x => x.id === entry.id) === -1) {
             entry = Object.assign(new SeriesPackage(), entry);
-            that.mainList.push(entry);
+            this.mainList.push(entry);
 
             x++;
           }
-        } catch (err) {}
+        } catch (err) {
+          console.log(err);
+        }
       }
 
       console.log('Data size: ' + data.length);
@@ -65,8 +66,8 @@ export default class MainList extends Vue {
 
     App.workerController.on('update-series-list', (data: IUpdateList) => {
       console.log(data);
-      that.$set(
-        that.mainList,
+      this.$set(
+        this.mainList,
         data.targetIndex,
         Object.assign(new SeriesPackage(), data.updatedEntry)
       );
@@ -74,7 +75,7 @@ export default class MainList extends Vue {
 
     App.workerController.on('series-list-remove-entry', (data: number) => {
       console.log('Remove entry: ' + data);
-      that.$delete(that.mainList, data);
+      this.$delete(this.mainList, data);
     });
   }
 

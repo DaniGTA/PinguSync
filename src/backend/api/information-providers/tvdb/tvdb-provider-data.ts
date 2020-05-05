@@ -16,13 +16,13 @@ export class TVDBProviderData {
         }
     }
 
-    public setTokens(accessToken: string, expiresIn: number) {
+    public setTokens(accessToken: string, expiresIn: number): void {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
         this.saveData();
     }
 
-    private async saveData() {
+    private saveData(): void {
         try {
             const dataPath = this.getPath();
             logger.warn('[IO] Write tvdb user file.');
@@ -32,7 +32,7 @@ export class TVDBProviderData {
         }
     }
 
-    private loadData() {
+    private loadData(): void {
         try {
             const dataPath = this.getPath();
             logger.warn('[IO] Read tvdb user file. ' + dataPath);
@@ -47,11 +47,7 @@ export class TVDBProviderData {
     }
 
     private getPath(): string {
-        try {
-            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(new PathHelper().getAppPath(), 'tvdb_config.json');
-        } catch (err) {
-            throw err;
-        }
+        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+        return path.join(new PathHelper().getAppPath(), 'tvdb_config.json');
     }
 }

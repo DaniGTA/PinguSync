@@ -5,7 +5,7 @@ import Series from '../objects/series';
 import SeriesPackage from '../objects/series-package';
 import MainListManager from './main-list-manager';
 export default class MainListPackageManager {
-    public async getIndexFromPackageId(packageId: string, list: readonly Series[] | Series[]): Promise<number> {
+    public getIndexFromPackageId(packageId: string, list: readonly Series[] | Series[]): number {
         return list.findIndex((x) => packageId === x.id);
     }
 
@@ -50,7 +50,7 @@ export default class MainListPackageManager {
         }
     }
 
-    public async removeSeriesPackage(packageId: string, list: Series[] | readonly Series[]) {
+    public removeSeriesPackage(packageId: string, list: Series[] | readonly Series[]): void {
         const allSeriesInThePackage = list.filter((x) => x.packageId === packageId);
         for (const series of allSeriesInThePackage) {
             MainListManager.removeSeriesFromMainList(series);

@@ -70,14 +70,14 @@ export default class ProviderList extends ProviderLoader {
         } else {
             providerName = localdata.provider;
         }
-        const result = this.getExternalProviderInstanceByProviderName(providerName);
+        const result = this.getProviderInstanceByProviderName(providerName);
         if (result !== undefined) {
-            return result as ExternalInformationProvider;
+            return result;
         }
         throw new Error('[ProviderList] NoProviderFound: ' + providerName);
     }
 
-    public static getExternalProviderInstanceByProviderName(providerName: string): ExternalInformationProvider | undefined {
+    public static getProviderInstanceByProviderName(providerName: string): ExternalInformationProvider | undefined {
         for (const provider of ProviderList.getAllExternalInformationProvider()) {
             if (provider.providerName === providerName) {
                 return provider;

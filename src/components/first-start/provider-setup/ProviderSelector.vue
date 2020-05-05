@@ -11,8 +11,8 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import WorkerController from '../../../backend/communication/ipc-renderer-controller';
 import ProviderImageBlock from './provider-elements/ProviderImageBlock.vue';
-import { PropSync, Model } from 'vue-property-decorator';
 import ListProvider from '../../../backend/api/provider/list-provider';
+import { chOnce } from '../../../backend/communication/channels';
 
 @Component({
 	components: {
@@ -53,7 +53,7 @@ export default class ProviderSettings extends Vue {
     }
     
     async getAllAvaibleProviders(): Promise<ListProvider[]> {
-        return await this.workerController.getOnce<ListProvider[]>('get-all-list-providers');
+        return await this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProviders);
     }
 }
 </script>

@@ -52,7 +52,7 @@ export default class FrontendController {
 
             FrontendController.instance = that;
             for (const pl of ProviderList.getListProviderList()) {
-                if (pl.hasOAuthCode) {
+                if (pl.hasOAuthLogin) {
                     this.communcation.on(pl.providerName.toLocaleLowerCase() + '-auth-code', async (code: string) => {
                         try {
                             await pl.logInUser(code);
@@ -147,6 +147,7 @@ export default class FrontendController {
     }
 
     public getPath(): string {
+        // eslint-disable-next-line no-undef
         return (process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + 'Library/Preferences' : process.env.HOME + '/.local/share')) + '/list-manager/';
 
     }

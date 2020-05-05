@@ -1,4 +1,4 @@
-import { equal, notEqual, rejects, strictEqual } from 'assert';
+import { equal, notEqual, rejects, strictEqual, throws } from 'assert';
 import StringHelper from '../../src/backend/helpFunctions/string-helper';
 
 describe('String Helper', () => {
@@ -41,36 +41,36 @@ describe('String Helper', () => {
         });
     });
 
-    test('should clean string of other characters', async () => {
-        strictEqual(await StringHelper.cleanString('この素晴らしい世界に祝福を！紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
-        strictEqual(await StringHelper.cleanString('この素晴らしい世界に祝福を! 紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
+    test('should clean string of other characters', () => {
+        strictEqual(StringHelper.cleanString('この素晴らしい世界に祝福を！紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
+        strictEqual(StringHelper.cleanString('この素晴らしい世界に祝福を! 紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
     });
-    test('should not crash on check kanij', async () => {
-        strictEqual(await StringHelper.hasKanji(null as unknown as string), false);
+    test('should not crash on check kanij', () => {
+        strictEqual(StringHelper.hasKanji(null as unknown as string), false);
     });
 
-    test('should detect cryillic', async () => {
-        strictEqual(await StringHelper.hasCyrillic('Привіт'), true);
+    test('should detect cryillic', () => {
+        strictEqual(StringHelper.hasCyrillic('Привіт'), true);
         return;
     });
 
-    test('should not detect cryillic', async () => {
-        strictEqual(await StringHelper.hasCyrillic('Hello'), false);
+    test('should not detect cryillic', () => {
+        strictEqual(StringHelper.hasCyrillic('Hello'), false);
         return;
     });
 
-    test('should detect hangul letters', async () => {
-        strictEqual(await StringHelper.hasHangul('안녕'), true);
+    test('should detect hangul letters', () => {
+        strictEqual(StringHelper.hasHangul('안녕'), true);
         return;
     });
 
-    test('should not detect hangul letters', async () => {
-        strictEqual(await StringHelper.hasHangul('Hello'), false);
+    test('should not detect hangul letters', () => {
+        strictEqual(StringHelper.hasHangul('Hello'), false);
         return;
     });
 
-    test('should make test to tset', async () => {
-        const result = await StringHelper.reverseString('test');
+    test('should make test to tset', () => {
+        const result = StringHelper.reverseString('test');
         equal(result, 'tset');
         return;
     });
@@ -90,38 +90,38 @@ describe('String Helper', () => {
     });
 
     describe('should get right season number from title', () => {
-        test('should detect parts', async () => {
-            strictEqual((await StringHelper.getSeasonNumberFromTitle('Title 3 Part 2')).seasonNumber, 3);
+        test('should detect parts', () => {
+            strictEqual((StringHelper.getSeasonNumberFromTitle('Title 3 Part 2')).seasonNumber, 3);
         });
-        test('Season marking with X', async () => {
-            strictEqual((await StringHelper.getSeasonNumberFromTitle('Title XX')).seasonNumber, 2, 'Season marking with X');
+        test('Season marking with X', () => {
+            strictEqual((StringHelper.getSeasonNumberFromTitle('Title XX')).seasonNumber, 2, 'Season marking with X');
         });
-        test('Season marking with number', async () => {
-            strictEqual((await StringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber, 2, 'Season marking with number');
+        test('Season marking with number', () => {
+            strictEqual((StringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber, 2, 'Season marking with number');
         });
-        test('Season marking with the letter s', async () => {
-            strictEqual((await StringHelper.getSeasonNumberFromTitle('Title S2')).seasonNumber, 2, 'Season marking with the letter s');
+        test('Season marking with the letter s', () => {
+            strictEqual((StringHelper.getSeasonNumberFromTitle('Title S2')).seasonNumber, 2, 'Season marking with the letter s');
         });
-        test('Season marking with the word season', async () => {
-            strictEqual((await StringHelper.getSeasonNumberFromTitle('Title Season 2 - The war')).seasonNumber, 2, 'Season marking with the word season');
+        test('Season marking with the word season', () => {
+            strictEqual((StringHelper.getSeasonNumberFromTitle('Title Season 2 - The war')).seasonNumber, 2, 'Season marking with the word season');
         });
-        test('Season marking with the a A', async () => {
-            strictEqual((await StringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
+        test('Season marking with the a A', () => {
+            strictEqual((StringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
         });
         test('should get season number 2 from title: アルドノア・ゼロ 2', async () => {
-            strictEqual((await StringHelper.getSeasonNumberFromTitle('アルドノア・ゼロ 2')).seasonNumber, 2, 'test 2');
+            strictEqual((StringHelper.getSeasonNumberFromTitle('アルドノア・ゼロ 2')).seasonNumber, 2, 'test 2');
         });
     });
 
     test('should not get a season number from title', async () => {
-        await rejects(StringHelper.getSeasonNumberFromTitle('14'), 'number is not a season.');
-        await rejects(StringHelper.getSeasonNumberFromTitle('C3'), '2 values cant give a season');
-        await rejects(StringHelper.getSeasonNumberFromTitle('C^3'), 'high 3 is not a season number');
-        await rejects(StringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya'));
-        await rejects(StringHelper.getSeasonNumberFromTitle('Title'), 'there is no season');
-        await rejects(StringHelper.getSeasonNumberFromTitle('Title 2006'), 'a year is not a season');
-        await rejects(StringHelper.getSeasonNumberFromTitle('Title AAA'), 'triple a is not a season marker');
-        await rejects(StringHelper.getSeasonNumberFromTitle('Title A'), 'single a is not a season marker');
+        throws(() => StringHelper.getSeasonNumberFromTitle('14'), 'number is not a season.');
+        throws(() => StringHelper.getSeasonNumberFromTitle('C3'), '2 values cant give a season');
+        throws(() => StringHelper.getSeasonNumberFromTitle('C^3'), 'high 3 is not a season number');
+        throws(() => StringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya'));
+        throws(() => StringHelper.getSeasonNumberFromTitle('Title'), 'there is no season');
+        throws(() => StringHelper.getSeasonNumberFromTitle('Title 2006'), 'a year is not a season');
+        throws(() => StringHelper.getSeasonNumberFromTitle('Title AAA'), 'triple a is not a season marker');
+        throws(() => StringHelper.getSeasonNumberFromTitle('Title A'), 'single a is not a season marker');
     });
 
 });

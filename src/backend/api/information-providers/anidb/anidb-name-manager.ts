@@ -48,12 +48,8 @@ export default class AniDBNameManager {
         }
     }
     private getPath(): string {
-        try {
-            const userDataPath = './';
-            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(userDataPath, 'anidb_config.json');
-        } catch (err) {
-            throw err;
-        }
+        const userDataPath = './';
+        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+        return path.join(userDataPath, 'anidb_config.json');
     }
 }

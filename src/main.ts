@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import VueI18n from 'vue-i18n';
 
 import App from './App.vue';
 
@@ -21,6 +22,7 @@ Vue.config.productionTip = false;
 // 0. If using a module system (e.g. via vue-cli), import Vue and VueRouter
 // and then call `Vue.use(VueRouter)`.
 Vue.use(Router);
+Vue.use(VueI18n);
 
 // 1. Define route components.
 // These can be imported from other files
@@ -45,7 +47,13 @@ const router = new Router({
   routes, // short for `routes: routes`
 });
 
+const i18n = new VueI18n({
+  locale: 'en',
+  fallbackLocale: 'en',
+});
+
 new Vue({
+  i18n,
   render: (h) => h(App),
   router,
 }).$mount('#app');

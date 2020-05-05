@@ -2,6 +2,9 @@ import ListProvider from '../../../api/provider/list-provider';
 import ICommunication from '../../../communication/icommunication';
 import IPCBackgroundController from '../../../communication/ipc-background-controller';
 import ProviderList from '../../provider-controller/provider-manager/provider-list';
+import FrontendProviderAuthController from './frontend-provider-auth-controller';
+import { chOnce } from '../../../communication/channels';
+import FrontendProviderSettingsController from './frontend-provider-settings-controller';
 
 export default class FrontendProviderController {
     private communcation: ICommunication;
@@ -10,14 +13,26 @@ export default class FrontendProviderController {
     constructor(webcontents: Electron.WebContents) {
         this.communcation = new IPCBackgroundController(webcontents);
         this.init();
+        // tslint:disable-next-line: no-unused-expression
+        new FrontendProviderAuthController(webcontents);
+        new FrontendProviderSettingsController(webcontents);
     }
 
 
     private init(): void {
-        this.communcation.on('get-all-list-providers', () => this.communcation.send('get-all-list-providers', this.getAllListProviders()));
+        this.communcation.on(chOnce.GetAllListProviders, () => this.communcation.send(chOnce.GetAllListProviders, this.getAllListProviders()));
+        this.communcation.on(chOnce.GetUserNameFromProvider, async (providerName) => this.communcation.send(chOnce.GetUserNameFromProvider, await this.getUsername(providerName)));
     }
 
     private getAllListProviders(): ListProvider[] {
         return ProviderList.getListProviderList();
+    }
+
+    private async getUsername(providerName: string): Promise<string> {
+        const providerInstance = ProviderList.getProviderInstanceByProviderName(providerName);
+        if (providerInstance instanceof ListProvider) {
+            return await providerInstance.getUsername();
+        }
+        throw new Error('Cant get Username from provider');
     }
 }

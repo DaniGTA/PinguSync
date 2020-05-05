@@ -10,7 +10,7 @@ import { UserData } from '../../user-data';
 export class MalUserData extends UserData {
 
     public loginData?: LoginData;
-    public username: string = '';
+    public username = '';
     public list: Series[] | undefined;
     public lastListUpdate: Date | undefined;
     constructor() {
@@ -19,17 +19,17 @@ export class MalUserData extends UserData {
     }
 
 
-    public updateList(list: Series[]) {
+    public updateList(list: Series[]): void {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();
     }
 
-    public setLoginData(loginData: LoginData) {
+    public setLoginData(loginData: LoginData): void {
         this.loginData = loginData;
         this.saveData();
     }
-    protected loadData() {
+    protected loadData(): void {
         try {
             logger.debug('[IO] Read mal user file.');
             if (fs.existsSync(this.getPath())) {
@@ -42,7 +42,7 @@ export class MalUserData extends UserData {
         }
     }
 
-    private async saveData() {
+    private async saveData(): Promise<void> {
         try {
             logger.debug('[IO] Write mal user file.');
             fs.writeFileSync(this.getPath(), JSON.stringify(this));
@@ -53,11 +53,7 @@ export class MalUserData extends UserData {
 
 
     private getPath(): string {
-        try {
-            // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-            return path.join(new PathHelper().getAppPath(), 'mal_config.json');
-        } catch (err) {
-            throw err;
-        }
+        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
+        return path.join(new PathHelper().getAppPath(), 'mal_config.json');
     }
 }

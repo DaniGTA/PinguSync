@@ -12,11 +12,11 @@ export default class TitleCheckHelper {
         return this.checkNames(aNameList, bNameList);
     }
 
-    public static async checkNames(aNameList: string[], bNameList: string[]) {
-        if (await TitleCheckHelper.fastMatch(aNameList, bNameList)) {
+    public static checkNames(aNameList: string[], bNameList: string[]): boolean {
+        if (TitleCheckHelper.fastMatch(aNameList, bNameList)) {
             const aCleanedNameList = TitleCheckHelper.cleanStringList(aNameList);
             const bCleanedNameList = TitleCheckHelper.cleanStringList(bNameList);
-            if (await this.checkAnimeNamesInArray(await aCleanedNameList, await bCleanedNameList)) {
+            if (this.checkAnimeNamesInArray(aCleanedNameList, bCleanedNameList)) {
                 return true;
             }
         }
@@ -24,7 +24,7 @@ export default class TitleCheckHelper {
     }
 
 
-    public static async checkAnimeNamesInArray(a: string[], b: string[]): Promise<boolean> {
+    public static checkAnimeNamesInArray(a: string[], b: string[]): boolean {
         for (let aName of [...a]) {
             if (aName != null && aName !== '') {
                 for (let bName of [...b]) {
@@ -42,7 +42,7 @@ export default class TitleCheckHelper {
                         }
                         const tempAName = this.removeSeasonMarkesFromTitle(aName);
                         const tempBName = this.removeSeasonMarkesFromTitle(bName);
-                        if (await tempAName === await tempBName) {
+                        if (tempAName === tempBName) {
                             return true;
                         }
                     }
@@ -52,7 +52,7 @@ export default class TitleCheckHelper {
         return false;
     }
 
-    public static async fastMatch(aList: string[], bList: string[]): Promise<boolean> {
+    public static fastMatch(aList: string[], bList: string[]): boolean {
         try {
             const al = [...aList];
             const bl = [...bList];
@@ -93,9 +93,9 @@ export default class TitleCheckHelper {
         }
     }
 
-    public static async removeSeasonMarkesFromTitle(title: string): Promise<string> {
+    public static removeSeasonMarkesFromTitle(title: string): string {
         if (title !== '') {
-            let reversedTitle = await StringHelper.reverseString(title);
+            let reversedTitle = StringHelper.reverseString(title);
             const lastChar = reversedTitle.charAt(0);
             let countLastChar = 0;
             if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gmi)) {
@@ -107,7 +107,7 @@ export default class TitleCheckHelper {
                 return title;
             }
             if ('0123456789'.includes(lastChar)) {
-                return (await StringHelper.reverseString(reversedTitle.substr(1))).trim();
+                return (StringHelper.reverseString(reversedTitle.substr(1))).trim();
             } else {
                 while (lastChar === reversedTitle.charAt(0)) {
                     countLastChar++;
@@ -115,7 +115,7 @@ export default class TitleCheckHelper {
                 }
 
                 if (countLastChar !== 1) {
-                    return (await StringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
+                    return (StringHelper.reverseString(reversedTitle)).replace('  ', ' ').trim();
                 }
             }
         }
@@ -137,7 +137,7 @@ export default class TitleCheckHelper {
         return MediaType.UNKOWN;
     }
 
-    public static async removeMediaTypeFromTitle(title: string): Promise<string> {
+    public static removeMediaTypeFromTitle(title: string): string {
         title = title.replace(/ Movie:/gi, ':');
         title = title.replace(/Movie/gi, '');
         title = title.replace(/Specials/gi, '');
@@ -150,37 +150,37 @@ export default class TitleCheckHelper {
     }
 
     private static hasTitleSeriesInformation(title: string): boolean {
-        if (title.match(/(-|:|: | )TV(\W|$|\_)/i)) {
+        if (/(-|:|: | )TV(\W|$|_)/i.exec(title)) {
             return true;
         }
 
-        if (title.match(/(:|: | )\(tv\)(\W|$|\_)/i)) {
+        if (/(:|: | )\(tv\)(\W|$|_)/i.exec(title)) {
             return true;
         }
         return false;
     }
 
     private static hasTitleMovieInformation(title: string): boolean {
-        if (title.match(/(-|:|: | )Movie(\W|$|\_)/i)) {
+        if (/(-|:|: | )Movie(\W|$|_)/i.exec(title)) {
             return true;
         }
 
-        if (title.match(/(:|: | )Gekijouban(\W|$|\_)/i)) {
+        if (/(:|: | )Gekijouban(\W|$|_)/i.exec(title)) {
             return true;
         }
         return false;
     }
 
     private static hasTitleSpecialInformation(title: string): boolean {
-        if (title.match(/(:|: | )OVA(\W|$|\_)/i)) {
+        if (/(:|: | )OVA(\W|$|_)/i.exec(title)) {
             return true;
         }
 
-        if (title.match(/(:|: | )Specials(\W|$|\_)/i)) {
+        if (/(:|: | )Specials(\W|$|_)/i.exec(title)) {
             return true;
         }
 
-        if (title.match(/(:|: | )Special(\W|$|\_)/i)) {
+        if (/(:|: | )Special(\W|$|_)/i.exec(title)) {
             return true;
         }
         return false;
@@ -190,12 +190,12 @@ export default class TitleCheckHelper {
      * @param nameList
      * @returns a list with uncleaned and cleaned strings.
      */
-    private static async cleanStringList(nameList: string[]): Promise<string[]> {
+    private static cleanStringList(nameList: string[]): string[] {
         for (const name of nameList) {
             try {
                 let bName2 = StringHelper.cleanString(name);
-                bName2 = await this.removeMediaTypeFromTitle(bName2);
-                bName2 = await this.removeSeasonMarkesFromTitle(bName2);
+                bName2 = this.removeMediaTypeFromTitle(bName2);
+                bName2 = this.removeSeasonMarkesFromTitle(bName2);
                 if (bName2 !== name) {
                     nameList.push(bName2);
                 }
@@ -208,7 +208,7 @@ export default class TitleCheckHelper {
         return nameList;
     }
 
-    private static equalIgnoreCase(s1: string, s2: string) {
+    private static equalIgnoreCase(s1: string, s2: string): boolean {
         return s1.toUpperCase() === s2.toUpperCase();
     }
 }

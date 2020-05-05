@@ -14,7 +14,7 @@ export class ListProviderLocalData extends ProviderLocalData {
     public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
         const finalProvider = await this.mergeProviderLocalData(...providers) as ListProviderLocalData;
         finalProvider.watchProgress = finalProvider.watchProgress ? await listHelper.getUniqueObjectList(finalProvider.watchProgress) : [];
-        return Object.assign(new ListProviderLocalData(finalProvider.id), finalProvider as ListProviderLocalData);
+        return Object.assign(new ListProviderLocalData(finalProvider.id), finalProvider);
     }
 
     /**
@@ -41,7 +41,7 @@ export class ListProviderLocalData extends ProviderLocalData {
     public watchStatus?: WatchStatus;
     public watchProgress: WatchProgress[] = [];
 
-    public customList: boolean = false;
+    public customList = false;
     public customListName = '';
     public version = 1;
 
@@ -86,7 +86,7 @@ export class ListProviderLocalData extends ProviderLocalData {
         return;
     }
 
-    public addWatchedEpisodes(episodes: number, plays = 0) {
+    public addWatchedEpisodes(episodes: number, plays = 0): void {
         for (let index = 1; index < episodes + 1; index++) {
             this.addOneWatchedEpisode(index, plays);
 
@@ -110,7 +110,7 @@ export class ListProviderLocalData extends ProviderLocalData {
      * @hasTest
      * @param watchProgress
      */
-    public addOneWatchProgress(watchProgress: WatchProgress) {
+    public addOneWatchProgress(watchProgress: WatchProgress): void {
         if (typeof this.watchProgress === 'undefined') {
             this.watchProgress = [];
         }
@@ -120,7 +120,7 @@ export class ListProviderLocalData extends ProviderLocalData {
      * @hasTest
      * @param watchProgress
      */
-    public async removeOneWatchProgress(watchProgress: WatchProgress): Promise<boolean> {
+    public removeOneWatchProgress(watchProgress: WatchProgress): boolean {
         if (typeof this.watchProgress === 'undefined') {
             this.watchProgress = [];
         }
@@ -128,7 +128,7 @@ export class ListProviderLocalData extends ProviderLocalData {
         if (index === -1) {
             return false;
         } else {
-            this.watchProgress = await listHelper.removeEntrys(this.watchProgress, this.watchProgress[index]);
+            this.watchProgress = listHelper.removeEntrys(this.watchProgress, this.watchProgress[index]);
             return true;
         }
     }

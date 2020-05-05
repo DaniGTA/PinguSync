@@ -18,7 +18,7 @@ export default class ListController {
         if (!ListController.instance) {
             logger.log('info', 'Start ListController.');
             if (!disableOnlineMode) {
-                this.getSeriesListAndUpdateMainList();
+                //this.getSeriesListAndUpdateMainList();
             }
             ListController.instance = this;
         }
@@ -69,7 +69,7 @@ export default class ListController {
         }
         for (const provider of anime.getListProvidersInfos()) {
             try {
-                const providerInstance = await provider.getProviderInstance();
+                const providerInstance = provider.getProviderInstance();
                 if (await providerInstance.isUserLoggedIn()) {
                     const newProvider = await providerInstance.updateEntry(anime, new WatchProgress(watchProgess));
                     newProvider.lastUpdate = new Date(Date.now());
@@ -122,7 +122,7 @@ export default class ListController {
     }
 
 
-    public async getAllEntrysFromProviders(forceDownload: boolean = false): Promise<MultiProviderResult[]> {
+    public async getAllEntrysFromProviders(forceDownload = false): Promise<MultiProviderResult[]> {
         const multiProviderResults: MultiProviderResult[] = [];
         for (const provider of ProviderList.getListProviderList()) {
             try {

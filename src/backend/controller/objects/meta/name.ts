@@ -35,14 +35,14 @@ export default class Name {
         return score;
     }
 
-    public static async getRomajiName(names: Name[]): Promise<string> {
+    public static getRomajiName(names: Name[]): string {
         let kanjiTitle = null;
         for (const name of names) {
             if (name.lang === 'x-jap' && name.nameType === NameType.MAIN) {
                 return name.name;
             }
-            if (!await StringHelper.hasKanji(name.name) && !await StringHelper.hasCyrillic(name.name)) {
-                if (!await StringHelper.hasHangul(name.name)) {
+            if (!StringHelper.hasKanji(name.name) && !StringHelper.hasCyrillic(name.name)) {
+                if (!StringHelper.hasHangul(name.name)) {
                     kanjiTitle = name.name;
                 }
             }
@@ -57,7 +57,7 @@ export default class Name {
 
     public static async getSeasonNumber(names: Name[]): Promise<SeasonNumberResponse> {
         const response = new SeasonNumberResponse();
-        const seasonsDetected = await Name.getSeasonNumbersInNames(names);
+        const seasonsDetected = Name.getSeasonNumbersInNames(names);
         if (!Array.isArray(seasonsDetected)) {
             return seasonsDetected;
         }
@@ -67,7 +67,7 @@ export default class Name {
         const mappedNumbers = seasonsDetected.map((x) => x.seasonNumber);
         const onlyNumbers = mappedNumbers.filter((x) => x) as number[];
         if (onlyNumbers) {
-            const mostFrequentNumberInList = await listHelper.findMostFrequent(onlyNumbers);
+            const mostFrequentNumberInList = listHelper.findMostFrequent(onlyNumbers);
             if (mostFrequentNumberInList) {
                 const entrys = await listHelper.countEntrysInArray(mappedNumbers, mostFrequentNumberInList);
                 if (names.length / 10 <= entrys) {
@@ -78,12 +78,12 @@ export default class Name {
         return response;
     }
 
-    private static async getSeasonNumbersInNames(names: Name[]): Promise<SeasonNumberResponse[] | SeasonNumberResponse> {
+    private static getSeasonNumbersInNames(names: Name[]): SeasonNumberResponse[] | SeasonNumberResponse {
         const seasonsDetected: SeasonNumberResponse[] = [];
         for (const nameObj of names) {
             try {
                 if (Name.canGetValidSeasonNumberFromName(nameObj)) {
-                    const nr = await StringHelper.getSeasonNumberFromTitle(nameObj.name);
+                    const nr = StringHelper.getSeasonNumberFromTitle(nameObj.name);
                     if (nr.seasonNumber !== undefined) {
                         if (nr.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
                             return nr;
@@ -97,7 +97,7 @@ export default class Name {
                     }
                 }
             } catch (err) {
-                logger.debug(`[getSeasonNumbersInNames] Failed extracting season from name: ` + nameObj.name);
+                logger.debug('[getSeasonNumbersInNames] Failed extracting season from name: ' + nameObj.name);
                 logger.debug(err);
                 continue;
             }
@@ -112,8 +112,8 @@ export default class Name {
         return false;
     }
 
-    public name: string = '';
-    public lang: string = '';
+    public name = '';
+    public lang = '';
     public nameType: NameType = NameType.UNKNOWN;
 
     constructor(name: string, lang: string, nameType: NameType = NameType.UNKNOWN) {

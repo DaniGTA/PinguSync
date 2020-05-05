@@ -7,7 +7,8 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:jest/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -21,7 +22,8 @@
         "createDefaultProgram": true
     },
     "plugins": [
-        "vue"
+        "vue",
+        "jest"
     ],
     "rules": {
         "linebreak-style": [
@@ -41,6 +43,9 @@
         "camelcase": [
             "off"
         ],
+        "jest/excpect-expect": [
+            "off"
+        ],
         "@typescript-eslint/require-await": [
             "warn"
         ],
@@ -51,6 +56,9 @@
             }
         ],
         "@typescript-eslint/camelcase": [
+            "warn"
+        ],
+        "@typescript-eslint/no-inferrable-types": [
             "warn"
         ]
     }

@@ -31,7 +31,7 @@ export default class MainListAdder {
      * This just managed the Waitlist.
      * @param series
      */
-    public async addSeries(...series: Series[]) {
+    public async addSeries(...series: Series[]): Promise<void> {
         const trackId = StringHelper.randomString(50);
         logger.log('info', '[MainListAdder] Start adding');
         MainListAdder.instanceTracker.push(trackId);
@@ -39,9 +39,9 @@ export default class MainListAdder {
 
         if (MainListAdder.instanceTracker.length === 1 && MainListAdder.instanceTracker[0] === trackId) {
             await MainListManager.finishListFilling();
-            await ProviderDataListManager.requestSaveProviderList();
+            ProviderDataListManager.requestSaveProviderList();
         }
-        MainListAdder.instanceTracker = await listHelper.removeEntrys(MainListAdder.instanceTracker, trackId);
+        MainListAdder.instanceTracker = listHelper.removeEntrys(MainListAdder.instanceTracker, trackId);
         logger.log('info', '[MainListAdder] End adding');
     }
 
@@ -55,7 +55,7 @@ export default class MainListAdder {
      *
      * @param list a series list.
      */
-    private async listWorker(list: Series[]) {
+    private async listWorker(list: Series[]): Promise<void> {
         const searcher = new MainListSearcher();
         const providerCacheManager = new AdderProviderCacheManager();
         logger.debug('[MainListAdder] Worker started to process ' + list.length + ' Items.');
@@ -84,7 +84,7 @@ export default class MainListAdder {
                     logger.error('[MainListAdder] [listWorker]: (error below)');
                     logger.error(err);
                 }
-                await listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache);
+                listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache);
             }
         }
         logger.log('info', 'Added ' + addCounter + ' to mainList');
@@ -92,7 +92,7 @@ export default class MainListAdder {
         return;
     }
 
-    private async updateExistingEntry(series: Series, existingEntry: Series) {
+    private async updateExistingEntry(series: Series, existingEntry: Series): Promise<void> {
         try {
             logger.log('info', '[MainListAdder] Add existing Series.');
             series.id = existingEntry.id;
@@ -107,8 +107,8 @@ export default class MainListAdder {
         }
     }
 
-    private async requestSave() {
-        await ProviderDataListManager.requestSaveProviderList();
-        await MainListManager.requestSaveMainList();
+    private requestSave(): void {
+        ProviderDataListManager.requestSaveProviderList();
+        MainListManager.requestSaveMainList();
     }
 }
