@@ -14,7 +14,6 @@ jobs:
     steps:
     - name: Decrypt API keys
       run: bash .github/scripts/decrypt_api_keys.sh "${{ secrets.API_KEY_SAFE }}"
-      working-directory: ${{ HOME }}
       shell: bash
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
