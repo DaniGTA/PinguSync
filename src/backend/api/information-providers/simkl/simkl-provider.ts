@@ -46,9 +46,6 @@ export default class SimklProvider extends ListProvider {
     public hasDefaultLogin = false;
     public hasUniqueIdForSeasons = true;
     public requestRateLimitInMs = 1500;
-
-    private clientSecret = 'bca301dbc53ad518f9e90abd38642a76dbd531c4d588e7e84fadd416b4ae1253';
-    private clientID = '9fda12e10ec09721e9231e5323b150a77d4d095eb009097f452aafd76c3bd3d9';
     private redirectUri = 'http://localhost:3000/callback';
     private apiUrl = 'https://api.simkl.com/';
     private timeout?: number;
@@ -58,7 +55,7 @@ export default class SimklProvider extends ListProvider {
         SimklProvider.instance = this;
     }
     public async addOAuthCode(code: string): Promise<boolean> {
-        const result = await this.simklRequest<CodeResponse>(this.apiUrl + 'oauth/pin/' + code + '?client_id=' + this.clientID);
+        const result = await this.simklRequest<CodeResponse>(this.apiUrl + 'oauth/pin/' + code + '?client_id=' + this.getApiId());
         if (result.access_token) {
             this.userData.setAccessToken(result.access_token);
             return true;
@@ -92,13 +89,13 @@ export default class SimklProvider extends ListProvider {
                     return result;
                 }
             } else if (provider.mediaType === MediaType.MOVIE) {
-                const url = this.apiUrl + 'movie/' + provider.id + '?extended=full&client_id=' + this.clientID;
+                const url = this.apiUrl + 'movie/' + provider.id + '?extended=full&client_id=' + this.getApiId();
                 const result = await this.simklRequest<ISimklFullInfoMovieResponse>(url);
                 if (result) {
                     return this.simklConverter.convertFullMovieInfoToProviderLocalData(result);
                 }
             } else if (provider.mediaType === MediaType.SERIES) {
-                const url = this.apiUrl + 'tv/' + provider.id + '?extended=full&client_id=' + this.clientID;
+                const url = this.apiUrl + 'tv/' + provider.id + '?extended=full&client_id=' + this.getApiId();
                 const result = await this.simklRequest<ISimklFullInfoSeriesResponse>(url);
                 if (result) {
                     return this.simklConverter.convertFullSeriesInfoToProviderLocalData(result);
@@ -132,7 +129,7 @@ export default class SimklProvider extends ListProvider {
         throw new Error('Method not implemented.');
     }
     public getTokenAuthUrl(): string {
-        return 'https://api.simkl.com/oauth/pin?client_id=' + this.clientID + '&redirect=' + this.redirectUri;
+        return 'https://api.simkl.com/oauth/pin?client_id=' + this.getApiId() + '&redirect=' + this.redirectUri;
     }
     public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error('Method not implemented.');
@@ -149,25 +146,25 @@ export default class SimklProvider extends ListProvider {
     }
 
     private async animeTextSearch(text: string): Promise<MultiProviderResult[]> {
-        const result = await this.simklRequest<ISimklTextSearchResults[]>(this.apiUrl + 'search/anime?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.clientID);
+        const result = await this.simklRequest<ISimklTextSearchResults[]>(this.apiUrl + 'search/anime?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.getApiId());
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.ANIME);
     }
 
     private async tvTextSearch(text: string): Promise<MultiProviderResult[]> {
-        const result = await this.simklRequest<ISimklTextSearchResults[]>(this.apiUrl + 'search/tv?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.clientID);
+        const result = await this.simklRequest<ISimklTextSearchResults[]>(this.apiUrl + 'search/tv?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.getApiId());
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.SERIES);
     }
 
     private async movieTextSearch(text: string): Promise<MultiProviderResult[]> {
-        const result = await this.simklRequest<ISimklTextSearchResults[]>(this.apiUrl + 'search/movie?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.clientID);
+        const result = await this.simklRequest<ISimklTextSearchResults[]>(this.apiUrl + 'search/movie?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.getApiId());
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.MOVIE);
     }
 
     private async getFullAnimeInfo(id: string | number): Promise<MultiProviderResult> {
-        const fullInfoUrl = this.apiUrl + 'anime/' + id + '?extended=full&client_id=' + this.clientID;
+        const fullInfoUrl = this.apiUrl + 'anime/' + id + '?extended=full&client_id=' + this.getApiId();
         const fullInfoResult = await this.simklRequest<ISimklFullInfoAnimeResponse>(fullInfoUrl);
         await this.waitUntilItCanPerfomNextRequest();
-        const episodeInfoResultUrl = this.apiUrl + 'anime/episodes/' + id + '?client_id=' + this.clientID;
+        const episodeInfoResultUrl = this.apiUrl + 'anime/episodes/' + id + '?client_id=' + this.getApiId();
         const episodeInfoResult = await this.simklRequest<ISimklEpisodeInfo[]>(episodeInfoResultUrl);
         return this.simklConverter.convertFullAnimeInfoToProviderLocalData(fullInfoResult, episodeInfoResult);
     }

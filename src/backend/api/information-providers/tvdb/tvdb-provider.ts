@@ -84,7 +84,7 @@ export default class TVDBProvider extends InfoProvider {
                 uri: TVDBProvider.Instance.baseUrl + '/login',
                 headers: { 'Content-Type': 'application/json' },
                 body: `{
-                        "apikey": "` + TVDBProvider.Instance.apiKey + `"
+                        "apikey": "` + TVDBProvider.Instance.getApiSecret() + `"
                     }`,
             });
             if (data.statusCode === 200 || data.statusCode === 201) {

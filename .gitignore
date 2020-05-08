@@ -28,8 +28,4 @@ report.*.json
 /html-report
 
 #APIKEYS
-src/keys/api/AniList.json
-/src/keys/api/omdb.json
-/src/keys/api/Simkl.json
-/src/keys/api/Trakt.json
-/src/keys/api/tvdb.json
+src/keys/api/*.json

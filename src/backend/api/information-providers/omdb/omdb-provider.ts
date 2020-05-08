@@ -21,7 +21,6 @@ export default class OMDbProvider extends InfoProvider {
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
     public version = 1;
-    public apikey = '728e1e03';
     constructor() {
         super();
         if (!OMDbProvider.instance) {
@@ -50,7 +49,7 @@ export default class OMDbProvider extends InfoProvider {
         const results: MultiProviderResult[] = [];
         const converter = new OMDbConverter();
         try {
-            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.apikey + '&s=' + encodeURI(searchTitle));
+            const result = await this.webRequest<SearchResults>('https://www.omdbapi.com/?apikey=' + this.getApiSecret() + '&s=' + encodeURI(searchTitle));
             if (result.Search) {
                 for (const resultEntry of result.Search) {
                     results.push(converter.convertSearchResult(resultEntry));
@@ -67,7 +66,7 @@ export default class OMDbProvider extends InfoProvider {
 
             try {
                 const converter = new OMDbConverter();
-                const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.apikey + '&i=' + provider.id);
+                const result = await this.webRequest<IdRequestResult>('https://www.omdbapi.com/?apikey=' + this.getApiSecret() + '&i=' + provider.id);
                 return converter.convertIdRequest(result);
             } catch (err) {
                 logger.error(err);

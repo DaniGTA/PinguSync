@@ -12,6 +12,10 @@ jobs:
         node-version: [12.x]
 
     steps:
+    - name: Decrypt large secret
+      run: ./.github/scripts/decrypt_secret.sh
+      env:
+        LARGE_SECRET_PASSPHRASE: ${{ secrets.API_KEY_SAFE }}
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1

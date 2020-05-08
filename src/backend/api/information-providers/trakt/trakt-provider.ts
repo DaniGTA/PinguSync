@@ -47,8 +47,6 @@ export default class TraktProvider extends ListProvider {
     public userData: TraktUserData;
     public version = 1;
 
-    private clientSecret = '9968dd9718a5aa812431980a045999547eefa48be7e0e9c638e329e5f9d6a0b2';
-    private clientId = '94776660ee3bd9e7b35ec07378bc6075b71dfc58129b2a3933dce2c3126f5fdd';
     private redirectUri = 'http://localhost:3000/callback';
     constructor() {
         super();
@@ -67,9 +65,9 @@ export default class TraktProvider extends ListProvider {
             },
             json: {
                 // eslint-disable-next-line @typescript-eslint/camelcase
-                client_id: this.clientId,
+                client_id: this.getApiId(),
                 // eslint-disable-next-line @typescript-eslint/camelcase
-                client_secret: this.clientSecret,
+                client_secret: this.getApiSecret(),
                 code,  // The Authorization Code received previously
                 // eslint-disable-next-line @typescript-eslint/camelcase
                 grant_type: 'authorization_code',
@@ -152,7 +150,7 @@ export default class TraktProvider extends ListProvider {
     }
 
     public getTokenAuthUrl(): string {
-        return 'https://trakt.tv/oauth/authorize?response_type=code&client_id=' + this.clientId + '&redirect_uri=' + this.redirectUri;
+        return 'https://trakt.tv/oauth/authorize?response_type=code&client_id=' + this.getApiId() + '&redirect_uri=' + this.redirectUri;
     }
     public async isUserLoggedIn(): Promise<boolean> {
         return this.userData.accessToken !== '';
@@ -217,7 +215,7 @@ export default class TraktProvider extends ListProvider {
             headers: {
                 'Authorization': 'Bearer ' + this.userData.accessToken,
                 'Content-Type': 'application/json',
-                'trakt-api-key': this.clientId,
+                'trakt-api-key': this.getApiId(),
                 'trakt-api-version': '2',
             },
             method,
