@@ -59,8 +59,6 @@ export default class AniListProvider extends ListProvider {
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
     public userData: AniListUserData;
-    private clientSecret = '5cxBi0XuQvDJHlpM5FaQqwF80bTIELuqd9MtMdZm';
-    private clientId = '389';
     private redirectUri = 'http://localhost:3000/callback';
 
     constructor() {
@@ -82,9 +80,9 @@ export default class AniListProvider extends ListProvider {
             },
             json: {
                 // eslint-disable-next-line @typescript-eslint/camelcase
-                client_id: this.clientId,
+                client_id: this.getApiId(),
                 // eslint-disable-next-line @typescript-eslint/camelcase
-                client_secret: this.clientSecret,
+                client_secret: this.getApiSecret(),
                 code, // The Authorization Code received previously
                 // eslint-disable-next-line @typescript-eslint/camelcase
                 grant_type: 'authorization_code',
@@ -134,7 +132,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public getTokenAuthUrl(): string {
-        return 'https://anilist.co/api/v2/oauth/authorize?client_id=' + this.clientId + '&redirect_uri=' + this.redirectUri + '&response_type=code';
+        return 'https://anilist.co/api/v2/oauth/authorize?client_id=' + this.getApiId() + '&redirect_uri=' + this.redirectUri + '&response_type=code';
     }
 
     public async isUserLoggedIn(): Promise<boolean> {

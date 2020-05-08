@@ -21,7 +21,6 @@ export default class TVDBProvider extends InfoProvider {
     public isOffline = false;
     public hasUniqueIdForSeasons = false;
     public version = 1;
-    private apiKey = '790G98VXW5MZHGV0';
     private baseUrl = 'https://api.thetvdb.com';
     private apiData: TVDBProviderData;
 
