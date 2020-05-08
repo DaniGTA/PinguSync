@@ -28,4 +28,5 @@ report.*.json
 /html-report
 
 #APIKEYS
-src/keys/api/*.json
+src/keys/api/*.*
+!src/keys/**/*.json.gpg
