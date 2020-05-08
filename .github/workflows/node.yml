@@ -12,9 +12,9 @@ jobs:
         node-version: [12.x]
 
     steps:
+    - uses: actions/checkout@v2
     - name: Decrypt API keys
-      run: ${{ HOME }}/.github/scripts/decrypt_api_keys.sh "${{ secrets.API_KEY_SAFE }}"
-      working-directory: ./
+      run: bash .github/scripts/decrypt_api_keys.sh "${{ secrets.API_KEY_SAFE }}"
       shell: bash
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
