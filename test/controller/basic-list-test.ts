@@ -66,12 +66,12 @@ describe('Basic List | Testrun', () => {
         const anilistResult = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
         const traktResult = updatedProviders.find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (anilistResult && traktResult) {
-            notStrictEqual(anilistResult.detailEpisodeInfo.length, 0);
-            notStrictEqual(traktResult.detailEpisodeInfo.length, 0);
-            notStrictEqual(anilistResult.getAllNames().length, 0);
-            notStrictEqual(traktResult.getAllNames().length, 0);
-            strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-            strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+            expect(anilistResult.detailEpisodeInfo.length).not.toEqual(0);
+            expect(traktResult.detailEpisodeInfo.length).not.toEqual(0);
+            expect(anilistResult.getAllNames().length).not.toEqual(0);
+            expect(traktResult.getAllNames().length).not.toEqual(0);
+            expect(traktResult.version).toEqual(ProviderInfoStatus.ADVANCED_BASIC_INFO);
+            expect(anilistResult.version).toEqual(ProviderInfoStatus.ADVANCED_BASIC_INFO);
         } else {
             fail();
         }
@@ -115,9 +115,9 @@ describe('Basic List | Testrun', () => {
             const anilistResult2 = updatedProviders2.find((x) => x.provider === AniListProvider.getInstance().providerName);
             const traktResult2 = updatedProviders2.find((x) => x.provider === TraktProvider.getInstance().providerName);
             if (anilistResult && traktResult && anilistResult2 && traktResult2) {
-                notStrictEqual(anilistResult.detailEpisodeInfo.length, 0);
-                notStrictEqual(traktResult.detailEpisodeInfo.length, 0);
-                notStrictEqual(anilistResult.getAllNames().length, 0);
+                expect(anilistResult.detailEpisodeInfo.length).not.toEqual(0);
+                expect(traktResult.detailEpisodeInfo.length).not.toEqual(0);
+                expect(anilistResult.getAllNames().length).not.toEqual(0);
                 notStrictEqual(traktResult.getAllNames().length, 0);
                 strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
@@ -195,8 +195,8 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 2);
-        strictEqual(await seriesHelper.isSameSeries(series1, series2), false);
+        expect(MainListManager['mainList'].length).toEqual(2);
+        expect(await seriesHelper.isSameSeries(series1, series2)).toEqual(false);
     }, 4000);
 
     test('should not merge different animes', async () => {
@@ -224,9 +224,9 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 3);
-        strictEqual(await seriesHelper.isSameSeries(series1, series3), false);
-        strictEqual(await seriesHelper.isSameSeries(series2, series3), false);
+        expect(MainListManager['mainList'].length).toEqual(3);
+        expect(await seriesHelper.isSameSeries(series1, series3)).toEqual(false);
+        expect(await seriesHelper.isSameSeries(series2, series3)).toEqual(false);
     }, 4000);
 
     test('should not merge series with anime', async () => {
@@ -250,8 +250,8 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 2);
-        strictEqual(await seriesHelper.isSameSeries(series1, series2), false);
+        expect(MainListManager['mainList'].length).toEqual(2);
+        expect(await seriesHelper.isSameSeries(series1, series2)).toEqual(false);
     }, 4000);
 
     test('should not merge season 1 with season 2', async () => {
@@ -347,7 +347,7 @@ describe('Basic List | Testrun', () => {
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
         const mpr = new MultiProviderResult(s1provider1);
-        const result = await MainListSearcher['findSeriesWithMultiProviderResult'](mpr);
+        const result = MainListSearcher['findSeriesWithMultiProviderResult'](mpr);
 
         notEqual(result, null);
     }, 4000);
@@ -382,8 +382,8 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         const mpr1 = new MultiProviderResult(s1provider1);
         const mpr2 = new MultiProviderResult(s2provider1);
-        const resultS1 = await MainListSearcher['findSeriesWithMultiProviderResult'](mpr1);
-        const resultS2 = await MainListSearcher['findSeriesWithMultiProviderResult'](mpr2);
+        const resultS1 = MainListSearcher['findSeriesWithMultiProviderResult'](mpr1);
+        const resultS2 = MainListSearcher['findSeriesWithMultiProviderResult'](mpr2);
         if (resultS1 && resultS2) {
             const traktProviderS1 = resultS1.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
             const traktProviderS2 = resultS2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
@@ -421,7 +421,7 @@ describe('Basic List | Testrun', () => {
         const trakprovider = list.find((x) => x.provider === TraktProvider.getInstance().providerName);
         notEqual(trakprovider, undefined);
 
-        const list2 = await series2.getAllProviderLocalDatas();
+        const list2 = series2.getAllProviderLocalDatas();
         const trakprovider2 = list2.find((x) => x.provider === TraktProvider.getInstance().providerName);
         notEqual(trakprovider2, undefined);
     }, 4000);
@@ -529,11 +529,11 @@ describe('Basic List | Testrun', () => {
                     const relevantResult = s1Result.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
                     notStrictEqual(relevantResult, undefined);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
-                    const s2BindedEpisodeResult = await EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
+                    const s2BindedEpisodeResult = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
                     const relevantResult = s2BindedEpisodeResult.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider));
                     notStrictEqual(relevantResult, undefined);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
-                    const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
+                    const allEpisodeBindingsPool = MainListManager.getMainList().flatMap((x) => x.episodeBindingPools);
                     const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
                     const s = len.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
                     if (episode.episodeNumber as number < 13) {
@@ -553,7 +553,7 @@ describe('Basic List | Testrun', () => {
                 logger.warn(episode.episodeNumber + ' S: ' + episode.season?.getSingleSeasonNumberAsNumber());
             }
             const season = series2.getProviderSeasonTarget(provider.provider);
-            strictEqual(season?.getSingleSeasonNumberAsNumber(), 2);
+            expect(season?.getSingleSeasonNumberAsNumber()).toEqual(2);
         } else {
             fail();
         }
@@ -572,7 +572,7 @@ describe('Basic List | Testrun', () => {
         await adderInstance.addSeries(series);
 
         // Result checking
-        const mainList = await MainListManager.getMainList();
+        const mainList = MainListManager.getMainList();
         strictEqual(mainList.length, 1);
 
         const resultSeries = mainList[0];
@@ -603,7 +603,7 @@ describe('Basic List | Testrun', () => {
         await adderInstance.addSeries(series);
 
         // Result checking
-        const mainList = await MainListManager.getMainList();
+        const mainList = MainListManager.getMainList();
         strictEqual(mainList.length, 1);
 
         const resultSeries = mainList[0];
@@ -645,7 +645,7 @@ describe('Basic List | Testrun', () => {
         await adderInstance.addSeries(series);
 
         // Result checking
-        const mainList = await MainListManager.getMainList();
+        const mainList = MainListManager.getMainList();
         strictEqual(mainList.length, 1);
 
         const resultSeries = mainList[0];
@@ -686,7 +686,7 @@ describe('Basic List | Testrun', () => {
         await adderInstance.addSeries(series);
 
         // Result checking
-        const mainList = await MainListManager.getMainList();
+        const mainList = MainListManager.getMainList();
         strictEqual(mainList.length, 1);
 
         const resultSeries = mainList[0];
@@ -729,7 +729,7 @@ describe('Basic List | Testrun', () => {
         await adderInstance.addSeries(series);
 
         // Result checking
-        const mainList = await MainListManager.getMainList();
+        const mainList = MainListManager.getMainList();
         strictEqual(mainList.length, 1);
 
         const resultSeries = mainList[0];
@@ -776,7 +776,7 @@ describe('Basic List | Testrun', () => {
         await adderInstance.addSeries(series);
 
         // Result checking
-        const mainList = await MainListManager.getMainList();
+        const mainList = MainListManager.getMainList();
 
         const resultSeries = mainList[0];
 
@@ -799,7 +799,7 @@ describe('Basic List | Testrun', () => {
         strictEqual(epMappings.length, 12);
         for (const epMapping of epMappings) {
             const stra = epMapping.bindedEpisodeMappings.find((x) => x.provider === aniListName);
-            notStrictEqual(stra, undefined);
+            expect(stra).not.toEqual(undefined);
         }
     });
     test.todo('Trakt id: 65266 (All season seperate)');

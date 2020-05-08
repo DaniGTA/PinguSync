@@ -15,7 +15,6 @@ export default class FrontendProviderController {
         this.init();
         // tslint:disable-next-line: no-unused-expression
         new FrontendProviderAuthController(webcontents);
-        new FrontendProviderSettingsController(webcontents);
     }
 
 

@@ -2,7 +2,7 @@
   <div class="setup-view">
     <ProviderSelector class="setup-view-selector" v-on:change:selection="onSelection" />
     <SetupGuide class="setup-view-guide" />
-    <ProviderSetup class="setup-view-settings" :selectedProvider.sync="selectedProvider" />
+    <ProviderSetup class="setup-view-settings" :selectedProvider.sync="selectedProvider" :key="selectedProvider" />
   </div>
 </template>
 

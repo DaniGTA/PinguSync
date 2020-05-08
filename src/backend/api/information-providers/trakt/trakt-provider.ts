@@ -25,7 +25,7 @@ export default class TraktProvider extends ListProvider {
         throw new Error('Method not implemented.');
     }
     public logoutUser(): void {
-        throw new Error('Method not implemented.');
+        this.userData.removeTokens();
     }
 
     public static getInstance(): TraktProvider {

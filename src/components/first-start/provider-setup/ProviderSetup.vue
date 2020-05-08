@@ -48,12 +48,13 @@ export default class ProviderSetup extends Vue {
     @Watch('selectedProvider', { immediate: true, deep: true })
     async onSelectionChange(val: ListProvider, oldVal: ListProvider): Promise<void>{
       try{
+        this.isLoggedIn = false;
         if(oldVal){
           this.workerController.removeListener('provider-any-login-status-changed', (x) => this.anyUpdateLoginStatus(x));
         }
         if(val){
           console.log('listen for auth status');
-          this.updateLoginStatus(await this.workerController.getOnce(chOnce.GetAllListProviders, val.providerName));
+          this.updateLoginStatus(await this.workerController.getOnce(chOnce.GetLoggedInStatus, val.providerName));
           this.workerController.on(chListener.OnLoggedInStatusChange, (x) => this.anyUpdateLoginStatus(x));
           console.log('listen for auth status finished');
         }

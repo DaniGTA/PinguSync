@@ -254,8 +254,12 @@ export default class AniListProvider extends ListProvider {
 
         logger.log('info', '[AniList] statusCode: {0}', response && response.statusCode); // Print the response status code if a response was received
         if (response.statusCode === 200) {
-            const rawdata = JSON.parse(response.body);
-            return rawdata.data as T;
+            try {
+                const rawdata = JSON.parse(response.body);
+                return rawdata.data as T;
+            } catch (err) {
+                return response.body as T;
+            }
         } else if (response.statusCode === 429) {
             timeHelper.delay(2000);
             return this.webRequest(options);

@@ -9,6 +9,7 @@ import UpdateProviderLoginStatus from './model/update-provider-login-status';
 import { chSend } from '../../../communication/send-only-channels';
 import { chOnce } from '../../../communication/channels';
 import { chListener } from '../../../communication/listener-channels';
+import logger from '../../../logger/logger';
 
 export default class FrontendProviderAuthController {
     /**
@@ -34,17 +35,17 @@ export default class FrontendProviderAuthController {
         this.com.on('default-login-provider', (data) => this.defaultLogin(data));
         this.com.on(chSend.LogoutUser, (providerName) => this.logoutProvider(providerName));
         this.com.on(chOnce.IsAnyProviderLoggedIn, async () => this.com.send(chOnce.IsAnyProviderLoggedIn, await this.isAnyProviderLoggedIn()));
-        this.com.on(chOnce.GetLoggedInStatus,
-            (providerName) => this.isUserLoggedIn(providerName).then(
-                (data) => this.com.send(chOnce.GetLoggedInStatus, data)
-            )
-        );
+        this.com.on(chOnce.GetLoggedInStatus, async (providerName) => this.com.send(chOnce.GetLoggedInStatus, await this.isUserLoggedIn(providerName)));
     }
 
     private logoutProvider(providerName: string): void {
         const provider = ProviderList.getProviderInstanceByProviderName(providerName);
         if (provider instanceof ListProvider) {
-            provider.logoutUser();
+            try {
+                provider.logoutUser();
+            } catch (err) {
+                logger.error(err);
+            }
             this.sendLoginStatus(provider);
         }
     }
@@ -52,8 +53,12 @@ export default class FrontendProviderAuthController {
     private async isAnyProviderLoggedIn(): Promise<boolean> {
         const allListProviders = ProviderList.getListProviderList();
         for (const listProvider of allListProviders) {
-            if (await listProvider.isUserLoggedIn()) {
-                return true;
+            try {
+                if (await listProvider.isUserLoggedIn()) {
+                    return true;
+                }
+            } catch (err) {
+                logger.error(err);
             }
         }
         return false;
@@ -62,7 +67,11 @@ export default class FrontendProviderAuthController {
     private async isUserLoggedIn(providerName: string): Promise<boolean> {
         const provider = ProviderList.getProviderInstanceByProviderName(providerName);
         if (provider instanceof ListProvider) {
-            return provider.isUserLoggedIn();
+            try {
+                return provider.isUserLoggedIn();
+            } catch (err) {
+                logger.error(err);
+            }
         }
         return false;
     }

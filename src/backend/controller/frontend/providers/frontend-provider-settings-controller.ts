@@ -17,14 +17,13 @@ export default class FrontendProviderSettingsController {
      */
     private com: ICommunication;
 
-    private settingManager = new SettingsManager();
 
     /**
      *Creates an instance of FrontendProviderAuthController.
      * @param {Electron.WebContents} webcontents  
      * @memberof FrontendProviderAuthController
      */
-    constructor(webcontents: Electron.WebContents) {
+    constructor(webcontents: Electron.WebContents, private settingManager: SettingsManager) {
         this.com = new IPCBackgroundController(webcontents);
         this.init();
     }

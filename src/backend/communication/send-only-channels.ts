@@ -7,4 +7,5 @@ export enum chSend {
      * Need providername (string) as data.
     */
     LogoutUser = 'provider-logout-user',
+    FinishFirstSetup = 'user-settings-mark-first-setup-as-finish',
 }

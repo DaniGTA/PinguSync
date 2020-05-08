@@ -11,6 +11,7 @@ export default class WorkerController {
 
     public on(channel: string, f: (data: any) => void): void {
         ipcRenderer.on(channel, (event: Electron.IpcRendererEvent, data: any) => {
+            console.log('info', 'frontend recieved data on: ' + channel);
             f(data);
         });
     }

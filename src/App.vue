@@ -41,7 +41,8 @@ export default class App extends Vue {
     
   }
 
-  mounted(): void{
+  async mounted(): void {
+    
     this.$router.push('setup');
   }
 }

@@ -6,6 +6,8 @@ import ProviderList from '../provider-controller/provider-manager/provider-list'
 import ListProvider from '../../api/provider/list-provider';
 import ProviderUserList from '../objects/provider-user-list';
 import logger from '../../logger/logger';
+import UserSettings from '../objects/settings/user-settings';
+import UserSettingsManager from './user-settings-manager';
 
 export default class SettingsManager {
     public loadedSetting?: Settings;
@@ -30,6 +32,11 @@ export default class SettingsManager {
         this.save();
     }
 
+    public isSyncEnabledForProvider(providerName: string): boolean {
+        const providerSettings = this.getProviderSetting(providerName);
+        return providerSettings.syncSettings.changesAllowed;
+    }
+
     /**
     * List Settings
     * ===============================================================
@@ -37,14 +44,13 @@ export default class SettingsManager {
 
     public addListSetting(newListSetting: ListSettings, providerName: string): void {
         const providerSettings = this.getProviderSetting(providerName);
-
-        for (let listSetting of providerSettings.listSettings) {
-            if (listSetting.listInfo.name === newListSetting.listInfo.name) {
-                listSetting = newListSetting;
-                this.save();
-                return;
-            }
+        const listSetting = providerSettings.listSettings.findIndex((entry) => entry.listInfo.name === newListSetting.listInfo.name);
+        if (listSetting !== -1) {
+            providerSettings.listSettings[listSetting] = newListSetting;
+            this.save();
+            return;
         }
+
         providerSettings.listSettings.push(newListSetting);
         this.save();
     }
@@ -74,8 +80,30 @@ export default class SettingsManager {
             return this.getProviderSetting(providerName).listSettings;
         }
 
-        return [];
+        return this.getProviderSetting(providerName).listSettings;
 
+    }
+
+    public getUserSettingsManager(): UserSettingsManager {
+        return new UserSettingsManager(this);
+    }
+
+    public getUserSettings(): UserSettings {
+        const settings = this.getSetting();
+        const userSettings = settings.userSettings;
+        if (userSettings) {
+            return userSettings;
+        } else {
+            settings.userSettings = new UserSettings();
+            this.save();
+            return settings.userSettings;
+        }
+    }
+
+    public saveUserSettings(newSettings: UserSettings): void {
+        const settings = this.getSetting();
+        settings.userSettings = newSettings;
+        this.save();
     }
 
     private updateListEntrys(lists: ProviderUserList[], providerName: string): void {
@@ -102,6 +130,7 @@ export default class SettingsManager {
         this.loadedSetting = new Settings();
         return this.loadedSetting;
     }
+
 
     private save(): void {
         writeFileSync('settings.json', JSON.stringify(this.loadedSetting));

@@ -18,7 +18,7 @@
       <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('provider-setup-description')" />
       <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('provider-setup-more-description')" />
     </div>
-    <button class="setup-confirm-button">{{$t('complete-setup')}}</button>
+    <button :disabled="!anyConnectedProvider" @click="finishSetup()" class="setup-confirm-button">{{$t('complete-setup')}}</button>
   </div>
 </template>
 
@@ -30,6 +30,7 @@ import WorkerController from '../../../backend/communication/ipc-renderer-contro
 import { chOnce } from '../../../backend/communication/channels';
 import UpdateProviderLoginStatus from '../../../backend/controller/frontend/providers/model/update-provider-login-status';
 import { chListener } from '../../../backend/communication/listener-channels';
+import { chSend } from '../../../backend/communication/send-only-channels';
 
 @Component({
 	components: {
@@ -40,14 +41,20 @@ export default class SetupGuide extends Vue {
 
   public workerController: WorkerController = new WorkerController();
   
-  anyConnectedProvider = false;
+  public anyConnectedProvider = false;
 
   async mounted(): Promise<void> {
+    this.workerController.on(chListener.OnLoggedInStatusChange, async (data: UpdateProviderLoginStatus) => await this.providerLoginStatusChange(data.isLoggedIn));
     this.anyConnectedProvider = await this.workerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
-    this.workerController.on(chListener.OnLoggedInStatusChange, (data: UpdateProviderLoginStatus)=> this.providerLoginStatusChange(data.isLoggedIn));
+  }
+
+  finishSetup(): void {
+    this.workerController.send(chSend.FinishFirstSetup);
+    this.$router.push('setup');
   }
 
   async providerLoginStatusChange(isLoggedIn: boolean): Promise<void>{
+    console.log('Login status change detected.');
     if(isLoggedIn){
       this.anyConnectedProvider = true;
     } else {
