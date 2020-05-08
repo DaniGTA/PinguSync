@@ -2,6 +2,7 @@
 import { MediaType } from '../../controller/objects/meta/media-type';
 import timeHelper from '../../helpFunctions/time-helper';
 import ExternalInformationProvider from './external-information-provider';
+import ApiKeyController from '../../controller/key/api-key-controller';
 
 export default abstract class ExternalProvider {
     public abstract providerName: string;
@@ -25,5 +26,13 @@ export default abstract class ExternalProvider {
     public informAWebRequest(): void {
         this.requestCounter++;
         this.lastRequestTimestamp = Date.now();
+    }
+
+    protected getApiSecret(): string | undefined {
+        return ApiKeyController.getApiSecret(this.providerName);
+    }
+
+    protected getApiId(): string | undefined {
+        return ApiKeyController.getApiId(this.providerName);
     }
 }

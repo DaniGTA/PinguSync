@@ -3,8 +3,8 @@ import OAuthListener from './o-auth-listener';
 
 export default class OAuthController {
     constructor(private provider: ListProvider) {
-
     }
+
     public async isOAuthFlowSuccessfull(): Promise<boolean> {
         const code = await this.getRedirectCode();
         return this.provider.addOAuthCode(code);
