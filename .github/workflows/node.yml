@@ -12,6 +12,7 @@ jobs:
         node-version: [12.x]
 
     steps:
+    - uses: actions/checkout@v2
     - name: Decrypt API keys
       run: bash .github/scripts/decrypt_api_keys.sh "${{ secrets.API_KEY_SAFE }}"
       shell: bash
