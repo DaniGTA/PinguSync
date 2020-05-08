@@ -1,49 +1,47 @@
-import { equal, notEqual, rejects, strictEqual, throws } from 'assert';
+import { notEqual, strictEqual } from 'assert';
 import StringHelper from '../../src/backend/helpFunctions/string-helper';
 
 describe('String Helper', () => {
-    beforeEach(() => {
-    });
-    test('should generate a randome string', async () => {
-        notEqual(StringHelper.randomString(), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
-        notEqual(StringHelper.randomString(), '');
-        notEqual(typeof StringHelper.randomString(), 'undefined');
+    test('should generate a randome string', () => {
+        expect(StringHelper.randomString()).not.toEqual('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+        expect(StringHelper.randomString()).not.toEqual('');
+        expect(typeof StringHelper.randomString()).not.toEqual('undefined');
         notEqual(StringHelper.randomString(), null);
         return;
     });
     describe('should clean string', () => {
         test('should clean string: Title ~Title!~', () => {
-            strictEqual(StringHelper.cleanString('Title ~Title!~'), 'Title Title');
+            expect(StringHelper.cleanString('Title ~Title!~')).toEqual('Title Title');
         });
         test('should clean string: Test.', () => {
-            strictEqual(StringHelper.cleanString('Test.'), 'Test');
+            expect(StringHelper.cleanString('Test.')).toEqual('Test');
         });
         test('should clean string: Title -test-', () => {
-            strictEqual(StringHelper.cleanString('Title -test-'), 'Title test');
+            expect(StringHelper.cleanString('Title -test-')).toEqual('Title test');
         });
         test('should clean string: Title-test', () => {
-            strictEqual(StringHelper.cleanString('Title-test'), 'Title test');
+            expect(StringHelper.cleanString('Title-test')).toEqual('Title test');
         });
         test('should clean string: Title \'test\'', () => {
-            strictEqual(StringHelper.cleanString('Title \'test\''), 'Title test');
+            expect(StringHelper.cleanString('Title \'test\'')).toEqual('Title test');
         });
         test('should clean string: Title!!', () => {
-            strictEqual(StringHelper.cleanString('Title!!'), 'Title!!');
+            expect(StringHelper.cleanString('Title!!')).toEqual('Title!!');
         });
         test('should clean string: Title: test', () => {
-            strictEqual(StringHelper.cleanString('Title: test'), 'Title test');
+            expect(StringHelper.cleanString('Title: test')).toEqual('Title test');
         });
         test('should clean string: Title  test', () => {
-            strictEqual(StringHelper.cleanString('Title  test'), 'Title test');
+            expect(StringHelper.cleanString('Title  test')).toEqual('Title test');
         });
         test('should clean string: Title`Title`', () => {
-            strictEqual(StringHelper.cleanString('Title`Title`'), 'TitleTitle');
+            expect(StringHelper.cleanString('Title`Title`')).toEqual('TitleTitle');
         });
     });
 
     test('should clean string of other characters', () => {
-        strictEqual(StringHelper.cleanString('この素晴らしい世界に祝福を！紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
-        strictEqual(StringHelper.cleanString('この素晴らしい世界に祝福を! 紅伝説'), 'この素晴らしい世界に祝福を 紅伝説');
+        expect(StringHelper.cleanString('この素晴らしい世界に祝福を！紅伝説')).toEqual('この素晴らしい世界に祝福を 紅伝説');
+        expect(StringHelper.cleanString('この素晴らしい世界に祝福を! 紅伝説')).toEqual('この素晴らしい世界に祝福を 紅伝説');
     });
     test('should not crash on check kanij', () => {
         strictEqual(StringHelper.hasKanji(null as unknown as string), false);
@@ -71,7 +69,7 @@ describe('String Helper', () => {
 
     test('should make test to tset', () => {
         const result = StringHelper.reverseString('test');
-        equal(result, 'tset');
+        expect(result).toEqual('tset');
         return;
     });
 
@@ -91,37 +89,37 @@ describe('String Helper', () => {
 
     describe('should get right season number from title', () => {
         test('should detect parts', () => {
-            strictEqual((StringHelper.getSeasonNumberFromTitle('Title 3 Part 2')).seasonNumber, 3);
+            expect((StringHelper.getSeasonNumberFromTitle('Title 3 Part 2')).seasonNumber).toEqual(3);
         });
         test('Season marking with X', () => {
-            strictEqual((StringHelper.getSeasonNumberFromTitle('Title XX')).seasonNumber, 2, 'Season marking with X');
+            expect((StringHelper.getSeasonNumberFromTitle('Title XX')).seasonNumber).toEqual(2);
         });
         test('Season marking with number', () => {
-            strictEqual((StringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber, 2, 'Season marking with number');
+            expect((StringHelper.getSeasonNumberFromTitle('Title 2')).seasonNumber).toEqual(2);
         });
         test('Season marking with the letter s', () => {
-            strictEqual((StringHelper.getSeasonNumberFromTitle('Title S2')).seasonNumber, 2, 'Season marking with the letter s');
+            expect((StringHelper.getSeasonNumberFromTitle('Title S2')).seasonNumber).toEqual(2);
         });
         test('Season marking with the word season', () => {
-            strictEqual((StringHelper.getSeasonNumberFromTitle('Title Season 2 - The war')).seasonNumber, 2, 'Season marking with the word season');
+            expect((StringHelper.getSeasonNumberFromTitle('Title Season 2 - The war')).seasonNumber).toEqual(2);
         });
         test('Season marking with the a A', () => {
-            strictEqual((StringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber, 2, 'Season marking with the a A');
+            expect((StringHelper.getSeasonNumberFromTitle('Title AA')).seasonNumber).toEqual(2);
         });
-        test('should get season number 2 from title: アルドノア・ゼロ 2', async () => {
-            strictEqual((StringHelper.getSeasonNumberFromTitle('アルドノア・ゼロ 2')).seasonNumber, 2, 'test 2');
+        test('should get season number 2 from title: アルドノア・ゼロ 2', () => {
+            expect((StringHelper.getSeasonNumberFromTitle('アルドノア・ゼロ 2')).seasonNumber).toEqual(2);
         });
     });
 
-    test('should not get a season number from title', async () => {
-        throws(() => StringHelper.getSeasonNumberFromTitle('14'), 'number is not a season.');
-        throws(() => StringHelper.getSeasonNumberFromTitle('C3'), '2 values cant give a season');
-        throws(() => StringHelper.getSeasonNumberFromTitle('C^3'), 'high 3 is not a season number');
-        throws(() => StringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya'));
-        throws(() => StringHelper.getSeasonNumberFromTitle('Title'), 'there is no season');
-        throws(() => StringHelper.getSeasonNumberFromTitle('Title 2006'), 'a year is not a season');
-        throws(() => StringHelper.getSeasonNumberFromTitle('Title AAA'), 'triple a is not a season marker');
-        throws(() => StringHelper.getSeasonNumberFromTitle('Title A'), 'single a is not a season marker');
+    test('should not get a season number from title', () => {
+        expect(() => StringHelper.getSeasonNumberFromTitle('14')).toThrow();
+        expect(() => StringHelper.getSeasonNumberFromTitle('C3')).toThrow();
+        expect(() => StringHelper.getSeasonNumberFromTitle('C^3')).toThrow();
+        expect(() => StringHelper.getSeasonNumberFromTitle('A Melancolia de Haruhi Suzumiya')).toThrow();
+        expect(() => StringHelper.getSeasonNumberFromTitle('Title')).toThrow();
+        expect(() => StringHelper.getSeasonNumberFromTitle('Title 2006')).toThrow();
+        expect(() => StringHelper.getSeasonNumberFromTitle('Title AAA')).toThrow();
+        expect(() => StringHelper.getSeasonNumberFromTitle('Title A')).toThrow();
     });
 
 });

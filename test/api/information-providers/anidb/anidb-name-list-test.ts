@@ -29,29 +29,29 @@ describe('Provider: AniDB | Offline Test runs', () => {
         ProviderDataListManager['providerDataList'] = [];
     });
     describe('Download Tests', () => {
-        test('should allow download (1/2)', async () => {
+        test('should allow download (1/2)', () => {
             const x = new AniDBProvider(false);
             // tslint:disable-next-line: no-string-literal
             AniDBHelper['anidbNameManager'].lastDownloadTime = undefined;
             // tslint:disable-next-line: no-string-literal
-            deepEqual(x['allowDownload'](), true);
+            expect(x['allowDownload']()).toBeTruthy();
             return;
         });
-        test('should allow download (2/2)', async () => {
+        test('should allow download (2/2)', () => {
             const a = new AniDBProvider(false);
             const twoDaysInMs = 172800000;
             // tslint:disable-next-line: no-string-literal
             AniDBHelper['anidbNameManager'].lastDownloadTime = new Date(Date.now() - twoDaysInMs * 2);
             // tslint:disable-next-line: no-string-literal
-            deepEqual(a['allowDownload'](), true);
+            expect(a['allowDownload']()).toBeTruthy();
             return;
         });
-        test('should not allow download', async () => {
+        test('should not allow download', () => {
             const a = new AniDBProvider(false);
             // tslint:disable-next-line: no-string-literal
             AniDBHelper['anidbNameManager'].lastDownloadTime = new Date(Date.now());
             // tslint:disable-next-line: no-string-literal
-            deepEqual(a['allowDownload'](), false);
+            expect(a['allowDownload']()).toBeFalsy();
             return;
         });
     });
@@ -290,7 +290,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await new DownloadProviderLocalDataWithoutId(series, a)['getProviderLocalDataByName'](new Name('Persona Trinity Soul', 'x-japclean'));
 
-        deepEqual(result.mainProvider.providerLocalData.id, '5544');
+        expect(result.mainProvider.providerLocalData.id).toEqual('5544');
     });
 
     test('should find id 11673', async () => {
@@ -304,7 +304,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
         // tslint:disable-next-line: no-string-literal
         const result = await new DownloadProviderLocalDataWithoutId(series, a)['getProviderLocalDataByName'](new Name('Gakusen Toshi Asterisk 2', 'en', NameType.MAIN), 1);
 
-        deepEqual(result.mainProvider.providerLocalData.id, '11673');
+        expect(result.mainProvider.providerLocalData.id).toEqual('11673');
     });
 
     test('should find id 14819', async () => {

@@ -12,7 +12,7 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - name: Decrypt large secret
+    - name: Decrypt API keys
       run: ./.github/scripts/decrypt_api_keys.sh
       env:
         LARGE_SECRET_PASSPHRASE: ${{ secrets.API_KEY_SAFE }}

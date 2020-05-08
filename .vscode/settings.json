@@ -1,12 +1,4 @@
 {
-    "mocha.runTestsOnSave": "true",
-    "mocha.options": {
-        "opts": "./test/mocha.opts"
-    },
-    "mocha.env": {
-        "TS_NODE_TRANSPILE_ONLY": true
-    },
-    "mochaExplorer.debuggerPort": 19485,
     "jest.showCoverageOnLoad": true,
     "jest.debugCodeLens.showWhenTestStateIn": [
         "fail",
@@ -17,4 +9,5 @@
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "debug.javascript.usePreview": true,
     "eslint.enable": true,
+    "tslint.enable": "false"
 }

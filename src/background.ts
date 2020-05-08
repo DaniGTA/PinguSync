@@ -27,6 +27,7 @@ try {
   logger.error(err);
 }
 
+// eslint-disable-next-line no-undef
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 app.removeAllListeners('ready');
