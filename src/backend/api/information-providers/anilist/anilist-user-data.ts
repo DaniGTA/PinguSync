@@ -26,26 +26,26 @@ export class AniListUserData extends UserData {
         }
     }
 
-    public updateList(list: MultiProviderResult[]) {
+    public updateList(list: MultiProviderResult[]): void {
         this.list = list;
         this.lastListUpdate = new Date(Date.now());
         this.saveData();
     }
 
-    public setViewer(viewer: IViewer) {
+    public setViewer(viewer: IViewer): void {
         this.viewer = viewer;
         this.username = viewer.name;
         this.saveData();
     }
 
-    public setTokens(accessToken: string, refreshToken: string, expiresIn: number) {
+    public setTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
         this.access_token = accessToken;
         this.refresh_token = refreshToken;
         this.expires_in = expiresIn;
         this.saveData();
     }
 
-    protected loadData() {
+    protected loadData(): void {
         try {
             logger.warn('[IO] Read anilist user file.');
             if (existsSync(this.getPath())) {

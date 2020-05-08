@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Decrypt large secret
-      run: ./.github/scripts/decrypt_secret.sh
+      run: ./.github/scripts/decrypt_api_keys.sh
       env:
         LARGE_SECRET_PASSPHRASE: ${{ secrets.API_KEY_SAFE }}
     - uses: actions/checkout@v1
