@@ -1,7 +1,21 @@
 {
-  "name": "list-manager",
+  "name": "pingu-sync",
   "version": "0.0.1",
   "private": true,
+  "build": {
+    "appId": "pingu-sync",
+    "productName": "PinguSync",
+    "mac": {
+      "icon": "./src/assets/logo/app/icon/mac/icon.icons",
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "icon": "./src/assets/logo/app/icon/windows/512x512.png"
+    }
+  },
+  "files": [
+    "./src/assets/logo/**/*"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

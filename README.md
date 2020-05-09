@@ -1,5 +1,7 @@
 # PinguSync
 
+![alt](https://raw.githubusercontent.com/DaniGTA/PinguSync/src/assets/logo/app/icon/512x512.png)
+
 [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest) [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.png?v=101)](https://github.com/ellerbrock/typescript-badges/)
 
