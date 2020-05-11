@@ -14,7 +14,7 @@ export default class AnimeOfflineDatabaseManager {
     public static async checkDatabaseStatus(): Promise<void> {
         if (this.canUpdateDatabase()) {
             const database = await this.downloadDatabase();
-            await this.LOCAL_DATA.updateDatabase(database);
+            this.LOCAL_DATA.updateDatabase(database);
         }
     }
 

@@ -82,24 +82,40 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         }
     });
 
-    test('should timeout (no id)', async () => {
-        // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test2', false, true)];
-        const series = new Series();
-
-        const listProvider = new ListProviderLocalData(1, 'Test2');
-        listProvider.addSeriesName(new Name('a', ''));
-
-        await series.addListProvider(listProvider);
-        const provider = new TestInfoProvider('Test');
-        // Delay function
-        provider.getMoreSeriesInfoByName = async () => new Promise<MultiProviderResult[]>((resolve) => {
-            setTimeout(() => {
-                resolve([]);
-            }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100);
+    describe('timeout', () => {
+        let spy: jest.SpyInstance<any, []>;
+        beforeAll(() => {
+            spy = jest.spyOn(DownloadSettings, 'requestTimoutPromise').mockImplementation(async () => {
+                return new Promise<void>((resolve, reject) => setTimeout(() => {
+                    reject(FailedRequestError.Timeout);
+                }, 100));
+            });
         });
-        await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.Timeout);
-    }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 1000);
+
+        afterAll(() => {
+            spy?.mockClear();
+        });
+
+        test('should timeout (no id)', async () => {
+
+            // tslint:disable: no-string-literal
+            ProviderList['loadedListProvider'] = [new TestProvider('Test2', false, true)];
+            const series = new Series();
+
+            const listProvider = new ListProviderLocalData(1, 'Test2');
+            listProvider.addSeriesName(new Name('a', ''));
+
+            await series.addListProvider(listProvider);
+            const provider = new TestInfoProvider('Test');
+            // Delay function
+            provider.getMoreSeriesInfoByName = async () => new Promise<MultiProviderResult[]>((resolve) => {
+                setTimeout(() => {
+                    resolve([]);
+                }, 101);
+            });
+            await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.Timeout);
+        });
+    });
 
     test('should dont have a result (with id)', async () => {
         // tslint:disable: no-string-literal
