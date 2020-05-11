@@ -7,8 +7,8 @@ describe('Time Helper | Small wait tests', () => {
     test('should wait 50ms', async () => {
         const start = new Date().getTime();
         await timeHelper.delay(50);
-        const result = new Date().getTime() - (start + 55);
-        expect(result).toBeLessThanOrEqual(0);
+        const result = new Date().getTime() - (start + 49);
+        expect(result).toBeGreaterThanOrEqual(0);
         return;
     });
 });
