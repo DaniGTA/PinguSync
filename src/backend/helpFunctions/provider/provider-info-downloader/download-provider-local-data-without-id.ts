@@ -1,5 +1,4 @@
 import ExternalInformationProvider from '../../../api/provider/external-information-provider';
-import ExternalProvider from '../../../api/provider/external-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import MainListManager from '../../../controller/main-list-manager/main-list-manager';
 import { FailedRequestError } from '../../../controller/objects/meta/failed-request';
@@ -67,7 +66,7 @@ export default class DownloadProviderLocalDataWithoutId {
                     }
                     trys++;
                     try {
-                        const result = await this.getProviderLocalDataByName(name, trys);
+                        const result = await this.getProviderLocalDataByName(name);
                         if (result) {
                             logger.log('info', `[${this.requestId}][${this.provider.providerName}] ByName ${name.name} Request success 🎉`);
                             return result;
@@ -173,11 +172,11 @@ export default class DownloadProviderLocalDataWithoutId {
      * @param name Searched name.
      * @param provider In this provider the search will be performed.
      */
-    private async getProviderLocalDataByName(name: Name, trys: number = 0): Promise<MultiProviderResult> {
+    private async getProviderLocalDataByName(name: Name): Promise<MultiProviderResult> {
         const season = await this.series.getSeason();
         if (season.seasonNumbers.length === 0 || season.getSingleSeasonNumberAsNumber() === 1 || this.provider.hasUniqueIdForSeasons) {
             logger.log('info', `[${this.provider.providerName}] Request (Search series info by name) with value: ${name.name} | S${season.seasonNumbers}`);
-            const result = await this.getMoreSeriesInfoByNameResults(name, season, trys);
+            const result = await this.getMoreSeriesInfoByNameResults(name, season);
             if (result) {
                 return result;
             }
@@ -187,8 +186,9 @@ export default class DownloadProviderLocalDataWithoutId {
         throw FailedRequestError.ProviderNoResult;
     }
 
-    private async getMoreSeriesInfoByNameResults(name: Name, season: Season, trys: number = 0) {
+    private async getMoreSeriesInfoByNameResults(name: Name, season: Season): Promise<undefined | MultiProviderResult> {
         let searchResult: MultiProviderResult[] = [];
+        const seasonNumber = season.getSingleSeasonNumberAsNumber();
         if (!await this.provider.isProviderAvailable()) {
             throw FailedRequestError.ProviderNotAvailble;
         }
@@ -198,13 +198,13 @@ export default class DownloadProviderLocalDataWithoutId {
         searchResult = await Promise.race(
             [
                 DownloadSettings.requestTimoutPromise<MultiProviderResult[]>(),
-                this.provider.getMoreSeriesInfoByName(name.name, season.getSingleSeasonNumberAsNumber()),
+                this.provider.getMoreSeriesInfoByName(name.name, seasonNumber),
             ]);
-        return this.processResultsOfGetMoreSeriesInfoByName(searchResult, trys);
+        return this.processResultsOfGetMoreSeriesInfoByName(searchResult);
     }
 
 
-    private async processResultsOfGetMoreSeriesInfoByName(searchResult: MultiProviderResult[], trys: number = 0) {
+    private async processResultsOfGetMoreSeriesInfoByName(searchResult: MultiProviderResult[]): Promise<undefined | MultiProviderResult> {
         const resultContainer: SearchResultRatingContainer[] = [];
         if (searchResult && searchResult.length !== 0) {
             logger.debug(`[${this.provider.providerName}] Results: ${searchResult.length}`);
@@ -220,7 +220,6 @@ export default class DownloadProviderLocalDataWithoutId {
                     logger.log('info', `[${this.provider.providerName}] Request success 🎉`);
                     return bestResult.result;
                 }
-
             }
         }
     }

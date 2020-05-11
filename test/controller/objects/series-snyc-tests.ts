@@ -46,23 +46,7 @@ describe('Series | Sync', () => {
         await anime.addProviderDatas(providerA, providerB);
         assert.equal(await anime.getCanSync(), true);
     });
-    test('can sync (3/3)', async () => {
-        const anime = new Series();
-        ProviderList.getListProviderList().push(new TestProvider('CanSync31'));
-        const providerA = new ListProviderLocalData(1, 'CanSync31');
-        providerA.episodes = 24;
-        for (let index = 1; index < 12; index++) {
-            providerA.addOneWatchedEpisode(index);
-        }
-        providerA.watchStatus = WatchStatus.COMPLETED;
-        ProviderList.getListProviderList().push(new TestProvider('CanSync32'));
-        const providerB = new ListProviderLocalData(1, 'CanSync32');
-        providerB.episodes = 24;
-        // tslint:disable-next-line: no-string-literal
-        providerB['episodes'] = 24;
-        await anime.addProviderDatas(providerA, providerB);
-        assert.equal(await anime.getCanSync(), true);
-    });
+
     test('cant sync (1/7)', async () => {
         const anime = new Series();
         ProviderList.getListProviderList().push(new TestProvider('A'));

@@ -24,8 +24,8 @@ export default class ListController {
         }
     }
 
-    public async getSeriesById(id: string): Promise<Series | undefined> {
-        for (const entry of await this.getMainList()) {
+    public getSeriesById(id: string): Series | undefined {
+        for (const entry of this.getMainList()) {
             // tslint:disable-next-line: triple-equals
             if (entry.id == id) {
                 return entry;
@@ -34,16 +34,16 @@ export default class ListController {
         return;
     }
 
-    public async syncProvider(anime: Series) {
+    public async syncProvider(anime: Series): Promise<void> {
         const watchProgress = await anime.getLastWatchProgress();
         this.updateWatchProgressTo(anime, watchProgress.episode);
     }
 
-    public async removeSeriesPackageFromMainList(id: string) {
-        await new MainListPackageManager().removeSeriesPackage(id, await this.getMainList());
+    public removeSeriesPackageFromMainList(id: string): void {
+        new MainListPackageManager().removeSeriesPackage(id, this.getMainList());
     }
 
-    public async removeWatchProgress(anime: Series, watchProgress: WatchProgress) {
+    public async removeWatchProgress(anime: Series, watchProgress: WatchProgress): Promise<void> {
         for (const provider of anime.getListProvidersInfos()) {
             try {
                 const providerInstance = provider.getProviderInstance();
@@ -58,7 +58,7 @@ export default class ListController {
             }
         }
     }
-    public async updateWatchProgressTo(anime: Series, watchProgess: number) {
+    public async updateWatchProgressTo(anime: Series, watchProgess: number): Promise<void> {
         if (anime.getListProvidersInfos().length < ProviderList.getListProviderList().length / 2) {
             try {
                 await NewProviderHelper.getAllRelevantProviderInfosForSeries(anime);
@@ -89,21 +89,21 @@ export default class ListController {
         await new MainListAdder().addSeries(...animes);
     }
 
-    public async getMainList(): Promise<readonly Series[]> {
-        return Object.freeze([...await MainListManager.getMainList()]);
+    public getMainList(): readonly Series[] {
+        return Object.freeze([...MainListManager.getMainList()]);
     }
 
     /**
      * Download the info from all providers.
      * @param anime
      */
-    public async forceRefreshProviderInfo(packageId: string) {
-        const allSeriesInThePackage = (await MainListManager.getMainList()).filter((x) => x.packageId === packageId);
+    public async forceRefreshProviderInfo(packageId: string): Promise<void> {
+        const allSeriesInThePackage = (MainListManager.getMainList()).filter((x) => x.packageId === packageId);
         for (const series of allSeriesInThePackage) {
-            const index = await MainListManager.getIndexFromSeries(series);
+            const index = MainListManager.getIndexFromSeries(series);
             if (index !== -1) {
                 try {
-                    const mainList = await MainListManager.getMainList();
+                    const mainList = MainListManager.getMainList();
                     const result = await NewProviderHelper.getAllRelevantProviderInfosForSeries((mainList)[index]);
                     this.addSeriesToMainList(result);
                 } catch (err) {
@@ -116,7 +116,6 @@ export default class ListController {
 
     public async getSeriesListAndUpdateMainList(): Promise<void> {
         logger.log('info', '[calc] -> SeriesList');
-        await this.getMainList();
         const allSeries: MultiProviderResult[] = await this.getAllEntrysFromProviders(true);
         await new MainListEntryUpdater().updateSeries(...allSeries);
     }
@@ -144,11 +143,11 @@ export default class ListController {
     }
 
 
-    public async checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Promise<Series> {
+    public checkIfProviderExistInMainList(entry: Series, provider: ListProvider): Series {
         const validProvider = entry.getListProvidersInfos().find((x) => (x.provider === provider.providerName));
         try {
             if (validProvider) {
-                for (const seriesMainListEntry of await this.getMainList()) {
+                for (const seriesMainListEntry of this.getMainList()) {
                     for (const oldprovider of seriesMainListEntry.getListProvidersInfos()) {
                         if (oldprovider.provider === validProvider.provider && ProviderComperator.simpleProviderIdCheck(oldprovider.id, validProvider.id)) {
                             return seriesMainListEntry;
@@ -162,20 +161,4 @@ export default class ListController {
         }
         return entry;
     }
-
-
-    private async syncWatcher() {
-        const needToSync: Series[] = [];
-        for (const item of await MainListManager.getMainList()) {
-            if (await item.getCanSync()) {
-                needToSync.push(item);
-            }
-        }
-        if (typeof needToSync !== 'undefined') {
-            for (const item of needToSync) {
-                await this.syncProvider(item);
-            }
-        }
-    }
-
 }

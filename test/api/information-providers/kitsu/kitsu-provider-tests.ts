@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import KitsuProvider from '../../../../src/backend/api/information-providers/kitsu/kitsu-provider';
 import ExternalProvider from '../../../../src/backend/api/provider/external-provider';
 import ListProvider from '../../../../src/backend/api/provider/list-provider';
@@ -36,7 +35,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
-        strictEqual(result.mainProvider.providerLocalData.id, '6521');
+        expect(result.mainProvider.providerLocalData.id).toEqual('6521');
     });
 
     test('should get a series (2/6)', async () => {
@@ -49,7 +48,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
-        strictEqual(result.mainProvider.providerLocalData.id, '8061');
+        expect(result.mainProvider.providerLocalData.id).toEqual('8061');
     });
 
     test('should get a series (3/6)', async () => {
@@ -62,7 +61,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
-        strictEqual(result.mainProvider.providerLocalData.id, '10857');
+        expect(result.mainProvider.providerLocalData.id).toEqual('10857');
     });
 
     test('should get a series (4/6)', async () => {
@@ -77,8 +76,8 @@ describe('Provider: Kitsu | Test runs', () => {
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         const kitsuResult = result.mainProvider;
 
-        strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
-        strictEqual(kitsuResult.providerLocalData.id, '12272');
+        expect(kitsuResult.providerLocalData.provider).toEqual(kitsuProvider.providerName);
+        expect(kitsuResult.providerLocalData.id).toEqual('12272');
     }, 5000);
 
     test('should get the series: 1555', async () => {
@@ -94,8 +93,8 @@ describe('Provider: Kitsu | Test runs', () => {
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         const kitsuResult = result.mainProvider;
 
-        strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
-        strictEqual(kitsuResult.providerLocalData.id, '1555');
+        expect(kitsuResult.providerLocalData.provider).toEqual(kitsuProvider.providerName);
+        expect(kitsuResult.providerLocalData.id).toEqual('1555');
     }, 5000);
 
     test('should get the series: 11578', async () => {
@@ -109,13 +108,13 @@ describe('Provider: Kitsu | Test runs', () => {
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
         const kitsuResult = result.mainProvider;
 
-        strictEqual(kitsuResult.providerLocalData.provider, kitsuProvider.providerName);
-        strictEqual(kitsuResult.providerLocalData.id, '11578');
+        expect(kitsuResult.providerLocalData.provider).toEqual(kitsuProvider.providerName);
+        expect(kitsuResult.providerLocalData.id).toEqual('11578');
     }, 5000);
 
     test('it should get a series by trakt id', async () => {
         const a = new KitsuProvider();
         const result = await a['getByTraktId'](94084);
-        strictEqual(result.data[0].id, '87492');
+        expect(result.data[0].id).toEqual('87492');
     });
 });

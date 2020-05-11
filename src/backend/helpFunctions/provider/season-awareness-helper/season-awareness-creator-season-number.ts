@@ -43,7 +43,6 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         providerWithoutSeasonAwarness: ProviderLocalData): Promise<ProviderLocalDataWithSeasonInfo[]> {
         let finalSeason: Season | undefined;
         const targetSeason = series.getProviderSeasonTarget(providerWithoutSeasonAwarness.provider);
-
         if (!EpisodeHelper.hasEpisodeNames(providerWithoutSeasonAwarness.detailEpisodeInfo)) {
             // tslint:disable-next-line: max-line-length
             const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([providerWithoutSeasonAwarness], ProviderList.getProviderInstanceByLocalData(providerWithoutSeasonAwarness));
@@ -59,32 +58,40 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         const externalProviders = this.getAllExternalProvidersThatCanHelpToCreateSeasonAwarness();
 
         for (const externalProvider of externalProviders) {
-            if (providerWithoutSeasonAwarness.provider !== externalProvider.providerName) {
-                const providerLocalData = await this.getValidProviderLocalData(allProviders, series, externalProvider);
-                if (providerLocalData) {
-                    const result = await this.getSeasonForProviderThatDontHaveSeason(providerLocalData, providerWithoutSeasonAwarness, finalSeason);
-                    if (result) {
-                        return result;
+            try {
+                if (providerWithoutSeasonAwarness.provider !== externalProvider.providerName) {
+                    const providerLocalData = await this.getValidProviderLocalData(allProviders, series, externalProvider, finalSeason !== undefined);
+                    if (providerLocalData) {
+                        const result = await this.getSeasonForProviderThatDontHaveSeason(providerLocalData, providerWithoutSeasonAwarness, finalSeason);
+                        if (result) {
+                            return result;
+                        }
                     }
                 }
+            } catch (err) {
+                logger.error(err);
             }
         }
         return [];
     }
 
-    private async getValidProviderLocalData(allProviders: ProviderLocalData[], series: Series, externalProvider: ExternalInformationProvider) {
+    private async getValidProviderLocalData(allProviders: ProviderLocalData[], series: Series, externalProvider: ExternalInformationProvider, firstSeasonAllowed: boolean): Promise<ProviderLocalData | undefined> {
         let providerLocalData = allProviders.find((x) => x.provider === externalProvider.providerName);
-        if (!providerLocalData) {
+        if (!providerLocalData && firstSeasonAllowed) {
             providerLocalData = await this.getProviderLocalDataFromFirstSeason(series, externalProvider);
         }
         if (!providerLocalData) {
             providerLocalData = await ProviderHelper.simpleProviderLocalDataUpgradeRequest(allProviders, externalProvider);
         }
         if (!providerLocalData) {
-            let names = series.getAllNames();
-            names = TitleHelper.getAllNamesSortedBySearchAbleScore(names);
-            const result = await new DownloadProviderLocalDataWithoutId(series, externalProvider).downloadProviderSeriesInfoBySeriesName(names);
-            providerLocalData = result?.mainProvider.providerLocalData;
+            try {
+                let names = series.getAllNames();
+                names = TitleHelper.getAllNamesSortedBySearchAbleScore(names);
+                const result = await new DownloadProviderLocalDataWithoutId(series, externalProvider).downloadProviderSeriesInfoBySeriesName(names);
+                providerLocalData = result?.mainProvider.providerLocalData;
+            } catch (err) {
+                logger.error(err);
+            }
         }
         return providerLocalData;
     }

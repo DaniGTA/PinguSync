@@ -16,8 +16,8 @@ export default class SeriesHelper {
      */
     public static async isSameSeries(a: Series, b: Series): Promise<boolean> {
 
-        let matches: number = 0;
-        let matchAbleScore: number = 0;
+        let matches = 0;
+        let matchAbleScore = 0;
         a = Object.assign(new Series(), a);
         b = Object.assign(new Series(), b);
         const providerComperator = new ProviderComperator(a, b);

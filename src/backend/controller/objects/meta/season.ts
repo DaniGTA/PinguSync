@@ -11,6 +11,7 @@ export default class Season {
     public seasonNumbers: Array<(number | string)> = [];
     public seasonPart?: number;
     public seasonError: SeasonError;
+    public confirmed = false;
 
     constructor(seasonNumbers?: (Array<(number | string)> | (number | string)), seasonPart?: number, seasonError: SeasonError = SeasonError.NONE) {
         if (seasonNumbers !== undefined) {

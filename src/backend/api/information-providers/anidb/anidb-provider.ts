@@ -51,7 +51,7 @@ export default class AniDBProvider extends InfoProvider {
         const nameDBList = AniDBHelper.anidbNameManager.data;
         if (nameDBList) {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            return MultiThreadingHelper.runFunctionInWorker(this.getSameTitle, searchTitle, nameDBList, season);
+            return await this.getSameTitle(searchTitle, nameDBList, season);
         }
         throw new Error('nothing found');
     }
@@ -82,7 +82,7 @@ export default class AniDBProvider extends InfoProvider {
                 if (result.length !== 0) {
                     const seasonOfTitle = await Name.getSeasonNumber(result);
                     if (season !== undefined) {
-                        if (seasonOfTitle.seasonNumber === undefined) {
+                        if (seasonOfTitle.seasonNumber === undefined && season <= 1) {
                             lastResults.push([seriesDB, result]);
                         } else if (seasonOfTitle.seasonNumber === season) {
                             return [await AniDBHelper.fillSeries(seriesDB, result)];

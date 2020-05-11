@@ -71,7 +71,7 @@ describe('Download provider local data to target info status helper test (downlo
 
             const result = await instance.upgradeToTarget();
 
-            strictEqual(((result as any) as FailedProviderRequest).error, FailedRequestError.ProviderNoResult);
+            expect(((result as FailedProviderRequest)).error).toEqual(FailedRequestError.ProviderNoResult);
         });
     });
 

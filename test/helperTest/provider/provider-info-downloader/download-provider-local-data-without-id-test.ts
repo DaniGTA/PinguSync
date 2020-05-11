@@ -1,10 +1,23 @@
-import { strictEqual } from 'assert';
 import { FailedRequestError } from '../../../../src/backend/controller/objects/meta/failed-request';
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Series from '../../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import DownloadProviderLocalDataWithoutId from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-without-id';
 import TestProvider from '../../../controller/objects/testClass/testProvider';
+function getListOfName(): Name[] {
+    const names: Name[] = [];
+    names.push(new Name('a', 'a'));
+    names.push(new Name('b', 'a'));
+    names.push(new Name('c', 'a'));
+    names.push(new Name('d', 'a'));
+    names.push(new Name('e', 'a'));
+    names.push(new Name('f', 'a'));
+    names.push(new Name('g', 'a'));
+    names.push(new Name('h', 'a'));
+    names.push(new Name('j', 'a'));
+    names.push(new Name('k', 'a'));
+    return names;
+}
 
 describe('Download provider local data without provider id', () => {
     beforeEach(() => {
@@ -73,21 +86,7 @@ describe('Download provider local data without provider id', () => {
 
         const dpldwi = new DownloadProviderLocalDataWithoutId(series, provider);
         await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toEqual(FailedRequestError.ProviderNotAvailble);
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(provider.getMoreSeriesInfoByName).toHaveBeenCalledTimes(1);
     });
-
-    function getListOfName(): Name[] {
-        const names: Name[] = [];
-        names.push(new Name('a', 'a'));
-        names.push(new Name('b', 'a'));
-        names.push(new Name('c', 'a'));
-        names.push(new Name('d', 'a'));
-        names.push(new Name('e', 'a'));
-        names.push(new Name('f', 'a'));
-        names.push(new Name('g', 'a'));
-        names.push(new Name('h', 'a'));
-        names.push(new Name('j', 'a'));
-        names.push(new Name('k', 'a'));
-        return names;
-    }
 });

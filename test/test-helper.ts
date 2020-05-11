@@ -7,6 +7,7 @@ import ProviderDataListLoader from '../src/backend/controller/provider-controlle
 import ProviderDataListManager from '../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import ResponseHelper from './response-helper';
 import SettingsManager from '../src/backend/controller/settings/settings-manager';
+import MainListSaver from '../src/backend/controller/main-list-manager/main-list-saver';
 
 ResponseHelper.mockRequest();
 // tslint:disable: no-string-literal
@@ -14,6 +15,7 @@ MainListManager['listLoaded'] = true;
 MainListManager['mainList'] = [];
 MainListPath.getPath = () => '/////- no path for testing -';
 // tslint:disable-next-line: no-empty
+MainListSaver.saveMainList = jest.fn();
 
 ProviderDataListManager['listLoaded'] = true;
 // tslint:disable-next-line: no-empty

@@ -200,7 +200,7 @@ export default class NewProviderHelper {
         return allRelevantProviders;
     }
 
-    private static async providerHasUserLoggedIn(provider: ListProvider) {
+    private static async providerHasUserLoggedIn(provider: ListProvider): Promise<boolean> {
         try {
             return await provider.isUserLoggedIn();
         } catch (err) {

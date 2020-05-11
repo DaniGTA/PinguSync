@@ -24,12 +24,48 @@ describe('ListController | Combine', () => {
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     });
+    async function getRandomeFilledAnime(): Promise<Series> {
+        const id = Math.random() * (+0 - +10000) + +10000;
+        const providerName = stringHelper.randomString();
+        const provider = new ListProviderLocalData(id, providerName);
+        ProviderList['loadedListProvider']?.push(new TestProvider(providerName));
+        const anime: Series = new Series();
+        provider.episodes = Math.random() * (+13 - +0) + +0;
+        provider.releaseYear = Math.random() * (+2019 - +1989) + +1989;
+        const season = Math.random() * (+3 - +0) + +0;
+
+        provider.addSeriesName(new Name(stringHelper.randomString(), 'en'));
+        await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season([season])));
+        return anime;
+    }
+
+    async function getFilledAnime(providername = 'Test', providerId = -1, targetSeason: number | null | undefined = 3): Promise<Series> {
+        if (targetSeason === null) {
+            targetSeason = undefined;
+        }
+
+        let id = Math.random() * (+0 - +10000) + +10000;
+        if (providerId !== -1) {
+            id = providerId;
+        } else {
+            id = Math.random() * (+0 - +10000) + +10000;
+        }
+        const provider = new ListProviderLocalData(id, providername);
+
+        const anime = new Series();
+        provider.episodes = 10;
+        provider.releaseYear = 2014;
+        provider.addSeriesName(new Name('FilledTest', 'en'));
+        await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(targetSeason)));
+        return anime;
+    }
+
     test('should combine same entry', async () => {
         const entry: Series[] = [];
         entry.push(await getFilledAnime());
         entry.push(await getFilledAnime(''));
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 1);
+        expect(MainListManager['mainList'].length).toEqual(1);
     });
 
     test('should combine basic entrys correct', async () => {
@@ -84,7 +120,7 @@ describe('ListController | Combine', () => {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 11);
+        expect(MainListManager['mainList'].length).toEqual(11);
         return;
     });
     test('should combine basic entrys with season in title (3/4)', async () => {
@@ -99,7 +135,7 @@ describe('ListController | Combine', () => {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 11);
+        expect(MainListManager['mainList'].length).toEqual(11);
         return;
     });
 
@@ -118,7 +154,7 @@ describe('ListController | Combine', () => {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 13);
+        expect(MainListManager['mainList'].length).toEqual(13);
         return;
     });
 
@@ -138,7 +174,7 @@ describe('ListController | Combine', () => {
             entry.push(await getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 13);
+        expect(MainListManager['mainList'].length).toEqual(13);
         return;
     });
 
@@ -156,7 +192,7 @@ describe('ListController | Combine', () => {
 
         await lc.addSeriesToMainList(x1, x2, x3);
 
-        assert.equal(MainListManager['mainList'].length, 1);
+        expect(MainListManager['mainList'].length).toEqual(1);
     });
 
     test('should get series list', async () => {
@@ -168,11 +204,8 @@ describe('ListController | Combine', () => {
         await lc.addSeriesToMainList(x1);
 
         assert.equal(MainListManager['mainList'].length, 1);
-        if (ListController.instance) {
-            assert.equal((await ListController.instance.getMainList()).length, 1);
-        } else {
-            fail();
-        }
+        expect((ListController?.instance?.getMainList())?.length).toEqual(1);
+
     });
 
     test('should clean doubled entrys (3/3)', async () => {
@@ -295,42 +328,3 @@ describe('ListController | Combine', () => {
         assert.notEqual(MainListManager['mainList'][0].lastUpdate, 0);
     });
 });
-
-async function getFilledAnime(providername: string = 'Test', providerId: number = -1, targetSeason: number | null | undefined = 3): Promise<Series> {
-    if (targetSeason === null) {
-        targetSeason = undefined;
-    }
-
-    let id = Math.random() * (+0 - +10000) + +10000;
-    if (providerId !== -1) {
-        id = providerId;
-    } else {
-        id = Math.random() * (+0 - +10000) + +10000;
-    }
-    const provider = new ListProviderLocalData(id, providername);
-
-    const anime = new Series();
-    provider.episodes = 10;
-    provider.releaseYear = 2014;
-    provider.addSeriesName(new Name('FilledTest', 'en'));
-    await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(targetSeason)));
-    return anime;
-}
-
-async function getRandomeFilledAnime(): Promise<Series> {
-    if (!ProviderList['loadedListProvider']) {
-        fail();
-    }
-    const id = Math.random() * (+0 - +10000) + +10000;
-    const providerName = stringHelper.randomString();
-    const provider = new ListProviderLocalData(id, providerName);
-    ProviderList['loadedListProvider'].push(new TestProvider(providerName));
-    const anime: Series = new Series();
-    provider.episodes = Math.random() * (+13 - +0) + +0;
-    provider.releaseYear = Math.random() * (+2019 - +1989) + +1989;
-    const season = Math.random() * (+3 - +0) + +0;
-
-    provider.addSeriesName(new Name(stringHelper.randomString(), 'en'));
-    await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season([season])));
-    return anime;
-}

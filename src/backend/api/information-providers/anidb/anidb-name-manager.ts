@@ -22,7 +22,7 @@ export default class AniDBNameManager {
         this.saveData();
     }
 
-    private async saveData(): Promise<void> {
+    private saveData(): void {
         try {
             logger.log('info', '[Save] -> AniDB -> Names');
             fs.writeFileSync(this.getPath(), JSON.stringify(this));
@@ -32,7 +32,7 @@ export default class AniDBNameManager {
         }
     }
 
-    private loadData() {
+    private loadData(): void {
         try {
             if (fs.existsSync(this.getPath())) {
                 const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');

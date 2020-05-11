@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import Episode from '../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeBindingPool from '../../src/backend/controller/objects/meta/episode/episode-binding-pool';
 import EpisodeMapping from '../../src/backend/controller/objects/meta/episode/episode-mapping';
@@ -9,7 +8,7 @@ import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
 
 describe('Episode binding pool helper tests | Testrun', () => {
-    test('should get all binded episode from an episode', async () => {
+    test('should get all binded episode from an episode', () => {
         const episode = new Episode(1);
         const episodeMapping1 = new EpisodeMapping(episode, new ListProviderLocalData(1, 'a'));
         const episodeMapping2 = new EpisodeMapping(new Episode(1), new ListProviderLocalData(1, 'b'));
@@ -21,10 +20,10 @@ describe('Episode binding pool helper tests | Testrun', () => {
         const episode2BindingPool = new EpisodeBindingPool(episode2Mapping1, episode2Mapping2);
 
         const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode([episodeBindingPool, episode2BindingPool], episode);
-        strictEqual(result.length, 1);
+        expect(result.length).toEqual(1);
     });
 
-    test('should not get season 2 with special season', async () => {
+    test('should not get season 2 with special season', () => {
         const testEpsiode1 = new Episode(2, new Season(2));
         testEpsiode1.providerEpisodeId = 2454207;
         const episodeMapping1 = new EpisodeMapping(testEpsiode1, new ListProviderLocalData(1, 'b'));
@@ -46,7 +45,7 @@ describe('Episode binding pool helper tests | Testrun', () => {
 
         const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode([episodeBindingPool], specialEpisode);
 
-        strictEqual(result.length, 0);
+        expect(result.length).toEqual(0);
     });
 
     describe('testing function: isEpisodeAlreadyBindedToAProvider', () => {
@@ -58,18 +57,14 @@ describe('Episode binding pool helper tests | Testrun', () => {
         const episodeMapping2 = new EpisodeMapping(episode2, new ListProviderLocalData(1, 'b'));
 
         const episodeBindingPool = new EpisodeBindingPool(episodeMapping1, episodeMapping2);
-        test('should find already binded episode', async () => {
+        test('should find already binded episode', () => {
             const result = EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider([episodeBindingPool], episode1, 'b');
-
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
 
-        test('should not find already binded episode', async () => {
-
+        test('should not find already binded episode', () => {
             const result2 = EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider([episodeBindingPool], episode1, 'c');
-
-            strictEqual(result2, false);
+            expect(result2).toBeFalsy();
         });
-
     });
 });

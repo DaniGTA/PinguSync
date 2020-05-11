@@ -10,22 +10,22 @@ import listHelper from '../../src/backend/helpFunctions/list-helper';
 describe('List Helper', () => {
     test('should clean array', async () => {
         const arr = await listHelper.cleanArray([null, undefined, '']);
-        assert.equal(arr.length, 0);
+        expect(arr.length).toEqual(0);
         return;
     });
-    test('should get most frequency occur (1/2)', async () => {
-        const arr = await listHelper.findMostFrequent([1, 1, 0, 1, 1, 0]);
-        assert.equal(arr, 1);
+    test('should get most frequency occur (1/2)', () => {
+        const arr = listHelper.findMostFrequent([1, 1, 0, 1, 1, 0]);
+        expect(arr).toEqual(1);
         return;
     });
     test('should get most frequency occur (2/2)', async () => {
-        const arr = await listHelper.findMostFrequent(await listHelper.cleanArray([1]));
-        assert.equal(arr, 1);
+        const arr = listHelper.findMostFrequent(await listHelper.cleanArray([1]));
+        expect(arr).toEqual(1);
         return;
     });
-    test('should return undefined', async () => {
-        const arr = await listHelper.findMostFrequent([]);
-        assert.equal(typeof arr, 'undefined');
+    test('should return undefined', () => {
+        const arr = listHelper.findMostFrequent([]);
+        expect(arr).toBeUndefined();
         return;
     });
 
@@ -39,7 +39,7 @@ describe('List Helper', () => {
         const list = [entry1, entry2, entry3];
         const result = await listHelper.isSeriesInList(list, entry2);
 
-        assert.equal(result, true);
+        expect(result).toBeTruthy();
     });
 
 
@@ -53,18 +53,18 @@ describe('List Helper', () => {
         const list = [entry1, entry3];
         const result = await listHelper.isSeriesInList(list, entry2);
 
-        assert.equal(result, false);
+        expect(result).toBeFalsy();
     });
 
     test('it should look if item is in list', async () => {
         const array = ['Test', 'Test2', 'Test3'];
         assert.strictEqual(await listHelper.isItemInList(array, 'Test'), true);
-        assert.strictEqual(await listHelper.isItemInList(array, 'xTestx'), false);
+        expect(await listHelper.isItemInList(array, 'xTestx')).toBeFalsy();
     });
 
     test('get lazy uniqe string list', async () => {
         const array = [new Name('Test', 'en'), new Name('test', 'en'), new Name('tesT', 'en'), new Name('Test2', 'en')];
-        assert.strictEqual((await listHelper.getLazyUniqueStringList(array)).length, 2);
+        expect((await listHelper.getLazyUniqueStringList(array)).length).toEqual(2);
     });
 
 
@@ -76,38 +76,38 @@ describe('List Helper', () => {
         assert.strictEqual(await listHelper.checkType(numberList, Number), true, 'numberList is type of number');
         assert.strictEqual(await listHelper.checkType(watchprogressList, WatchProgress), true, 'watchprogressList is type of WatchProgress');
         assert.strictEqual(await listHelper.checkType(numberList, WatchProgress), false, 'numberList is not type of WatchProgress');
-        assert.strictEqual(await listHelper.checkType(watchprogressList, Number), false, 'watchprogressList is not type of Number');
+        expect(await listHelper.checkType(watchprogressList, Number)).toBeFalsy();
     });
 
     test('should find entry (list in list)', async () => {
         const array = ['A', 'B', 'C'];
         const array2 = ['X', 'Y', 'C'];
         const result = await listHelper.isAnyListEntryInList(array, array2);
-        assert.strictEqual(result, true);
+        expect(result).toBeTruthy();
     });
 
     test('should not find entry (list in list)', async () => {
         const array = ['A', 'B', 'C'];
         const array2 = ['X', 'Y', 'Z'];
         const result = await listHelper.isAnyListEntryInList(array, array2);
-        assert.strictEqual(result, false);
+        expect(result).toBeFalsy();
     });
 
     test('should find entry object (list in list)', async () => {
         const array = [new Name('tesT', 'en'), new Name('tesT2', 'en')];
         const array2 = [new Name('tesT1', 'en'), new Name('tesT2', 'en'), new Name('tesT3', 'en')];
         const result = await listHelper.isAnyListEntryInList(array, array2);
-        assert.strictEqual(result, true);
+        expect(result).toBeTruthy();
     });
 
     test('should not find entry object (list in list)', async () => {
         const array = [new Name('tesT', 'en'), new Name('tesT2', 'en')];
         const array2 = [new Name('tesT1', 'en'), new Name('tesT4', 'en'), new Name('tesT3', 'en')];
         const result = await listHelper.isAnyListEntryInList(array, array2);
-        assert.strictEqual(result, false);
+        expect(result).toBeFalsy();
     });
 
-    test('should filter duplicates in episode list (1/2)', async () => {
+    test('should filter duplicates in episode list (1/2)', () => {
         const episode1 = new Episode(1);
         episode1.provider = '';
         const episode2 = new Episode(2);
@@ -119,12 +119,12 @@ describe('List Helper', () => {
         const episode5 = new Episode(4);
         episode5.provider = '';
 
-        const result = await listHelper.getUniqueEpisodeList([episode1, episode2, episode3, episode5], [episode4, episode5]);
+        const result = listHelper.getUniqueEpisodeList([episode1, episode2, episode3, episode5], [episode4, episode5]);
 
-        assert.strictEqual(result.length, 4);
+        expect(result.length).toEqual(4);
     });
 
-    test('should filter duplicates in episode list (2/2)', async () => {
+    test('should filter duplicates in episode list (2/2)', () => {
         const episode1 = new Episode(1);
         episode1.provider = '';
         const episode2 = new Episode(1);
@@ -138,14 +138,14 @@ describe('List Helper', () => {
         const episode6 = new Episode(3);
         episode6.provider = '';
 
-        const result = await listHelper.getUniqueEpisodeList([episode1, episode3, episode5], [episode4, episode5, episode2]);
+        const result = listHelper.getUniqueEpisodeList([episode1, episode3, episode5], [episode4, episode5, episode2]);
 
-        assert.strictEqual(result.length, 3);
+        expect(result.length).toEqual(3);
     });
 
-    test('should get a even number', async () => {
+    test('should get a even number', () => {
         const te = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8];
         const result = listHelper.getMostFrequentNumberFromList(te);
-        assert.strictEqual(result, 2);
+        expect(result).toEqual(2);
     });
 });

@@ -1,5 +1,3 @@
-import { strictEqual } from 'assert';
-
 import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
 import KitsuProvider from '../../../src/backend/api/information-providers/kitsu/kitsu-provider';
 import MalProvider from '../../../src/backend/api/information-providers/mal/mal-provider';
@@ -27,43 +25,45 @@ describe('Season Awareness Test', () => {
         new ListController(true);
     });
 
-    test('should detected as season unaware (no season)', async () => {
+    test('should detected as season unaware (no season)', () => {
         const seasonAwareeProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), undefined);
         const result = SeasonAwarenessHelper.isSeasonAware([seasonAwareeProvider]);
-        strictEqual(result, false);
+        expect(result).toBeFalsy();
     });
 
-    test('should detected as season unaware (undefined season number)', async () => {
+    test('should detected as season unaware (undefined season number)', () => {
         const seasonAwareeProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), new Season());
         const result = SeasonAwarenessHelper.isSeasonAware([seasonAwareeProvider]);
-        strictEqual(result, false);
+        expect(result).toBeFalsy();
     });
 
-    test('should detected as season aware (already first season)', async () => {
-        const seasonAwareeProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), new Season(1));
+    test('should detected as season aware (already first season)', () => {
+        const season = new Season(1);
+        season.confirmed = true;
+        const seasonAwareeProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), season);
         const result = SeasonAwarenessHelper.isSeasonAware([seasonAwareeProvider]);
-        strictEqual(result, true);
+        expect(result).toBeTruthy();
     });
 
-    test('should detected as season aware (unique id for season)', async () => {
+    test('should detected as season aware (unique id for season)', () => {
         const seasonAwareeProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(2, MalProvider), new Season(2));
         const result = SeasonAwarenessHelper.isSeasonAware([seasonAwareeProvider]);
-        strictEqual(result, true);
+        expect(result).toBeTruthy();
     });
 
-    test('should detected as season aware (unknown season)', async () => {
+    test('should detected as season aware (unknown season)', () => {
         const seasonAwareeProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), new Season(2));
         const result = SeasonAwarenessHelper.isSeasonAware([seasonAwareeProvider]);
-        strictEqual(result, false);
+        expect(result).toBeFalsy();
     });
 
-    test('should detected as season aware (known season)', async () => {
+    test('should detected as season aware (known season)', () => {
         const seasonUnawareeProvider = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), new Season(3, 1));
         const seasonAwareeProvider = new ProviderDataWithSeasonInfo(new InfoProviderLocalData(1, AniDBProvider), new Season(3, 1));
         const result = SeasonAwarenessHelper.isSeasonAware([seasonAwareeProvider, seasonUnawareeProvider]);
-        strictEqual(result, true);
+        expect(result).toBeTruthy();
 
         const result2 = SeasonAwarenessHelper.isSeasonAware([seasonUnawareeProvider, seasonAwareeProvider]);
-        strictEqual(result2, true);
+        expect(result2).toBeTruthy();
     });
 });

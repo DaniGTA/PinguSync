@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import Episode from '../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../src/backend/controller/objects/meta/episode/episode-title';
 import Season from '../../src/backend/controller/objects/meta/season';
@@ -13,7 +12,7 @@ describe('Episode Helper Test', () => {
         detailedEpisode2.title.push(new EpisodeTitle('test', 'test'));
         const list = [detailedEpisode1, detailedEpisode2];
         const result = EpisodeHelper.hasEpisodeNames(list);
-        strictEqual(result, true);
+        expect(result).toBeTruthy();
     });
 
     test('shouldnt detect episode title', () => {
@@ -21,7 +20,7 @@ describe('Episode Helper Test', () => {
         const detailedEpisode2 = new Episode(2);
         const list = [detailedEpisode1, detailedEpisode2];
         const result = EpisodeHelper.hasEpisodeNames(list);
-        strictEqual(result, false);
+        expect(result).toBeFalsy();
     });
 
     test('should find one missing episode', () => {
@@ -36,23 +35,18 @@ describe('Episode Helper Test', () => {
         const list2 = [part2DetailedEpisodeS2e1];
 
         const result = new EpisodeRelationAnalyser(list, list2);
-        strictEqual(result.maxEpisodes, 2);
-        strictEqual(result.missingEpisodes, 1);
-        strictEqual(result.seasonComplete, true);
-        strictEqual(result.numberOfRegularEpisodesFound, 1);
-        if (result.seasonNumbers) {
-            strictEqual(result.seasonNumbers[0], 2);
-        } else {
-            fail();
-        }
+        expect(result.maxEpisodes).toEqual(2);
+        expect(result.missingEpisodes).toEqual(1);
+        expect(result.seasonComplete).toBeTruthy();
+        expect(result.numberOfRegularEpisodesFound).toEqual(1);
+        expect(result?.seasonNumbers?.[0]).toEqual(2);
     });
 
     test('should get difference of episode', () => {
         const episodeA = new Episode(1);
         const episodeB = new Episode(2);
 
-        strictEqual(EpisodeHelper.getEpisodeDifference(episodeA, episodeB), -1);
-        strictEqual(EpisodeHelper.getEpisodeDifference(episodeB, episodeA), 1);
-
+        expect(EpisodeHelper.getEpisodeDifference(episodeA, episodeB)).toEqual(-1);
+        expect(EpisodeHelper.getEpisodeDifference(episodeB, episodeA)).toEqual(1);
     });
 });

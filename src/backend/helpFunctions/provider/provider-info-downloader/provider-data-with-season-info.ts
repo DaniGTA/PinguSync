@@ -4,6 +4,7 @@ import ProviderLocalData from '../../../controller/provider-controller/provider-
 export default class ProviderLocalDataWithSeasonInfo {
     public providerLocalData: ProviderLocalData;
     public seasonTarget: Season | undefined;
+    public confirmed = false;
 
     constructor(providerLocalData: ProviderLocalData, seasonTarget?: Season | undefined) {
         this.providerLocalData = providerLocalData;

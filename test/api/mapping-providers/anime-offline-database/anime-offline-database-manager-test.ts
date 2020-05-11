@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import { readFileSync } from 'fs';
 import AniDBProvider from '../../../../src/backend/api/information-providers/anidb/anidb-provider';
 import AniListProvider from '../../../../src/backend/api/information-providers/anilist/anilist-provider';
@@ -17,13 +16,13 @@ describe('AnimeOfflineDatabaseManager | basic test', () => {
     test('should not allow download', () => {
         AnimeOfflineDatabaseManager['LOCAL_DATA'].lastDatabaseDownloadTimestamp = Date.now();
         const result = AnimeOfflineDatabaseManager['canUpdateDatabase']();
-        strictEqual(result, false);
+        expect(result).toBeFalsy();
     });
 
     test('should allow download', () => {
         AnimeOfflineDatabaseManager['LOCAL_DATA'].lastDatabaseDownloadTimestamp = 0;
         const result = AnimeOfflineDatabaseManager['canUpdateDatabase']();
-        strictEqual(result, true);
+        expect(result).toBeTruthy();
     });
     describe('getMappingFromProviderLocalData tests', () => {
         const database: IAnimeOfflineDatabase = JSON.parse(readFileSync('./test/api/mapping-providers/anime-offline-database/data/anime-offline-database.json', 'UTF-8')) as IAnimeOfflineDatabase;
@@ -36,28 +35,28 @@ describe('AnimeOfflineDatabaseManager | basic test', () => {
             const providerLocalData = new InfoProviderLocalData('4563', AniDBProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
             const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
-            strictEqual(r?.episodes, 37);
+            expect(r?.episodes).toEqual(37);
         });
 
         test('should find IDatabaseEntry with aniList id', async () => {
             const providerLocalData = new ListProviderLocalData(1535, AniListProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
             const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
-            strictEqual(r?.episodes, 37);
+            expect(r?.episodes).toEqual(37);
         });
 
         test('should find IDatabaseEntry with kitsu id', async () => {
             const providerLocalData = new ListProviderLocalData(1376, KitsuProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
             const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
-            strictEqual(r?.episodes, 37);
+            expect(r?.episodes).toEqual(37);
         });
 
         test('should find IDatabaseEntry with mal id', async () => {
             const providerLocalData = new ListProviderLocalData(1535, MalProvider);
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
             const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
-            strictEqual(r?.episodes, 37);
+            expect(r?.episodes).toEqual(37);
         });
     });
 });

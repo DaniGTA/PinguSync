@@ -36,9 +36,12 @@ export default class SeasonAwarenessHelper {
         return false;
     }
 
-    public static isProviderSeasonAware(provider: ProviderLocalDataWithSeasonInfo) {
+    public static isProviderSeasonAware(provider: ProviderLocalDataWithSeasonInfo): boolean {
         if (!ProviderList.getProviderInstanceByLocalData(provider.providerLocalData).hasUniqueIdForSeasons) {
-            return false;
+            if (provider.seasonTarget?.getSingleSeasonNumberAsNumber() === undefined) {
+                return false;
+            }
+            return provider.seasonTarget.confirmed;
         }
         return true;
     }

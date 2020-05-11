@@ -37,7 +37,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
         const a = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
 
-        strictEqual(a.mainProvider.providerLocalData.id, 1);
+        expect(a.mainProvider.providerLocalData.id).toEqual(1);
     });
 
     test('should dont have a result (no id)', async () => {
@@ -98,13 +98,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
                 resolve([]);
             }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100);
         });
-
-        try {
-            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            fail();
-        } catch (err) {
-            strictEqual(err, FailedRequestError.Timeout);
-        }
+        await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.Timeout);
     }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 1000);
 
     test('should dont have a result (with id)', async () => {
@@ -138,12 +132,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         await series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
         jest.spyOn(provider, 'isProviderAvailable').mockImplementation(async () => false);
-        try {
-            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            fail();
-        } catch (err) {
-            strictEqual(err, FailedRequestError.ProviderNotAvailble);
-        }
+        await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.ProviderNotAvailble);
     });
 
     test('should timeout (with id)', async () => {
@@ -162,12 +151,6 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
                 resolve();
             }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100);
         });
-
-        try {
-            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            fail();
-        } catch (err) {
-            strictEqual(err, FailedRequestError.Timeout);
-        }
+        await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.Timeout);
     }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 1000);
 });

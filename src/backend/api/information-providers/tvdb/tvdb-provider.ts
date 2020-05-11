@@ -74,17 +74,18 @@ export default class TVDBProvider extends InfoProvider {
     }
 
     private async getAccessKey(): Promise<string> {
+        const apiSecret = this.getApiSecret();
         this.informAWebRequest();
-        if (TVDBProvider.Instance.apiData.accessToken && TVDBProvider.Instance.apiData.expiresIn && new Date().getTime() < TVDBProvider.Instance.apiData.expiresIn) {
-            return TVDBProvider.Instance.apiData.accessToken;
+        if (this.apiData.accessToken && this.apiData.expiresIn && new Date().getTime() < this.apiData.expiresIn) {
+            return this.apiData.accessToken;
         } else {
             let token: string | null = null;
             const data = await WebRequestManager.request({
                 method: 'POST',
-                uri: TVDBProvider.Instance.baseUrl + '/login',
+                uri: this.baseUrl + '/login',
                 headers: { 'Content-Type': 'application/json' },
                 body: `{
-                        "apikey": "` + TVDBProvider.Instance.getApiSecret() + `"
+                        "apikey": "` + apiSecret + `"
                     }`,
             });
             if (data.statusCode === 200 || data.statusCode === 201) {
@@ -94,7 +95,7 @@ export default class TVDBProvider extends InfoProvider {
                 throw new Error('[TVDB] Failed to get token');
             }
             const dayInms = 86400000;
-            TVDBProvider.Instance.apiData.setTokens(token, new Date().getTime() + dayInms);
+            this.apiData.setTokens(token, new Date().getTime() + dayInms);
             return token;
         }
     }

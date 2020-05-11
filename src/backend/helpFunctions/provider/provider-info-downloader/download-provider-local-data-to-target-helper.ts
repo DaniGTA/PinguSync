@@ -110,7 +110,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         }
     }
 
-    private async downloadUntilTargetLogic(firstSeason: Series | undefined) {
+    private async downloadUntilTargetLogic(firstSeason: Series | undefined): Promise<MultiProviderResult | null | undefined | FailedProviderRequest> {
         let requestResult;
         if (firstSeason && !this.provider.hasUniqueIdForSeasons) {
             try {
