@@ -36,7 +36,7 @@ describe('Download provider local data to target info status helper test (downlo
                 .mockImplementationOnce(async () => new MultiProviderResult(secondLocalData));
 
             const result = await instance['downloadProviderLocalDataUntilTarget'](new Series());
-            strictEqual(result?.mainProvider?.providerLocalData, secondLocalData);
+            expect(result?.mainProvider?.providerLocalData).toEqual(secondLocalData);
 
             mock.mockRestore();
         });
@@ -93,7 +93,7 @@ describe('Download provider local data to target info status helper test (downlo
 
             const result = instance['getAvaibleProvidersThatCanProvideProviderId']([pld1, pld2, pld3], externalProvider);
 
-            strictEqual(result.length, 2);
+            expect(result.length).toEqual(2);
         });
 
 
@@ -114,7 +114,7 @@ describe('Download provider local data to target info status helper test (downlo
 
             const result = instance['getAvaibleProvidersThatCanProvideProviderId']([pld1, pld2, pld3], externalProvider);
 
-            strictEqual(result.length, 1);
+            expect(result.length).toEqual(1);
         });
     });
 
@@ -130,7 +130,7 @@ describe('Download provider local data to target info status helper test (downlo
             const targetProvider = new TestProvider('test1');
 
             const result = new DownloadProviderLocalDataToTargetHelper(new Series(), currentProvider, ProviderInfoStatus.FULL_INFO)['canGetTargetIdFromCurrentProvider'](currentProviderLocalData, targetProvider);
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
 
         test('should be false (no right entry)', () => {
@@ -144,7 +144,7 @@ describe('Download provider local data to target info status helper test (downlo
             const targetProvider = new TestProvider('test1');
 
             const result = new DownloadProviderLocalDataToTargetHelper(new Series(), currentProvider, ProviderInfoStatus.FULL_INFO)['canGetTargetIdFromCurrentProvider'](currentProviderLocalData, targetProvider);
-            strictEqual(result, false);
+            expect(result).toBeFalsy();
         });
 
         test('should be false (no entry)', () => {
@@ -158,7 +158,7 @@ describe('Download provider local data to target info status helper test (downlo
             const targetProvider = new TestProvider('test1');
 
             const result = new DownloadProviderLocalDataToTargetHelper(new Series(), currentProvider, ProviderInfoStatus.FULL_INFO)['canGetTargetIdFromCurrentProvider'](currentProviderLocalData, targetProvider);
-            strictEqual(result, false);
+            expect(result).toBeFalsy();
         });
 
         test('should be false (no provider name)', () => {
@@ -172,7 +172,7 @@ describe('Download provider local data to target info status helper test (downlo
             const targetProvider = new TestProvider('test1');
 
             const result = new DownloadProviderLocalDataToTargetHelper(new Series(), currentProvider, ProviderInfoStatus.FULL_INFO)['canGetTargetIdFromCurrentProvider'](currentProviderLocalData, targetProvider);
-            strictEqual(result, false);
+            expect(result).toBeFalsy();
         });
     });
 });

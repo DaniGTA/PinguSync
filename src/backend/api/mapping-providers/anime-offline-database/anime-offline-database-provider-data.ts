@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
-import PathHelper from '../../../helpFunctions/path-helper';
 import logger from '../../../logger/logger';
 import { IAnimeOfflineDatabase } from './objects/database-entry';
 
@@ -11,14 +10,14 @@ export default class AnimeOfflineDatabaseProviderData {
         this.loadDatabase();
     }
 
-    public async updateLastTimestamp(timestamp: number): Promise<void> {
+    public updateLastTimestamp(timestamp: number): void {
         this.lastDatabaseDownloadTimestamp = timestamp;
-        await this.saveData();
+        this.saveData();
     }
 
-    public async updateDatabase(database: IAnimeOfflineDatabase): Promise<void> {
+    public updateDatabase(database: IAnimeOfflineDatabase): void {
         this.database = database;
-        await this.updateLastTimestamp(Date.now());
+        this.updateLastTimestamp(Date.now());
     }
 
     private loadDatabase(): void {
@@ -36,7 +35,7 @@ export default class AnimeOfflineDatabaseProviderData {
         }
     }
 
-    private async saveData(): Promise<void> {
+    private saveData(): void {
         try {
             logger.info('[AnimeOfflineDatabaseProviderData] Write user data to hard drive');
             writeFileSync(this.getPath(), JSON.stringify(this));
