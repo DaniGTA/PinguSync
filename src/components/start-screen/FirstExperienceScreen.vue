@@ -11,8 +11,8 @@ import LoadingScreen from '../loading-screen/LoadingScreen.vue';
 @Component({
 	components: {
 		WelcomeScreen,
-		LoadingScreen
-	}
+		LoadingScreen,
+	},
 })
 export default class FirstExperienceScreen extends Vue {
 

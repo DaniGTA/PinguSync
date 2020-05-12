@@ -7,14 +7,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import LoadingBalls from './LoadingBalls.vue'
-import WelcomeTitle from './WelcomeTitle.vue'
+import { Component, Vue } from 'vue-property-decorator';
+import LoadingBalls from './LoadingBalls.vue';
+import WelcomeTitle from './WelcomeTitle.vue';
 @Component({
 	components: {
 		LoadingBalls,
 		WelcomeTitle,
-	}
+	},
 })
 export default class WelcomeScreen extends Vue {
   title = 'Willkommen bei AtsuListManager'

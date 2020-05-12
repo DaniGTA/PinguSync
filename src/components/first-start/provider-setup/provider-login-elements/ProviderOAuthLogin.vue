@@ -43,7 +43,6 @@ export default class ProviderOAuthLogin extends Vue {
     grid-template-rows: auto auto auto;
     gap: 25px 0px;
     grid-template-areas: "logo" "description" "button";
-    padding: 10px;
     width: 100%;
     min-width: 150px;
 }

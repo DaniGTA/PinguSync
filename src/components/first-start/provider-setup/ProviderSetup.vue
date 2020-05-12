@@ -15,7 +15,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { PropSync, Watch } from 'vue-property-decorator';
-import ProviderList from '../../../backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderImageBlock from './provider-elements/ProviderImageBlock.vue';
 import MultiProviderLoginView from './provider-login-elements/MultiProviderLoginView.vue';
 import ProviderSetupPlaceholder from './ProviderSetupPlaceholder.vue';
@@ -40,7 +39,7 @@ import { chListener } from '../../../backend/communication/listener-channels';
 export default class ProviderSetup extends Vue {
     public workerController: WorkerController = new WorkerController();
 
-    @PropSync('selectedProvider', { type: ProviderList }) 
+    @PropSync('selectedProvider', {type: String}) 
     public syncedSelectedProvider!: ListProvider;
 
     public isLoggedIn = false;

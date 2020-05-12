@@ -40,7 +40,6 @@ export default class ProviderLogin extends Vue {
     gap: 1px 1px;
     grid-template-areas: "Title" "Credentials" "Button";
     width: fit-content;
-    padding: 10px;
     min-width: 150px;
     justify-self: center;
     width: 100%;
@@ -87,6 +86,6 @@ export default class ProviderLogin extends Vue {
   background-color: #b1b1b1;
   border: none;
   box-shadow: inset black 0px 0px 3px;
-  width: 100%;
+  width: -webkit-fill-available;
 }
 </style>

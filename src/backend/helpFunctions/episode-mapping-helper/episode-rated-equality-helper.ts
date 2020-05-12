@@ -44,8 +44,8 @@ export default class EpisodeRatedEqualityHelper {
 
     private getAllRelevantEpisodes(provider: ProviderLocalDataWithSeasonInfo, otherProvider: ProviderLocalDataWithSeasonInfo) {
         const result: Episode[] = [];
-        let diff: number = 0;
-        let lastSuccessFullIndex: number = 0;
+        let diff = 0;
+        let lastSuccessFullIndex = 0;
         const aNumberOfEpisodes = provider.providerLocalData.getAllRegularEpisodes(provider.seasonTarget).length;
         const bNumberOfEpisodes = otherProvider.providerLocalData.getAllRegularEpisodes(otherProvider.seasonTarget);
 

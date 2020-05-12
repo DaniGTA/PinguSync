@@ -12,23 +12,22 @@ export default class TitleHelper {
         const regex = /Season\s{1,}(\d{1,})|(\d{1,})nd|\s(s(\d{1,})($|\s))/gmi;
         const isNumber = /^\d+$/;
         const match = regex.exec(title);
-        if (match) {
-            if (match != null) {
-                if (isNumber.test(match[1])) {
-                    response.seasonNumber = parseInt(match[1], 10);
-                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                    return response;
-                } else if (isNumber.test(match[2])) {
-                    response.seasonNumber = parseInt(match[2], 10);
-                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                    return response;
-                } else if (isNumber.test(match[4])) {
-                    response.seasonNumber = parseInt(match[4], 10);
-                    response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
-                    return response;
-                }
+        if (match != null) {
+            if (isNumber.test(match[1])) {
+                response.seasonNumber = parseInt(match[1], 10);
+                response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                return response;
+            } else if (isNumber.test(match[2])) {
+                response.seasonNumber = parseInt(match[2], 10);
+                response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                return response;
+            } else if (isNumber.test(match[4])) {
+                response.seasonNumber = parseInt(match[4], 10);
+                response.absoluteResult = AbsoluteResult.ABSOLUTE_TRUE;
+                return response;
             }
         }
+
         response.absoluteResult = AbsoluteResult.ABSOLUTE_NONE;
         return response;
     }

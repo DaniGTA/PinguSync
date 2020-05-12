@@ -7,6 +7,6 @@ export default class AdderProviderCache {
     constructor(providerName: string, providerId: string | number, providerSeason?: Season) {
         this.providerName = providerName;
         this.providerId = providerId;
-        this.providerSeason = providerSeason
+        this.providerSeason = providerSeason;
     }
 }

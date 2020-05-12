@@ -8,7 +8,7 @@ import { SeasonError } from './season-error';
 export default class SearchSeasonValueResult {
     public season?: Season;
     public seasonError: SeasonError;
-    public foundType: string = 'NONE';
+    public foundType = 'NONE';
     public searchResultDetails?: RelationSearchResults;
     constructor(seasonNumber: Season, foundType: string, seasonError: SeasonError = SeasonError.NONE, searchResultDetails?: RelationSearchResults) {
         if (seasonError === SeasonError.NONE) {

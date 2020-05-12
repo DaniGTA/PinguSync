@@ -38,7 +38,7 @@ export default class EpisodeComperator {
      * @param season
      * @param upshift add the number to the episode number from episode a. This make ep number 1 and ep number 2 match able when upshift set to 1
      */
-    public static compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season, upshift: number = 0): ComperatorResult {
+    public static compareDetailedEpisode(aEpisode: Episode, bEpsiode: Episode, providerASeason?: Season, providerBSeason?: Season, season?: Season, upshift = 0): ComperatorResult {
         const result = new ComperatorResult();
         if (aEpisode.id === bEpsiode.id) {
             result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;

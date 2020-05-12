@@ -43,7 +43,8 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800, height: 600, webPreferences: {
-      nodeIntegration: true,
+      // eslint-disable-next-line no-undef
+      nodeIntegration: process?.env.ELECTRON_NODE_INTEGRATION as any,
     },
   });
   fc.mainInit(win.webContents);

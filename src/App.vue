@@ -8,7 +8,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Providers from './components/Providers.vue';
-import MainList from './components/MainList.vue';
 import FirstExperienceScreen from './components/start-screen/FirstExperienceScreen.vue';
 import VersionView from './components/system/VersionView.vue';
 
@@ -18,7 +17,6 @@ import WorkerController from './backend/communication/ipc-renderer-controller';
 @Component({
 	components: {
 		Providers,
-		MainList,
     FirstExperienceScreen,
     VersionView,
 	},
@@ -41,9 +39,8 @@ export default class App extends Vue {
     
   }
 
-  async mounted(): void {
-    
-    this.$router.push('setup');
+  async mounted(): Promise<void> {
+    await this.$router.push('setup');
   }
 }
 </script>

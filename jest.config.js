@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 
 module.exports = {
@@ -29,6 +29,6 @@ module.exports = {
 	'testEnvironment': 'node',
 	'setupFilesAfterEnv': ['<rootDir>/test/test-helper.ts'],
 	'maxWorkers': 4
-}
+};
 
 

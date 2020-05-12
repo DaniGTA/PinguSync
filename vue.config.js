@@ -6,8 +6,24 @@ module.exports = {
 
 	pluginOptions: {
 		electronBuilder: {
+			builderOptions: {
+				appId: 'pingu-sync',
+				productName: 'PinguSync',
+				mac: {
+					icon: './src/assets/logo/app/icon/mac/icon.icns',
+					category: 'public.app-category.utilities'
+				},
+				win: {
+					icon: './src/assets/logo/app/icon/windows/512x512.png'
+				}
+			},
 			// List native deps here if they don't work
-			externals: ['dom'],
+			disableMainProcessTypescript: false, // Manually disable typescript plugin for main process. Enable if you want to use regular js for the main process (src/background.js by default).
+			mainProcessTypeChecking: false, // Manually enable type checking during webpck bundling for background file.
+			nodeIntegration: true,
+			chainWebpackRendererProcess: (config) => {
+				config.module.rules.delete('eslint');
+			}
 		}
 	},
 
@@ -21,5 +37,11 @@ module.exports = {
 			.end();
 	},
 
-	runtimeCompiler: true
+	runtimeCompiler: true,
+	css: {
+		extract: false
+	},
+
+	lintOnSave: false,
+
 };

@@ -39,6 +39,7 @@ export default class MultiProviderLogin extends Vue {
     grid-area: default-login;
     max-width: 350px;
     width: 100%;
+    padding: 10px;
 }
 
 .oauth-login {
@@ -46,5 +47,6 @@ export default class MultiProviderLogin extends Vue {
     grid-area: oauth-login; 
     max-width: 350px;
     width: 100%;
+    padding: 10px;
 }
 </style>

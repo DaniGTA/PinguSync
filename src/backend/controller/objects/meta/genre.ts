@@ -1,6 +1,6 @@
 export default class Genre {
     public genre: string;
-    public weight: number = 0;
+    public weight = 0;
     public verifid: boolean;
     public spoiler: boolean;
     constructor(genre: string, weight = 0, verifid = false, spoiler = false) {

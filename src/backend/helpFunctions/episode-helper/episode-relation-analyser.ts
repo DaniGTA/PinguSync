@@ -18,10 +18,10 @@ export default class EpisodeRelationAnalyser {
     public maxEpisodeNumberOfSeasonHolder = 0;
     public maxDifference = 0;
     public seasonNumbers: number[] = [];
-    public maxEpisodes: number = 0;
+    public maxEpisodes = 0;
     public finalSeasonNumbers: number[] = [];
     public missingEpisodes: number;
-    public seasonComplete: boolean = false;
+    public seasonComplete = false;
     public maxSeasonNumber: number | undefined;
 
     constructor(private seasonHolder: Episode[], private currentSeason: Episode[]) {
@@ -120,7 +120,7 @@ export default class EpisodeRelationAnalyser {
     }
 
     private updateMaxSeasonNumber(episodes: Episode[]) {
-        let maxSeasonNumber: number = -1;
+        let maxSeasonNumber = -1;
         for (const episode of episodes) {
             if (episode.season !== undefined && episode.season.seasonNumbers !== undefined) {
                 for (const seasonNumber of episode.season.seasonNumbers) {

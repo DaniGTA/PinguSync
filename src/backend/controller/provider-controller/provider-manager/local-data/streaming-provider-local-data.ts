@@ -1,7 +1,7 @@
 import ProviderLocalData from './interfaces/provider-local-data';
 
 export class StreamingProviderLocalData extends ProviderLocalData {
-    public version: number = 1;
+    public version = 1;
     public readonly provider: string;
     constructor(id: string | number, lp?: string) {
         super(id);

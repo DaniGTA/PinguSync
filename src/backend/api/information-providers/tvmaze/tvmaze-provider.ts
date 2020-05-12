@@ -13,14 +13,14 @@ import TVMazeConverter from './tvmaze-converter';
 
 export default class TVMazeProvider extends InfoProvider {
     public static instance: TVMazeProvider;
-    public isOffline: boolean = false;
-    public hasOAuthCode: boolean = false;
-    public providerName: string = 'tvmaze';
-    public hasUniqueIdForSeasons: boolean = false;
+    public isOffline = false;
+    public hasOAuthCode = false;
+    public providerName = 'tvmaze';
+    public hasUniqueIdForSeasons = false;
     public supportedMediaTypes: MediaType[] = [MediaType.SERIES, MediaType.ANIME];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
-    public version: number = 1;
+    public version = 1;
     constructor() {
         super();
         if (!TVMazeProvider.instance) {
