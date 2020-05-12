@@ -49,7 +49,6 @@ function createWindow() {
   });
   fc.mainInit(win.webContents);
 
-
   // new WorkerController(win.webContents);
   // new ProviderController(win.webContents).initController();
   if (process.env.WEBPACK_DEV_SERVER_URL) {

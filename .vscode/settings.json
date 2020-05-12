@@ -10,5 +10,6 @@
     "debug.javascript.usePreview": true,
     "eslint.enable": true,
     "tslint.enable": "false",
-    "eslint.lintTask.enable": true
+    "eslint.lintTask.enable": true,
+    "i18n-ally.localesPaths": "src/assets/locales"
 }

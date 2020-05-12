@@ -1,7 +1,12 @@
 // eslint-disable-next-line no-undef
 module.exports = {
-	configureWebpack: {
-		devtool: 'source-map',
+	configureWebpack: config => {
+		if (process.env.NODE_ENV === 'production') {
+			// mutate config for production...
+		} else {
+			config.output.globalObject('this');
+		}
+
 	},
 
 	pluginOptions: {
@@ -15,7 +20,14 @@ module.exports = {
 				},
 				win: {
 					icon: './src/assets/logo/app/icon/windows/512x512.png'
-				}
+				},
+				extraFiles: [
+					{
+						'from': './src/keys',
+						'to': 'src/keys',
+						'filter': ['**/*']
+					}
+				],
 			},
 			// List native deps here if they don't work
 			disableMainProcessTypescript: false, // Manually disable typescript plugin for main process. Enable if you want to use regular js for the main process (src/background.js by default).
@@ -28,7 +40,6 @@ module.exports = {
 	},
 
 	chainWebpack: (config) => {
-		config.output.globalObject('this');
 		config.module.rule('i18n')
 			.resourceQuery(/blockType=i18n/)
 			.type('javascript/auto')
