@@ -8,4 +8,5 @@ export enum chSend {
     */
     LogoutUser = 'provider-logout-user',
     FinishFirstSetup = 'user-settings-mark-first-setup-as-finish',
+    QuitAndInstall = 'quitAndInstall',
 }

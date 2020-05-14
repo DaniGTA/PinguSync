@@ -61,7 +61,7 @@ export default class ListEntry extends Vue {
   public showModal = false;
   public currentSelect: FrontendSeriesInfos | null = null;
   @Watch('sPackage', { immediate: true, deep: true })
-  public async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage) {
+  public async onChildChanged(val: SeriesPackage, oldVal: SeriesPackage): Promise<void> {
   	console.log('ANIME CHANGE');
   	this.cover = val.getAnyCoverUrl();
   	this.name = await val.getPreferedName();

@@ -15,6 +15,7 @@ yarn-error.log*
 list.json*
 anidb_config.json*
 provider_data_list.json
+anime_offline_database_data.json
 
 #Electron-builder output
 /dist_electron

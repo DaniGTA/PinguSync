@@ -1,13 +1,19 @@
-import { autoUpdater, app } from 'electron';
-import * as electronUpdater from 'update-electron-app';
+import { autoUpdater } from 'electron-updater';
+import logger from '../../logger/logger';
 export default class AppUpdateController {
-    private static readonly serverUrl = ''
-    public static initController() {
-        electronUpdater.updater({
-            repo: 'DaniGTA/listManager',
-            updateInterval: '1 hour',
-            logger: require('electron-log')
+    public initListeners(webContents: Electron.WebContents): void {
+        autoUpdater.on('update-downloaded', () => {
+            webContents.send('updateReady');
         });
+    }
 
+    public static async checkUpdate(): Promise<void> {
+        autoUpdater.logger = logger;
+        autoUpdater.autoDownload = true;
+        await autoUpdater.checkForUpdatesAndNotify();
+    }
+
+    public installUpdate(): void {
+        autoUpdater.quitAndInstall();
     }
 }

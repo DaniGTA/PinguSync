@@ -14,7 +14,7 @@
                 "--enable-logging",
                 "--remote-debugging-port=9223",
             ],
-            "args" : ["."],
+            "args" : ["./dist_electron"],
             "outputCapture": "std"
         },
         {

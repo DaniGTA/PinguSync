@@ -13,6 +13,7 @@ import * as mongoose from 'mongoose';
 import FrontendController from './backend/controller/frontend-controller';
 import DatabaseLoader from './backend/controller/stats-manager/database-loader';
 import logger from './backend/logger/logger';
+import AppUpdateController from './backend/controller/auto-updater/app-update-controller';
 
 try {
 
@@ -113,6 +114,7 @@ app.on('ready', async () => {
     }
   }
   createWindow();
+  await AppUpdateController.checkUpdate();
 });
 
 // Exit cleanly on request from parent process in development mode.

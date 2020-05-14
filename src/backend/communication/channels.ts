@@ -8,4 +8,5 @@ export enum chOnce {
     IsAnyProviderLoggedIn = 'is-any-provider-logged-in',
     GetProviderListSettings = 'get-provider-list-settings',
     GetLoggedInStatus = 'provider-auth-status',
+    IsUpdateAvailable = 'is-app-update-available',
 }

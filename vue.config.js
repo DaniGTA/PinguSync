@@ -4,7 +4,6 @@ module.exports = {
 		if (process.env.NODE_ENV === 'production') {
 			// mutate config for production...
 		} else {
-			config.output.globalObject('this');
 		}
 
 	},

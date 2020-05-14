@@ -9,6 +9,7 @@ import Series from './objects/series';
 import SeriesPackage from './objects/series-package';
 import IUpdateList from './objects/update-list';
 import ProviderList from './provider-controller/provider-manager/provider-list';
+import FrontendCommmunicationEventController from './frontend/frontend-communication-event-controller';
 
 export default class FrontendController {
 
@@ -43,7 +44,7 @@ export default class FrontendController {
     public mainInit(webcontents: Electron.WebContents): void {
         this.communcation = new IPCBackgroundController(webcontents);
         // tslint:disable-next-line: no-unused-expression
-        new FrontendProviderController(webcontents);
+        new FrontendCommmunicationEventController(webcontents);
         // tslint:disable-next-line: no-this-assignment
         const that = this;
 

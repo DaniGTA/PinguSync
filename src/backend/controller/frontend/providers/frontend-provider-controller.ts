@@ -4,7 +4,6 @@ import IPCBackgroundController from '../../../communication/ipc-background-contr
 import ProviderList from '../../provider-controller/provider-manager/provider-list';
 import FrontendProviderAuthController from './frontend-provider-auth-controller';
 import { chOnce } from '../../../communication/channels';
-import FrontendProviderSettingsController from './frontend-provider-settings-controller';
 
 export default class FrontendProviderController {
     private communcation: ICommunication;
