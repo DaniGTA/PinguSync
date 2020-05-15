@@ -8,7 +8,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Providers from './components/Providers.vue';
-import FirstExperienceScreen from './components/start-screen/FirstExperienceScreen.vue';
 import VersionView from './components/system/VersionView.vue';
 
 import { ipcRenderer } from 'electron';
@@ -17,7 +16,6 @@ import WorkerController from './backend/communication/ipc-renderer-controller';
 @Component({
 	components: {
 		Providers,
-    FirstExperienceScreen,
     VersionView,
 	},
 })
