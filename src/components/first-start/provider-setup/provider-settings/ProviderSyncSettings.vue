@@ -21,7 +21,7 @@ import ListProvider from '../../../../backend/api/provider/list-provider';
 import WorkerController from '../../../../backend/communication/ipc-renderer-controller';
 import AddSyncProvidersModel from '../../../../backend/controller/frontend/providers/model/add-sync-providers-model';
 import { chOnce } from '../../../../backend/communication/channels';
-import ProviderImageBlock from '../provider-elements/ProviderImageBlock.vue';
+import ProviderImageBlock from '../../../elements/provider-elements/ProviderImageBlock.vue';
 
 @Component({
     components: {

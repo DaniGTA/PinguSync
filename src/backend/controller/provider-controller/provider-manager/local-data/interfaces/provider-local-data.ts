@@ -15,6 +15,7 @@ import Name from '../../../../objects/meta/name';
 import Overview from '../../../../objects/meta/overview';
 import Season from '../../../../objects/meta/season';
 import { ProviderInfoStatus } from './provider-info-status';
+import { ListType } from '../../../../settings/models/provider/list-types';
 
 export default abstract class ProviderLocalData {
 
@@ -137,6 +138,7 @@ export default abstract class ProviderLocalData {
     public country?: string;
     public genres: Genre[] = [];
     public detailEpisodeInfo: Episode[] = [];
+    public onListType: ListType[] = [ListType.Unknown];
     /**
      * Only fill this if provider give sequel ids and have different ids for every season.
      */

@@ -9,4 +9,5 @@ export enum chOnce {
     GetProviderListSettings = 'get-provider-list-settings',
     GetLoggedInStatus = 'provider-auth-status',
     IsUpdateAvailable = 'is-app-update-available',
+    FinishedFirstSetup = 'get-finished-first-setup'
 }

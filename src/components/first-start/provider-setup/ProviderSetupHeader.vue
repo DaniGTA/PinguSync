@@ -20,7 +20,7 @@
 import { Prop } from 'vue-property-decorator';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ProviderImageBlock from './provider-elements/ProviderImageBlock.vue';
+import ProviderImageBlock from '../../elements/provider-elements/ProviderImageBlock.vue';
 import ProviderUserInformation from './ProviderUserInformation.vue';
 import ListProvider from '../../../backend/api/provider/list-provider';
 import WorkerController from '../../../backend/communication/ipc-renderer-controller';

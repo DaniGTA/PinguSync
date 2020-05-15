@@ -10,9 +10,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import WorkerController from '../../../backend/communication/ipc-renderer-controller';
-import ProviderImageBlock from './provider-elements/ProviderImageBlock.vue';
+import ProviderImageBlock from '../../elements/provider-elements/ProviderImageBlock.vue';
 import ListProvider from '../../../backend/api/provider/list-provider';
 import { chOnce } from '../../../backend/communication/channels';
+import ProviderController from '../../controller/provider-controller';
 
 @Component({
 	components: {
@@ -48,12 +49,7 @@ export default class ProviderSettings extends Vue {
     }
 
     async init(): Promise<void> {
-        this.providers.push(...await this.getAllAvaibleProviders());
-
-    }
-    
-    async getAllAvaibleProviders(): Promise<ListProvider[]> {
-        return await this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProviders);
+        this.providers.push(...await ProviderController.getAllAvaibleProviders());
     }
 }
 </script>

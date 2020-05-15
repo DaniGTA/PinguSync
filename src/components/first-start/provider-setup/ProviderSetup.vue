@@ -15,7 +15,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { PropSync, Watch } from 'vue-property-decorator';
-import ProviderImageBlock from './provider-elements/ProviderImageBlock.vue';
 import MultiProviderLoginView from './provider-login-elements/MultiProviderLoginView.vue';
 import ProviderSetupPlaceholder from './ProviderSetupPlaceholder.vue';
 import ProviderUserInformation from './ProviderUserInformation.vue';
@@ -28,7 +27,6 @@ import { chOnce } from '../../../backend/communication/channels';
 import { chListener } from '../../../backend/communication/listener-channels';
 @Component({
 	components: {
-    ProviderImageBlock,
     MultiProviderLoginView,
     ProviderSetupPlaceholder,
     ProviderUserInformation,

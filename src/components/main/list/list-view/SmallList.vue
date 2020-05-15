@@ -12,7 +12,7 @@ import Component from 'vue-class-component';
 	components: {
 	}
 })
-export default class SmallEntry extends Vue {
+export default class SmallList extends Vue {
 
 }
 </script>

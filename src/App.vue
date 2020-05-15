@@ -8,10 +8,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Providers from './components/Providers.vue';
-import VersionView from './components/system/VersionView.vue';
+import VersionView from './components/system/version/VersionView.vue';
 
-import { ipcRenderer } from 'electron';
 import WorkerController from './backend/communication/ipc-renderer-controller';
+import { chOnce } from './backend/communication/channels';
 
 @Component({
 	components: {
@@ -20,25 +20,17 @@ import WorkerController from './backend/communication/ipc-renderer-controller';
 	},
 })
 export default class App extends Vue {
-  static workerController: WorkerController = new WorkerController();
+  private workerController: WorkerController = new WorkerController();
   constructor() {
   	super();
-  	ipcRenderer.on(
-  		'path',
-  		(event: Electron.IpcRendererEvent, string: string) => {
-  			App.workerController.send('path', string);
-  		}
-  	);
-  	App.workerController.on('get-path', () => {
-  		ipcRenderer.send('get-path');
-  	});
-
-    ipcRenderer.send('get-path');
-    
   }
 
   async mounted(): Promise<void> {
-    await this.$router.push('setup');
+    if(await this.workerController.getOnce<boolean>(chOnce.FinishedFirstSetup)){
+      await this.$router.push('main');
+    }else{
+      await this.$router.push('setup');
+    }
   }
 }
 </script>
@@ -76,7 +68,11 @@ export default class App extends Vue {
   font-family: "Roboto", "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
+
 #app::after {
   content: "";
   background: url("assets/background/1.jpg");
@@ -93,6 +89,7 @@ export default class App extends Vue {
 body {
   margin: 0;
   width: 100%;
+  height: 100%;
 }
 
 html {

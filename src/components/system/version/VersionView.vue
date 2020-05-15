@@ -2,17 +2,22 @@
   <div id="version">
     <button @click="installUpdate()" class="update" v-if="updateReady">
       <i class="fas fa-download"></i>
-    </button>v0.0.1 Beta Preview</div>
+    </button><VersionText/></div>
 </template>
 
 <script lang="ts">
 import Component from 'vue-class-component';
 import Vue from 'vue';
-import WorkerController from '../../backend/communication/ipc-renderer-controller';
-import { chListener } from '../../backend/communication/listener-channels';
-import { chSend } from '../../backend/communication/send-only-channels';
+import WorkerController from '../../../backend/communication/ipc-renderer-controller';
+import { chListener } from '../../../backend/communication/listener-channels';
+import { chSend } from '../../../backend/communication/send-only-channels';
+import VersionText from './VersionText.vue';
 
-@Component
+@Component({
+	components: {
+      VersionText
+	}
+})
 export default class Providers extends Vue {
   public workerController: WorkerController = new WorkerController();
   public updateReady = false;

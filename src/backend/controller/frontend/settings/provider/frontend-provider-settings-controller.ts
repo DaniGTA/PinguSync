@@ -1,12 +1,12 @@
-import ICommunication from '../../../communication/icommunication';
-import IPCBackgroundController from '../../../communication/ipc-background-controller';
-import { chOnce } from '../../../communication/channels';
-import ListProvider from '../../../api/provider/list-provider';
-import AddSyncProvidersModel from './model/add-sync-providers-model';
-import logger from '../../../logger/logger';
-import SettingsManager from '../../settings/settings-manager';
-import { chSend } from '../../../communication/send-only-channels';
-import UpdateUserListType from './model/update-user-list-type';
+import ICommunication from '../../../../communication/icommunication';
+import IPCBackgroundController from '../../../../communication/ipc-background-controller';
+import { chOnce } from '../../../../communication/channels';
+import ListProvider from '../../../../api/provider/list-provider';
+import AddSyncProvidersModel from '../../providers/model/add-sync-providers-model';
+import logger from '../../../../logger/logger';
+import SettingsManager from '../../../settings/settings-manager';
+import { chSend } from '../../../../communication/send-only-channels';
+import UpdateUserListType from '../../providers/model/update-user-list-type';
 
 export default class FrontendProviderSettingsController {
     /**
