@@ -1,26 +1,3 @@
-<i18n>
-{
-  "en": {
-    "0_LISTTYPE": "Unknown",
-    "1_LISTTYPE": "Custom",
-    "2_LISTTYPE": "Watching",
-    "3_LISTTYPE": "Planning",
-    "4_LISTTYPE": "Completed",
-    "5_LISTTYPE": "Paused",
-    "6_LISTTYPE": "Dropped"
-  },
-  "de": {
-    "0_LISTTYPE": "Unbekannt",
-    "1_LISTTYPE": "Benutzerdefiniert",
-    "2_LISTTYPE": "Gucken",
-    "3_LISTTYPE": "Plannen",
-    "4_LISTTYPE": "Vervollständigt",
-    "5_LISTTYPE": "Pausiert",
-    "6_LISTTYPE": "Fallengelassen"
-  }
-}
-</i18n>
-
 <template>
   <div class="dropdown">
       <select v-model="selected" @change="onSelectionChange()" class="dropdown">

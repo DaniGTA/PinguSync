@@ -1,9 +1,14 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, IpcRenderer } from 'electron';
 
 export default class WorkerController {
     constructor() {
         console.log('info', 'IPC RENDERER LOADED');
     }
+
+    public getIpcRenderer(): IpcRenderer {
+        return ipcRenderer;
+    }
+
     public send(channel: string, data?: any): void {
         console.log('info', 'frontend send: ' + channel);
         ipcRenderer.send(channel, data);

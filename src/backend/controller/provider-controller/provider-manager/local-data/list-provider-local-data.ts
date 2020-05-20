@@ -1,10 +1,10 @@
 import ListProvider from '../../../../api/provider/list-provider';
 import listHelper from '../../../../helpFunctions/list-helper';
 import WatchProgress from '../../../objects/meta/watch-progress';
-import { WatchStatus } from '../../../objects/series';
 import ProviderList from '../provider-list';
 import ProviderNameManager from '../provider-name-manager';
 import ProviderLocalData from './interfaces/provider-local-data';
+import { ListType } from '../../../settings/models/provider/list-types';
 
 /**
  * Contains info about the series and the user watch progress and the list that series is in.
@@ -22,10 +22,10 @@ export class ListProviderLocalData extends ProviderLocalData {
      * @param a
      * @param b
      */
-    private static async isValidWatchStatus(a?: WatchStatus, b?: WatchStatus): Promise<boolean> {
+    private static async isValidWatchStatus(a?: ListType, b?: ListType): Promise<boolean> {
         if (typeof a !== 'undefined') {
             if (typeof a !== 'undefined' && b !== a) {
-                if (a === WatchStatus.COMPLETED) {
+                if (a === ListType.COMPLETED) {
                     return true;
                 }
             } else {
@@ -38,7 +38,7 @@ export class ListProviderLocalData extends ProviderLocalData {
 
     public canUpdateWatchProgress = false;
 
-    public watchStatus?: WatchStatus;
+    public watchStatus?: ListType;
     public watchProgress: WatchProgress[] = [];
 
     public customList = false;

@@ -3,7 +3,7 @@
 import request from 'request';
 import * as meta from '../../../controller/objects/meta/media-type';
 import WatchProgress from '../../../controller/objects/meta/watch-progress';
-import Series, { WatchStatus } from '../../../controller/objects/series';
+import Series from '../../../controller/objects/series';
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
@@ -27,6 +27,7 @@ import { IViewer } from './graphql/viewer';
 import ProviderUserList from '../../../controller/objects/provider-user-list';
 import getUserSeriesListInfoGql from './graphql/getUserSeriesListInfo.gql';
 import { GetUserSeriesListInfo } from './graphql/getUserSeriesList';
+import { ListType } from '../../../controller/settings/models/provider/list-types';
 
 export default class AniListProvider extends ListProvider {
     public async getAllLists(): Promise<ProviderUserList[]> {
@@ -175,17 +176,17 @@ export default class AniListProvider extends ListProvider {
         }
     }
 
-    public convertListNameToWatchStatus(name: string): WatchStatus {
-        let watchStatus = WatchStatus.CURRENT;
+    public convertListNameToWatchStatus(name: string): ListType {
+        let watchStatus = ListType.CURRENT;
         switch (name) {
             case 'Planning':
-                watchStatus = WatchStatus.PLANNING;
+                watchStatus = ListType.PLANNING;
                 break;
             case 'Completed':
-                watchStatus = WatchStatus.COMPLETED;
+                watchStatus = ListType.COMPLETED;
                 break;
             case 'Paused':
-                watchStatus = WatchStatus.PAUSED;
+                watchStatus = ListType.PAUSED;
                 break;
         }
         return watchStatus;
@@ -196,13 +197,13 @@ export default class AniListProvider extends ListProvider {
         if (aniListProvider) {
             let watchStatus = '';
             if (watchProgress.episode === 0) {
-                aniListProvider.watchStatus = WatchStatus.PLANNING;
+                aniListProvider.watchStatus = ListType.PLANNING;
                 watchStatus = 'PLANNING';
             } else if (watchProgress.episode === aniListProvider.episodes) {
-                aniListProvider.watchStatus = WatchStatus.COMPLETED;
+                aniListProvider.watchStatus = ListType.COMPLETED;
                 watchStatus = 'COMPLETED';
             } else {
-                aniListProvider.watchStatus = WatchStatus.CURRENT;
+                aniListProvider.watchStatus = ListType.CURRENT;
                 watchStatus = 'CURRENT';
             }
 

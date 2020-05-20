@@ -6,7 +6,6 @@ import Name from '../../../controller/objects/meta/name';
 import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
 import Season from '../../../controller/objects/meta/season';
-import { WatchStatus } from '../../../controller/objects/series';
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import listHelper from '../../../helpFunctions/list-helper';
@@ -37,15 +36,15 @@ export default new class AniListConverter {
     public convertStatusToUserListType(status: string): ListType {
         switch (status) {
             case 'PAUSED':
-                return ListType.Paused;
+                return ListType.PAUSED;
             case 'DROPPED':
-                return ListType.Dropped;
+                return ListType.DROPPED;
             case 'COMPLETED':
-                return ListType.Completed;
+                return ListType.COMPLETED;
             case 'CURRENT':
-                return ListType.Watching;
+                return ListType.CURRENT;
             default:
-                return ListType.Unknown;
+                return ListType.UNKOWN;
         }
     }
 
@@ -102,7 +101,7 @@ export default new class AniListConverter {
         return provider;
     }
 
-    public async convertListEntryToAnime(entry: Entry, watchStatus: WatchStatus): Promise<MultiProviderResult> {
+    public async convertListEntryToAnime(entry: Entry, watchStatus: ListType): Promise<MultiProviderResult> {
         let seasonNumber: number | undefined;
         let providerInfo: ListProviderLocalData = new ListProviderLocalData(entry.media.id, AniListProvider.getInstance());
         if (entry.media.title.romaji) {

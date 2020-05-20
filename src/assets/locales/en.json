@@ -1,0 +1,11 @@
+{
+    "0_LISTTYPE": "Unknown",
+    "1_LISTTYPE": "Custom",
+    "2_LISTTYPE": "Planning",
+    "3_LISTTYPE": "Current",
+    "4_LISTTYPE": "Paused",
+    "5_LISTTYPE": "Dropped",
+    "6_LISTTYPE": "Completed",
+    "7_LISTTYPE": "Repeating",
+    "8_LISTTYPE": "ALL"
+}

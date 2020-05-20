@@ -38,7 +38,7 @@ export default class ProviderSingleListSetting extends Vue {
     @Prop()
     listSetting!: ListSettings;
 
-    public onSelection(value: ListType = ListType.Unknown): void {
+    public onSelection(value: ListType = ListType.UNKOWN): void {
         const data: UpdateUserListType = {listSetting: this.listSetting, newListType: value, providerName:''}; 
         this.$emit('change:list:type', data);
     }

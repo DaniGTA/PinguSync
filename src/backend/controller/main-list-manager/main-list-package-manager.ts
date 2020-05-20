@@ -5,11 +5,11 @@ import Series from '../objects/series';
 import SeriesPackage from '../objects/series-package';
 import MainListManager from './main-list-manager';
 export default class MainListPackageManager {
-    public getIndexFromPackageId(packageId: string, list: readonly Series[] | Series[]): number {
+    public static getIndexFromPackageId(packageId: string, list: readonly Series[] | Series[]): number {
         return list.findIndex((x) => packageId === x.id);
     }
 
-    public async getSeriesPackages(list: readonly Series[] | Series[]): Promise<SeriesPackage[]> {
+    public static async getSeriesPackages(list: readonly Series[] | Series[]): Promise<SeriesPackage[]> {
         const tempList = [...list];
 
         const seriesPackageList: SeriesPackage[] = [];
@@ -39,7 +39,7 @@ export default class MainListPackageManager {
         return seriesPackageList;
     }
 
-    public async getSeriesPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
+    public static async getSeriesPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
         if (series.packageId) {
             const allSeriesInThePackage = list.filter((x) => x.packageId === series.packageId);
             const seriesPackage = new SeriesPackage(...allSeriesInThePackage);
@@ -50,14 +50,14 @@ export default class MainListPackageManager {
         }
     }
 
-    public removeSeriesPackage(packageId: string, list: Series[] | readonly Series[]): void {
+    public static removeSeriesPackage(packageId: string, list: Series[] | readonly Series[]): void {
         const allSeriesInThePackage = list.filter((x) => x.packageId === packageId);
         for (const series of allSeriesInThePackage) {
             MainListManager.removeSeriesFromMainList(series);
         }
     }
 
-    private async createSeriesPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
+    private static async createSeriesPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
         try {
             series = Object.assign(new Series(), series);
             const relations = await series.getAllRelations(list, true);

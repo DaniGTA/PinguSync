@@ -6,7 +6,6 @@ import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
-import MultiThreadingHelper from '../../../helpFunctions/multi-threading-helper';
 import logger from '../../../logger/logger';
 import ExternalInformationProvider from '../../provider/external-information-provider';
 import InfoProvider from '../../provider/info-provider';

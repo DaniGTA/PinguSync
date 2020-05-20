@@ -32,6 +32,7 @@ import Season from './meta/season';
 import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
+import { ListType } from '../settings/models/provider/list-types';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -408,7 +409,7 @@ export default class Series extends SeriesProviderExtension {
             list = MainListManager.getMainList();
         }
         if (this.firstSeasonSeriesId) {
-            const result = new MainListSearcher().findSeriesBySeriesId(this.firstSeasonSeriesId);
+            const result = MainListSearcher.findSeriesById(this.firstSeasonSeriesId);
             if (result) {
                 return result;
             } else {
@@ -537,6 +538,16 @@ export default class Series extends SeriesProviderExtension {
         } else {
             throw new Error('Cant get average provider info status');
         }
+    }
+
+    public getListType(): ListType {
+        let listType = ListType.UNKOWN;
+        for (const localdata of this.getListProvidersInfos()) {
+            if (localdata.watchStatus !== undefined && localdata.watchStatus > listType) {
+                listType = localdata.watchStatus;
+            }
+        }
+        return listType;
     }
 
     private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {
@@ -720,20 +731,4 @@ export default class Series extends SeriesProviderExtension {
         }
         return latestUpdatedProvider;
     }
-}
-
-
-export enum WatchStatus {
-    // Currently watching/reading
-    CURRENT,
-    // Planning to watch / read
-    PLANNING,
-    // Finished watching / reading
-    COMPLETED,
-    // Stopped watching / reading before completing
-    DROPPED,
-    // Paused watching / reading
-    PAUSED,
-    // Re - watching / reading
-    REPEATING,
 }

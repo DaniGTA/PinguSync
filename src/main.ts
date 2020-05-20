@@ -8,6 +8,14 @@ import { dom, library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';
 import routes from './routes/routes';
+import {
+  Quasar,
+  QBtn,
+  QVirtualScroll
+} from 'quasar';
+
+import './styles/quasar.sass';
+
 
 
 library.add(fas);
@@ -24,6 +32,12 @@ Vue.config.productionTip = false;
 // and then call `Vue.use(VueRouter)`.
 Vue.use(Router);
 Vue.use(VueI18n);
+Vue.use(Quasar, {
+  components: {
+    QBtn,
+    QVirtualScroll
+  }
+});
 
 // 3. Create the router instance and pass the `routes` option
 // You can pass in additional options here, but let's

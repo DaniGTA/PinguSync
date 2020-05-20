@@ -7,7 +7,7 @@ import { MediaType } from '../../../../src/backend/controller/objects/meta/media
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../../src/backend/controller/objects/meta/name-type';
 import Season from '../../../../src/backend/controller/objects/meta/season';
-import Series, { WatchStatus } from '../../../../src/backend/controller/objects/series';
+import Series from '../../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import { ProviderInfoStatus } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
@@ -15,6 +15,7 @@ import ProviderList from '../../../../src/backend/controller/provider-controller
 import logger from '../../../../src/backend/logger/logger';
 import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
 import DownloadProviderLocalDataWithoutId from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-without-id';
+import { ListType } from '../../../../src/backend/controller/settings/models/provider/list-types';
 
 // tslint:disable: no-string-literal
 describe('Provider: AniDB | Offline Test runs', () => {
@@ -65,7 +66,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             const lpdld = new ListProviderLocalData(9993, 'AniList');
             lpdld.episodes = 12;
             lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
-            lpdld.watchStatus = WatchStatus.DROPPED;
+            lpdld.watchStatus = ListType.DROPPED;
 
             const series = new Series();
             // tslint:disable-next-line: no-string-literal
@@ -91,7 +92,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             const lpdld = new ListProviderLocalData(9994, 'AniList');
             lpdld.episodes = 12;
             lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
-            lpdld.watchStatus = WatchStatus.DROPPED;
+            lpdld.watchStatus = ListType.DROPPED;
 
             const series = new Series();
             // tslint:disable-next-line: no-string-literal
@@ -114,7 +115,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             const lpdld = new ListProviderLocalData(9995, 'AniList');
             lpdld.episodes = 12;
             lpdld.infoStatus = ProviderInfoStatus.FULL_INFO;
-            lpdld.watchStatus = WatchStatus.DROPPED;
+            lpdld.watchStatus = ListType.DROPPED;
 
             const series = new Series();
             // tslint:disable-next-line: no-string-literal

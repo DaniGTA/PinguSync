@@ -14,7 +14,7 @@ import FrontendController from './backend/controller/frontend-controller';
 import DatabaseLoader from './backend/controller/stats-manager/database-loader';
 import logger from './backend/logger/logger';
 import AppUpdateController from './backend/controller/auto-updater/app-update-controller';
-
+import LogRocket from 'logrocket';
 try {
 
   mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
@@ -113,6 +113,7 @@ app.on('ready', async () => {
       logger.error('Vue Devtools failed to install:', e.toString());
     }
   }
+  LogRocket.init('rfifib/pingusync');
   createWindow();
   await AppUpdateController.checkUpdate();
 });

@@ -2,7 +2,6 @@ import ListProvider from '../api/provider/list-provider';
 import ICommunication from '../communication/icommunication';
 import IPCBackgroundController from '../communication/ipc-background-controller';
 import logger from '../logger/logger';
-import FrontendProviderController from './frontend/providers/frontend-provider-controller';
 import ListController from './list-controller';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
 import Series from './objects/series';
@@ -139,8 +138,8 @@ export default class FrontendController {
     public async sendSeriesList() {
         logger.log('info', '[Send] -> list -> anime');
         if (ListController.instance) {
-            const seriesList = await ListController.instance.getMainList();
-            const packagelist = await new MainListPackageManager().getSeriesPackages(seriesList);
+            const seriesList = ListController.instance.getMainList();
+            const packagelist = await MainListPackageManager.getSeriesPackages(seriesList);
             this.communcation.send('series-list', packagelist);
         } else {
             logger.log('info', 'Failed to send list: no provider instance');
@@ -162,7 +161,7 @@ export default class FrontendController {
     private async syncSeries(id: string | number) {
         if (ListController.instance) {
             const lc = ListController.instance;
-            const anime = (await lc.getMainList()).find((x) => x.id === id);
+            const anime = (lc.getMainList()).find((x) => x.id === id);
             if (anime) {
                 lc.syncProvider(anime);
             } else {

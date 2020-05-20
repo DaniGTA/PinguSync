@@ -9,5 +9,7 @@ export enum chOnce {
     GetProviderListSettings = 'get-provider-list-settings',
     GetLoggedInStatus = 'provider-auth-status',
     IsUpdateAvailable = 'is-app-update-available',
-    FinishedFirstSetup = 'get-finished-first-setup'
+    FinishedFirstSetup = 'get-finished-first-setup',
+    GetSeriesIdsWithListType = 'get-series-list-with-give-list-type',
+    GetSeriesById = 'get-series-id',
 }

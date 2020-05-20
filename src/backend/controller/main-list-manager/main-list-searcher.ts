@@ -7,6 +7,7 @@ import logger from '../../logger/logger';
 import Season from '../objects/meta/season';
 import Series from '../objects/series';
 import MainListManager from './main-list-manager';
+import { ListType } from '../settings/models/provider/list-types';
 
 /**
  * Has search function to find series in the main list.
@@ -62,7 +63,7 @@ export default class MainListSearcher {
      *
      * @param id the series id.
      */
-    public findSeriesBySeriesId(id: string): Series | null {
+    public static findSeriesById(id: string): Series | null {
         const series = MainListManager.getMainList();
         for (const serie of series) {
             if (serie.id === id) {
@@ -101,6 +102,16 @@ export default class MainListSearcher {
         }
         logger.log('info', 'Found: ' + foundedSameSeries.length);
         return foundedSameSeries;
+    }
+
+    public static getAllSeriesWithTypeList(list: ListType): Series[] {
+        const seriesList: Series[] = [];
+        for (const entry of MainListManager.getMainList()) {
+            if (entry.getListType() === list || list === ListType.ALL) {
+                seriesList.push(entry);
+            }
+        }
+        return seriesList;
     }
 
     private async quickFindSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {

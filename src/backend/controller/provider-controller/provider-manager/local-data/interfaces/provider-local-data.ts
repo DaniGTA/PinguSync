@@ -137,9 +137,7 @@ export default abstract class ProviderLocalData {
     public isNSFW = false;
     public country?: string;
     public genres: Genre[] = [];
-    public detailEpisodeInfo: Episode[] = [];
-    public onListType: ListType[] = [ListType.Unknown];
-    /**
+    public detailEpisodeInfo: Episode[] = [];    /**
      * Only fill this if provider give sequel ids and have different ids for every season.
      */
     public sequelIds: number[] = [];

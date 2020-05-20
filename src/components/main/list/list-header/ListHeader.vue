@@ -1,10 +1,12 @@
 <template>
 <div class="list-header">
     <div class="list-header-left">
+        <ListTypeChooser />
     </div>
     
     <div class="list-header-right">
         <ListSearch />
+        <q-btn color="black" label="Black">Test</q-btn>
         <ListListTypes />
     </div>
 </div>
@@ -15,10 +17,13 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import ListListTypes from './ListListTypes.vue';
 import ListSearch from './ListSearch.vue';
+import ListTypeChooser from './ListTypeChooser.vue';
+
 @Component({
     components: {
         ListListTypes,
-        ListSearch
+        ListSearch,
+        ListTypeChooser
     }
 })
 export default class ListHeader extends Vue {
