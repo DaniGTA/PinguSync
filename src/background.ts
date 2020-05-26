@@ -14,7 +14,6 @@ import FrontendController from './backend/controller/frontend-controller';
 import DatabaseLoader from './backend/controller/stats-manager/database-loader';
 import logger from './backend/logger/logger';
 import AppUpdateController from './backend/controller/auto-updater/app-update-controller';
-import LogRocket from 'logrocket';
 try {
 
   mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
@@ -49,9 +48,6 @@ function createWindow() {
     },
   });
   fc.mainInit(win.webContents);
-
-  // new WorkerController(win.webContents);
-  // new ProviderController(win.webContents).initController();
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
@@ -113,7 +109,6 @@ app.on('ready', async () => {
       logger.error('Vue Devtools failed to install:', e.toString());
     }
   }
-  LogRocket.init('rfifib/pingusync');
   createWindow();
   await AppUpdateController.checkUpdate();
 });

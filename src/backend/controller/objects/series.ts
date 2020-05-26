@@ -113,6 +113,19 @@ export default class Series extends SeriesProviderExtension {
         return names;
     }
 
+    public getAllCovers(): Cover[] {
+        const covers: Cover[] = [];
+        for (const provider of this.getAllProviderLocalDatas()) {
+            try {
+                covers.push(...provider.covers);
+            } catch (err) {
+                logger.error(err);
+                logger.error(`[COVER] [GET] [ALL]: Failed to get all Covers from provider: ${provider.provider} (ID: ${provider.id})`);
+            }
+        }
+        return covers;
+    }
+
     public getAllNamesSeasonAware(): Name[] {
         const names = [];
         for (const provider of this.getAllProviderLocalDatasWithSeasonInfo()) {

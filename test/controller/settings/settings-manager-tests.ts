@@ -22,9 +22,9 @@ describe('settings-manager-tests', () => {
     test('should change list type', async () => {
         const settingsManager = new SettingsManager();
         settingsManager.loadedSetting = new Settings();
-        settingsManager.addListSetting(new ListSettings(new ProviderUserList('watching', ListType.Custom)), 'test');
-        settingsManager.addListSetting(new ListSettings(new ProviderUserList('watching', ListType.Watching)), 'test');
-        expect((await settingsManager.getAllListSettings('test'))[0].listInfo.type).toEqual(ListType.Watching);
+        settingsManager.addListSetting(new ListSettings(new ProviderUserList('watching', ListType.CUSTOM)), 'test');
+        settingsManager.addListSetting(new ListSettings(new ProviderUserList('watching', ListType.CURRENT)), 'test');
+        expect((await settingsManager.getAllListSettings('test'))[0].listInfo.type).toEqual(ListType.CURRENT);
     });
 
     test('should get non existing provider setting', () => {

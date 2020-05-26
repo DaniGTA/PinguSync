@@ -1,44 +1,52 @@
 <template>
-  <div class="block-list-entry">
-    <template v-if="series !== null">
-      <SeriesImageBlock :series="series" />
+  <q-intersection class="block-list-entry-container" once transition="scale">
+    <div class="block-list-entry" v-intersection="onIntersection">
+    <template v-if="id && visible">
+      <SeriesImageBlock class="block-list-entry-img" :seriesId="id" />
+      <BlockListEntryInfoSection :seriesId="id" />
     </template>
-    <template v-else>
-      Error: {{id}}
-    </template>
-  </div>
+    </div>
+  </q-intersection>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import FrontendSeriesInfos from '../../../../../backend/controller/objects/transfer/frontend-series-infos';
-import SeriesListViewController from '../../../../controller/series-list-view-controller';
 import SeriesImageBlock from '../../../../elements/series-elements/SeriesImageBlock.vue';
+import BlockListEntryInfoSection from './BlockListEntryInfoSection.vue';
 @Component({
 	components: {
-    SeriesImageBlock
+    SeriesImageBlock,
+    BlockListEntryInfoSection
 	}
 })
 export default class BlockEntry extends Vue {
   @Prop()
   public id!: string;
-  public series: FrontendSeriesInfos | null = null;
 
-  async mounted(): Promise<void>{
-    console.log(this.id);
-    this.series = await SeriesListViewController.getSeriesById(this.id);
-  }
+  public visible = false;
+   onIntersection (entry: IntersectionObserverEntry) {
+      this.visible = entry.isIntersecting;
+    }
 }
 </script>
 
 <style>
 .block-list-entry{
   width: 150px;
+  height: 285px;
+  display: inline-block;
+  overflow: hidden;
+}
+.block-list-entry-container{
+  display: inline-block;
+  margin: 10px;
+}
+
+.block-list-entry-img{
   height: 205px;
   border-radius: 5px;
-  display: inline-block;
   overflow: hidden;
 }
 </style>

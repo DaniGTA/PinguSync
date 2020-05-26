@@ -16,8 +16,8 @@ export default class ProviderImageBlock extends Vue {
     @Prop({required: true})
     provider!: ListProvider;
 
-    @Prop()
-    showText = true;
+    @Prop({default: true})
+    showText!: boolean;
 }
 </script>
 

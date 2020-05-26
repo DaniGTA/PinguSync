@@ -29,19 +29,22 @@ export default class AniDBProvider extends InfoProvider {
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [MalProvider];
     public requireInternetAccessGetMoreSeriesInfoByName = false;
-    constructor(download = true) {
+    constructor(private download = true) {
         super();
         if (!AniDBProvider.instance) {
             AniDBProvider.instance = this;
-            if (this.allowDownload() && download) {
-                this.getData();
-            } else if (!AniDBHelper.anidbNameManager.data || Object.entries(AniDBHelper.anidbNameManager.data).length === 0) {
-                try {
-                    AniDBHelper.anidbNameManager.updateOnlyData(this.convertXmlToJson());
-                } catch (err) {
-                    logger.error('Error at AniDBProvider.constructor:');
-                    logger.error(err);
-                }
+        }
+    }
+
+    private async loadAniDBNameManagerData() {
+        if (this.allowDownload() && this.download) {
+            await this.getData();
+        } else if (!AniDBHelper.anidbNameManager.data || Object.entries(AniDBHelper.anidbNameManager.data).length === 0) {
+            try {
+                AniDBHelper.anidbNameManager.updateOnlyData(this.convertXmlToJson());
+            } catch (err) {
+                logger.error('Error at AniDBProvider.constructor:');
+                logger.error(err);
             }
         }
     }
@@ -50,6 +53,7 @@ export default class AniDBProvider extends InfoProvider {
         const nameDBList = AniDBHelper.anidbNameManager.data;
         if (nameDBList) {
             // eslint-disable-next-line @typescript-eslint/unbound-method
+            await this.loadAniDBNameManagerData();
             return await this.getSameTitle(searchTitle, nameDBList, season);
         }
         throw new Error('nothing found');
@@ -127,14 +131,16 @@ export default class AniDBProvider extends InfoProvider {
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
-    private getData(): void {
+    private async getData(): Promise<void> {
         logger.warn('[ANIDB] Download anime names.');
-        this.downloadFile('http://anidb.net/api/anime-titles.xml.gz', './anidb-anime-titles.xml.gz').then(async (value) => {
+        try {
+            await this.downloadFile('http://anidb.net/api/anime-titles.xml.gz', './anidb-anime-titles.xml.gz');
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML());
-        }).catch((err) => {
+        } catch (err) {
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), AniDBHelper.anidbNameManager.data);
             logger.error(err);
-        });
+
+        }
     }
 
     private async getAniDBNameListXML(): Promise<AniDBNameListXML> {

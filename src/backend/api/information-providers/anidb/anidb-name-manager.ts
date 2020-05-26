@@ -6,8 +6,14 @@ import AniDBNameListXML from './objects/anidbNameListXML';
 export default class AniDBNameManager {
     public lastDownloadTime: Date | undefined;
     public data: AniDBNameListXML | undefined;
-    constructor() {
-        this.loadData();
+
+    public getData(): AniDBNameListXML {
+        if (this.data) {
+            return this.data;
+        } else {
+            this.data = this.loadData();
+            return this.data;
+        }
     }
 
     public updateData(time: Date, data?: AniDBNameListXML): void {
@@ -32,20 +38,14 @@ export default class AniDBNameManager {
         }
     }
 
-    private loadData(): void {
-        try {
-            if (fs.existsSync(this.getPath())) {
-                const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
-                const loadedData = JSON.parse(loadedString) as this;
-                Object.assign(this, loadedData);
-                if (this.data) {
-                    this.data = Object.freeze(JSON.parse(this.data as unknown as string));
-                }
-            }
-        } catch (err) {
-            logger.error('Error at AniDBNameManager.load:');
-            logger.error(err);
+    private loadData(): AniDBNameListXML {
+        if (fs.existsSync(this.getPath())) {
+            const loadedString = fs.readFileSync(this.getPath(), 'UTF-8');
+            const loadedData = JSON.parse(loadedString) as this;
+            Object.assign(this, loadedData);
+            return Object.freeze(JSON.parse(this.data as unknown as string));
         }
+        throw 'File for AniDBNameList not found';
     }
     private getPath(): string {
         const userDataPath = './';

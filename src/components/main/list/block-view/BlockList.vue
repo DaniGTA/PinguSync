@@ -1,15 +1,7 @@
 <template>
-    <q-virtual-scroll
-    style="max-height: 300px; overflow-x: hidden"
-    :items="items"
-    :virtual-scroll-item-size="205"
-    :virtual-scroll-slice-size="80"
-    separator
-  >
-    <template v-slot="{ item, index }">
-      <BlockListEntry :key="index" :index="index" :id="item"></BlockListEntry>
-    </template>
-  </q-virtual-scroll>
+  <div class="block-list-scroll">
+      <BlockListEntry v-for="entry in allItems" :key="entry" :id="entry"></BlockListEntry>
+  </div>
 </template>
 
 <script lang="ts">
@@ -24,16 +16,16 @@ import SeriesListViewController from '../../../controller/series-list-view-contr
 	}
 })
 export default class BlockList extends Vue {
-  public size = 0;
-  public items: string[] = [];
+  public renderedItems: string[][] = [];
+  public allItems: string[] = [];
+
   constructor(){
     super();
     this.getList();
   }
-  public async getList(): Promise<void> {
-    const list = await SeriesListViewController.getSeriesIdsFromCurrentlySelectedListType();
-    this.size = list.length;
-    this.items = list;
+
+  private async getList(): Promise<void> {
+   this.allItems = await SeriesListViewController.getSeriesIdsFromCurrentlySelectedListType();
   }
 }
 </script>
@@ -41,5 +33,13 @@ export default class BlockList extends Vue {
 <style>
 .main-header{
 
+}
+.block-list-scroll{
+  height: calc(100vh - 140px);
+  overflow-y: scroll;
+}
+
+.list-line {
+  text-align: center;
 }
 </style>

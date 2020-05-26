@@ -1,6 +1,6 @@
 <template>
     <div>
-    v0.0.1 Beta Preview
+    v0.0.1
     </div>
 </template>
 

@@ -4,10 +4,21 @@ import logger from '../../../logger/logger';
 import { IAnimeOfflineDatabase } from './objects/database-entry';
 
 export default class AnimeOfflineDatabaseProviderData {
-    public database: IAnimeOfflineDatabase = { data: [] };
+    public database: IAnimeOfflineDatabase | null = null;
     public lastDatabaseDownloadTimestamp = 0;
-    constructor() {
-        this.loadDatabase();
+
+    public getDatabase(): IAnimeOfflineDatabase {
+        if (this.database) {
+            return { data: [] };
+        } else {
+            const data = this.loadDatabase();
+            if (data) {
+                this.database = data;
+                return data;
+            } else {
+                throw 'No database';
+            }
+        }
     }
 
     public updateLastTimestamp(timestamp: number): void {
@@ -20,7 +31,7 @@ export default class AnimeOfflineDatabaseProviderData {
         this.updateLastTimestamp(Date.now());
     }
 
-    private loadDatabase(): void {
+    private loadDatabase(): IAnimeOfflineDatabase | null {
         logger.info('[AnimeOfflineDatabaseProviderData] Loading database from file');
         const path = this.getPath();
         if (existsSync(path)) {
@@ -28,11 +39,13 @@ export default class AnimeOfflineDatabaseProviderData {
                 const loadedString = readFileSync(path, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
+                return loadedData.database;
             } catch (err) {
                 logger.error(err);
                 this.saveData();
             }
         }
+        return null;
     }
 
     private saveData(): void {

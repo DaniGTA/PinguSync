@@ -22,7 +22,7 @@ describe('MainListPackageManager', () => {
         list.push(series);
 
         const seriesList = Object.freeze(list);
-        const seriesPackage = await new MainListPackageManager().getSeriesPackages(seriesList);
+        const seriesPackage = await MainListPackageManager.getSeriesPackages(seriesList);
 
         strictEqual(seriesPackage.length, 1);
     });

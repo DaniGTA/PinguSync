@@ -1,7 +1,7 @@
 <template>
   <div class="main-header-title-box">
       <div class="main-header-title">PinguSync</div>
-      <VersionText class="main-header-title-version-text"/>
+      <q-badge color="primary"><VersionText class="main-header-title-version-text"/></q-badge>
   </div>
 </template>
 
@@ -27,10 +27,5 @@ export default class MainHeaderTitle extends Vue {
 .main-header-title{
     font-size: 24px;
     color: #EFEFEF;
-}
-
-.main-header-title-version-text{
-    font-size: 12px;
-    color: #B2ABAB;
 }
 </style>

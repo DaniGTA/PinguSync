@@ -1,47 +1,44 @@
 <template>
-  <img class="series-image-block" :src="getSeriesImageUrl()" />
+<div class="series-image-block">
+    <q-img class="series-image-block" :src="url" transition="fade" @error="onImageError">
+        <template v-slot:loading>
+            <q-skeleton square width="100%" height="100%" animation="fade" />
+        </template>
+    </q-img>
+</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import FrontendSeriesInfos from '../../../backend/controller/objects/transfer/frontend-series-infos';
-import ProviderLocalData from '../../../backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ImageSize } from '../../../backend/controller/objects/meta/image-size';
+import SeriesListViewController from '../../controller/series-list-view-controller';
+import { FailedCover } from '../../../backend/controller/frontend/series/model/failed-cover';
 
 @Component
 export default class ProviderImageBlock extends Vue {
     @Prop({required: true})
-    public series!: FrontendSeriesInfos;
+    public seriesId!: string;
 
-    getSeriesImageUrl(): string{
-        const url = '';
-        console.log(this.series);
-        const providers: ProviderLocalData[] = this.getAllProviders();
-        for (const provider of providers) {
-            const result = provider.covers?.find(x=> x.size < ImageSize.MEDIUM);
-            if(result){
-                return result.url;
-            }
-        }
-        return url;
+    public url = '';
+
+    public mounted(): void {
+        this.loadImg();
     }
-    
-    getAllProviders(): ProviderLocalData[] {
-        const allProviders = [];
-        if(Array.isArray(this.series.infoProviderInfosBinded)){
-            allProviders.push(...this.series.infoProviderInfosBinded);
-        }else{
-            allProviders.push(this.series.infoProviderInfosBinded);
-        }
 
-        if(Array.isArray(this.series.listProviderInfosBinded)){
-            allProviders.push(...this.series.listProviderInfosBinded);
+    private async loadImg(): Promise<void> {
+        this.url = await SeriesListViewController.getSeriesCoverUrlById(this.seriesId) ?? '';
+    }
+
+
+    private onImageError(imageUrl: string): void {
+        if(imageUrl){
+            const failedCover: FailedCover = {seriesId: this.seriesId, coverUrl: imageUrl};
+            SeriesListViewController.sendFailedCover(failedCover);
+            this.loadImg();
         }else{
-            allProviders.push(this.series.listProviderInfosBinded);
+            console.error('No image src');
         }
-        return allProviders;
     }
 }
 </script>
@@ -49,6 +46,11 @@ export default class ProviderImageBlock extends Vue {
 
 <style>
 .series-image-block{
+    height: 100%;
+    width: 100%;
+}
+
+.series-image-block img{
     height: 100%;
     width: 100%;
 }

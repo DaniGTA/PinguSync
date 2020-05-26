@@ -27,9 +27,9 @@ export default class ListViewSwitcher extends Vue {
 </script>
 
 <style>
-.list-view{
+.list-view {
     background: #1E242D;
     margin: 0px 25px;
-    height: 100%;
+    height: calc(100% - 140px);
 }
 </style>

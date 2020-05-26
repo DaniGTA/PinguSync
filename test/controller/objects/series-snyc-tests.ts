@@ -2,9 +2,10 @@
 import TestProvider from './testClass/testProvider';
 
 import assert from 'assert';
-import Series, { WatchStatus } from '../../../src/backend/controller/objects/series';
+import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
+import { ListType } from '../../../src/backend/controller/settings/models/provider/list-types';
 
 describe('Series | Sync', () => {
     test('can sync (1/3)', async () => {
@@ -15,7 +16,7 @@ describe('Series | Sync', () => {
         for (let index = 0; index < 12; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.CURRENT;
+        providerA.watchStatus = ListType.CURRENT;
 
         ProviderList.getListProviderList().push(new TestProvider('CanSync122'));
         const providerB = new ListProviderLocalData(1, 'CanSync122');
@@ -23,7 +24,7 @@ describe('Series | Sync', () => {
         for (let index = 0; index < 24; index++) {
             providerB.addOneWatchedEpisode(index);
         }
-        providerB.watchStatus = WatchStatus.COMPLETED;
+        providerB.watchStatus = ListType.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         await anime.addProviderDatas(providerA, providerB);
@@ -37,7 +38,7 @@ describe('Series | Sync', () => {
         for (let index = 1; index < 25; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.COMPLETED;
+        providerA.watchStatus = ListType.COMPLETED;
         ProviderList.getListProviderList().push(new TestProvider('CanSync22'));
         const providerB = new ListProviderLocalData(1, 'CanSync22');
         providerB.episodes = 24;
@@ -55,7 +56,7 @@ describe('Series | Sync', () => {
         for (let index = 0; index < 25; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.CURRENT;
+        providerA.watchStatus = ListType.CURRENT;
         ProviderList.getListProviderList().push(new TestProvider('B'));
         const providerB = new ListProviderLocalData(1, 'B');
         providerB.episodes = 12;
@@ -63,7 +64,7 @@ describe('Series | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.addOneWatchedEpisode(1);
-        providerB.watchStatus = WatchStatus.COMPLETED;
+        providerB.watchStatus = ListType.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         await anime.addProviderDatas(providerA, providerB);
@@ -78,7 +79,7 @@ describe('Series | Sync', () => {
         for (let index = 0; index < 13; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.COMPLETED;
+        providerA.watchStatus = ListType.COMPLETED;
         ProviderList.getListProviderList().push(new TestProvider('C'));
 
         const providerB = new ListProviderLocalData(1, 'C');
@@ -87,7 +88,7 @@ describe('Series | Sync', () => {
             providerB.addOneWatchedEpisode(index);
         }
         providerB.addOneWatchedEpisode(1);
-        providerB.watchStatus = WatchStatus.COMPLETED;
+        providerB.watchStatus = ListType.COMPLETED;
         providerB.episodes = 24;
         await series.addProviderDatas(providerA, providerB);
         assert.equal(await series.getCanSync(), false);
@@ -101,14 +102,14 @@ describe('Series | Sync', () => {
         for (let index = 0; index < 12; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.CURRENT;
+        providerA.watchStatus = ListType.CURRENT;
         ProviderList.getListProviderList().push(new TestProvider('F', false));
         const providerB = new ListProviderLocalData(1, 'F');
         providerB.episodes = 24;
         for (let index = 0; index < 24; index++) {
             providerB.addOneWatchedEpisode(index);
         }
-        providerB.watchStatus = WatchStatus.COMPLETED;
+        providerB.watchStatus = ListType.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         await anime.addProviderDatas(providerA, providerB);
@@ -123,7 +124,7 @@ describe('Series | Sync', () => {
         for (let index = 0; index < 12; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.CURRENT;
+        providerA.watchStatus = ListType.CURRENT;
         // tslint:disable-next-line: no-string-literal
         providerA['episodes'] = 24;
         await anime.addProviderDatas(providerA);
@@ -139,14 +140,14 @@ describe('Series | Sync', () => {
         for (let index = 1; index < 13; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.CURRENT;
+        providerA.watchStatus = ListType.CURRENT;
         ProviderList.getListProviderList().push(new TestProvider('JJ'));
         const providerB = new ListProviderLocalData(1, 'JJ');
         providerB.lastUpdate = new Date(50);
         for (let index = 1; index < 5; index++) {
             providerB.addOneWatchedEpisode(index);
         }
-        providerB.watchStatus = WatchStatus.COMPLETED;
+        providerB.watchStatus = ListType.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         await anime.addProviderDatas(providerA, providerB);
@@ -161,7 +162,7 @@ describe('Series | Sync', () => {
         for (let index = 0; index < 12; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.CURRENT;
+        providerA.watchStatus = ListType.CURRENT;
         ProviderList.getListProviderList().push(new TestProvider('O'));
         const providerB = new ListProviderLocalData(1, 'O');
         providerB.episodes = 24;
@@ -174,7 +175,7 @@ describe('Series | Sync', () => {
         for (let index = 1; index < 25; index++) {
             providerC.addOneWatchedEpisode(index);
         }
-        providerC.watchStatus = WatchStatus.COMPLETED;
+        providerC.watchStatus = ListType.COMPLETED;
         // tslint:disable-next-line: no-string-literal
         providerB['episodes'] = 24;
         await anime.addProviderDatas(providerA, providerB, providerC);
@@ -190,7 +191,7 @@ describe('Series | Sync', () => {
         for (let index = 1; index < 13; index++) {
             providerA.addOneWatchedEpisode(index);
         }
-        providerA.watchStatus = WatchStatus.CURRENT;
+        providerA.watchStatus = ListType.CURRENT;
         ProviderList.getListProviderList().push(new TestProvider('TestProvider2'));
         const providerB = new ListProviderLocalData(1, 'TestProvider2');
         providerB.lastUpdate = new Date('2019-07-24T19:09:37.759Z');

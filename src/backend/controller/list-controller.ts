@@ -40,7 +40,7 @@ export default class ListController {
     }
 
     public removeSeriesPackageFromMainList(id: string): void {
-        new MainListPackageManager().removeSeriesPackage(id, this.getMainList());
+        MainListPackageManager.removeSeriesPackage(id, this.getMainList());
     }
 
     public async removeWatchProgress(anime: Series, watchProgress: WatchProgress): Promise<void> {

@@ -9,7 +9,7 @@ import Name from '../../../controller/objects/meta/name';
 import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
 import Season from '../../../controller/objects/meta/season';
-import Series, { WatchStatus } from '../../../controller/objects/series';
+import Series from '../../../controller/objects/series';
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
@@ -25,6 +25,7 @@ import { Season as TrakSeason, SendEntryUpdate, Show as SendEntryShow, TraktEpis
 import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
+import { ListType } from '../../../controller/settings/models/provider/list-types';
 
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
@@ -40,7 +41,7 @@ export default new class TraktConverter {
             for (const episode of season.episodes) {
                 providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
             }
-            providerInfo.watchStatus = WatchStatus.COMPLETED;
+            providerInfo.watchStatus = ListType.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
             providerInfo.infoStatus = ProviderInfoStatus.BASIC_INFO;
             result.push(new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(providerInfo, new Season([season.number]))));

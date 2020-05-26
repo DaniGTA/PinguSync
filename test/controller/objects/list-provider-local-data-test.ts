@@ -6,9 +6,9 @@ import Genre from '../../../src/backend/controller/objects/meta/genre';
 import { ImageSize } from '../../../src/backend/controller/objects/meta/image-size';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
-import { WatchStatus } from '../../../src/backend/controller/objects/series';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import { ListType } from '../../../src/backend/controller/settings/models/provider/list-types';
 
 describe('listProviderLocalData tests', () => {
     test('should merge two', async () => {
@@ -16,13 +16,13 @@ describe('listProviderLocalData tests', () => {
         a.episodes = 13;
         a.publicScore = 20;
         a.lastUpdate = new Date(0);
-        a.watchStatus = WatchStatus.CURRENT;
+        a.watchStatus = ListType.CURRENT;
         const b = new ListProviderLocalData(1);
         b.episodes = 14;
         b.publicScore = 20;
         b.score = 40;
         b.infoStatus = ProviderInfoStatus.FULL_INFO;
-        b.watchStatus = WatchStatus.COMPLETED;
+        b.watchStatus = ListType.COMPLETED;
         b.covers.push(new Cover(''));
 
         const merged = await ListProviderLocalData.mergeProviderInfos(a, b);
@@ -31,7 +31,7 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.publicScore, 20, 'Public score merge failed');
         strictEqual(merged.score, 40, 'Score merge failed');
         strictEqual(merged.infoStatus, ProviderInfoStatus.FULL_INFO, 'Should add latest hasFullInfo');
-        strictEqual(merged.watchStatus, WatchStatus.COMPLETED, 'Should add latest watch status');
+        strictEqual(merged.watchStatus, ListType.COMPLETED, 'Should add latest watch status');
         return;
     });
 

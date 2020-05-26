@@ -21,7 +21,7 @@ export default class AnimeOfflineDatabaseManager {
     public static async getMappingFromProviderLocalData(providerLocalData: ProviderLocalData): Promise<IDatabaseEntry | undefined> {
         await this.checkDatabaseStatus();
         const providerInstance = ProviderList.getProviderInstanceByLocalData(providerLocalData);
-        for (const databaseEntry of this.LOCAL_DATA.database.data) {
+        for (const databaseEntry of this.LOCAL_DATA.getDatabase().data) {
             if (this.databaseEntryHasSameIdAsProviderLocalData(databaseEntry, providerInstance, providerLocalData)) {
                 return databaseEntry;
             }

@@ -8,8 +8,22 @@ export enum chOnce {
     IsAnyProviderLoggedIn = 'is-any-provider-logged-in',
     GetProviderListSettings = 'get-provider-list-settings',
     GetLoggedInStatus = 'provider-auth-status',
-    IsUpdateAvailable = 'is-app-update-available',
     FinishedFirstSetup = 'get-finished-first-setup',
+
+    /*
+        Series API
+    */
+
     GetSeriesIdsWithListType = 'get-series-list-with-give-list-type',
+
     GetSeriesById = 'get-series-id',
+    GetPreferedCoverUrlBySeriesId = 'get-prefered-series-cover-url-by-series-id',
+    GetPreferedNameBySeriesId = 'get-prefered-series-name-by-id',
+    GetSeriesMaxEpisodeNumberBySeriesId = 'get-series-max-episode-number-by-series-id',
+
+    /*
+         Update API
+    */
+
+    IsUpdateAvailable = 'is-app-update-available',
 }

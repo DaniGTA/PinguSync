@@ -83,7 +83,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
     });
 
     describe('timeout', () => {
-        let spy: jest.SpyInstance<any, []>;
+        let spy: jest.SpyInstance<any, unknown[]>;
         beforeAll(() => {
             spy = jest.spyOn(DownloadSettings, 'requestTimoutPromise' as any).mockImplementation(async () => {
                 return new Promise<void>((resolve, reject) => setTimeout(() => {

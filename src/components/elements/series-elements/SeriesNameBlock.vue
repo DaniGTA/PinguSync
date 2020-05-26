@@ -1,52 +1,42 @@
 <template>
-  <div :src="getSeriesName()" />
+  <div class="series-name-block-text"> 
+    <template v-if="name"> 
+    {{name}}
+    </template>
+    <template v-else>
+      <q-skeleton type="text" animation="fade"/>
+      <q-skeleton type="text" animation="fade"/>
+    </template>
+    </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import ListProvider from '../../../backend/api/provider/list-provider';
-import FrontendSeriesInfos from '../../../backend/controller/objects/transfer/frontend-series-infos';
-import ProviderLocalData from '../../../backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ImageSize } from '../../../backend/controller/objects/meta/image-size';
+import SeriesListViewController from '../../controller/series-list-view-controller';
 
 @Component
 export default class ProviderImageBlock extends Vue {
     @Prop({required: true})
-    public series!: FrontendSeriesInfos;
+    public seriesId!: string;
 
-    getSeriesName(): string{
-        const url = '';
-        const providers: ProviderLocalData[] = this.getAllProviders();
-        for (const provider of providers) {
-           const result = provider.covers.find(x=> x.size < ImageSize.MEDIUM);
-           if(result){
-               return result.url;
-           }
-        }
-        return url;
+    public name = '';
+
+    public async mounted(): Promise<void> {
+        this.name = await SeriesListViewController.getSeriesNameById(this.seriesId) ?? '';
     }
 
-    getAllProviders(): ProviderLocalData[] {
-        const allProviders = [];
-        if(Array.isArray(this.series.infoProviderInfosBinded)){
-            allProviders.push(...this.series.infoProviderInfosBinded);
-        }else{
-            allProviders.push(this.series.infoProviderInfosBinded);
-        }
-
-        if(Array.isArray(this.series.listProviderInfosBinded)){
-            allProviders.push(...this.series.listProviderInfosBinded);
-        }else{
-            allProviders.push(this.series.listProviderInfosBinded);
-        }
-        return allProviders;
-    }
 }
 </script>
 
 
 <style>
-
+.series-name-block-text{
+    color: #F5EEEE;
+    z-index: 100;
+    font-size: 14px;
+    font-family: roboto;
+    font-weight: 500;
+}
 </style>

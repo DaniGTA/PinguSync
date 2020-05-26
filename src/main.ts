@@ -1,58 +1,20 @@
 import Vue from 'vue';
-import Router from 'vue-router';
-import VueI18n from 'vue-i18n';
-
 import App from './App.vue';
 
-import { dom, library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';
-import routes from './routes/routes';
-import {
-  Quasar,
-  QBtn,
-  QVirtualScroll
-} from 'quasar';
-
-import './styles/quasar.sass';
-
-
-
-library.add(fas);
-
-dom.watch();
-
-Vue.component('font-awesome-icon', FontAwesomeIcon);
-Vue.component('font-awesome-layers', FontAwesomeLayers);
-Vue.component('font-awesome-layers-text', FontAwesomeLayersText);
+import LangLoader from './loader/lang-loader';
+import QuasarLoader from './loader/quasar-loader';
+import RouterLoader from './loader/router-loader';
+import FontLoader from './loader/font-loader';
 
 Vue.config.productionTip = false;
 
-// 0. If using a module system (e.g. via vue-cli), import Vue and VueRouter
-// and then call `Vue.use(VueRouter)`.
-Vue.use(Router);
-Vue.use(VueI18n);
-Vue.use(Quasar, {
-  components: {
-    QBtn,
-    QVirtualScroll
-  }
-});
-
-// 3. Create the router instance and pass the `routes` option
-// You can pass in additional options here, but let's
-// keep it simple for now.
-const router = new Router({
-  routes, // short for `routes: routes`
-});
-
-const i18n = new VueI18n({
-  locale: 'en',
-  fallbackLocale: 'en',
-});
+QuasarLoader.loadQuasar();
+FontLoader.loadFont();
+const i18n = LangLoader.getI18n();
+const router = RouterLoader.loadVueRouter();
 
 new Vue({
   i18n,
-  render: (h) => h(App),
+  render: (h): any => h(App),
   router,
 }).$mount('#app');

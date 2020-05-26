@@ -1,7 +1,8 @@
 import { ListType } from '../../backend/controller/settings/models/provider/list-types';
 import WorkerController from '../../backend/communication/ipc-renderer-controller';
 import { chOnce } from '../../backend/communication/channels';
-import FrontendSeriesInfos from '../../backend/controller/objects/transfer/frontend-series-infos';
+import { FailedCover } from '../../backend/controller/frontend/series/model/failed-cover';
+import { chListener } from '../../backend/communication/listener-channels';
 
 export default class SeriesListViewController {
     public static workerController: WorkerController = new WorkerController();
@@ -11,10 +12,23 @@ export default class SeriesListViewController {
     public static async getSeriesIdsFromCurrentlySelectedListType(): Promise<string[]> {
         return await this.workerController.getOnce<string[]>(chOnce.GetSeriesIdsWithListType, this.selectedListType);
     }
-    public static async getSeriesById(id: string): Promise<FrontendSeriesInfos> {
-        this.workerController.send(chOnce.GetSeriesById, id);
-        return new Promise<FrontendSeriesInfos>((resolve, reject) => {
-            this.workerController.getIpcRenderer().once(chOnce.GetSeriesById + '-' + id, (event: Electron.IpcRendererEvent, data: FrontendSeriesInfos) => {
+
+    public static async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
+        return await this.getSeriesDataFromId(chOnce.GetPreferedCoverUrlBySeriesId, id);
+    }
+
+    public static async getSeriesNameById(id: string): Promise<string | undefined> {
+        return await this.getSeriesDataFromId(chOnce.GetPreferedNameBySeriesId, id);
+    }
+
+    public static sendFailedCover(failedCover: FailedCover): void {
+        this.workerController.send(chListener.OnSeriesFailedCoverImage, failedCover);
+    }
+
+    private static async getSeriesDataFromId<T>(channel: string, seriesId: string): Promise<T> {
+        this.workerController.send(channel, seriesId);
+        return new Promise<T>((resolve, reject) => {
+            this.workerController.getIpcRenderer().once(channel + '-' + seriesId, (event: Electron.IpcRendererEvent, data: T) => {
                 resolve(data);
             });
         });
