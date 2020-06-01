@@ -2,6 +2,7 @@
   <q-intersection class="block-list-entry-container" once transition="scale">
     <div class="block-list-entry" v-intersection="onIntersection">
     <template v-if="id && visible">
+      <BlockListEntrySyncStatus />
       <SeriesImageBlock class="block-list-entry-img" :seriesId="id" />
       <BlockListEntryInfoSection :seriesId="id" />
     </template>
@@ -15,10 +16,12 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import SeriesImageBlock from '../../../../elements/series-elements/SeriesImageBlock.vue';
 import BlockListEntryInfoSection from './BlockListEntryInfoSection.vue';
+import BlockListEntrySyncStatus from './sync-status/BlockListEntrySyncStatus.vue';
 @Component({
 	components: {
     SeriesImageBlock,
-    BlockListEntryInfoSection
+    BlockListEntryInfoSection,
+    BlockListEntrySyncStatus
 	}
 })
 export default class BlockEntry extends Vue {
@@ -26,7 +29,7 @@ export default class BlockEntry extends Vue {
   public id!: string;
 
   public visible = false;
-   onIntersection (entry: IntersectionObserverEntry) {
+   onIntersection(entry: IntersectionObserverEntry) {
       this.visible = entry.isIntersecting;
     }
 }

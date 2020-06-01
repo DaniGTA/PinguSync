@@ -57,13 +57,10 @@ module.exports = {
 
   runtimeCompiler: true,
 
-  css: {
-    extract: false
-  },
-
   lintOnSave: false,
 
   transpileDependencies: [
-    'quasar'
+    'quasar',
+    /[\\/]node_modules[\\/]quasar[\\/]/,
   ]
 };

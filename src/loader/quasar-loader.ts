@@ -8,7 +8,8 @@ import {
     QImg,
     QSelect,
     QInput,
-    QBadge
+    QBadge,
+    QSeparator
 } from 'quasar';
 import Vue from 'vue';
 import './../styles/quasar.sass';
@@ -34,7 +35,8 @@ export default class QuasarLoader {
                 QImg,
                 QSelect,
                 QInput,
-                QBadge
+                QBadge,
+                QSeparator
             }
         });
     }

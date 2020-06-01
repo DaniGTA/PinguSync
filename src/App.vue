@@ -7,7 +7,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Providers from './components/Providers.vue';
 import VersionView from './components/system/version/VersionView.vue';
 
 import WorkerController from './backend/communication/ipc-renderer-controller';
@@ -15,7 +14,6 @@ import { chOnce } from './backend/communication/channels';
 
 @Component({
 	components: {
-		Providers,
     VersionView,
 	},
 })

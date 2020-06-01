@@ -11,5 +11,6 @@
     "eslint.enable": true,
     "tslint.enable": "false",
     "eslint.lintTask.enable": true,
-    "i18n-ally.localesPaths": "src/assets/locales"
+    "i18n-ally.localesPaths": "src/assets/locales",
+    "i18n-ally.sourceLanguage": "de"
 }
