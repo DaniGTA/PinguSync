@@ -1,3 +1,5 @@
+!WORK IN PROGRESS (Currently not useable)
+
 # PinguSync
 
 ![alt](https://raw.githubusercontent.com/DaniGTA/PinguSync/src/assets/logo/app/icon/512x512.png)
