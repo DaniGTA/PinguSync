@@ -2,7 +2,7 @@
   <q-intersection class="block-list-entry-container" once transition="scale">
     <div class="block-list-entry" v-intersection="onIntersection">
     <template v-if="id && visible">
-      <BlockListEntrySyncStatus />
+      <BlockListEntrySyncStatus :seriesId="id"/>
       <SeriesImageBlock class="block-list-entry-img" :seriesId="id" />
       <BlockListEntryInfoSection :seriesId="id" />
     </template>
@@ -29,9 +29,9 @@ export default class BlockEntry extends Vue {
   public id!: string;
 
   public visible = false;
-   onIntersection(entry: IntersectionObserverEntry) {
-      this.visible = entry.isIntersecting;
-    }
+  onIntersection(entry: IntersectionObserverEntry): void {
+    this.visible = entry.isIntersecting;
+  }
 }
 </script>
 

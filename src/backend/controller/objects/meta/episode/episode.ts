@@ -4,6 +4,7 @@ import Season from '../season';
 import EpisodeThumbnail from './episode-thumbnail';
 import EpisodeTitle from './episode-title';
 import { EpisodeType } from './episode-type';
+import WatchHistory from './episode-watch-history';
 
 /**
  * Contains detail infos about a episode.
@@ -23,7 +24,7 @@ export default class Episode {
 
     public readonly episodeNumber: number | string;
     public readonly lastUpdate: number;
-    public readonly id: string;
+    public id: string;
 
     /**
      * -- Optional --
@@ -44,6 +45,7 @@ export default class Episode {
     public providerId?: string | number;
     public providerEpisodeId?: number | string;
     public thumbnails: EpisodeThumbnail[] = [];
+    public watchHistory: WatchHistory[] = [];
 
     private _season?: Season;
     /**

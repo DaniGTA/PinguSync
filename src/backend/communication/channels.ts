@@ -2,7 +2,9 @@
  * Communcation channels for getOnce requests
  */
 export enum chOnce {
+    GetSyncStatusOfProviderFromASeries = 'get-sync-status-from-single-provider-for-one-series',
     GetAllListProviders = 'get-all-list-providers',
+    GetAllListProvidersWithConnectedUser = 'get-all-list-providers-with-user-logged-in',
     GetUserNameFromProvider = 'get-username-from-provider',
     GetSyncProviderSettings = 'get-sync-provider-settings',
     IsAnyProviderLoggedIn = 'is-any-provider-logged-in',

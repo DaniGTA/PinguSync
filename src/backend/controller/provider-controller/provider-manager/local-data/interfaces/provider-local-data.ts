@@ -15,7 +15,6 @@ import Name from '../../../../objects/meta/name';
 import Overview from '../../../../objects/meta/overview';
 import Season from '../../../../objects/meta/season';
 import { ProviderInfoStatus } from './provider-info-status';
-import { ListType } from '../../../../settings/models/provider/list-types';
 
 export default abstract class ProviderLocalData {
 
@@ -43,45 +42,47 @@ export default abstract class ProviderLocalData {
         return finalProvider;
     }
 
-    private static mergeBasicEntrys(a: ProviderLocalData, b: ProviderLocalData): ProviderLocalData {
-        const finalProvider: any = a;
-        for (const key in b) {
+    private static mergeBasicEntrys(newProvider: ProviderLocalData, oldProvider: ProviderLocalData): ProviderLocalData {
+        const newP: any = newProvider;
+        for (const key in oldProvider) {
             // eslint-disable-next-line no-prototype-builtins
-            if (b.hasOwnProperty(key)) {
-                const keyValue = (b as any)[key];
-                if (Array.isArray(keyValue)) {
-                    if (finalProvider[key] !== undefined) {
+            if (oldProvider.hasOwnProperty(key)) {
+                const oldValue = (oldProvider as any)[key];
+                if (Array.isArray(oldValue)) {
+                    if (newP[key] !== undefined) {
                         if (key === 'sequelIds' || key === 'prequelIds' || key === 'alternativeIds') {
-                            if (keyValue.length !== 0) {
-                                finalProvider[key] = keyValue;
+                            if (oldValue.length !== 0) {
+                                newP[key] = oldValue;
                             }
                         } else if (key === 'detailEpisodeInfo') {
-                            finalProvider[key] = listHelper.getUniqueEpisodeList(finalProvider[key], keyValue);
+                            newP[key] = listHelper.getUniqueEpisodeList(newP[key], oldValue);
                         } else {
-                            finalProvider[key] = [...finalProvider[key], ...keyValue];
+                            newP[key] = [...newP[key], ...oldValue];
                         }
                         continue;
                     }
                 } else if (key === 'infoStatus') {
-                    if (finalProvider[key] !== undefined) {
-                        if (finalProvider[key] > keyValue) {
-                            finalProvider[key] = keyValue;
+                    if (newP[key] !== undefined) {
+                        if (newP[key] > oldValue) {
+                            newP[key] = oldValue;
                         }
                         continue;
                     }
                 } else if (key === 'isNSFW') {
-                    if (keyValue) {
-                        finalProvider[key] = keyValue;
+                    if (oldValue) {
+                        newP[key] = oldValue;
                     }
                     continue;
                 }
-                if (keyValue !== undefined) {
-                    finalProvider[key] = keyValue;
+                if (oldValue !== undefined) {
+                    newP[key] = oldValue;
                 }
             }
         }
-        return finalProvider;
+        return newP;
     }
+
+    private static mergeEpisodeList() { }
     // ------------------
     //  Provider metadata stuff
     // ------------------
@@ -137,7 +138,8 @@ export default abstract class ProviderLocalData {
     public isNSFW = false;
     public country?: string;
     public genres: Genre[] = [];
-    public detailEpisodeInfo: Episode[] = [];    /**
+    public detailEpisodeInfo: Episode[] = [];
+    /**
      * Only fill this if provider give sequel ids and have different ids for every season.
      */
     public sequelIds: number[] = [];

@@ -3,6 +3,7 @@ import EpisodeMapping from '../../controller/objects/meta/episode/episode-mappin
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
 import Season from '../../controller/objects/meta/season';
 import EpisodeComperator from '../comperators/episode-comperator';
+import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 
 export default class EpisodeHelper {
 
@@ -42,6 +43,16 @@ export default class EpisodeHelper {
      */
     public static isSameEpisodeID(a: Episode, b: Episode): boolean {
         return a.id === b.id;
+    }
+
+    public static getOldEpInOldArrayWithNew(ep: Episode, oldArr: Episode[]): Episode | undefined {
+        for (const oldEp of oldArr) {
+            const result = EpisodeComperator.compareDetailedEpisode(ep, oldEp);
+            if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
+                return oldEp;
+            }
+        }
+        return;
     }
 
     private static sortingEpisodeComperator(a: Episode, b: Episode, season?: Season): number {

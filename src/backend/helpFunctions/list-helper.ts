@@ -7,10 +7,11 @@ import logger from '../logger/logger';
 import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from './comperators/episode-comperator';
 import sortHelper from './sort-helper';
+import EpisodeHelper from './episode-helper/episode-helper';
 
 class ListHelper {
 
-    public async findAllIndexes<T>(arr: T[], filter: (item: T) => boolean): Promise<number[]> {
+    public findAllIndexes<T>(arr: T[], filter: (item: T) => boolean): number[] {
         const indexes = [];
         let i;
         for (i = 0; i < arr.length; i++) {
@@ -20,7 +21,7 @@ class ListHelper {
         }
         return indexes;
     }
-    public async cleanArray<T>(actual: T[]): Promise<T[]> {
+    public cleanArray<T>(actual: T[]): T[] {
         const newArray: T[] = [];
         // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < actual.length; i++) {
@@ -31,7 +32,7 @@ class ListHelper {
         return newArray;
     }
 
-    public async isAnyListEntryInList<T>(array: T[], array2: T[]): Promise<boolean> {
+    public isAnyListEntryInList<T>(array: T[], array2: T[]): boolean {
         for (const entry of array) {
             for (const entry2 of array2) {
                 if (this.objectsEquals(entry, entry2)) {
@@ -106,11 +107,15 @@ class ListHelper {
         return mostCommonNumber;
     }
 
-    public getUniqueEpisodeList(arr1: Episode[], arr2: Episode[]): Episode[] {
-        const copyArr1 = [...arr1, ...arr2];
+    public getUniqueEpisodeList(newArr: Episode[], oldArr: Episode[]): Episode[] {
+        const copyArr1 = [...newArr, ...oldArr];
         const uniqueEpisodeList: Episode[] = [];
         for (const episode of copyArr1) {
             if (!this.isEpisodeInArray(uniqueEpisodeList, episode)) {
+                const oldEp = EpisodeHelper.getOldEpInOldArrayWithNew(episode, oldArr);
+                if (oldEp) {
+                    episode.id = oldEp?.id;
+                }
                 uniqueEpisodeList.push(episode);
             }
         }

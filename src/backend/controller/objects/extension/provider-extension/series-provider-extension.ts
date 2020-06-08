@@ -22,7 +22,7 @@ export default class SeriesProviderExtension {
 
     protected failedProviderRequest: FailedProviderRequest[] = [];
 
-    public clearAllBindings() {
+    public clearAllBindings(): void {
         this.listProviderInfos = [];
         this.infoProviderInfos = [];
     }
@@ -39,7 +39,7 @@ export default class SeriesProviderExtension {
      * Prevents too have double entrys of the same provider.
      * @param infoProviders
      */
-    public async addInfoProvider(infoProvider: InfoProviderLocalData, season?: Season) {
+    public async addInfoProvider(infoProvider: InfoProviderLocalData, season?: Season): Promise<void> {
         const index = await new ProviderDataListAdder().addNewProviderData(infoProvider);
         this.addInfoProviderBindings(new InfoLocalDataBind(infoProvider, season, index));
     }
@@ -48,12 +48,12 @@ export default class SeriesProviderExtension {
      * Prevents too have double entrys of the same provider.
      * @param listProvider
      */
-    public async addListProvider(listProvider: ListProviderLocalData, season?: Season) {
+    public async addListProvider(listProvider: ListProviderLocalData, season?: Season): Promise<void> {
         const index = await new ProviderDataListAdder().addNewProviderData(listProvider);
         this.addListProviderBindings(new ListLocalDataBind(listProvider, season, index));
     }
 
-    public async addProviderDatas(...localdatas: ProviderLocalData[]) {
+    public async addProviderDatas(...localdatas: ProviderLocalData[]): Promise<void> {
         for (const localdata of localdatas) {
             if (SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(localdata)) {
                 await this.addListProvider(localdata as ListProviderLocalData);
@@ -63,7 +63,7 @@ export default class SeriesProviderExtension {
         }
     }
 
-    public async addProviderDatasWithSeasonInfos(...localdatas: ProviderLocalDataWithSeasonInfo[]) {
+    public async addProviderDatasWithSeasonInfos(...localdatas: ProviderLocalDataWithSeasonInfo[]): Promise<void> {
         logger.debug('addProviderDatasWithSeasonInfo: adding ' + localdatas.length);
         try {
             for (let index = 0; index < localdatas.length; index++) {
@@ -106,7 +106,7 @@ export default class SeriesProviderExtension {
         return [...this.infoProviderInfos, ...this.listProviderInfos];
     }
 
-    public addAllBindings(...localDataBindings: LocalDataBind[]) {
+    public addAllBindings(...localDataBindings: LocalDataBind[]): void {
         for (const localDataBinding of localDataBindings) {
             if (localDataBinding.instanceName === InfoLocalDataBind.name || localDataBinding instanceof InfoLocalDataBind) {
                 this.addInfoProviderBindings(localDataBinding);
@@ -118,7 +118,7 @@ export default class SeriesProviderExtension {
         }
     }
 
-    public addInfoProviderBindings(...infoLocalDataBinds: InfoLocalDataBind[]) {
+    public addInfoProviderBindings(...infoLocalDataBinds: InfoLocalDataBind[]): void {
         for (const infoLocalDataBind of infoLocalDataBinds) {
             const existingBinding = this.infoProviderInfos.findIndex((x) => x.providerName === infoLocalDataBind.providerName);
             if (existingBinding !== -1) {
@@ -136,7 +136,7 @@ export default class SeriesProviderExtension {
         }
     }
 
-    public addListProviderBindings(...listLocalDataBinds: ListLocalDataBind[]) {
+    public addListProviderBindings(...listLocalDataBinds: ListLocalDataBind[]): void {
         for (const listLocalDataBind of listLocalDataBinds) {
             const existingBindingIndex = this.listProviderInfos.findIndex((x) =>
                 x.providerName === listLocalDataBind.providerName &&

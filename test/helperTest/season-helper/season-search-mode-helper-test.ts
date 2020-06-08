@@ -3,6 +3,7 @@ import MainListManager from '../../../src/backend/controller/main-list-manager/m
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
 import SeasonSearchModeHelper from '../../../src/backend/helpFunctions/season-helper/season-search-mode-helper';
+import { assert } from 'console';
 
 
 

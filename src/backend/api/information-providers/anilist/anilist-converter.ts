@@ -170,7 +170,7 @@ export default new class AniListConverter {
         if (sequel !== -1) {
             providerInfo.sequelIds.push(relations.nodes[sequel].id);
         }
-        const alternatives = await listHelper.findAllIndexes(relations.edges, (item) => item.relationType === MediaRelation.ALTERNATIVE);
+        const alternatives = listHelper.findAllIndexes(relations.edges, (item) => item.relationType === MediaRelation.ALTERNATIVE);
         if (alternatives.length !== 0) {
             for (const index of alternatives) {
                 providerInfo.alternativeIds.push(relations.nodes[index].id);

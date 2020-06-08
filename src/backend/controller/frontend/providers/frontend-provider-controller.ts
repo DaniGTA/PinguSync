@@ -4,26 +4,44 @@ import IPCBackgroundController from '../../../communication/ipc-background-contr
 import ProviderList from '../../provider-controller/provider-manager/provider-list';
 import FrontendProviderAuthController from './frontend-provider-auth-controller';
 import { chOnce } from '../../../communication/channels';
+import logger from '../../../logger/logger';
+import FrontendProviderSyncController from './sync-status/frontend-provider-sync-controller';
 
 export default class FrontendProviderController {
-    private communcation: ICommunication;
+    private com: ICommunication;
 
 
     constructor(webcontents: Electron.WebContents) {
-        this.communcation = new IPCBackgroundController(webcontents);
+        this.com = new IPCBackgroundController(webcontents);
         this.init();
         // tslint:disable-next-line: no-unused-expression
         new FrontendProviderAuthController(webcontents);
+        new FrontendProviderSyncController(webcontents);
     }
 
 
     private init(): void {
-        this.communcation.on(chOnce.GetAllListProviders, () => this.communcation.send(chOnce.GetAllListProviders, this.getAllListProviders()));
-        this.communcation.on(chOnce.GetUserNameFromProvider, async (providerName) => this.communcation.send(chOnce.GetUserNameFromProvider, await this.getUsername(providerName)));
+        this.com.on(chOnce.GetAllListProviders, () => this.com.send(chOnce.GetAllListProviders, this.getAllListProviders()));
+        this.com.on(chOnce.GetUserNameFromProvider, async (providerName) => this.com.send(chOnce.GetUserNameFromProvider, await this.getUsername(providerName)));
+        this.com.on(chOnce.GetAllListProvidersWithConnectedUser, async () => this.com.send(chOnce.GetAllListProvidersWithConnectedUser, await this.getAllListProvidersWithLoggedInUser()));
     }
 
     private getAllListProviders(): ListProvider[] {
         return ProviderList.getListProviderList();
+    }
+
+    private async getAllListProvidersWithLoggedInUser(): Promise<ListProvider[]> {
+        const allLoggedInProviders = [];
+        for (const provider of ProviderList.getListProviderList()) {
+            try {
+                if (await provider.isUserLoggedIn()) {
+                    allLoggedInProviders.push(provider);
+                }
+            } catch (err) {
+                logger.error(err);
+            }
+        }
+        return allLoggedInProviders;
     }
 
     private async getUsername(providerName: string): Promise<string> {
