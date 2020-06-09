@@ -27,6 +27,8 @@ export default class TVMazeProvider extends InfoProvider {
             TVMazeProvider.instance = this;
         }
     }
+    
+
     public async isProviderAvailable(): Promise<boolean> {
         return true;
     }

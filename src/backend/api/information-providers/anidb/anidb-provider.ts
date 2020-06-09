@@ -36,7 +36,7 @@ export default class AniDBProvider extends InfoProvider {
         }
     }
 
-    private async loadAniDBNameManagerData() {
+    private async loadAniDBNameManagerData(): Promise<void> {
         if (this.allowDownload() && this.download) {
             await this.getData();
         } else if (!AniDBHelper.anidbNameManager.data || Object.entries(AniDBHelper.anidbNameManager.data).length === 0) {

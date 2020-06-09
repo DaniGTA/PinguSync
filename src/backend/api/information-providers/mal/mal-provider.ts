@@ -44,6 +44,15 @@ export default class MalProvider extends ListProvider {
         super();
         this.userData = new MalUserData();
     }
+
+    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+
+    }
+
+    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
+
+    }
+
     public addOAuthCode(): Promise<boolean> {
         throw new Error('OAuth not support by ' + this.providerName);
     }

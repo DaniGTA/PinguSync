@@ -54,6 +54,15 @@ export default class SimklProvider extends ListProvider {
         super();
         SimklProvider.instance = this;
     }
+
+    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+
+    }
+
+    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
+
+    }
+
     public async addOAuthCode(code: string): Promise<boolean> {
         const result = await this.simklRequest<CodeResponse>(this.apiUrl + 'oauth/pin/' + code + '?client_id=' + this.getApiId());
         if (result.access_token) {

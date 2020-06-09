@@ -59,6 +59,15 @@ export default class KitsuProvider extends ListProvider {
             this.userData = new KitsuUserData();
         }
     }
+
+    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+
+    }
+
+    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
+
+    }
+
     public addOAuthCode(): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
