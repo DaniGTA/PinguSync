@@ -1,4 +1,4 @@
-export interface IDatabaseEntry {
+export interface DatabaseEntry {
     sources: string[];
     title: string;
     type: 'TV' | 'Movie' | 'OVA' | 'ONA' | 'Special';
@@ -10,8 +10,8 @@ export interface IDatabaseEntry {
     relations: string[];
 }
 
-export interface IAnimeOfflineDatabase {
-    data: IDatabaseEntry[];
+export interface AnimeOfflineDatabase {
+    data: DatabaseEntry[];
 }
 
 

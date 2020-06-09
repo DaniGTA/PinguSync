@@ -7,11 +7,11 @@ import KitsuProvider from '../../information-providers/kitsu/kitsu-provider';
 import MalProvider from '../../information-providers/mal/mal-provider';
 import ExternalProvider from '../../provider/external-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
-import { IDatabaseEntry } from './objects/database-entry';
+import { DatabaseEntry } from './objects/database-entry';
 
 export default class AnimeOfflineDatabaseConverter {
 
-    public static convertDatabaseEntryToMultiProviderResult(databaseEntry: IDatabaseEntry, providerInstance: ExternalProvider): MultiProviderResult {
+    public static convertDatabaseEntryToMultiProviderResult(databaseEntry: DatabaseEntry, providerInstance: ExternalProvider): MultiProviderResult {
         const providerLocalDatas = this.convertSourceListToProviderLocalDatas(databaseEntry.sources);
         // tslint:disable-next-line: triple-equals
         const mainProvider = providerLocalDatas.find((x) => x.provider == providerInstance.providerName);

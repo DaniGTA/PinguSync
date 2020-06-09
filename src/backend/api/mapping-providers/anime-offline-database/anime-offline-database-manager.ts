@@ -8,7 +8,7 @@ import KitsuProvider from '../../information-providers/kitsu/kitsu-provider';
 import MalProvider from '../../information-providers/mal/mal-provider';
 import ExternalInformationProvider from '../../provider/external-information-provider';
 import AnimeOfflineDatabaseProviderData from './anime-offline-database-provider-data';
-import { IAnimeOfflineDatabase, IDatabaseEntry } from './objects/database-entry';
+import { AnimeOfflineDatabase, DatabaseEntry } from './objects/database-entry';
 
 export default class AnimeOfflineDatabaseManager {
     public static async checkDatabaseStatus(): Promise<void> {
@@ -18,10 +18,11 @@ export default class AnimeOfflineDatabaseManager {
         }
     }
 
-    public static async getMappingFromProviderLocalData(providerLocalData: ProviderLocalData): Promise<IDatabaseEntry | undefined> {
+    public static async getMappingFromProviderLocalData(providerLocalData: ProviderLocalData): Promise<DatabaseEntry | undefined> {
         await this.checkDatabaseStatus();
         const providerInstance = ProviderList.getProviderInstanceByLocalData(providerLocalData);
-        for (const databaseEntry of this.LOCAL_DATA.getDatabase().data) {
+        const data = this.LOCAL_DATA.getDatabase().data;
+        for (const databaseEntry of data) {
             if (this.databaseEntryHasSameIdAsProviderLocalData(databaseEntry, providerInstance, providerLocalData)) {
                 return databaseEntry;
             }
@@ -32,7 +33,7 @@ export default class AnimeOfflineDatabaseManager {
     private static readonly UPDATE_INTERVAL_IN_DAYS: number = 7;
     private static readonly DATABASE_URL = 'https://raw.githubusercontent.com/manami-project/anime-offline-database/master/anime-offline-database.json';
 
-    private static databaseEntryHasSameIdAsProviderLocalData(databaseEntry: IDatabaseEntry, providerInstance: ExternalInformationProvider, providerLocalData: ProviderLocalData): boolean {
+    private static databaseEntryHasSameIdAsProviderLocalData(databaseEntry: DatabaseEntry, providerInstance: ExternalInformationProvider, providerLocalData: ProviderLocalData): boolean {
         // tslint:disable: triple-equals
         if (providerInstance instanceof AniDBProvider) {
             const anidbString = databaseEntry.sources.find((x) => x.includes('anidb'));
@@ -66,10 +67,10 @@ export default class AnimeOfflineDatabaseManager {
         return false;
     }
 
-    private static async downloadDatabase(): Promise<IAnimeOfflineDatabase> {
+    private static async downloadDatabase(): Promise<AnimeOfflineDatabase> {
         const res = await WebRequestManager.request({ uri: AnimeOfflineDatabaseManager.DATABASE_URL });
         if (res.statusCode === 200) {
-            return JSON.parse(res.body) as IAnimeOfflineDatabase;
+            return JSON.parse(res.body) as AnimeOfflineDatabase;
         } else {
             throw new Error('[AnimeOfflineDatabase] Database download failed status code: ' + res.statusCode);
         }

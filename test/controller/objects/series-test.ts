@@ -22,37 +22,6 @@ describe('Series | Basic', () => {
         return;
     });
 
-    test('should return last provider', async () => {
-        const series = new Series();
-        const providerA = new ListProviderLocalData(1, 'A');
-        providerA.lastUpdate = new Date(100);
-        providerA.watchProgress = [];
-        const providerB = new ListProviderLocalData(1, 'B');
-        providerB.watchProgress = [];
-        providerB.lastUpdate = new Date(50);
-        await series.addProviderDatas(providerA, providerB);
-        // tslint:disable-next-line: no-string-literal
-        assert.equal(await series['getLastUpdatedProvider'](), providerA);
-        return;
-    });
-
-    test('should return last watchprogress', async () => {
-        const series = new Series();
-        const providerA = new ListProviderLocalData(1, 'A');
-        providerA.lastUpdate = new Date(2);
-        providerA.addOneWatchedEpisode(5);
-        const providerB = new ListProviderLocalData(1, 'B');
-        providerB.lastUpdate = new Date(1);
-        providerB.addOneWatchedEpisode(4);
-        await series.addProviderDatas(providerA, providerB);
-        const result = await series.getLastWatchProgress();
-        if (result) {
-            assert.equal(result.episode, 5);
-        }
-        assert.notEqual(typeof result, 'undefined');
-        return;
-    });
-
     test('should all episodes (1/3)', async () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1, 'TestA');
@@ -109,18 +78,7 @@ describe('Series | Basic', () => {
         return;
     });
 
-    test('should max episode (3/3)', async () => {
-        const series = new Series();
-        const providerA = new ListProviderLocalData(1);
-        providerA.episodes = 12;
-        const providerB = new ListProviderLocalData(1);
-        providerB.episodes = 24;
-        // tslint:disable-next-line: no-string-literal
-        providerB['episodes'] = 11;
-        await series.addProviderDatas(providerA, providerB);
-        assert.throws(series.getMaxEpisode);
-        return;
-    });
+
 
     test('should prevent duplicates in names', async () => {
         const series = new Series();
@@ -128,7 +86,7 @@ describe('Series | Basic', () => {
         providerA.addSeriesName(new Name('Test', 'eng'));
         providerA.addSeriesName(new Name('Test', 'eng'));
         await series.addListProvider(providerA);
-        assert.strictEqual((await series.getAllNames()).length, 1);
+        assert.strictEqual((series.getAllNames()).length, 1);
     });
 
     test('should prevent null entrys in names', async () => {
@@ -136,7 +94,7 @@ describe('Series | Basic', () => {
         const providerA = new ListProviderLocalData(1);
         providerA.addSeriesName(null as unknown as Name);
         await series.addListProvider(providerA);
-        assert.strictEqual((await series.getAllNames()).length, 0);
+        assert.strictEqual((series.getAllNames()).length, 0);
     });
 
     test('should prevent undefined entrys in names', async () => {
@@ -144,7 +102,7 @@ describe('Series | Basic', () => {
         const providerA = new ListProviderLocalData(1);
         providerA.addSeriesName(undefined as unknown as Name);
         await series.addListProvider(providerA);
-        assert.strictEqual((await series.getAllNames()).length, 0);
+        assert.strictEqual((series.getAllNames()).length, 0);
     });
 
     test('should replace existing info provider binding', async () => {

@@ -18,12 +18,6 @@ describe('Provider: AniList | Converter tests', () => {
         const anime = await anilistConverter.convertListEntryToAnime(entry, ListType.COMPLETED);
         const providerInfo = anime.mainProvider.providerLocalData;
         if (providerInfo instanceof ListProviderLocalData) {
-            const highestWatchedResult = providerInfo.getHighestWatchedEpisode();
-            if (highestWatchedResult) {
-                assert.strictEqual(highestWatchedResult.episode, 1);
-            } else {
-                assert.fail();
-            }
             assert.strictEqual(anime.mainProvider.providerLocalData.episodes, 1);
             assert.strictEqual(providerInfo.watchStatus, ListType.COMPLETED);
         } else {

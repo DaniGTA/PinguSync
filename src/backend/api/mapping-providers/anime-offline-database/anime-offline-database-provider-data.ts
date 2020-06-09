@@ -1,15 +1,15 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
 import logger from '../../../logger/logger';
-import { IAnimeOfflineDatabase } from './objects/database-entry';
+import { AnimeOfflineDatabase } from './objects/database-entry';
 
 export default class AnimeOfflineDatabaseProviderData {
-    public database: IAnimeOfflineDatabase | null = null;
+    public database: AnimeOfflineDatabase | null = null;
     public lastDatabaseDownloadTimestamp = 0;
 
-    public getDatabase(): IAnimeOfflineDatabase {
+    public getDatabase(): AnimeOfflineDatabase {
         if (this.database) {
-            return { data: [] };
+            return this.database;
         } else {
             const data = this.loadDatabase();
             if (data) {
@@ -26,12 +26,12 @@ export default class AnimeOfflineDatabaseProviderData {
         this.saveData();
     }
 
-    public updateDatabase(database: IAnimeOfflineDatabase): void {
+    public updateDatabase(database: AnimeOfflineDatabase): void {
         this.database = database;
         this.updateLastTimestamp(Date.now());
     }
 
-    private loadDatabase(): IAnimeOfflineDatabase | null {
+    private loadDatabase(): AnimeOfflineDatabase | null {
         logger.info('[AnimeOfflineDatabaseProviderData] Loading database from file');
         const path = this.getPath();
         if (existsSync(path)) {

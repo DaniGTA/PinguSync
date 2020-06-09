@@ -101,7 +101,6 @@ describe('listProviderLocalData tests', () => {
         a.genres.push(new Genre('Action', 100));
         a.prequelIds.push(1);
         a.sequelIds.push(1);
-        a.watchProgress = [(new WatchProgress(1))];
         const episode = new Episode(5, new Season([1]));
         a.addDetailedEpisodeInfos(episode);
         const b = Object.assign(new ListProviderLocalData(1), a);
@@ -121,11 +120,6 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.detailEpisodeInfo.length, 1);
         strictEqual(merged.prequelIds.length, 1);
         strictEqual(merged.sequelIds.length, 1);
-        if (merged.watchProgress !== undefined) {
-            strictEqual(merged.watchProgress.length, 1);
-        } else {
-            fail();
-        }
         return;
     });
 });
