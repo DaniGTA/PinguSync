@@ -20,10 +20,8 @@ describe('Main list saver tests', () => {
         a.addListProviderBindings(new ListLocalDataBind(new ListProviderLocalData(2, 'Test')));
         await MainListManager.addSerieToMainList(a);
 
-        await MainListManager.requestSaveMainList();
+        MainListManager.requestSaveMainList();
 
-        equal(existsSync(MainListPath.getPath()), true);
-
-
+        expect(existsSync(MainListPath.getPath())).toBeTruthy();
     });
 });

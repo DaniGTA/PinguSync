@@ -12,7 +12,7 @@
 
 <template>
   <div class="setup-guide">
-    <h2 class="setup-title">{{$t('title')}}</h2>
+    <div class="setup-title">{{$t('title')}}</div>
     <div class="setup-steps">
       <SetupGuideEntry v-bind:required = "true" :completed="anyConnectedProvider"  v-bind:description = "$t('provider-login-description')" v-bind:syncCompleted.sync= "anyConnectedProvider" />
       <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('provider-setup-description')" />

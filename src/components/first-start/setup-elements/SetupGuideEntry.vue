@@ -85,9 +85,13 @@ export default class SetupGuideEntry extends Vue {
 
 
 .icon {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
-    grid-area: Icon; 
-    font-size: 1em;
+    grid-area: Icon;
+    font-size: 10px;
+    width: 55px;
+    align-self: center;
 }
 
 .type {

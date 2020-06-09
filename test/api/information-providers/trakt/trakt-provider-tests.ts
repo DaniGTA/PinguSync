@@ -9,7 +9,6 @@ import ProviderDataListManager from '../../../../src/backend/controller/provider
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
-import TestProvider from '../../../controller/objects/testClass/testProvider';
 import TraktTestProvider from './trakt-test-provider';
 // tslint:disable: no-string-literal
 describe('Provider: Trakt | Tests runs', () => {

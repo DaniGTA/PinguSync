@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
 import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
 import MultiProviderResult from '../../../src/backend/api/provider/multi-provider-result';
@@ -41,7 +40,7 @@ describe('MainList | Searcher tests', () => {
 
         const result = await searcher['quickFindSameSeriesInList'](series3, MainListManager['mainList']);
 
-        strictEqual(result.length, 1);
+        expect(result.length).toBe(1);
     });
 
     test('should find series 2', async () => {
@@ -64,8 +63,8 @@ describe('MainList | Searcher tests', () => {
         MainListManager['mainList'] = [series1, series2, series3];
 
         const search = new MultiProviderResult(new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider)));
-        const result = await MainListSearcher.findSeriesWithMultiProviderResult(search);
-        strictEqual(result, series1);
+        const result = MainListSearcher.findSeriesWithMultiProviderResult(search);
+        expect(result).toBe(series1);
 
     });
 
