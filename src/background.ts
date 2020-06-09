@@ -1,5 +1,5 @@
 'use strict';
-
+/* global process */
 // tslint:disable-next-line: no-implicit-dependencies
 import { app, protocol, BrowserWindow, ipcMain, shell } from 'electron';
 import {
@@ -8,14 +8,15 @@ import {
   // tslint:disable-next-line: no-implicit-dependencies tslint:disable-next-line: no-submodule-imports
 } from 'vue-cli-plugin-electron-builder/lib';
 // tslint:disable-next-line: no-implicit-dependencies
-import * as electron from 'electron';
 import * as mongoose from 'mongoose';
 import FrontendController from './backend/controller/frontend-controller';
 import DatabaseLoader from './backend/controller/stats-manager/database-loader';
 import logger from './backend/logger/logger';
 import AppUpdateController from './backend/controller/auto-updater/app-update-controller';
+import CronManager from './backend/controller/cron-jobs/cron-manager';
 try {
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
     if (err) {
       logger.error(err.message);
@@ -39,12 +40,11 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 
 const fc = new FrontendController();
 
-function createWindow() {
+function createWindow(): void {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800, height: 600, webPreferences: {
       // eslint-disable-next-line no-undef
-      nodeIntegration: process?.env.ELECTRON_NODE_INTEGRATION as any,
     },
   });
   fc.mainInit(win.webContents);
@@ -54,7 +54,7 @@ function createWindow() {
     try {
       if (!process.env.IS_TEST) { win.webContents.openDevTools(); }
     } catch (err) {
-
+      logger.error(err);
     }
   } else {
     createProtocol('app');
@@ -66,17 +66,9 @@ function createWindow() {
   win.on('closed', () => {
     win = null;
   });
+
   ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
     shell.openExternal(data);
-  });
-  ipcMain.on('get-path', (event: Electron.IpcMainEvent, s: string) => {
-    if (win != null) {
-      try {
-        win.webContents.send('path', (electron.app || electron.remote.app));
-      } catch (err) {
-        logger.error(err);
-      }
-    }
   });
 }
 
@@ -100,7 +92,7 @@ app.on('activate', () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {
+app.on('ready', () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -110,7 +102,8 @@ app.on('ready', async () => {
     }
   }
   createWindow();
-  await AppUpdateController.checkUpdate();
+  AppUpdateController.checkUpdate();
+  CronManager.init();
 });
 
 // Exit cleanly on request from parent process in development mode.

@@ -18,6 +18,7 @@ const router = RouterLoader.loadVueRouter();
 new Vue({
   i18n,
   store,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   render: (h): any => h(App),
   router,
 }).$mount('#app');
