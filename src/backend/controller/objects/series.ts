@@ -232,7 +232,7 @@ export default class Series extends SeriesProviderExtension {
         logger.debug('[Episode] [Serve]: Serve all Episodes');
         let result;
         try {
-            result = await listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap((x) => x.episodes));
+            result = listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap((x) => x.episodes));
         } catch (e) {
             logger.error(e);
         }
@@ -327,21 +327,6 @@ export default class Series extends SeriesProviderExtension {
         return new RelationSearchResults(null, ...searchedProviders);
     }
 
-    public async getCanSync(): Promise<boolean> {
-        if (this.canSync) {
-            return this.canSync;
-        }
-        try {
-            this.canSync = await this.getCanSyncStatus();
-            logger.debug('Calculated Sync status');
-        } catch (err) {
-            logger.error('Error at Series.getCanSync');
-            logger.error(err);
-            this.canSync = false;
-        }
-        return this.canSync;
-    }
-
     public getProviderSeasonTarget(providerName: string): Season | undefined {
         const bindings = this.getAllProviderBindings();
         const result = bindings.find((x) => x.providerName === providerName);
@@ -372,7 +357,6 @@ export default class Series extends SeriesProviderExtension {
             newAnime.addEpisodeBindingPools(...anime.episodeBindingPools, ...this.episodeBindingPools);
         }
         logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
-        await newAnime.getCanSync();
         if (this.lastInfoUpdate < anime.lastInfoUpdate) {
             newAnime.lastInfoUpdate = anime.lastInfoUpdate;
         } else {
@@ -388,25 +372,6 @@ export default class Series extends SeriesProviderExtension {
         return newAnime;
     }
 
-    public async getLastWatchProgress(): Promise<WatchProgress> {
-        logger.debug('[Episode] [Serve]: Last watch progress. SeriesID: ' + this.id);
-        const provider = await this.getLastUpdatedProvider();
-        if (provider) {
-            const latestUpdatedProvider = Object.assign(new ListProviderLocalData(provider.id), provider);
-            if (latestUpdatedProvider === null) {
-                throw new Error('[Series] no provider with valid sync status SeriesID: ' + this.id);
-            }
-
-            const watchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
-            if (watchProgress) {
-                return watchProgress;
-            } else {
-                throw new Error('[Series] no watch progress SeriesID: ' + this.id);
-            }
-        } else {
-            throw new Error('[Series] no provider with valid sync status SeriesID: ' + this.id);
-        }
-    }
     /**
      * Get the first season of this series.
      * @param list
@@ -645,103 +610,5 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         return collectedMediaTypes;
-    }
-
-    /**
-     * Checks if providers can be synced.
-     * The Provider need to have episode.
-     * The Provider need to have a user loggedIn.
-     * The Provider need to be out of sync.
-     */
-    private async getCanSyncStatus(): Promise<boolean> {
-        if (this.listProviderInfos.length <= 1) {
-            return false;
-        }
-        let latestUpdatedProvider: ListProviderLocalData | null = null;
-        try {
-            latestUpdatedProvider = await this.getLastUpdatedProvider();
-        } catch (err) {
-            logger.error('[ERROR] [Series] [getCanSyncStatus]:');
-            logger.error(err);
-        }
-        if (!latestUpdatedProvider) {
-            throw new Error('[Series] no provider with valid sync status SeriesID: ' + this.id);
-        }
-        latestUpdatedProvider = Object.assign(new ListProviderLocalData(latestUpdatedProvider.id), latestUpdatedProvider);
-        if (!await latestUpdatedProvider.getProviderInstance().isUserLoggedIn()) {
-            latestUpdatedProvider.lastUpdate = new Date(0);
-            for (let provider of this.getListProvidersInfos()) {
-                provider = Object.assign(new ListProviderLocalData(provider.id), provider);
-                if (provider !== latestUpdatedProvider && latestUpdatedProvider) {
-                    if (new Date(provider.lastUpdate) > latestUpdatedProvider.lastUpdate && provider.getProviderInstance().isUserLoggedIn()) {
-                        latestUpdatedProvider = provider;
-                    }
-                }
-            }
-        }
-
-        for (let provider of this.getListProvidersInfos()) {
-            provider = Object.assign(new ListProviderLocalData(provider.id), provider);
-            if (latestUpdatedProvider && latestUpdatedProvider.provider !== provider.provider && await provider.getProviderInstance().isUserLoggedIn()) {
-                const watchProgress = provider.getHighestWatchedEpisode();
-                const latestWatchProgress = latestUpdatedProvider.getHighestWatchedEpisode();
-                if (latestUpdatedProvider.watchProgress && latestWatchProgress && provider.episodes) {
-                    if (!watchProgress) {
-                        return true;
-                    }
-                    // If the watchprogress has a difference and if the provider has a max defined episode.
-                    // Without the episodes we dont know if we can sync or not.
-                    if (latestWatchProgress.episode !== watchProgress.episode) {
-                        if (!latestUpdatedProvider.episodes || latestWatchProgress.episode < latestUpdatedProvider.episodes) {
-                            try {
-                                if (!watchProgress) {
-                                    return true;
-                                } else if (this.getMaxEpisode() < watchProgress.episode) {
-                                    return false;
-                                } else {
-                                    provider.canUpdateWatchProgress = true;
-                                    return true;
-                                }
-                            } catch (err) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return the last updated provider with watchProgress !
-     */
-    private async getLastUpdatedProvider(exclude: ListProviderLocalData[] = []): Promise<ListProviderLocalData | null> {
-        logger.debug('[Provider] [Serve]: Last updated provider');
-        let latestUpdatedProvider: ListProviderLocalData | null = null;
-        const providerInfos = this.getListProvidersInfos();
-        if (providerInfos) {
-            for (const provider of providerInfos) {
-                if (provider.watchProgress) {
-                    if (exclude.findIndex((x) => x === latestUpdatedProvider) === -1) {
-                        if (latestUpdatedProvider === null) {
-                            latestUpdatedProvider = provider;
-                        } else {
-                            const latestExternalStatus = latestUpdatedProvider.lastExternalChange &&
-                                new Date(latestUpdatedProvider.lastExternalChange).getTime() !== 0;
-                            const providerExternalStatus = provider.lastExternalChange && new Date(provider.lastExternalChange).getTime() !== 0;
-                            if (latestExternalStatus && providerExternalStatus) {
-                                if (new Date(latestUpdatedProvider.lastExternalChange).getTime() < new Date(provider.lastExternalChange).getTime()) {
-                                    latestUpdatedProvider = provider;
-                                }
-                            } else if (new Date(latestUpdatedProvider.lastUpdate).getTime() < new Date(provider.lastUpdate).getTime()) {
-                                latestUpdatedProvider = provider;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return latestUpdatedProvider;
     }
 }

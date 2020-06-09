@@ -34,11 +34,6 @@ export default class ListController {
         return;
     }
 
-    public async syncProvider(anime: Series): Promise<void> {
-        const watchProgress = await anime.getLastWatchProgress();
-        this.updateWatchProgressTo(anime, watchProgress.episode);
-    }
-
     public removeSeriesPackageFromMainList(id: string): void {
         MainListPackageManager.removeSeriesPackage(id, this.getMainList());
     }

@@ -39,7 +39,7 @@ export default new class TraktConverter {
             }
             providerInfo.rawEntry = watchedInfo;
             for (const episode of season.episodes) {
-                providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
+                //providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
             }
             providerInfo.watchStatus = ListType.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
@@ -234,13 +234,13 @@ export default new class TraktConverter {
             for (let i = 1; i < maxEpisodes; i++) {
 
                 for (let index = 1; (index < newWatchprogress + 1 && index < maxEpisodes + 1 && i < newWatchprogress + 1); index++) {
-                    if (currentProvider.watchProgress) {
+                    /**if (currentProvider.watchProgress) {
                         if (newWatchprogress === index || currentProvider.watchProgress.findIndex((x) => x.episode === index) === -1) {
                             episodes.push({ number: index });
                         }
                     } else {
                         episodes.push({ number: index });
-                    }
+                    }**/
                 }
                 for (const seasonNumber of seasonNumbers) {
                     const season: TrakSeason = {

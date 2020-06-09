@@ -137,7 +137,7 @@ export default new class AniListConverter {
         providerInfo.banners.push(new Banner(entry.media.bannerImage, ImageSize.LARGE));
         if (entry.progress !== 0) {
             for (let index = 0; index < entry.progress; index++) {
-                providerInfo.addOneWatchedEpisode(index + 1);
+                //providerInfo.addOneWatchedEpisode(index + 1);
             }
         }
 
