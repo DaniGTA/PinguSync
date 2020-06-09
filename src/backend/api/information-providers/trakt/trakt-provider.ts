@@ -17,15 +17,19 @@ import { TraktUserInfo } from './objects/userInfo';
 import { WatchedInfo } from './objects/watchedInfo';
 import traktConverter from './trakt-converter';
 import { TraktUserData } from './trakt-user-data';
+import { UserInfoSmall } from './objects/userInfoSmall';
 export default class TraktProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
         throw new Error('Method not implemented.');
     }
     
     public async getUsername(): Promise<string> {
-        const a = await this.traktRequest('',);
-        throw new Error('Method not implemented.');
+        const a = 'https://api.trakt.tv/users/'+this.userData.username;   
+        const b  = await this.traktRequest<UserInfoSmall>(a);
+        return b.name ?? b.username;
+        
     }
+
     public logoutUser(): void {
         this.userData.removeTokens();
     }
