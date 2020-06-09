@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import MainListPackageManager from '../../../src/backend/controller/main-list-manager/main-list-package-manager';
 import Series from '../../../src/backend/controller/objects/series';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
@@ -24,6 +23,6 @@ describe('MainListPackageManager', () => {
         const seriesList = Object.freeze(list);
         const seriesPackage = await MainListPackageManager.getSeriesPackages(seriesList);
 
-        strictEqual(seriesPackage.length, 1);
+        expect(seriesPackage.length).toBe(1);
     });
 });

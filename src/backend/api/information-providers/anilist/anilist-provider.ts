@@ -206,9 +206,6 @@ export default class AniListProvider extends ListProvider {
                 aniListProvider.watchStatus = ListType.CURRENT;
                 watchStatus = 'CURRENT';
             }
-
-            aniListProvider.addOneWatchProgress(watchProgress);
-
             await this.webRequest(this.getGraphQLOptions(saveMediaListEntryGql, { mediaId: aniListProvider.id, status: watchStatus, progress: watchProgress }));
 
             return aniListProvider;
@@ -220,7 +217,6 @@ export default class AniListProvider extends ListProvider {
     public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         const providerInfo = anime.getListProvidersInfos().find((x) => x.provider === this.providerName);
         if (typeof providerInfo !== 'undefined') {
-            providerInfo.removeOneWatchProgress(watchProgress);
             return providerInfo;
         }
         throw new Error('err');
