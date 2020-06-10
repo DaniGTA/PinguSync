@@ -28,16 +28,18 @@ export default class ShowStatusOfSingleProvider extends Vue {
     @Prop({required:true})
     provider!: ListProvider;
 
-    isSync!: boolean;
+    isSync = true;
 
-    async mounted(): Promise<void> {
-        this.isSync = await this.isSynced();
+    mounted(): void {
+        this.isSynced();
         console.log('Hovering: '+ SeriesHoverController.currentlyHoveringSeriesId);
     }
 
     async isSynced(): Promise<boolean>{
         const result = await ProviderController.isProviderSync({providerName: this.provider.providerName, seriesId: SeriesHoverController.currentlyHoveringSeriesId});
-        return result.isSync;
+        console.log(result);
+         this.isSync = result.isSync;
+         return this.isSync;
     }
 }
 </script>

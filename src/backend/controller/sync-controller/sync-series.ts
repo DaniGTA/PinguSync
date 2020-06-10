@@ -5,7 +5,7 @@ import ProviderList from '../provider-controller/provider-manager/provider-list'
 
 export default class SyncSeries {
     public static async updateLocalSeriesListWithAllProviders(): Promise<void> {
-        logger.log('info', '[calc] -> SeriesList');
+        logger.log('info', '[SYNC] Start updateing series list with all Providers...');
         const allSeries: MultiProviderResult[] = await this.getAllEntrysFromProviders(true);
         await new MainListEntryUpdater().updateSeries(...allSeries);
     }

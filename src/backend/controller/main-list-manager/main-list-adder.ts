@@ -62,7 +62,7 @@ export default class MainListAdder {
         let addCounter = 0;
         for (const series of list) {
             const providerCache = providerCacheManager.convertSeriesToProviderCache(series);
-            if (MainListAdder.currentlyAdding.length === 0 || !await listHelper.isAnyListEntryInList(MainListAdder.currentlyAdding, providerCache)) {
+            if (MainListAdder.currentlyAdding.length === 0 || !listHelper.isAnyListEntryInList(MainListAdder.currentlyAdding, providerCache)) {
                 MainListAdder.currentlyAdding.push(...providerCache);
                 try {
                     const entrys = await searcher.quickFindSameSeriesInMainList(series);

@@ -61,8 +61,8 @@ export default class SyncEpisodes {
         throw 'Episode not found';
     }
 
-    isEpisodeWatchedById(id: string): boolean {
-        const episode = this.getEpisodeById(id);
+    isEpisodeWatchedById(id: string, provider?: string): boolean {
+        const episode = this.getEpisodeById(id, provider);
         return this.isEpisodeWatchedByEpisode(episode);
     }
 
@@ -83,6 +83,8 @@ export default class SyncEpisodes {
         } else {
             for (const provider of this.series.getAllProviderLocalDatas()) {
                 result = provider?.detailEpisodeInfo.find(x => x.id === id);
+                if (result)
+                    return result;
             }
         }
         if (result) {

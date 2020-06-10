@@ -44,7 +44,8 @@ function createWindow(): void {
   // Create the browser window.
   win = new BrowserWindow({
     width: 800, height: 600, webPreferences: {
-      // eslint-disable-next-line no-undef
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      nodeIntegration: process?.env.ELECTRON_NODE_INTEGRATION as any,
     },
   });
   fc.mainInit(win.webContents);

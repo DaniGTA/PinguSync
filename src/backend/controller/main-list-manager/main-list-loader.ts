@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import logger from '../../logger/logger';
 import Series from '../objects/series';
 import MainListPath from './main-list-path';
@@ -17,7 +17,8 @@ export default class MainListLoader {
                 logger.log('info', 'Items loaded: ' + loadedData.length);
                 return this.convertJSONArrayToSeriesArray(loadedData);
             } else {
-                logger.error('File not exist');
+                logger.warn('File not exist, creating file...');
+                writeFileSync(MainListPath.getPath(), '');
             }
         } catch (err) {
             logger.error(err);

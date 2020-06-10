@@ -1,8 +1,8 @@
-import cron from 'node-cron';
+import cron from 'cron';
 import SyncSeries from '../sync-controller/sync-series';
 export default class CronUpdateSeriesList {
-    public static getUpdateSeriesListCronJob(): cron.ScheduledTask {
-        const job = cron.schedule('*/30 * * * *', () => {
+    public static getUpdateSeriesListCronJob(): cron.CronJob {
+        const job = cron.job('*/120 * * * *', () => {
             SyncSeries.updateLocalSeriesListWithAllProviders();
         });
         return job;
