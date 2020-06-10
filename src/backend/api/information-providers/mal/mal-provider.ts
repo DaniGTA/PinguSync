@@ -11,6 +11,7 @@ import ListProvider from '../../provider/list-provider';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import malConverter from './mal-converter';
 import { MalUserData } from './mal-user-data';
+import Episode from '../../../controller/objects/meta/episode/episode';
 export default class MalProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
         throw new Error('Method not implemented.');

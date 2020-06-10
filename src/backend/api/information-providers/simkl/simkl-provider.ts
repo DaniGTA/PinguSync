@@ -23,6 +23,7 @@ import { ISimklTextSearchResults } from './objects/simklTextSearchResults';
 import { UserListResponse } from './objects/userListResonse';
 import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
+import Episode from '../../../controller/objects/meta/episode/episode';
 
 export default class SimklProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {

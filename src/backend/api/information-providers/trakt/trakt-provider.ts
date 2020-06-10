@@ -19,6 +19,8 @@ import traktConverter from './trakt-converter';
 import { TraktUserData } from './trakt-user-data';
 import { UserInfoSmall } from './objects/userInfoSmall';
 import Episode from '../../../controller/objects/meta/episode/episode';
+import { Movie } from './objects/movies';
+import { monitorEventLoopDelay } from 'perf_hooks';
 export default class TraktProvider extends ListProvider {
 
     public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
@@ -26,7 +28,10 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async markEpisodeAsWatched(episode: Episode): Promise<void> {
-
+        
+        const id = JSON.stringify({episode as movie});
+        const response = await this.traktRequest<>('https://api.trakt.tv/sync/history','',id);
+        episode.
     }
 
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
@@ -34,9 +39,9 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async getUsername(): Promise<string> {
-        const a = 'https://api.trakt.tv/users/' + this.userData.username;
-        const b = await this.traktRequest<UserInfoSmall>(a);
-        return b.name ?? b.username;
+        const url = 'https://api.trakt.tv/users/' + this.userData.username;
+        const response = await this.traktRequest<UserInfoSmall>(url);
+        return response.name ?? response.username;
 
     }
 

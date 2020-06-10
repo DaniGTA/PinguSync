@@ -28,6 +28,7 @@ import ProviderUserList from '../../../controller/objects/provider-user-list';
 import getUserSeriesListInfoGql from './graphql/getUserSeriesListInfo.gql';
 import { GetUserSeriesListInfo } from './graphql/getUserSeriesList';
 import { ListType } from '../../../controller/settings/models/provider/list-types';
+import Episode from '../../../controller/objects/meta/episode/episode';
 
 export default class AniListProvider extends ListProvider {
     public async getAllLists(): Promise<ProviderUserList[]> {

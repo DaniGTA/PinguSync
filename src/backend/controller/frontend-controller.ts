@@ -4,7 +4,6 @@ import IPCBackgroundController from '../communication/ipc-background-controller'
 import logger from '../logger/logger';
 import ListController from './list-controller';
 import MainListPackageManager from './main-list-manager/main-list-package-manager';
-import Series from './objects/series';
 import SeriesPackage from './objects/series-package';
 import IUpdateList from './objects/update-list';
 import ProviderList from './provider-controller/provider-manager/provider-list';
@@ -97,10 +96,6 @@ export default class FrontendController {
             this.communcation.send('all-providers', ProviderList.getListProviderList().flatMap((x) => x.providerName));
         });
 
-        this.communcation.on('sync-series', (data) => {
-            this.syncSeries(data);
-        });
-
         this.communcation.on('delete-series-package', (data: string) => {
             if (ListController.instance) {
                 ListController.instance.removeSeriesPackageFromMainList(data);
@@ -109,26 +104,6 @@ export default class FrontendController {
             }
         });
 
-
-        this.communcation.on('anime-update-watch-progress', async (data) => {
-            if (ListController.instance) {
-                const lc = ListController.instance;
-                const anime: Series = Object.assign(new Series(), data.anime);
-                logger.log('info', data);
-                if (data.reduce) {
-                    lc.removeWatchProgress(anime, await anime.getLastWatchProgress());
-                } else {
-                    const watchProgress = await anime.getLastWatchProgress();
-                    if (watchProgress) {
-                        lc.updateWatchProgressTo(anime, watchProgress.episode++);
-                    } else {
-                        lc.updateWatchProgressTo(anime, 1);
-                    }
-                }
-            } else {
-                logger.log('info', 'Failed to update watch progress: no provider instance');
-            }
-        });
     }
 
     public async removeEntryFromList(index: number) {
@@ -158,17 +133,4 @@ export default class FrontendController {
         this.communcation.send('update-series-list', { targetIndex, updatedEntry } as IUpdateList);
     }
 
-    private async syncSeries(id: string | number) {
-        if (ListController.instance) {
-            const lc = ListController.instance;
-            const anime = (lc.getMainList()).find((x) => x.id === id);
-            if (anime) {
-                lc.syncProvider(anime);
-            } else {
-                logger.error('Error on sync series');
-            }
-        } else {
-            logger.error('Failed sync series: no list provider instance');
-        }
-    }
 }

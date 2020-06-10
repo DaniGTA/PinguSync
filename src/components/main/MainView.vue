@@ -8,7 +8,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import MainHeader from './header/Header.vue';
+import MainHeader from './header/HeaderView.vue';
 import ListBlock from './list/ListBlock.vue';
 
 @Component({

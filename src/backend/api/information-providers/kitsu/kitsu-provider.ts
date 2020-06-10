@@ -19,6 +19,7 @@ import kitsuConverter from './kitsu-converter';
 import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
+import Episode from '../../../controller/objects/meta/episode/episode';
 export default class KitsuProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
         throw new Error('Method not implemented.');
