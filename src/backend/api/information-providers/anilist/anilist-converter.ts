@@ -20,6 +20,8 @@ import { Entry, MediaRelation, Relation } from './graphql/seriesList';
 import { GetUserSeriesListInfo } from './graphql/getUserSeriesList';
 import ProviderUserList from '../../../controller/objects/provider-user-list';
 import { ListType } from '../../../controller/settings/models/provider/list-types';
+import EpisodeGeneratorHelper from '../../../helpFunctions/episode-mapping-helper/episode-generator-helper';
+import WatchHistory from '../../../controller/objects/meta/episode/episode-watch-history';
 
 export default new class AniListConverter {
 
@@ -135,11 +137,6 @@ export default new class AniListConverter {
         providerInfo.covers.push(new Cover(entry.media.coverImage.medium, ImageSize.MEDIUM));
 
         providerInfo.banners.push(new Banner(entry.media.bannerImage, ImageSize.LARGE));
-        if (entry.progress !== 0) {
-            for (let index = 0; index < entry.progress; index++) {
-                //providerInfo.addOneWatchedEpisode(index + 1);
-            }
-        }
 
         providerInfo.watchStatus = watchStatus;
         providerInfo.lastExternalChange = new Date(entry.updatedAt);
@@ -147,6 +144,13 @@ export default new class AniListConverter {
         if (typeof entry.media.episodes !== 'undefined') {
             providerInfo.episodes = entry.media.episodes;
         }
+        const episode = EpisodeGeneratorHelper.generateMissingEpisodes(providerInfo, new Season(seasonNumber));
+        providerInfo.detailEpisodeInfo.push(...episode);
+        for (let index = 1; index < entry.progress + 1; index++) {
+            const element = episode.find(x => x.episodeNumber === index);
+            element?.watchHistory.push(new WatchHistory());
+        }
+
         return new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(providerInfo, new Season(seasonNumber)));
     }
 

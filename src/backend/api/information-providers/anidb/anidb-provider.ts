@@ -29,6 +29,11 @@ export default class AniDBProvider extends InfoProvider {
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [MalProvider];
     public requireInternetAccessGetMoreSeriesInfoByName = false;
+
+    private isBanned = false;
+    private bannedTimestamp = 0;
+    private clientName = 'SyncAnimeWatchList';
+    private clientVersion = 3;
     constructor(private download = true) {
         super();
         if (!AniDBProvider.instance) {
@@ -63,7 +68,7 @@ export default class AniDBProvider extends InfoProvider {
         const converter = new AniDBConverter();
         if (provider.provider === this.providerName && provider.id) {
             try {
-                const fullInfo = await this.webRequest<AniDBAnimeFullInfo>('http://api.anidb.net:9001/httpapi?request=anime&client=animesynclist&clientver=2&protover=1&aid=' + provider.id);
+                const fullInfo = await this.webRequest<AniDBAnimeFullInfo>(`http://api.anidb.net:9001/httpapi?request=anime&client=${this.clientName}&clientver=${this.clientVersion}&protover=1&aid=` + provider.id);
                 return converter.convertFullInfoToProviderLocalData(fullInfo);
             } catch (err) {
                 throw new Error(err);
@@ -73,7 +78,7 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     public async isProviderAvailable(): Promise<boolean> {
-        return true;
+        return this.isBanned;
     }
 
     private async getSameTitle(searchTitle: string, nameDBList: AniDBNameListXML, season?: number): Promise<MultiProviderResult[]> {
@@ -197,6 +202,11 @@ export default class AniDBProvider extends InfoProvider {
         const response = await WebRequestManager.request({ method: 'GET', uri: url, gzip: true });
         logger.log('info', '[AniDB] statusCode:', response && response.statusCode); // Print the response status code if a response was received
         if (response.statusCode === 200) {
+            if (response.body === '<error code="500">banned</error>') {
+                this.bannedTimestamp = new Date().getTime();
+                this.isBanned = true;
+                throw new Error('[AniDB] [API_ERROR]: 500 = BANNED');
+            }
             const json = xml2json(response.body, { compact: true, spaces: 0 });
             if (json) {
                 return JSON.parse(json) as T;

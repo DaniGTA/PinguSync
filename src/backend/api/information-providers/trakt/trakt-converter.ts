@@ -26,6 +26,7 @@ import ITraktShowSeasonInfo from './objects/showSeasonInfo';
 import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
 import { ListType } from '../../../controller/settings/models/provider/list-types';
+import WatchHistory from '../../../controller/objects/meta/episode/episode-watch-history';
 
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
@@ -39,7 +40,15 @@ export default new class TraktConverter {
             }
             providerInfo.rawEntry = watchedInfo;
             for (const episode of season.episodes) {
-                //providerInfo.addOneWatchedEpisode(episode.number, episode.plays, episode.last_watched_at);
+                const ep = new Episode(episode.number, new Season(season.number));
+                for (let index = 1; index < episode.plays + 1; index++) {
+                    if (index === episode.plays) {
+                        ep.watchHistory.push(new WatchHistory(new Date(episode.last_watched_at).getTime()));
+                    } else {
+                        ep.watchHistory.push(new WatchHistory());
+                    }
+                }
+                providerInfo.detailEpisodeInfo.push(ep);
             }
             providerInfo.watchStatus = ListType.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
@@ -164,6 +173,7 @@ export default new class TraktConverter {
                     if (seasonInfo.title && seasonInfo.title.toLowerCase().includes('special')) {
                         tempEpisode.type = EpisodeType.SPECIAL;
                     }
+
                     detailedEpisodes.push(tempEpisode);
                 }
             } else if (seasonInfo.episode_count) {

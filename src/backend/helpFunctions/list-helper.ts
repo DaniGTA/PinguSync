@@ -107,14 +107,15 @@ class ListHelper {
         return mostCommonNumber;
     }
 
-    public getUniqueEpisodeList(newArr: Episode[], oldArr: Episode[]): Episode[] {
-        const copyArr1 = [...newArr, ...oldArr];
+    public getUniqueEpisodeList(oldArr: Episode[], newArr: Episode[]): Episode[] {
         const uniqueEpisodeList: Episode[] = [];
-        for (const episode of copyArr1) {
+        for (let episode of newArr) {
             if (!this.isEpisodeInArray(uniqueEpisodeList, episode)) {
-                const oldEp = EpisodeHelper.getOldEpInOldArrayWithNew(episode, oldArr);
-                if (oldEp) {
-                    episode.id = oldEp?.id;
+                const newEp = EpisodeHelper.getOldEpInOldArrayWithNew(episode, oldArr);
+                if (newEp) {
+                    const id = new String(episode.id);
+                    episode = newEp;
+                    episode.id = id.toString();
                 }
                 uniqueEpisodeList.push(episode);
             }

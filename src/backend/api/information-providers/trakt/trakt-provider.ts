@@ -28,10 +28,9 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async markEpisodeAsWatched(episode: Episode): Promise<void> {
-        
-        const id = JSON.stringify({episode as movie});
-        const response = await this.traktRequest<>('https://api.trakt.tv/sync/history','',id);
-        episode.
+
+        const id = JSON.stringify({ episode });
+        const response = await this.traktRequest('https://api.trakt.tv/sync/history', '', id);
     }
 
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {

@@ -528,6 +528,15 @@ export default class Series extends SeriesProviderExtension {
         return listType;
     }
 
+    public hasListType(listType: ListType): boolean {
+        for (const localdata of this.getListProvidersInfos()) {
+            if (localdata.watchStatus !== undefined && localdata.watchStatus == listType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {
         const result = await SeasonFindHelper.prepareSearchSeasonValue(this, searchMode, searchInList);
         if (result.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER && searchMode !== SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS) {

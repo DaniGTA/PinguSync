@@ -5,10 +5,10 @@ import Episode from '../../../src/backend/controller/objects/meta/episode/episod
 import Genre from '../../../src/backend/controller/objects/meta/genre';
 import { ImageSize } from '../../../src/backend/controller/objects/meta/image-size';
 import Season from '../../../src/backend/controller/objects/meta/season';
-import WatchProgress from '../../../src/backend/controller/objects/meta/watch-progress';
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import { ListType } from '../../../src/backend/controller/settings/models/provider/list-types';
+import WatchHistory from '../../../src/backend/controller/objects/meta/episode/episode-watch-history';
 
 describe('listProviderLocalData tests', () => {
     test('should merge two', async () => {
@@ -29,7 +29,7 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.covers.length, 1, 'Cover merge failed');
         strictEqual(merged.episodes, 14, 'Episodes merge failed');
         strictEqual(merged.publicScore, 20, 'Public score merge failed');
-        strictEqual(merged.score, 40, 'Score merge failed');
+        expect(merged.score).toBe(40);
         strictEqual(merged.infoStatus, ProviderInfoStatus.FULL_INFO, 'Should add latest hasFullInfo');
         strictEqual(merged.watchStatus, ListType.COMPLETED, 'Should add latest watch status');
         return;
@@ -55,9 +55,22 @@ describe('listProviderLocalData tests', () => {
         const merged = await ListProviderLocalData.mergeProviderInfos(a, b, c);
         strictEqual(merged.covers.length, 2, 'Cover merge failed');
         strictEqual(merged.episodes, 15, 'Episodes merge failed');
-        strictEqual(merged.publicScore, 20, 'Public score merge failed');
+        expect(merged.publicScore).toBe(20);
         strictEqual(merged.lastUpdate.getTime(), new Date(20000).getTime(), 'Last update merge failed');
         return;
+    });
+    test('should merge provider watchHistory', async () => {
+        const a = new ListProviderLocalData(1);
+        a.detailEpisodeInfo.push(new Episode(1));
+
+        const b = new ListProviderLocalData(1);
+        const bEp = new Episode(1);
+        bEp.watchHistory.push(new WatchHistory());
+        b.detailEpisodeInfo.push(bEp);
+
+        const merged = await ListProviderLocalData.mergeProviderInfos(a, b);
+
+        expect(merged.detailEpisodeInfo[0].watchHistory.length).not.toBe(0);
     });
 
     test('should not merge same cover', async () => {
@@ -83,7 +96,7 @@ describe('listProviderLocalData tests', () => {
         strictEqual(merged.episodes, 15);
         strictEqual(merged.publicScore, 25);
         strictEqual(merged.lastUpdate.getTime(), 2);
-        strictEqual(merged.score, 40);
+        expect(merged.score).toBe(40);
         strictEqual(merged.isNSFW, true);
         return;
     });
@@ -109,17 +122,17 @@ describe('listProviderLocalData tests', () => {
 
 
         const merged = await ListProviderLocalData.mergeProviderInfos(b, a);
-        strictEqual(merged.covers.length, 1);
-        strictEqual(merged.episodes, 13);
-        strictEqual(merged.publicScore, 20);
-        strictEqual(merged.lastUpdate.getTime(), 1);
-        strictEqual(merged.score, 20);
-        strictEqual(merged.alternativeIds.length, 1);
-        strictEqual(merged.banners.length, 2);
-        strictEqual(merged.genres.length, 1);
-        strictEqual(merged.detailEpisodeInfo.length, 1);
-        strictEqual(merged.prequelIds.length, 1);
-        strictEqual(merged.sequelIds.length, 1);
+        expect(merged.covers.length).toBe(1);
+        expect(merged.episodes).toBe(13);
+        expect(merged.publicScore).toBe(20);
+        expect(merged.lastUpdate.getTime()).toBe(1);
+        expect(merged.score).toBe(20);
+        expect(merged.alternativeIds.length).toBe(1);
+        expect(merged.banners.length).toBe(2);
+        expect(merged.genres.length).toBe(1);
+        expect(merged.detailEpisodeInfo.length).toBe(1);
+        expect(merged.prequelIds.length).toBe(1);
+        expect(merged.sequelIds.length).toBe(1);
         return;
     });
 });

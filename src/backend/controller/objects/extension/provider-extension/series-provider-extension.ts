@@ -184,4 +184,13 @@ export default class SeriesProviderExtension {
         const localdata: ProviderLocalDataWithSeasonInfo[] = this.getAllProviderLocalDatasWithSeasonInfo();
         return localdata.find((entry) => entry.providerLocalData.provider === provider.providerName);
     }
+
+    /**
+     * Get a single provider local data with the given provider.
+     * @param provider the given providerName.
+     */
+    public getProviderLocalDataWithSeasonInfoByProviderName(providerName: string): ProviderLocalDataWithSeasonInfo | undefined {
+        const localdata: ProviderLocalDataWithSeasonInfo[] = this.getAllProviderLocalDatasWithSeasonInfo();
+        return localdata.find((entry) => entry.providerLocalData.provider === providerName);
+    }
 }

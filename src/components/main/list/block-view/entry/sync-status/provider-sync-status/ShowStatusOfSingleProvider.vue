@@ -1,12 +1,9 @@
 <template>
-<div>
-    <ProviderImageBlock :provider="provider" :showText="false"/>
-    <template v-if="isSync">
-        <i class="fas fa-check"></i>
-    </template>
-    <template v-else>
-        <i class="fas fa-times"></i>
-    </template>
+    <div>
+        <ProviderImageBlock :provider="provider" :showText="false"/>
+        <i v-if="isSync" class="fas fa-check"></i>
+        <q-skeleton v-else-if="isSync === null" c size="12px" />
+        <i v-else class="fas fa-times"></i>
     </div>
 </template>
 
@@ -28,18 +25,15 @@ export default class ShowStatusOfSingleProvider extends Vue {
     @Prop({required:true})
     provider!: ListProvider;
 
-    isSync = true;
+    public isSync: boolean | null = null;
 
-    mounted(): void {
-        this.isSynced();
-        console.log('Hovering: '+ SeriesHoverController.currentlyHoveringSeriesId);
+    async mounted(): Promise<void> {
+       this.isSync = await this.isSynced();
     }
 
-    async isSynced(): Promise<boolean>{
+    async isSynced(): Promise<boolean> {
         const result = await ProviderController.isProviderSync({providerName: this.provider.providerName, seriesId: SeriesHoverController.currentlyHoveringSeriesId});
-        console.log(result);
-         this.isSync = result.isSync;
-         return this.isSync;
+        return result.isSync;
     }
 }
 </script>

@@ -107,7 +107,7 @@ export default class MainListSearcher {
     public static getAllSeriesWithTypeList(list: ListType): Series[] {
         const seriesList: Series[] = [];
         for (const entry of MainListManager.getMainList()) {
-            if (entry.getListType() === list || list === ListType.ALL) {
+            if (entry.hasListType(list) || list === ListType.ALL) {
                 seriesList.push(entry);
             }
         }

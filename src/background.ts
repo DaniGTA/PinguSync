@@ -45,7 +45,7 @@ function createWindow(): void {
   win = new BrowserWindow({
     width: 800, height: 600, webPreferences: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      nodeIntegration: process?.env.ELECTRON_NODE_INTEGRATION as any,
+      nodeIntegration: process?.env.ELECTRON_NODE_INTEGRATION as unknown as boolean,
     },
   });
   fc.mainInit(win.webContents);
