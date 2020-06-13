@@ -10,6 +10,3 @@
     export interface Movies {
         movies: Movie[];
     }
-
-
-

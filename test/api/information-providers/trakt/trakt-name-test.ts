@@ -2,7 +2,7 @@ import ProviderList from '../../../../src/backend/controller/provider-controller
 import TraktProvider from '../../../../src/backend/api/information-providers/trakt/trakt-provider';
 import WebRequestManager from '../../../../src/backend/controller/web-request-manager/web-request-manager';
 
-describe('Provider: Trakt | Username get tests', () => {
+describe('Provider: Trakt | username/name get tested', () => {
     const traktProviderInstance = ProviderList.getProviderInstanceByClass(TraktProvider);
 
     test('should get name', async ()=>{
