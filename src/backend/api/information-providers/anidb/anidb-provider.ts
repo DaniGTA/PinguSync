@@ -78,7 +78,7 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     public async isProviderAvailable(): Promise<boolean> {
-        return this.isBanned;
+        return !this.isBanned;
     }
 
     private async getSameTitle(searchTitle: string, nameDBList: AniDBNameListXML, season?: number): Promise<MultiProviderResult[]> {

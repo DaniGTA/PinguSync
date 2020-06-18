@@ -11,7 +11,7 @@ import DownloadProviderLocalDataToTargetHelper from '../provider-info-downloader
 import SeasonAwarenessHelper from './season-awareness-helper';
 
 export default class SeasonAwarenessFindSeasonNumber {
-    public static async  getSeasonForProvider(series: Series, localData: ProviderLocalData): Promise<Season> {
+    public static async getSeasonForProvider(series: Series, localData: ProviderLocalData): Promise<Season> {
         const externalProviderInstance = ProviderList.getProviderInstanceByLocalData(localData);
         if (localData) {
             if (externalProviderInstance.hasEpisodeTitleOnFullInfo) {
@@ -55,7 +55,7 @@ export default class SeasonAwarenessFindSeasonNumber {
         if (result.finalSeasonNumbers !== undefined && result.seasonComplete) {
             return new Season(result.finalSeasonNumbers);
         } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder !== 1) {
-            const prequel = await series.getPrequel();
+            const prequel = series.getPrequel();
             if (prequel.foundedSeries) {
                 const prequelSeason = await this.searchSeasonForProvider(prequel.foundedSeries, targetLocalDataProvider);
                 if (prequelSeason.seasonPart !== undefined) {

@@ -185,7 +185,7 @@ describe('Episode mapping | Mapping Only', () => {
             // Result checking
             for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x => x.getAllDetailedEpisodes())) {
                 const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, episode);
-                strictEqual(mappedTo.length, 2, episode.episodeNumber + '');
+                expect(mappedTo.length).toBe(2);
                 strictEqual(mappedTo[0].episodeNumber, episode.episodeNumber);
                 notStrictEqual(mappedTo[0].provider, episode.provider);
             }
@@ -218,7 +218,7 @@ describe('Episode mapping | Mapping Only', () => {
         for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x => x.getAllDetailedEpisodes())) {
             const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(result, episode);
 
-            strictEqual(mappedTo.length, 1);
+            expect(mappedTo.length).toBe(1);
             strictEqual(mappedTo[0].episodeNumber, episode.episodeNumber);
             notStrictEqual(mappedTo[0].provider, episode.provider);
         }
@@ -264,11 +264,11 @@ describe('Episode mapping | Mapping Only', () => {
         await MainListManager.finishListFilling();
 
         // Result checking
-        const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
+        const allEpisodeBindingsPool = (MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
 
         for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x => x.getAllDetailedEpisodes())) {
             const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
-            strictEqual(mappedTo.length, 1, episode.episodeNumber + '');
+            expect(mappedTo.length).toBe(1);
             notStrictEqual(mappedTo[0].provider, episode.provider);
         }
     });
@@ -327,19 +327,19 @@ describe('Episode mapping | Mapping Only', () => {
 
             await MainListManager.finishListFilling();
 
-            const allEpisodeBindingsPool = (await MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
+            const allEpisodeBindingsPool = (MainListManager.getMainList()).flatMap((x) => x.episodeBindingPools);
 
             // Result checking
             for (const episode of aSeries.getAllProviderLocalDatas().flatMap(x => x.getAllDetailedEpisodes())) {
                 const mappedTo = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
 
                 strictEqual(mappedTo.length, 1, episode.episodeNumber + '');
-                notStrictEqual(mappedTo[0].provider, episode.provider);
+                expect(mappedTo[0].provider).not.toBe(episode.provider);
             }
         },
     );
 
-    test('should sort episode list right', async () => {
+    test('should sort episode list right', () => {
 
         let episodes: Episode[] = [];
         const episode1 = new Episode(1);
@@ -357,7 +357,7 @@ describe('Episode mapping | Mapping Only', () => {
         episodes.push(episode1s2);
         episodes.push(episode2s2);
 
-        episodes = await listHelper.shuffle(episodes);
+        episodes = listHelper.shuffle(episodes);
 
         // Testing
 
@@ -365,12 +365,12 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Result checking
 
-        strictEqual(result[0], episode1, '0 should be EP01S01');
-        strictEqual(result[1], episode2s1, '1 should be EP02S01');
-        strictEqual(result[2], episode3, '2 should be EP03S01');
-        strictEqual(result[3], episode1s2, '3 should be EP01S02');
-        strictEqual(result[4], episode2s2, '4 should be EP02S02');
-        strictEqual(result[5], episode4, '5 should be EP04S01');
+        expect(result[0]).toBe(episode1);
+        expect(result[1]).toBe(episode2s1);
+        expect(result[2]).toBe(episode3);
+        expect(result[3]).toBe(episode1s2);
+        expect(result[4]).toBe(episode2s2);
+        expect(result[5]).toBe(episode4);
     });
     describe('sorting episode results', () => {
         test('should sort result container right', async () => {
@@ -385,13 +385,13 @@ describe('Episode mapping | Mapping Only', () => {
             const ep1erec = new EpisodeRatedEqualityContainer(ep1r);
             const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
             const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
-            strictEqual(sorted[0], ep2erec);
-            strictEqual(sorted[1], ep1erec);
-            strictEqual(sorted2[0], ep2erec);
-            strictEqual(sorted2[1], ep1erec);
+            expect(sorted[0]).toBe(ep2erec);
+            expect(sorted[1]).toBe(ep1erec);
+            expect(sorted2[0]).toBe(ep2erec);
+            expect(sorted2[1]).toBe(ep1erec);
         });
 
-        test('should sort result container right', async () => {
+        test('should sort result container right 2', async () => {
 
             const ep2r = new ComperatorResult();
             ep2r.matchAble = 2;
@@ -404,10 +404,10 @@ describe('Episode mapping | Mapping Only', () => {
 
             const sorted = await sortHelper.quickSort([ep1erec, ep2erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
             const sorted2 = await sortHelper.quickSort([ep2erec, ep1erec], async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
-            strictEqual(sorted[0], ep1erec);
-            strictEqual(sorted[1], ep2erec);
-            strictEqual(sorted2[0], ep1erec);
-            strictEqual(sorted2[1], ep2erec);
+            expect(sorted[0]).toBe(ep1erec);
+            expect(sorted[1]).toBe(ep2erec);
+            expect(sorted2[0]).toBe(ep1erec);
+            expect(sorted2[1]).toBe(ep2erec);
         });
     });
 

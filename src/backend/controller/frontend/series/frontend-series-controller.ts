@@ -8,6 +8,8 @@ import { FailedCover } from './model/failed-cover';
 import ProviderLocalData from '../../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderDataListManager from '../../provider-controller/provider-data-list-manager/provider-data-list-manager';
 import isOnline from 'is-online';
+import EpisodeMappingHelper from '../../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
+import MainListManager from '../../main-list-manager/main-list-manager';
 
 export default class FrontendSeriesController {
     private com: IPCBackgroundController;
@@ -26,6 +28,17 @@ export default class FrontendSeriesController {
         this.com.on(chListener.OnSeriesFailedCoverImage, (failedCover: FailedCover) => this.markCoverAsFailed(failedCover));
         this.com.on(chOnce.GetPreferedNameBySeriesId, async (id) => this.sendSeriesData(chOnce.GetPreferedNameBySeriesId, id, await this.getSeriesPreferedName(id)));
         this.com.on(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, (id) => this.sendSeriesData(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, id, this.getSeriesMaxEpisodeNumberBy(id)));
+        this.com.on(chListener.OnSeriesEpisodeListRefreshRequest, (id) => this.refreshSeriesEpisodeList(id));
+    }
+
+    private async refreshSeriesEpisodeList(id: string): Promise<void> {
+        const series = MainListSearcher.findSeriesById(id);
+        if (series) {
+            series.episodeBindingPools = [];
+            const instance = await EpisodeMappingHelper.getEpisodeMappings(series);
+            series.addEpisodeBindingPools(...instance);
+            MainListManager.updateSerieInList(series);
+        }
     }
 
     private getSeriesById(id: string): FrontendSeriesInfos | null {

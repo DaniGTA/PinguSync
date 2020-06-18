@@ -24,7 +24,7 @@ export default class BlockListEntrySyncStatus extends Vue {
 </script>
 
 <style>
-    .sync-symbol{
+    .sync-symbol {
         position: absolute;
         z-index: 8;
         margin: -10px -10px;
@@ -34,7 +34,7 @@ export default class BlockListEntrySyncStatus extends Vue {
         font-size: 20px;
         filter: drop-shadow(3px 3px 10px black);
     }
-    .hover-content{
+    .hover-content {
         background-color: #101317;
     }
 </style>

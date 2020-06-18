@@ -20,7 +20,6 @@ import { TraktUserData } from './trakt-user-data';
 import { UserInfoSmall } from './objects/userInfoSmall';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import { Movies } from './objects/movies';
-import { monitorEventLoopDelay } from 'perf_hooks';
 
 export default class TraktProvider extends ListProvider {
 

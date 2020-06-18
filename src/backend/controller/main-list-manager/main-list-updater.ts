@@ -5,6 +5,7 @@ import MainListSearcher from './main-list-searcher';
 import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import MainListManager from './main-list-manager';
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
+import ProviderDataListManager from '../provider-controller/provider-data-list-manager/provider-data-list-manager';
 export default class MainListEntryUpdater {
     /**
      * Use ListController to add Series too the MainList.
@@ -26,7 +27,12 @@ export default class MainListEntryUpdater {
                 notFounded.push(newSeries);
             }
         }
-        await new MainListAdder().addSeries(...notFounded);
+        if (notFounded.length !== 0) {
+            await new MainListAdder().addSeries(...notFounded);
+        } else {
+            ProviderDataListManager.requestSaveProviderList();
+            MainListManager.requestSaveMainList();
+        }
     }
 
     public async updateSingleProviderData(provider: ProviderLocalDataWithSeasonInfo, series: Series): Promise<void> {

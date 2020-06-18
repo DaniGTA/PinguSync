@@ -9,13 +9,11 @@ import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comper
 import SeasonComperator from './season-comperator';
 
 export default class EpisodeComperator {
-    public static async compareEpisodes(a: Series, b: Series): Promise<ComperatorResult> {
+    public static compareEpisodes(a: Series, b: Series): ComperatorResult {
         const result = new ComperatorResult();
         try {
-            const allAEpisodePromise = a.getAllEpisodes();
-            const allBEpisodePromise = b.getAllEpisodes();
-            const allAEpisodes = await allAEpisodePromise;
-            const allBEpisodes = await allBEpisodePromise;
+            const allAEpisodes = a.getAllEpisodes();
+            const allBEpisodes = b.getAllEpisodes();
             // Search if there is a match between the arrays.
             if (allAEpisodes.length !== 0 && allBEpisodes.length !== 0) {
                 result.matchAble += 2;
@@ -66,12 +64,20 @@ export default class EpisodeComperator {
             const seasonResult = this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season);
             result.matchAble += seasonResult.matchAble;
             result.matches += seasonResult.matches;
+            if (seasonResult.matchAble !== seasonResult.matches) {
+                result.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
+            }
+        } else {
+            result.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
         }
 
         const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);
         result.matchAble += episodeTitleResult.matchAble * 4;
         result.matches += episodeTitleResult.matches * 4;
-        result.isAbsolute = episodeTitleResult.isAbsolute;
+        if (episodeTitleResult.isAbsolute !== AbsoluteResult.ABSOLUTE_NONE) {
+            result.isAbsolute = episodeTitleResult.isAbsolute;
+        }
+
         if (result.matches !== 0) {
             const episodeTypeResult = this.isEpisodeSameType(aEpisode, bEpsiode);
             result.matchAble += episodeTypeResult.matchAble;

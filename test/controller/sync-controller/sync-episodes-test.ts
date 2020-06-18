@@ -40,13 +40,13 @@ describe('sync episode test', () => {
         });
 
         it('provider A should be sync', () => {
-            const resultA = new SyncEpisodes(series).isSync(providerA as ListProvider);
-            expect(resultA).toBeTruthy();
+            const resultA = new SyncEpisodes(series).getSyncStatus(providerA as ListProvider);
+            expect(resultA.isSync).toBeTruthy();
         });
 
         it('provider B should not be sync', () => {
-            const resultB = new SyncEpisodes(series).isSync(providerB as ListProvider);
-            expect(resultB).toBeFalsy();
+            const resultB = new SyncEpisodes(series).getSyncStatus(providerB as ListProvider);
+            expect(resultB.isSync).toBeFalsy();
         });
 
         it('should check if a single episode is sync', () => {
