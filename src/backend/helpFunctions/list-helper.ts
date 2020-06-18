@@ -127,11 +127,11 @@ class ListHelper {
     }
 
 
-    public async getUniqueOverviewList(arr: Overview[]): Promise<Overview[]> {
+    public getUniqueOverviewList(arr: Overview[]): Overview[] {
         return arr.filter((v, i, a) => a.findIndex((t) => (t.content === v.content)) === i);
     }
 
-    public async getUniqueNameList(arr: Name[]): Promise<Name[]> {
+    public getUniqueNameList(arr: Name[]): Name[] {
         return arr.filter((v, i, a) => a.findIndex((t) => (t.name === v.name)) === i);
     }
 
@@ -143,14 +143,14 @@ class ListHelper {
      * {a: 7, b:'a'} vs {a: 7, b:'a'} from different objects will be the same.
      * @param arr
      */
-    public async getUniqueObjectList<T>(arr: T[]): Promise<T[]> {
+    public getUniqueObjectList<T>(arr: T[]): T[] {
         return arr.filter((v, i, a) => a.findIndex((t) => this.objectsEquals(t, v)) === i);
     }
-    public async getLazyUniqueStringList(arr: Name[]): Promise<Name[]> {
+    public getLazyUniqueStringList(arr: Name[]): Name[] {
         return arr.filter((s, index, array) => array.findIndex((item) => (s.name.toLocaleLowerCase() === item.name.toLocaleLowerCase())) === index);
     }
 
-    public async is(obj: any, type: any): Promise<boolean> {
+    public is(obj: any, type: any): boolean {
         const objType: string = typeof obj;
         const typeString = type.toString();
         const nameRegex = /Arguments|Function|String|Number|Date|Array|Boolean|RegExp/;
@@ -171,9 +171,9 @@ class ListHelper {
         return false;
     }
 
-    public async checkType(myArray: any[], type: any): Promise<boolean> {
+    public checkType(myArray: any[], type: any): boolean {
         for (const iterator of myArray) {
-            if (!await this.is(iterator, type)) {
+            if (!this.is(iterator, type)) {
                 return false;
             }
         }
@@ -203,7 +203,7 @@ class ListHelper {
      * Default list is the main list.
      * @param list
      */
-    public async sortList(list: Series[]) {
+    public async sortList(list: Series[]): Promise<Series[]> {
         list = await sortHelper.quickSort(list, async (a: Series, b: Series) => {
             const aNames = await a.getAllNamesUnique();
             const bNames = await b.getAllNamesUnique();
@@ -224,17 +224,17 @@ class ListHelper {
         return list;
     }
 
-    public async isSeriesInList(list: Series[], item: Series): Promise<boolean> {
+    public isSeriesInList(list: Series[], item: Series): boolean {
         return list.findIndex((entry) => item.id === entry.id) !== -1;
     }
-    public async isItemInList<T>(list: T[], item: T): Promise<boolean> {
+    public isItemInList<T>(list: T[], item: T): boolean {
         return list.findIndex((x) => x === item) !== -1;
     }
-    public async isCoverInList(list: Cover[], item: Cover): Promise<boolean> {
+    public isCoverInList(list: Cover[], item: Cover): boolean {
         return list.findIndex((x) => x.url === item.url) !== -1;
     }
 
-    public async countEntrysInArray<T>(array: T[], target: T): Promise<number> {
+    public countEntrysInArray<T>(array: T[], target: T): number {
         let counter = 0;
 
         for (const entry of array) {

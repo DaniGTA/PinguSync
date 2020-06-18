@@ -22,7 +22,7 @@ export default class ProviderDataListAdder {
      * This just managed the Waitlist.
      * @param providerData
      */
-    public async addNewProviderData(...providerData: ProviderLocalData[]): Promise<number | undefined> {
+    public addNewProviderData(...providerData: ProviderLocalData[]): number | undefined {
         for (const entry of providerData) {
             return ProviderDataListManager.addProviderLocalDataToMainList(entry);
         }

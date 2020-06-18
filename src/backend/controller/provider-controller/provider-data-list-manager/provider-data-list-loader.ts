@@ -37,7 +37,7 @@ export default class ProviderDataListLoader {
      * Save the main list to a json file.
      * @param list the main list.
      */
-    public static async saveData(list: ProviderLocalData[]) {
+    public static saveData(list: ProviderLocalData[]): void {
         logger.log('info', 'Save list: ' + list.length);
         logger.log('info', this.getPath());
         writeFileSync(this.getPath(), JSON.stringify(list));

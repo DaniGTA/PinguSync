@@ -15,11 +15,11 @@ export default class ProviderDataListManager {
      * @param provider
      * @param notfiyRenderer
      */
-    public static async addProviderLocalDataToMainList(provider: ProviderLocalData, notfiyRenderer = false): Promise<number | undefined> {
+    public static addProviderLocalDataToMainList(provider: ProviderLocalData, notfiyRenderer = false): number | undefined {
         try {
             const alreadyExistingEntry = ProviderDataListSearcher.getProviderLDByProviderLD(provider);
             if (alreadyExistingEntry != null) {
-                await this.updateProviderInList(provider);
+                this.updateProviderInList(provider);
                 return undefined;
             } else {
                 return this.providerDataList.push(provider);
@@ -34,17 +34,17 @@ export default class ProviderDataListManager {
      * need test.
      * @param provider
      */
-    public static async updateProviderInList(provider: ProviderLocalData): Promise<void> {
+    public static updateProviderInList(provider: ProviderLocalData): void {
         const providerIndex = ProviderDataListSearcher.getIndexByProviderLD(provider);
         if (providerIndex != null) {
             const oldProvider = this.providerDataList[providerIndex];
             if (SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(oldProvider) &&
                 SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(provider)) {
-                const lpld = await ListProviderLocalData.mergeProviderInfos(provider as ListProviderLocalData, oldProvider as ListProviderLocalData);
+                const lpld = ListProviderLocalData.mergeProviderInfos(provider as ListProviderLocalData, oldProvider as ListProviderLocalData);
                 this.providerDataList[providerIndex] = lpld;
             } else if (SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(oldProvider) &&
                 SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(provider)) {
-                const ipld = await InfoProviderLocalData.mergeProviderInfos(provider as InfoProviderLocalData, oldProvider as InfoProviderLocalData);
+                const ipld = InfoProviderLocalData.mergeProviderInfos(provider as InfoProviderLocalData, oldProvider as InfoProviderLocalData);
                 this.providerDataList[providerIndex] = ipld;
             } else {
                 logger.error('[ProviderList] Failed update: Not same instance');

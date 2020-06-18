@@ -17,7 +17,7 @@ export default class MultiProviderComperator {
         const finalResult = new ComperatorResult();
 
         const tempSeries = new Series();
-        await tempSeries.addProviderDatasWithSeasonInfos(result.mainProvider, ...result.subProviders);
+        tempSeries.addProviderDatasWithSeasonInfos(result.mainProvider, ...result.subProviders);
         const seasonA = await series.getSeason();
         const seasonB = await tempSeries.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);
 

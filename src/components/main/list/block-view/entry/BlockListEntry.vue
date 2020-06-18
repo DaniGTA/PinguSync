@@ -5,6 +5,9 @@
       <BlockListEntrySyncStatus :seriesId="id"/>
       <SeriesImageBlock class="block-list-entry-img" :seriesId="id" />
       <BlockListEntryInfoSection :seriesId="id" />
+      <q-menu anchor="top right" self="top left" content-class="hover-content" >
+        <BlockListEntrySyncStatusHover :seriesId="seriesId"/>
+      </q-menu>
     </template>
     </div>
   </q-intersection>
@@ -17,11 +20,13 @@ import { Prop } from 'vue-property-decorator';
 import SeriesImageBlock from '../../../../elements/series-elements/SeriesImageBlock.vue';
 import BlockListEntryInfoSection from './BlockListEntryInfoSection.vue';
 import BlockListEntrySyncStatus from './sync-status/BlockListEntrySyncStatus.vue';
+import BlockListEntrySyncStatusHover from './sync-status/BlockListEntrySyncStatusHover.vue';
 @Component({
 	components: {
     SeriesImageBlock,
     BlockListEntryInfoSection,
-    BlockListEntrySyncStatus
+    BlockListEntrySyncStatus,
+    BlockListEntrySyncStatusHover
 	}
 })
 export default class BlockEntry extends Vue {

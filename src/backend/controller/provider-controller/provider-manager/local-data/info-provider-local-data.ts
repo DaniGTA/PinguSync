@@ -6,8 +6,8 @@ import ProviderLocalData from './interfaces/provider-local-data';
  * Only contains infos about the series.
  */
 export class InfoProviderLocalData extends ProviderLocalData {
-    public static async mergeProviderInfos(...providers: InfoProviderLocalData[]): Promise<InfoProviderLocalData> {
-        const finalProvider = await this.mergeProviderLocalData(...providers) as InfoProviderLocalData;
+    public static mergeProviderInfos(...providers: InfoProviderLocalData[]): InfoProviderLocalData {
+        const finalProvider = this.mergeProviderLocalData(...providers) as InfoProviderLocalData;
         return Object.assign(new InfoProviderLocalData(finalProvider.id), finalProvider);
     }
     public readonly provider: string;

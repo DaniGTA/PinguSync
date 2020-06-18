@@ -49,7 +49,7 @@ export default class ProviderHelper {
 
 
     // tslint:disable-next-line: max-line-length
-    public static isProviderTargetAchievFailed(currentResult: ProviderLocalDataWithSeasonInfo | null, lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null, target: ProviderInfoStatus) {
+    public static isProviderTargetAchievFailed(currentResult: ProviderLocalDataWithSeasonInfo | null, lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null, target: ProviderInfoStatus): boolean {
         if (lastLocalDataResult && currentResult) {
             if (currentResult.providerLocalData.infoStatus > target) {
                 if (currentResult.providerLocalData.infoStatus !== lastLocalDataResult.providerLocalData.infoStatus) {
@@ -66,7 +66,7 @@ export default class ProviderHelper {
     public static async simpleProviderLocalDataUpgradeRequest(currentLocalDatas: ProviderLocalData[], providerInstance: ExternalInformationProvider): Promise<ProviderLocalData | undefined> {
         try {
             const tempSeries = new Series();
-            await tempSeries.addProviderDatas(...currentLocalDatas);
+            tempSeries.addProviderDatas(...currentLocalDatas);
             const currentProviderLocalData = currentLocalDatas.find((x) => x.provider === providerInstance.providerName);
             if (currentProviderLocalData?.infoStatus !== ProviderInfoStatus.FULL_INFO) {
                 const infoResult = await new DownloadProviderLocalDataToTargetHelper(

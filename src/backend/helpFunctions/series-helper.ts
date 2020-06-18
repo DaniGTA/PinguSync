@@ -95,9 +95,8 @@ export default class SeriesHelper {
         logger.debug('[Series] Merged Providers  | SeriesID: ' + seriesA.id);
         if (mergeType === MergeTypes.UPGRADE) {
             const getSeason = newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
-            const getMediaType = newAnime.getMediaType();
+            newAnime.getMediaType();
             await getSeason;
-            await getMediaType;
             newAnime.episodeBindingPools = await EpisodeMappingHelper.getEpisodeMappings(newAnime);
         } else if (mergeType === MergeTypes.UPDATE) {
             newAnime.addEpisodeBindingPools(...this.mergeEpisodeBindingPool(seriesA, seriesB));

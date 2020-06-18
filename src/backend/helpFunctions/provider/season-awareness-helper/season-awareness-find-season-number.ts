@@ -64,7 +64,7 @@ export default class SeasonAwarenessFindSeasonNumber {
             } else {
                 const tempPrequel = await SeasonAwarenessHelper.createTempPrequelFromRelationSearchResults(prequel);
                 if (tempPrequel) {
-                    await tempPrequel.addProviderDatas(targetLocalDataProvider);
+                    tempPrequel.addProviderDatas(targetLocalDataProvider);
                     const prequelSeason = await this.searchSeasonForProvider(tempPrequel, targetLocalDataProvider);
                     if (prequelSeason.seasonPart !== undefined) {
                         return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart);

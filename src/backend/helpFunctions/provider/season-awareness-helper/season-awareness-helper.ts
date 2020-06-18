@@ -63,12 +63,12 @@ export default class SeasonAwarenessHelper {
         return collectedProviders;
     }
 
-    public static async createTempPrequelFromRelationSearchResults(searchResult: RelationSearchResults): Promise<Series | undefined> {
+    public static createTempPrequelFromRelationSearchResults(searchResult: RelationSearchResults): Series | undefined {
         const tempPrequel = new Series();
         const allPrequelProviders = this.getAllProviderWithLocalData(searchResult.searchedProviders);
 
         if (allPrequelProviders.length !== 0) {
-            await tempPrequel.addProviderDatas(...allPrequelProviders);
+            tempPrequel.addProviderDatas(...allPrequelProviders);
         }
 
         if (tempPrequel.getAllProviderBindings().length !== 0) {
@@ -77,12 +77,12 @@ export default class SeasonAwarenessHelper {
         return undefined;
     }
 
-    public static async createTempPrequelFromLocalData(providerLocalDatas: ProviderLocalData[]): Promise<Series | undefined> {
+    public static createTempPrequelFromLocalData(providerLocalDatas: ProviderLocalData[]): Series | undefined {
         const tempPrequel = new Series();
         const allPrequelProviders = this.getAllProviderWithLocalData(providerLocalDatas);
 
         if (allPrequelProviders.length !== 0) {
-            await tempPrequel.addProviderDatas(...allPrequelProviders);
+            tempPrequel.addProviderDatas(...allPrequelProviders);
         }
 
         if (tempPrequel.getAllProviderBindings().length !== 0) {
@@ -114,7 +114,7 @@ export default class SeasonAwarenessHelper {
             // tslint:disable-next-line: max-line-length
             const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([currentProviderThatHasAwareness], currentProviderThatHasAwarenessProvider);
             if (result !== undefined) {
-                await new ProviderDataListAdder().addNewProviderData(result);
+                new ProviderDataListAdder().addNewProviderData(result);
                 currentProviderThatHasAwareness = result;
             }
         }

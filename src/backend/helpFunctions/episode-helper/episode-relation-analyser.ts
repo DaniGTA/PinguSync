@@ -31,20 +31,20 @@ export default class EpisodeRelationAnalyser {
         this.updateSeasonComplete();
     }
 
-    private updateSeasonComplete() {
+    private updateSeasonComplete(): void {
         if (this.maxEpisodes !== 0) {
             this.seasonComplete = (this.maxEpisodes === this.maxDifference + this.maxEpisodeNumberOfCurrentSeason) ||
                 this.missingEpisodes === EpisodeRelationAnalyser.toleranze;
         }
     }
 
-    private updateMaxEpisodes() {
+    private updateMaxEpisodes(): void {
         for (const season of this.finalSeasonNumbers) {
             this.maxEpisodes += this.getRegularEpisodeCountOfSeason(this.seasonHolder, new Season([season]));
         }
     }
 
-    private calcAllInformations() {
+    private calcAllInformations(): void {
         for (const episode of this.seasonHolder) {
             for (const newEpisodes of this.currentSeason) {
                 const result = EpisodeComperator.compareEpisodeTitle(episode, newEpisodes);
@@ -57,7 +57,7 @@ export default class EpisodeRelationAnalyser {
 
     }
 
-    private updateAllInformations(seasonHolder: Episode, currentSeason: Episode) {
+    private updateAllInformations(seasonHolder: Episode, currentSeason: Episode): void {
         this.updateSeasonHolderInformations(seasonHolder);
         this.updateCurrentSeasonInformations(currentSeason);
         this.updateMaxDifference(seasonHolder, currentSeason);
@@ -65,7 +65,7 @@ export default class EpisodeRelationAnalyser {
         this.updateSeasonNumbers(seasonHolder);
     }
 
-    private updateSeasonHolderInformations(episode: Episode) {
+    private updateSeasonHolderInformations(episode: Episode): void {
         const newEpisodeNumber = episode.episodeNumber as unknown as number;
         if (!isNaN(newEpisodeNumber as unknown as number)) {
             this.updateMinEpisodeNumberOfSeasonHolder(newEpisodeNumber);
@@ -73,7 +73,7 @@ export default class EpisodeRelationAnalyser {
         }
     }
 
-    private updateCurrentSeasonInformations(episode: Episode) {
+    private updateCurrentSeasonInformations(episode: Episode): void {
         const newEpisodeNumber = episode.episodeNumber as unknown as number;
         if (!isNaN(newEpisodeNumber as unknown as number)) {
             this.updateMinEpisodeNumberOfCurrentSeason(newEpisodeNumber);
@@ -81,34 +81,34 @@ export default class EpisodeRelationAnalyser {
         }
     }
 
-    private updateMinEpisodeNumberOfSeasonHolder(episodeNumber: number) {
+    private updateMinEpisodeNumberOfSeasonHolder(episodeNumber: number): void {
         if (this.minEpisodeNumberOfSeasonHolder === undefined || episodeNumber < this.minEpisodeNumberOfSeasonHolder) {
             this.minEpisodeNumberOfSeasonHolder = episodeNumber;
         }
     }
 
-    private updateMinEpisodeNumberOfCurrentSeason(episodeNumber: number) {
+    private updateMinEpisodeNumberOfCurrentSeason(episodeNumber: number): void {
         if (this.minEpisodeNumberOfCurrentSeason === undefined || episodeNumber < this.minEpisodeNumberOfCurrentSeason) {
             this.minEpisodeNumberOfCurrentSeason = episodeNumber;
         }
     }
 
-    private updateMaxEpisodeNumberOfSeasonHolder(episodeNumber: number) {
+    private updateMaxEpisodeNumberOfSeasonHolder(episodeNumber: number): void {
         if (episodeNumber > this.maxEpisodeNumberOfSeasonHolder) {
             this.maxEpisodeNumberOfSeasonHolder = episodeNumber;
         }
     }
 
-    private updateMaxEpisodeNumberOfCurrentSeason(episodeNumber: number) {
+    private updateMaxEpisodeNumberOfCurrentSeason(episodeNumber: number): void {
         if (episodeNumber > this.maxEpisodeNumberOfCurrentSeason) {
             this.maxEpisodeNumberOfCurrentSeason = episodeNumber;
         }
     }
-    private updateSeasonNumbers(episode: Episode) {
+    private updateSeasonNumbers(episode: Episode): void {
         this.updateFinalSeasonNumber(episode);
     }
 
-    private updateFinalSeasonNumber(episode: Episode) {
+    private updateFinalSeasonNumber(episode: Episode): void {
         if (episode.season !== undefined && episode.season.seasonNumbers !== undefined) {
             for (const seasonNumber of episode.season.seasonNumbers) {
                 if (!isNaN(seasonNumber as number)) {
@@ -119,7 +119,7 @@ export default class EpisodeRelationAnalyser {
         this.finalSeasonNumbers = listHelper.getUniqueList(this.seasonNumbers);
     }
 
-    private updateMaxSeasonNumber(episodes: Episode[]) {
+    private updateMaxSeasonNumber(episodes: Episode[]): void {
         let maxSeasonNumber = -1;
         for (const episode of episodes) {
             if (episode.season !== undefined && episode.season.seasonNumbers !== undefined) {
@@ -135,7 +135,7 @@ export default class EpisodeRelationAnalyser {
         }
     }
 
-    private updateEpisodeCounter(episode: Episode) {
+    private updateEpisodeCounter(episode: Episode): void {
         if (episode.type === EpisodeType.UNKOWN || episode.type === EpisodeType.REGULAR_EPISODE) {
             this.numberOfRegularEpisodesFound++;
         } else {
@@ -143,7 +143,7 @@ export default class EpisodeRelationAnalyser {
         }
     }
 
-    private updateMaxDifference(episodeA: Episode, episodeB: Episode) {
+    private updateMaxDifference(episodeA: Episode, episodeB: Episode): void {
         let diff: number | null = null;
 
         diff = Math.abs(EpisodeHelper.getEpisodeDifference(episodeA, episodeB));

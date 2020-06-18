@@ -1,9 +1,8 @@
-import sortHelper from '../sort-helper';
 import listHelper from '../list-helper';
 import EpisodeRatedEqualityContainer from './objects/episode-rated-equality-container';
 
 export default class EpisodeRatedEqualityContainerHelper {
-    public static async sortingEpisodeRatedEqualityContainerByResultPoints(aEp: EpisodeRatedEqualityContainer, bEp: EpisodeRatedEqualityContainer) {
+    public static sortingEpisodeRatedEqualityContainerByResultPoints(aEp: EpisodeRatedEqualityContainer, bEp: EpisodeRatedEqualityContainer): number {
         const a = aEp.result.matches;
         const b = bEp.result.matches;
         if (a < b) {
@@ -24,9 +23,9 @@ export default class EpisodeRatedEqualityContainerHelper {
      * @param re
      * @param numberOfProviders default is 2
      */
-    public static async getBestResultsFromEpisodeRatedEqualityContainer(re: EpisodeRatedEqualityContainer[]): Promise<EpisodeRatedEqualityContainer[]> {
+    public static getBestResultsFromEpisodeRatedEqualityContainer(re: EpisodeRatedEqualityContainer[]): EpisodeRatedEqualityContainer[] {
         const container: EpisodeRatedEqualityContainer[] = [...re];
-        let sorted: EpisodeRatedEqualityContainer[] = await sortHelper.quickSort(container, async (a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
+        let sorted: EpisodeRatedEqualityContainer[] = container.sort((a, b) => EpisodeRatedEqualityContainerHelper.sortingEpisodeRatedEqualityContainerByResultPoints(a, b));
         const results: EpisodeRatedEqualityContainer[] = [];
         while (sorted.length !== 0) {
             const bestResult = sorted[0];

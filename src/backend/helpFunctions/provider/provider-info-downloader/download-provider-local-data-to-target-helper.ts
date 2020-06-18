@@ -58,10 +58,10 @@ export default class DownloadProviderLocalDataToTargetHelper {
         return new FailedProviderRequest(this.provider, FailedRequestError.ProviderNoResult);
     }
 
-    private async getProviderResultByOtherProvider() {
+    private async getProviderResultByOtherProvider(): Promise<MultiProviderResult | undefined> {
         const requestResultByOtherProvider = await this.getProviderByOtherProviders();
         if (requestResultByOtherProvider) {
-            await this.series.addProviderDatasWithSeasonInfos(...requestResultByOtherProvider.getAllProvidersWithSeason());
+            this.series.addProviderDatasWithSeasonInfos(...requestResultByOtherProvider.getAllProvidersWithSeason());
             const requestResultByOtherProviderAsSource = await this.downloadProviderLocalDataUntilTarget(this.series);
             if (requestResultByOtherProviderAsSource) {
                 return requestResultByOtherProviderAsSource;
@@ -132,13 +132,13 @@ export default class DownloadProviderLocalDataToTargetHelper {
         return requestResult;
     }
 
-    private async downloadProviderLocalDataUntilTarget(series: Series) {
+    private async downloadProviderLocalDataUntilTarget(series: Series): Promise<MultiProviderResult | null> {
         let lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null = null;
         let currentResult: ProviderLocalDataWithSeasonInfo | null = null;
         let requestResult: MultiProviderResult | null = null;
         do {
             if (currentResult) {
-                await series.addProviderDatasWithSeasonInfos(currentResult);
+                series.addProviderDatasWithSeasonInfos(currentResult);
                 lastLocalDataResult = currentResult;
                 currentResult = null;
             }
@@ -154,7 +154,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         return requestResult;
     }
 
-    private isProviderTargetReached(currentResult: ProviderLocalDataWithSeasonInfo | null, lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null) {
+    private isProviderTargetReached(currentResult: ProviderLocalDataWithSeasonInfo | null, lastLocalDataResult: ProviderLocalDataWithSeasonInfo | null): boolean {
         if (lastLocalDataResult && currentResult) {
             if (currentResult.providerLocalData.infoStatus > this.target) {
                 if (currentResult.providerLocalData.infoStatus !== lastLocalDataResult.providerLocalData.infoStatus) {
@@ -193,7 +193,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
             try {
                 const idProviderResult = await DownloadProviderLocalDataHelper.downloadProviderLocalData(this.series, idProvider);
                 result.push(idProviderResult);
-                await this.series.addProviderDatasWithSeasonInfos(...idProviderResult.getAllProvidersWithSeason());
+                this.series.addProviderDatasWithSeasonInfos(...idProviderResult.getAllProvidersWithSeason());
             } catch (err) {
                 logger.error('Error at ProviderHelper.requestProviderInfo');
                 logger.error(err);

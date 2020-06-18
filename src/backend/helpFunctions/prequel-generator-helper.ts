@@ -48,7 +48,7 @@ export default class PrequelGeneratorHelper {
         }
         let newSeries = new Series();
         if (newProvider) {
-            await newSeries.addProviderDatasWithSeasonInfos(newProvider);
+            newSeries.addProviderDatasWithSeasonInfos(newProvider);
             newSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(newSeries);
             const mediaTypeComperatorResult = MediaTypeComperator.comperaMediaType(await newSeries.getMediaType(), currentMediaType);
             if (mediaTypeComperatorResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {

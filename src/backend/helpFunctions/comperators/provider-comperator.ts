@@ -46,13 +46,13 @@ export default class ProviderComperator {
         for (const aProvider of a) {
             let aMediaType = aProvider.mediaType;
             if (aMediaType === MediaType.UNKOWN && aSeries) {
-                aMediaType = await aSeries.getMediaType();
+                aMediaType = aSeries.getMediaType();
             }
             for (const bProvider of b) {
                 if (aProvider.provider === bProvider.provider) {
                     let bMediaType = bProvider.mediaType;
                     if (bMediaType === MediaType.UNKOWN && bSeries) {
-                        bMediaType = await bSeries.getMediaType();
+                        bMediaType = bSeries.getMediaType();
                     }
 
                     try {

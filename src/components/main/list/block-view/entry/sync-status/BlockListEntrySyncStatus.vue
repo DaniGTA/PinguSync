@@ -1,9 +1,7 @@
 <template>
     <div once transition="scale">
         <i class="fas fa-sync fa-5x sync-symbol"></i>
-        <q-tooltip content-class="hover-content" >
-          <BlockListEntrySyncStatusHover :seriesId="seriesId"/>
-        </q-tooltip>
+
     </div>
 </template>
 
@@ -36,5 +34,6 @@ export default class BlockListEntrySyncStatus extends Vue {
     }
     .hover-content {
         background-color: #101317;
+        color: white;
     }
 </style>

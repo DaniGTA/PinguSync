@@ -154,7 +154,7 @@ export default class ProviderInfoHelper {
         return maxEpisodeNumber;
     }
 
-    private static itSupportProviders(provider: InfoProvider, checkIfSupported: ListProvider[]) {
+    private static itSupportProviders(provider: InfoProvider, checkIfSupported: ListProvider[]): boolean {
         for (const allRelevantListProvider of checkIfSupported) {
             for (const providerOther of provider.supportedOtherProvider) {
                 if (allRelevantListProvider.providerName === ProviderNameManager.getProviderName(providerOther)) {

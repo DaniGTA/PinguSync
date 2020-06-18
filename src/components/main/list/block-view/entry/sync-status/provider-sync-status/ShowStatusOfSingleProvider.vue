@@ -7,7 +7,7 @@
         <div v-if="result">
         {{result.syncedEpisodeCount}}/{{result.maxEpisodeNumber}}
         </div>
-        <q-btn @click="sync">Sync</q-btn>
+        <q-btn text-color="white" @click="sync">Sync</q-btn>
     </div>
 </template>
 
@@ -32,15 +32,17 @@ export default class ShowStatusOfSingleProvider extends Vue {
 
     public result: GetSyncStatusRecieved | null = null;
 
-    async mounted(): Promise<void> {
-       this.result = await this.isSynced();
+    mounted(): void {
+       this.isSynced().then(x =>{
+           this.result = x;
+       });
     }
 
     async isSynced(): Promise<GetSyncStatusRecieved> {
         return await ProviderController.isProviderSync({providerName: this.provider.providerName, seriesId: this.getSeriesId()});
     }
 
-    async sync(): Promise<void>{
+    sync(): void{
         ProviderController.syncAllEpisodes(this.provider.providerName, this.getSeriesId());
     }
 

@@ -41,16 +41,16 @@ export default class SeasonAwarenessSequelPathController {
         throw new Error('no sequel avaible for provider: ' + providerThatHasAwareness.provider);
     }
 
-    public static async addSequelTooMainList(
+    public static addSequelTooMainList(
         providerWithAwareness: ProviderLocalData,
-        providerWithoutAwareness: ProviderLocalData, result: EpisodeRelationAnalyser) {
+        providerWithoutAwareness: ProviderLocalData, result: EpisodeRelationAnalyser): void {
         const sequel = this.getSequel(providerWithAwareness);
         if (sequel) {
             const sequelSeasonResult = new Season(result.finalSeasonNumbers, 2);
             const sequelResult = [new ProviderLocalDataWithSeasonInfo(sequel, sequelSeasonResult),
             new ProviderLocalDataWithSeasonInfo(providerWithoutAwareness, sequelSeasonResult)];
             const sequelTempSeries = new Series();
-            await sequelTempSeries.addProviderDatasWithSeasonInfos(...sequelResult);
+            sequelTempSeries.addProviderDatasWithSeasonInfos(...sequelResult);
             new MainListAdder().addSeries(sequelTempSeries);
         }
     }

@@ -19,7 +19,7 @@ export default class MediaTypeHelper {
         return false;
     }
 
-    public static providerSupportUnkownSeriesMediaType(provider: ExternalProvider) {
+    public static providerSupportUnkownSeriesMediaType(provider: ExternalProvider): boolean {
         for (const mediaType of provider.supportedMediaTypes) {
             if (mediaType === MediaType.ANIME ||
                 mediaType === MediaType.SERIES ||
@@ -28,5 +28,6 @@ export default class MediaTypeHelper {
                 return true;
             }
         }
+        return false;
     }
 }

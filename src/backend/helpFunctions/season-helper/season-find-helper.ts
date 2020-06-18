@@ -156,7 +156,7 @@ export default class SeasonFindHelper {
      * So a dummy will be created where all provider data can be filled in.
      * @param localDatas
      */
-    public static async createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Promise<Series[]> {
+    public static createTempSeriesFromPrequels(localDatas: ProviderLocalData[]): Series[] {
         const result: Series[] = [];
         logger.info('[SeasonHelper] create temp series');
         for (const entry of localDatas) {
@@ -167,12 +167,12 @@ export default class SeasonFindHelper {
                         const newProvider = new ListProviderLocalData(prequelId, entry.provider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
                         newProvider.sequelIds.push(entry.id as number);
-                        await series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(newProvider));
+                        series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(newProvider));
                     } else if (entry instanceof InfoProviderLocalData) {
                         const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
                         newProvider.sequelIds.push(entry.id as number);
-                        await series.addProviderDatas(newProvider);
+                        series.addProviderDatas(newProvider);
                     } else {
                         continue;
 

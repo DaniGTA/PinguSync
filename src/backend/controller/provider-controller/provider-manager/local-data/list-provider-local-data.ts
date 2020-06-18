@@ -9,8 +9,8 @@ import { ListType } from '../../../settings/models/provider/list-types';
  */
 export class ListProviderLocalData extends ProviderLocalData {
 
-    public static async mergeProviderInfos(...providers: ListProviderLocalData[]): Promise<ListProviderLocalData> {
-        const finalProvider = await this.mergeProviderLocalData(...providers) as ListProviderLocalData;
+    public static mergeProviderInfos(...providers: ListProviderLocalData[]): ListProviderLocalData {
+        const finalProvider = this.mergeProviderLocalData(...providers) as ListProviderLocalData;
         return Object.assign(new ListProviderLocalData(finalProvider.id), finalProvider);
     }
 

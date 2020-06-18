@@ -23,7 +23,7 @@ export default class MainListEntryUpdater {
                 }
             } else {
                 const newSeries = new Series();
-                await newSeries.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
+                newSeries.addProviderDatasWithSeasonInfos(...provider.getAllProvidersWithSeason());
                 notFounded.push(newSeries);
             }
         }
@@ -37,7 +37,7 @@ export default class MainListEntryUpdater {
 
     public async updateSingleProviderData(provider: ProviderLocalDataWithSeasonInfo, series: Series): Promise<void> {
         const oldProvider = series.getProviderLocalDataWithSeasonInfoByProviderName(provider.providerLocalData.provider);
-        await series.addProviderDatasWithSeasonInfos(provider);
+        series.addProviderDatasWithSeasonInfos(provider);
         if (oldProvider?.providerLocalData.detailEpisodeInfo.length !== provider.providerLocalData.detailEpisodeInfo.length) {
             const instance = await EpisodeMappingHelper.getEpisodeMappings(series);
             series.addEpisodeBindingPools(...instance);

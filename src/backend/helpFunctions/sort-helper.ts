@@ -9,7 +9,7 @@ export default new class SortHelper {
         return array;
     }
 
-    private async sort<T>(array: T[], comparator: ((a: T, b: T) => Promise<number>) | ((a: T, b: T) => number), low: number, high: number) {
+    private async sort<T>(array: T[], comparator: ((a: T, b: T) => Promise<number>) | ((a: T, b: T) => number), low: number, high: number): Promise<void> {
         if (low < high) {
             const partIndex = await this.partition(array, comparator, low, high);
             await this.sort(array, comparator, low, partIndex - 1);
@@ -24,22 +24,22 @@ export default new class SortHelper {
      * @param low
      * @param high
      */
-    private async  partition<T>(array: T[], comp: ((a: T, b: T) => Promise<number>) | ((a: T, b: T) => number), low: number, high: number): Promise<number> {
+    private async partition<T>(array: T[], comp: ((a: T, b: T) => Promise<number>) | ((a: T, b: T) => number), low: number, high: number): Promise<number> {
         const pivot: T = array[high];
         let i: number = low - 1;
         for (let j = low; j <= high - 1; j++) {
             if (await comp(array[j], pivot) === -1) {
                 i = i + 1;
-                await this.swap(array, i, j);
+                this.swap(array, i, j);
             }
         }
         if (await comp(array[high], array[i + 1]) === -1) {
-            await this.swap(array, i + 1, high);
+            this.swap(array, i + 1, high);
         }
         return i + 1;
     }
 
-    private async swap<T>(array: T[], i: number, j: number) {
+    private swap<T>(array: T[], i: number, j: number): void {
         const newJ: T = array[i];
         array[i] = array[j];
         array[j] = newJ;

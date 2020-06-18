@@ -39,8 +39,8 @@ export default class SeriesProviderExtension {
      * Prevents too have double entrys of the same provider.
      * @param infoProviders
      */
-    public async addInfoProvider(infoProvider: InfoProviderLocalData, season?: Season): Promise<void> {
-        const index = await new ProviderDataListAdder().addNewProviderData(infoProvider);
+    public addInfoProvider(infoProvider: InfoProviderLocalData, season?: Season): void {
+        const index = new ProviderDataListAdder().addNewProviderData(infoProvider);
         this.addInfoProviderBindings(new InfoLocalDataBind(infoProvider, season, index));
     }
 
@@ -48,30 +48,30 @@ export default class SeriesProviderExtension {
      * Prevents too have double entrys of the same provider.
      * @param listProvider
      */
-    public async addListProvider(listProvider: ListProviderLocalData, season?: Season): Promise<void> {
-        const index = await new ProviderDataListAdder().addNewProviderData(listProvider);
+    public addListProvider(listProvider: ListProviderLocalData, season?: Season): void {
+        const index = new ProviderDataListAdder().addNewProviderData(listProvider);
         this.addListProviderBindings(new ListLocalDataBind(listProvider, season, index));
     }
 
-    public async addProviderDatas(...localdatas: ProviderLocalData[]): Promise<void> {
+    public addProviderDatas(...localdatas: ProviderLocalData[]): void {
         for (const localdata of localdatas) {
             if (SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(localdata)) {
-                await this.addListProvider(localdata as ListProviderLocalData);
+                this.addListProvider(localdata as ListProviderLocalData);
             } else if (SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(localdata)) {
-                await this.addInfoProvider(localdata as InfoProviderLocalData);
+                this.addInfoProvider(localdata as InfoProviderLocalData);
             }
         }
     }
 
-    public async addProviderDatasWithSeasonInfos(...localdatas: ProviderLocalDataWithSeasonInfo[]): Promise<void> {
+    public addProviderDatasWithSeasonInfos(...localdatas: ProviderLocalDataWithSeasonInfo[]): void {
         logger.debug('addProviderDatasWithSeasonInfo: adding ' + localdatas.length);
         try {
             for (let index = 0; index < localdatas.length; index++) {
                 const localdata = localdatas[index];
                 if (SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(localdata.providerLocalData)) {
-                    await this.addListProvider(localdata.providerLocalData as ListProviderLocalData, localdata.seasonTarget);
+                    this.addListProvider(localdata.providerLocalData as ListProviderLocalData, localdata.seasonTarget);
                 } else if (SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(localdata.providerLocalData)) {
-                    await this.addInfoProvider(localdata.providerLocalData as InfoProviderLocalData, localdata.seasonTarget);
+                    this.addInfoProvider(localdata.providerLocalData as InfoProviderLocalData, localdata.seasonTarget);
                 } else {
                     logger.debug('addProviderDatasWithSeasonInfos cant add unkown instance');
                 }

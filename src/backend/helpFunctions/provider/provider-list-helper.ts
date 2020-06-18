@@ -46,7 +46,7 @@ export default class ProviderListHelper {
                 if (providerLocalData && providerLocalData.infoStatus > target || !providerLocalData) {
                     const requestResults = await new DownloadProviderLocalDataToTargetHelper(tempSeriesCopy, providerThatNeedUpdate, ProviderInfoStatus.ADVANCED_BASIC_INFO).upgradeToTarget();
                     if (requestResults instanceof MultiProviderResult) {
-                        await tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResults?.getAllProvidersWithSeason());
+                        tempSeriesCopy.addProviderDatasWithSeasonInfos(...requestResults?.getAllProvidersWithSeason());
                         results.push(...requestResults.getAllProvidersWithSeason());
                         series.resetCache();
                         tempSeriesCopy.resetCache();

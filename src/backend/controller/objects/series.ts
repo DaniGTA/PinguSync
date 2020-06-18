@@ -1,6 +1,5 @@
 import ProviderComperator from '../../helpFunctions/comperators/provider-comperator';
 import SeasonComperator from '../../helpFunctions/comperators/season-comperator';
-import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import listHelper from '../../helpFunctions/list-helper';
 import titleCheckHelper from '../../helpFunctions/name-helper/title-check-helper';
 import PrequelGeneratorHelper from '../../helpFunctions/prequel-generator-helper';
@@ -78,7 +77,7 @@ export default class Series extends SeriesProviderExtension {
         this.firstSeasonSeriesId = undefined;
     }
 
-    public async getSlugNames(): Promise<Name[]> {
+    public getSlugNames(): Name[] {
         const slugs = [];
         const names = this.getAllNames();
         for (const name of names) {
@@ -92,7 +91,7 @@ export default class Series extends SeriesProviderExtension {
     /**
      * It prevent double entrys from all names.
      */
-    public async getAllNamesUnique(): Promise<Name[]> {
+    public getAllNamesUnique(): Name[] {
         const names = this.getAllNames();
         return listHelper.getUniqueNameList(names);
     }
@@ -151,7 +150,7 @@ export default class Series extends SeriesProviderExtension {
      * Get all overviews
      * + It prevents double entrys.
      */
-    public async getAllOverviews(): Promise<Overview[]> {
+    public getAllOverviews(): Overview[] {
         const overviews = this.getAllProviderLocalDatas().flatMap((provider) => provider.getAllOverviews());
         return listHelper.getUniqueOverviewList(overviews);
     }
@@ -369,7 +368,7 @@ export default class Series extends SeriesProviderExtension {
         }
 
         if (list) {
-            const allRelations = await this.getAllRelations(list);
+            const allRelations = this.getAllRelations(list);
             for (const relation of allRelations) {
                 if (seasonHelper.isSeasonFirstSeason((await relation.getSeason()))) {
                     this.firstSeasonSeriesId = relation.id;
@@ -393,7 +392,7 @@ export default class Series extends SeriesProviderExtension {
      * @param list
      * @param returnWithThis default value is: FALSE
      */
-    public async getAllRelations(list?: readonly Series[] | Series[], returnWithThis = false): Promise<Series[]> {
+    public getAllRelations(list?: readonly Series[] | Series[], returnWithThis = false): Series[] {
         let relations = [this as Series];
 
         if (!list) {
@@ -402,9 +401,9 @@ export default class Series extends SeriesProviderExtension {
 
         for (const entry2 of relations) {
             for (const entry of list) {
-                if (!await listHelper.isSeriesInList(relations, entry)) {
+                if (!listHelper.isSeriesInList(relations, entry)) {
                     try {
-                        relations.push(await this.searchInProviderForRelations(entry, entry2));
+                        relations.push(this.searchInProviderForRelations(entry, entry2));
                     } catch (err) {
                         logger.debug(err);
                     }
@@ -426,7 +425,7 @@ export default class Series extends SeriesProviderExtension {
         return this.getAllProviderLocalDatas().findIndex((provider) => provider.prequelIds.length !== 0) !== -1;
     }
 
-    public async getMediaType(): Promise<MediaType> {
+    public getMediaType(): MediaType {
         const collectedMediaTypes: MediaType[] = [];
         for (const localdata of this.getAllProviderLocalDatas()) {
             if (localdata.mediaType !== MediaType.UNKOWN) {
@@ -434,7 +433,7 @@ export default class Series extends SeriesProviderExtension {
             }
         }
 
-        collectedMediaTypes.push(...await this.getAllMediaTypesFromTitle());
+        collectedMediaTypes.push(...this.getAllMediaTypesFromTitle());
 
         if (collectedMediaTypes.length === 0) {
             this.cachedMediaType = MediaType.UNKOWN;
@@ -517,7 +516,7 @@ export default class Series extends SeriesProviderExtension {
             if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
                 if (result.searchResultDetails.searchedProviders.length !== 0) {
                     logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
-                    const list = await SeasonFindHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
+                    const list = SeasonFindHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
                     await new MainListAdder().addSeries(...list);
                     logger.info('Temp Series Successfull added.');
                 }
@@ -533,10 +532,10 @@ export default class Series extends SeriesProviderExtension {
         return Object.assign(new Season(), this.cachedSeason);
     }
 
-    private async searchInProviderForRelations(a: Series, b: Series): Promise<Series> {
+    private searchInProviderForRelations(a: Series, b: Series): Series {
         const aMediaType = a.getMediaType();
         const bMediaType = b.getMediaType();
-        if (await aMediaType === await bMediaType || await aMediaType === MediaType.UNKOWN || await bMediaType === MediaType.UNKOWN) {
+        if (aMediaType === bMediaType || aMediaType === MediaType.UNKOWN || bMediaType === MediaType.UNKOWN) {
             const allAProviders = a.getAllProviderLocalDatasWithSeasonInfo();
             const allBProviders = b.getAllProviderLocalDatasWithSeasonInfo();
             for (const providerAWithSeason of allAProviders) {
@@ -582,9 +581,9 @@ export default class Series extends SeriesProviderExtension {
     /**
      * Get all MediaTypes that it can find in the title.
      */
-    private async getAllMediaTypesFromTitle(): Promise<MediaType[]> {
+    private getAllMediaTypesFromTitle(): MediaType[] {
         const collectedMediaTypes: MediaType[] = [];
-        const names = await this.getAllNamesUnique();
+        const names = this.getAllNamesUnique();
         for (const name of names) {
             const result = titleCheckHelper.getMediaTypeFromTitle(name.name);
             if (result !== MediaType.UNKOWN) {

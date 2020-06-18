@@ -21,7 +21,7 @@ export default class EpisodeGeneratorHelper {
         return [];
     }
 
-    private static generateAllEpisodes(provider: ProviderLocalData, episodeSeason?: Season, startEpisode = 1, numberOfEpiodes = 0) {
+    private static generateAllEpisodes(provider: ProviderLocalData, episodeSeason?: Season, startEpisode = 1, numberOfEpiodes = 0): Episode[] {
         const generatedEpisodes: Episode[] = [];
         for (let episodeNumber = startEpisode; episodeNumber <= numberOfEpiodes; episodeNumber++) {
             const isEpisodePresent = this.isEpisodePresent(episodeNumber, provider, episodeSeason);
@@ -49,7 +49,7 @@ export default class EpisodeGeneratorHelper {
         return 0;
     }
 
-    private static isEpisodePresent(episodeNumber: number, provider: ProviderLocalData, episodeSeason: Season | undefined) {
+    private static isEpisodePresent(episodeNumber: number, provider: ProviderLocalData, episodeSeason: Season | undefined): boolean {
         let episodeFounded = false;
         for (const detailedEpisode of provider.detailEpisodeInfo) {
             if (EpisodeComperator.isEpisodeSameAsDetailedEpisode(episodeNumber, detailedEpisode, episodeSeason)) {
@@ -63,7 +63,7 @@ export default class EpisodeGeneratorHelper {
     /**
      * Episode season is only needed when provider dont have a unique id (multi seasons under same id)
      */
-    private static getEpisodeSeason(provider: ProviderLocalData, season?: Season) {
+    private static getEpisodeSeason(provider: ProviderLocalData, season?: Season): Season | undefined {
         try {
             if (!ProviderList.getProviderInstanceByLocalData(provider).hasUniqueIdForSeasons) {
                 return season;
@@ -73,7 +73,7 @@ export default class EpisodeGeneratorHelper {
         }
     }
 
-    private static generateSingleEpisode(episodeNumber: number, provider: ProviderLocalData) {
+    private static generateSingleEpisode(episodeNumber: number, provider: ProviderLocalData): Episode {
         const episode = new Episode(episodeNumber);
         episode.provider = provider.provider;
         episode.providerId = provider.id;

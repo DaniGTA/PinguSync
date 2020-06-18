@@ -96,7 +96,7 @@ export default class DownloadProviderLocalDataWithoutId {
     }
 
     private async getProviderSeriesInfoBySeriesName(): Promise<MultiProviderResult | undefined> {
-        const names = await this.getNamesSortedBySearchAbleScore(this.series);
+        const names = this.getNamesSortedBySearchAbleScore(this.series);
         return this.downloadProviderSeriesInfoBySeriesName(names);
     }
 
@@ -147,7 +147,7 @@ export default class DownloadProviderLocalDataWithoutId {
      * Get all names of a series sorted by a score and it is unique say all double entrys will be filtered out.
      * @param series The series from which the names will be taken.
      */
-    private async getNamesSortedBySearchAbleScore(series: Series): Promise<Name[]> {
+    private getNamesSortedBySearchAbleScore(series: Series): Name[] {
         let names = series.getAllNamesSeasonAware();
         logger.debug(`[INFO] [ProviderInfoDownloadHelper] [getNamesSortedBySearchAbleScore] start sorting ${names.length} names by search able score.`);
         names = TitleHelper.getAllNamesSortedBySearchAbleScore(names);

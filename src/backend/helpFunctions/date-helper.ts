@@ -20,7 +20,7 @@ class DateHelper {
         return diffDays;
     }
 
-    private convertDaysToTimestamp(days: number) {
+    private convertDaysToTimestamp(days: number): number {
         return (days * 24 * 60 * 60 * 1000);
     }
 }

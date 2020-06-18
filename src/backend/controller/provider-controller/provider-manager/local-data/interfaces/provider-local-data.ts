@@ -26,19 +26,19 @@ export default abstract class ProviderLocalData {
      * @param a
      * @param b
      */
-    protected static async mergeProviderLocalData(...providers: ProviderLocalData[]): Promise<ProviderLocalData> {
+    protected static mergeProviderLocalData(...providers: ProviderLocalData[]): ProviderLocalData {
         providers.sort((a, b) => a.lastUpdate.getTime() - b.lastUpdate.getTime());
         let finalProvider: any = {};
         for (const provider of providers) {
             finalProvider = this.mergeBasicEntrys(finalProvider, provider);
         }
 
-        finalProvider.genres = finalProvider.genres ? await listHelper.getUniqueObjectList(finalProvider.genres) : [];
-        finalProvider.banners = finalProvider.banners ? await listHelper.getUniqueObjectList(finalProvider.banners) : [];
-        finalProvider.covers = finalProvider.covers ? await listHelper.getUniqueObjectList(finalProvider.covers) : [];
+        finalProvider.genres = finalProvider.genres ? listHelper.getUniqueObjectList(finalProvider.genres) : [];
+        finalProvider.banners = finalProvider.banners ? listHelper.getUniqueObjectList(finalProvider.banners) : [];
+        finalProvider.covers = finalProvider.covers ? listHelper.getUniqueObjectList(finalProvider.covers) : [];
 
-        finalProvider.names = finalProvider.names ? await listHelper.getUniqueNameList(finalProvider.names) : [];
-        finalProvider.overviews = finalProvider.overviews ? await listHelper.getUniqueOverviewList(finalProvider.overviews) : [];
+        finalProvider.names = finalProvider.names ? listHelper.getUniqueNameList(finalProvider.names) : [];
+        finalProvider.overviews = finalProvider.overviews ? listHelper.getUniqueOverviewList(finalProvider.overviews) : [];
         return finalProvider;
     }
 
@@ -82,7 +82,6 @@ export default abstract class ProviderLocalData {
         return newP;
     }
 
-    private static mergeEpisodeList() { }
     // ------------------
     //  Provider metadata stuff
     // ------------------

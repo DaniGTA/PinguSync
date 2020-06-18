@@ -13,7 +13,7 @@ export enum PreferedSeriesName {
 export class PreferedSeriesNameHelper {
     public async getPreferedNameOfSeries(series: Series): Promise<string> {
         const userSettings = new UserSettings();
-        const seriesNames = await series.getAllNamesUnique();
+        const seriesNames = series.getAllNamesUnique();
 
         try {
             return Name.getRomajiName(seriesNames);

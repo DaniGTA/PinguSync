@@ -36,7 +36,7 @@ export default class SeasonAwarenessPathController {
      * @param pWithoutAwarness provider without season awareness
      * @param tSeason target season.
      */
-    public async getSeasonAwarnessResult(tSeason: Season | undefined) {
+    public async getSeasonAwarnessResult(tSeason: Season | undefined): Promise<ProviderLocalDataWithSeasonInfo[]> {
         const seasonResult = await this.getProviderLocalDataWithSeason(tSeason);
         const finalResult = [
             new ProviderLocalDataWithSeasonInfo(this.providerWithoutAwarness, seasonResult),
@@ -66,7 +66,7 @@ export default class SeasonAwarenessPathController {
                 }
 
             } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder === 1) {
-                await SeasonAwarenessSequelPathController.addSequelTooMainList(this.providerWithAwareness, this.providerWithoutAwarness, result);
+                SeasonAwarenessSequelPathController.addSequelTooMainList(this.providerWithAwareness, this.providerWithoutAwarness, result);
                 return new Season(result.finalSeasonNumbers, 1);
             } else {
                 logger.error('SEASON IS NOT COMPLETE CANT EXTRACT SEASON NUMBER !!!');
