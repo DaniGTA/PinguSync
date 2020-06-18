@@ -14,7 +14,7 @@ describe('Provider: Trakt | movies/series get tested', () => {
         const testmovie: Movies = {movies: []};
         testmovie.movies.push({ids:{slug:'no-game-no-life-zero-2017'}, watched_at : new Date()});
         const response = await traktProviderInstance.markEpisodeAsWatched(episode);
-
+        
         expect(response).toBe('');
     });
 

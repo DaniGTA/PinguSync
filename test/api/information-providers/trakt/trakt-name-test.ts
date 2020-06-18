@@ -10,7 +10,7 @@ describe('Provider: Trakt | username/name get tested', () => {
             body: '{"username":"sean","private":false,"name":"Sean Rudford","vip":true,"vip_ep":true,"ids":{"slug":"sean"}}',
             statusCode: 200
         };
-
+        
         WebRequestManager.request = jest.fn(async () => response) as any;
         traktProviderInstance.userData.username = 'Sean Rudford';
        const a = await traktProviderInstance.getUsername();
