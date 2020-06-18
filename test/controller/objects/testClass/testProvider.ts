@@ -6,10 +6,17 @@ import { MediaType } from '../../../../src/backend/controller/objects/meta/media
 import Series from '../../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import logger from '../../../../src/backend/logger/logger';
 
 
 export default class TestProvider extends ListProvider {
     public hasOAuthLogin = false;
+    public async markEpisodeAsUnwatched(): Promise<void> {
+        logger.debug('Called markEpisodeAsUnwatched');
+    }
+    public async markEpisodeAsWatched(): Promise<void> {
+        logger.debug('Called markEpisodeAsWatched');
+    }
     public addOAuthCode(code: string): Promise<boolean> {
         throw new Error('Method not implemented.');
     }

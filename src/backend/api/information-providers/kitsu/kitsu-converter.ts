@@ -30,7 +30,7 @@ import { IKitsuEpisode, IKitsuEpisodeTitle, IKitsuMappings, IMedia } from './obj
 export default new class KitsuConverter {
     public async convertMediaToAnime(media: IMedia, fullInfo: ProviderInfoStatus = ProviderInfoStatus.FULL_INFO): Promise<MultiProviderResult> {
         logger.debug('[KitsuConverter] Starting converting media to provider local data. MediaInfo: ID: ' + media.id + ' TYPE:' + media.type);
-        const providerInfos = new ListProviderLocalData(media.id, KitsuProvider.getInstance());
+        const providerInfos = new ListProviderLocalData(media.id, KitsuProvider);
         if (media.titles.en) {
             providerInfos.addSeriesName(new Name(media.titles.en, 'en'));
         }
@@ -97,7 +97,7 @@ export default new class KitsuConverter {
         for (const mapping of mappings) {
             try {
                 if (mapping.externalSite === 'anidb') {
-                    const localdata = new InfoProviderLocalData(mapping.externalId, AniDBProvider.instance);
+                    const localdata = new InfoProviderLocalData(mapping.externalId, AniDBProvider);
                     providerLocalData.push(localdata);
                 } else if (mapping.externalSite === 'aotora') {
                     const localdata = new InfoProviderLocalData(mapping.externalId, 'aotora');

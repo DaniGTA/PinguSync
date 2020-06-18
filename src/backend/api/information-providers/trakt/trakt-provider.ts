@@ -20,7 +20,6 @@ import { TraktUserData } from './trakt-user-data';
 import { UserInfoSmall } from './objects/userInfoSmall';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import { Movies } from './objects/movies';
-import { monitorEventLoopDelay } from 'perf_hooks';
 
 export default class TraktProvider extends ListProvider {
 
@@ -29,13 +28,15 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async markEpisodeAsWatched(episode: Episode): Promise<void> {
-        
-        const testmovie: Movies = {movies: []};
-        testmovie.movies.push({ids:{slug:'no-game-no-life-zero-2017'}, watched_at : new Date()});        
-        const response = await this.traktRequest<Movies>('https://api.trakt.tv/sync/history','',JSON.stringify({testmovie}));
-        
-        throw response ;
-        
+
+        const testmovie: Movies = { movies: [] };
+        testmovie.movies.push({ ids: { slug: 'no-game-no-life-zero-2017' }, watched_at: new Date() });
+
+        const response = await this.traktRequest<Movies>('https://api.trakt.tv/sync/history', '', JSON.stringify({ testmovie }));
+
+        const id = episode.providerId;
+        throw response;
+
     }
 
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {

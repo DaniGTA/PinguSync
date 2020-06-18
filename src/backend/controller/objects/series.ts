@@ -14,7 +14,6 @@ import MainListManager from '../main-list-manager/main-list-manager';
 import MainListSearcher from '../main-list-manager/main-list-searcher';
 import { ProviderInfoStatus } from '../provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../provider-controller/provider-manager/provider-list';
 import InfoLocalDataBind from './extension/provider-extension/binding/info-local-data-bind';
 import ListLocalDataBind from './extension/provider-extension/binding/list-local-data-bind';
@@ -29,10 +28,10 @@ import Name from './meta/name';
 import { NameType } from './meta/name-type';
 import Overview from './meta/overview';
 import Season from './meta/season';
-import WatchProgress from './meta/watch-progress';
 import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
 import { ListType } from '../settings/models/provider/list-types';
+import SeriesHelper from '../../helpFunctions/series-helper';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -43,10 +42,10 @@ export default class Series extends SeriesProviderExtension {
     public lastUpdate: number = Date.now();
     public lastInfoUpdate = 0;
     public episodeBindingPools: EpisodeBindingPool[] = [];
+    public episodeBindingPoolGeneratedAt = 0;
     private cachedSeason?: Season;
     private cachedMediaType?: MediaType;
     private seasonDetectionType = '';
-    private canSync: boolean | null = null;
     private firstSeasonSeriesId?: string;
 
     constructor() {
@@ -171,6 +170,7 @@ export default class Series extends SeriesProviderExtension {
         for (const bindingPool of bindingPools) {
             this.addEpisodeMapping(...bindingPool.bindedEpisodeMappings);
         }
+        this.episodeBindingPoolGeneratedAt = Date.now();
     }
 
     public findExistingBindingPoolByEpisodeMapping(...episodeMappings: EpisodeMapping[]): EpisodeBindingPool | null {
@@ -228,7 +228,7 @@ export default class Series extends SeriesProviderExtension {
     /**
      * Give an array of all episodes in numbers.
      */
-    public async getAllEpisodes(): Promise<number[]> {
+    public getAllEpisodes(): number[] {
         logger.debug('[Episode] [Serve]: Serve all Episodes');
         let result;
         try {
@@ -339,37 +339,10 @@ export default class Series extends SeriesProviderExtension {
     /**
      * Merge two animes to one object.
      * Will be often used too update watchprogress.
-     * @param anime
+     * @param seriesB
      */
-    public async merge(anime: Series, allowAddNewEntry = true, mergeType = MergeTypes.UPGRADE): Promise<Series> {
-        logger.debug('[Series ] Merging Series   | SeriesID: ' + this.id);
-        const newAnime: Series = new Series();
-
-        newAnime.addAllBindings(...[...this.getAllProviderBindings(), ...anime.getAllProviderBindings()]);
-        logger.debug('[Series] Merged Providers  | SeriesID: ' + this.id);
-        if (mergeType === MergeTypes.UPGRADE) {
-            const getSeason = newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
-            const getMediaType = newAnime.getMediaType();
-            await getSeason;
-            await getMediaType;
-            await EpisodeMappingHelper.getEpisodeMappings(newAnime);
-        } else if (mergeType === MergeTypes.UPDATE) {
-            newAnime.addEpisodeBindingPools(...anime.episodeBindingPools, ...this.episodeBindingPools);
-        }
-        logger.debug('[Series] Calculated Season | SeriesID: ' + this.id);
-        if (this.lastInfoUpdate < anime.lastInfoUpdate) {
-            newAnime.lastInfoUpdate = anime.lastInfoUpdate;
-        } else {
-            newAnime.lastInfoUpdate = this.lastInfoUpdate;
-        }
-
-        if (this.lastUpdate < anime.lastUpdate) {
-            newAnime.lastUpdate = anime.lastUpdate;
-        } else {
-            newAnime.lastUpdate = this.lastUpdate;
-        }
-
-        return newAnime;
+    public async merge(seriesB: Series, allowAddNewEntry = true, mergeType = MergeTypes.UPGRADE): Promise<Series> {
+        return await SeriesHelper.merge(this, seriesB, allowAddNewEntry, mergeType);
     }
 
     /**
@@ -526,6 +499,15 @@ export default class Series extends SeriesProviderExtension {
             }
         }
         return listType;
+    }
+
+    public hasListType(listType: ListType): boolean {
+        for (const localdata of this.getListProvidersInfos()) {
+            if (localdata.watchStatus !== undefined && localdata.watchStatus == listType) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private async prepareSeasonSearch(searchMode: SeasonSearchMode, allowAddNewEntry: boolean, searchInList?: readonly Series[] | Series[]): Promise<Season | undefined> {

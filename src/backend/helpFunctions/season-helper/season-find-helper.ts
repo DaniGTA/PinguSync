@@ -24,9 +24,9 @@ export default class SeasonFindHelper {
      * has a relation to Series C and C have the Season info 1, now Series B knows because its above C it must be one Season higher.
      * At the End Series A knows its Season is 3.
      *
-     * Series C - S01       ←
-     *  |- Series B - ?     ↑
-     *      |- Series A - ? ↑
+     * Series C - S01       ←  (S1)
+     *  |- Series B - ?     ↑  (S2)
+     *      |- Series A - ? ↑  (S3)
      *
      * @param series the series where the trace should be performed.
      * @param seriesList a list where the relation should be.
@@ -85,9 +85,9 @@ export default class SeasonFindHelper {
      * has a relation to Series C and C have the Season info 1, now Series B knows because its below C it must be one Season lower.
      * At the End Series A knows its Season is 1.
      *
-     * Series A - ?             ↓
-     *  |- Series B - ?         ↓
-     *      |- Series C - S03   ←
+     * Series A - ?             ↓   (s1) 
+     *  |- Series B - ?         ↓   (S2)
+     *      |- Series C - S03   ←   (S3)
      *
      *
      * @param series the series where the trace should be performed.

@@ -7,5 +7,7 @@ export enum chListener {
     OnNewUpdateStatusAvailable = 'on-app-update-available-status-changed',
     OnUpdateDownload = 'on-app-update-downloaded',
     OnUpdateReady = 'updateReady',
-    OnSeriesFailedCoverImage = 'on-series-failed-cover-image-url'
+    OnSeriesFailedCoverImage = 'on-series-failed-cover-image-url',
+    OnSeriesEpisodeListRefreshRequest = 'OnSeriesepisodeListRefreshRequest',
+    OnSyncEpisodeOfSeriesRequest = 'OnSyncEpisodeOfSeriesRequest'
 }

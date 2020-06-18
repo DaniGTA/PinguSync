@@ -4,7 +4,6 @@ import { FailedRequestError } from '../../../controller/objects/meta/failed-requ
 import Series from '../../../controller/objects/series';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderNameManager from '../../../controller/provider-controller/provider-manager/provider-name-manager';
-import StringHelper from '../../string-helper';
 import DownloadProviderLocalDataWithId from './download-provider-local-data-with-id';
 import DownloadProviderLocalDataWithoutId from './download-provider-local-data-without-id';
 /**

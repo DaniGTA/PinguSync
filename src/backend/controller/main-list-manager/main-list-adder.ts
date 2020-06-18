@@ -39,7 +39,7 @@ export default class MainListAdder {
 
         if (MainListAdder.instanceTracker.length === 1 && MainListAdder.instanceTracker[0] === trackId) {
             await MainListManager.finishListFilling();
-            ProviderDataListManager.requestSaveProviderList();
+            this.requestSave();
         }
         MainListAdder.instanceTracker = listHelper.removeEntrys(MainListAdder.instanceTracker, trackId);
         logger.log('info', '[MainListAdder] End adding');
@@ -99,6 +99,7 @@ export default class MainListAdder {
             if (SeriesHelper.canUpdateSeries(series, existingEntry)) {
                 const updateExistingEntry = await NewProviderHelper.getAllRelevantProviderInfosForSeries(existingEntry);
                 await MainListManager.updateSerieInList(updateExistingEntry);
+                return;
             }
 
             await MainListManager.updateSerieInList(series);

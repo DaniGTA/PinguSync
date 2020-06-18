@@ -25,7 +25,7 @@ try {
       );
     }
   } catch (err) {
-    logger.debug(err);
+    console.log('No Electron envoirmoent!');
   }
 
   logger = winston.createLogger({
@@ -40,7 +40,7 @@ try {
     transports: transports,
   });
 } catch (err) {
-  logger.debug(err);
+  console.log(err);
 }
 
 export default logger;

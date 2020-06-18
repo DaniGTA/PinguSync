@@ -8,6 +8,11 @@ import ReleaseYearComperator from './comperators/release-year-comperator';
 import SeasonComperator from './comperators/season-comperator';
 import TitleComperator from './comperators/title-comperator';
 import NewProviderHelper from './provider/new-provider-helper';
+import logger from '../logger/logger';
+import { MergeTypes } from '../controller/objects/merge-types';
+import { SeasonSearchMode } from './season-helper/season-search-mode';
+import EpisodeMappingHelper from './episode-mapping-helper/episode-mapping-helper';
+import EpisodeBindingPool from '../controller/objects/meta/episode/episode-binding-pool';
 export default class SeriesHelper {
     /**
      * Calculate the value
@@ -54,7 +59,7 @@ export default class SeriesHelper {
         const aFirstSeason = seasonResult.aFirstSeason;
         const bFirstSeason = seasonResult.bFirstSeason;
 
-        const episodeResult = await EpisodeComperator.compareEpisodes(a, b);
+        const episodeResult = EpisodeComperator.compareEpisodes(a, b);
         if (episodeResult.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
             return true;
         }
@@ -80,5 +85,44 @@ export default class SeriesHelper {
         }
 
         return false;
+    }
+
+    public static async merge(seriesA: Series, seriesB: Series, allowAddNewEntry = true, mergeType = MergeTypes.UPGRADE): Promise<Series> {
+        logger.debug('[Series ] Merging Series   | SeriesID: ' + seriesA.id);
+        const newAnime: Series = new Series();
+
+        newAnime.addAllBindings(...[...seriesA.getAllProviderBindings(), ...seriesB.getAllProviderBindings()]);
+        logger.debug('[Series] Merged Providers  | SeriesID: ' + seriesA.id);
+        if (mergeType === MergeTypes.UPGRADE) {
+            const getSeason = newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry);
+            const getMediaType = newAnime.getMediaType();
+            await getSeason;
+            await getMediaType;
+            newAnime.episodeBindingPools = await EpisodeMappingHelper.getEpisodeMappings(newAnime);
+        } else if (mergeType === MergeTypes.UPDATE) {
+            newAnime.addEpisodeBindingPools(...this.mergeEpisodeBindingPool(seriesA, seriesB));
+        }
+        logger.debug('[Series] Calculated Season | SeriesID: ' + seriesA.id);
+        if (seriesA.lastInfoUpdate < seriesB.lastInfoUpdate) {
+            newAnime.lastInfoUpdate = seriesB.lastInfoUpdate;
+        } else {
+            newAnime.lastInfoUpdate = seriesA.lastInfoUpdate;
+        }
+
+        if (seriesA.lastUpdate < seriesB.lastUpdate) {
+            newAnime.lastUpdate = seriesB.lastUpdate;
+        } else {
+            newAnime.lastUpdate = seriesA.lastUpdate;
+        }
+
+        return newAnime;
+    }
+
+    private static mergeEpisodeBindingPool(seriesA: Series, seriesB: Series): EpisodeBindingPool[] {
+        if (seriesA.episodeBindingPoolGeneratedAt > seriesB.episodeBindingPoolGeneratedAt) {
+            return seriesA.episodeBindingPools;
+        } else {
+            return seriesB.episodeBindingPools;
+        }
     }
 }

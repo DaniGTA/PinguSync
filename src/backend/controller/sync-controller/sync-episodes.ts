@@ -2,39 +2,45 @@ import Series from '../objects/series';
 import ListProvider from '../../api/provider/list-provider';
 import Episode from '../objects/meta/episode/episode';
 import EpisodeMapping from '../objects/meta/episode/episode-mapping';
+import { SyncStatus } from './model/sync-status';
 
 export default class SyncEpisodes {
     constructor(private series: Series) {
 
     }
-
-    syncAllEpisodesBetweenProviders(providers: ListProvider[]) {
-        for (const epPool of this.series.episodeBindingPools) {
-            const epBinding = epPool.bindedEpisodeMappings.find(x => x.provider === 'provider.providerName');
-            const episode = this.getEpisodeByBinding(epBinding);
-            if (episode) {
-                const result = this.isSyncByEpisode(episode);
-                if (!result) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    isSync(provider: ListProvider): boolean {
+    public getAllEpisodeThatAreOutOfSync(provider: ListProvider): Episode[] {
+        const outOfSync: Episode[] = [];
         for (const epPool of this.series.episodeBindingPools) {
             const epBinding = epPool.bindedEpisodeMappings.find(x => x.provider === provider.providerName);
             const episode = this.getEpisodeByBinding(epBinding);
             if (episode) {
                 const result = this.isSyncByEpisode(episode);
                 if (!result) {
-                    return false;
+                    outOfSync.push(episode);
                 }
             }
         }
-        return true;
+        return outOfSync;
     }
+
+    getSyncStatus(provider: ListProvider): SyncStatus {
+        let lastEp: null | Episode = null;
+        for (const epPool of this.series.episodeBindingPools) {
+            const epBinding = epPool.bindedEpisodeMappings.find(x => x.provider === provider.providerName);
+            const episode = this.getEpisodeByBinding(epBinding);
+            if (episode) {
+                const result = this.isSyncByEpisode(episode);
+                if (!result) {
+                    return new SyncStatus(false, lastEp, 6);
+                } else {
+                    lastEp = episode;
+                }
+            }
+        }
+        return new SyncStatus(true, lastEp, 6);
+    }
+
+
 
     isSyncById(id: string, provider?: string): boolean {
         const ep = this.getEpisodeById(id, provider);
@@ -71,12 +77,12 @@ export default class SyncEpisodes {
     }
 
 
-    getEpisodeByEpisodeMapping(em: EpisodeMapping): Episode | undefined {
+    private getEpisodeByEpisodeMapping(em: EpisodeMapping): Episode | undefined {
         const provider = this.series.getAllProviderLocalDatas().find(x => x.provider === em.provider);
         return provider?.detailEpisodeInfo.find(x => x.id === em.id);
     }
 
-    getEpisodeById(id: string, providerName?: string): Episode {
+    private getEpisodeById(id: string, providerName?: string): Episode {
         let result;
         if (providerName) {
             result = this.getEpisodeByIdAndProvider(id, providerName);

@@ -21,7 +21,7 @@ export default class WorkerController {
         });
     }
 
-    public removeListener(channel: string, f: (data: any) => void) {
+    public removeListener(channel: string, f: (data: any) => void): void {
         ipcRenderer.removeListener('channel', f);
     }
 
@@ -30,7 +30,13 @@ export default class WorkerController {
      * @param sendData data that will be send with the send request.
      */
     public async getOnce<T>(channel: string, sendData?: any): Promise<T> {
-        const promise = new Promise<T>((resolve, reject) => {
+        const promise = this.once<T>(channel);
+        this.send(channel, sendData);
+        return await promise;
+    }
+
+    public once<T>(channel: string): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             try {
                 console.log('info', 'frontend list once: ' + channel);
                 ipcRenderer.once(channel, (event: Electron.IpcRendererEvent, data: T) => {
@@ -41,7 +47,5 @@ export default class WorkerController {
                 reject(err);
             }
         });
-        this.send(channel, sendData);
-        return await promise;
     }
 }

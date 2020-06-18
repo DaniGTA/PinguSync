@@ -112,7 +112,7 @@ export default class ListController {
     public async getSeriesListAndUpdateMainList(): Promise<void> {
         logger.log('info', '[calc] -> SeriesList');
         const allSeries: MultiProviderResult[] = await this.getAllEntrysFromProviders(true);
-        await new MainListEntryUpdater().updateSeries(...allSeries);
+        await new MainListEntryUpdater().updateMultiProviderData(...allSeries);
     }
 
 

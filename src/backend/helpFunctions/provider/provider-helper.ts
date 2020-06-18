@@ -31,8 +31,8 @@ export default class ProviderHelper {
                     }
                 }
             } catch (err) {
-                logger.error('Error at ProviderHelper.requestUpgradeAllCurrentinfos');
-                logger.error(err);
+                logger.debug('Error at ProviderHelper.requestUpgradeAllCurrentinfos');
+                logger.debug(err);
             }
         }
         return resultList;

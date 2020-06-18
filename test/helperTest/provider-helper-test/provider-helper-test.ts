@@ -1,4 +1,4 @@
-import { equal, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 import AniDBHelper from '../../../src/backend/api/information-providers/anidb/anidb-helper';
 import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
 import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
@@ -32,7 +32,7 @@ import TestInfoProvider3 from './test-info-provider-3';
 jest.mock('../../../src/backend/api/provider/external-provider');
 // tslint:disable: no-string-literal
 describe('Provider Helper Test', () => {
-    beforeAll(async () => {
+    beforeAll(() => {
         const wait = jest.fn();
         jest.fn().mockImplementation(() => {
             return { waitUntilItCanPerfomNextRequest: wait };
@@ -65,7 +65,7 @@ describe('Provider Helper Test', () => {
             await series.addInfoProvider(providerLocalData);
 
             const result = NewProviderHelper.canUpdateAnyProvider(series);
-            strictEqual(result, true);
+            expect(result).toBe(true);
         });
         test('should be false', async () => {
             const series = new Series();
@@ -74,7 +74,7 @@ describe('Provider Helper Test', () => {
             await series.addInfoProvider(providerLocalData);
 
             const result = NewProviderHelper.canUpdateAnyProvider(series);
-            strictEqual(result, false);
+            expect(result).toBe(false);
         });
 
         test('should be false (provider has error)', async () => {
@@ -87,7 +87,7 @@ describe('Provider Helper Test', () => {
             await series.addInfoProvider(providerLocalData);
 
             const result = NewProviderHelper.canUpdateAnyProvider(series);
-            strictEqual(result, false);
+            expect(result).toBe(false);
         });
     });
 
@@ -99,10 +99,10 @@ describe('Provider Helper Test', () => {
         await series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
         // tslint:disable-next-line: no-string-literal
         const result = await ProviderInfoHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
-        equal(result.length, 2);
+        expect(result.length).toBe(2);
     });
 
-    test('should sort provider that need updates right (1/3)', async () => {
+    test('should sort provider that need updates right (1/3)', () => {
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
         providersThatNeedsAUpdate.push(AniListProvider.getInstance());
@@ -115,10 +115,10 @@ describe('Provider Helper Test', () => {
         // tslint:disable-next-line: no-string-literal
         providersThatNeedsAUpdate.sort((a, b) => ProviderListHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
-        strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
+        expect(providersThatNeedsAUpdate[0].providerName).toBe(TraktProvider.getInstance().providerName);
     });
 
-    test('should sort provider that need updates right (2/3)', async () => {
+    test('should sort provider that need updates right (2/3)', () => {
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
         providersThatNeedsAUpdate.push(AniListProvider.getInstance());
@@ -131,11 +131,11 @@ describe('Provider Helper Test', () => {
         // tslint:disable-next-line: no-string-literal
         providersThatNeedsAUpdate.sort((a, b) => ProviderListHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
-        strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
+        expect(providersThatNeedsAUpdate[0].providerName).toBe(TraktProvider.getInstance().providerName);
     });
 
 
-    test('should sort provider that need updates right (3/3)', async () => {
+    test('should sort provider that need updates right (3/3)', () => {
         const providersThatNeedsAUpdate: ExternalProvider[] = [];
 
         providersThatNeedsAUpdate.push(TraktProvider.getInstance());
@@ -148,7 +148,7 @@ describe('Provider Helper Test', () => {
         // tslint:disable-next-line: no-string-literal
         providersThatNeedsAUpdate.sort((a, b) => ProviderListHelper['sortProvidersThatNeedUpdates'](a, b, currentProviderData));
 
-        strictEqual(providersThatNeedsAUpdate[0].providerName, TraktProvider.getInstance().providerName);
+        expect(providersThatNeedsAUpdate[0].providerName).toBe(TraktProvider.getInstance().providerName);
     });
 
     test('should create season awareness', async () => {
@@ -162,7 +162,7 @@ describe('Provider Helper Test', () => {
 
         const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
         if (anidbProvider) {
-            equal(anidbProvider.id, 13244);
+            expect(anidbProvider.id).toBe(13244);
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.getSingleSeasonNumberAsNumber(), 3);
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart, 1);
 

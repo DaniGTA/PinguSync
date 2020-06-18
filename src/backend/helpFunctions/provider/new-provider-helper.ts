@@ -18,11 +18,16 @@ import SeasonAwarenessCreatorSeasonNumber from './season-awareness-helper/season
 export default class NewProviderHelper {
 
     public static canUpdateAnyProvider(series: Series): boolean {
+        logger.debug('Check if it can update any provider for series: ' + series.id);
         const allProviderLocalDatats = series.getAllProviderLocalDatas();
         for (const providerLocalData of allProviderLocalDatats) {
-            const providerInstance = ProviderList.getProviderInstanceByLocalData(providerLocalData);
-            if (providerInstance.version !== providerLocalData.version && series.getAllErrosForOneProvider(providerInstance).length === 0) {
-                return true;
+            try {
+                const providerInstance = ProviderList.getProviderInstanceByLocalData(providerLocalData);
+                if (providerInstance.version !== providerLocalData.version && series.getAllErrosForOneProvider(providerInstance).length === 0) {
+                    return true;
+                }
+            } catch (err) {
+                logger.debug(err);
             }
         }
         return false;

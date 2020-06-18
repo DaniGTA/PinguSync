@@ -45,10 +45,10 @@ export default class EpisodeHelper {
         return a.id === b.id;
     }
 
-    public static getOldEpInOldArrayWithNew(ep: Episode, oldArr: Episode[]): Episode | undefined {
+    public static getEpisodeFromArrayWithEpisode(ep: Episode, oldArr: Episode[]): Episode | undefined {
         for (const oldEp of oldArr) {
             const result = EpisodeComperator.compareDetailedEpisode(ep, oldEp);
-            if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.matchAble === result.matches) {
+            if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE || result.isAbsolute === AbsoluteResult.ABSOLUTE_NONE || result.matchAble === result.matches) {
                 return oldEp;
             }
         }

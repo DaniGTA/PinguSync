@@ -28,7 +28,7 @@ describe('MainList | Entry update tests', () => {
         const mpr = new MultiProviderResult(providerB);
 
         // Testing
-        await new MainListEntryUpdater().updateSeries(mpr);
+        await new MainListEntryUpdater().updateMultiProviderData(mpr);
 
         // tslint:disable-next-line: no-string-literal
         expect(MainListManager['mainList'].length).toBe(1);
