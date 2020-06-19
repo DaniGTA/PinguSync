@@ -13,43 +13,43 @@ describe('Provider data manager list tests', () => {
         ProviderList['loadedInfoProvider'] = [];
     });
 
-    test('should update list provider and hold the right info status', async () => {
+    test('should update list provider and hold the right info status', () => {
         const provider = new ListProviderLocalData(1, 'test');
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         provider.runTime = 10;
         provider.lastUpdate = new Date(0);
         provider.isNSFW = false;
 
-        await ProviderDataListManager.addProviderLocalDataToMainList(provider);
+        ProviderDataListManager.addProviderLocalDataToMainList(provider);
 
         const newProvider = new ListProviderLocalData(1, 'test');
         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
         newProvider.lastUpdate = new Date(1);
-        await ProviderDataListManager['updateProviderInList'](newProvider);
+        ProviderDataListManager['updateProviderInList'](newProvider);
 
         strictEqual(ProviderDataListManager['providerDataList'].length, 1);
         strictEqual(ProviderDataListManager['providerDataList'][0].infoStatus, ProviderInfoStatus.FULL_INFO);
         strictEqual(ProviderDataListManager['providerDataList'][0].runTime, 10);
-        strictEqual(ProviderDataListManager['providerDataList'][0].isNSFW, false);
+        expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false);
     });
 
-    test('should update info provider and hold the right info status', async () => {
+    test('should update info provider and hold the right info status', () => {
         const provider = new InfoProviderLocalData(1, 'test');
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
         provider.runTime = 10;
         provider.isNSFW = false;
 
-        await ProviderDataListManager.addProviderLocalDataToMainList(provider);
+        ProviderDataListManager.addProviderLocalDataToMainList(provider);
 
         const newProvider = new InfoProviderLocalData(1, 'test');
         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
 
-        await ProviderDataListManager['updateProviderInList'](newProvider);
+        ProviderDataListManager['updateProviderInList'](newProvider);
 
         strictEqual(ProviderDataListManager['providerDataList'].length, 1);
         strictEqual(ProviderDataListManager['providerDataList'][0].infoStatus, ProviderInfoStatus.FULL_INFO);
         strictEqual(ProviderDataListManager['providerDataList'][0].runTime, 10);
-        strictEqual(ProviderDataListManager['providerDataList'][0].isNSFW, false);
+        expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false);
     });
 
 });

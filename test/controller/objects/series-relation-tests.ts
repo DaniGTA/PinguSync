@@ -29,23 +29,23 @@ describe('Series | Relations', () => {
         const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
-        list = await listHelper.shuffle(list);
-        const result1 = await series1.getAllRelations(list);
-        const result2 = await series2.getAllRelations(list);
-        const result3 = await series3.getAllRelations(list);
+        list = listHelper.shuffle(list);
+        const result1 = series1.getAllRelations(list);
+        const result2 = series2.getAllRelations(list);
+        const result3 = series3.getAllRelations(list);
 
-        assert.equal(result1.length, 2);
-        assert.equal(result2.length, 2);
-        assert.equal(result3.length, 2);
+        expect(result1.length).toBe(2);
+        expect(result2.length).toBe(2);
+        expect(result3.length).toBe(2);
 
-        assert.equal(await listHelper.isSeriesInList(result1, series1), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series2), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series3), false);
+        assert.equal(listHelper.isSeriesInList(result1, series1), false);
+        assert.equal(listHelper.isSeriesInList(result2, series2), false);
+        assert.equal(listHelper.isSeriesInList(result3, series3), false);
 
 
-        assert.equal(await listHelper.isSeriesInList(result1, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series4), false);
+        assert.equal(listHelper.isSeriesInList(result1, series4), false);
+        assert.equal(listHelper.isSeriesInList(result2, series4), false);
+        assert.equal(listHelper.isSeriesInList(result3, series4), false);
     });
 
     test('get all Relations based on sequel id', async () => {
@@ -57,23 +57,23 @@ describe('Series | Relations', () => {
         const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
-        list = await listHelper.shuffle(list);
-        const result1 = await series1.getAllRelations(list);
-        const result2 = await series2.getAllRelations(list);
-        const result3 = await series3.getAllRelations(list);
+        list = listHelper.shuffle(list);
+        const result1 = series1.getAllRelations(list);
+        const result2 = series2.getAllRelations(list);
+        const result3 = series3.getAllRelations(list);
 
-        assert.equal(result1.length, 2);
-        assert.equal(result2.length, 2);
-        assert.equal(result3.length, 2);
+        expect(result1.length).toBe(2);
+        expect(result2.length).toBe(2);
+        expect(result3.length).toBe(2);
 
-        assert.equal(await listHelper.isSeriesInList(result1, series1), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series2), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series3), false);
+        assert.equal(listHelper.isSeriesInList(result1, series1), false);
+        assert.equal(listHelper.isSeriesInList(result2, series2), false);
+        assert.equal(listHelper.isSeriesInList(result3, series3), false);
 
 
-        assert.equal(await listHelper.isSeriesInList(result1, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series4), false);
+        assert.equal(listHelper.isSeriesInList(result1, series4), false);
+        assert.equal(listHelper.isSeriesInList(result2, series4), false);
+        assert.equal(listHelper.isSeriesInList(result3, series4), false);
     });
 
     test('get all Relations based on sequel id and prequel id', async () => {
@@ -87,22 +87,22 @@ describe('Series | Relations', () => {
         const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
-        list = await listHelper.shuffle(list);
-        const result1 = await series1.getAllRelations(list);
-        const result2 = await series2.getAllRelations(list);
-        const result3 = await series3.getAllRelations(list);
+        list = listHelper.shuffle(list);
+        const result1 = series1.getAllRelations(list);
+        const result2 = series2.getAllRelations(list);
+        const result3 = series3.getAllRelations(list);
 
-        assert.equal(result1.length, 2);
-        assert.equal(result2.length, 2);
-        assert.equal(result3.length, 2);
+        expect(result1.length).toBe(2);
+        expect(result2.length).toBe(2);
+        expect(result3.length).toBe(2);
 
-        assert.equal(await listHelper.isSeriesInList(result1, series1), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series2), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series3), false);
+        assert.equal(listHelper.isSeriesInList(result1, series1), false);
+        assert.equal(listHelper.isSeriesInList(result2, series2), false);
+        assert.equal(listHelper.isSeriesInList(result3, series3), false);
 
-        assert.equal(await listHelper.isSeriesInList(result1, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series4), false);
+        assert.equal(listHelper.isSeriesInList(result1, series4), false);
+        assert.equal(listHelper.isSeriesInList(result2, series4), false);
+        assert.equal(listHelper.isSeriesInList(result3, series4), false);
     });
 
     test('get all Relations based on provider id', async () => {
@@ -112,22 +112,22 @@ describe('Series | Relations', () => {
         const series4 = await getFilledAnime(4);
 
         let list = [series1, series2, series3, series4];
-        list = await listHelper.shuffle(list);
-        const result1 = await series1.getAllRelations(list);
-        const result2 = await series2.getAllRelations(list);
-        const result3 = await series3.getAllRelations(list);
+        list = listHelper.shuffle(list);
+        const result1 = series1.getAllRelations(list);
+        const result2 = series2.getAllRelations(list);
+        const result3 = series3.getAllRelations(list);
 
         assert.equal(result1.length, 2);
         assert.equal(result2.length, 2);
         assert.equal(result3.length, 2);
 
-        assert.equal(await listHelper.isSeriesInList(result1, series1), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series2), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series3), false);
+        assert.equal(listHelper.isSeriesInList(result1, series1), false);
+        assert.equal(listHelper.isSeriesInList(result2, series2), false);
+        assert.equal(listHelper.isSeriesInList(result3, series3), false);
 
-        assert.equal(await listHelper.isSeriesInList(result1, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result2, series4), false);
-        assert.equal(await listHelper.isSeriesInList(result3, series4), false);
+        assert.equal(listHelper.isSeriesInList(result1, series4), false);
+        assert.equal(listHelper.isSeriesInList(result2, series4), false);
+        assert.equal(listHelper.isSeriesInList(result3, series4), false);
     });
 
     test('get all Relations based on multi sequels id', async () => {
@@ -147,23 +147,23 @@ describe('Series | Relations', () => {
         const series6 = await getFilledAnime(6);
 
         let list = [series1, series2, series3, series4, series5, series6];
-        list = await listHelper.shuffle(list);
-        const result1 = await series1.getAllRelations(list);
-        const result2 = await series3.getAllRelations(list);
-        const result3 = await series4.getAllRelations(list);
+        list = listHelper.shuffle(list);
+        const result1 = series1.getAllRelations(list);
+        const result2 = series3.getAllRelations(list);
+        const result3 = series4.getAllRelations(list);
 
         assert.equal(result1.length, 5, 'Id 1 failed');
         assert.equal(result2.length, 5, 'Id 2 failed');
         assert.equal(result3.length, 5, 'Id 3 failed');
 
-        assert.equal(await listHelper.isSeriesInList(result1, series1), false, 'Series1 shouldnt not be in the own relation list');
-        assert.equal(await listHelper.isSeriesInList(result2, series2), true, 'Series3 should have Series2 as relation');
-        assert.equal(await listHelper.isSeriesInList(result3, series6), true, 'Series4 should have Series6 as relation');
+        assert.equal(listHelper.isSeriesInList(result1, series1), false, 'Series1 shouldnt not be in the own relation list');
+        assert.equal(listHelper.isSeriesInList(result2, series2), true, 'Series3 should have Series2 as relation');
+        assert.equal(listHelper.isSeriesInList(result3, series6), true, 'Series4 should have Series6 as relation');
 
 
-        assert.equal(await listHelper.isSeriesInList(result1, series2), true, 'Series2 should be in result1');
-        assert.equal(await listHelper.isSeriesInList(result2, series2), true, 'Series2 should be in result2');
-        assert.equal(await listHelper.isSeriesInList(result3, series2), true, 'Series2 should be in result3');
+        assert.equal(listHelper.isSeriesInList(result1, series2), true, 'Series2 should be in result1');
+        assert.equal(listHelper.isSeriesInList(result2, series2), true, 'Series2 should be in result2');
+        assert.equal(listHelper.isSeriesInList(result3, series2), true, 'Series2 should be in result3');
     });
 
     async function getFilledAnime(id: string | number = 1, targetSeason = 3): Promise<Series> {
@@ -173,7 +173,7 @@ describe('Series | Relations', () => {
         // tslint:disable-next-line: no-string-literal
         provider['episodes'] = 10;
         provider.releaseYear = 2014;
-        await anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(targetSeason)));
+        anime.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(targetSeason)));
         return anime;
     }
 });

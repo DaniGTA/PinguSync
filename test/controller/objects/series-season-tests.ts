@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Season from '../../../src/backend/controller/objects/meta/season';
@@ -19,8 +18,8 @@ describe('Series | Season', () => {
     test('should return season 1', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData(1, 'TestA');
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season([1])));
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), 1);
+        series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season([1])));
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(1);
         return;
     });
 
@@ -28,8 +27,8 @@ describe('Series | Season', () => {
         const series = new Series();
         const provider = new ListProviderLocalData(1, 'TestA');
         provider.addSeriesName(new Name('Test 3', 'en'));
-        await series.addListProvider(provider);
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), 3);
+        series.addListProvider(provider);
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(3);
         return;
     });
 
@@ -37,8 +36,8 @@ describe('Series | Season', () => {
         const series = new Series();
         const provider = new ListProviderLocalData(1, 'TestA');
         provider.addSeriesName(new Name('Test III', 'en'));
-        await series.addListProvider(provider);
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), 3);
+        series.addListProvider(provider);
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(3);
         return;
     });
 
@@ -47,9 +46,9 @@ describe('Series | Season', () => {
         const lpld = new ListProviderLocalData(1);
         lpld.prequelIds.push(6);
         lpld.addSeriesName(new Name('Test III', 'en'));
-        await series.addListProvider(lpld);
+        series.addListProvider(lpld);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series])).getSingleSeasonNumberAsNumber(), 3);
+        expect((await series.getSeason(SeasonSearchMode.ALL, [series])).getSingleSeasonNumberAsNumber()).toBe(3);
         return;
     });
 
@@ -58,16 +57,16 @@ describe('Series | Season', () => {
         const lpld = new ListProviderLocalData(2);
         lpld.prequelIds.push(6);
         lpld.addSeriesName(new Name('Test III', 'en'));
-        await series.addListProvider(lpld);
+        series.addListProvider(lpld);
 
         const series2 = new Series();
         const lpld2 = new ListProviderLocalData(1);
         lpld2.prequelIds.push(5);
         lpld2.sequelIds.push(6);
         lpld2.addSeriesName(new Name('Test II', 'en'));
-        await series2.addListProvider(lpld2);
+        series2.addListProvider(lpld2);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber(), 3);
+        expect((await series.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber()).toBe(3);
         return;
     });
 
@@ -76,16 +75,16 @@ describe('Series | Season', () => {
         const lpld = new ListProviderLocalData(1, 'test2');
         lpld.prequelIds.push(6);
         lpld.addSeriesName(new Name('Test III', 'en'));
-        await series.addListProvider(lpld);
+        series.addListProvider(lpld);
 
         const series2 = new Series();
         const lpld2 = new ListProviderLocalData(1, 'test');
         lpld2.prequelIds.push(5);
         lpld2.sequelIds.push(6);
         lpld2.addSeriesName(new Name('Test II', 'en'));
-        await series2.addListProvider(lpld2);
+        series2.addListProvider(lpld2);
 
-        strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber(), 2);
+        expect((await series2.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber()).toBe(2);
         return;
     });
 
@@ -94,16 +93,16 @@ describe('Series | Season', () => {
         const lpld = new ListProviderLocalData(6, 'Test');
         lpld.prequelIds.push(5);
         lpld.addSeriesName(new Name('Test Cool', 'en'));
-        await series.addListProvider(lpld);
+        series.addListProvider(lpld);
 
         const series2 = new Series();
         const lpld2 = new ListProviderLocalData(5, 'Test');
         lpld2.sequelIds.push(6);
         lpld2.addSeriesName(new Name('Test Test', 'en'));
-        await series2.addListProvider(lpld2);
+        series2.addListProvider(lpld2);
 
-        strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber(), 2);
-        strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber(), 1);
+        expect((await series.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber()).toBe(2);
+        expect((await series2.getSeason(SeasonSearchMode.ALL, [series, series2])).getSingleSeasonNumberAsNumber()).toBe(1);
         return;
     });
     describe('should return season 8', () => {
@@ -113,38 +112,38 @@ describe('Series | Season', () => {
 
         let series3: Series = new Series();
 
-        beforeEach(async () => {
+        beforeEach(() => {
             series = new Series();
             const lpld = new ListProviderLocalData(5);
             lpld.sequelIds.push(6);
             lpld.addSeriesName(new Name('Test Cool', 'en'));
-            await series.addListProvider(lpld);
+            series.addListProvider(lpld);
 
             series2 = new Series();
             const lpld2 = new ListProviderLocalData(6);
             lpld2.sequelIds.push(7);
             lpld2.prequelIds.push(5);
             lpld2.addSeriesName(new Name('Test Test', 'en'));
-            await series2.addListProvider(lpld2);
+            series2.addListProvider(lpld2);
 
             series3 = new Series();
             const lpld3 = new ListProviderLocalData(7);
             lpld3.prequelIds.push(6);
             lpld3.addSeriesName(new Name('Test Testooo', 'en'));
-            await series3.addListProvider(lpld3);
+            series3.addListProvider(lpld3);
         });
         test('at season 1', async () => {
-            strictEqual((await series.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).getSingleSeasonNumberAsNumber(), 1);
+            expect((await series.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).getSingleSeasonNumberAsNumber()).toBe(1);
             return;
         });
 
         test('at season 2', async () => {
-            strictEqual((await series2.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).getSingleSeasonNumberAsNumber(), 2);
+            expect((await series2.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).getSingleSeasonNumberAsNumber()).toBe(2);
             return;
         });
 
         test('at season 3', async () => {
-            strictEqual((await series3.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).getSingleSeasonNumberAsNumber(), 3);
+            expect((await series3.getSeason(SeasonSearchMode.ALL, [series, series2, series3])).getSingleSeasonNumberAsNumber()).toBe(3);
             return;
         });
     });
@@ -154,8 +153,8 @@ describe('Series | Season', () => {
         const lpld = new ListProviderLocalData(1);
         lpld.addSeriesName(new Name('Title xx', 'eng'));
         lpld.addSeriesName(new Name('Title XX', 'eng'));
-        await series.addListProvider(lpld);
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), 2);
+        series.addListProvider(lpld);
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(2);
         return;
     });
 
@@ -163,8 +162,8 @@ describe('Series | Season', () => {
         const series = new Series();
         const lpld = new ListProviderLocalData(1);
         lpld.addSeriesName(new Name('Test S3 part 2', 'en'));
-        await series.addListProvider(lpld);
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), 3);
+        series.addListProvider(lpld);
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(3);
         return;
     });
 
@@ -172,17 +171,17 @@ describe('Series | Season', () => {
         const series = new Series();
         const lpld = new ListProviderLocalData(3);
         lpld.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series.addListProvider(lpld);
+        series.addListProvider(lpld);
 
         const series2 = new Series();
         const lpld2 = new ListProviderLocalData(1);
         lpld2.addSeriesName(new Name('Test: yman', 'en'));
         lpld2.sequelIds.push(3);
-        await series2.addListProvider(lpld2);
+        series2.addListProvider(lpld2);
 
 
 
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), undefined);
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(undefined);
         return;
     });
 
@@ -191,8 +190,8 @@ describe('Series | Season', () => {
         const series = new Series();
         const lpld = new ListProviderLocalData(1);
         lpld.addSeriesName(new Name('test-2017-127567', 'slug'));
-        await series.addListProvider(lpld);
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), undefined);
+        series.addListProvider(lpld);
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(undefined);
         return;
     });
 
@@ -200,8 +199,8 @@ describe('Series | Season', () => {
         const series = new Series();
         const lpld = new ListProviderLocalData(1);
         lpld.addSeriesName(new Name('test-test-2013', 'slug'));
-        await series.addListProvider(lpld);
-        strictEqual((await series.getSeason()).getSingleSeasonNumberAsNumber(), undefined);
+        series.addListProvider(lpld);
+        expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(undefined);
         return;
     });
 });

@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import { NameType } from '../../../src/backend/controller/objects/meta/name-type';
@@ -16,112 +15,110 @@ describe('Series | Basic', () => {
         MainListManager['mainList'] = [];
         ProviderDataListManager['providerDataList'] = [];
     });
-    test('should have a id', async () => {
+    test('should have a id', () => {
         const series = new Series();
-        assert.notEqual(series.id.length, 0);
+        expect(series.id.length).not.toBe(0);
         return;
     });
 
-    test('should all episodes (1/3)', async () => {
+    test('should all episodes (1/3)', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1, 'TestA');
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 11;
-        await series.addProviderDatas(providerA, providerB);
-        const allEpisodes = await series.getAllEpisodes();
-        assert.equal(allEpisodes[0], 10);
-        assert.equal(allEpisodes[1], 11);
-        assert.equal(allEpisodes.length, 2);
+        series.addProviderDatas(providerA, providerB);
+        const allEpisodes = series.getAllEpisodes();
+        expect(allEpisodes[0]).toBe(10);
+        expect(allEpisodes[1]).toBe(11);
+        expect(allEpisodes.length).toBe(2);
         return;
     });
 
-    test('should all episodes (2/3)', async () => {
+    test('should all episodes (2/3)', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1, 'A');
         providerA.episodes = 10;
         const providerB = new ListProviderLocalData(1, 'B');
         providerB.episodes = 11;
-        await series.addProviderDatas(providerA, providerB);
-        assert.deepEqual(await series.getAllEpisodes(), [10, 11]);
-        return;
+        series.addProviderDatas(providerA, providerB);
+        expect(series.getAllEpisodes()).toStrictEqual([10, 11]);
     });
 
-    test('should all episodes (3/3)', async () => {
+    test('should all episodes (3/3)', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1);
 
-        await series.addListProvider(providerA);
-        assert.deepStrictEqual(await series.getAllEpisodes(), []);
-        return;
+        series.addListProvider(providerA);
+        expect(series.getAllEpisodes()).toStrictEqual([]);
     });
 
-    test('should max episode (1/3)', async () => {
+    test('should max episode (1/3)', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1, 'TestA');
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 11;
-        await series.addProviderDatas(providerA, providerB);
-        assert.equal(series.getMaxEpisode(), 12);
+        series.addProviderDatas(providerA, providerB);
+        expect(series.getMaxEpisode()).toBe(12);
         return;
     });
 
-    test('should max episode (2/3)', async () => {
+    test('should max episode (2/3)', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1, 'TestA');
         providerA.episodes = 12;
         const providerB = new ListProviderLocalData(1, 'TestB');
         providerB.episodes = 24;
-        await series.addProviderDatas(providerA, providerB);
-        assert.equal(series.getMaxEpisode(), 24);
+        series.addProviderDatas(providerA, providerB);
+        expect(series.getMaxEpisode()).toBe(24);
         return;
     });
 
 
 
-    test('should prevent duplicates in names', async () => {
+    test('should prevent duplicates in names', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1);
         providerA.addSeriesName(new Name('Test', 'eng'));
         providerA.addSeriesName(new Name('Test', 'eng'));
-        await series.addListProvider(providerA);
-        assert.strictEqual((series.getAllNames()).length, 1);
+        series.addListProvider(providerA);
+        expect(series.getAllNames().length).toBe(1);
     });
 
-    test('should prevent null entrys in names', async () => {
+    test('should prevent null entrys in names', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1);
         providerA.addSeriesName(null as unknown as Name);
-        await series.addListProvider(providerA);
-        assert.strictEqual((series.getAllNames()).length, 0);
+        series.addListProvider(providerA);
+        expect(series.getAllNames().length).toBe(0);
     });
 
-    test('should prevent undefined entrys in names', async () => {
+    test('should prevent undefined entrys in names', () => {
         const series = new Series();
         const providerA = new ListProviderLocalData(1);
         providerA.addSeriesName(undefined as unknown as Name);
-        await series.addListProvider(providerA);
-        assert.strictEqual((series.getAllNames()).length, 0);
+        series.addListProvider(providerA);
+        expect(series.getAllNames().length).toBe(0);
     });
 
-    test('should replace existing info provider binding', async () => {
+    test('should replace existing info provider binding', () => {
         const series = new Series();
         const provider1 = new InfoProviderLocalData(1, 'test');
         const provider2 = new InfoProviderLocalData(2, 'test');
 
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([3])));
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([3])));
+        series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([3])));
+        series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([3])));
 
-        assert.strictEqual(series.getAllProviderBindings()[0].id, 2);
+        expect(series.getAllProviderBindings()[0].id).toBe(2);
     });
 
     test('should extract season number from series', async () => {
         const series = new Series();
         const provider = new ListProviderLocalData(-1, '');
         provider.addSeriesName(new Name('title-2nd-season', 'slug', NameType.SLUG));
-        await series.addProviderDatas(provider);
+        series.addProviderDatas(provider);
         const season = series.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);
-        assert.strictEqual((await season).getSingleSeasonNumberAsNumber(), 2);
+        expect((await season).getSingleSeasonNumberAsNumber()).toBe(2);
     });
 });

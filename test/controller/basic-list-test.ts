@@ -51,7 +51,7 @@ describe('Basic List | Testrun', () => {
         const series = new Series();
         const provider = new ListProviderLocalData(101348, AniListProvider);
         provider.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series.addListProvider(provider);
+        series.addListProvider(provider);
 
         await ListController.instance.addSeriesToMainList(series);
 
@@ -87,7 +87,7 @@ describe('Basic List | Testrun', () => {
             const series = new Series();
             const provider = new ListProviderLocalData(21202, AniListProvider);
             provider.infoStatus = ProviderInfoStatus.ONLY_ID;
-            await series.addListProvider(provider);
+            series.addListProvider(provider);
 
             await ListController.instance.addSeriesToMainList(series);
 
@@ -95,7 +95,7 @@ describe('Basic List | Testrun', () => {
             const series2 = new Series();
             const provider2 = new ListProviderLocalData(21699, AniListProvider);
             provider2.infoStatus = ProviderInfoStatus.ONLY_ID;
-            await series2.addListProvider(provider2);
+            series2.addListProvider(provider2);
 
             await ListController.instance.addSeriesToMainList(series2);
 
@@ -164,11 +164,11 @@ describe('Basic List | Testrun', () => {
         s1provider7.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s1provider8 = new InfoProviderLocalData(5312, 'tvmaze');
         s1provider8.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider2);
-        await series1.addListProvider(s1provider3);
-        await series1.addInfoProvider(s1provider5);
-        await series1.addInfoProvider(s1provider6);
-        await series1.addInfoProvider(s1provider7);
+        series1.addListProvider(s1provider2);
+        series1.addListProvider(s1provider3);
+        series1.addInfoProvider(s1provider5);
+        series1.addInfoProvider(s1provider6);
+        series1.addInfoProvider(s1provider7);
 
         await ListController.instance.addSeriesToMainList(series1);
         // S2
@@ -185,11 +185,11 @@ describe('Basic List | Testrun', () => {
         s2provider7.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s2provider8 = new InfoProviderLocalData(5312, 'tvmaze');
         s2provider8.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider2);
-        await series2.addListProvider(s2provider3);
-        await series2.addInfoProvider(s2provider5);
-        await series2.addInfoProvider(s2provider6);
-        await series2.addInfoProvider(s2provider7);
+        series2.addListProvider(s2provider2);
+        series2.addListProvider(s2provider3);
+        series2.addInfoProvider(s2provider5);
+        series2.addInfoProvider(s2provider6);
+        series2.addInfoProvider(s2provider7);
 
         await ListController.instance.addSeriesToMainList(series2);
         // tslint:disable-next-line: no-string-literal
@@ -207,18 +207,18 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(21858, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
 
         const series2 = new Series();
         const s2provider1 = new ListProviderLocalData(21776, AniListProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
         await ListController.instance.addSeriesToMainList(series1, series2);
 
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(117492, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series3.addListProvider(s3provider1);
+        series3.addListProvider(s3provider1);
 
         await ListController.instance.addSeriesToMainList(series3);
         // tslint:disable-next-line: no-string-literal
@@ -239,13 +239,13 @@ describe('Basic List | Testrun', () => {
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
         const s1provider2 = new InfoProviderLocalData(11370, AniDBProvider);
         s1provider2.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
-        await series1.addInfoProvider(s1provider2);
+        series1.addListProvider(s1provider1);
+        series1.addInfoProvider(s1provider2);
 
         const series2 = new Series();
         const s2provider1 = new ListProviderLocalData(1390, TraktProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
         await ListController.instance.addSeriesToMainList(series1, series2);
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
@@ -262,12 +262,12 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(8675, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
         // s2
         const series2 = new Series();
         const s2provider1 = new ListProviderLocalData(20448, AniListProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
         await ListController.instance.addSeriesToMainList(series1, series2);
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']();
@@ -284,17 +284,17 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(20853, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
         // s2
         const series2 = new Series();
         const s2provider1 = new ListProviderLocalData(20632, AniListProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
 
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(20853, AniListProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series3.addListProvider(s3provider1);
+        series3.addListProvider(s3provider1);
 
         await ListController.instance.addSeriesToMainList(series1, series2, series3);
 
@@ -313,7 +313,7 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(46004, TraktProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
 
         await ListController.instance.addSeriesToMainList(series1);
 
@@ -340,7 +340,7 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(20605, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
 
         await ListController.instance.addSeriesToMainList(series1);
 
@@ -362,20 +362,20 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(20521, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
 
         // s2
         const series2 = new Series();
         series2.id = 'S2';
         const s2provider1 = new ListProviderLocalData(20711, AniListProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
 
         // s3
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(60931, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series3.addListProvider(s3provider1);
+        series3.addListProvider(s3provider1);
 
         await ListController.instance.addSeriesToMainList(series2, series1, series3);
 
@@ -408,13 +408,13 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(20994, AniListProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
 
         // s2
         const series2 = new Series();
         const s2provider1 = new ListProviderLocalData(21364, AniListProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
 
         await ListController.instance.addSeriesToMainList(series1, series2);
 
@@ -436,19 +436,19 @@ describe('Basic List | Testrun', () => {
         const series1 = new Series();
         const s1provider1 = new ListProviderLocalData(79352, TraktProvider);
         s1provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series1.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s1provider1, new Season([1])));
+        series1.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s1provider1, new Season([1])));
 
         // s2
         const series2 = new Series();
         const s2provider1 = new ListProviderLocalData(99539, AniListProvider);
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
 
         // s3
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(108928, AniListProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series3.addListProvider(s3provider1);
+        series3.addListProvider(s3provider1);
 
         await ListController.instance.addSeriesToMainList(series1);
         await ListController.instance.addSeriesToMainList(series2);
@@ -482,7 +482,7 @@ describe('Basic List | Testrun', () => {
         s1provider1.releaseYear = 2015;
         s1provider1.episodes = 24;
         s1provider1.sequelIds.push(21518);
-        await series1.addListProvider(s1provider1);
+        series1.addListProvider(s1provider1);
 
         // s2
         const series2 = new Series();
@@ -494,19 +494,19 @@ describe('Basic List | Testrun', () => {
         s2provider1.releaseYear = 2016;
         s2provider1.episodes = 13;
         s2provider1.prequelIds.push(20923);
-        await series2.addListProvider(s2provider1);
+        series2.addListProvider(s2provider1);
 
         // s4
         const series4 = new Series();
         const s4provider1 = new ListProviderLocalData(109963, AniListProvider);
         s4provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series4.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s4provider1, new Season([4])));
+        series4.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s4provider1, new Season([4])));
 
         // s3
         const series3 = new Series();
         const s3provider1 = new ListProviderLocalData(94084, TraktProvider);
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID;
-        await series3.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s3provider1, new Season([3])));
+        series3.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(s3provider1, new Season([3])));
 
         await ListController.instance.addSeriesToMainList(series1, series2);
         await ListController.instance.addSeriesToMainList(series3);
@@ -563,7 +563,7 @@ describe('Basic List | Testrun', () => {
         provider.addSeriesName(new Name('Clannad', 'en', NameType.OFFICIAL));
 
         const series = new Series();
-        await series.addProviderDatas(provider);
+        series.addProviderDatas(provider);
         const adderInstance = new MainListAdder();
 
         // Test
@@ -594,7 +594,7 @@ describe('Basic List | Testrun', () => {
         const provider = new ListProviderLocalData(110252, TraktProvider);
 
         const series = new Series();
-        await series.addProviderDatas(provider);
+        series.addProviderDatas(provider);
         const adderInstance = new MainListAdder();
 
         // Test
@@ -636,7 +636,7 @@ describe('Basic List | Testrun', () => {
         const provider = new ListProviderLocalData(61179, TraktProvider);
 
         const series = new Series();
-        await series.addProviderDatas(provider);
+        series.addProviderDatas(provider);
         const adderInstance = new MainListAdder();
 
         // Test
@@ -677,7 +677,7 @@ describe('Basic List | Testrun', () => {
         const provider = new ListProviderLocalData(60988, TraktProvider);
 
         const series = new Series();
-        await series.addProviderDatas(provider);
+        series.addProviderDatas(provider);
         const adderInstance = new MainListAdder();
 
         // Test
@@ -720,7 +720,7 @@ describe('Basic List | Testrun', () => {
         const provider = new ListProviderLocalData(97794, TraktProvider);
 
         const series = new Series();
-        await series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(provider, new Season(1)));
+        series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(provider, new Season(1)));
         const adderInstance = new MainListAdder();
 
         // Test
@@ -767,7 +767,7 @@ describe('Basic List | Testrun', () => {
         const provider = new ListProviderLocalData(21390, AniListProvider);
 
         const series = new Series();
-        await series.addProviderDatas(provider);
+        series.addProviderDatas(provider);
         const adderInstance = new MainListAdder();
 
         // Test

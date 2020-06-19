@@ -34,7 +34,7 @@ describe('sync episode test', () => {
             provider2.addDetailedEpisodeInfos(new Episode(1));
             provider2.addDetailedEpisodeInfos(new Episode(2));
 
-            await series.addProviderDatas(provider1, provider2);
+            series.addProviderDatas(provider1, provider2);
 
             series.episodeBindingPools.push(...await EpisodeMappingHelper.getEpisodeMappings(series));
         });
