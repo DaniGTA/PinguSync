@@ -62,7 +62,7 @@ describe('Download provider local data to target info status helper test (downlo
             const pld2 = new ListProviderLocalData(5, 'test');
 
             pld2.addSeriesName(new Name('Name', 'jp'));
-            await series.addListProvider(pld2);
+            series.addListProvider(pld2);
 
             const provider = new TestProvider('test');
             const target = ProviderInfoStatus.FULL_INFO;

@@ -32,7 +32,7 @@ export default class AniDBProvider extends InfoProvider {
 
     private isBanned = false;
     private bannedTimestamp = 0;
-    private clientName = 'SyncAnimeWatchList';
+    private clientName = 'animesynclist';
     private clientVersion = 3;
     constructor(private download = true) {
         super();
@@ -67,10 +67,13 @@ export default class AniDBProvider extends InfoProvider {
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const converter = new AniDBConverter();
         if (provider.provider === this.providerName && provider.id) {
+
+            const url = `http://api.anidb.net:9001/httpapi?request=anime&client=${this.clientName}&clientver=${this.clientVersion}&protover=1&aid=` + provider.id;
             try {
-                const fullInfo = await this.webRequest<AniDBAnimeFullInfo>(`http://api.anidb.net:9001/httpapi?request=anime&client=${this.clientName}&clientver=${this.clientVersion}&protover=1&aid=` + provider.id);
+                const fullInfo = await this.webRequest<AniDBAnimeFullInfo>(url);
                 return converter.convertFullInfoToProviderLocalData(fullInfo);
             } catch (err) {
+                logger.error('[AniDB] Failed to get FullInfoById: ' + url);
                 throw new Error(err);
             }
         }

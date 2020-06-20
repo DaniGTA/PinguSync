@@ -27,7 +27,7 @@ export default class Season {
     }
 
     public isSeasonNumberPresent(): boolean {
-        if (this.seasonNumbers !== undefined) {
+        if (this.seasonNumbers !== undefined && this.seasonNumbers.length !== 0) {
             for (const seasonNumber of this.seasonNumbers) {
                 if (!isNaN(seasonNumber as number)) {
                     return true;

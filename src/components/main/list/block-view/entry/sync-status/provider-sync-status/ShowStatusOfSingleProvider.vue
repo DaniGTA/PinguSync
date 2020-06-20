@@ -1,13 +1,14 @@
 <template>
-    <div>
-        <ProviderImageBlock :provider="provider" :showText="false"/>
-        <i v-if="result && result.isSync" class="fas fa-check"></i>
-        <q-skeleton v-else-if="!result && result.isSync === null" c size="12px" />
-        <i v-else class="fas fa-times"></i>
-        <div v-if="result">
-        {{result.syncedEpisodeCount}}/{{result.maxEpisodeNumber}}
+    <div class="col provider-status">
+        <ProviderImageBlock class="row" :provider="provider" :showText="false"/>
+        <div class="row justify-center status">
+            <i v-if="result && result.isSync" color="green" class="fas fa-check"></i>
+            <q-skeleton v-else-if="!result && result.isSync === null" c size="12px" />
+            <div class="bad-status" v-if="result && !result.isSync">
+                {{result.syncedEpisodeCount}}/{{result.maxEpisodeNumber}}
+            </div>
         </div>
-        <q-btn text-color="white" @click="sync">Sync</q-btn>
+        <q-btn push color="black" text-color="white" @click="sync">Sync</q-btn>
     </div>
 </template>
 
@@ -34,6 +35,7 @@ export default class ShowStatusOfSingleProvider extends Vue {
 
     mounted(): void {
        this.isSynced().then(x =>{
+           console.log(x);
            this.result = x;
        });
     }
@@ -52,6 +54,15 @@ export default class ShowStatusOfSingleProvider extends Vue {
 }
 </script>
 
-<style>
-
+<style scoped>
+.status{
+    height: 20px;
+}
+.provider-status{
+    margin: 5px;
+}
+.bad-status{
+    color: red;
+    font-weight: bold;
+}
 </style>

@@ -61,11 +61,11 @@ export default class KitsuProvider extends ListProvider {
         }
     }
 
-    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
 
     }
 
-    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
 
     }
 

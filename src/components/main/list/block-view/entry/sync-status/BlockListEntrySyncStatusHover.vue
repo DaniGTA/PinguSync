@@ -38,5 +38,6 @@ export default class BlockListEntrySyncStatusHover extends Vue {
 .hover{
     height: 205px;
     display: flex;
+    margin: 15px;
 }
 </style>

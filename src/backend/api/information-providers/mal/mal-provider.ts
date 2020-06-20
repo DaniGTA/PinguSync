@@ -39,6 +39,7 @@ export default class MalProvider extends ListProvider {
     public hasOAuthLogin = false;
     public hasUniqueIdForSeasons = true;
     public userData: MalUserData;
+    public requestRateLimitInMs = 4005;
     private api = new ScraperClient();
 
     constructor() {
@@ -46,11 +47,11 @@ export default class MalProvider extends ListProvider {
         this.userData = new MalUserData();
     }
 
-    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
 
     }
 
-    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
 
     }
 
@@ -66,7 +67,7 @@ export default class MalProvider extends ListProvider {
     }
 
     public async isProviderAvailable(): Promise<boolean> {
-        return true;
+        return false;
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {

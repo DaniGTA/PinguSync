@@ -147,7 +147,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
                 currentResult = requestResult.mainProvider;
             } catch (err) {
                 if (err !== FailedRequestError.ProviderNoResult) {
-                    throw err;
+                    throw new Error(err);
                 }
             }
         } while (!this.isProviderTargetReached(currentResult, lastLocalDataResult));

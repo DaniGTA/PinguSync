@@ -87,7 +87,7 @@ export default class MainListAdder {
                 listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache);
             }
         }
-        logger.log('info', 'Added ' + addCounter + ' to mainList');
+        logger.log('info', 'Added ' + addCounter + '/' + list.length + ' to mainList');
         logger.log('info', 'End waitlist worker');
         return;
     }

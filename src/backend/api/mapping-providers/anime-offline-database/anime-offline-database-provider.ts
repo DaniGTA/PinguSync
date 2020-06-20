@@ -12,6 +12,9 @@ import AnimeOfflineDatabaseConverter from './anime-offline-database-converter';
 import AnimeOfflineDatabaseManager from './anime-offline-database-manager';
 
 export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvider {
+    public getEpisodeMappings(provider: ProviderLocalData): Promise<import('../../../controller/objects/meta/episode/episode-mapping').default> {
+        throw new Error('Method not implemented.');
+    }
     public providerName = 'AnimeOfflineDatabase';
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.OVA, MediaType.SPECIAL, MediaType.MOVIE];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [AniDBProvider, AniListProvider, KitsuProvider, MalProvider];
@@ -19,7 +22,7 @@ export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvide
 
     public version = 1;
 
-    public async getMappings(provider: ProviderLocalData): Promise<MultiProviderResult> {
+    public async getSeriesMappings(provider: ProviderLocalData): Promise<MultiProviderResult> {
         const providerInstance = ProviderList.getProviderInstanceByLocalData(provider);
         const databaseEntry = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(provider);
         if (databaseEntry) {
@@ -34,5 +37,4 @@ export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvide
     public async isProviderAvailable(): Promise<boolean> {
         return true;
     }
-
 }

@@ -1,12 +1,13 @@
 <template>
   <q-intersection class="block-list-entry-container" once transition="scale">
-    <div class="block-list-entry" v-intersection="onIntersection">
+    <div class="block-list-entry" v-intersection="onIntersection" @mouseover="isHovering()"
+    @mouseleave="isNotHovering()">
     <template v-if="id && visible">
       <BlockListEntrySyncStatus :seriesId="id"/>
       <SeriesImageBlock class="block-list-entry-img" :seriesId="id" />
       <BlockListEntryInfoSection :seriesId="id" />
-      <q-menu anchor="top right" self="top left" content-class="hover-content" >
-        <BlockListEntrySyncStatusHover :seriesId="seriesId"/>
+      <q-menu @mouseover="isHovering()" @mouseleave="isNotHovering()" anchor="top right" self="top left" content-class="hover-content"  v-model="hover" scroll-target=".block-list-entry">
+        <BlockListEntrySyncStatusHover :seriesId="id"/>
       </q-menu>
     </template>
     </div>
@@ -32,11 +33,28 @@ import BlockListEntrySyncStatusHover from './sync-status/BlockListEntrySyncStatu
 export default class BlockEntry extends Vue {
   @Prop()
   public id!: string;
-
   public visible = false;
+  
+  public hover = false;
+  public newHoverStatus = false;
   onIntersection(entry: IntersectionObserverEntry): void {
     this.visible = entry.isIntersecting;
   }
+
+  public isHovering(): void{
+    this.hover = true;
+    this.newHoverStatus = true;
+  }
+
+  public async isNotHovering(): Promise<void>{
+    this.newHoverStatus = false;
+    await this.sleep(50);
+    this.hover = this.newHoverStatus;
+  }
+  
+  private sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 }
 </script>
 

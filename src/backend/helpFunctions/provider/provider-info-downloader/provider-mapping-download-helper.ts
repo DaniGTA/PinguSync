@@ -15,7 +15,7 @@ export default class ProviderMappingDownloadHelper {
                 const relevantMappingProviders = this.getAllAvailableMappingProviderThatSupportProvider(providerInstance);
                 for (const mappingProvider of relevantMappingProviders) {
                     try {
-                        result.push(await mappingProvider.getMappings(localData));
+                        result.push(await mappingProvider.getSeriesMappings(localData));
                     } catch (err) {
                         logger.error(err);
                     }

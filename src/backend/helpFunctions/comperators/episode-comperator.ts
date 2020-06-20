@@ -266,7 +266,7 @@ export default class EpisodeComperator {
         return number1 == number2;
     }
 
-    private static isEpisodeTitleEquals(textA: string, textB: string) {
+    private static isEpisodeTitleEquals(textA: string, textB: string): boolean {
         // tslint:disable-next-line: triple-equals
         if (textA == textB) {
             return true;

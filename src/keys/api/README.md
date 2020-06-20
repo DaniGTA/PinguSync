@@ -1,16 +1,16 @@
 # How to add a API Key for local devolopment
 
-Add new json to
+## Add new json to folder `/src/keys/api`
 
-    src/keys/api
+    provider-name.json
 
-~provider-name~.json
+(like `AniList.json`) (ProviderName must match api name(give in provider class))
 
 ## JSON CONTENT
 
     {
-        "secret": "",
-        "id": ""
+        "secret": "xxx",
+        "id": "xxx"
     }
 
 secret = ClientSecret

@@ -74,11 +74,11 @@ export default class AniListProvider extends ListProvider {
         }
     }
 
-    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
 
     }
 
-    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
 
     }
 

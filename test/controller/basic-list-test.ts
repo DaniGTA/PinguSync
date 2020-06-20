@@ -459,13 +459,13 @@ describe('Basic List | Testrun', () => {
 
         expect(seasonTarget?.getSingleSeasonNumberAsNumber()).toEqual(3);
         // tslint:disable-next-line: no-string-literal
-        const provider = MainListManager['mainList'][2].getAllProviderLocalDatas().find((x) => x.provider === traktProviderName);
-        if (provider != null) {
-            const season = MainListManager['mainList'][2].getProviderSeasonTarget(provider.provider);
-            expect(season?.getSingleSeasonNumberAsNumber()).toEqual(2);
-        } else {
-            fail();
-        }
+        const aniListProviderName = ProviderNameManager.getProviderName(AniListProvider);
+        const s2 = MainListSearcher.findAllSeriesByProvider(99539, aniListProviderName)[0];
+        const season2 = s2?.getProviderSeasonTarget(traktProviderName);
+        expect(season2?.getSingleSeasonNumberAsNumber()).toEqual(2);
+        const season3 = MainListSearcher.findAllSeriesByProvider(108928, aniListProviderName)[0].getProviderSeasonTarget(traktProviderName);
+        expect(season3?.getSingleSeasonNumberAsNumber()).toEqual(3);
+
     }, 4000);
 
     test('should get the right season. for shokugeki no souma', async () => {

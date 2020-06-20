@@ -72,8 +72,6 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(1);
             // tslint:disable-next-line: no-string-literal
-            series['canSync'] = false;
-            // tslint:disable-next-line: no-string-literal
             lpdld['episodes'] = 12;
             lpdld.isNSFW = false;
             lpdld.mediaType = MediaType.SERIES;
@@ -81,7 +79,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             lpdld.addSeriesName(new Name('Kiniro Mosaic', 'x-jap', NameType.OFFICIAL));
             lpdld.addSeriesName(new Name('KINMOZA!', 'en', NameType.OFFICIAL));
             lpdld.addSeriesName(new Name('きんいろモザイク', 'jap', NameType.OFFICIAL));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('Kiniro Mosaic', 1);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('9579');
@@ -98,14 +96,13 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(-1);
             // tslint:disable-next-line: no-string-literal
-            series['canSync'] = false;
             lpdld.isNSFW = false;
             lpdld.mediaType = MediaType.MOVIE;
             lpdld.releaseYear = 2019;
             lpdld.addSeriesName(new Name('Kono Subarashii Sekai ni Shukufuku wo! Kurenai Densetsu', 'x-jap', NameType.OFFICIAL));
             lpdld.addSeriesName(new Name('KONOSUBA -God\'s blessing on this wonderful world! Movie', 'en', NameType.MAIN));
             lpdld.addSeriesName(new Name('この素晴らしい世界に祝福を！紅伝説', 'jap', NameType.UNKNOWN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('この素晴らしい世界に祝福を！紅伝説', -1);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('13310');
@@ -121,7 +118,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(3);
             lpdld.addSeriesName(new Name('Sword Art Online: Alicization', 'en', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('Sword Art Online: Alicization', 3);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('13493');
@@ -136,7 +133,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(4);
             lpdld.addSeriesName(new Name('Shingeki no Kyojin The Final Season', 'x-jap', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('Shingeki no Kyojin The Final Season');
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('14977');
@@ -153,7 +150,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             lpdld.addSeriesName(new Name('Suzumiya Haruhi no Yuuutsu', 'x-jap', NameType.MAIN));
             lpdld.addSeriesName(new Name('The Melancholy of Haruhi Suzumiya', 'unkown', NameType.MAIN));
             lpdld.addSeriesName(new Name('涼宮ハルヒの憂鬱', 'x-jap', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('The Melancholy of Haruhi Suzumiya', 1);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('3651');
@@ -168,7 +165,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             series['cachedSeason'] = new Season(1);
             lpdld.addSeriesName(new Name('Hunter x Hunter (2011)', '', NameType.MAIN));
             lpdld.addSeriesName(new Name('ハンター×ハンター (2011)', 'jap', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('Hunter x Hunter (2011)', 1);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('8550');
@@ -185,7 +182,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             lpdld.addSeriesName(new Name('Danshi Koukousei no Nichijou', NameType.MAIN));
             lpdld.addSeriesName(new Name('Daily Lives of High School Boys', 'jap', NameType.MAIN));
             lpdld.addSeriesName(new Name('男子高校生の日常', 'jap', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             // tslint:disable-next-line: no-string-literal
             const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
             expect(result.mainProvider.providerLocalData.id).toEqual('8729');
@@ -202,7 +199,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             lpdld.addSeriesName(new Name('Danshi Koukousei no Nichijou Specials', NameType.MAIN));
             lpdld.addSeriesName(new Name('Daily Lives of High School Boys Specials', 'jap', NameType.MAIN));
             lpdld.addSeriesName(new Name('男子高校生の日常', 'jap', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             try {
                 // tslint:disable-next-line: no-string-literal
                 await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
@@ -221,7 +218,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(1);
             lpdld.addSeriesName(new Name('Toaru Majutsu no Index', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('Toaru Majutsu no Index', 1);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('5975');
@@ -236,7 +233,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(1);
             lpdld.addSeriesName(new Name('Toaru Majutsu no Index', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('Toaru Majutsu no Index', 2);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('7599');
@@ -251,7 +248,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(1);
             lpdld.addSeriesName(new Name('Boku no Hero Academia 4', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('My Hero Academia Season 4', 4);
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('14416');
@@ -264,7 +261,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
             const series = new Series();
             lpdld.addSeriesName(new Name('Mahouka Koukou no Rettousei', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a.getMoreSeriesInfoByName('Mahouka Koukou no Rettousei');
 
             expect(result[0].mainProvider.providerLocalData.id).toEqual('10182');
@@ -279,7 +276,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             lpdld.addSeriesName(new Name('Persona -Trinity Soul-', 'x-jap', NameType.MAIN));
             lpdld.addSeriesName(new Name(' Persona -trinity soul-', 'unknown', NameType.MAIN));
             lpdld.addSeriesName(new Name('ペルソナ 〜トリニティ・ソウル〜', 'jap', NameType.UNKNOWN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             // tslint:disable-next-line: no-string-literal
             const result = await new DownloadProviderLocalDataWithoutId(series, a)['getProviderLocalDataByName'](new Name('Persona Trinity Soul', 'x-japclean'));
 
@@ -292,7 +289,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             lpdld.addSeriesName(new Name('Gakusen Toshi Asterisk 2', 'en', NameType.MAIN));
             const series = new Series();
             series['cachedSeason'] = new Season(2);
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             const result = await a['getSameTitle']('Gakusen Toshi Asterisk 2', AniDBHelper.anidbNameManager.data as any, 2);
             expect(result.length).toEqual(0);
         });
@@ -305,7 +302,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             lpdld.addSeriesName(new Name('Nanatsu no Taizai: Kamigami no Gekirin', 'x-jap', NameType.OFFICIAL));
             lpdld.addSeriesName(new Name('The Seven Deadly Sins: Wrath of the Gods', 'unknown', NameType.MAIN));
             lpdld.addSeriesName(new Name('ペルソナ 〜トリニティ・ソウル〜', 'jap', NameType.UNKNOWN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             // tslint:disable-next-line: no-string-literal
             const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
 
@@ -318,7 +315,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
 
             const series = new Series();
             lpdld.addSeriesName(new Name('Kono Subarashii Sekai ni Shukufuku o! 2', 'x-jap', NameType.OFFICIAL));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             series['cachedSeason'] = new Season(-1);
             // tslint:disable-next-line: no-string-literal
             const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
@@ -337,7 +334,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             // tslint:disable-next-line: no-string-literal
             series['cachedSeason'] = new Season(1);
             lpdld.addSeriesName(new Name('Tokyo Ghoulre', 'jap', NameType.MAIN));
-            await series.addListProvider(lpdld);
+            series.addListProvider(lpdld);
             try {
                 // tslint:disable-next-line: no-string-literal
                 await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);

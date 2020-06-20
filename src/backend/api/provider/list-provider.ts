@@ -32,7 +32,7 @@ export default abstract class ListProvider extends ExternalInformationProvider {
     public abstract updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
     //depracted
     public abstract removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData>;
-    public abstract markEpisodeAsWatched(episode: Episode): Promise<void>;
-    public abstract markEpisodeAsUnwatched(episode: Episode): Promise<void>;
+    public abstract markEpisodeAsWatched(episode: Episode[]): Promise<void>;
+    public abstract markEpisodeAsUnwatched(episode: Episode[]): Promise<void>;
     public abstract getAllLists(): Promise<ProviderUserList[]>
 }

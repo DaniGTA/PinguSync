@@ -1,5 +1,6 @@
 import CronUpdateSeriesList from './cron-update-series-list';
 import cron from 'cron';
+import CronRunSyncJobs from './cron-run-sync-jobs';
 export default class CronManager {
 
     private static loadedCronJobs = false;
@@ -17,6 +18,7 @@ export default class CronManager {
         const cronJobs: cron.CronJob[] = [];
 
         cronJobs.push(CronUpdateSeriesList.getUpdateSeriesListCronJob());
+        cronJobs.push(CronRunSyncJobs.runEpisodeSyncJobs());
 
         return cronJobs;
     }

@@ -34,7 +34,7 @@ export default class DownloadProviderLocalDataWithoutId {
     }
 
     public async download(): Promise<MultiProviderResult> {
-        const seriesMediaType = await this.series.getMediaType();
+        const seriesMediaType = this.series.getMediaType();
         let result: MultiProviderResult | undefined;
         if (MediaTypeHelper.providerSupportMediaType(this.provider, seriesMediaType)) {
             result = await this.getProviderSeriesInfoByRelation();
@@ -102,7 +102,7 @@ export default class DownloadProviderLocalDataWithoutId {
 
     private async linkProviderDataFromRelations(): Promise<ProviderLocalDataWithSeasonInfo> {
         if (!this.provider.hasUniqueIdForSeasons) {
-            const relations = await this.series.getAllRelations(MainListManager.getMainList());
+            const relations = this.series.getAllRelations(MainListManager.getMainList());
             if (relations.length !== 0) {
                 for (const relation of relations) {
                     try {

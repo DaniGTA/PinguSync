@@ -1,8 +1,6 @@
-!WORK IN PROGRESS (Currently not useable)
+! WORK IN PROGRESS (Currently not useable)
 
 # PinguSync
-
-![alt](https://raw.githubusercontent.com/DaniGTA/PinguSync/src/assets/logo/app/icon/512x512.png)
 
 [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest) [![jest](https://jestjs.io/img/jest-badge.svg)](https://github.com/facebook/jest)
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.png?v=101)](https://github.com/ellerbrock/typescript-badges/)
@@ -14,7 +12,7 @@ Now you have that series marked as watched on **Kitsu** and **AniList**.
 
 ## Sites that currently will be Supported
 
-Providers that only have login support will become late the list sync support.
+Providers that only have login support will become later the list sync support.
 
 > **For Devolopers:**
 > All provider for list syncing need to follow the interface **ListProvider** (list-provider.ts)
@@ -24,14 +22,19 @@ Providers that only have login support will become late the list sync support.
 
 | Provider | List sync Support | Login Support|
 |--|--|--|
-|[AniList](https://anilist.co/)| ✔️ | ✔️
-|[trakt.tv](https://trakt.tv/)| ✔️ | ✔️
+|[AniList](https://anilist.co/)| ❌ | ✔️
+|[trakt.tv](https://trakt.tv/)| ❌ | ✔️
 |[AniDB](http://anidb.net/)| ❌ | ❌
 |[Kitsu](https://kitsu.io/)| ❌ | ✔️
 |[MyAnimeList](https://myanimelist.net/)| ❌ | ✔️
 |[Simkl](https://simkl.com/) (Planned)| ❌ | ❌
+|[aniSearch](https://www.anisearch.de/) (Planned)| ❌ | ❌
+|[Proxer](https://proxer.me/) (Planned)| ❌ | ❌
+|[Anime-Planet](https://Anime-Planet.com) (Planned)| ❌ | ❌
 
 ## Current Plan
 
 - Basic list sync design
 - Better Provider API support
+- Watching the next episode directly on Crunchyrole, Netflix, Amazone Prime...
+- Sync watch progress automaticly

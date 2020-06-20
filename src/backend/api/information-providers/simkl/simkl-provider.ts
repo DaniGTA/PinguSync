@@ -56,11 +56,11 @@ export default class SimklProvider extends ListProvider {
         SimklProvider.instance = this;
     }
 
-    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
 
     }
 
-    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
 
     }
 

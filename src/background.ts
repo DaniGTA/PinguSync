@@ -14,6 +14,10 @@ import DatabaseLoader from './backend/controller/stats-manager/database-loader';
 import logger from './backend/logger/logger';
 import AppUpdateController from './backend/controller/auto-updater/app-update-controller';
 import CronManager from './backend/controller/cron-jobs/cron-manager';
+import * as os from 'os';
+const nodeThreads = os.cpus().length * 2;
+logger.info('Loaded Node.js with: ' + nodeThreads + ' Threads');
+process.env.UV_THREADPOOL_SIZE = nodeThreads + '';
 try {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -10,7 +10,7 @@ import ListProvider from '../../../../api/provider/list-provider';
 import { chListener } from '../../../../communication/listener-channels';
 import SyncExternalEpisodes from '../../../sync-controller/sync-external-episodes';
 import FrontendSyncEpisodes from './model/sync-episodes';
-
+import Fiber from 'fibers';
 
 export default class FrontendProviderSyncController {
     private com: ICommunication;
@@ -42,7 +42,7 @@ export default class FrontendProviderSyncController {
     private syncEpisodeOfProvider(x: FrontendSyncEpisodes): void {
         const series = MainListSearcher.findSeriesById(x.seriesId);
         if (series) {
-            SyncExternalEpisodes.sync(x.providerName, series);
+            SyncExternalEpisodes.addSyncJob(x.providerName, series);
         }
     }
 }  

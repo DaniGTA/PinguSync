@@ -23,18 +23,18 @@ import { Movies } from './objects/movies';
 
 export default class TraktProvider extends ListProvider {
 
-    public async markEpisodeAsUnwatched(episode: Episode): Promise<void> {
+    public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
 
     }
 
-    public async markEpisodeAsWatched(episode: Episode): Promise<void> {
-     
+    public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
+
         const testmovie: Movies = { movies: [] };
         testmovie.movies.push({ ids: { slug: 'no-game-no-life-zero-2017' }, watched_at: new Date() });
         const response = await this.traktRequest<Movies>('https://api.trakt.tv/sync/history', '', JSON.stringify({ testmovie }));
-        if(response){
+        if (response) {
             logger.info('YAY Response is da');
-        }else{
+        } else {
             throw new Error('YEET Response nicht da');
         }
     }
