@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.5.0",
-    "@types/jest": "^24.9.1",
+    "@types/jest": "^26.0.0",
     "@types/node": "^13.13.9",
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
