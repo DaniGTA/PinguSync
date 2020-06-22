@@ -8,10 +8,16 @@ module.exports = {
 			],
 			extensions: [
 				'.js',
-				'.ts'
+				'.ts',
+				'.gql'
 			]
 		},
 		rules: [
+			 {
+				test: /\.(graphql|gql)$/,
+				exclude: /node_modules/,
+				use: [{loader: 'graphql-tag/loader'}]
+			},
 			{
 				test: /\.vue$/,
 				loader: 'vue-loader',

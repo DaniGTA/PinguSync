@@ -126,7 +126,6 @@ class ListHelper {
         return uniqueEpisodeList;
     }
 
-
     public getUniqueOverviewList(arr: Overview[]): Overview[] {
         return arr.filter((v, i, a) => a.findIndex((t) => (t.content === v.content)) === i);
     }

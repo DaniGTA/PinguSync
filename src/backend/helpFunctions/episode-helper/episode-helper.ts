@@ -4,6 +4,8 @@ import { EpisodeType } from '../../controller/objects/meta/episode/episode-type'
 import Season from '../../controller/objects/meta/season';
 import EpisodeComperator from '../comperators/episode-comperator';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
+import e from 'express';
+import listHelper from '../list-helper';
 
 export default class EpisodeHelper {
 
@@ -19,15 +21,17 @@ export default class EpisodeHelper {
     }
 
     public static getEpisodeDifference(episodeA: Episode, episodeB: Episode): number {
-        if (episodeA.isEpisodeNumberARealNumber() && episodeB.isEpisodeNumberARealNumber()) {
-            return episodeA.getEpNrAsNr() - episodeB.getEpNrAsNr();
+        const a = episodeA.getEpNrAsNr();
+        const b = episodeB.getEpNrAsNr();
+        if (a !== undefined && b !== undefined) {
+            return a - b;
         }
         return 0;
     }
 
     public static getEpisodeAndEpisodeMappingDifference(episodeA: Episode, episodeMappingB: EpisodeMapping): number {
         if (episodeA.isEpisodeNumberARealNumber() && !isNaN(episodeMappingB.episodeNumber as number)) {
-            return episodeA.getEpNrAsNr() - (episodeMappingB.episodeNumber as number);
+            return episodeA.getEpNrAsNr() ?? 0 - (episodeMappingB.episodeNumber as number);
         }
         return 0;
     }
@@ -53,6 +57,35 @@ export default class EpisodeHelper {
             }
         }
         return;
+    }
+
+    public static getMaxEpisodeNumberFromArray(episodeArray: Episode[]): number | undefined {
+        let episodeNumber: number | undefined;
+        for (const episode of episodeArray) {
+            const currentEpisodeNumber = episode.getEpNrAsNr();
+            if (episodeNumber === undefined) {
+                episodeNumber = currentEpisodeNumber;
+            } else if (currentEpisodeNumber !== undefined && episodeNumber < currentEpisodeNumber) {
+                episodeNumber = currentEpisodeNumber;
+            }
+        }
+        return episodeNumber;
+    }
+
+    public static groupBySeriesIds(episodeArray: Episode[]): Episode[][] {
+        const arraySeriesIdBinding: (string | number | null)[] = [];
+        const finalGroupedArray: Episode[][] = [];
+        for (let index = 0; index < episodeArray.length; index++) {
+            const element = episodeArray[index];
+            let index2 = arraySeriesIdBinding.findIndex((x) => x === element.providerId ?? null);
+            if (index2 === -1) {
+                index2 = finalGroupedArray.push([element]);
+                arraySeriesIdBinding[index2 - 1] = element.providerId ?? null;
+            } else {
+                finalGroupedArray[index2].push(element);
+            }
+        }
+        return finalGroupedArray;
     }
 
     private static sortingEpisodeComperator(a: Episode, b: Episode, season?: Season): number {

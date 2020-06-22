@@ -71,7 +71,10 @@ export default class Episode {
     /**
      * Convert the Episode number to a absolute number
      */
-    public getEpNrAsNr(): number {
-        return this.episodeNumber as number;
+    public getEpNrAsNr(): number | undefined {
+        if (!isNaN(this.episodeNumber as number)) {
+            return this.episodeNumber as number;
+        }
+        return undefined;
     }
 }

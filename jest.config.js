@@ -9,6 +9,7 @@ module.exports = {
 		'**/test/**/*-(test|tests).+(ts|tsx|js)',
 	],
 	'transform': {
+		'\\.(gql|graphql)$': '@jagi/jest-transform-graphql',
 		'^.+\\.(ts|tsx)$': 'ts-jest'
 	},
 	'reporters': [

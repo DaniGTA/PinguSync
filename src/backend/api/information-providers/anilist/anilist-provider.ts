@@ -29,6 +29,9 @@ import getUserSeriesListInfoGql from './graphql/getUserSeriesListInfo.gql';
 import { GetUserSeriesListInfo } from './graphql/getUserSeriesList';
 import { ListType } from '../../../controller/settings/models/provider/list-types';
 import Episode from '../../../controller/objects/meta/episode/episode';
+import UpdateSeriesEpisodeProgress from './graphql/mutation/saveMediaListEntry_UpdateProgress.gql';
+import { print } from 'graphql';
+import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper';
 
 export default class AniListProvider extends ListProvider {
     public async getAllLists(): Promise<ProviderUserList[]> {
@@ -79,7 +82,18 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
-
+        const query = print(UpdateSeriesEpisodeProgress);
+        const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode);
+        for (const groupedEpisode of groupedEpisodes) {
+            const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromArray(groupedEpisode);
+            const variables = {
+                mediaId: groupedEpisode[0].providerId,
+                progress: maxEpNumber
+            };
+            const options = this.getGraphQLOptions(query, variables);
+            await this.waitUntilItCanPerfomNextRequest();
+            await this.webRequest(options);
+        }
     }
 
     public async addOAuthCode(code: string): Promise<boolean> {

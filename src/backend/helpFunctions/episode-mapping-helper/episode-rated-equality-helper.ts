@@ -75,7 +75,7 @@ export default class EpisodeRatedEqualityHelper {
                         }
                         if (this.isEpisodeAlreadyMappedToEpisode(detailedEpA, detailedEpB, this.targetBindingPools)) {
                             if (detailedEpA.isEpisodeNumberARealNumber() && detailedEpB.isEpisodeNumberARealNumber()) {
-                                diff = detailedEpA.getEpNrAsNr() - detailedEpB.getEpNrAsNr();
+                                diff = (detailedEpA.getEpNrAsNr() ?? 0) - (detailedEpB.getEpNrAsNr() ?? 0);
                             }
                             result.push(detailedEpA);
                             lastSuccessFullIndex = index + 1;
@@ -85,7 +85,7 @@ export default class EpisodeRatedEqualityHelper {
                             result.push(detailedEpA);
                             if (detailedEpA.isEpisodeNumberARealNumber() && detailedEpB.isEpisodeNumberARealNumber()) {
                                 if (detailedEpB.type !== EpisodeType.SPECIAL && detailedEpA.type !== EpisodeType.SPECIAL) {
-                                    diff = detailedEpA.getEpNrAsNr() - detailedEpB.getEpNrAsNr();
+                                    diff = (detailedEpA.getEpNrAsNr() ?? 0) - (detailedEpB.getEpNrAsNr() ?? 0);
                                 }
                                 lastSuccessFullIndex = index + 1;
                             }

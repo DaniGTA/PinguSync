@@ -49,4 +49,44 @@ describe('Episode Helper Test', () => {
         expect(EpisodeHelper.getEpisodeDifference(episodeA, episodeB)).toEqual(-1);
         expect(EpisodeHelper.getEpisodeDifference(episodeB, episodeA)).toEqual(1);
     });
+
+    describe('test fn: getMaxEpisodeNumberFromArray()', () => {
+        it('should return the max episode', () => {
+            const ep1 = new Episode(1);
+            const ep2 = new Episode(2);
+
+            const result = EpisodeHelper.getMaxEpisodeNumberFromArray([ep1, ep2]);
+            expect(result).toBe(2);
+        });
+
+        it('should return the max episode (0)', () => {
+            const ep1 = new Episode(0);
+            const result = EpisodeHelper.getMaxEpisodeNumberFromArray([ep1]);
+            expect(result).toBe(0);
+        });
+
+        it('should return undefined', () => {
+            const ep1 = new Episode('special');
+            const ep2 = new Episode('very special');
+
+            const result = EpisodeHelper.getMaxEpisodeNumberFromArray([ep1, ep2]);
+            expect(result).toBe(undefined);
+        });
+    });
+
+    describe('test fn: groupBySeriesIds()', () => {
+        it('should find 2 differen series', () => {
+            const ep1 = new Episode(1);
+            ep1.providerId = '1';
+            const ep2 = new Episode(2);
+            ep2.providerId = '1';
+            const ep1v2 = new Episode(1);
+            ep1v2.providerId = '2';
+
+            const result = EpisodeHelper.groupBySeriesIds([ep1, ep2, ep1v2]);
+            expect(result.length).toBe(2);
+            expect(result[0].length).toBe(2);
+            expect(result[1].length).toBe(1);
+        });
+    });
 });
