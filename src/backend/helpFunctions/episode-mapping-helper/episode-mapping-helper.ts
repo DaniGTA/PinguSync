@@ -18,7 +18,7 @@ export default class EpisodeMappingHelper {
     public static async getEpisodeMappings(series: Series): Promise<EpisodeBindingPool[]> {
         const season = series.getSeason();
         const allProviders = series.getAllProviderLocalDatasWithSeasonInfo();
-        const allEpisodeBindingPools = this.getAllEpisodeBindingsThatAreRelevant(allProviders);
+        const allEpisodeBindingPools = await this.getAllEpisodeBindingsThatAreRelevant(allProviders);
         for (const provider of allProviders) {
             if (!this.detailedEpisodeIsPresent(provider.providerLocalData)) {
                 const generateEpisodes = EpisodeGeneratorHelper.generateMissingEpisodes(provider.providerLocalData, provider.seasonTarget);
@@ -128,13 +128,13 @@ export default class EpisodeMappingHelper {
      * get all relevant episode bindings from other series.
      * (On season difference it can be helpfull to get the bindings from other season to calc the episode difference)
      */
-    private static getAllEpisodeBindingsThatAreRelevant(providers: ProviderLocalDataWithSeasonInfo[]): EpisodeBindingPool[] {
+    private static async getAllEpisodeBindingsThatAreRelevant(providers: ProviderLocalDataWithSeasonInfo[]): Promise<EpisodeBindingPool[]> {
         const finalEpisodeBindingPool: EpisodeBindingPool[] = [];
         const allProvidersWithNoUniqueIdAndDetailedEpisodes = this.getAllProvidersWithNoUniqueIdAndDetailedEpisodes(providers);
         for (const providersWithNoUniqueIdAndDetailedEpisodes of allProvidersWithNoUniqueIdAndDetailedEpisodes) {
             const providerId = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.id;
             const providerName = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.provider;
-            const allSeriesWithProvider = MainListSearcher.findAllSeriesByProvider(providerId, providerName);
+            const allSeriesWithProvider = await MainListSearcher.findAllSeriesByProvider(providerId, providerName);
             finalEpisodeBindingPool.push(...(allSeriesWithProvider).flatMap((x) => x.episodeBindingPools));
         }
         return finalEpisodeBindingPool;

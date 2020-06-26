@@ -359,7 +359,7 @@ export default class Series extends SeriesProviderExtension {
             list = MainListManager.getMainList();
         }
         if (this.firstSeasonSeriesId) {
-            const result = MainListSearcher.findSeriesById(this.firstSeasonSeriesId);
+            const result = await MainListSearcher.findSeriesById(this.firstSeasonSeriesId);
             if (result) {
                 return result;
             } else {

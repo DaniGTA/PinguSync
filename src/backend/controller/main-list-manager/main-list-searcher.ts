@@ -8,6 +8,8 @@ import Season from '../objects/meta/season';
 import Series from '../objects/series';
 import MainListManager from './main-list-manager';
 import { ListType } from '../settings/models/provider/list-types';
+import { spawn, Worker } from 'threads';
+import { MainListSearchIdWorker } from './worker/main-list-search-id-worker';
 
 /**
  * Has search function to find series in the main list.
@@ -63,14 +65,11 @@ export default class MainListSearcher {
      *
      * @param id the series id.
      */
-    public static findSeriesById(id: string): Series | null {
-        const series = MainListManager.getMainList();
-        for (const serie of series) {
-            if (serie.id === id) {
-                return serie;
-            }
-        }
-        return null;
+    public static async findSeriesById(id: string): Promise<Series | null> {
+        const list = MainListManager.getMainList();
+        const worker = await spawn<MainListSearchIdWorker>(new Worker('./worker/main-list-search-id-worker.ts'));
+        const result = await worker.findSeriesById(list, id);
+        return result ? list[result] : null;
     }
 
     /**

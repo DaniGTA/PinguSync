@@ -42,7 +42,7 @@ export default class SyncExternalEpisodes {
 
     private static async syncEpisodeOfSingleProvider(job: SyncJob): Promise<void> {
         const providerInstance = ProviderList.getProviderInstanceByProviderName(job.providerName);
-        const series = MainListSearcher.findSeriesById(job.seriesId);
+        const series = await MainListSearcher.findSeriesById(job.seriesId);
         if (providerInstance instanceof ListProvider && series) {
             const allEpisodesThatNeedSync = new SyncEpisodes(series).getAllEpisodeThatAreOutOfSync(providerInstance);
             console.info(`[Syncing] [${job.providerName}] [${job.seriesId}] Syncing ${allEpisodesThatNeedSync.length} episodes.`);

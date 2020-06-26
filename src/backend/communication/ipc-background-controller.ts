@@ -17,18 +17,22 @@ export default class IPCBackgroundController implements ICommunication {
                 logger.log('info', 'worker send: ' + channel);
                 success = true;
             } catch (err) {
-                logger.log('info', err);
+                logger.error( err);
             }
         }
     }
 
     public async on(channel: string, f: ((data: any) => void) | ((data: any) => Promise<void>)): Promise<void> {
-        ipcMain.on(channel, (event: Electron.IpcMainEvent, data: any) => {
+        ipcMain.on(channel, async (event: Electron.IpcMainEvent, data: any) => {
             logger.log('info', 'recieved: ' + channel);
             try {
-                f(JSON.parse(data));
+                await f(JSON.parse(data));
             } catch (err) {
-                f(data);
+                try {
+                    await f(data);
+                } catch (err) {
+                    logger.error(err);
+                }
             }
         });
     }

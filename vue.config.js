@@ -1,3 +1,6 @@
+const { config } = require("process");
+const ThreadsPlugin = require('threads-plugin');
+
 // eslint-disable-next-line no-undef
 module.exports = {
   configureWebpack: config => {
@@ -35,13 +38,21 @@ module.exports = {
       nodeIntegration: true,
       chainWebpackRendererProcess: (config) => {
         config.module.rules.delete('eslint');
-      },
-      chainWebpackMainProcess: (config) => {
-        config.module.rule('graphql')
-        .test(/\.(graphql|gql)$/)
-        .use('graphql-tag/loader')
-        .loader('graphql-tag/loader')
-        .end();
+        config.module.rule('i18n')
+          .resourceQuery(/blockType=i18n/)
+          .type('javascript/auto')
+          .use('i18n')
+          .loader('@kazupon/vue-i18n-loader')
+          .end();
+          
+        },
+        chainWebpackMainProcess: (config) => {
+          config.module.rule('graphql')
+          .test(/\.(graphql|gql)$/)
+          .use('graphql-tag/loader')
+          .loader('graphql-tag/loader')
+          .end();
+          config.plugin('ThreadsPlugin').use(ThreadsPlugin)
       }
     },
     i18n: {
@@ -51,15 +62,6 @@ module.exports = {
       importStrategy: 'kebab',
       rtlSupport: true
     }
-  },
-
-  chainWebpack: (config) => {
-    config.module.rule('i18n')
-      .resourceQuery(/blockType=i18n/)
-      .type('javascript/auto')
-      .use('i18n')
-      .loader('@kazupon/vue-i18n-loader')
-      .end();
   },
 
   runtimeCompiler: true,

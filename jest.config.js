@@ -29,7 +29,7 @@ module.exports = {
 	},
 	'testEnvironment': 'node',
 	'setupFilesAfterEnv': ['<rootDir>/test/test-helper.ts'],
-	'maxWorkers': 4
+	'maxWorkers': 6
 };
 
 

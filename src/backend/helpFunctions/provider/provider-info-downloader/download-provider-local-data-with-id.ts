@@ -3,6 +3,7 @@ import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import { FailedRequestError } from '../../../controller/objects/meta/failed-request';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import DownloadSettings from './download-settings';
+import logger from '../../../logger/logger';
 
 export default class DownloadProviderLocalDataWithId {
     public static async download(provider: ExternalInformationProvider, providerLocalData: ProviderLocalData): Promise<MultiProviderResult> {
@@ -19,7 +20,7 @@ export default class DownloadProviderLocalDataWithId {
             if (!isNaN(err)) {
                 throw err;
             }
-            console.error(err);
+            logger.error(err);
             throw FailedRequestError.ProviderNoResult;
         }
     }

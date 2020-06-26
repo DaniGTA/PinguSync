@@ -9,6 +9,7 @@ import ResponseHelper from './response-helper';
 import SettingsManager from '../src/backend/controller/settings/settings-manager';
 import MainListSaver from '../src/backend/controller/main-list-manager/main-list-saver';
 import AnimeOfflineDatabaseProviderData from '../src/backend/api/mapping-providers/anime-offline-database/anime-offline-database-provider-data';
+import 'threads/register';
 
 ResponseHelper.mockRequest();
 // tslint:disable: no-string-literal
