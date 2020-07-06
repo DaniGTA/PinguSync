@@ -72,17 +72,17 @@ export default class ProviderSetup extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
 .provider-setup-header {
-  background-color: #2980b9;
+  background-color: $second-text;
   grid-area: Header;
 }
 
 .provider-setup-settings{
   width: 100%;
   height: 100%;
-  background-color: #34495e;;
-  color: white;
+  background-color: $primary-background;;
+  color: $primary-text;
 }
 
 .provider-setup-entry {

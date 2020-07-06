@@ -32,7 +32,7 @@ export default class ProviderSettings extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .dropdown {
   position: relative;
   display: inline-block;
@@ -41,7 +41,7 @@ export default class ProviderSettings extends Vue {
 
 .dropdown select {
   background-color: rgba(0, 0, 0, 0.25);
-  color: #fff;
+  color: $primary-text;
   font-size: inherit;
   padding: .5em;
   padding-right: 2.5em;	

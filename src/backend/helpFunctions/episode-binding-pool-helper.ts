@@ -36,7 +36,7 @@ export default class EpisodeBindingPoolHelper {
     private static extractAllMappedEpiodesFromBindingPool(episodeBindingPool: EpisodeBindingPool, episode: Episode): EpisodeMapping[] {
         const result: EpisodeMapping[] = [];
         for (const bindedEpisode of episodeBindingPool.bindedEpisodeMappings) {
-            if (!EpisodeComperator.compareEpisodeMappingToEpisode(bindedEpisode, episode)) {
+            if (!EpisodeComperator.isSameEpisodeMappingToEpisode(bindedEpisode, episode)) {
                 result.push(bindedEpisode);
             }
         }

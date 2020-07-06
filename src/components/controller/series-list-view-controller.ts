@@ -4,6 +4,8 @@ import { chOnce } from '../../backend/communication/channels';
 import { FailedCover } from '../../backend/controller/frontend/series/model/failed-cover';
 import { chListener } from '../../backend/communication/listener-channels';
 import IdListWithListType from './model/id-list-with-list-type';
+import Overview from '../../backend/controller/objects/meta/overview';
+import ApiRequestController from './api-request-controller';
 
 export default class SeriesListViewController {
     public static workerController: WorkerController = new WorkerController();
@@ -40,23 +42,18 @@ export default class SeriesListViewController {
     }
 
     public static async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
-        return await this.getSeriesDataFromId(chOnce.GetPreferedCoverUrlBySeriesId, id);
+        return await ApiRequestController.getDataWithId(chOnce.GetPreferedCoverUrlBySeriesId, id);
     }
 
     public static async getSeriesNameById(id: string): Promise<string | undefined> {
-        return await this.getSeriesDataFromId(chOnce.GetPreferedNameBySeriesId, id);
+        return await ApiRequestController.getDataWithId(chOnce.GetPreferedNameBySeriesId, id);
+    }
+
+    public static async getSeriesDescriptionById(id: string): Promise<Overview | undefined> {
+        return await ApiRequestController.getDataWithId(chOnce.GetOverviewBySeriesId, id);
     }
 
     public static sendFailedCover(failedCover: FailedCover): void {
         this.workerController.send(chListener.OnSeriesFailedCoverImage, failedCover);
-    }
-
-    private static async getSeriesDataFromId<T>(channel: string, seriesId: string): Promise<T> {
-        this.workerController.send(channel, seriesId);
-        return new Promise<T>((resolve, reject) => {
-            this.workerController.getIpcRenderer().once(channel + '-' + seriesId, (event: Electron.IpcRendererEvent, data: T) => {
-                resolve(data);
-            });
-        });
     }
 }

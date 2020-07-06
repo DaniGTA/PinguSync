@@ -31,7 +31,7 @@ describe('List Helper', () => {
         return;
     });
 
-    test('should find entry existing in list', async () => {
+    test('should find entry existing in list', () => {
         const entry1 = new Series();
         entry1.id = '1';
         const entry2 = new Series();
@@ -39,13 +39,13 @@ describe('List Helper', () => {
         const entry3 = new Series();
         entry3.id = '3';
         const list = [entry1, entry2, entry3];
-        const result = await listHelper.isSeriesInList(list, entry2);
+        const result = listHelper.isSeriesInList(list, entry2);
 
         expect(result).toBeTruthy();
     });
 
 
-    test('shouldnt find any entry', async () => {
+    test('shouldnt find any entry', () => {
         const entry1 = new Series();
         entry1.id = '1';
         const entry2 = new Series();
@@ -53,32 +53,32 @@ describe('List Helper', () => {
         const entry3 = new Series();
         entry3.id = '3';
         const list = [entry1, entry3];
-        const result = await listHelper.isSeriesInList(list, entry2);
+        const result = listHelper.isSeriesInList(list, entry2);
 
         expect(result).toBeFalsy();
     });
 
-    test('it should look if item is in list', async () => {
+    test('it should look if item is in list', () => {
         const array = ['Test', 'Test2', 'Test3'];
-        assert.strictEqual(await listHelper.isItemInList(array, 'Test'), true);
-        expect(await listHelper.isItemInList(array, 'xTestx')).toBeFalsy();
+        assert.strictEqual(listHelper.isItemInList(array, 'Test'), true);
+        expect(listHelper.isItemInList(array, 'xTestx')).toBeFalsy();
     });
 
-    test('get lazy uniqe string list', async () => {
+    test('get lazy uniqe string list', () => {
         const array = [new Name('Test', 'en'), new Name('test', 'en'), new Name('tesT', 'en'), new Name('Test2', 'en')];
-        expect((await listHelper.getLazyUniqueStringList(array)).length).toEqual(2);
+        expect(listHelper.getLazyUniqueStringList(array).length).toEqual(2);
     });
 
 
-    test('should check list type', async () => {
+    test('should check list type', () => {
 
         const numberList = [1, 2, 3];
         const watchprogressList = [new WatchProgress(1), new WatchProgress(2), new WatchProgress(3)];
 
-        assert.strictEqual(await listHelper.checkType(numberList, Number), true, 'numberList is type of number');
-        assert.strictEqual(await listHelper.checkType(watchprogressList, WatchProgress), true, 'watchprogressList is type of WatchProgress');
-        assert.strictEqual(await listHelper.checkType(numberList, WatchProgress), false, 'numberList is not type of WatchProgress');
-        expect(await listHelper.checkType(watchprogressList, Number)).toBeFalsy();
+        assert.strictEqual(listHelper.checkType(numberList, Number), true, 'numberList is type of number');
+        assert.strictEqual(listHelper.checkType(watchprogressList, WatchProgress), true, 'watchprogressList is type of WatchProgress');
+        assert.strictEqual(listHelper.checkType(numberList, WatchProgress), false, 'numberList is not type of WatchProgress');
+        expect(listHelper.checkType(watchprogressList, Number)).toBeFalsy();
     });
 
     test('should find entry (list in list)', () => {
@@ -150,37 +150,53 @@ describe('List Helper', () => {
         const result = listHelper.getMostFrequentNumberFromList(te);
         expect(result).toEqual(2);
     });
+    describe('test fn: getUniqueEpisodeList()', () => {
+        it('should combine episodes without dup them', () => {
+            const episode = new Episode(1);
+            const episodeAList = [episode];
+            const episodeB = new Episode(1);
+            episodeB.title.push(new EpisodeTitle('test'));
+            const episodeBList = [episodeB];
+            const result = listHelper.getUniqueEpisodeList(episodeAList, episodeBList);
 
-    it('should combine episodes without dup them', () => {
-        const episode = new Episode(1);
-        const episodeAList = [episode];
-        const episodeB = new Episode(1);
-        episodeB.title.push(new EpisodeTitle('test'));
-        const episodeBList = [episodeB];
-        const result = listHelper.getUniqueEpisodeList(episodeAList, episodeBList);
+            expect(result[0].id).toBe(episode.id);
+            expect(result.length).toBe(1);
+        });
 
-        expect(result[0].id).toBe(episode.id);
-        expect(result.length).toBe(1);
-    });
+        it('should not combine episodes', () => {
+            const episode = new Episode(1);
+            const episodeAList = [episode];
+            const episodeB = new Episode(1, new Season(2));
+            const episodeBList = [episodeB];
+            const result = listHelper.getUniqueEpisodeList(episodeAList, episodeBList);
 
-    it('should not combine episodes', () => {
-        const episode = new Episode(1);
-        const episodeAList = [episode];
-        const episodeB = new Episode(1, new Season(2));
-        const episodeBList = [episodeB];
-        const result = listHelper.getUniqueEpisodeList(episodeAList, episodeBList);
+            expect(result.length).toBe(2);
+        });
 
-        expect(result.length).toBe(2);
-    });
+        it('should get a episode list with no new ids', () => {
+            const episode = new Episode(1);
+            const episodeAList = [episode];
+            const episodeB = new Episode(1);
+            const episodeBList = [episodeB];
+            const result = listHelper.getUniqueEpisodeList(episodeAList, episodeBList);
 
-    it('should get a episode list with no new ids', () => {
-        const episode = new Episode(1);
-        const episodeAList = [episode];
-        const episodeB = new Episode(1);
-        const episodeBList = [episodeB];
-        const result = listHelper.getUniqueEpisodeList(episodeAList, episodeBList);
+            expect(result[0].id).toBe(episode.id);
+            expect(result.length).toBe(1);
+        });
 
-        expect(result[0].id).toBe(episode.id);
-        expect(result.length).toBe(1);
+        it('should merge', () => {
+            const episode = new Episode(1);
+            episode.providerId = 1;
+            episode.provider = 'A';
+            const episodeAList = [episode];
+            const episodeB = new Episode(1);
+            episodeB.providerId = 1;
+            episodeB.provider = 'A';
+            const episodeBList = [episodeB];
+            const result = listHelper.getUniqueEpisodeList(episodeAList, episodeBList);
+
+            expect(result[0].id).toBe(episode.id);
+            expect(result.length).toBe(1);
+        });
     });
 });

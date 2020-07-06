@@ -29,7 +29,7 @@ export default class SetupView extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .setup-view{
   display: grid;
   grid-template-columns: 0.4fr 1.6fr;

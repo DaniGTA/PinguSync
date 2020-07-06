@@ -28,7 +28,7 @@ export default class BlockList extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .block-list{
 }
 
@@ -38,7 +38,7 @@ export default class BlockList extends Vue {
 }
 
 .block-list-title-line {
-  background: white;
+  background: $primary-text;
   margin: 0px 5px;
   width: auto;
 }
@@ -47,7 +47,7 @@ export default class BlockList extends Vue {
   text-align: center;
 }
 .block-list-title{
-  color: white;
+  color: $primary-text;
   margin: 0px 10px;
   display: inline;
   font-size: 28px;

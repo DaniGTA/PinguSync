@@ -1,7 +1,7 @@
 <template>
   <q-intersection class="block-list-entry-container" once transition="scale">
     <div class="block-list-entry" v-intersection="onIntersection" @mouseover="isHovering()"
-    @mouseleave="isNotHovering()">
+    @mouseleave="isNotHovering()" @click="openDetailView()">
     <template v-if="id && visible">
       <BlockListEntrySyncStatus :seriesId="id"/>
       <SeriesImageBlock class="block-list-entry-img" :seriesId="id" />
@@ -51,6 +51,10 @@ export default class BlockEntry extends Vue {
     await this.sleep(50);
     this.hover = this.newHoverStatus;
   }
+
+  public openDetailView(): void{
+    this.$router.push({name: 'SeriesDetail', params: {id: this.id}});
+  }
   
   private sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -58,7 +62,7 @@ export default class BlockEntry extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .block-list-entry{
   width: 150px;
   height: 285px;

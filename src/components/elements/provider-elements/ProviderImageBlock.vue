@@ -1,6 +1,6 @@
 <template>
     <div class="provider-image-block">
-        <img class="provider-image-block-image" :src="require('@/assets/'+provider.providerName.toLowerCase() + '-logo.png')" />
+        <img class="provider-image-block-image" :src="require('@/assets/'+provider.providerName.toLowerCase() + '-logo.png')" :width="size" :height="size" />
         <div class="provider-name-block-name" v-if="showText">{{provider.providerName}}</div>
     </div>
 </template>
@@ -16,6 +16,9 @@ export default class ProviderImageBlock extends Vue {
     @Prop({required: true})
     provider!: ListProvider;
 
+    @Prop({default: 50})
+    size!: number;
+
     @Prop({default: true})
     showText!: boolean;
 }
@@ -23,8 +26,6 @@ export default class ProviderImageBlock extends Vue {
 
 <style>
 .provider-image-block-image {
-    width: 50px;
-    height: 50px;
     grid-area: Image;
 }
 

@@ -31,7 +31,7 @@ export default class ListHeader extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 .list-header-left{
     height: 100%;

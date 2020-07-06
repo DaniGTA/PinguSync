@@ -11,8 +11,6 @@ import TestProvider from '../../controller/objects/testClass/testProvider';
 
 // tslint:disable: no-string-literal
 describe('Episode comperator | Full test', () => {
-    beforeAll(() => {
-    });
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
@@ -96,9 +94,9 @@ describe('Episode comperator | Full test', () => {
         episodeB.type = EpisodeType.UNKOWN;
         episodeB.providerEpisodeId = 123;
 
-        const result = await EpisodeComperator.compareDetailedEpisode(episodeA, episodeB, undefined, undefined, new Season([2]), 0);
-        strictEqual(result.matchAble, 6);
-        strictEqual(result.matches, 0);
+        const result = EpisodeComperator.compareDetailedEpisode(episodeA, episodeB, undefined, undefined, new Season([2]), 0);
+        expect(result.matchAble).toBe(6);
+        expect(result.matches).toBe(0);
     });
 
     test('should compare the episode as the same', async () => {
@@ -116,119 +114,119 @@ describe('Episode comperator | Full test', () => {
         episodeB.type = EpisodeType.UNKOWN;
         episodeB.providerEpisodeId = 123;
 
-        const result = await EpisodeComperator.compareEpisodeTitle(episodeA, episodeB);
-        strictEqual(result.matchAble, 1);
-        strictEqual(result.matches, 1);
-        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
+        const result = EpisodeComperator.isSameEpisodeTitle(episodeA, episodeB);
+        expect(result.matchAble).toBe(1);
+        expect(result.matches).toBe(1);
+        expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_TRUE);
     });
 
     test('should be the same Episode title', () => {
         const episodeA = new Episode(1, undefined, [new EpisodeTitle('Final Flame for This Over-the-Top Fortress!')]);
         const episodeB = new Episode(1, undefined, [new EpisodeTitle('Final Flame for this Over-the-top Fortress!')]);
-        const result = EpisodeComperator.compareEpisodeTitle(episodeA, episodeB);
+        const result = EpisodeComperator.isSameEpisodeTitle(episodeA, episodeB);
 
-        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
+        expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_TRUE);
     });
 
     describe('compares simple episode number vs detailed episode', () => {
-        test('same ep 0 s0 (should return true)', async () => {
+        test('same ep 0 s0 (should return true)', () => {
             const detailedEpisode = new Episode(0, new Season(0));
-            const result = await EpisodeComperator.isEpisodeSameAsDetailedEpisode(0, detailedEpisode, new Season([0]));
+            const result = EpisodeComperator.isEpisodeSameAsDetailedEpisode(0, detailedEpisode, new Season([0]));
 
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
 
-        test('same ep 1 s1 (should return true)', async () => {
+        test('same ep 1 s1 (should return true)', () => {
             const detailedEpisode = new Episode(1, new Season([1]));
-            const result = await EpisodeComperator.isEpisodeSameAsDetailedEpisode(1, detailedEpisode, new Season([1]));
+            const result = EpisodeComperator.isEpisodeSameAsDetailedEpisode(1, detailedEpisode, new Season([1]));
 
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
 
-        test('different ep 1 s1 and ep 2 s1 (should return false)', async () => {
+        test('different ep 1 s1 and ep 2 s1 (should return false)', () => {
             const detailedEpisode = new Episode(1, new Season([1]));
-            const result = await EpisodeComperator.isEpisodeSameAsDetailedEpisode(2, detailedEpisode, new Season([1]));
+            const result = EpisodeComperator.isEpisodeSameAsDetailedEpisode(2, detailedEpisode, new Season([1]));
 
-            strictEqual(result, false);
+            expect(result).toBeFalsy();
         });
     });
 
     describe('checks if episode title are equals or not equals', () => {
         test('should be equels', () => {
             const result = EpisodeComperator['isEpisodeTitleEquals']('Title', 'title');
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
 
         test('should be equels (special charactar: ")', () => {
             const result = EpisodeComperator['isEpisodeTitleEquals']('"Ma" and "La"', '"Ma" and "La" ');
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
 
         test('should be equels (should ignore: The)', () => {
             const result = EpisodeComperator['isEpisodeTitleEquals']('Title: the title', 'title: title');
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
 
         test('should be equels (should ignore: and)', () => {
             const result = EpisodeComperator['isEpisodeTitleEquals']('Title & title', 'title and title');
-            strictEqual(result, true);
+            expect(result).toBeTruthy();
         });
     });
 
     describe('checks if episode a season number is higher then episode b or not', () => {
-        test('should be false | same season (not higher)', async () => {
+        test('should be false | same season (not higher)', () => {
             const episodeA = new Episode(1, new Season([1]));
             const episodeB = new Episode(1, new Season([1]));
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
-            strictEqual(resultA, false);
+            expect(resultA).toBeFalsy();
         });
 
-        test('should be false | same season with series season (not higher)', async () => {
+        test('should be false | same season with series season (not higher)', () => {
             const episodeA = new Episode(1, new Season([1]));
             const episodeB = new Episode(1);
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season([1]));
-            strictEqual(resultA, false);
+            expect(resultA).toBeFalsy();
         });
 
-        test('should be true | higher season', async () => {
+        test('should be true | higher season', () => {
             const episodeA = new Episode(1, new Season([1]));
             const episodeB = new Episode(1, new Season(2));
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
-            strictEqual(resultA, true);
+            expect(resultA).toBeTruthy();
         });
 
-        test('should be true | higher season with series season for season b', async () => {
+        test('should be true | higher season with series season for season b', () => {
             const episodeA = new Episode(1, new Season([1]));
             const episodeB = new Episode(1);
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season(2));
-            strictEqual(resultA, true);
+            expect(resultA).toBeTruthy();
         });
 
-        test('should be true | higher season b with series season for season a', async () => {
+        test('should be true | higher season b with series season for season a', () => {
             const episodeA = new Episode(1);
             const episodeB = new Episode(1, new Season(2));
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season([1]));
-            strictEqual(resultA, true);
+            expect(resultA).toBeTruthy();
         });
-        test('should be false | lower season', async () => {
+        test('should be false | lower season', () => {
             const episodeA = new Episode(1, new Season(2));
             const episodeB = new Episode(1, new Season([1]));
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
-            strictEqual(resultA, false);
+            expect(resultA).toBeFalsy();
         });
 
-        test('should be false | lower season with series season', async () => {
+        test('should be false | lower season with series season', () => {
             const episodeA = new Episode(1, new Season(2));
             const episodeB = new Episode(1);
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB, new Season([1]));
-            strictEqual(resultA, false);
+            expect(resultA).toBeFalsy();
         });
 
-        test('should be false | undefined season', async () => {
+        test('should be false | undefined season', () => {
             const episodeA = new Episode(1);
             const episodeB = new Episode(1);
             const resultA = EpisodeComperator.isEpisodeASeasonHigher(episodeA, episodeB);
-            strictEqual(resultA, false);
+            expect(resultA).toBeFalsy();
         });
     });
 });

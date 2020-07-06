@@ -19,13 +19,13 @@ export default class MainHeaderTitle extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .main-header-title-box{
     margin: 5px;
 }
 
 .main-header-title{
     font-size: 24px;
-    color: #EFEFEF;
+    color: $primary-text;
 }
 </style>

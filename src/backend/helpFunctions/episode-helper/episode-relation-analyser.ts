@@ -47,7 +47,7 @@ export default class EpisodeRelationAnalyser {
     private calcAllInformations(): void {
         for (const episode of this.seasonHolder) {
             for (const newEpisodes of this.currentSeason) {
-                const result = EpisodeComperator.compareEpisodeTitle(episode, newEpisodes);
+                const result = EpisodeComperator.isSameEpisodeTitle(episode, newEpisodes);
                 if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                     this.updateAllInformations(episode, newEpisodes);
                 }

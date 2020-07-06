@@ -35,8 +35,5 @@ export default class ProviderImageBlock extends Vue {
 .series-name-block-text{
     color: #F5EEEE;
     z-index: 100;
-    font-size: 14px;
-    font-family: roboto;
-    font-weight: 500;
 }
 </style>

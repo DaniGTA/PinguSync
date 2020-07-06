@@ -10,6 +10,7 @@ import ProviderDataListManager from '../../provider-controller/provider-data-lis
 import isOnline from 'is-online';
 import EpisodeMappingHelper from '../../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import MainListManager from '../../main-list-manager/main-list-manager';
+import Overview from '../../objects/meta/overview';
 
 export default class FrontendSeriesController {
     private com: IPCBackgroundController;
@@ -29,6 +30,7 @@ export default class FrontendSeriesController {
         this.com.on(chOnce.GetPreferedNameBySeriesId, async (id) => this.sendSeriesData(chOnce.GetPreferedNameBySeriesId, id, await this.getSeriesPreferedName(id)));
         this.com.on(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, async(id) => this.sendSeriesData(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, id, await this.getSeriesMaxEpisodeNumberBy(id)));
         this.com.on(chListener.OnSeriesEpisodeListRefreshRequest, (id) => this.refreshSeriesEpisodeList(id));
+        this.com.on(chOnce.GetOverviewBySeriesId, async (id) => { this.sendSeriesData(chOnce.GetOverviewBySeriesId,id,await this.getSeriesOverviewBySeriesId(id))});
     }
 
     private async refreshSeriesEpisodeList(id: string): Promise<void> {
@@ -60,6 +62,12 @@ export default class FrontendSeriesController {
         const result = await MainListSearcher.findSeriesById(id);
         return result?.episodeBindingPools?.length;
 
+    }
+
+    private async getSeriesOverviewBySeriesId(id: string): Promise<Overview | undefined> {
+        const result = await MainListSearcher.findSeriesById(id);
+        const overviews = result?.getAllOverviews() ?? [];
+        return overviews[0];
     }
 
     private async getSeriesPreferedName(id: string): Promise<string | undefined> {

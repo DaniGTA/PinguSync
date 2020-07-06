@@ -28,14 +28,14 @@ export default class MultiProviderLogin extends Vue {
 }
 </script>
 
-<style>
+<style class="scss" scoped>
 .provider-login-choice{
     display: flex;
     justify-content: space-evenly;
 }
 
 .default-login {
-    background-color: #2c3e50;
+    background-color: $primary-background;
     grid-area: default-login;
     max-width: 350px;
     width: 100%;
@@ -43,7 +43,7 @@ export default class MultiProviderLogin extends Vue {
 }
 
 .oauth-login {
-    background-color: #2c3e50;
+    background-color: $primary-background;
     grid-area: oauth-login; 
     max-width: 350px;
     width: 100%;

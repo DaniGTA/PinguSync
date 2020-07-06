@@ -54,11 +54,11 @@ export default class ProviderSettings extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .provider-selector-block{
     overflow-x: auto;
     overflow-y: hidden;
-    background-color: #34495e;
+    background-color: $primary-background;
     text-align: -webkit-center;
 }
 
@@ -73,6 +73,6 @@ export default class ProviderSettings extends Vue {
     padding: 5px;
     width: 80px;
     height: 80px;
-    background: #2d2d2d;
+    background: $primary-background;
 }
 </style>

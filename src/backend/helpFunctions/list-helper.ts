@@ -203,9 +203,9 @@ class ListHelper {
      * @param list
      */
     public async sortList(list: Series[]): Promise<Series[]> {
-        list = await sortHelper.quickSort(list, async (a: Series, b: Series) => {
-            const aNames = await a.getAllNamesUnique();
-            const bNames = await b.getAllNamesUnique();
+        list = await sortHelper.quickSort(list, (a: Series, b: Series) => {
+            const aNames = a.getAllNamesUnique();
+            const bNames = b.getAllNamesUnique();
             let aName = aNames[0].name;
             let bName = bNames[0].name;
             try {

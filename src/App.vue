@@ -25,7 +25,7 @@ export default class App extends Vue {
 
   async mounted(): Promise<void> {
     if(await this.workerController.getOnce<boolean>(chOnce.FinishedFirstSetup)){
-      await this.$router.push('main');
+      await this.$router.push({name:'List'});
     }else{
       await this.$router.push('setup');
     }

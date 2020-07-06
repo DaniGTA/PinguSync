@@ -17,11 +17,11 @@ export default class ListListTypes extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .list-list-types{
     display: flex;
-    background-color: #1E242D;
-    color: #367BC3;
+    background-color: $primary-background;
+    color: $second-text;
     width: 100px;
     height: 38px;
     justify-content: space-evenly;

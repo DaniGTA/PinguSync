@@ -50,7 +50,7 @@ export default class SetupGuide extends Vue {
 
   finishSetup(): void {
     this.workerController.send(chSend.FinishFirstSetup);
-    this.$router.push('main');
+    this.$router.push({name: 'List'});
   }
 
   async providerLoginStatusChange(isLoggedIn: boolean): Promise<void>{

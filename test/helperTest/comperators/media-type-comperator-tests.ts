@@ -5,8 +5,6 @@ import MediaTypeComperator from '../../../src/backend/helpFunctions/comperators/
 
 
 describe('Media Type Comperator | Testrun', () => {
-    beforeAll(() => {
-    });
     test('should be both detected as normal series', async () => {
         const mediaTypeA = MediaType.UNKOWN_SERIES;
         const mediaTypeB = MediaType.ANIME;

@@ -51,7 +51,7 @@ export default class EpisodeComperator {
                     result.matches++;
                     return result;
                 }
-                if (aEpisode.id !== bEpsiode.id) {
+                if (aEpisode.providerId !== bEpsiode.providerId) {
                     result.isAbsolute = AbsoluteResult.ABSOLUTE_FALSE;
                     return result;
                 }
@@ -71,7 +71,7 @@ export default class EpisodeComperator {
             result.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
         }
 
-        const episodeTitleResult = this.compareEpisodeTitle(aEpisode, bEpsiode);
+        const episodeTitleResult = this.isSameEpisodeTitle(aEpisode, bEpsiode);
         result.matchAble += episodeTitleResult.matchAble * 4;
         result.matches += episodeTitleResult.matches * 4;
         if (episodeTitleResult.isAbsolute !== AbsoluteResult.ABSOLUTE_NONE) {
@@ -105,7 +105,7 @@ export default class EpisodeComperator {
 
     public static isEpisodeSameAsDetailedEpisode(aEpisode: number, bEpisode: Episode, season?: Season): boolean {
         if (this.isDetailedEpisodeSameSeason(bEpisode, season)) {
-            if (this.compareEpNr(aEpisode, bEpisode.episodeNumber)) {
+            if (this.isSameEpisodeNumber(aEpisode, bEpisode.episodeNumber)) {
                 return true;
             }
         }
@@ -186,7 +186,7 @@ export default class EpisodeComperator {
         return false;
     }
 
-    public static compareEpisodeMapping(aEpisodeMapping: EpisodeMapping, bEpisodeMapping: EpisodeMapping): boolean {
+    public static isSameEpisodeMapping(aEpisodeMapping: EpisodeMapping, bEpisodeMapping: EpisodeMapping): boolean {
         if (aEpisodeMapping.id === bEpisodeMapping.id) {
             return true;
         } else if (aEpisodeMapping.provider === bEpisodeMapping.provider) {
@@ -196,7 +196,7 @@ export default class EpisodeComperator {
                 return true;
             }
             // tslint:disable-next-line: triple-equals
-            if (this.compareEpNr(aEpisodeMapping.episodeNumber, bEpisodeMapping.episodeNumber) &&
+            if (this.isSameEpisodeNumber(aEpisodeMapping.episodeNumber, bEpisodeMapping.episodeNumber) &&
                 SeasonComperator.isSameSeason(aEpisodeMapping.season, bEpisodeMapping.season)) {
                 return true;
             } else if (aEpisodeMapping.providerEpisodeId !== undefined && (aEpisodeMapping.providerEpisodeId === bEpisodeMapping.providerEpisodeId)) {
@@ -207,7 +207,7 @@ export default class EpisodeComperator {
         return false;
     }
 
-    public static compareEpisodeMappingToEpisode(aEpisodeMapping: EpisodeMapping, aEpisode: Episode): boolean {
+    public static isSameEpisodeMappingToEpisode(aEpisodeMapping: EpisodeMapping, aEpisode: Episode): boolean {
         if (aEpisodeMapping.id === aEpisode.id) {
             return true;
         } else if (aEpisodeMapping.provider === aEpisode.provider) {
@@ -225,7 +225,7 @@ export default class EpisodeComperator {
         return false;
     }
 
-    public static compareEpisodeTitle(aEpisode: Episode, bEpsiode: Episode): ComperatorResult {
+    public static isSameEpisodeTitle(aEpisode: Episode, bEpsiode: Episode): ComperatorResult {
         const result = new ComperatorResult();
         if (aEpisode.title.length !== 0 || bEpsiode.title.length !== 0) {
             result.matchAble++;
@@ -261,7 +261,7 @@ export default class EpisodeComperator {
      * @param number1 episode number 1 will be compared with 2.
      * @param number2 episode number 2 will be compared with 1.
      */
-    public static compareEpNr(number1: number | string, number2: number | string): boolean {
+    public static isSameEpisodeNumber(number1: number | string, number2: number | string): boolean {
         // tslint:disable-next-line: triple-equals
         return number1 == number2;
     }

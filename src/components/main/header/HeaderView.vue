@@ -20,11 +20,11 @@ import HeaderTitle from './HeaderTitle.vue';
 export default class MainHeader extends Vue {}
 </script>
 
-<style>
+<style scoped lang="scss">
 .main-header{
   width: 100%;
   height: 70px;
-  background-color:#1E242D;
+  background-color:$primary-background;
   display: flex;
 }
 </style>

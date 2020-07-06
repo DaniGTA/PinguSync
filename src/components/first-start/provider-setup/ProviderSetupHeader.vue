@@ -48,7 +48,7 @@ export default class ProviderSetupHeader extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .provider-setup-header{
     display: grid;
     grid-template-columns: 50px 100px auto auto;
@@ -74,7 +74,7 @@ export default class ProviderSetupHeader extends Vue {
     width: 100px;
     justify-self: flex-end;
     background-color: #de5252;
-    color: white;
+    color: $primary-text;
     font-size: 16px;
     cursor: pointer;
 }

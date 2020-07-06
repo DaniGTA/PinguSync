@@ -32,9 +32,9 @@ export default class ProviderUserInformation extends Vue {
 </script>
 
 
-<style>
+<style lang="scss" scoped>
 .provider-user-name {
-    color: #e0e0e0;
+    color: $primary-text;
     font-size: small;
 }
 </style>

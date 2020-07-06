@@ -25,11 +25,11 @@ export default class ListSearch extends Vue {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
 .list-search{
     display: flex;
-    background-color: #1E242D;
-    border-left: solid #1E242D 2px;
+    background-color: $primary-background;
+    border-left: solid $primary-background 2px;
     width: 300px;
     height: 38px;
     align-items: center;
@@ -37,16 +37,16 @@ export default class ListSearch extends Vue {
 }
 
 .list-search-logo{
-    color: #367BC3;
+    color: $second-text;
     margin: 5px;
 }
 
 .list-search-input{
     border: none;
-    border-bottom: solid #1A1F27 3px;
-    background-color: #1E242D;
+    border-bottom: solid $primary-background 3px;
+    background-color: $primary-background;
     font-size: 16px;
-    color: white;
+    color: $primary-text;
     min-width: 250px;
     outline: none;
 }

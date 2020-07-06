@@ -13,11 +13,11 @@ loadingTitle!: string;
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 .loading-title {
   z-index: 3;
-  color: rgba(255,255,255,0.87);
+  color: $primary-text;
   font-family: Roboto;
   font-size: 72px;
   font-weight: 300;

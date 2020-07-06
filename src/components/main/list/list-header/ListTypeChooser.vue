@@ -54,19 +54,19 @@ export default class ListTypeChooser extends Vue {
 }
 </script>
 
-<style>
-.list-type-choser-container{
-    background: #1E242D;
-    width: 200px;
-    height: 38px;
-}
+<style lang="scss" scoped>
+    .list-type-choser-container{
+        background: $primary-background;
+        width: 200px;
+        height: 38px;
+    }
 
-.list-type-choser-select{
-    width: 200px;
-    height: 38px;
-}
+    .list-type-choser-select{
+        width: 200px;
+        height: 38px;
+    }
 
-.list-type-choser-selected{
-    color: white;
-}
+    .list-type-choser-selected{
+        color: $primary-text;
+    }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="main">
       <MainHeader />
-      <ListBlock />
+      <router-view />
   </div>
 </template>
 
@@ -9,12 +9,11 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import MainHeader from './header/HeaderView.vue';
-import ListBlock from './list/ListBlock.vue';
 
 @Component({
 	components: {
         MainHeader,
-        ListBlock  
+          
 	}
 })
 export default class Main extends Vue {

@@ -71,5 +71,12 @@ module.exports = {
   transpileDependencies: [
     'quasar',
     /[\\/]node_modules[\\/]quasar[\\/]/,
-  ]
+  ],
+  css: {
+    loaderOptions: {
+      sass: {
+        prependData: '@import "@/styles/quasar.sass";'
+      }
+    }
+  }
 };

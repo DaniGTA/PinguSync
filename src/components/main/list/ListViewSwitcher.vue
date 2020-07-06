@@ -41,9 +41,9 @@ export default class ListViewSwitcher extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .list-view {
-    background: #1E242D;
+    background: $primary-background;
     margin: 0px 25px;
     height: calc(100% - 140px);
     overflow-y: scroll;

@@ -15,7 +15,6 @@ export enum chOnce {
     /*
         Series API
     */
-
     GetSeriesIdsWithListType = 'get-series-list-with-give-list-type',
 
     GetSeriesById = 'get-series-id',
@@ -26,6 +25,8 @@ export enum chOnce {
     /*
          Update API
     */
-
     IsUpdateAvailable = 'is-app-update-available',
+    GetOverviewBySeriesId = "GetDescribtionBySeriesId",
+    GetEpisodeIdsListBySeriesId = "GetEpisodeIdsListBySeriesId",
+    GetEpisodeByEpisodeId = "GetEpisodeByEpisodeId"
 }

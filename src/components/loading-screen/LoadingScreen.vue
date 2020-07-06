@@ -29,7 +29,7 @@ export default class LoadingScreen extends Vue {
 </script>
 
 
-<style>
+<style lang="scss">
 .loading-screen {
     margin: 0;
     position: absolute;
@@ -43,7 +43,7 @@ export default class LoadingScreen extends Vue {
 .loading-space {
     width: 100%;
     margin: auto;
-    background: rgba(0, 0, 0, 0.8);
+    background: $primary-background;
 
 }
 

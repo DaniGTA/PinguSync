@@ -18,8 +18,8 @@ export default class ProviderSetupPlaceholder extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .provider-setup-placeholder{
-  color: white;
+  color: $primary-text;
 }
 </style>

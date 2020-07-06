@@ -2,12 +2,15 @@ import FrontendProviderController from './providers/frontend-provider-controller
 import FrontendAppUpdateController from './app/update/frontend-app-update-controller';
 import FrontendSettingsController from './settings/frontend-settings-controller';
 import FrontendSeriesController from './series/frontend-series-controller';
+import FrontendEpisodesController from './episodes/frontend-episodes-controller';
 
 export default class FrontendCommmunicationEventController {
     public frontendProviderController: FrontendProviderController;
     public frontendAppUpdateController: FrontendAppUpdateController;
     public frontendSettingsController: FrontendSettingsController;
     public frontendSeriesController: FrontendSeriesController;
+    public frontendEpisodesController: FrontendEpisodesController;
+
     /**
      *Creates an instance of FrontendCommmunicationEventController.
      * @param {Electron.WebContents} webcontents  
@@ -17,6 +20,7 @@ export default class FrontendCommmunicationEventController {
         this.frontendProviderController = new FrontendProviderController(webcontents);
         this.frontendAppUpdateController = new FrontendAppUpdateController(webcontents);
         this.frontendSettingsController = new FrontendSettingsController(webcontents);
+        this.frontendEpisodesController = new FrontendEpisodesController(webcontents);
 
     }
 }
