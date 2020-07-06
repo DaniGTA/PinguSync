@@ -1,4 +1,4 @@
-interface SingleEpisodeQuery {
+export interface SingleEpisodeQuery {
     episodeId: string;
     seriesId: string;
 }
