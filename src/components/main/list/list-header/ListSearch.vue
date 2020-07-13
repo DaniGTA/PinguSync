@@ -1,15 +1,7 @@
-<i18n>
-{
-    "en":{
-        "search": "Search"
-    }
-}
-</i18n>
-
 <template>
     <div class="list-search">
         <i class="fas fa-search list-search-logo"></i>
-        <input class="list-search-input" :placeholder="$t('search')" />
+        <input class="list-search-input" :placeholder="$t('ListSearch.search')" />
     </div>
 </template>
 

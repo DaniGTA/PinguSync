@@ -1,6 +1,7 @@
 <template>
     <div class="provider-image-block">
         <img class="provider-image-block-image" :src="require('@/assets/'+provider.providerName.toLowerCase() + '-logo.png')" :width="size" :height="size" />
+        <q-skeleton class="provider-image-block-image"  v-if="!provider"/>
         <div class="provider-name-block-name" v-if="showText">{{provider.providerName}}</div>
     </div>
 </template>

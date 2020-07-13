@@ -7,13 +7,25 @@ import { chListener } from '../../backend/communication/listener-channels';
 import FrontendSyncEpisodes from '../../backend/controller/frontend/providers/sync-status/model/sync-episodes';
 export default class ProviderController {
     private static workerController: WorkerController = new WorkerController();
-
+    private static cachedProviderWithConnectedUser: ListProvider[] | null = null;
+    private static lastProviderWithConnectUserRequest: number = new Date(0).getTime();
     public static async getAllAvaibleProviders(): Promise<ListProvider[]> {
         return await this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProviders);
     }
 
     public static async getAllProviderWithConnectedUser(): Promise<ListProvider[]> {
-        return await this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProvidersWithConnectedUser);
+        if (this.cachedProviderWithConnectedUser) {
+            if (((this.lastProviderWithConnectUserRequest - new Date().getTime()) / 1000) > 5) {
+                this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProvidersWithConnectedUser).then((updated) => {
+                    this.cachedProviderWithConnectedUser = updated;
+                    this.lastProviderWithConnectUserRequest = new Date().getTime();
+                });
+            }
+            return this.cachedProviderWithConnectedUser;
+        }
+        const result = await this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProvidersWithConnectedUser);
+        this.cachedProviderWithConnectedUser = result;
+        return result;
     }
 
     public static async isProviderSync(data: GetSyncStatus): Promise<GetSyncStatusRecieved> {

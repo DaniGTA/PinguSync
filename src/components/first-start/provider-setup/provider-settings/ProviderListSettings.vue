@@ -1,15 +1,6 @@
-
-<i18n>
-{
-  "en":{
-    "list_settings": "List Settings"
-  }
-}
-</i18n>
-
 <template>
     <div class="provider-user-list-list">
-        <h2>{{$t('list_settings')}}</h2>
+        <h2>{{$t('ProviderListSettings.list_settings')}}</h2>
         <ProviderSingleListSetting 
         v-for="listSetting in listSettings" 
         :key="listSetting.listInfo.name" 

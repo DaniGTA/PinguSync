@@ -1,15 +1,3 @@
-<i18n>
-{
-  "en": {
-    "SyncTo": "Sync to"
-  },
-  "de": {
-    "SyncTo": "Synchronisiere zu"
-  }
-}
-</i18n>
-
-
 <template>
     <div class="provider-user-list-setting-entry">
         <div class="provider-user-list-name">{{listSetting.listInfo.name}}</div>

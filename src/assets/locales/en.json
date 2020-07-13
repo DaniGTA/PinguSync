@@ -7,5 +7,27 @@
     "5_LISTTYPE": "Dropped",
     "6_LISTTYPE": "Completed",
     "7_LISTTYPE": "Repeating",
-    "8_LISTTYPE": "ALL"
+    "8_LISTTYPE": "ALL",
+    "providerSingleListSetting": {
+        "syncTo": "Sync to"
+    },
+    "SetupGuide": {
+        "provider-login-description": "Bei mindestens einem Provider anmelden.",
+        "provider-setup-description": "Ein Provider einstellen",
+        "provider-setup-more-description": "Weitere Provider einrichten.",
+        "title": "Einrichtung",
+        "complete-setup": "Complete Setup"
+    },
+    "ListTypeChooser": {
+        "selected-list": "Selected list"
+    },
+    "ProviderSetupHeader": {
+        "logout": "Logout"
+    },
+    "ListSearch": {
+        "search": "Search"
+    },
+    "ProviderListSettings": {
+        "list_settings": "List Settings"
+    }
 }

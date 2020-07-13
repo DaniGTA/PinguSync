@@ -48,7 +48,7 @@ export default class BlockEntry extends Vue {
 
   public async isNotHovering(): Promise<void>{
     this.newHoverStatus = false;
-    await this.sleep(50);
+    await this.sleep(25);
     this.hover = this.newHoverStatus;
   }
 

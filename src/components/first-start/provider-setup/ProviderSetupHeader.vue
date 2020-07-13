@@ -1,18 +1,10 @@
-<i18n>
-{
-    "en":{
-        "logout": "Logout"
-    }
-}
-</i18n>
-
 <template>
     <div class="provider-setup-header">
         <ProviderImageBlock class="provider-image" :provider="provider" :showText="showText"/>
         <div class="provider-setup-title"></div>
         <div class="provider-name">{{provider.providerName}}</div>
         <ProviderUserInformation v-if="isProviderLoggedIn" class="user-name" />
-        <button @click="logoutUser()" v-if="isProviderLoggedIn" class="provider-logout">{{$t('logout')}}</button>
+        <button @click="logoutUser()" v-if="isProviderLoggedIn" class="provider-logout">{{$t('ProviderSetupHeader.logout')}}</button>
     </div>
 </template>
 

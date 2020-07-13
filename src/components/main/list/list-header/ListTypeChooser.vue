@@ -1,33 +1,22 @@
-<i18n>
-{
-    "de": {
-        "selected-list": "Ausgewählte Liste"
-    },
-    "en": {
-        "selected-list": "Selected list"
-    }
-}
-</i18n>
-
 <template>
-<div class="list-type-choser-container" >
-    <q-select 
-        label-color="white" 
-        class="list-type-choser-select" 
-        filled 
-        v-model="model" 
-        dense="true" 
-        :options="getListTypes()" 
-        :label="$t('selected-list')"
-        @input="changeSelectedListType">
+    <div class="list-type-choser-container" >
+        <q-select 
+            label-color="white" 
+            class="list-type-choser-select" 
+            filled 
+            v-model="model" 
+            dense="true" 
+            :options="getListTypes()" 
+            :label="$t('ListTypeChooser.selected-list')"
+            @input="changeSelectedListType">
 
-         <template v-slot:selected>
-             <div class="list-type-choser-selected">
-            {{ model }}
-            </div>
-        </template>
-    </q-select>
-</div>
+            <template v-slot:selected>
+                <div class="list-type-choser-selected">
+                {{ model }}
+                </div>
+            </template>
+        </q-select>
+    </div>
 </template>
 
 <script lang="ts">

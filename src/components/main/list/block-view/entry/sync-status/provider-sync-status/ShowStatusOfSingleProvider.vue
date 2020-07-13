@@ -2,9 +2,9 @@
     <div class="col provider-status">
         <ProviderImageBlock class="row" :provider="provider" :showText="false"/>
         <div class="row justify-center status">
-            <i v-if="result && result.isSync" color="green" class="fas fa-check"></i>
-            <q-skeleton v-else-if="!result && result.isSync === null" c size="12px" />
-            <div class="bad-status" v-if="result && !result.isSync">
+            <i v-if="isSync()" color="green" class="fas fa-check"></i>
+            <q-skeleton v-else-if="result === null" c size="12px" />
+            <div class="bad-status" v-if="!isSync() && result !== null">
                 {{result.syncedEpisodeCount}}/{{result.maxEpisodeNumber}}
             </div>
         </div>
@@ -33,11 +33,13 @@ export default class ShowStatusOfSingleProvider extends Vue {
 
     public result: GetSyncStatusRecieved | null = null;
 
-    mounted(): void {
-       this.isSynced().then(x =>{
-           console.log(x);
-           this.result = x;
-       });
+    async created(): Promise<void> {
+        await this.delay(500);
+        //this.result = await this.isSynced();
+    }
+
+    destroyed(){
+        this.isSynced = (async ()=> { console.log('Closed IsSynced request')}) as any;
     }
 
     async isSynced(): Promise<GetSyncStatusRecieved> {
@@ -50,6 +52,14 @@ export default class ShowStatusOfSingleProvider extends Vue {
 
     private getSeriesId(): string{
         return SeriesHoverController.currentlyHoveringSeriesId;
+    }
+
+    isSync(): boolean{
+        return this?.result?.isSync ?? false;
+    }
+
+    delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms) );
     }
 }
 </script>

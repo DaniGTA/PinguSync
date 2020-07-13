@@ -22,14 +22,15 @@ export default class BlockListEntrySyncStatusHover extends Vue {
     providers: ListProvider[] = [];
     @Prop({required:true})
     seriesId!: string;
-    mounted(): void{
+    created(): void{
         this.loadProviders();
         console.log('Hover entry: '+this.seriesId);
         SeriesHoverController.currentlyHoveringSeriesId = this.seriesId;
     }
 
     async loadProviders(): Promise<void>{
-        this.providers.push(...await ProviderController.getAllProviderWithConnectedUser());
+        console.log('Providers loaded');
+        this.providers = await ProviderController.getAllProviderWithConnectedUser();
     }
 }
 </script>

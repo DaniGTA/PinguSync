@@ -1,24 +1,14 @@
-<i18n>
-{
-  "en": {
-    "provider-login-description": "Bei mindestens einem Provider anmelden.",
-    "provider-setup-description": "Ein Provider einstellen",
-    "provider-setup-more-description": "Weitere Provider einrichten.",
-    "title": "Einrichtung",
-    "complete-setup": "Complete Setup"
-  }
-}
-</i18n>
+
 
 <template>
   <div class="setup-guide">
-    <div class="setup-title">{{$t('title')}}</div>
+    <div class="setup-title">{{$t('SetupGuide.title')}}</div>
     <div class="setup-steps">
-      <SetupGuideEntry v-bind:required = "true" :completed="anyConnectedProvider"  v-bind:description = "$t('provider-login-description')" v-bind:syncCompleted.sync= "anyConnectedProvider" />
-      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('provider-setup-description')" />
-      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('provider-setup-more-description')" />
+      <SetupGuideEntry v-bind:required = "true" :completed="anyConnectedProvider"  v-bind:description = "$t('SetupGuide.provider-login-description')" v-bind:syncCompleted.sync= "anyConnectedProvider" />
+      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('SetupGuide.provider-setup-description')" />
+      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('SetupGuide.provider-setup-more-description')" />
     </div>
-    <button :disabled="!anyConnectedProvider" @click="finishSetup()" class="setup-confirm-button">{{$t('complete-setup')}}</button>
+    <button :disabled="!anyConnectedProvider" @click="finishSetup()" class="setup-confirm-button">{{$t('SetupGuide.complete-setup')}}</button>
   </div>
 </template>
 

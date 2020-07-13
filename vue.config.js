@@ -14,6 +14,11 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
+        asar: true,
+        asarUnpack: [
+          '**/0.worker.js ',
+          '**/0.worker.js.map '
+        ],
         appId: 'pingu-sync',
         productName: 'PinguSync',
         mac: {
@@ -44,15 +49,15 @@ module.exports = {
           .use('i18n')
           .loader('@kazupon/vue-i18n-loader')
           .end();
-          
-        },
-        chainWebpackMainProcess: (config) => {
-          config.module.rule('graphql')
+
+      },
+      chainWebpackMainProcess: (config) => {
+        config.module.rule('graphql')
           .test(/\.(graphql|gql)$/)
           .use('graphql-tag/loader')
           .loader('graphql-tag/loader')
           .end();
-          config.plugin('ThreadsPlugin').use(ThreadsPlugin)
+        config.plugin('ThreadsPlugin').use(ThreadsPlugin);
       }
     },
     i18n: {
