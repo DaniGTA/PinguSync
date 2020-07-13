@@ -7,9 +7,9 @@
             <DetailInfoSyncStatus :seriesId="id" />
             <SeriesDescriptionBlock :seriesId="id"/>
         </div>
-        <DetailInfoEpisodes />
       </div>
-      Id: {{id}}
+        Id: {{id}}
+        <DetailInfoEpisodes :seriesId="id" />
   </div>
 </template>
 
@@ -60,4 +60,5 @@ export default class SeriesDetailInfo extends Vue {
     z-index: 10;
     box-shadow: black 0px 0px 5px 1px;
 }
+
 </style>

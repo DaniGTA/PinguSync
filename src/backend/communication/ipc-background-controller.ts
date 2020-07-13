@@ -13,11 +13,12 @@ export default class IPCBackgroundController implements ICommunication {
         let success = false;
         while (!success) {
             try {
-                this.webcontents.send(channel, data);
+                const onlyData = JSON.parse(JSON.stringify(data));
+                this.webcontents.send(channel, onlyData);
                 logger.log('info', 'worker send: ' + channel);
                 success = true;
             } catch (err) {
-                logger.error( err);
+                logger.error(err);
             }
         }
     }

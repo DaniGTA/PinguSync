@@ -1,6 +1,6 @@
 <template>
-  <div>
-      <EpisodeBlock v-for="episodeId of episodesIds" :key="episodeId+'-entry'" :episodeIds="episodeId" :seriesId="seriesId"/>
+  <div class="episode-list">
+      <EpisodeBlock v-for="episodeId of episodeIds" :key="episodeId.length + '-entry'" :episodeIds="episodeId" :seriesId="seriesId"/>
   </div>
 </template>
 
@@ -18,7 +18,7 @@ import ProviderController from '../../../controller/provider-controller';
 	}
 })
 export default class DetailInfoEpisodes extends Vue {
-    episodeIds: string[][] = [];
+    public episodeIds: string[][] = [];
     @Prop({required:true})
     seriesId!: string;
     mounted(): void{
@@ -26,11 +26,15 @@ export default class DetailInfoEpisodes extends Vue {
     }
 
     async loadEpisodeIds(): Promise<void> {
-        this.episodeIds = await EpisodeController.getEpisodeIdList(this.seriesId);
+        this.episodeIds = await EpisodeController.getEpisodeIdList(this.seriesId) ?? [];
+        console.log(this.episodeIds);
     }
 }
 </script>
 
 <style>
-
+.episode-list{
+    text-align: center;
+    overflow-x: auto;
+}
 </style>

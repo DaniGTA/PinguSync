@@ -1,5 +1,5 @@
-Sho<template>
-  <div v-if="description">
+<template>
+  <div v-if="description" class="describtion">
     {{description.content}}
   </div>
 </template>
@@ -14,18 +14,20 @@ import SeriesListViewController from '../../controller/series-list-view-controll
 @Component
 export default class SeriesDescriptionBlock extends Vue {
     @Prop({required: true})
-    id!: string;
+    seriesId!: string;
     description: Overview | null = null;
     mounted(): void{
         this.loadDescription();
     }
     async loadDescription(): Promise<void>{
-      this.description = (await SeriesListViewController.getSeriesDescriptionById(this.id)) ?? null;
+      this.description = (await SeriesListViewController.getSeriesDescriptionById(this.seriesId)) ?? null;
     }
 }
 </script>
 
 
-<style>
-
+<style lang="scss" scoped>
+.describtion{
+  color: $primary-text;
+}
 </style>

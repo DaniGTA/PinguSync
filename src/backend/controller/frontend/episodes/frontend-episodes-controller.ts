@@ -2,7 +2,7 @@ import IPCBackgroundController from '../../../communication/ipc-background-contr
 import { chOnce } from '../../../communication/channels';
 import MainListSearcher from '../../main-list-manager/main-list-searcher';
 import Episode from '../../objects/meta/episode/episode';
-import SingleEpisodeQuery from '../../frontend/episodes/model/singel-episode-query';
+import {SingleEpisodeQuery} from '../../frontend/episodes/model/singel-episode-query';
 
 export default class FrontendEpisodesController {
     private com: IPCBackgroundController;

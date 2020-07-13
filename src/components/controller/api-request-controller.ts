@@ -6,7 +6,9 @@ export default class ApiRequestController {
     public static async getDataWithId<T>(channel: string, seriesId: string): Promise<T> {
         this.workerController.send(channel, seriesId);
         return new Promise<T>((resolve, reject) => {
+            console.log('Listen: ' + channel + '-' + seriesId);
             this.workerController.getIpcRenderer().once(channel + '-' + seriesId, (event: Electron.IpcRendererEvent, data: T) => {
+                console.log('RECIEVED: ' + channel + '-' + seriesId);
                 resolve(data);
             });
         });
