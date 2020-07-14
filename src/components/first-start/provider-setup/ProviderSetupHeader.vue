@@ -25,8 +25,6 @@ import { chSend } from '../../../backend/communication/send-only-channels';
 	}
 })
 export default class ProviderSetupHeader extends Vue {
-    public workerController: WorkerController = new WorkerController();
-
     @Prop({required: true})
     provider!: ListProvider;
     @Prop({default: false})
@@ -35,7 +33,7 @@ export default class ProviderSetupHeader extends Vue {
     isProviderLoggedIn!: boolean;
 
     public logoutUser(): void {
-        this.workerController.send(chSend.LogoutUser, this.provider.providerName);
+        WorkerController.send(chSend.LogoutUser, this.provider.providerName);
     }
 }
 </script>

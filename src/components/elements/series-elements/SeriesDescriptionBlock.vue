@@ -10,6 +10,9 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import Overview from '../../../backend/controller/objects/meta/overview';
 import SeriesListViewController from '../../controller/series-list-view-controller';
+import { getModule } from 'vuex-module-decorators';
+
+const seriesListViewController = getModule(SeriesListViewController);
 
 @Component
 export default class SeriesDescriptionBlock extends Vue {
@@ -20,7 +23,7 @@ export default class SeriesDescriptionBlock extends Vue {
         this.loadDescription();
     }
     async loadDescription(): Promise<void>{
-      this.description = (await SeriesListViewController.getSeriesDescriptionById(this.seriesId)) ?? null;
+      this.description = (await seriesListViewController.getSeriesDescriptionById(this.seriesId)) ?? null;
     }
 }
 </script>

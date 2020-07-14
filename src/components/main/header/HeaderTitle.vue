@@ -17,10 +17,8 @@ import WorkerController from '../../../backend/communication/ipc-renderer-contro
 	}
 })
 export default class MainHeaderTitle extends Vue {
-    private workerController: WorkerController = new WorkerController();
-
     async openDefaultSite(): Promise<void>{
-    if(await this.workerController.getOnce<boolean>(chOnce.FinishedFirstSetup)){
+    if(await WorkerController.getOnce<boolean>(chOnce.FinishedFirstSetup)){
       await this.$router.push({name:'List'});
     }else{
       await this.$router.push('setup');

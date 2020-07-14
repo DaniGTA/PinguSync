@@ -91,7 +91,7 @@ export default class AniDBProvider extends InfoProvider {
                 const result = await AniDBHelper.checkTitles(searchTitle, seriesDB.title);
 
                 if (result.length !== 0) {
-                    const seasonOfTitle = await Name.getSeasonNumber(result);
+                    const seasonOfTitle = Name.getSeasonNumber(result);
                     if (season !== undefined) {
                         if (seasonOfTitle.seasonNumber === undefined && season <= 1) {
                             lastResults.push([seriesDB, result]);

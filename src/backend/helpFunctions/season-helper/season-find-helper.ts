@@ -41,11 +41,11 @@ export default class SeasonFindHelper {
             if (searchResult.relationExistButNotFounded) {
                 return new SearchSeasonValueResult(new Season([-2]), 'PrequelTraceNotAvaible', SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER, searchResult);
             } else {
-                const mediaTypeSeries = await series.getMediaType();
+                const mediaTypeSeries = series.getMediaType();
                 const alreadyCheckedPrequels: string[] = [];
                 while (prequel && alreadyCheckedPrequels.findIndex((x) => x === prequel?.id) === -1) {
                     alreadyCheckedPrequels.push(prequel.id);
-                    const mediaTypePrequel = await prequel.getMediaType();
+                    const mediaTypePrequel = prequel.getMediaType();
                     if (mediaTypePrequel === mediaTypeSeries) {
                         searchCount++;
                         const prequelSeason = await prequel.getSeason(SeasonSearchMode.PREQUEL_TRACE_MODE, seriesList);
@@ -106,7 +106,7 @@ export default class SeasonFindHelper {
                 const alreadyCheckedSequels: string[] = [];
                 while (sequel && alreadyCheckedSequels.findIndex((x) => x === sequel?.id) === -1) {
                     alreadyCheckedSequels.push(sequel.id);
-                    if (await sequel.getMediaType() === await series.getMediaType()) {
+                    if (sequel.getMediaType() === series.getMediaType()) {
                         searchCount++;
                         const sequelSeason = await sequel.getSeason(SeasonSearchMode.SEQUEL_TRACE_MODE, seriesList);
                         if (sequelSeason.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {
@@ -207,7 +207,7 @@ export default class SeasonFindHelper {
         const seasonPart = this.getSeasonPart(series);
 
         if (SeasonSearchModeHelper.canPerformATitleSearch(searchMode)) {
-            numberFromName = await Name.getSeasonNumber(await series.getAllNamesUnique());
+            numberFromName = Name.getSeasonNumber(series.getAllNamesUnique());
 
             if (numberFromName && numberFromName.seasonNumber && numberFromName.absoluteResult === AbsoluteResult.ABSOLUTE_TRUE) {
                 return new SearchSeasonValueResult(numberFromName.convertToSeason(seasonPart), 'Name');

@@ -26,7 +26,7 @@ export enum chOnce {
          Update API
     */
     IsUpdateAvailable = 'is-app-update-available',
-    GetOverviewBySeriesId = "GetDescribtionBySeriesId",
-    GetEpisodeIdsListBySeriesId = "GetEpisodeIdsListBySeriesId",
-    GetEpisodeByEpisodeId = "GetEpisodeByEpisodeId"
+    GetOverviewBySeriesId = 'GetDescribtionBySeriesId',
+    GetEpisodeIdsListBySeriesId = 'GetEpisodeIdsListBySeriesId',
+    GetEpisodeByEpisodeId = 'GetEpisodeByEpisodeId'
 }

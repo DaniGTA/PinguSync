@@ -29,9 +29,6 @@ import ProviderImageBlock from '../../../elements/provider-elements/ProviderImag
     }
 })
 export default class ProviderSyncSettings extends Vue {
-    public workerController: WorkerController = new WorkerController();
-
-
     @Prop()
     provider!: ListProvider;
 
@@ -39,7 +36,7 @@ export default class ProviderSyncSettings extends Vue {
 
 
     async getAllProviderThatWillBeSynced(): Promise<ListProvider[]>{
-        return await this.workerController.getOnce<ListProvider[]>(chOnce.GetSyncProviderSettings, this.provider.providerName);
+        return await WorkerController.getOnce<ListProvider[]>(chOnce.GetSyncProviderSettings, this.provider.providerName);
     }
 
     addProviderToSync(): void{
@@ -47,7 +44,7 @@ export default class ProviderSyncSettings extends Vue {
             providerName: this.provider.providerName,
             providerNameThatWillBeAddedToSync: ''
         };
-        this.workerController.send('add-sync-with-provider', data);
+        WorkerController.send('add-sync-with-provider', data);
     }
 }
 </script>

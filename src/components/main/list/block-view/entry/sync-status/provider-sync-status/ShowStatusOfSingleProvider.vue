@@ -16,11 +16,14 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ProviderImageBlock from './../../../../../../elements/provider-elements/ProviderImageBlock.vue';
-import ListProvider from '../../../../../../../backend/api/provider/list-provider';
 import { Prop } from 'vue-property-decorator';
 import ProviderController from '../../../../../../controller/provider-controller';
 import SeriesHoverController from './../../../../../../controller/series-hover-controller';
 import GetSyncStatusRecieved from '../../../../../../../backend/controller/frontend/providers/sync-status/model/get-sync-status-recieved';
+import { getModule } from 'vuex-module-decorators';
+import { ListProviderInterface } from '../../../../../../controller/model/list-provider-interface';
+const providerController = getModule(ProviderController);
+const seriesHoverController = getModule(SeriesHoverController);
 
 @Component({
 	components: {
@@ -29,29 +32,29 @@ import GetSyncStatusRecieved from '../../../../../../../backend/controller/front
 })
 export default class ShowStatusOfSingleProvider extends Vue {
     @Prop({required:true})
-    provider!: ListProvider;
+    provider!: ListProviderInterface;
 
     public result: GetSyncStatusRecieved | null = null;
 
     async created(): Promise<void> {
         await this.delay(500);
-        //this.result = await this.isSynced();
+        this.result = await this.isSynced();
     }
 
     destroyed(){
-        this.isSynced = (async ()=> { console.log('Closed IsSynced request')}) as any;
+        this.isSynced = (async () => { console.log('Closed IsSynced request');}) as any;
     }
 
     async isSynced(): Promise<GetSyncStatusRecieved> {
-        return await ProviderController.isProviderSync({providerName: this.provider.providerName, seriesId: this.getSeriesId()});
+        return await providerController.isProviderSync({providerName: this.provider.providerName, seriesId: this.getSeriesId()});
     }
 
     sync(): void{
-        ProviderController.syncAllEpisodes(this.provider.providerName, this.getSeriesId());
+        providerController.syncAllEpisodes(this.provider.providerName, this.getSeriesId());
     }
 
     private getSeriesId(): string{
-        return SeriesHoverController.currentlyHoveringSeriesId;
+        return seriesHoverController.currentlyHoveringSeriesId;
     }
 
     isSync(): boolean{

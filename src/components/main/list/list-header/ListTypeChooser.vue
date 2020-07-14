@@ -5,7 +5,7 @@
             class="list-type-choser-select" 
             filled 
             v-model="model" 
-            dense="true" 
+            :dense="true" 
             :options="getListTypes()" 
             :label="$t('ListTypeChooser.selected-list')"
             @input="changeSelectedListType">
@@ -24,6 +24,10 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { ListType } from '../../../../backend/controller/settings/models/provider/list-types';
 import SeriesListViewController from '../../../controller/series-list-view-controller';
+import { getModule } from 'vuex-module-decorators';
+
+const seriesListViewController = getModule(SeriesListViewController);
+
 
 @Component({
     components: {}
@@ -38,7 +42,7 @@ export default class ListTypeChooser extends Vue {
 
     public changeSelectedListType(newSelection: string): void {
         const type = this.getListTypes().findIndex(x => x == newSelection);
-        SeriesListViewController.selectedListType = this.listTypeEnum[type] as unknown as number;
+        seriesListViewController.SET_selectedListType(this.listTypeEnum[type] as unknown as number);
     }
 }
 </script>

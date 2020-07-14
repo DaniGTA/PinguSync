@@ -11,18 +11,16 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import ListSettings from '../../../../backend/controller/settings/models/provider/list-settings';
-import WorkerController from '../../../../backend/communication/ipc-renderer-controller';
 import { ListType } from '../../../../backend/controller/settings/models/provider/list-types';
 import SelectedListType from './provider-user-list/SelectedListType.vue';
 import UpdateUserListType from '../../../../backend/controller/frontend/providers/model/update-user-list-type';
+
 @Component({
     components: {
         SelectedListType
     }
 })
 export default class ProviderSingleListSetting extends Vue {
-    public workerController: WorkerController = new WorkerController();
-
     @Prop()
     listSetting!: ListSettings;
 

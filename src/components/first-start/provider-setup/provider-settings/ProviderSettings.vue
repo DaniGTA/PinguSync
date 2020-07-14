@@ -23,22 +23,20 @@ import UpdateUserListType from '../../../../backend/controller/frontend/provider
     }
 })
 export default class ProviderSettings extends Vue {
-    public workerController: WorkerController = new WorkerController();
-
     @Prop()
     provider!: ListProvider;
 
     providerLists: ListSettings[] = [];
 
     async mounted(): Promise<void> {
-        this.providerLists = await this.workerController.getOnce<ListSettings[]>(chOnce.GetProviderListSettings, this.provider.providerName);
+        this.providerLists = await WorkerController.getOnce<ListSettings[]>(chOnce.GetProviderListSettings, this.provider.providerName);
     }
     /** 
      * value wihtout providerName.
     */
     public onListTypeChange(value: UpdateUserListType): void {
         value.providerName = this.provider.providerName;
-        this.workerController.send(chSend.UpdateListType, value);
+        WorkerController.send(chSend.UpdateListType, value);
     }
 }
 </script>

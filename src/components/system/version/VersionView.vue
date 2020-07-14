@@ -19,17 +19,16 @@ import VersionText from './VersionText.vue';
 	}
 })
 export default class Providers extends Vue {
-  public workerController: WorkerController = new WorkerController();
   public updateReady = false;
   constructor(){
     super();
-    this.workerController.on(chListener.OnUpdateReady, ()=> {
+    WorkerController.on(chListener.OnUpdateReady, ()=> {
       this.updateReady = true;
     });
   }
 
   public installUpdate(): void{
-    this.workerController.send(chSend.QuitAndInstall);
+    WorkerController.send(chSend.QuitAndInstall);
   }
 }
 </script>

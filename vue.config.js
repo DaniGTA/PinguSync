@@ -1,4 +1,4 @@
-const { config } = require("process");
+const { config } = require('process');
 const ThreadsPlugin = require('threads-plugin');
 
 // eslint-disable-next-line no-undef
@@ -43,6 +43,8 @@ module.exports = {
       nodeIntegration: true,
       chainWebpackRendererProcess: (config) => {
         config.module.rules.delete('eslint');
+        config.plugins.delete('prefetch');
+
         config.module.rule('i18n')
           .resourceQuery(/blockType=i18n/)
           .type('javascript/auto')
@@ -58,6 +60,7 @@ module.exports = {
           .loader('graphql-tag/loader')
           .end();
         config.plugin('ThreadsPlugin').use(ThreadsPlugin);
+
       }
     },
     i18n: {

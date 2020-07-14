@@ -1,39 +1,56 @@
-import ListProvider from '../../backend/api/provider/list-provider';
 import { chOnce } from '../../backend/communication/channels';
 import WorkerController from '../../backend/communication/ipc-renderer-controller';
 import GetSyncStatusRecieved from '../../backend/controller/frontend/providers/sync-status/model/get-sync-status-recieved';
 import GetSyncStatus from '../../backend/controller/frontend/providers/sync-status/model/get-sync-status';
 import { chListener } from '../../backend/communication/listener-channels';
 import FrontendSyncEpisodes from '../../backend/controller/frontend/providers/sync-status/model/sync-episodes';
-export default class ProviderController {
-    private static workerController: WorkerController = new WorkerController();
-    private static cachedProviderWithConnectedUser: ListProvider[] | null = null;
-    private static lastProviderWithConnectUserRequest: number = new Date(0).getTime();
-    public static async getAllAvaibleProviders(): Promise<ListProvider[]> {
-        return await this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProviders);
+import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import store from '../../store';
+import { ListProviderInterface } from './model/list-provider-interface';
+
+@Module({
+    dynamic: true,
+    name: 'providerController',
+    store
+})
+export default class ProviderController extends VuexModule {
+    private cachedProviderWithConnectedUser: ListProviderInterface[] | null = null;
+    private lastProviderWithConnectUserRequest: number = new Date(0).getTime();
+
+
+    @Mutation
+    private SET_updateCachedProviderWithConnectedUser(listProvider: ListProviderInterface[]): void {
+        this.cachedProviderWithConnectedUser = listProvider;
+        this.lastProviderWithConnectUserRequest = new Date().getTime();
     }
 
-    public static async getAllProviderWithConnectedUser(): Promise<ListProvider[]> {
-        if (this.cachedProviderWithConnectedUser) {
-            if (((this.lastProviderWithConnectUserRequest - new Date().getTime()) / 1000) > 5) {
-                this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProvidersWithConnectedUser).then((updated) => {
-                    this.cachedProviderWithConnectedUser = updated;
-                    this.lastProviderWithConnectUserRequest = new Date().getTime();
+    @Action({ commit: 'getAllAvaibleProviders' })
+    public async getAllAvaibleProviders(): Promise<ListProviderInterface[]> {
+        return await WorkerController.getOnce<ListProviderInterface[]>(chOnce.GetAllListProviders);
+    }
+    @Action({ commit: 'getAllProviderWithConnectedUser' })
+    public async getAllProviderWithConnectedUser(): Promise<ListProviderInterface[]> {
+        if (this.context.getters['cachedProviderWithConnectedUser']) {
+            if (((this.context.getters['lastProviderWithConnectUserRequest'] - new Date().getTime()) / 1000) > 5) {
+                WorkerController.getOnce<ListProviderInterface[]>(chOnce.GetAllListProvidersWithConnectedUser).then((updated) => {
+                    this.context.commit('SET_updateCachedProviderWithConnectedUser', updated);
                 });
             }
-            return this.cachedProviderWithConnectedUser;
+            return this.context.getters['cachedProviderWithConnectedUser'];
         }
-        const result = await this.workerController.getOnce<ListProvider[]>(chOnce.GetAllListProvidersWithConnectedUser);
-        this.cachedProviderWithConnectedUser = result;
+        const result = await WorkerController.getOnce<ListProviderInterface[]>(chOnce.GetAllListProvidersWithConnectedUser);
+        this.context.commit('SET_updateCachedProviderWithConnectedUser', result);
         return result;
     }
 
-    public static async isProviderSync(data: GetSyncStatus): Promise<GetSyncStatusRecieved> {
-        this.workerController.send(chOnce.GetSyncStatusOfProviderFromASeries, data);
-        return await this.workerController.once<GetSyncStatusRecieved>(chOnce.GetSyncStatusOfProviderFromASeries + data.providerName);
+    @Action({ commit: 'isProviderSync' })
+    public async isProviderSync(data: GetSyncStatus): Promise<GetSyncStatusRecieved> {
+        WorkerController.send(chOnce.GetSyncStatusOfProviderFromASeries, data);
+        return await WorkerController.once<GetSyncStatusRecieved>(chOnce.GetSyncStatusOfProviderFromASeries + data.providerName);
     }
 
-    public static syncAllEpisodes(providerName: string, seriesId: string): void {
-        this.workerController.send(chListener.OnSyncEpisodeOfSeriesRequest, { providerName, seriesId } as FrontendSyncEpisodes);
+    @Action({ commit: 'syncAllEpisodes' })
+    public syncAllEpisodes(providerName: string, seriesId: string): void {
+        WorkerController.send(chListener.OnSyncEpisodeOfSeriesRequest, { providerName, seriesId } as FrontendSyncEpisodes);
     }
 }

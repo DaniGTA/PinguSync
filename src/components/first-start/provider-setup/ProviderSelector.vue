@@ -11,9 +11,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import WorkerController from '../../../backend/communication/ipc-renderer-controller';
 import ProviderImageBlock from '../../elements/provider-elements/ProviderImageBlock.vue';
-import ListProvider from '../../../backend/api/provider/list-provider';
-import { chOnce } from '../../../backend/communication/channels';
 import ProviderController from '../../controller/provider-controller';
+import { getModule } from 'vuex-module-decorators';
+import { ListProviderInterface } from '../../controller/model/list-provider-interface';
+
+const providerController = getModule(ProviderController);
 
 @Component({
 	components: {
@@ -23,7 +25,7 @@ import ProviderController from '../../controller/provider-controller';
 export default class ProviderSettings extends Vue {
     public workerController: WorkerController;
 
-    public providers: ListProvider[] = [];
+    public providers: ListProviderInterface[] = [];
 
     public selectedProviderName: string | null =  null;
 
@@ -37,7 +39,7 @@ export default class ProviderSettings extends Vue {
         this.init();
     }
 
-    onClick(provider: ListProvider): void {
+    onClick(provider: ListProviderInterface): void {
         console.log(provider.providerName);
         if(provider.providerName === this.selectedProviderName){
             this.selectedProviderName = null;
@@ -49,7 +51,7 @@ export default class ProviderSettings extends Vue {
     }
 
     async init(): Promise<void> {
-        this.providers.push(...await ProviderController.getAllAvaibleProviders());
+        this.providers = await providerController.getAllAvaibleProviders();
     }
 }
 </script>

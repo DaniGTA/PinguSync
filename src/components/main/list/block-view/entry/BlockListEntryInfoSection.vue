@@ -18,15 +18,12 @@ import { chListener } from '../../../../../backend/communication/listener-channe
 	}
 })
 export default class BlockEntry extends Vue {
-  private workerController: WorkerController = new WorkerController();
-
   @Prop()
   public seriesId!: string;
 
   updateEpList(): void {
-    this.workerController.send(chListener.OnSeriesEpisodeListRefreshRequest, this.seriesId);
+    WorkerController.send(chListener.OnSeriesEpisodeListRefreshRequest, this.seriesId);
   }
-
 }
 </script>
 <style>

@@ -55,7 +55,7 @@ export default class Name {
         throw new Error(names + 'HasNoRomajiName');
     }
 
-    public static async getSeasonNumber(names: Name[]): Promise<SeasonNumberResponse> {
+    public static getSeasonNumber(names: Name[]): SeasonNumberResponse {
         const response = new SeasonNumberResponse();
         const seasonsDetected = Name.getSeasonNumbersInNames(names);
         if (!Array.isArray(seasonsDetected)) {
@@ -69,7 +69,7 @@ export default class Name {
         if (onlyNumbers) {
             const mostFrequentNumberInList = listHelper.findMostFrequent(onlyNumbers);
             if (mostFrequentNumberInList) {
-                const entrys = await listHelper.countEntrysInArray(mappedNumbers, mostFrequentNumberInList);
+                const entrys = listHelper.countEntrysInArray(mappedNumbers, mostFrequentNumberInList);
                 if (names.length / 10 <= entrys) {
                     response.seasonNumber = mostFrequentNumberInList;
                 }

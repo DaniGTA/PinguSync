@@ -22,15 +22,8 @@ export default class ProviderOAuthLogin extends Vue {
   @Prop({required: true})
   provider!: ListProvider;
 
-  public workerController: WorkerController;
-
-  constructor(){
-      super();
-      this.workerController = new WorkerController();
-  }
-
   async oauthLogin(): Promise<void> {
-    await this.workerController.getOnce<boolean>('oauth-login-provider', this.provider.providerName);
+    await WorkerController.getOnce<boolean>('oauth-login-provider', this.provider.providerName);
   }
 }
 </script>

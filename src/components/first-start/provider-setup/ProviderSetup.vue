@@ -35,8 +35,6 @@ import { chListener } from '../../../backend/communication/listener-channels';
 	}
 })
 export default class ProviderSetup extends Vue {
-    public workerController: WorkerController = new WorkerController();
-
     @PropSync('selectedProvider', {type: String}) 
     public syncedSelectedProvider!: ListProvider;
 
@@ -47,12 +45,12 @@ export default class ProviderSetup extends Vue {
       try{
         this.isLoggedIn = false;
         if(oldVal){
-          this.workerController.removeListener('provider-any-login-status-changed', (x) => this.anyUpdateLoginStatus(x));
+          WorkerController.removeListener('provider-any-login-status-changed', (x) => this.anyUpdateLoginStatus(x));
         }
         if(val){
           console.log('listen for auth status');
-          this.updateLoginStatus(await this.workerController.getOnce(chOnce.GetLoggedInStatus, val.providerName));
-          this.workerController.on(chListener.OnLoggedInStatusChange, (x) => this.anyUpdateLoginStatus(x));
+          this.updateLoginStatus(await WorkerController.getOnce(chOnce.GetLoggedInStatus, val.providerName));
+          WorkerController.on(chListener.OnLoggedInStatusChange, (x) => this.anyUpdateLoginStatus(x));
           console.log('listen for auth status finished');
         }
       } catch(err){

@@ -18,13 +18,8 @@ import { chOnce } from './backend/communication/channels';
 	},
 })
 export default class App extends Vue {
-  private workerController: WorkerController = new WorkerController();
-  constructor() {
-  	super();
-  }
-
   async mounted(): Promise<void> {
-    if(await this.workerController.getOnce<boolean>(chOnce.FinishedFirstSetup)){
+    if(await WorkerController.getOnce<boolean>(chOnce.FinishedFirstSetup)){
       await this.$router.push({name:'List'});
     }else{
       await this.$router.push('setup');

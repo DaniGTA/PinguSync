@@ -10,8 +10,8 @@ import Component from 'vue-class-component';
 import EpisodeBlock from '../../../elements/episode-elements/EpisodeBlock.vue';
 import EpisodeController from '../../../controller/episode-controller';
 import { Prop } from 'vue-property-decorator';
-import ListProvider from '../../../../backend/api/provider/list-provider';
-import ProviderController from '../../../controller/provider-controller';
+
+
 @Component({
 	components: {
         EpisodeBlock

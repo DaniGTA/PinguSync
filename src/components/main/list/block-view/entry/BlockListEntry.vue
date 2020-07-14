@@ -3,9 +3,7 @@
     <div class="block-list-entry" v-intersection="onIntersection" @mouseover="isHovering()"
     @mouseleave="isNotHovering()" @click="openDetailView()">
     <template v-if="id && visible">
-      <BlockListEntrySyncStatus :seriesId="id"/>
-      <SeriesImageBlock class="block-list-entry-img" :seriesId="id" />
-      <BlockListEntryInfoSection :seriesId="id" />
+      <BlockListEntryDetails :seriesId="id"/>
       <q-menu @mouseover="isHovering()" @mouseleave="isNotHovering()" anchor="top right" self="top left" content-class="hover-content"  v-model="hover" scroll-target=".block-list-entry">
         <BlockListEntrySyncStatusHover :seriesId="id"/>
       </q-menu>
@@ -18,27 +16,29 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import SeriesImageBlock from '../../../../elements/series-elements/SeriesImageBlock.vue';
-import BlockListEntryInfoSection from './BlockListEntryInfoSection.vue';
-import BlockListEntrySyncStatus from './sync-status/BlockListEntrySyncStatus.vue';
+import BlockListEntryDetails from './BlockListEntryDetails.vue';
 import BlockListEntrySyncStatusHover from './sync-status/BlockListEntrySyncStatusHover.vue';
+
 @Component({
 	components: {
-    SeriesImageBlock,
-    BlockListEntryInfoSection,
-    BlockListEntrySyncStatus,
-    BlockListEntrySyncStatusHover
+    BlockListEntrySyncStatusHover,
+    BlockListEntryDetails
 	}
 })
 export default class BlockEntry extends Vue {
   @Prop()
   public id!: string;
   public visible = false;
+
+  private hover = false;
+  private newHoverStatus = false;
   
-  public hover = false;
-  public newHoverStatus = false;
   onIntersection(entry: IntersectionObserverEntry): void {
     this.visible = entry.isIntersecting;
+  }
+
+  public openDetailView(): void{
+    this.$router.push({name: 'SeriesDetail', params: {id: this.id}});
   }
 
   public isHovering(): void{
@@ -52,13 +52,9 @@ export default class BlockEntry extends Vue {
     this.hover = this.newHoverStatus;
   }
 
-  public openDetailView(): void{
-    this.$router.push({name: 'SeriesDetail', params: {id: this.id}});
-  }
-  
   private sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }
 </script>
 

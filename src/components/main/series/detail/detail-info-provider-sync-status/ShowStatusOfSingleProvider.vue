@@ -19,7 +19,8 @@ import { Prop } from 'vue-property-decorator';
 import GetSyncStatusRecieved from '../../../../../backend/controller/frontend/providers/sync-status/model/get-sync-status-recieved';
 import ListProvider from '../../../../../backend/api/provider/list-provider';
 import ProviderController from '../../../../controller/provider-controller';
-import SeriesHoverController from '../../../../controller/series-hover-controller';
+import { getModule } from 'vuex-module-decorators';
+const providerController = getModule(ProviderController);
 
 @Component({
 	components: {
@@ -41,11 +42,11 @@ export default class ShowStatusOfSingleProvider extends Vue {
     }
 
     async isSynced(): Promise<GetSyncStatusRecieved> {
-        return await ProviderController.isProviderSync({providerName: this.provider.providerName, seriesId: this.id});
+        return await providerController.isProviderSync({providerName: this.provider.providerName, seriesId: this.id});
     }
 
     sync(): void{
-        ProviderController.syncAllEpisodes(this.provider.providerName, this.id);
+        providerController.syncAllEpisodes(this.provider.providerName, this.id);
     }
 }
 </script>

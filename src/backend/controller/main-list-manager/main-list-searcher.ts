@@ -67,9 +67,7 @@ export default class MainListSearcher {
      */
     public static async findSeriesById(id: string): Promise<Series | null> {
         const list = MainListManager.getMainList();
-        const worker = await spawn<MainListSearchIdWorker>(new Worker('./worker/main-list-search-id-worker.ts'));
-        const result = await worker.findSeriesById(list, id);
-        return result ? list[result] : null;
+        return list.find(x => x.id === id) ?? null;
     }
 
     /**

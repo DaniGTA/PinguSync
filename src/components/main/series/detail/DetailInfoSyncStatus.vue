@@ -9,10 +9,14 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ShowStatusOfSingleProvider from './detail-info-provider-sync-status/ShowStatusOfSingleProvider.vue';
-import ListProvider from '../../../../backend/api/provider/list-provider';
-import SeriesHoverController from '../../../controller/series-hover-controller';
 import ProviderController from '../../../controller/provider-controller';
 import { Prop } from 'vue-property-decorator';
+import { getModule } from 'vuex-module-decorators';
+import { ListProviderInterface } from '../../../controller/model/list-provider-interface';
+
+const providerController = getModule(ProviderController);
+
+
 @Component({
 	components: {
         ShowStatusOfSingleProvider
@@ -20,7 +24,7 @@ import { Prop } from 'vue-property-decorator';
 	}
 })
 export default class DetailInfoSyncStatus extends Vue {
-    providers: ListProvider[] = [];
+    providers: ListProviderInterface[] = [];
     @Prop({required:true})
     seriesId!: string;
     mounted(): void{
@@ -28,7 +32,7 @@ export default class DetailInfoSyncStatus extends Vue {
     }
 
     async loadProviders(): Promise<void>{
-        this.providers.push(...await ProviderController.getAllProviderWithConnectedUser());
+        this.providers = await providerController.getAllProviderWithConnectedUser();
     }
 }
 </script>

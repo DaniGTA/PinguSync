@@ -27,19 +27,16 @@ import { chSend } from '../../../backend/communication/send-only-channels';
     SetupGuideEntry
 	}
 })
-export default class SetupGuide extends Vue {
-
-  public workerController: WorkerController = new WorkerController();
-  
+export default class SetupGuide extends Vue {  
   public anyConnectedProvider = false;
 
   async mounted(): Promise<void> {
-    this.workerController.on(chListener.OnLoggedInStatusChange, async (data: UpdateProviderLoginStatus) => await this.providerLoginStatusChange(data.isLoggedIn));
-    this.anyConnectedProvider = await this.workerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
+    WorkerController.on(chListener.OnLoggedInStatusChange, async (data: UpdateProviderLoginStatus) => await this.providerLoginStatusChange(data.isLoggedIn));
+    this.anyConnectedProvider = await WorkerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
   }
 
   finishSetup(): void {
-    this.workerController.send(chSend.FinishFirstSetup);
+    WorkerController.send(chSend.FinishFirstSetup);
     this.$router.push({name: 'List'});
   }
 
@@ -48,7 +45,7 @@ export default class SetupGuide extends Vue {
     if(isLoggedIn){
       this.anyConnectedProvider = true;
     } else {
-      this.anyConnectedProvider = await this.workerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
+      this.anyConnectedProvider = await WorkerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
     }
   }
 }

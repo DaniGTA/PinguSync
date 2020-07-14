@@ -13,7 +13,10 @@ export default class IPCBackgroundController implements ICommunication {
         let success = false;
         while (!success) {
             try {
-                const onlyData = JSON.parse(JSON.stringify(data));
+                let onlyData = undefined;
+                if (data) {
+                    onlyData = JSON.parse(JSON.stringify(data));
+                }
                 this.webcontents.send(channel, onlyData);
                 logger.log('info', 'worker send: ' + channel);
                 success = true;
@@ -27,13 +30,18 @@ export default class IPCBackgroundController implements ICommunication {
         ipcMain.on(channel, async (event: Electron.IpcMainEvent, data: any) => {
             logger.log('info', 'recieved: ' + channel);
             try {
-                await f(JSON.parse(data));
-            } catch (err) {
-                try {
+                if (data) {
+                    await f(JSON.parse(data));
+                } else {
                     await f(data);
-                } catch (err) {
-                    logger.error(err);
                 }
+            } catch (err) {
+                logger.debug(err);
+            }
+            try {
+                await f(data);
+            } catch (err) {
+                logger.error(err);
             }
         });
     }

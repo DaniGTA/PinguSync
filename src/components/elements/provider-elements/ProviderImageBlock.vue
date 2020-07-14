@@ -10,12 +10,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import ListProvider from '../../../backend/api/provider/list-provider';
+import { ListProviderInterface } from '../../controller/model/list-provider-interface';
 
 @Component
 export default class ProviderImageBlock extends Vue {
     @Prop({required: true})
-    provider!: ListProvider;
+    provider!: ListProviderInterface;
 
     @Prop({default: 50})
     size!: number;

@@ -30,7 +30,7 @@ export default class FrontendSeriesController {
         this.com.on(chOnce.GetPreferedNameBySeriesId, async (id) => this.sendSeriesData(chOnce.GetPreferedNameBySeriesId, id, await this.getSeriesPreferedName(id)));
         this.com.on(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, async(id) => this.sendSeriesData(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, id, await this.getSeriesMaxEpisodeNumberBy(id)));
         this.com.on(chListener.OnSeriesEpisodeListRefreshRequest, (id) => this.refreshSeriesEpisodeList(id));
-        this.com.on(chOnce.GetOverviewBySeriesId, async (id) => { this.sendSeriesData(chOnce.GetOverviewBySeriesId,id,await this.getSeriesOverviewBySeriesId(id))});
+        this.com.on(chOnce.GetOverviewBySeriesId, async (id) => { this.sendSeriesData(chOnce.GetOverviewBySeriesId,id,await this.getSeriesOverviewBySeriesId(id));});
     }
 
     private async refreshSeriesEpisodeList(id: string): Promise<void> {

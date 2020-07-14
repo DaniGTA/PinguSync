@@ -18,7 +18,6 @@ import ListSettings from '../../../../backend/controller/settings/models/provide
 import ProviderSingleListSetting from './ProviderSingleListSetting.vue';
 import UpdateUserListType from '../../../../backend/controller/frontend/providers/model/update-user-list-type';
 import { chSend } from '../../../../backend/communication/send-only-channels';
-import WorkerController from '../../../../backend/communication/ipc-renderer-controller';
 
 @Component({
     components: {
@@ -27,9 +26,6 @@ import WorkerController from '../../../../backend/communication/ipc-renderer-con
     }
 })
 export default class ProviderListSettings extends Vue {
-    public workerController: WorkerController = new WorkerController();
-
-
     @Prop()
     listSettings!: ListSettings[];
     

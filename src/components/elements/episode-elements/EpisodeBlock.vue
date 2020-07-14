@@ -28,13 +28,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import Overview from '../../../backend/controller/objects/meta/overview';
-import SeriesListViewController from '../../controller/series-list-view-controller';
 import Episode from '../../../backend/controller/objects/meta/episode/episode';
 import EpisodeThumbnail from '../../../backend/controller/objects/meta/episode/episode-thumbnail';
 import EpisodeTitle from '../../../backend/controller/objects/meta/episode/episode-title';
 import EpisodeController from '../../controller/episode-controller';
 import ProviderImageBlock from '../provider-elements/ProviderImageBlock.vue';
+
 @Component({
     components: {
         ProviderImageBlock

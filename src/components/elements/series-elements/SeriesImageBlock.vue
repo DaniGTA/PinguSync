@@ -14,6 +14,9 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import SeriesListViewController from '../../controller/series-list-view-controller';
 import { FailedCover } from '../../../backend/controller/frontend/series/model/failed-cover';
+import { getModule } from 'vuex-module-decorators';
+
+const seriesListViewController = getModule(SeriesListViewController);
 
 @Component
 export default class ProviderImageBlock extends Vue {
@@ -27,14 +30,14 @@ export default class ProviderImageBlock extends Vue {
     }
 
     private async loadImg(): Promise<void> {
-        this.url = await SeriesListViewController.getSeriesCoverUrlById(this.seriesId) ?? '';
+        this.url = await seriesListViewController.getSeriesCoverUrlById(this.seriesId) ?? '';
     }
 
 
-    private onImageError(imageUrl: string): void {
-        if(imageUrl){
-            const failedCover: FailedCover = {seriesId: this.seriesId, coverUrl: imageUrl};
-            SeriesListViewController.sendFailedCover(failedCover);
+    private onImageError(): void {
+        if(this.url){
+            const failedCover: FailedCover = {seriesId: this.seriesId, coverUrl: this.url};
+            seriesListViewController.sendFailedCover(failedCover);
             this.loadImg();
         }else{
             console.error('No image src');

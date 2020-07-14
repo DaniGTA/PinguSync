@@ -15,6 +15,9 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import SeriesListViewController from '../../controller/series-list-view-controller';
+import { getModule } from 'vuex-module-decorators';
+
+const seriesListViewController = getModule(SeriesListViewController);
 
 @Component
 export default class ProviderImageBlock extends Vue {
@@ -24,9 +27,8 @@ export default class ProviderImageBlock extends Vue {
     public name = '';
 
     public async mounted(): Promise<void> {
-        this.name = await SeriesListViewController.getSeriesNameById(this.seriesId) ?? '';
+        this.name = await seriesListViewController.getSeriesNameById(this.seriesId) ?? '';
     }
-
 }
 </script>
 

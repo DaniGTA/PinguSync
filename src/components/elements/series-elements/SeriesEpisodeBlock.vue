@@ -15,6 +15,12 @@ export default class ProviderImageBlock extends Vue {
 
     @Prop()
     showText = true;
+
+    
+    public destroyed (): void {
+        delete this.provider;
+        delete this.showText;
+    }
 }
 </script>
 

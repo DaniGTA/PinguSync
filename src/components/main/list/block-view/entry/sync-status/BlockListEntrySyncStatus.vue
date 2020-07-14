@@ -18,6 +18,11 @@ import { Prop } from 'vue-property-decorator';
 export default class BlockListEntrySyncStatus extends Vue {
   @Prop({required:true})
     seriesId!: string;
+    public destroyed (): void {
+        delete this.seriesId;
+        this.$destroy();
+    }
+    
 }
 </script>
 

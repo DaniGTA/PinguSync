@@ -1,27 +1,29 @@
 import { ipcRenderer, IpcRenderer } from 'electron';
 
 export default class WorkerController {
-    constructor() {
-        console.log('info', 'IPC RENDERER LOADED');
-    }
-
-    public getIpcRenderer(): IpcRenderer {
+    public static getIpcRenderer(): IpcRenderer {
         return ipcRenderer;
     }
 
-    public send(channel: string, data?: any): void {
+    public static send(channel: string, data?: any): void {
         console.log('info', 'frontend send: ' + channel);
-        ipcRenderer.send(channel, data);
+        try {
+            ipcRenderer.send(channel, data);
+        } catch (err) {
+            console.error(data);
+            console.error(err);
+            throw new Error(err);
+        }
     }
 
-    public on(channel: string, f: (data: any) => void): void {
+    public static on(channel: string, f: (data: any) => void): void {
         ipcRenderer.on(channel, (event: Electron.IpcRendererEvent, data: any) => {
             console.log('info', 'frontend recieved data on: ' + channel);
             f(data);
         });
     }
 
-    public removeListener(channel: string, f: (data: any) => void): void {
+    public static removeListener(channel: string, f: (data: any) => void): void {
         ipcRenderer.removeListener('channel', f);
     }
 
@@ -29,13 +31,13 @@ export default class WorkerController {
      * @param channel will be use for recieving data and send data.
      * @param sendData data that will be send with the send request.
      */
-    public async getOnce<T>(channel: string, sendData?: any): Promise<T> {
+    public static async getOnce<T>(channel: string, sendData?: any): Promise<T> {
         const promise = this.once<T>(channel);
         this.send(channel, sendData);
         return await promise;
     }
 
-    public once<T>(channel: string): Promise<T> {
+    public static once<T>(channel: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             try {
                 console.log('info', 'frontend list once: ' + channel);

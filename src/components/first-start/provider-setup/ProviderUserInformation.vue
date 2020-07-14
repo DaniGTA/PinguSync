@@ -16,8 +16,6 @@ import { chOnce } from '../../../backend/communication/channels';
 	}
 })
 export default class ProviderUserInformation extends Vue {
-  public workerController: WorkerController = new WorkerController();
-
   public username = '';
 
   @Prop({required: true})
@@ -25,7 +23,7 @@ export default class ProviderUserInformation extends Vue {
 
   async mounted(): Promise<void>{
     if(this.provider){
-      this.username = await this.workerController.getOnce(chOnce.GetUserNameFromProvider, this.provider.providerName);
+      this.username = await WorkerController.getOnce(chOnce.GetUserNameFromProvider, this.provider.providerName);
     }
   }
 }
