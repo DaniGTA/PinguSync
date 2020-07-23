@@ -32,6 +32,7 @@ import Episode from '../../../controller/objects/meta/episode/episode';
 import UpdateSeriesEpisodeProgress from './graphql/mutation/saveMediaListEntry_UpdateProgress.gql';
 import { print } from 'graphql';
 import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 
 export default class AniListProvider extends ListProvider {
     public async getAllLists(): Promise<ProviderUserList[]> {
@@ -197,6 +198,10 @@ export default class AniListProvider extends ListProvider {
 
             return seriesList;
         }
+    }
+
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        return '';
     }
 
     public convertListNameToWatchStatus(name: string): ListType {

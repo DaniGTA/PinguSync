@@ -11,6 +11,8 @@ import ISeriesSearchResults from './models/searchResults';
 import TVDBConverter from './tvdb-converter';
 import { TVDBProviderData } from './tvdb-provider-data';
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import Episode from '../../../controller/objects/meta/episode/episode';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 
 export default class TVDBProvider extends InfoProvider {
     public static Instance: TVDBProvider;
@@ -40,7 +42,9 @@ export default class TVDBProvider extends InfoProvider {
             this.apiData = new TVDBProviderData();
         }
     }
-
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        return '';
+    }
     public async getMoreSeriesInfoByName(searchTitle: string): Promise<MultiProviderResult[]> {
         const result = [];
         try {

@@ -2,9 +2,11 @@ import { createReadStream, createWriteStream, existsSync, readFileSync } from 'f
 // tslint:disable-next-line: no-implicit-dependencies
 import { xml2json } from 'xml-js';
 import { createGunzip } from 'zlib';
+import Episode from '../../../controller/objects/meta/episode/episode';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
 import ExternalInformationProvider from '../../provider/external-information-provider';
@@ -80,6 +82,10 @@ export default class AniDBProvider extends InfoProvider {
         throw new Error('False provider - AniDB');
     }
 
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        return '';
+    }
+
     public async isProviderAvailable(): Promise<boolean> {
         return !this.isBanned;
     }
@@ -88,7 +94,7 @@ export default class AniDBProvider extends InfoProvider {
         const lastResults: Array<[Anime, Name[]]> = [];
         for (const seriesDB of nameDBList.animetitles.anime) {
             try {
-                const result = await AniDBHelper.checkTitles(searchTitle, seriesDB.title);
+                const result = AniDBHelper.checkTitles(searchTitle, seriesDB.title);
 
                 if (result.length !== 0) {
                     const seasonOfTitle = Name.getSeasonNumber(result);
@@ -96,12 +102,12 @@ export default class AniDBProvider extends InfoProvider {
                         if (seasonOfTitle.seasonNumber === undefined && season <= 1) {
                             lastResults.push([seriesDB, result]);
                         } else if (seasonOfTitle.seasonNumber === season) {
-                            return [await AniDBHelper.fillSeries(seriesDB, result)];
+                            return [AniDBHelper.fillSeries(seriesDB, result)];
                         }
                     } else {
                         lastResults.push([seriesDB, result]);
                         if (result.flatMap((x) => x.name).includes(searchTitle)) {
-                            return [await AniDBHelper.fillSeries(seriesDB, result)];
+                            return [AniDBHelper.fillSeries(seriesDB, result)];
                         }
                     }
                 }
@@ -112,7 +118,7 @@ export default class AniDBProvider extends InfoProvider {
         if (lastResults.length !== 0) {
             const finalResult = [];
             for (const lastResult of lastResults) {
-                finalResult.push(await AniDBHelper.fillSeries(lastResult[0], lastResult[1]));
+                finalResult.push(AniDBHelper.fillSeries(lastResult[0], lastResult[1]));
             }
             return finalResult;
         }
@@ -208,6 +214,7 @@ export default class AniDBProvider extends InfoProvider {
             if (response.body === '<error code="500">banned</error>') {
                 this.bannedTimestamp = new Date().getTime();
                 this.isBanned = true;
+                console.warn('Changed AniDB API Available status to false');
                 throw new Error('[AniDB] [API_ERROR]: 500 = BANNED');
             }
             const json = xml2json(response.body, { compact: true, spaces: 0 });

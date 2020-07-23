@@ -24,7 +24,7 @@ describe('ListController | Combine', () => {
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     });
-    async function getRandomeFilledAnime(): Promise<Series> {
+    function getRandomeFilledAnime(): Series {
         const id = Math.random() * (+0 - +10000) + +10000;
         const providerName = stringHelper.randomString();
         const provider = new ListProviderLocalData(id, providerName);
@@ -39,7 +39,7 @@ describe('ListController | Combine', () => {
         return anime;
     }
 
-    async function getFilledAnime(providername = 'Test', providerId = -1, targetSeason: number | null | undefined = 3): Promise<Series> {
+    function getFilledAnime(providername = 'Test', providerId = -1, targetSeason: number | null | undefined = 3): Series {
         if (targetSeason === null) {
             targetSeason = undefined;
         }
@@ -62,8 +62,8 @@ describe('ListController | Combine', () => {
 
     test('should combine same entry', async () => {
         const entry: Series[] = [];
-        entry.push(await getFilledAnime());
-        entry.push(await getFilledAnime(''));
+        entry.push(getFilledAnime());
+        entry.push(getFilledAnime(''));
         const a = await lc['addSeriesToMainList'](...entry);
         expect(MainListManager['mainList'].length).toEqual(1);
     });
@@ -71,53 +71,53 @@ describe('ListController | Combine', () => {
     test('should combine basic entrys correct', async () => {
 
         const entry: Series[] = [];
-        entry.push(await getFilledAnime('Test A'));
-        entry.push(await getFilledAnime('Test B'));
+        entry.push(getFilledAnime('Test A'));
+        entry.push(getFilledAnime('Test B'));
         for (let index = 0; index < 10; index++) {
-            entry.push(await getRandomeFilledAnime());
+            entry.push(getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 11);
+        expect(MainListManager['mainList'].length).toBe(11);
     });
 
     test('should combine basic entrys with less data', async () => {
         const entry: Series[] = [];
-        const x2 = await getFilledAnime('Test A');
+        const x2 = getFilledAnime('Test A');
         x2.getListProvidersInfos()[0]['episodes'] = undefined;
         x2.getListProvidersInfos()[0]['releaseYear'] = undefined;
         entry.push(x2);
-        entry.push(await getFilledAnime('Test B'));
+        entry.push(getFilledAnime('Test B'));
         for (let index = 0; index < 20; index++) {
-            entry.push(await getRandomeFilledAnime());
+            entry.push(getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 21);
+        expect(MainListManager['mainList'].length).toBe(21);
         return;
     });
 
     test('should combine basic entrys with season in title (1/4)', async () => {
         const entry: Series[] = [];
-        const x2 = await getFilledAnime('TestA');
+        const x2 = getFilledAnime('TestA');
         x2.getAllProviderBindings()[0].targetSeason = undefined;
         x2.getListProvidersInfos()[0].addSeriesName(new Name('Test III', 'en'));
         entry.push(x2);
-        entry.push(await getFilledAnime('TestB'));
+        entry.push(getFilledAnime('TestB'));
         for (let index = 0; index < 10; index++) {
-            entry.push(await getRandomeFilledAnime());
+            entry.push(getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
-        assert.equal(MainListManager['mainList'].length, 11);
+        expect(MainListManager['mainList'].length).toBe(11);
         return;
     });
     test('should combine basic entrys with season in title (2/4)', async () => {
         const entry: Series[] = [];
-        const x2 = await getFilledAnime('TestA');
+        const x2 = getFilledAnime('TestA');
         x2.getAllProviderBindings()[0].targetSeason = undefined;
         x2.getListProvidersInfos()[0].addSeriesName(new Name('Test 3', 'en'));
         entry.push(x2);
-        entry.push(await getFilledAnime('TestB'));
+        entry.push(getFilledAnime('TestB'));
         for (let index = 0; index < 10; index++) {
-            entry.push(await getRandomeFilledAnime());
+            entry.push(getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
         expect(MainListManager['mainList'].length).toEqual(11);
@@ -125,14 +125,14 @@ describe('ListController | Combine', () => {
     });
     test('should combine basic entrys with season in title (3/4)', async () => {
         const entry: Series[] = [];
-        const x2 = await getFilledAnime('TestA');
+        const x2 = getFilledAnime('TestA');
         x2.getListProvidersInfos()[0].addSeriesName(new Name('Test Season 3', 'en'));
         x2.getListProvidersInfos()[0]['episodes'] = 0;
         x2.getListProvidersInfos()[0]['releaseYear'] = 0;
         entry.push(x2);
-        entry.push(await getFilledAnime('TestB'));
+        entry.push(getFilledAnime('TestB'));
         for (let index = 0; index < 10; index++) {
-            entry.push(await getRandomeFilledAnime());
+            entry.push(getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
         expect(MainListManager['mainList'].length).toEqual(11);
@@ -141,9 +141,9 @@ describe('ListController | Combine', () => {
 
     test('should combine basic entrys with season in title (4/5)', async () => {
         const entry: Series[] = [];
-        const x = await getFilledAnime('TestA');
+        const x = getFilledAnime('TestA');
         x.getListProvidersInfos()[0].addSeriesName(new Name('Test', 'en'));
-        const x2 = await getFilledAnime('TestB');
+        const x2 = getFilledAnime('TestB');
         x2.getListProvidersInfos()[0].addSeriesName(new Name('Test x', 'en'));
         x2.getListProvidersInfos()[0]['episodes'] = 0;
         x2.getListProvidersInfos()[0]['releaseYear'] = 0;
@@ -151,7 +151,7 @@ describe('ListController | Combine', () => {
         entry.push(x2);
         entry.push(x);
         for (let index = 0; index < 12; index++) {
-            entry.push(await getRandomeFilledAnime());
+            entry.push(getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
         expect(MainListManager['mainList'].length).toEqual(13);
@@ -160,18 +160,18 @@ describe('ListController | Combine', () => {
 
     test('should combine (4/4)', async () => {
         const entry: Series[] = [];
-        const x = await getFilledAnime();
+        const x = getFilledAnime();
 
         x.getListProvidersInfos()[0]['episodes'] = 220;
         x.getListProvidersInfos()[0]['releaseYear'] = 2002;
-        const x2 = await getFilledAnime('');
+        const x2 = getFilledAnime('');
 
         x2.getListProvidersInfos()[0]['episodes'] = 220;
         x2.getListProvidersInfos()[0]['releaseYear'] = 2002;
         entry.push(x2);
         entry.push(x);
         for (let index = 0; index < 12; index++) {
-            entry.push(await getRandomeFilledAnime());
+            entry.push(getRandomeFilledAnime());
         }
         const a = await lc['addSeriesToMainList'](...entry);
         expect(MainListManager['mainList'].length).toEqual(13);
@@ -181,13 +181,13 @@ describe('ListController | Combine', () => {
     test('should clean doubled entrys (1/2)', async () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
-        const x1 = await getFilledAnime(undefined, undefined, 1);
+        const x1 = getFilledAnime(undefined, undefined, 1);
         x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
 
-        const x2 = await getFilledAnime(undefined, undefined, 1);
+        const x2 = getFilledAnime(undefined, undefined, 1);
         x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
 
-        const x3 = await getFilledAnime(undefined, undefined, 1);
+        const x3 = getFilledAnime(undefined, undefined, 1);
         x3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
 
         await lc.addSeriesToMainList(x1, x2, x3);
@@ -198,7 +198,7 @@ describe('ListController | Combine', () => {
     test('should get series list', async () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
-        const x1 = await getFilledAnime(undefined, undefined, 1);
+        const x1 = getFilledAnime(undefined, undefined, 1);
         x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
 
         await lc.addSeriesToMainList(x1);
@@ -211,11 +211,11 @@ describe('ListController | Combine', () => {
     test('should clean doubled entrys (3/3)', async () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 12;
-        const x1 = await getFilledAnime('', 1, 1);
+        const x1 = getFilledAnime('', 1, 1);
         x1['infoProviderInfos'] = [];
         x1['listProviderInfos'] = [];
         x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
-        const x2 = await getFilledAnime('', 1);
+        const x2 = getFilledAnime('', 1);
         x2['infoProviderInfos'] = [];
         x2['listProviderInfos'] = [];
         const lpld2 = new ListProviderLocalData(2);
@@ -225,8 +225,7 @@ describe('ListController | Combine', () => {
         MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
-
-        assert.equal(MainListManager['mainList'].length, 1);
+        expect(MainListManager['mainList'].length).toBe(1);
     });
 
 
@@ -239,19 +238,18 @@ describe('ListController | Combine', () => {
         lpld.episodes = 12;
         const lpld2 = new ListProviderLocalData(3, 'TestB');
         lpld2.episodes = 12;
-        const x1 = await getFilledAnime();
+        const x1 = getFilledAnime();
         x1['infoProviderInfos'] = [];
         x1['listProviderInfos'] = [];
         x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
 
-        const x2 = await getFilledAnime();
+        const x2 = getFilledAnime();
         x2['infoProviderInfos'] = [];
         x2['listProviderInfos'] = [];
         x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season([2])));
 
         await lc.addSeriesToMainList(x1, x2);
-
-        assert.equal(MainListManager['mainList'].length, 2);
+        expect(MainListManager['mainList'].length).toBe(2);
     });
 
     test('shouldnt clean doubled entrys (2/2)', async () => {
@@ -260,71 +258,68 @@ describe('ListController | Combine', () => {
         const lpld2 = new ListProviderLocalData(3, 'Test');
         lpld2.episodes = 12;
 
-        const x1 = await getFilledAnime();
+        const x1 = getFilledAnime();
         x1['listProviderInfos'] = [];
         x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld));
 
-        const x2 = await getFilledAnime();
+        const x2 = getFilledAnime();
         x2['listProviderInfos'] = [];
         x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2));
 
         MainListManager['mainList'] = [x1, x2];
 
         const x = await lc.addSeriesToMainList(x1, x2);
-
-        assert.equal(MainListManager['mainList'].length, 2);
+        expect(MainListManager['mainList'].length).toBe(2);
     });
 
     test('should clean doubled entrys (2/2)', async () => {
         const lpld = new ListProviderLocalData(2, 'Test');
         lpld.episodes = 12;
 
-        const x1 = await getFilledAnime();
+        const x1 = getFilledAnime();
         x1['listProviderInfos'] = [];
         x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld));
 
 
-        const x2 = await getFilledAnime();
+        const x2 = getFilledAnime();
         x2['listProviderInfos'] = [];
         x2.addListProvider(lpld);
         MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
 
-        assert.equal(MainListManager['mainList'].length, 1);
+        expect(MainListManager['mainList'].length).toBe(1);
     });
 
     test('should clean doubled entrys with different season', async () => {
         const lpld = new ListProviderLocalData(2);
         lpld.episodes = 10;
-        const x1 = await getFilledAnime('Test', 1, null);
+        const x1 = getFilledAnime('Test', 1, null);
         x1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld));
 
         const lpld2 = new ListProviderLocalData(2);
         lpld2.episodes = 10;
 
-        const x2 = await getFilledAnime('Test', 1, 1);
+        const x2 = getFilledAnime('Test', 1, 1);
         x2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season([1])));
 
         MainListManager['mainList'] = [x1, x2];
 
         await lc.addSeriesToMainList(x1, x2);
-
-        assert.equal(MainListManager['mainList'].length, 1);
+        expect(MainListManager['mainList'].length).toBe(1);
     });
 
     test('should contain last update date', async () => {
-        const x1 = await getFilledAnime('Test', 1);
+        const x1 = getFilledAnime('Test', 1);
         x1.lastInfoUpdate = 10;
         x1.lastUpdate = 10;
-        const x2 = await getFilledAnime('Test', 1);
+        const x2 = getFilledAnime('Test', 1);
         x2.lastInfoUpdate = 0;
         x2.lastUpdate = 0;
 
         await lc.addSeriesToMainList(x1);
         await lc.addSeriesToMainList(x2);
-
-        assert.notEqual(MainListManager['mainList'][0].lastInfoUpdate, 0);
-        assert.notEqual(MainListManager['mainList'][0].lastUpdate, 0);
+        expect(MainListManager['mainList'][0].lastInfoUpdate).not.toBe(0);
+        expect(MainListManager['mainList'][0].lastUpdate).not.toBe(0);
     });
 });

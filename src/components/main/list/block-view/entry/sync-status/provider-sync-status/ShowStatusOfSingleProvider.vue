@@ -41,10 +41,6 @@ export default class ShowStatusOfSingleProvider extends Vue {
         this.result = await this.isSynced();
     }
 
-    destroyed(){
-        this.isSynced = (async () => { console.log('Closed IsSynced request');}) as any;
-    }
-
     async isSynced(): Promise<GetSyncStatusRecieved> {
         return await providerController.isProviderSync({providerName: this.provider.providerName, seriesId: this.getSeriesId()});
     }

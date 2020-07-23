@@ -20,8 +20,16 @@ import { TraktUserData } from './trakt-user-data';
 import { UserInfoSmall } from './objects/userInfoSmall';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import { Movies } from './objects/movies';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { NameType } from '../../../controller/objects/meta/name-type';
 
 export default class TraktProvider extends ListProvider {
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        const slug = provider.getAllNames().find(x => x.nameType == NameType.SLUG)?.name;
+        const seasonNr = episode.season?.getSingleSeasonNumberAsNumber();
+        const episodeNr = episode.episodeNumber;
+        return `https://trakt.tv/shows/${slug}/seasons/${seasonNr}/episodes/${episodeNr}`;
+    }
 
     public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
 

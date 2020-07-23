@@ -24,6 +24,7 @@ import { UserListResponse } from './objects/userListResonse';
 import SimklConverter from './simkl-converter';
 import { SimklUserData } from './simkl-user-data';
 import Episode from '../../../controller/objects/meta/episode/episode';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 
 export default class SimklProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
@@ -35,7 +36,9 @@ export default class SimklProvider extends ListProvider {
     public logoutUser(): void {
         throw new Error('Method not implemented.');
     }
-
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        return '';
+    }
     public static instance: SimklProvider;
     public userData: SimklUserData = new SimklUserData();
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];

@@ -12,6 +12,7 @@ import MultiProviderResult from '../../provider/multi-provider-result';
 import malConverter from './mal-converter';
 import { MalUserData } from './mal-user-data';
 import Episode from '../../../controller/objects/meta/episode/episode';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 export default class MalProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
         throw new Error('Method not implemented.');
@@ -22,7 +23,9 @@ export default class MalProvider extends ListProvider {
     public logoutUser(): void {
         throw new Error('Method not implemented.');
     }
-
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        return '';
+    }
     public static getInstance(): MalProvider {
         if (!MalProvider.instance) {
             MalProvider.instance = new MalProvider();

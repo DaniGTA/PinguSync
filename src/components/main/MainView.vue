@@ -1,8 +1,10 @@
 <template>
-  <div class="main">
+  <q-layout view="hHh lpR fFf main">
       <MainHeader />
-      <router-view />
-  </div>
+      <q-page-container class="page">
+        <router-view />
+      </q-page-container>
+  </q-layout>
 </template>
 
 <script lang="ts">
@@ -21,8 +23,11 @@ export default class Main extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .main{
+  height: 100%;
+}
+.page {
   height: 100%;
 }
 </style>

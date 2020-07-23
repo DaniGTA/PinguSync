@@ -74,7 +74,7 @@ describe('Series | Merge', () => {
 
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.getAllOverviews().length, 1);
+        expect(merged.getAllOverviews().length).toBe(1);
         return;
     });
     test('should merge overview (2)', async () => {

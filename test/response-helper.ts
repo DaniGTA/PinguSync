@@ -47,7 +47,7 @@ export default class ResponseHelper {
                     response.mainProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](response.mainProvider.providerLocalData);
                     response.mainProvider.seasonTarget = Object.assign(new Season(), response.mainProvider.seasonTarget);
                     for (let index = 0; index < response.subProviders.length; index++) {
-                        let subProvider = response.subProviders[index];
+                        const subProvider = response.subProviders[index];
                         subProvider.providerLocalData = ProviderDataListLoader['createProviderLocalDataInstance'](subProvider.providerLocalData);
                         subProvider.seasonTarget = Object.assign(new Season(), subProvider.seasonTarget);
                         response.subProviders[index] = subProvider;

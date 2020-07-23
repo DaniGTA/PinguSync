@@ -9,13 +9,13 @@ export default class AniDBHelper {
     public static anidbNameManager: AniDBNameManager = new AniDBNameManager();
 
 
-    public static async fillSeries(seriesDB: Anime, result: Name[]): Promise<MultiProviderResult> {
+    public static fillSeries(seriesDB: Anime, result: Name[]): MultiProviderResult {
         const converter = new AniDBConverter();
         const localdata = converter.convertAnimeToLocalData(seriesDB);
         localdata.mainProvider.providerLocalData.addSeriesName(...result);
         return localdata;
     }
-    public static async checkTitles(name: string, titles: Title[] | Title): Promise<Name[]> {
+    public static checkTitles(name: string, titles: Title[] | Title): Name[] {
         const converter = new AniDBConverter();
         const resultNames = [];
         let stringTitles = [];
@@ -25,7 +25,7 @@ export default class AniDBHelper {
             stringTitles.push(titles._text);
         }
 
-        if ( TitleCheckHelper.checkNames([name], stringTitles)) {
+        if (TitleCheckHelper.checkNames([name], stringTitles)) {
             if (Array.isArray(titles)) {
                 for (const title of titles) {
                     if (title._text) {

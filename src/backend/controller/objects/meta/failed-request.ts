@@ -1,7 +1,11 @@
 export enum FailedRequestError {
-    UnkownError,
-    ProviderNotAvailble,
-    Timeout,
-    ProviderNoResult,
-    ProviderApiNotExist,
+    UnkownError = 'UnkownError',
+    ProviderNotAvailble = 'ProviderNotAvailable',
+    Timeout = 'Timeout',
+    ProviderNoResult = 'ProviderNoResult',
+    ProviderApiNotExist = 'ProviderApiNotExist',
 }
+
+export const isFailedRequestError = (s: string): boolean => {
+    return Object.values(FailedRequestError).includes(s as any);
+};

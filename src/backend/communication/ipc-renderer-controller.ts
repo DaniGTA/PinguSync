@@ -17,6 +17,9 @@ export default class WorkerController {
     }
 
     public static on(channel: string, f: (data: any) => void): void {
+        if (ipcRenderer.listenerCount(channel) !== 0) {
+            console.error('Multi listeners: ' + ipcRenderer.listenerCount(channel));
+        }
         ipcRenderer.on(channel, (event: Electron.IpcRendererEvent, data: any) => {
             console.log('info', 'frontend recieved data on: ' + channel);
             f(data);
@@ -32,6 +35,9 @@ export default class WorkerController {
      * @param sendData data that will be send with the send request.
      */
     public static async getOnce<T>(channel: string, sendData?: any): Promise<T> {
+        if (ipcRenderer.listenerCount(channel) !== 0) {
+            console.error('Multi listeners on channel: ' + channel + ' :' + ipcRenderer.listenerCount(channel));
+        }
         const promise = this.once<T>(channel);
         this.send(channel, sendData);
         return await promise;

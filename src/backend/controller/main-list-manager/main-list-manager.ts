@@ -129,6 +129,7 @@ export default class MainListManager {
             logger.error(err);
         }
         MainListManager.listMaintance = false;
+        MainListManager.secondList = [];
     }
 
 

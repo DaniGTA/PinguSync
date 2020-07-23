@@ -32,14 +32,18 @@ export default class FrontendProviderController {
 
     private async getAllListProvidersWithLoggedInUser(): Promise<ListProvider[]> {
         const allLoggedInProviders = [];
-        for (const provider of ProviderList.getListProviderList()) {
-            try {
-                if (await provider.isUserLoggedIn()) {
-                    allLoggedInProviders.push(provider);
+        try {
+            for (const provider of ProviderList.getListProviderList()) {
+                try {
+                    if (await provider.isUserLoggedIn()) {
+                        allLoggedInProviders.push(provider);
+                    }
+                } catch (err) {
+                    logger.debug(err);
                 }
-            } catch (err) {
-                logger.error(err);
             }
+        } catch (err) {
+            logger.error(err);
         }
         return allLoggedInProviders;
     }

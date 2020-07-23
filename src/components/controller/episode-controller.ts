@@ -3,6 +3,7 @@ import { chOnce } from '../../backend/communication/channels';
 import Episode from '../../backend/controller/objects/meta/episode/episode';
 import WorkerController from '../../backend/communication/ipc-renderer-controller';
 import { SingleEpisodeQuery } from '../../backend/controller/frontend/episodes/model/singel-episode-query';
+import { chSend } from '../../backend/communication/send-only-channels';
 
 export default class EpisodeController {
     public static async getEpisodeIdList(seriesId: string): Promise<string[][]> {
@@ -18,5 +19,9 @@ export default class EpisodeController {
                 resolve(data);
             });
         });
+    }
+
+    public static async openEpisodeInExternalBrowser(episodeId: string, seriesId: string): Promise<void> {
+        WorkerController.send(chSend.OpenEpisodeInExternalBrowser, { episodeId, seriesId } as SingleEpisodeQuery);
     }
 }

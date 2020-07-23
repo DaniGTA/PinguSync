@@ -1,6 +1,6 @@
 import ExternalInformationProvider from '../../../api/provider/external-information-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
-import { FailedRequestError } from '../../../controller/objects/meta/failed-request';
+import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import DownloadSettings from './download-settings';
 import logger from '../../../logger/logger';
@@ -17,7 +17,7 @@ export default class DownloadProviderLocalDataWithId {
                     provider.getFullInfoById(providerLocalData),
                 ]);
         } catch (err) {
-            if (!isNaN(err)) {
+            if (isFailedRequestError(err)) {
                 throw err;
             }
             logger.error(err);

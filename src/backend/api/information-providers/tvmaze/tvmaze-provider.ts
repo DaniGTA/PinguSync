@@ -1,8 +1,10 @@
+import Episode from '../../../controller/objects/meta/episode/episode';
 // tslint:disable-next-line: no-implicit-dependencies
 import { MediaType } from '../../../controller/objects/meta/media-type';
 
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager';
 import logger from '../../../logger/logger';
 import ExternalInformationProvider from '../../provider/external-information-provider';
@@ -27,7 +29,10 @@ export default class TVMazeProvider extends InfoProvider {
             TVMazeProvider.instance = this;
         }
     }
-    
+
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        return '';
+    }
 
     public async isProviderAvailable(): Promise<boolean> {
         return true;

@@ -1,8 +1,8 @@
 <template>
-<div class="list-block-view">
+<q-page class="list-block-view">
     <ListHeader />
     <ListViewSwitcher />
-</div>
+</q-page>
 </template>
 
 <script lang="ts">

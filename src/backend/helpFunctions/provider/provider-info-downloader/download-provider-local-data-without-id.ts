@@ -1,7 +1,7 @@
 import ExternalInformationProvider from '../../../api/provider/external-information-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import MainListManager from '../../../controller/main-list-manager/main-list-manager';
-import { FailedRequestError } from '../../../controller/objects/meta/failed-request';
+import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request';
 import Name from '../../../controller/objects/meta/name';
 import Season from '../../../controller/objects/meta/season';
 import Series from '../../../controller/objects/series';
@@ -74,7 +74,7 @@ export default class DownloadProviderLocalDataWithoutId {
                     } catch (err) {
                         logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo');
                         logger.error(err);
-                        if (!isNaN(err) && err !== FailedRequestError.ProviderNoResult) {
+                        if (isFailedRequestError(err) && err !== FailedRequestError.ProviderNoResult) {
                             throw err;
                         }
                     }

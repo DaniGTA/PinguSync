@@ -1,3 +1,4 @@
+import Episode from '../../controller/objects/meta/episode/episode';
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ExternalProvider from './external-provider';
 import MultiProviderResult from './multi-provider-result';
@@ -19,4 +20,5 @@ export default abstract class ExternalInformationProvider extends ExternalProvid
 
     public abstract getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]>;
     public abstract getFullInfoById(provider: ProviderLocalData): Promise<MultiProviderResult>;
+    public abstract getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string>;
 }

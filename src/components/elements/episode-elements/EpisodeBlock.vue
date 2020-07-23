@@ -1,19 +1,26 @@
 <template>
   <div v-intersection="onIntersection" class="episode-block">
-    <div v-if="episode" class="episode">
-        <div class="img"><img v-if="imgUrl" :src="imgUrl"/></div>
-        <div>
-            <div class="number">Episode: {{getEpisodeNumber()}}</div>
-            <q-badge class="duration" v-if="duration">{{duration}}min</q-badge>
-        </div>
-        <div>{{getEpisodeTitle()}}</div>
-        <div class="providers">
-            <div v-for="e of episode" :key="e.provider + e.id">
-                <q-tooltip>{{e.provider}}</q-tooltip>
-                <ProviderImageBlock :provider="{providerName: e.provider}" :showText="false" :size="20" @click=""/>
-            </div>
-        </div>
-    </div>
+    <q-card v-if="episode" class="episode">
+        <q-img class="img"  :src="imgUrl">
+            <EpisodeMenu style="top: 8px; right: 8px; float: right;" />
+        </q-img>
+        <q-card-section class="row justify-between no-margin title">
+            <div class="col col-md-8 text-left">Episode: {{getEpisodeNumber()}}</div>
+            <q-badge class="col-3" v-if="duration">{{duration}}min</q-badge>
+        </q-card-section>
+        <q-card-section class="no-padding no-margin">
+            <div class="text-h7">{{getEpisodeTitle()}}</div>
+ 
+        </q-card-section>
+        <q-card-actions class="providers">
+            <template v-for="e of episode">
+                <div v-if="e.provider" :key="e.id+e.provider" v-on:click="openUrl(e)">
+                    <q-tooltip>{{e.provider}}</q-tooltip>
+                    <ProviderImageBlock :provider="{providerName: e.provider}" :showText="false" :size="20" class="cursor-pointer"/>
+                </div>
+            </template>
+        </q-card-actions>
+    </q-card>
     <div v-else class="episode" >
         <q-skeleton class="img" square animation="fade" />
         <div>
@@ -33,10 +40,11 @@ import EpisodeThumbnail from '../../../backend/controller/objects/meta/episode/e
 import EpisodeTitle from '../../../backend/controller/objects/meta/episode/episode-title';
 import EpisodeController from '../../controller/episode-controller';
 import ProviderImageBlock from '../provider-elements/ProviderImageBlock.vue';
-
+import EpisodeMenu from './EpisodeMenu.vue';
 @Component({
     components: {
-        ProviderImageBlock
+        ProviderImageBlock,
+        EpisodeMenu
     }
 })
 export default class SeriesDescriptionBlock extends Vue {
@@ -111,45 +119,29 @@ export default class SeriesDescriptionBlock extends Vue {
         }
         return;
     }
+
+    openUrl(episode: Episode): void {
+        console.log('OpenUrl');
+        EpisodeController.openEpisodeInExternalBrowser(episode.id, this.seriesId);
+    }
 }
 </script>
 
 <style scoped lang="scss">
-$width: 200px;
-$widthSpace: 10px;
-$height: 100px;
-$textHeight: 40px;
-
-.episode-block {
+.episode-block{
     display: inline-block;
-    background-color: #1E242D;
-    margin: $widthSpace/2;
 }
 
 .episode{
-    color: white;
-    width: $width + $widthSpace;
-    height: $height + $textHeight + 10px;
-    position: relative;
+    max-width: 225px;
+    margin: 5px;
+}
+.title{
+    padding: 5px;
+    margin: 0px;
 }
 .img{
-    background-color: white;
-    width: $width;
-    height: $height;
-    margin: 5px $widthSpace/2;
-}
-.duration{
-    position: absolute;
-    right: $widthSpace/2;
-    bottom: $textHeight - 10px;
-}
-.number{
-    margin-left: $widthSpace/2;
-}
-.providers{
-    display: flex;
-    position: absolute;
-    bottom: 5;
-    right: $widthSpace/2;
+    width: 225px;
+    height: 100px;
 }
 </style>

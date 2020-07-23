@@ -1,8 +1,8 @@
 <template>
-  <div class="main-header">
+  <q-header reveal class="main-header">
     <HeaderTitle />
     <ProviderList />
-  </div>
+  </q-header>
 </template>
 
 <script lang="ts">

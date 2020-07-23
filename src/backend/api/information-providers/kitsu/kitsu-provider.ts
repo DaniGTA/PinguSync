@@ -20,6 +20,8 @@ import { KitsuUserData } from './kitsu-user-data';
 import { GetMediaResult } from './objects/getResult';
 import { ISearchResult } from './objects/searchResult';
 import Episode from '../../../controller/objects/meta/episode/episode';
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import { NameType } from '../../../controller/objects/meta/name-type';
 export default class KitsuProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
         throw new Error('Method not implemented.');
@@ -30,7 +32,11 @@ export default class KitsuProvider extends ListProvider {
     public logoutUser(): void {
         throw new Error('Method not implemented.');
     }
-
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        const slug = provider.getAllNames().find(x => x.nameType == NameType.SLUG)?.name;
+        const episodeNr = episode.episodeNumber;
+        return `https://kitsu.io/anime/${slug}/episodes/${episodeNr}`;
+    }
     public static getInstance(): KitsuProvider {
         if (!KitsuProvider.instance) {
             KitsuProvider.instance = new KitsuProvider();

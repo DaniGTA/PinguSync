@@ -1,6 +1,6 @@
 import ExternalInformationProvider from '../../../api/provider/external-information-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
-import { FailedRequestError } from '../../../controller/objects/meta/failed-request';
+import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request';
 import Series from '../../../controller/objects/series';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderNameManager from '../../../controller/provider-controller/provider-manager/provider-name-manager';
@@ -27,7 +27,7 @@ export default class DownloadProviderLocalDataHelper {
                 try {
                     return DownloadProviderLocalDataWithId.download(provider, providerLocalForIdRequest);
                 } catch (err) {
-                    if (!isNaN(err)) {
+                    if (isFailedRequestError(err)) {
                         throw err;
                     }
                     throw new Error('[' + provider.providerName + '] Unkown error: ' + err);

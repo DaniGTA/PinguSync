@@ -4,6 +4,7 @@ import EpisodeMapping from './episode-mapping';
 
 export default class EpisodeBindingPool {
     public readonly bindedEpisodeMappings: EpisodeMapping[] = [];
+    public isWatched: boolean | undefined;
     // tslint:disable-next-line: variable-name
     private readonly __className: string;
 

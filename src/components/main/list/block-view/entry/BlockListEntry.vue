@@ -3,10 +3,11 @@
     <div class="block-list-entry" v-intersection="onIntersection" @mouseover="isHovering()"
     @mouseleave="isNotHovering()" @click="openDetailView()">
     <template v-if="id && visible">
-      <BlockListEntryDetails :seriesId="id"/>
-      <q-menu @mouseover="isHovering()" @mouseleave="isNotHovering()" anchor="top right" self="top left" content-class="hover-content"  v-model="hover" scroll-target=".block-list-entry">
-        <BlockListEntrySyncStatusHover :seriesId="id"/>
-      </q-menu>
+        <BlockListEntryDetails :seriesId="id" ref="details"/>
+        <q-menu @mouseover="isHovering()" @mouseleave="isNotHovering()" 
+        auto-close anchor="top right" self="top left" content-class="hover-content"  v-model="hover" scroll-target=".block-list-entry" ref="menu">
+          <BlockListEntrySyncStatusHover :seriesId="id" ref="hoverStatus"/>
+        </q-menu>
     </template>
     </div>
   </q-intersection>
@@ -15,7 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import { Prop, Ref } from 'vue-property-decorator';
 import BlockListEntryDetails from './BlockListEntryDetails.vue';
 import BlockListEntrySyncStatusHover from './sync-status/BlockListEntrySyncStatusHover.vue';
 
@@ -30,11 +31,24 @@ export default class BlockEntry extends Vue {
   public id!: string;
   public visible = false;
 
+  @Ref()
+  public details!: any;
+
+  @Ref()
+  public menu!: any;
+
+  @Ref()
+  public hoverStatus!: any;
+
   private hover = false;
   private newHoverStatus = false;
   
   onIntersection(entry: IntersectionObserverEntry): void {
     this.visible = entry.isIntersecting;
+    if(!this.visible){
+      this.details?.$destroy();
+      this.menu?.$destroy();
+    }
   }
 
   public openDetailView(): void{
@@ -50,6 +64,8 @@ export default class BlockEntry extends Vue {
     this.newHoverStatus = false;
     await this.sleep(25);
     this.hover = this.newHoverStatus;
+    this.hoverStatus?.$destroy();
+
   }
 
   private sleep(ms: number): Promise<void> {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BlockListEntrySyncStatus :seriesId="seriesId"/>
+      <BlockListEntrySyncStatus :seriesId="seriesId"/>
       <SeriesImageBlock class="block-list-entry-img" :seriesId="seriesId" />
       <BlockListEntryInfoSection :seriesId="seriesId" />
   </div>
@@ -19,8 +19,16 @@ export default {
     },
     props: {
         seriesId: ''
+    },
+    methods: {
+      beforeDestroy: () =>{
+        console.log('ACHTUNG COMPONENT FÄLLT!');
+      },
+      destroyed: () => {
+        console.log('Entry details DESTROYED!!!');
+      }
     }
-}
+};
 </script>
 
 <style scoped>

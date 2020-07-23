@@ -3,7 +3,7 @@ import ExternalMappingProvider from '../../../api/provider/external-mapping-prov
 import ExternalProvider from '../../../api/provider/external-provider';
 import MultiProviderResult from '../../../api/provider/multi-provider-result';
 import FailedProviderRequest from '../../../controller/objects/meta/failed-provider-request';
-import { FailedRequestError } from '../../../controller/objects/meta/failed-request';
+import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request';
 import Series from '../../../controller/objects/series';
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
@@ -123,7 +123,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
             try {
                 requestResult = await this.downloadProviderLocalDataUntilTarget(this.series);
             } catch (err) {
-                if (!isNaN(err)) {
+                if (isFailedRequestError(err)) {
                     return new FailedProviderRequest(this.provider, err);
                 }
                 logger.error(err);
@@ -197,7 +197,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
             } catch (err) {
                 logger.error('Error at ProviderHelper.requestProviderInfo');
                 logger.error(err);
-                if (!isNaN(err)) {
+                if (isFailedRequestError(err)) {
                     result.push(new FailedProviderRequest(idProvider, err));
                 }
             }

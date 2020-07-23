@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="app">
     <router-view></router-view>
     <VersionView />
   </div>
@@ -57,16 +57,15 @@ export default class App extends Vue {
     font-style: normal;
 }
 
-#app {
+.app {
   font-family: "Roboto", "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   max-height: 100%;
-  overflow: hidden;
 }
 
-#app::after {
+.app::after {
   content: "";
   background: url("assets/background/1.jpg");
   background-size: cover;

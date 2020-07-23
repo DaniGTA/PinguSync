@@ -28,5 +28,7 @@ export enum chOnce {
     IsUpdateAvailable = 'is-app-update-available',
     GetOverviewBySeriesId = 'GetDescribtionBySeriesId',
     GetEpisodeIdsListBySeriesId = 'GetEpisodeIdsListBySeriesId',
-    GetEpisodeByEpisodeId = 'GetEpisodeByEpisodeId'
+    GetEpisodeByEpisodeId = 'GetEpisodeByEpisodeId',
+    IsEpisodeSync = 'IsEpisodeSync',
+    WatchedEpisode = 'WatchedEpisode'
 }
