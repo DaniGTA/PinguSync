@@ -21,10 +21,10 @@ import BlockListEntryDetails from './BlockListEntryDetails.vue';
 import BlockListEntrySyncStatusHover from './sync-status/BlockListEntrySyncStatusHover.vue';
 
 @Component({
-	components: {
+  components: {
     BlockListEntrySyncStatusHover,
-    BlockListEntryDetails
-	}
+    BlockListEntryDetails,
+  },
 })
 export default class BlockEntry extends Vue {
   @Prop()
@@ -42,7 +42,7 @@ export default class BlockEntry extends Vue {
 
   private hover = false;
   private newHoverStatus = false;
-  
+
   onIntersection(entry: IntersectionObserverEntry): void {
     this.visible = entry.isIntersecting;
     if(!this.visible){
@@ -51,16 +51,16 @@ export default class BlockEntry extends Vue {
     }
   }
 
-  public openDetailView(): void{
-    this.$router.push({name: 'SeriesDetail', params: {id: this.id}});
+  public openDetailView(): void {
+    this.$router.push({ name: "SeriesDetail", params: { id: this.id } });
   }
 
-  public isHovering(): void{
+  public isHovering(): void {
     this.hover = true;
     this.newHoverStatus = true;
   }
 
-  public async isNotHovering(): Promise<void>{
+  public async isNotHovering(): Promise<void> {
     this.newHoverStatus = false;
     await this.sleep(25);
     this.hover = this.newHoverStatus;
@@ -69,24 +69,24 @@ export default class BlockEntry extends Vue {
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
 </script>
 
 <style scoped>
-.block-list-entry{
+.block-list-entry {
   width: 150px;
   height: 285px;
   display: inline-block;
   overflow: hidden;
 }
-.block-list-entry-container{
+.block-list-entry-container {
   display: inline-block;
   margin: 10px;
 }
 
-.block-list-entry-img{
+.block-list-entry-img {
   height: 205px;
   border-radius: 5px;
   overflow: hidden;
