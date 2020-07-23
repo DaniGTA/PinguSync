@@ -14,33 +14,13 @@ import { ListProviderInterface } from './model/list-provider-interface';
     store
 })
 export default class ProviderController extends VuexModule {
-    private cachedProviderWithConnectedUser: ListProviderInterface[] | null = null;
-    private lastProviderWithConnectUserRequest: number = new Date(0).getTime();
-
-
-    @Mutation
-    private SET_updateCachedProviderWithConnectedUser(listProvider: ListProviderInterface[]): void {
-        this.cachedProviderWithConnectedUser = listProvider;
-        this.lastProviderWithConnectUserRequest = new Date().getTime();
-    }
-
     @Action({ commit: 'getAllAvaibleProviders' })
     public async getAllAvaibleProviders(): Promise<ListProviderInterface[]> {
         return await WorkerController.getOnce<ListProviderInterface[]>(chOnce.GetAllListProviders);
     }
     @Action({ commit: 'getAllProviderWithConnectedUser' })
     public async getAllProviderWithConnectedUser(): Promise<ListProviderInterface[]> {
-        if (this.context.getters['cachedProviderWithConnectedUser']) {
-            if (((this.context.getters['lastProviderWithConnectUserRequest'] - new Date().getTime()) / 1000) > 5) {
-                WorkerController.getOnce<ListProviderInterface[]>(chOnce.GetAllListProvidersWithConnectedUser).then((updated) => {
-                    this.context.commit('SET_updateCachedProviderWithConnectedUser', updated);
-                });
-            }
-            return this.context.getters['cachedProviderWithConnectedUser'];
-        }
-        const result = await WorkerController.getOnce<ListProviderInterface[]>(chOnce.GetAllListProvidersWithConnectedUser);
-        this.context.commit('SET_updateCachedProviderWithConnectedUser', result);
-        return result;
+        return await WorkerController.getOnce<ListProviderInterface[]>(chOnce.GetAllListProvidersWithConnectedUser);
     }
 
     @Action({ commit: 'isProviderSync' })
