@@ -19,7 +19,7 @@ export default class FrontendSeriesSearchController {
 
     getSearchResult(searchQuery: SearchQuery): string[] {
         const mainList = MainListManager.getMainList();
-        const searchStringResult = mainList.filter(x => !!x.getAllNamesUnique().find(x => x.name.includes(searchQuery.searchString)));
+        const searchStringResult = mainList.filter(x => !!x.getAllNamesUnique().find(x => new RegExp(searchQuery.searchString, 'gmi').test(x.name)));
         return searchStringResult.map(x => x.id);
     }
 

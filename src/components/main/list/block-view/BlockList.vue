@@ -1,27 +1,27 @@
 <template>
   <div class="block-list">
-      <div class="block-list-title-box">
-        <div class="block-list-title">{{$t(title +'_LISTTYPE')}}</div>
-        <q-separator class="block-list-title-line" />
-      </div>
-      <BlockListEntry v-for="entry in syncedItems" :key="entry" :id="entry"></BlockListEntry>
+    <div class="block-list-title-box">
+      <div class="block-list-title">{{$t(title +'_LISTTYPE')}}</div>
+      <q-separator class="block-list-title-line" />
+    </div>
+    <BlockListEntry v-for="entry in syncedItems" :key="entry + 'listentry'" :id="entry"></BlockListEntry>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import BlockListEntry from './entry/BlockListEntry.vue';
-import { PropSync, Prop } from 'vue-property-decorator';
-import { ListType } from '../../../../backend/controller/settings/models/provider/list-types';
+import Vue from "vue";
+import Component from "vue-class-component";
+import BlockListEntry from "./entry/BlockListEntry.vue";
+import { PropSync, Prop } from "vue-property-decorator";
+import { ListType } from "../../../../backend/controller/settings/models/provider/list-types";
 
 @Component({
-	components: {
-    BlockListEntry
-	}
+  components: {
+    BlockListEntry,
+  },
 })
 export default class BlockList extends Vue {
-  @PropSync('items')
+  @PropSync("items")
   public syncedItems!: string[];
   @Prop()
   public title!: ListType;
@@ -29,12 +29,12 @@ export default class BlockList extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.block-list{
+.block-list {
 }
 
-.block-list-title-box{
-    display: flex;
-    align-items: center;
+.block-list-title-box {
+  display: flex;
+  align-items: center;
 }
 
 .block-list-title-line {
@@ -46,7 +46,7 @@ export default class BlockList extends Vue {
 .list-line {
   text-align: center;
 }
-.block-list-title{
+.block-list-title {
   color: $primary-text;
   margin: 0px 10px;
   display: inline;

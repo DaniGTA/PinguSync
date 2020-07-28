@@ -31,17 +31,19 @@ export default class SeriesListViewController extends VuexModule {
 
     @Mutation
     public async getSeriesIdsFromCurrentlySelectedListType(): Promise<IdListWithListType[]> {
-        const currentSelectedType = this.GET_selectedListType;
+        const currentSelectedType = this.selectedListType;
         console.log('GetList: ' + currentSelectedType);
         if (currentSelectedType == ListType.ALL) {
             const allListTypesWithoutAll = Object.keys(ListType).map(x => Number.parseInt(x) as ListType).filter(x => x !== ListType.ALL).reverse();
-            return await SeriesListViewController.getSeriesIdsFromListTypes(allListTypesWithoutAll);
+            this.ids = await SeriesListViewController.getSeriesIdsFromListTypes(allListTypesWithoutAll);
         } else {
-            return SeriesListViewController.getSeriesIdsFromListTypes([currentSelectedType]);
+            this.ids = await SeriesListViewController.getSeriesIdsFromListTypes([currentSelectedType]);
         }
+        console.log('ListSite: ' + this.ids.length);
+        return this.ids;
     }
     public static async getSeriesIdsFromListTypes(listTypes: ListType[]): Promise<IdListWithListType[]> {
-        console.log('Get Series from listType: ' + listTypes);
+        console.log('Get Series from listType: ' + listTypes.length);
         const idListsWN: IdListWithListType[] = [];
         for (const listType of listTypes) {
             const idList = await WorkerController.getOnce<string[]>(chOnce.GetSeriesIdsWithListType, listType);
@@ -51,18 +53,31 @@ export default class SeriesListViewController extends VuexModule {
         }
         return idListsWN;
     }
+
+    @Action
+    public async changeListSelection(newSelection: ListType) {
+        this.SET_selectedListType(newSelection);
+        await this.getSeriesIdsFromCurrentlySelectedListType();
+    }
+
     @Action
     public async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
         return await ApiRequestController.getDataWithId(chOnce.GetPreferedCoverUrlBySeriesId, id);
     }
-    @Mutation
-    public async search(query: SearchQuery): Promise<void> {
+
+    @Action
+    public async search(query: SearchQuery) {
         if (query.searchString) {
-            const result: string[] = await WorkerController.getOnce<string[]>(chOnce.SearchSeries, query);
-            this.ids = [{ ids: result, listType: ListType.SearchResult }];
+            this.loadSearchResultToIdList(query);
         } else {
             this.getSeriesIdsFromCurrentlySelectedListType();
         }
+    }
+
+    @Mutation
+    public async loadSearchResultToIdList(query: SearchQuery): Promise<void> {
+        const result: string[] = await WorkerController.getOnce<string[]>(chOnce.SearchSeries, query);
+        this.ids = [{ ids: result, listType: ListType.SearchResult }];
     }
 
     @Action

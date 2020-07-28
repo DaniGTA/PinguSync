@@ -56,7 +56,7 @@ export default class FrontendSeriesController {
         try {
             const result = await MainListSearcher.findSeriesById(id);
             const allCovers = result?.getAllCovers();
-            const firstCover = allCovers?.find(x => (x.failed === false || x.failed === undefined));
+            const firstCover = allCovers?.find(x => !x.failed);
             return firstCover?.url;
         } catch (err) {
             logger.error(err);
@@ -84,14 +84,18 @@ export default class FrontendSeriesController {
 
     private async markCoverAsFailed(failedCover: FailedCover): Promise<void> {
         const result = await MainListSearcher.findSeriesById(failedCover.seriesId);
-        if (result && await isOnline()) {
-            const provider = this.findProviderWithCoverUrl(failedCover.coverUrl, result.getAllProviderLocalDatas());
-            if (provider) {
-                const index = provider?.covers.findIndex(x => x.url === failedCover.coverUrl) ?? -1;
-                if (index !== -1) {
-                    provider.covers[index].failed = true;
-                    ProviderDataListManager.updateProviderInList(provider);
+        if (result) {
+            if (await isOnline()) {
+                const provider = this.findProviderWithCoverUrl(failedCover.coverUrl, result.getAllProviderLocalDatas());
+                if (provider) {
+                    const index = provider?.covers.findIndex(x => x.url === failedCover.coverUrl) ?? -1;
+                    if (index !== -1) {
+                        provider.covers[index].failed = true;
+                        ProviderDataListManager.updateProviderInList(provider);
+                    }
                 }
+            } else {
+                logger.warn('Cant mark cover as failed - no internet connection');
             }
         }
     }
