@@ -8,6 +8,7 @@ import Overview from '../../backend/controller/objects/meta/overview';
 import ApiRequestController from './api-request-controller';
 import { Action, Module, Mutation, MutationAction, VuexModule } from 'vuex-module-decorators';
 import store from '../../store';
+import { SearchQuery } from '../../backend/controller/frontend/series/model/search-query';
 
 @Module({
     dynamic: true,
@@ -17,7 +18,7 @@ import store from '../../store';
 export default class SeriesListViewController extends VuexModule {
 
     selectedListType: ListType = ListType.ALL;
-
+    ids: IdListWithListType[] = [];
     get GET_selectedListType(): ListType {
         return this.selectedListType;
     }
@@ -28,7 +29,7 @@ export default class SeriesListViewController extends VuexModule {
         this.selectedListType = value;
     }
 
-    @Action
+    @Mutation
     public async getSeriesIdsFromCurrentlySelectedListType(): Promise<IdListWithListType[]> {
         const currentSelectedType = this.GET_selectedListType;
         console.log('GetList: ' + currentSelectedType);
@@ -54,6 +55,16 @@ export default class SeriesListViewController extends VuexModule {
     public async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
         return await ApiRequestController.getDataWithId(chOnce.GetPreferedCoverUrlBySeriesId, id);
     }
+    @Mutation
+    public async search(query: SearchQuery): Promise<void> {
+        if (query.searchString) {
+            const result: string[] = await WorkerController.getOnce<string[]>(chOnce.SearchSeries, query);
+            this.ids = [{ ids: result, listType: ListType.SearchResult }];
+        } else {
+            this.getSeriesIdsFromCurrentlySelectedListType();
+        }
+    }
+
     @Action
     public async getSeriesNameById(id: string): Promise<string | undefined> {
         return await ApiRequestController.getDataWithId(chOnce.GetPreferedNameBySeriesId, id);

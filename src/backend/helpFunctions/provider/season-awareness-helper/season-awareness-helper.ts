@@ -109,7 +109,7 @@ export default class SeasonAwarenessHelper {
 
     public static async updateProvider(providerLocalData: ProviderLocalData): Promise<ProviderLocalData> {
         let currentProviderThatHasAwareness = providerLocalData;
-        if (!EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.detailEpisodeInfo)) {
+        if (!EpisodeHelper.hasEpisodeNames(currentProviderThatHasAwareness.getAllDetailedEpisodes())) {
             const currentProviderThatHasAwarenessProvider = ProviderList.getProviderInstanceByLocalData(currentProviderThatHasAwareness);
             // tslint:disable-next-line: max-line-length
             const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([currentProviderThatHasAwareness], currentProviderThatHasAwarenessProvider);

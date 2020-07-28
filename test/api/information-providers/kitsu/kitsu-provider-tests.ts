@@ -31,7 +31,7 @@ describe('Provider: Kitsu | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Sankarea', 'en'));
-        await series.addProviderDatas(unkownProvider);
+        series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
@@ -44,7 +44,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Seitokai Yakuindomo＊', 'en'));
-        await series.addProviderDatas(unkownProvider);
+        series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
@@ -57,7 +57,7 @@ describe('Provider: Kitsu | Test runs', () => {
         series['cachedSeason'] = new Season(1);
         const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('The Asterisk War: The Academy City on the Water', 'en'));
-        await series.addProviderDatas(unkownProvider);
+        series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
@@ -70,7 +70,7 @@ describe('Provider: Kitsu | Test runs', () => {
         const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.mediaType = MediaType.ANIME;
         unkownProvider.addSeriesName(new Name('Little Witch Academia', 'en'));
-        await series.addProviderDatas(unkownProvider);
+        series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
@@ -87,7 +87,7 @@ describe('Provider: Kitsu | Test runs', () => {
         const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.mediaType = MediaType.ANIME;
         unkownProvider.addSeriesName(new Name('Naruto: Shippuuden', 'en'));
-        await series.addProviderDatas(unkownProvider);
+        series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);
@@ -102,7 +102,7 @@ describe('Provider: Kitsu | Test runs', () => {
 
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(11578, KitsuProvider);
-        await series.addProviderDatas(unkownProvider);
+        series.addProviderDatas(unkownProvider);
 
         // tslint:disable-next-line: no-string-literal
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, kitsuProvider);

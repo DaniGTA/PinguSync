@@ -3,9 +3,11 @@ import ExternalProvider from '../../../../src/backend/api/provider/external-prov
 import InfoProvider from '../../../../src/backend/api/provider/info-provider';
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { UserData } from '../../../../src/backend/api/user-data';
+import Episode from '../../../../src/backend/controller/objects/meta/episode/episode';
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type';
 import Series from '../../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
+import ProviderLocalData from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 
 
@@ -28,6 +30,9 @@ export default class TestInfoProvider extends InfoProvider {
         this.providerName = providerName;
         this.loggedIn = loggedIn;
         this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;
+    }
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        throw new Error('Method not implemented.');
     }
     public getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
         throw new Error('Method not implemented.');

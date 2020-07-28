@@ -36,7 +36,7 @@ export default class EpisodeRatedEqualityHelper {
             throw new Error(`Cant get rated equality between ${providerA.providerLocalData.provider} and ${providerB.providerLocalData.provider}`);
         }
 
-        if (providerB.providerLocalData.detailEpisodeInfo.length !== 0 && providerA.providerLocalData.detailEpisodeInfo.length !== 0) {
+        if (providerB.providerLocalData.getAllDetailedEpisodes().length !== 0 && providerA.providerLocalData.getAllDetailedEpisodes().length !== 0) {
             return this.performRatingEqualityOfEpisodes(providerA, providerB, season, this.targetBindingPools, 0);
         }
         return [];
@@ -53,7 +53,7 @@ export default class EpisodeRatedEqualityHelper {
         if (Math.abs(aNumberOfEpisodes - bNumberOfEpisodes.length) <= EpisodeRatedEqualityHelper.EPISODE_NUMBER_SEASON_TOLERANCE) {
             skipNotSameSeason = true;
         }
-        for (const detailedEpA of provider.providerLocalData.detailEpisodeInfo) {
+        for (const detailedEpA of provider.providerLocalData.getAllDetailedEpisodes()) {
             if (result.includes(detailedEpA)) {
                 continue;
             }
@@ -63,9 +63,9 @@ export default class EpisodeRatedEqualityHelper {
                 continue;
             }
             if (!this.isSameProviderNameInMapping(detailedEpA, otherProvider.providerLocalData, this.allBindingPools)) {
-                if (lastSuccessFullIndex < otherProvider.providerLocalData.detailEpisodeInfo.length) {
-                    for (let index = lastSuccessFullIndex; index < otherProvider.providerLocalData.detailEpisodeInfo.length; index++) {
-                        const detailedEpB = otherProvider.providerLocalData.detailEpisodeInfo[index];
+                if (lastSuccessFullIndex < otherProvider.providerLocalData.getAllDetailedEpisodes().length) {
+                    for (let index = lastSuccessFullIndex; index < otherProvider.providerLocalData.getAllDetailedEpisodes().length; index++) {
+                        const detailedEpB = otherProvider.providerLocalData.getAllDetailedEpisodes()[index];
 
                         if (skipNotSameSeason &&
                             !SeasonHelper.isSeasonUndefined(detailedEpB.season) &&

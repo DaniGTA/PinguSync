@@ -1,5 +1,5 @@
 
-import Mal, { ScraperClient } from 'node-myanimelist';
+import Mal, { Jikan } from 'node-myanimelist';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import WatchProgress from '../../../controller/objects/meta/watch-progress';
 import Series from '../../../controller/objects/series';
@@ -13,6 +13,7 @@ import malConverter from './mal-converter';
 import { MalUserData } from './mal-user-data';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
+import MalConverter from './mal-converter';
 export default class MalProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
         throw new Error('Method not implemented.');
@@ -42,8 +43,7 @@ export default class MalProvider extends ListProvider {
     public hasOAuthLogin = false;
     public hasUniqueIdForSeasons = true;
     public userData: MalUserData;
-    public requestRateLimitInMs = 4005;
-    private api = new ScraperClient();
+    public requestRateLimitInMs = 4500;
 
     constructor() {
         super();
@@ -77,8 +77,10 @@ export default class MalProvider extends ListProvider {
         const endResults: MultiProviderResult[] = [];
         try {
             // Only query at 3 or more letters.
-            const result = await Mal.search().anime({ q: seriesName });
-            result.data;
+            if (seriesName.length >= 3) {
+                //const result = await Jikan.search().anime({ q: seriesName });
+                //console.log(result);
+            }
         } catch (err) {
             logger.error(err);
         }
@@ -87,20 +89,13 @@ export default class MalProvider extends ListProvider {
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        const anime = Mal.anime(Number(provider.id));
-        const v = await anime.videos();
-        const cs = await anime.charactersStaff();
-        const e = await anime.episodes();
-        const i = await anime.info();
-        const mi = await anime.moreInfo();
-        const p = await anime.pictures();
-        const r = await anime.reviews();
-        return malConverter.convertAnimeToProviderData(anime);
-
+        const anime = Jikan.anime(Number(provider.id));
+        return MalConverter.convertAnimeToProviderData(anime);
     }
+
     public async getAllSeries(disableCache?: boolean | undefined): Promise<MultiProviderResult[]> {
         if (this.userData.loginData) {
-            const userInfo = await this.api.notifications(this.userData.loginData);
+            const userInfo = await Mal.Scraper.notifications(this.userData.loginData);
 
         }
         throw new Error('Method not implemented.');
@@ -108,7 +103,7 @@ export default class MalProvider extends ListProvider {
     public async logInUser(pass: string, username?: string | undefined): Promise<boolean> {
         try {
             if (username && pass) {
-                const loginData = await this.api.login(username, pass);
+                const loginData = await Mal.Scraper.login(username, pass);
                 this.userData.setLoginData(loginData);
                 return this.isUserLoggedIn();
             }

@@ -30,5 +30,6 @@ export enum chOnce {
     GetEpisodeIdsListBySeriesId = 'GetEpisodeIdsListBySeriesId',
     GetEpisodeByEpisodeId = 'GetEpisodeByEpisodeId',
     IsEpisodeSync = 'IsEpisodeSync',
-    WatchedEpisode = 'WatchedEpisode'
+    WatchedEpisode = 'WatchedEpisode',
+    SearchSeries = "SearchSeries"
 }

@@ -127,7 +127,7 @@ export default class ProviderInfoHelper {
         let maxSeasonNumber = 0;
         for (const nonSeasonAwareProviderLocalData of allProviderLocalData) {
             try {
-                const seasonNumber = EpisodeStatsHelper.getMaxSeasonNumberFromEpisodeList(nonSeasonAwareProviderLocalData.detailEpisodeInfo);
+                const seasonNumber = EpisodeStatsHelper.getMaxSeasonNumberFromEpisodeList(nonSeasonAwareProviderLocalData.getAllDetailedEpisodes());
                 if (maxSeasonNumber < seasonNumber) {
                     maxSeasonNumber = seasonNumber;
                 }

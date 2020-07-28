@@ -7,8 +7,8 @@ import ProviderLocalData from '../../controller/provider-controller/provider-man
 export default class EpisodeStatsHelper {
     public static getMaxEpisodeNumber(providerLocalData: ProviderLocalData): number {
         let maxEpisodeNumber = 0;
-        if (providerLocalData.detailEpisodeInfo.length !== 0) {
-            maxEpisodeNumber = this.getMaxEpisodeFromEpisodeList(providerLocalData.detailEpisodeInfo);
+        if (providerLocalData.getAllDetailedEpisodes().length !== 0) {
+            maxEpisodeNumber = this.getMaxEpisodeFromEpisodeList(providerLocalData.getAllDetailedEpisodes());
         } else {
             if (providerLocalData.episodes !== undefined) {
                 maxEpisodeNumber = providerLocalData.episodes;

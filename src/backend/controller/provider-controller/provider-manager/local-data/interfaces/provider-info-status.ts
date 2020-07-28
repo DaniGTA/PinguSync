@@ -1,4 +1,7 @@
 export enum ProviderInfoStatus {
+    /**
+     * Has everything that the provider can give.
+     */
     FULL_INFO,
     /**
      * Has episode number.

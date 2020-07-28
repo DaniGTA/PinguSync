@@ -79,7 +79,7 @@ export default class SyncEpisodes {
 
     private getEpisodeByEpisodeMapping(em: EpisodeMapping): Episode | undefined {
         const provider = this.series.getAllProviderLocalDatas().find(x => x.provider === em.provider);
-        return provider?.detailEpisodeInfo.find(x => x.id === em.id);
+        return provider?.getAllDetailedEpisodes().find(x => x.id === em.id);
     }
 
     private getEpisodeById(id: string, providerName?: string): Episode {
@@ -88,7 +88,7 @@ export default class SyncEpisodes {
             result = this.getEpisodeByIdAndProvider(id, providerName);
         } else {
             for (const provider of this.series.getAllProviderLocalDatas()) {
-                result = provider?.detailEpisodeInfo.find(x => x.id === id);
+                result = provider?.getAllDetailedEpisodes().find(x => x.id === id);
                 if (result)
                     return result;
             }
@@ -108,7 +108,7 @@ export default class SyncEpisodes {
     private getEpisodeByIdAndProvider(id: string, providerName: string): Episode | undefined {
         const provider = this.series.getAllProviderLocalDatas().find(x => x.provider == providerName);
         if (provider) {
-            return provider.detailEpisodeInfo.find(x => x.id === id);
+            return provider.getAllDetailedEpisodes().find(x => x.id === id);
         } else {
             throw new Error('Provider ' + providerName + ' not found in series: ' + this.series.id);
         }

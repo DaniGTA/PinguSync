@@ -134,7 +134,7 @@ export default class DownloadProviderLocalDataWithoutId {
 
 
     private hasProviderLocalDataSeasonTargetInfos(provider: ProviderLocalData, seasonTarget: Season): boolean {
-        for (const episode of provider.detailEpisodeInfo) {
+        for (const episode of provider.getAllDetailedEpisodes()) {
             // tslint:disable-next-line: triple-equals
             if (SeasonComperator.isSameSeason(episode.season, seasonTarget)) {
                 return true;

@@ -145,7 +145,7 @@ export default new class AniListConverter {
             providerInfo.episodes = entry.media.episodes;
         }
         const episode = EpisodeGeneratorHelper.generateMissingEpisodes(providerInfo, new Season(seasonNumber));
-        providerInfo.detailEpisodeInfo.push(...episode);
+        providerInfo.addDetailedEpisodeInfos(...episode);
         for (let index = 1; index < entry.progress + 1; index++) {
             const element = episode.find(x => x.episodeNumber === index);
             element?.watchHistory.push(new WatchHistory());

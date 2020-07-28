@@ -1,5 +1,6 @@
 
 import SeasonComperator from '../../../../../helpFunctions/comperators/season-comperator';
+import CoverHelper from '../../../../../helpFunctions/cover-helper/cover-helper';
 import EpisodeHelper from '../../../../../helpFunctions/episode-helper/episode-helper';
 import listHelper from '../../../../../helpFunctions/list-helper';
 import SeasonHelper from '../../../../../helpFunctions/season-helper/season-helper';
@@ -35,7 +36,7 @@ export default abstract class ProviderLocalData {
 
         finalProvider.genres = finalProvider.genres ? listHelper.getUniqueObjectList(finalProvider.genres) : [];
         finalProvider.banners = finalProvider.banners ? listHelper.getUniqueObjectList(finalProvider.banners) : [];
-        finalProvider.covers = finalProvider.covers ? listHelper.getUniqueObjectList(finalProvider.covers) : [];
+        finalProvider.covers = finalProvider.covers ? CoverHelper.getUniqueCoverList(finalProvider.covers) : [];
 
         finalProvider.names = finalProvider.names ? listHelper.getUniqueNameList(finalProvider.names) : [];
         finalProvider.overviews = finalProvider.overviews ? listHelper.getUniqueOverviewList(finalProvider.overviews) : [];
@@ -137,7 +138,7 @@ export default abstract class ProviderLocalData {
     public isNSFW = false;
     public country?: string;
     public genres: Genre[] = [];
-    public detailEpisodeInfo: Episode[] = [];
+    private detailEpisodeInfo: Episode[] = [];
     /**
      * Only fill this if provider give sequel ids and have different ids for every season.
      */
@@ -192,7 +193,7 @@ export default abstract class ProviderLocalData {
      */
     public addSeriesName(...names: Name[]): void {
         for (const name of names) {
-            if (name && name.name && name.name !== 'null') {
+            if (name?.name && name.name !== 'null') {
                 if (this.names.findIndex((x) => x.name === name.name && x.lang === x.lang) === -1) {
                     this.names.push(name);
                 }
@@ -207,14 +208,21 @@ export default abstract class ProviderLocalData {
     public addOverview(...newOverviews: Overview[]): boolean {
         this.overviews = [...this.overviews];
         for (const newOverview of newOverviews) {
-
-
             if (this.overviews.findIndex((x) => x === newOverview) === -1) {
                 this.overviews.push(newOverview);
                 return true;
             }
         }
         return false;
+    }
+
+    public addDetailedEpisodeInfos(...episodes: Episode[]): void {
+        for (const episode of episodes) {
+            episode.provider = this.provider;
+            episode.providerId = this.id;
+            this.detailEpisodeInfo.push(episode);
+            this.detailEpisodeInfo = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo);
+        }
     }
 
     /**
@@ -257,15 +265,6 @@ export default abstract class ProviderLocalData {
             }
         }
         return result;
-    }
-
-    public addDetailedEpisodeInfos(...episodes: Episode[]): void {
-        for (const episode of episodes) {
-            episode.provider = this.provider;
-            episode.providerId = this.id;
-            this.detailEpisodeInfo.push(episode);
-            this.detailEpisodeInfo = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo);
-        }
     }
 
     /**

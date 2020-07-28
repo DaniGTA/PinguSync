@@ -11,6 +11,7 @@ import isOnline from 'is-online';
 import EpisodeMappingHelper from '../../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import MainListManager from '../../main-list-manager/main-list-manager';
 import Overview from '../../objects/meta/overview';
+import logger from '../../../logger/logger';
 
 export default class FrontendSeriesController {
     private com: IPCBackgroundController;
@@ -28,9 +29,9 @@ export default class FrontendSeriesController {
         this.com.on(chOnce.GetPreferedCoverUrlBySeriesId, async (id) => this.sendSeriesData(chOnce.GetPreferedCoverUrlBySeriesId, id, await this.getCoverUrlById(id)));
         this.com.on(chListener.OnSeriesFailedCoverImage, (failedCover: FailedCover) => this.markCoverAsFailed(failedCover));
         this.com.on(chOnce.GetPreferedNameBySeriesId, async (id) => this.sendSeriesData(chOnce.GetPreferedNameBySeriesId, id, await this.getSeriesPreferedName(id)));
-        this.com.on(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, async(id) => this.sendSeriesData(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, id, await this.getSeriesMaxEpisodeNumberBy(id)));
+        this.com.on(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, async (id) => this.sendSeriesData(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, id, await this.getSeriesMaxEpisodeNumberBy(id)));
         this.com.on(chListener.OnSeriesEpisodeListRefreshRequest, (id) => this.refreshSeriesEpisodeList(id));
-        this.com.on(chOnce.GetOverviewBySeriesId, async (id) => { this.sendSeriesData(chOnce.GetOverviewBySeriesId,id,await this.getSeriesOverviewBySeriesId(id));});
+        this.com.on(chOnce.GetOverviewBySeriesId, async (id) => { this.sendSeriesData(chOnce.GetOverviewBySeriesId, id, await this.getSeriesOverviewBySeriesId(id)); });
     }
 
     private async refreshSeriesEpisodeList(id: string): Promise<void> {
@@ -52,10 +53,15 @@ export default class FrontendSeriesController {
     }
 
     private async getCoverUrlById(id: string): Promise<string | undefined> {
-        const result = await MainListSearcher.findSeriesById(id);
-        const allCovers = result?.getAllCovers();
-        const firstCover = allCovers?.find(x => x.failed === false || x.failed === undefined);
-        return firstCover?.url;
+        try {
+            const result = await MainListSearcher.findSeriesById(id);
+            const allCovers = result?.getAllCovers();
+            const firstCover = allCovers?.find(x => (x.failed === false || x.failed === undefined));
+            return firstCover?.url;
+        } catch (err) {
+            logger.error(err);
+        }
+        return;
     }
 
     private async getSeriesMaxEpisodeNumberBy(id: string): Promise<number | undefined> {

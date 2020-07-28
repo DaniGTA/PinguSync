@@ -2,6 +2,7 @@ import IPCBackgroundController from '../../../../communication/ipc-background-co
 import { chOnce } from '../../../../communication/channels';
 import { ListType } from '../../../settings/models/provider/list-types';
 import MainListSearcher from '../../../main-list-manager/main-list-searcher';
+import logger from '../../../../logger/logger';
 
 export default class FrontendSeriesListController {
     private com: IPCBackgroundController;
@@ -15,7 +16,12 @@ export default class FrontendSeriesListController {
     }
 
     private async GetSeriesIdsWithListType(listType: ListType): Promise<string[]> {
-        const list = MainListSearcher.getAllSeriesWithTypeList(listType);
-        return list.map(x => x.id);
+        try {
+            const list = MainListSearcher.getAllSeriesWithTypeList(listType);
+            return list.map(x => x.id);
+        } catch (err) {
+            logger.error(err);
+        }
+        return [];
     }
 }

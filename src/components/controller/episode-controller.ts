@@ -21,7 +21,7 @@ export default class EpisodeController {
         });
     }
 
-    public static async openEpisodeInExternalBrowser(episodeId: string, seriesId: string): Promise<void> {
+    public static openEpisodeInExternalBrowser(episodeId: string, seriesId: string): void {
         WorkerController.send(chSend.OpenEpisodeInExternalBrowser, { episodeId, seriesId } as SingleEpisodeQuery);
     }
 }

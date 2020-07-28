@@ -48,7 +48,7 @@ export default new class TraktConverter {
                         ep.watchHistory.push(new WatchHistory());
                     }
                 }
-                providerInfo.detailEpisodeInfo.push(ep);
+                providerInfo.addDetailedEpisodeInfos(ep);
             }
             providerInfo.watchStatus = ListType.COMPLETED;
             providerInfo.lastExternalChange = watchedInfo.last_watched_at;
@@ -149,7 +149,7 @@ export default new class TraktConverter {
 
     public getMediaTypeFromGenres(genres: Genre[], expectedMediaTypeDirection: MediaType): MediaType {
         if (expectedMediaTypeDirection === MediaType.UNKOWN_SERIES) {
-            if (isNullOrUndefined(genres.find((x) => x.genre === 'anime'))) {
+            if (!genres.find((x) => x.genre === 'anime')) {
                 return MediaType.SERIES;
             } else {
                 return MediaType.ANIME;

@@ -11,7 +11,7 @@ import { ListType } from '../../../src/backend/controller/settings/models/provid
 import WatchHistory from '../../../src/backend/controller/objects/meta/episode/episode-watch-history';
 
 describe('listProviderLocalData tests', () => {
-    test('should merge two', async () => {
+    test('should merge two', () => {
         const a = new ListProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
@@ -25,7 +25,7 @@ describe('listProviderLocalData tests', () => {
         b.watchStatus = ListType.COMPLETED;
         b.covers.push(new Cover(''));
 
-        const merged = await ListProviderLocalData.mergeProviderInfos(a, b);
+        const merged = ListProviderLocalData.mergeProviderInfos(a, b);
         strictEqual(merged.covers.length, 1, 'Cover merge failed');
         strictEqual(merged.episodes, 14, 'Episodes merge failed');
         strictEqual(merged.publicScore, 20, 'Public score merge failed');
@@ -35,7 +35,7 @@ describe('listProviderLocalData tests', () => {
         return;
     });
 
-    test('should merge three', async () => {
+    test('should merge three', () => {
         const a = new ListProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
@@ -52,28 +52,28 @@ describe('listProviderLocalData tests', () => {
         c.covers.push(new Cover('x'));
 
 
-        const merged = await ListProviderLocalData.mergeProviderInfos(a, b, c);
+        const merged = ListProviderLocalData.mergeProviderInfos(a, b, c);
         strictEqual(merged.covers.length, 2, 'Cover merge failed');
         strictEqual(merged.episodes, 15, 'Episodes merge failed');
         expect(merged.publicScore).toBe(20);
         strictEqual(merged.lastUpdate.getTime(), new Date(20000).getTime(), 'Last update merge failed');
         return;
     });
-    test('should merge provider watchHistory', async () => {
+    test('should merge provider watchHistory', () => {
         const a = new ListProviderLocalData(1);
-        a.detailEpisodeInfo.push(new Episode(1));
+        a['detailEpisodeInfo'].push(new Episode(1));
 
         const b = new ListProviderLocalData(1);
         const bEp = new Episode(1);
         bEp.watchHistory.push(new WatchHistory());
-        b.detailEpisodeInfo.push(bEp);
+        b['detailEpisodeInfo'].push(bEp);
 
-        const merged = await ListProviderLocalData.mergeProviderInfos(a, b);
+        const merged = ListProviderLocalData.mergeProviderInfos(a, b);
 
-        expect(merged.detailEpisodeInfo[0].watchHistory.length).not.toBe(0);
+        expect(merged['detailEpisodeInfo'][0].watchHistory.length).not.toBe(0);
     });
 
-    test('should not merge same cover', async () => {
+    test('should not merge same cover', () => {
         const a = new ListProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
@@ -91,7 +91,7 @@ describe('listProviderLocalData tests', () => {
         c.covers.push(new Cover('c'));
 
 
-        const merged = await ListProviderLocalData.mergeProviderInfos(c, b, a);
+        const merged = ListProviderLocalData.mergeProviderInfos(c, b, a);
         strictEqual(merged.covers.length, 1);
         strictEqual(merged.episodes, 15);
         strictEqual(merged.publicScore, 25);
@@ -101,7 +101,7 @@ describe('listProviderLocalData tests', () => {
         return;
     });
 
-    test('should not dublicate lists', async () => {
+    test('should not dublicate lists', () => {
         const a = new ListProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
@@ -121,7 +121,7 @@ describe('listProviderLocalData tests', () => {
         b.addDetailedEpisodeInfos(new Episode(5, new Season([1])));
 
 
-        const merged = await ListProviderLocalData.mergeProviderInfos(b, a);
+        const merged = ListProviderLocalData.mergeProviderInfos(b, a);
         expect(merged.covers.length).toBe(1);
         expect(merged.episodes).toBe(13);
         expect(merged.publicScore).toBe(20);
@@ -130,7 +130,7 @@ describe('listProviderLocalData tests', () => {
         expect(merged.alternativeIds.length).toBe(1);
         expect(merged.banners.length).toBe(2);
         expect(merged.genres.length).toBe(1);
-        expect(merged.detailEpisodeInfo.length).toBe(1);
+        expect(merged['detailEpisodeInfo'].length).toBe(1);
         expect(merged.prequelIds.length).toBe(1);
         expect(merged.sequelIds.length).toBe(1);
         return;

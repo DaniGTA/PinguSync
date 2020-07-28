@@ -26,7 +26,7 @@ export default class SeasonAwarenessFindSeasonNumber {
         for (let otherProvider of otherProviders) {
             const providerInstance = ProviderList.getProviderInstanceByLocalData(otherProvider);
             try {
-                if (otherProvider.detailEpisodeInfo.length === 0) {
+                if (otherProvider.getAllDetailedEpisodes().length === 0) {
                     const maybeFullInfoResult =
                         await new DownloadProviderLocalDataToTargetHelper(series, providerInstance, ProviderInfoStatus.FULL_INFO).upgradeToTarget();
                     if (maybeFullInfoResult instanceof MultiProviderResult) {
@@ -51,7 +51,7 @@ export default class SeasonAwarenessFindSeasonNumber {
      * @param targetLocalDataProvider where the season is missing.
      */
     private static async calcSeasonForTargetProvider(series: Series, otherProvider: ProviderLocalData, targetLocalDataProvider: ProviderLocalData): Promise<Season> {
-        const result = new EpisodeRelationAnalyser(targetLocalDataProvider.detailEpisodeInfo, otherProvider.detailEpisodeInfo);
+        const result = new EpisodeRelationAnalyser(targetLocalDataProvider.getAllDetailedEpisodes(), otherProvider.getAllDetailedEpisodes());
         if (result.finalSeasonNumbers !== undefined && result.seasonComplete) {
             return new Season(result.finalSeasonNumbers);
         } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder !== 1) {
@@ -62,7 +62,7 @@ export default class SeasonAwarenessFindSeasonNumber {
                     return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart);
                 }
             } else {
-                const tempPrequel = await SeasonAwarenessHelper.createTempPrequelFromRelationSearchResults(prequel);
+                const tempPrequel = SeasonAwarenessHelper.createTempPrequelFromRelationSearchResults(prequel);
                 if (tempPrequel) {
                     tempPrequel.addProviderDatas(targetLocalDataProvider);
                     const prequelSeason = await this.searchSeasonForProvider(tempPrequel, targetLocalDataProvider);

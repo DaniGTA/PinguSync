@@ -14,5 +14,7 @@ export enum ListType {
     // Re - watching / reading
     REPEATING,
     // All lists
-    ALL
+    ALL,
+    // Search Result
+    SearchResult
 }

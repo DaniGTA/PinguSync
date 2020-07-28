@@ -156,7 +156,7 @@ describe('Provider Helper Test', () => {
         const series: Series = new Series();
         const provider = new ListProviderLocalData(94084, TraktProvider);
 
-        await series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(3)));
+        series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season(3)));
         await mainListAdder.addSeries(series);
         const infoProvider = series.getAllProviderLocalDatas();
 

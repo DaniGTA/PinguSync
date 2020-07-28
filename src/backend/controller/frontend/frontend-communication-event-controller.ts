@@ -3,6 +3,7 @@ import FrontendAppUpdateController from './app/update/frontend-app-update-contro
 import FrontendSettingsController from './settings/frontend-settings-controller';
 import FrontendSeriesController from './series/frontend-series-controller';
 import FrontendEpisodesController from './episodes/frontend-episodes-controller';
+import FrontendSeriesSearchController from './series/frontend-series-search-controller';
 
 export default class FrontendCommmunicationEventController {
     public frontendProviderController: FrontendProviderController;
@@ -10,7 +11,7 @@ export default class FrontendCommmunicationEventController {
     public frontendSettingsController: FrontendSettingsController;
     public frontendSeriesController: FrontendSeriesController;
     public frontendEpisodesController: FrontendEpisodesController;
-
+    public frontendSeriesSearchCOntroller: FrontendSeriesSearchController;
     /**
      *Creates an instance of FrontendCommmunicationEventController.
      * @param {Electron.WebContents} webcontents  
@@ -21,6 +22,6 @@ export default class FrontendCommmunicationEventController {
         this.frontendAppUpdateController = new FrontendAppUpdateController(webcontents);
         this.frontendSettingsController = new FrontendSettingsController(webcontents);
         this.frontendEpisodesController = new FrontendEpisodesController(webcontents);
-
+        this.frontendSeriesSearchCOntroller = new FrontendSeriesSearchController(webcontents);
     }
 }

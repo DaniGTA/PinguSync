@@ -1,19 +1,28 @@
 <template>
     <div class="list-search">
         <i class="fas fa-search list-search-logo"></i>
-        <input class="list-search-input" :placeholder="$t('ListSearch.search')" />
+        <q-input debounce="500" v-model="searchText" class="list-search-input" :placeholder="$t('ListSearch.search')"  @change="search"/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import SeriesListViewController from '../../../controller/series-list-view-controller';
+import { getModule } from 'vuex-module-decorators';
+import { SearchQuery } from '../../../../backend/controller/frontend/series/model/search-query';
+
+const seriesListViewController = getModule(SeriesListViewController);
 
 @Component({
     components: {}
 })
 export default class ListSearch extends Vue {
-
+    private searchText: string = '';
+    search(): void {
+        const searchQuery: SearchQuery = { searchString: this.searchText}; 
+        seriesListViewController.search(searchQuery);
+    }
 }
 </script>
 

@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { LoginData } from 'node-myanimelist/typings/methods/poly/noApiLogin';
+import { LoginData } from 'node-myanimelist/typings/methods/scraper/noApiLogin';
 import * as path from 'path';
 import Series from '../../../controller/objects/series';
 import PathHelper from '../../../helpFunctions/path-helper';

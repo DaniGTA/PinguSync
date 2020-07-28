@@ -20,7 +20,6 @@ import SeriesListViewController from '../../controller/series-list-view-controll
 import IdListWithName from '../../controller/model/id-list-with-list-type';
 import { getModule } from 'vuex-module-decorators';
 import { Watch } from 'vue-property-decorator';
-import { mapState } from 'vuex';
 import { ListType } from '../../../backend/controller/settings/models/provider/list-types';
 
 const seriesListViewController = getModule(SeriesListViewController);
@@ -33,30 +32,14 @@ const seriesListViewController = getModule(SeriesListViewController);
     }
 })
 export default class ListViewSwitcher extends Vue {
-    public seriesIds: IdListWithName[] = []; 
     private currentLoadedListType: ListType = ListType.ALL; 
-    get selectedListType(): ListType {
-        return seriesListViewController.GET_selectedListType;
+    get seriesIds(): IdListWithName[] {
+        return seriesListViewController.ids;
+    }
+    created(): void {
+        seriesListViewController.getSeriesIdsFromCurrentlySelectedListType();
     }
 
-    @Watch('selectedListType')
-    changeProfile(newListType: ListType): void {
-        console.log('ListType changed');
-        if(this.currentLoadedListType != newListType){
-            this.loadList();
-            this.currentLoadedListType = newListType;
-        }
-    }
-
-    async created(): Promise<void>{
-        await this.loadList(); 
-    }
-
-    private async loadList(): Promise<void> {
-        console.log('Load list');
-        this.seriesIds = await seriesListViewController.getSeriesIdsFromCurrentlySelectedListType();
-        console.log('New list size: '+this.seriesIds.length);
-    }
 }
 </script>
 

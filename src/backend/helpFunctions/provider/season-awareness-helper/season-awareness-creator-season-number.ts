@@ -43,7 +43,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         providerWithoutSeasonAwarness: ProviderLocalData): Promise<ProviderLocalDataWithSeasonInfo[]> {
         let finalSeason: Season | undefined;
         const targetSeason = series.getProviderSeasonTarget(providerWithoutSeasonAwarness.provider);
-        if (!EpisodeHelper.hasEpisodeNames(providerWithoutSeasonAwarness.detailEpisodeInfo)) {
+        if (!EpisodeHelper.hasEpisodeNames(providerWithoutSeasonAwarness.getAllDetailedEpisodes())) {
             // tslint:disable-next-line: max-line-length
             const result: ProviderLocalData | undefined = await ProviderHelper.simpleProviderLocalDataUpgradeRequest([providerWithoutSeasonAwarness], ProviderList.getProviderInstanceByLocalData(providerWithoutSeasonAwarness));
             if (result !== undefined) {

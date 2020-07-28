@@ -51,7 +51,7 @@ export default class EpisodeGeneratorHelper {
 
     private static isEpisodePresent(episodeNumber: number, provider: ProviderLocalData, episodeSeason: Season | undefined): boolean {
         let episodeFounded = false;
-        for (const detailedEpisode of provider.detailEpisodeInfo) {
+        for (const detailedEpisode of provider.getAllDetailedEpisodes()) {
             if (EpisodeComperator.isEpisodeSameAsDetailedEpisode(episodeNumber, detailedEpisode, episodeSeason)) {
                 episodeFounded = true;
                 break;

@@ -14,15 +14,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import ProviderImageBlock from "./../../../../../../elements/provider-elements/ProviderImageBlock.vue";
-import { Prop, Ref } from "vue-property-decorator";
-import ProviderController from "../../../../../../controller/provider-controller";
-import SeriesHoverController from "./../../../../../../controller/series-hover-controller";
-import GetSyncStatusRecieved from "../../../../../../../backend/controller/frontend/providers/sync-status/model/get-sync-status-recieved";
-import { getModule } from "vuex-module-decorators";
-import { ListProviderInterface } from "../../../../../../controller/model/list-provider-interface";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import ProviderImageBlock from './../../../../../../elements/provider-elements/ProviderImageBlock.vue';
+import { Prop, Ref } from 'vue-property-decorator';
+import ProviderController from '../../../../../../controller/provider-controller';
+import SeriesHoverController from './../../../../../../controller/series-hover-controller';
+import GetSyncStatusRecieved from '../../../../../../../backend/controller/frontend/providers/sync-status/model/get-sync-status-recieved';
+import { getModule } from 'vuex-module-decorators';
+import { ListProviderInterface } from '../../../../../../controller/model/list-provider-interface';
 
 @Component({
   components: {

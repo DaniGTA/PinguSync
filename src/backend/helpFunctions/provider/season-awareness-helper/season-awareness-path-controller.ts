@@ -24,8 +24,8 @@ export default class SeasonAwarenessPathController {
     public async getProviderLocalDataWithSeason(targetSeason: Season | undefined): Promise<Season | undefined> {
         this.providerWithAwareness = await SeasonAwarenessHelper.updateProvider(this.providerWithAwareness);
 
-        if (EpisodeHelper.hasEpisodeNames(this.providerWithAwareness.detailEpisodeInfo)) {
-            const result = new EpisodeRelationAnalyser(this.providerWithoutAwarness.detailEpisodeInfo, this.providerWithAwareness.detailEpisodeInfo);
+        if (EpisodeHelper.hasEpisodeNames(this.providerWithAwareness.getAllDetailedEpisodes())) {
+            const result = new EpisodeRelationAnalyser(this.providerWithoutAwarness.getAllDetailedEpisodes(), this.providerWithAwareness.getAllDetailedEpisodes());
             const seasonResult = await this.seasonAwarenessChoicePath(result, targetSeason);
             return seasonResult;
         }

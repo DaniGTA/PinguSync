@@ -9,6 +9,6 @@ describe('', () => {
         const episode2 = new Episode(2);
         const episode3 = new Episode(3);
 
-        await aniListInstance.markEpisodeAsWatched([episode1, episode2, episode3]);
+        //await aniListInstance.markEpisodeAsWatched([episode1, episode2, episode3]);
     });
 });
