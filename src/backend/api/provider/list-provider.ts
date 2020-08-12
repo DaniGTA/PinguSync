@@ -23,6 +23,9 @@ export default abstract class ListProvider extends ExternalInformationProvider {
     public abstract userData: UserData;
     public abstract getAllSeries(disableCache?: boolean): Promise<MultiProviderResult[]>;
     public abstract logInUser(pass: string, username?: string): Promise<boolean>;
+    /**
+     * Process Recieved OAUth token.
+     */
     public abstract addOAuthCode(code: string): Promise<boolean>;
     public abstract isUserLoggedIn(): Promise<boolean>;
     public abstract logoutUser(): void;

@@ -8,8 +8,7 @@ import { UserData } from '../../user-data';
 
 
 export class MalUserData extends UserData {
-
-    public loginData?: LoginData;
+    public token = '';
     public username = '';
     public list: Series[] | undefined;
     public lastListUpdate: Date | undefined;
@@ -25,8 +24,8 @@ export class MalUserData extends UserData {
         this.saveData();
     }
 
-    public setLoginData(loginData: LoginData): void {
-        this.loginData = loginData;
+    public setToken(loginData: string): void {
+        this.token = loginData;
         this.saveData();
     }
     protected loadData(): void {

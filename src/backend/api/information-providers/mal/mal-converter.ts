@@ -1,14 +1,16 @@
-import { Jikan } from 'node-myanimelist';
+import { Jikan, Mal } from 'node-myanimelist';
 import Banner from '../../../controller/objects/meta/banner';
 import Cover from '../../../controller/objects/meta/cover';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import Genre from '../../../controller/objects/meta/genre';
 import { ImageSize } from '../../../controller/objects/meta/image-size';
+import { MediaType } from '../../../controller/objects/meta/media-type';
 import Name from '../../../controller/objects/meta/name';
 import { NameType } from '../../../controller/objects/meta/name-type';
 import Overview from '../../../controller/objects/meta/overview';
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import logger from '../../../logger/logger';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import MalProvider from './mal-provider';
 
@@ -17,7 +19,7 @@ export default class MalConverter {
         const animeInfo = await anime.info();
         const lpd = new ListProviderLocalData(animeInfo.mal_id, MalProvider);
         lpd.releaseYear = animeInfo.aired.prop.from.year ?? undefined;
-
+        lpd.mediaType = this.getTypeByAnimeInfo(animeInfo);
         lpd.covers.push(this.getCover(animeInfo));
         lpd.genres.push(...this.getGeneres(animeInfo));
         lpd.runTime = parseInt(animeInfo.duration ?? '') ?? undefined;
@@ -57,6 +59,8 @@ export default class MalConverter {
         const episode = new Episode(1);
         episode.providerEpisodeId = ep.episode_id;
         episode.isFiller = ep.filler;
+        episode.isRecap = ep.recap;
+        episode.airDate = new Date(ep.aired as any);
         const titles = [];
         titles.push(new Name(ep.title, 'unknown', NameType.MAIN));
         if (ep.title_romanji)
@@ -88,6 +92,44 @@ export default class MalConverter {
             titles.push(new Name(info.title_japanese, 'jap', NameType.OFFICIAL));
         titles.push(...info.title_synonyms.map(x => new Name(x, 'unknown', NameType.SYN)));
         return titles;
+    }
+
+    public static convertSearchResultData(animeInfo: any): ListProviderLocalData {
+        const lpd = new ListProviderLocalData(animeInfo.mal_id, MalProvider);
+        lpd.episodes = animeInfo.episodes;
+        lpd.releaseYear = new Date(animeInfo.start_date).getFullYear();
+        lpd.publicScore = animeInfo.score;
+        lpd.covers.push(new Cover(animeInfo.image_url, ImageSize.LARGE));
+        lpd.mediaType = this.getTypeByAnimeInfo(animeInfo);
+        lpd.addSeriesName(new Name(animeInfo.title, 'en', NameType.MAIN));
+        if (animeInfo.synopsis)
+            lpd.addOverview(new Overview(animeInfo.synopsis, 'en'));
+        return lpd;
+    }
+
+    private static getTypeByAnimeInfo(animeInfo: Jikan.Anime.AnimeInfo) {
+        if (animeInfo.type === 'TV') {
+            return MediaType.ANIME;
+        } else if (animeInfo.type === 'Movie') {
+            return MediaType.MOVIE;
+        } else if (animeInfo.type === 'Special') {
+            return MediaType.SPECIAL;
+        } else if (animeInfo.type === 'OVA') {
+            return MediaType.OVA;
+        } else if (animeInfo.type === 'ONA') {
+            return MediaType.ONA;
+        } else if (animeInfo.type === 'Music') {
+            return MediaType.MUSIC;
+        } else {
+            logger.warn('[MAL CONVERTER] Unkown media type:' + animeInfo.type);
+        }
+        return MediaType.UNKOWN;
+    }
+
+    public static convertMalListToMultiProviderResult(lists: Mal.Common.Paging<Mal.Mal.User.AnimeListItem<Mal.Mal.Common.WorkBase, Mal.Mal.Anime.AnimeListStatusBase>>) {
+        for (const entry of lists.data) {
+
+        }
     }
 
 }

@@ -47,6 +47,7 @@ export default class Episode {
     public thumbnails: EpisodeThumbnail[] = [];
     public watchHistory: WatchHistory[] = [];
     public isFiller?: boolean;
+    public isRecap?: boolean;
 
     private _season?: Season;
     /**

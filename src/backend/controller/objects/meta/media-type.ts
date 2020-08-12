@@ -6,4 +6,6 @@ export enum MediaType {
     MOVIE = 'MOVIE',
     SPECIAL = 'SPECIAL',
     OVA = 'OVA',
+    ONA = 'ONA',
+    MUSIC = 'MUSIC'
 }

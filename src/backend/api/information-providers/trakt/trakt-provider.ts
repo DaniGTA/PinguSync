@@ -91,6 +91,7 @@ export default class TraktProvider extends ListProvider {
             this.userData = new TraktUserData();
         }
     }
+
     public async addOAuthCode(code: string): Promise<boolean> {
         const options = {
             headers: {
