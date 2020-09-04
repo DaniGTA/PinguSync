@@ -27,14 +27,18 @@ export default class SyncEpisodes {
         let lastEp: null | Episode = null;
         for (const epPool of this.series.episodeBindingPools) {
             const epBinding = epPool.bindedEpisodeMappings.find(x => x.provider === provider.providerName);
-            const episode = this.getEpisodeByBinding(epBinding);
-            if (episode) {
-                const result = this.isSyncByEpisode(episode);
-                if (!result) {
-                    return new SyncStatus(false, lastEp, 6);
-                } else {
-                    lastEp = episode;
+            if (epBinding) {
+                const episode = this.getEpisodeByBinding(epBinding);
+                if (episode) {
+                    const result = this.isSyncByEpisode(episode);
+                    if (!result) {
+                        return new SyncStatus(false, lastEp, 6);
+                    } else {
+                        lastEp = episode;
+                    }
                 }
+            } else {
+                return new SyncStatus(false, lastEp, 6);
             }
         }
         return new SyncStatus(true, lastEp, 6);

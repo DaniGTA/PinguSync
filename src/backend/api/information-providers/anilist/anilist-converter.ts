@@ -50,7 +50,7 @@ export default new class AniListConverter {
         }
     }
 
-    public async convertMediaToLocalData(medium: Medium): Promise<ListProviderLocalData> {
+    public convertMediaToLocalData(medium: Medium): ListProviderLocalData {
         let provider = new ListProviderLocalData(medium.id, AniListProvider.getInstance());
 
         if (medium.title.romaji) {
@@ -72,11 +72,11 @@ export default new class AniListConverter {
 
         provider.score = medium.averageScore;
         provider.episodes = medium.episodes;
-        provider = await this.fillRelation(provider, medium.relations);
+        provider = this.fillRelation(provider, medium.relations);
         return provider;
     }
 
-    public async convertExtendedInfoToAnime(info: GetSeriesByID): Promise<ListProviderLocalData> {
+    public convertExtendedInfoToAnime(info: GetSeriesByID): ListProviderLocalData {
         let provider = new ListProviderLocalData(info.Media.id, AniListProvider.getInstance());
         provider.addOverview(new Overview(info.Media.description, 'eng'));
 
@@ -99,11 +99,11 @@ export default new class AniListConverter {
         provider.score = info.Media.averageScore;
         provider.episodes = info.Media.episodes;
         provider.infoStatus = ProviderInfoStatus.FULL_INFO;
-        provider = await this.fillRelation(provider, info.Media.relations);
+        provider = this.fillRelation(provider, info.Media.relations);
         return provider;
     }
 
-    public async convertListEntryToAnime(entry: Entry, watchStatus: ListType): Promise<MultiProviderResult> {
+    public convertListEntryToAnime(entry: Entry, watchStatus: ListType): MultiProviderResult {
         let seasonNumber: number | undefined;
         let providerInfo: ListProviderLocalData = new ListProviderLocalData(entry.media.id, AniListProvider.getInstance());
         if (entry.media.title.romaji) {
@@ -126,7 +126,7 @@ export default new class AniListConverter {
                     seasonNumber = 1;
                 }
             }
-            providerInfo = await this.fillRelation(providerInfo, entry.media.relations);
+            providerInfo = this.fillRelation(providerInfo, entry.media.relations);
 
         } catch (err) {
             logger.error(err);
@@ -165,7 +165,7 @@ export default new class AniListConverter {
         return MediaType.UNKOWN;
     }
 
-    private async fillRelation(providerInfo: ListProviderLocalData, relations: Relation): Promise<ListProviderLocalData> {
+    private fillRelation(providerInfo: ListProviderLocalData, relations: Relation): ListProviderLocalData {
         const prequel = relations.edges.findIndex((x) => x.relationType === MediaRelation.PREQUEL);
         if (prequel !== -1) {
             providerInfo.prequelIds.push(relations.nodes[prequel].id);

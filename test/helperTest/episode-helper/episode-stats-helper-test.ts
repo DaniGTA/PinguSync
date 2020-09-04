@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
@@ -11,7 +10,7 @@ describe('Episode stats helper', () => {
         const episodeS = new Episode('S3');
 
         const result = EpisodeStatsHelper.getMaxEpisodeFromEpisodeList([episode1, episode2, episodeS]);
-        strictEqual(result, 2);
+        expect(result).toBe(2);
     });
 
     test('should get max episode from providerLocalData with detailed episodes', () => {
@@ -20,16 +19,16 @@ describe('Episode stats helper', () => {
         const episode1 = new Episode(1);
         const episode2 = new Episode(2);
         const episodeS = new Episode('S3');
-        providerLocalData.detailEpisodeInfo = [episode1, episode2, episodeS];
+        providerLocalData.addDetailedEpisodeInfos(episode1, episode2, episodeS);
         const result = EpisodeStatsHelper.getMaxEpisodeNumber(providerLocalData);
-        strictEqual(result, 2);
+        expect(result).toBe(2);
     });
 
     test('should get max episode from providerLocalData with max episodes number', () => {
         const providerLocalData = new InfoProviderLocalData('1');
         providerLocalData.episodes = 2;
         const result = EpisodeStatsHelper.getMaxEpisodeNumber(providerLocalData);
-        strictEqual(result, 2);
+        expect(result).toBe(2);
     });
 
     test('should get max season number from detailed episodes', () => {
@@ -37,6 +36,6 @@ describe('Episode stats helper', () => {
         const episode2 = new Episode(2, new Season(2));
         const episodeS = new Episode('S3');
         const result = EpisodeStatsHelper.getMaxSeasonNumberFromEpisodeList([episode1, episode2, episodeS]);
-        strictEqual(result, 2);
+        expect(result).toBe(2);
     });
 });

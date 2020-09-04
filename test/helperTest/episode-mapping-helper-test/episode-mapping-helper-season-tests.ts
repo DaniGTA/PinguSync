@@ -37,7 +37,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         aProvider.addDetailedEpisodeInfos(new Episode(2, undefined, [new EpisodeTitle('Special round')]));
         aProvider.addDetailedEpisodeInfos(new Episode(3, undefined, [new EpisodeTitle('Second round')]));
 
-        await aSeries.addProviderDatas(aProvider);
+        aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -59,7 +59,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         bProvider.addDetailedEpisodeInfos(bEpisodeInfo2);
         bProvider.addDetailedEpisodeInfos(bEpisodeInfo3);
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
 
         // Testing
 
@@ -67,9 +67,9 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
-        const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
-        const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
+        const aEpisodeInfo1 = aProvider.getAllDetailedEpisodes()[0];
+        const aEpisodeInfo2 = aProvider.getAllDetailedEpisodes()[1];
+        const aEpisodeInfo3 = aProvider.getAllDetailedEpisodes()[2];
 
 
         // Result checking
@@ -109,7 +109,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         aProvider.addDetailedEpisodeInfos(new Episode(2, undefined, [new EpisodeTitle('Special round')]));
         aProvider.addDetailedEpisodeInfos(new Episode(3, undefined, [new EpisodeTitle('Second round')]));
 
-        await aSeries.addProviderDatas(aProvider);
+        aSeries.addProviderDatas(aProvider);
 
         // B Site
 
@@ -120,7 +120,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(1, new Season([2])));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([2])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([2])));
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+        aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
 
         // Testing
 
@@ -128,17 +128,17 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
-        const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
-        const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
+        const aEpisodeInfo1 = aProvider.getAllDetailedEpisodes()[0];
+        const aEpisodeInfo2 = aProvider.getAllDetailedEpisodes()[1];
+        const aEpisodeInfo3 = aProvider.getAllDetailedEpisodes()[2];
 
-        const bEpisodeInfo1 = bProvider.detailEpisodeInfo[0];
-        const bEpisodeInfo2 = bProvider.detailEpisodeInfo[1];
-        const bEpisodeInfo3 = bProvider.detailEpisodeInfo[2];
+        const bEpisodeInfo1 = bProvider.getAllDetailedEpisodes()[0];
+        const bEpisodeInfo2 = bProvider.getAllDetailedEpisodes()[1];
+        const bEpisodeInfo3 = bProvider.getAllDetailedEpisodes()[2];
 
-        const bEpisodeInfo1s2 = bProvider.detailEpisodeInfo[3];
-        const bEpisodeInfo2s2 = bProvider.detailEpisodeInfo[4];
-        const bEpisodeInfo3s2 = bProvider.detailEpisodeInfo[5];
+        const bEpisodeInfo1s2 = bProvider.getAllDetailedEpisodes()[3];
+        const bEpisodeInfo2s2 = bProvider.getAllDetailedEpisodes()[4];
+        const bEpisodeInfo3s2 = bProvider.getAllDetailedEpisodes()[5];
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo1s2 && bEpisodeInfo2s2 && bEpisodeInfo3s2)) {
@@ -177,7 +177,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         aProvider.addDetailedEpisodeInfos(new Episode(2, undefined, [new EpisodeTitle('Special round')]));
         aProvider.addDetailedEpisodeInfos(new Episode(3, undefined, [new EpisodeTitle('Second round')]));
 
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([2])));
+        aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider, new Season([2])));
 
         // B Site
 
@@ -188,7 +188,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
         bProvider.addDetailedEpisodeInfos(new Episode(1, new Season([2])));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([2])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([2])));
-        await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([2])));
+        aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([2])));
 
         // Testing
 
@@ -196,17 +196,17 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
         // Extract results.
 
-        const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
-        const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
-        const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
+        const aEpisodeInfo1 = aProvider.getAllDetailedEpisodes()[0];
+        const aEpisodeInfo2 = aProvider.getAllDetailedEpisodes()[1];
+        const aEpisodeInfo3 = aProvider.getAllDetailedEpisodes()[2];
 
-        const bEpisodeInfo1 = bProvider.detailEpisodeInfo[0];
-        const bEpisodeInfo2 = bProvider.detailEpisodeInfo[1];
-        const bEpisodeInfo3 = bProvider.detailEpisodeInfo[2];
+        const bEpisodeInfo1 = bProvider.getAllDetailedEpisodes()[0];
+        const bEpisodeInfo2 = bProvider.getAllDetailedEpisodes()[1];
+        const bEpisodeInfo3 = bProvider.getAllDetailedEpisodes()[2];
 
-        const bEpisodeInfo1s2 = bProvider.detailEpisodeInfo[3];
-        const bEpisodeInfo2s2 = bProvider.detailEpisodeInfo[4];
-        const bEpisodeInfo3s2 = bProvider.detailEpisodeInfo[5];
+        const bEpisodeInfo1s2 = bProvider.getAllDetailedEpisodes()[3];
+        const bEpisodeInfo2s2 = bProvider.getAllDetailedEpisodes()[4];
+        const bEpisodeInfo3s2 = bProvider.getAllDetailedEpisodes()[5];
 
         // Result checking
         if (!(aEpisodeInfo1 && aEpisodeInfo2 && aEpisodeInfo3 && bEpisodeInfo1 && bEpisodeInfo2 && bEpisodeInfo3 && bEpisodeInfo1s2 && bEpisodeInfo2s2 && bEpisodeInfo3s2)) {
@@ -247,7 +247,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
             aProvider.addDetailedEpisodeInfos(new Episode(2));
             aProvider.addDetailedEpisodeInfos(new Episode(3));
 
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider));
+            aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(aProvider));
 
             // B Site
 
@@ -261,7 +261,7 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
             bProvider.addDetailedEpisodeInfos(new Episode(1, new Season([2])));
             bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([2])));
             bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([2])));
-            await aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
+            aSeries.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(bProvider, new Season([1])));
 
             // Testing
 
@@ -269,21 +269,21 @@ describe('Episode mapping | Season Mapping Tests Only', () => {
 
             // Extract results.
 
-            const aEpisodeInfo1 = aProvider.detailEpisodeInfo[0];
-            const aEpisodeInfo2 = aProvider.detailEpisodeInfo[1];
-            const aEpisodeInfo3 = aProvider.detailEpisodeInfo[2];
+            const aEpisodeInfo1 = aProvider.getAllDetailedEpisodes()[0];
+            const aEpisodeInfo2 = aProvider.getAllDetailedEpisodes()[1];
+            const aEpisodeInfo3 = aProvider.getAllDetailedEpisodes()[2];
 
-            const bEpisodeInfo1s0 = bProvider.detailEpisodeInfo[0];
-            const bEpisodeInfo2s0 = bProvider.detailEpisodeInfo[1];
-            const bEpisodeInfo3s0 = bProvider.detailEpisodeInfo[2];
+            const bEpisodeInfo1s0 = bProvider.getAllDetailedEpisodes()[0];
+            const bEpisodeInfo2s0 = bProvider.getAllDetailedEpisodes()[1];
+            const bEpisodeInfo3s0 = bProvider.getAllDetailedEpisodes()[2];
 
-            const bEpisodeInfo1s1 = bProvider.detailEpisodeInfo[3];
-            const bEpisodeInfo2s1 = bProvider.detailEpisodeInfo[4];
-            const bEpisodeInfo3s1 = bProvider.detailEpisodeInfo[5];
+            const bEpisodeInfo1s1 = bProvider.getAllDetailedEpisodes()[3];
+            const bEpisodeInfo2s1 = bProvider.getAllDetailedEpisodes()[4];
+            const bEpisodeInfo3s1 = bProvider.getAllDetailedEpisodes()[5];
 
-            const bEpisodeInfo1s2 = bProvider.detailEpisodeInfo[6];
-            const bEpisodeInfo2s2 = bProvider.detailEpisodeInfo[7];
-            const bEpisodeInfo3s2 = bProvider.detailEpisodeInfo[8];
+            const bEpisodeInfo1s2 = bProvider.getAllDetailedEpisodes()[6];
+            const bEpisodeInfo2s2 = bProvider.getAllDetailedEpisodes()[7];
+            const bEpisodeInfo3s2 = bProvider.getAllDetailedEpisodes()[8];
 
             // Result checking
 

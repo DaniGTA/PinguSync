@@ -135,7 +135,7 @@ export default class AniListProvider extends ListProvider {
         const endResult: MultiProviderResult[] = [];
         for (const result of searchResults.Page.media) {
             try {
-                endResult.push(new MultiProviderResult(await aniListConverter.convertMediaToLocalData(result)));
+                endResult.push(new MultiProviderResult(aniListConverter.convertMediaToLocalData(result)));
             } catch (err) {
                 continue;
             }
@@ -151,7 +151,7 @@ export default class AniListProvider extends ListProvider {
         if (provider.provider === this.providerName && provider.id) {
             const fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' }));
 
-            return new MultiProviderResult(await aniListConverter.convertExtendedInfoToAnime(fullInfo));
+            return new MultiProviderResult(aniListConverter.convertExtendedInfoToAnime(fullInfo));
         }
         throw new Error('False provider - AniList');
     }
@@ -191,7 +191,7 @@ export default class AniListProvider extends ListProvider {
             for (const list of data.lists) {
                 const watchStatus = this.convertListNameToWatchStatus(list.name);
                 for (const entry of list.entries) {
-                    seriesList.push(await aniListConverter.convertListEntryToAnime(entry, watchStatus));
+                    seriesList.push(aniListConverter.convertListEntryToAnime(entry, watchStatus));
                 }
             }
             this.userData.updateList(seriesList);

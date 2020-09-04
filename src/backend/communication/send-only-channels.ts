@@ -11,5 +11,6 @@ export enum chSend {
     QuitAndInstall = 'quitAndInstall',
     OpenEpisodeInExternalBrowser = 'OpenEpisodeInExternalBrowser',
     MarkEpisodeAsWatched = 'MarkEpisodeAsWatched',
-    MarkEpisodeAsUnwatched = 'MarkEpisodeAsUnwatched'
+    MarkEpisodeAsUnwatched = 'MarkEpisodeAsUnwatched',
+    DefaultProviderLogin = 'default-login-provider'
 }

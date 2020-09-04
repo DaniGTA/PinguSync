@@ -32,7 +32,7 @@ export default class FrontendProviderAuthController {
 
     private init(): void {
         this.com.on('oauth-login-provider', (providerName) => this.oAuthLogin(providerName));
-        this.com.on('default-login-provider', (data) => this.defaultLogin(data));
+        this.com.on(chSend.DefaultProviderLogin, (data) => this.defaultLogin(data));
         this.com.on(chSend.LogoutUser, (providerName) => this.logoutProvider(providerName));
         this.com.on(chOnce.IsAnyProviderLoggedIn, async () => this.com.send(chOnce.IsAnyProviderLoggedIn, await this.isAnyProviderLoggedIn()));
         this.com.on(chOnce.GetLoggedInStatus, async (providerName) => this.com.send(chOnce.GetLoggedInStatus, await this.isUserLoggedIn(providerName)));

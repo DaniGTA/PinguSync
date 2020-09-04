@@ -1,5 +1,5 @@
 
-import Mal, { Jikan, Scraper } from 'node-myanimelist';
+import { Mal, Jikan, Scraper } from 'node-myanimelist';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import WatchProgress from '../../../controller/objects/meta/watch-progress';
 import Series from '../../../controller/objects/series';
@@ -14,7 +14,7 @@ import { MalUserData } from './mal-user-data';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import MalConverter from './mal-converter';
-import pkceChallenge from "pkce-challenge";
+import pkceChallenge from 'pkce-challenge';
 import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper';
 
 export default class MalProvider extends ListProvider {
@@ -43,19 +43,19 @@ export default class MalProvider extends ListProvider {
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
     public providerName = 'Mal';
-    public hasOAuthLogin = false;
+    public hasOAuthLogin = true;
     public hasUniqueIdForSeasons = true;
     public userData: MalUserData;
     public requestRateLimitInMs = 4500;
     public pkce = pkceChallenge();
-    public malAuth = Mal.Mal.auth();
-    public currentAcount: Mal.Mal.MalAcount | null = null;
+    public malAuth = Mal.auth();
+    public static currentAcount: Mal.MalAcount | null = null;
     constructor() {
         super();
         this.userData = new MalUserData();
         if (this.userData.token) {
-            const token = Mal.Mal.MalToken.fromJsonString(this.userData.token);
-            this.currentAcount = this.malAuth.loadToken(token);
+            const token = Mal.MalToken.fromJsonString(this.userData.token);
+            MalProvider.currentAcount = this.malAuth.loadToken(token);
 
         }
     }
@@ -65,11 +65,11 @@ export default class MalProvider extends ListProvider {
     }
 
     public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
-        if (this.currentAcount) {
+        if (MalProvider.currentAcount) {
             const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode);
             for (const groupedEpisode of groupedEpisodes) {
                 const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromArray(groupedEpisode);
-                await this.currentAcount.anime.updateMyAnime(groupedEpisode[0].providerId as number, { num_watched_episodes: maxEpNumber, status: 'watching' }).call();
+                await MalProvider.currentAcount.anime.updateMyAnime(groupedEpisode[0].providerId as number, { num_watched_episodes: maxEpNumber, status: 'watching' }).call();
             }
         }
 
@@ -125,9 +125,9 @@ export default class MalProvider extends ListProvider {
     }
 
     public async getAllSeries(disableCache?: boolean | undefined): Promise<MultiProviderResult[]> {
-        if (this.currentAcount) {
-            const lists = await this.currentAcount.user.animelist().call();
-            MalConverter.convertMalListToMultiProviderResult(lists);
+        if (MalProvider.currentAcount) {
+            const lists = await MalProvider.currentAcount.user.animelist().call();
+            return MalConverter.convertMalListToMultiProviderResult(lists);
         }
         throw new Error('Method not implemented.');
     }
@@ -136,7 +136,7 @@ export default class MalProvider extends ListProvider {
             if (username && pass) {
 
                 const acount = await this.malAuth.Unstable.login(username, pass);
-                this.currentAcount = acount;
+                MalProvider.currentAcount = acount;
                 this.userData.setToken(acount.stringifyToken());
                 return this.isUserLoggedIn();
             }

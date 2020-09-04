@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import { isDeepStrictEqual } from 'util';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import Name from '../../../src/backend/controller/objects/meta/name';
@@ -13,36 +12,36 @@ describe('Provider data list manager tests', () => {
         ProviderDataListManager['providerDataList'] = [];
     });
 
-    test('It should update provider data in list', async () => {
+    test('It should update provider data in list', () => {
         const oldProvider = new ListProviderLocalData(1, 'test');
-        await ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
+        ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
 
         const newProvider = new ListProviderLocalData(1, 'test');
-        newProvider.detailEpisodeInfo.push(new Episode(1));
+        newProvider.addDetailedEpisodeInfos(new Episode(1));
         newProvider.watchStatus = ListType.COMPLETED;
         newProvider.infoStatus = ProviderInfoStatus.BASIC_INFO;
         newProvider.addSeriesName(new Name('A', 'A'));
 
-        await ProviderDataListManager.addProviderLocalDataToMainList(newProvider);
+        ProviderDataListManager.addProviderLocalDataToMainList(newProvider);
 
-        strictEqual(ProviderDataListManager['providerDataList'].length, 1);
+        expect(ProviderDataListManager['providerDataList'].length).toBe(1);
         isDeepStrictEqual(ProviderDataListManager['providerDataList'][0], newProvider);
     });
 
-    test('It should not downgrade existing data', async () => {
+    test('It should not downgrade existing data', () => {
         const oldProvider = new ListProviderLocalData(1, 'test');
-        await ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
+        ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
 
         const newProvider = new ListProviderLocalData(1, 'test');
-        newProvider.detailEpisodeInfo.push(new Episode(1));
+        newProvider.addDetailedEpisodeInfos(new Episode(1));
         newProvider.watchStatus = ListType.COMPLETED;
         newProvider.infoStatus = ProviderInfoStatus.BASIC_INFO;
         newProvider.addSeriesName(new Name('A', 'A'));
 
-        await ProviderDataListManager.addProviderLocalDataToMainList(newProvider);
-        await ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
+        ProviderDataListManager.addProviderLocalDataToMainList(newProvider);
+        ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
 
-        strictEqual(ProviderDataListManager['providerDataList'].length, 1);
+        expect(ProviderDataListManager['providerDataList'].length).toBe(1);
         isDeepStrictEqual(ProviderDataListManager['providerDataList'][0], newProvider);
     });
 });

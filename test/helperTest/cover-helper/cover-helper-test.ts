@@ -14,7 +14,7 @@ describe('Cover Helper Test', () => {
         expect(failedC?.failed).toBeTruthy();
     });
 
-    test('It should return unique list (one list)', async () => {
+    test('It should return unique list (one list)', () => {
         const failedA = new Cover('test2');
         failedA.failed = true;
         const failedB = new Cover('test2');

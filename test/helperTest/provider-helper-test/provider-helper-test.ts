@@ -57,34 +57,34 @@ describe('Provider Helper Test', () => {
 
     });
     describe('Test function: canUpdateAnyProvider()', () => {
-        test('should be true', async () => {
+        test('should be true', () => {
             const series = new Series();
             const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1);
             providerLocalData.version--;
 
-            await series.addInfoProvider(providerLocalData);
+            series.addInfoProvider(providerLocalData);
 
             const result = NewProviderHelper.canUpdateAnyProvider(series);
             expect(result).toBe(true);
         });
-        test('should be false', async () => {
+        test('should be false', () => {
             const series = new Series();
             const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1);
 
-            await series.addInfoProvider(providerLocalData);
+            series.addInfoProvider(providerLocalData);
 
             const result = NewProviderHelper.canUpdateAnyProvider(series);
             expect(result).toBe(false);
         });
 
-        test('should be false (provider has error)', async () => {
+        test('should be false (provider has error)', () => {
             const series = new Series();
             series.addFailedRequest(
                 new FailedProviderRequest(ProviderList.getProviderInstanceByClass(TestInfoProvider1), FailedRequestError.ProviderNotAvailble));
             const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1);
             providerLocalData.version--;
 
-            await series.addInfoProvider(providerLocalData);
+            series.addInfoProvider(providerLocalData);
 
             const result = NewProviderHelper.canUpdateAnyProvider(series);
             expect(result).toBe(false);
@@ -95,8 +95,8 @@ describe('Provider Helper Test', () => {
     test('It should get all list provider that need a update', async () => {
         // Series A
         const series = new Series();
-        await series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
-        await series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
+        series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
+        series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
         // tslint:disable-next-line: no-string-literal
         const result = await ProviderInfoHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         expect(result.length).toBe(2);

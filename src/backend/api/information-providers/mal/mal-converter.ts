@@ -1,3 +1,4 @@
+import { ListType } from './../../../controller/settings/models/provider/list-types';
 import { Jikan, Mal } from 'node-myanimelist';
 import Banner from '../../../controller/objects/meta/banner';
 import Cover from '../../../controller/objects/meta/cover';
@@ -13,6 +14,8 @@ import { ListProviderLocalData } from '../../../controller/provider-controller/p
 import logger from '../../../logger/logger';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import MalProvider from './mal-provider';
+import { AnimeListStatusBase } from 'node-myanimelist/typings/methods/malApi/anime';
+import WatchHistory from '../../../controller/objects/meta/episode/episode-watch-history';
 
 export default class MalConverter {
     public static async convertAnimeToProviderData(anime: Jikan.Anime.Anime): Promise<MultiProviderResult> {
@@ -126,10 +129,49 @@ export default class MalConverter {
         return MediaType.UNKOWN;
     }
 
-    public static convertMalListToMultiProviderResult(lists: Mal.Common.Paging<Mal.Mal.User.AnimeListItem<Mal.Mal.Common.WorkBase, Mal.Mal.Anime.AnimeListStatusBase>>) {
-        for (const entry of lists.data) {
-
+    private static convertWatchStatus(watchStatus: AnimeListStatusBase['status'], isRewatching: boolean): ListType {
+        if (isRewatching) {
+            return ListType.REPEATING;
+        } else if (watchStatus == 'watching') {
+            return ListType.CURRENT;
+        } else if (watchStatus == 'plan_to_watch') {
+            return ListType.PLANNING;
+        } else if (watchStatus == 'completed') {
+            return ListType.COMPLETED;
+        } else if (watchStatus == 'dropped') {
+            return ListType.DROPPED;
+        } else if (watchStatus == 'on_hold') {
+            return ListType.PAUSED;
+        } else {
+            return ListType.UNKOWN;
         }
     }
+    public static convertMalListToMultiProviderResult(lists: Mal.Common.Paging<Mal.User.AnimeListItem<Mal.Common.WorkBase, Mal.Anime.AnimeListStatusBase>>): MultiProviderResult[] {
+        const multiProviderResultList: MultiProviderResult[] = [];
+        for (const entry of lists.data) {
+            const p = new ListProviderLocalData(entry.node.id, MalProvider);
+            p.infoStatus = ProviderInfoStatus.BASIC_INFO;
+            for (let index = 1; index < (entry.list_status.num_episodes_watched + 1); index++) {
+                const ep = new Episode(index);
+                ep.watchHistory.push(new WatchHistory());
+                p.addDetailedEpisodeInfos(ep);
+            }
+            p.watchStatus = this.convertWatchStatus(entry.list_status.status, entry.list_status.is_rewatching);
+            p.addSeriesName(new Name(entry.node.title, 'en', NameType.MAIN));
+            p.covers.push(...this.convertMainPicturToCovers(entry.node.main_picture));
+            multiProviderResultList.push(new MultiProviderResult(p));
+        }
+        return multiProviderResultList;
+    }
 
+    private static convertMainPicturToCovers(mainPicture: Mal.Common.Picture | null): Cover[] {
+        const covers: Cover[] = [];
+        if (mainPicture) {
+            if (mainPicture.large)
+                covers.push(new Cover(mainPicture.large, ImageSize.LARGE));
+            if (mainPicture.medium)
+                covers.push(new Cover(mainPicture.medium, ImageSize.MEDIUM));
+        }
+        return covers;
+    }
 }

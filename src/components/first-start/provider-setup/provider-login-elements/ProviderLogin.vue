@@ -4,14 +4,14 @@
     <div class="provider-login-credentials">
       <div class="provider-login-credentials-username">
         <div>Benutzername</div>
-        <input />
+        <input  v-model="username" />
       </div>
       <div class="provider-login-credentials-password">
         <div>Passwort</div>
-        <input type="password" />
+        <input type="password" v-model="password"/>
       </div>
     </div>
-  <button class="provider-login-button"> Anmelden </button>
+  <button @click="defaultLogin()" class="provider-login-button"> Anmelden </button>
   </div>
 </template>
 
@@ -21,6 +21,9 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import ProviderOAuthLogin from './ProviderOAuthLogin.vue';
 import ListProvider from '../../../../backend/api/provider/list-provider';
+import { chSend } from '../../../../backend/communication/send-only-channels';
+import FrontendDefaultLogin from '../../../../backend/controller/frontend/providers/model/frontend-default-login';
+import WorkerController from '../../../../backend/communication/ipc-renderer-controller';
 @Component({
 	components: {
         ProviderOAuthLogin
@@ -29,6 +32,13 @@ import ListProvider from '../../../../backend/api/provider/list-provider';
 export default class ProviderLogin extends Vue {
   @Prop({required: true})
   provider!: ListProvider;
+
+  username: string = '';
+  password: string = '';
+
+  async defaultLogin(){
+    WorkerController.send(chSend.DefaultProviderLogin, {providerName: this.provider.providerName, username: this.username, password: this.password} as FrontendDefaultLogin);
+  }
 }
 </script>
 
