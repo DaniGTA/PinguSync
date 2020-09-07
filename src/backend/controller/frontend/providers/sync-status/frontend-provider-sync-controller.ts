@@ -1,3 +1,4 @@
+import { SyncStatusType } from './../../../sync-controller/model/sync-status-type';
 import ICommunication from '../../../../communication/icommunication';
 import IPCBackgroundController from '../../../../communication/ipc-background-controller';
 import { chOnce } from '../../../../communication/channels';
@@ -32,6 +33,9 @@ export default class FrontendProviderSyncController {
         const provider = ProviderList.getProviderInstanceByProviderName(data.providerName);
         if (series && provider instanceof ListProvider) {
             const se = new SyncEpisodes(series).getSyncStatus(provider);
+            if (SyncExternalEpisodes.isSeriesOnWaitlist(data.seriesId, data.providerName)) {
+                se.syncStatus = SyncStatusType.ON_SYNC_WAITLIST;
+            }
             return se as GetSyncStatusRecieved;
         }
         return {} as GetSyncStatusRecieved;

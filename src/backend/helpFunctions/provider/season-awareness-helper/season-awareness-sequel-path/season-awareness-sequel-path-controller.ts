@@ -51,7 +51,7 @@ export default class SeasonAwarenessSequelPathController {
             new ProviderLocalDataWithSeasonInfo(providerWithoutAwareness, sequelSeasonResult)];
             const sequelTempSeries = new Series();
             sequelTempSeries.addProviderDatasWithSeasonInfos(...sequelResult);
-            new MainListAdder().addSeries(sequelTempSeries);
+            new MainListAdder().addSeriesWithoutCleanUp(sequelTempSeries);
         }
     }
 

@@ -34,6 +34,11 @@ export default class NewProviderHelper {
         return false;
     }
 
+    public static async missingAnyReleventProvider(series: Series): Promise<boolean> {
+        const missingProviders2 = await NewProviderHelper.missingRelevantProviders(series, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+        return missingProviders2.length !== 0;
+    }
+
 
     public static async getAllRelevantProviderInfosForSeries(series: Series): Promise<Series> {
         const upgradedinfos = await ProviderHelper.requestUpgradeAllCurrentinfos(series, false);

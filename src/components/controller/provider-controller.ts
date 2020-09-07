@@ -30,7 +30,7 @@ export default class ProviderController extends VuexModule {
     }
 
     @Action({ commit: 'syncAllEpisodes' })
-    public syncAllEpisodes(providerName: string, seriesId: string): void {
-        WorkerController.send(chListener.OnSyncEpisodeOfSeriesRequest, { providerName, seriesId } as FrontendSyncEpisodes);
+    public syncAllEpisodes(frontendSyncEpisodes: FrontendSyncEpisodes): void {
+        WorkerController.send(chListener.OnSyncEpisodeOfSeriesRequest, frontendSyncEpisodes);
     }
 }

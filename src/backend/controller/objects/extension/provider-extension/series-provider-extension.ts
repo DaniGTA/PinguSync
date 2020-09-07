@@ -82,8 +82,8 @@ export default class SeriesProviderExtension {
         }
     }
 
-    public getListProvidersInfos(): ListProviderLocalData[] {
-        const realData = ProviderDataListSearcher.getAllBindedProvider(...this.listProviderInfos);
+    public getListProvidersInfos(listProviders = this.listProviderInfos): ListProviderLocalData[] {
+        const realData = ProviderDataListSearcher.getAllBindedProvider(...listProviders);
         return realData as ListProviderLocalData[];
     }
 
@@ -171,26 +171,39 @@ export default class SeriesProviderExtension {
      * Get a single provider local data with the given provider.
      * @param provider the given provider.
      */
-    public getProviderLocalData(provider: ExternalProvider): ProviderLocalData | undefined {
-        const localdata: ProviderLocalData[] = this.getAllProviderLocalDatas();
-        return localdata.find((entry) => entry.provider === provider.providerName);
+    public getOneProviderLocalDataByExternalProvider(provider: ExternalProvider): ProviderLocalData | undefined {
+        return this.getOneProviderLocalDataByProviderName(provider.providerName);
+    }
+
+    public getOneProviderLocalDataByProviderName(providerName: string): ProviderLocalData | undefined {
+        const bindings = this.getAllProviderBindings();
+        const binding = bindings.find((entry) => entry.providerName === providerName);
+        if (binding) {
+            return ProviderDataListSearcher.getOneBindedProvider(binding);
+        }
     }
 
     /**
      * Get a single provider local data with the given provider.
      * @param provider the given provider.
      */
-    public getProviderLocalDataWithSeasonInfo(provider: ExternalProvider): ProviderLocalDataWithSeasonInfo | undefined {
-        const localdata: ProviderLocalDataWithSeasonInfo[] = this.getAllProviderLocalDatasWithSeasonInfo();
-        return localdata.find((entry) => entry.providerLocalData.provider === provider.providerName);
+    public getOneProviderLocalDataWithSeasonInfo(provider: ExternalProvider): ProviderLocalDataWithSeasonInfo | undefined {
+        return this.getOneProviderLocalDataWithSeasonInfoByProviderName(provider.providerName);
     }
 
     /**
      * Get a single provider local data with the given provider.
      * @param provider the given providerName.
      */
-    public getProviderLocalDataWithSeasonInfoByProviderName(providerName: string): ProviderLocalDataWithSeasonInfo | undefined {
-        const localdata: ProviderLocalDataWithSeasonInfo[] = this.getAllProviderLocalDatasWithSeasonInfo();
-        return localdata.find((entry) => entry.providerLocalData.provider === providerName);
+    public getOneProviderLocalDataWithSeasonInfoByProviderName(providerName: string): ProviderLocalDataWithSeasonInfo | undefined {
+        const binding = this.getOneProviderLocalDataBindingByProviderName(providerName);
+        if (binding) {
+            return ProviderDataListSearcher.getOneBindedProviderLocalDataWithSeasonInfo(binding);
+        }
+    }
+
+    public getOneProviderLocalDataBindingByProviderName(providerName: string): LocalDataBind | undefined {
+        const bindings = this.getAllProviderBindings();
+        return bindings.find((entry) => entry.providerName === providerName);
     }
 }

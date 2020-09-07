@@ -86,7 +86,7 @@ export default class AniListProvider extends ListProvider {
         const query = print(UpdateSeriesEpisodeProgress);
         const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode);
         for (const groupedEpisode of groupedEpisodes) {
-            const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromArray(groupedEpisode);
+            const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray(groupedEpisode);
             const variables = {
                 mediaId: groupedEpisode[0].providerId,
                 progress: maxEpNumber

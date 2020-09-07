@@ -9,7 +9,7 @@
         v-if="!isSync() && result !== null"
       >{{result.syncedEpisodeCount}}/{{result.maxEpisodeNumber}}</div>
     </div>
-    <q-btn push color="black" text-color="white" @click="sync">Sync</q-btn>
+    <q-btn push color="black" text-color="white" @click.native="sync()">Sync</q-btn>
   </div>
 </template>
 
@@ -23,6 +23,7 @@ import SeriesHoverController from './../../../../../../controller/series-hover-c
 import GetSyncStatusRecieved from '../../../../../../../backend/controller/frontend/providers/sync-status/model/get-sync-status-recieved';
 import { getModule } from 'vuex-module-decorators';
 import { ListProviderInterface } from '../../../../../../controller/model/list-provider-interface';
+import FrontendSyncEpisodes from '../../../../../../../backend/controller/frontend/providers/sync-status/model/sync-episodes';
 
 @Component({
   components: {
@@ -56,13 +57,12 @@ export default class ShowStatusOfSingleProvider extends Vue {
   }
 
   sync(): void {
-    this.providerController.syncAllEpisodes(
-      this.provider.providerName,
-      this.getSeriesId()
-    );
+    const seriesId = this.getSeriesId();
+    this.providerController.syncAllEpisodes( { providerName: this.provider.providerName, seriesId: seriesId } as FrontendSyncEpisodes);
   }
 
   private getSeriesId(): string {
+    console.log('Save hover entry id: '+ this.seriesHoverController.currentlyHoveringSeriesId);
     return this.seriesHoverController.currentlyHoveringSeriesId;
   }
 

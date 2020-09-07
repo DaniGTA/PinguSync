@@ -112,8 +112,8 @@ export default class DownloadProviderLocalDataWithoutId {
                             const [seriesSeason, mediaType] = await Promise.all([this.series.getSeason(), this.series.getMediaType()]);
                             if (seriesSeason.isSeasonNumberPresent()) {
                                 const providerData = ProviderDataListSearcher.getOneBindedProvider(result);
-                                if (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(mediaType, providerData.mediaType)
-                                    || this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason)) {
+                                if (providerData && (MediaTypeComperator.areTheseMediaTypeBothNormalSeries(mediaType, providerData.mediaType)
+                                    || this.hasProviderLocalDataSeasonTargetInfos(providerData, seriesSeason))) {
                                     if (providerData instanceof ListProviderLocalData) {
                                         return new ProviderLocalDataWithSeasonInfo(providerData, seriesSeason);
                                     } else if (providerData instanceof InfoProviderLocalData) {

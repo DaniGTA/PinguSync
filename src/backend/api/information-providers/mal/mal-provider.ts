@@ -38,7 +38,7 @@ export default class MalProvider extends ListProvider {
         return MalProvider.instance;
     }
     private static instance: MalProvider;
-    public version = 1;
+    public version = 3;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
@@ -68,7 +68,7 @@ export default class MalProvider extends ListProvider {
         if (MalProvider.currentAcount) {
             const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode);
             for (const groupedEpisode of groupedEpisodes) {
-                const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromArray(groupedEpisode);
+                const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray(groupedEpisode);
                 await MalProvider.currentAcount.anime.updateMyAnime(groupedEpisode[0].providerId as number, { num_watched_episodes: maxEpNumber, status: 'watching' }).call();
             }
         }
@@ -97,7 +97,7 @@ export default class MalProvider extends ListProvider {
     }
 
     public async isProviderAvailable(): Promise<boolean> {
-        return false;
+        return true;
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {

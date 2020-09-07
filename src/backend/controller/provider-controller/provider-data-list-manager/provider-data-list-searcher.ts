@@ -5,6 +5,11 @@ import ProviderLocalData from '../provider-manager/local-data/interfaces/provide
 import ProviderDataListManager from './provider-data-list-manager';
 
 export default class ProviderDataListSearcher {
+    /**
+     * 
+     * @param id providerId
+     * @param providerName provider instance name
+     */
     public static getOneProviderLocalData(id: string | number, providerName: string): ProviderLocalData | null {
         const localDataList = ProviderDataListManager.getProviderDataList();
         for (const entry of localDataList) {
@@ -35,9 +40,10 @@ export default class ProviderDataListSearcher {
         return null;
     }
 
-    public static getOneBindedProvider(binding: LocalDataBind): ProviderLocalData {
+    public static getOneBindedProvider(binding: LocalDataBind): ProviderLocalData | undefined {
         const result = this.getAllBindedProvider(binding);
-        return result[0];
+        if (result.length !== 0)
+            return result[0];
     }
 
     public static getAllBindedProvider(...bindings: LocalDataBind[]): ProviderLocalData[] {
@@ -64,22 +70,28 @@ export default class ProviderDataListSearcher {
     public static getAllBindedProviderLocalDataWithSeasonInfo(...bindings: LocalDataBind[]): ProviderLocalDataWithSeasonInfo[] {
         const localDataList: ProviderLocalData[] = ProviderDataListManager.getProviderDataListSync();
         const results: ProviderLocalDataWithSeasonInfo[] = [];
-        const len = localDataList.length;
         for (const binding of bindings) {
-            if (this.isProviderLocalDataSavedIndexValid(localDataList, binding)) {
-                results.push(new ProviderLocalDataWithSeasonInfo(localDataList[binding.lastIndex as number], binding.targetSeason));
-            } else {
-                for (let index = 0; index < len; index++) {
-                    const localData = localDataList[index];
-                    if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
-                        binding.lastIndex = index;
-                        results.push(new ProviderLocalDataWithSeasonInfo(localData, binding.targetSeason));
-                        break;
-                    }
-                }
+            const result = this.getOneBindedProviderLocalDataWithSeasonInfo(binding, localDataList);
+            if (result) {
+                results.push(result);
             }
         }
         return results;
+    }
+
+    public static getOneBindedProviderLocalDataWithSeasonInfo(binding: LocalDataBind, localDataList = ProviderDataListManager.getProviderDataListSync()): ProviderLocalDataWithSeasonInfo | undefined {
+        const len = localDataList.length;
+        if (this.isProviderLocalDataSavedIndexValid(localDataList, binding)) {
+            return new ProviderLocalDataWithSeasonInfo(localDataList[binding.lastIndex as number], binding.targetSeason);
+        } else {
+            for (let index = 0; index < len; index++) {
+                const localData = localDataList[index];
+                if (this.isProviderLocalDataTheSearchResult(localData, binding.id, binding.providerName)) {
+                    binding.lastIndex = index;
+                    return new ProviderLocalDataWithSeasonInfo(localData, binding.targetSeason);
+                }
+            }
+        }
     }
 
     public static isProviderLocalDataTheSearchResult(entry: ProviderLocalData | undefined, id: string | number, providerName: string): boolean {

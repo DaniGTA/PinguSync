@@ -79,8 +79,11 @@ export default class SeriesHelper {
         return matches >= matchAbleScore / 1.39;
     }
 
-    public static canUpdateSeries(newSeries: Series, oldSeries: Series): boolean {
+    public static async canUpdateSeries(newSeries: Series, oldSeries: Series): Promise<boolean> {
         if (NewProviderHelper.canUpdateAnyProvider(oldSeries)) {
+            return true;
+        }
+        if (await NewProviderHelper.missingAnyReleventProvider(oldSeries)) {
             return true;
         }
 

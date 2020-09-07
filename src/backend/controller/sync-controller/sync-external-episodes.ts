@@ -6,6 +6,8 @@ import { SyncJob } from './model/sync-episode-job';
 import MainListSearcher from '../main-list-manager/main-list-searcher';
 import logger from '../../logger/logger';
 import listHelper from '../../helpFunctions/list-helper';
+import { ProviderInfoStatus } from '../provider-controller/provider-manager/local-data/interfaces/provider-info-status';
+import MainListAdder from '../main-list-manager/main-list-adder';
 
 export default class SyncExternalEpisodes {
     private static plannedJobList: SyncJob[] = []
@@ -13,6 +15,11 @@ export default class SyncExternalEpisodes {
         if (this.canSync(providerName, series.id)) {
             this.plannedJobList.push({ providerName, seriesId: series.id });
         }
+    }
+
+    public static isSeriesOnWaitlist(seriesId: string, providerName: string): boolean {
+        const result = this.plannedJobList.find(x => (x.seriesId === seriesId && x.providerName === providerName));
+        return !!result;
     }
 
     public static async cronJobProcessSyncing(): Promise<void> {
@@ -42,16 +49,38 @@ export default class SyncExternalEpisodes {
 
     private static async syncEpisodeOfSingleProvider(job: SyncJob): Promise<void> {
         const providerInstance = ProviderList.getProviderInstanceByProviderName(job.providerName);
-        const series = await MainListSearcher.findSeriesById(job.seriesId);
+        let series = await MainListSearcher.findSeriesById(job.seriesId);
         if (providerInstance instanceof ListProvider && series) {
-            const allEpisodesThatNeedSync = new SyncEpisodes(series).getAllEpisodeThatAreOutOfSync(providerInstance);
-            console.info(`[Syncing] [${job.providerName}] [${job.seriesId}] Syncing ${allEpisodesThatNeedSync.length} episodes.`);
-            await providerInstance.markEpisodeAsWatched(allEpisodesThatNeedSync);
+            if (this.needSeriesUpdate(series, providerInstance,)) {
+                const updatedSeries = await this.getUpdatedSeries(series);
+                if (updatedSeries) {
+                    series = updatedSeries;
+                }
+            }
+            await this.syncProcess(series, providerInstance);
         }
         listHelper.removeEntrys(this.plannedJobList, job);
     }
 
+    private static async syncProcess(series: Series, providerInstance: ListProvider): Promise<void> {
+        const allEpisodesThatNeedSync = new SyncEpisodes(series).getAllEpisodeThatAreOutOfSync(providerInstance);
+        logger.info(`[Syncing] [${providerInstance.providerName}] [${series.id}] Syncing ${allEpisodesThatNeedSync.length} episodes.`);
+        if (allEpisodesThatNeedSync.length !== 0) {
+            await providerInstance.markEpisodeAsWatched(allEpisodesThatNeedSync);
+        }
+    }
+
+    private static needSeriesUpdate(series: Series, providerInstance: ListProvider): boolean {
+        const providerLocalData = series.getOneProviderLocalDataByExternalProvider(providerInstance);
+        return ((providerLocalData?.infoStatus ?? 4 > ProviderInfoStatus.ADVANCED_BASIC_INFO) as boolean && providerLocalData?.version !== providerInstance.version);
+    }
+
+    private static async getUpdatedSeries(series: Series): Promise<Series | null> {
+        await new MainListAdder().addSeriesWithoutCleanUp(series);
+        return await MainListSearcher.findSeriesById(series.id);
+    }
+
     private static canSync(provider: string, seriesId: string): boolean {
-        return !this.plannedJobList.find(x => x.providerName === provider && x.seriesId === seriesId);
+        return !this.isSeriesOnWaitlist(seriesId, provider);
     }
 }

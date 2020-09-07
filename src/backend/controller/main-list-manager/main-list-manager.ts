@@ -40,8 +40,6 @@ export default class MainListManager {
                         }
                     }
                 } else {
-                    const instance = await EpisodeMappingHelper.getEpisodeMappings(series);
-                    series.addEpisodeBindingPools(...instance);
                     results.push(series);
                 }
                 if (results.length === 0) {
@@ -62,7 +60,7 @@ export default class MainListManager {
         }
     }
 
-    public static async updateSerieInList(series: Series): Promise<void> {
+    public static async updateSerieInList(series: Series, updateType = MergeTypes.UPDATE): Promise<void> {
         logger.info('[MainList] Update series in mainlist ' + series.id);
         const mainIndex = this.getIndexFromSeries(series, MainListManager.mainList);
         if (mainIndex !== -1) {
@@ -70,7 +68,7 @@ export default class MainListManager {
             if (typeof outdatedSeries.merge !== 'function') {
                 outdatedSeries = Object.assign(new Series(), outdatedSeries);
             }
-            const tempSeries = await outdatedSeries.merge(series, true, MergeTypes.UPDATE);
+            const tempSeries = await outdatedSeries.merge(series, true, updateType);
             tempSeries.id = series.id;
             MainListManager.mainList[mainIndex] = tempSeries;
         }
@@ -81,7 +79,7 @@ export default class MainListManager {
                 if (typeof outdatedSecondListSeries.merge !== 'function') {
                     outdatedSecondListSeries = Object.assign(new Series(), outdatedSecondListSeries);
                 }
-                const tempSecondListSeries = await outdatedSecondListSeries.merge(series, true, MergeTypes.UPDATE);
+                const tempSecondListSeries = await outdatedSecondListSeries.merge(series, true, updateType);
                 tempSecondListSeries.id = series.id;
                 MainListManager.secondList[seconListIndex] = tempSecondListSeries;
             }

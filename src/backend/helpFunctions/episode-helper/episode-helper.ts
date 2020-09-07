@@ -6,6 +6,7 @@ import EpisodeComperator from '../comperators/episode-comperator';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import e from 'express';
 import listHelper from '../list-helper';
+import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
 
 export default class EpisodeHelper {
 
@@ -59,7 +60,7 @@ export default class EpisodeHelper {
         return;
     }
 
-    public static getMaxEpisodeNumberFromArray(episodeArray: Episode[]): number | undefined {
+    public static getMaxEpisodeNumberFromEpisodeArray(episodeArray: Episode[]): number | undefined {
         let episodeNumber: number | undefined;
         for (const episode of episodeArray) {
             const currentEpisodeNumber = episode.getEpNrAsNr();
@@ -67,6 +68,22 @@ export default class EpisodeHelper {
                 episodeNumber = currentEpisodeNumber;
             } else if (currentEpisodeNumber !== undefined && episodeNumber < currentEpisodeNumber) {
                 episodeNumber = currentEpisodeNumber;
+            }
+        }
+        return episodeNumber;
+    }
+
+    public static getMaxEpisodeNrFromEpisodeBindingArray(episodeBingings: EpisodeBindingPool[], providerName: string): number | undefined {
+        let episodeNumber: number | undefined;
+        for (const episodeBinging of episodeBingings) {
+            const epsiodeMappings = episodeBinging.bindedEpisodeMappings.find(x => x.provider === providerName);
+            if (epsiodeMappings) {
+                const currentEpisodeNumber = epsiodeMappings.episodeNumber as number;
+                if (episodeNumber === undefined) {
+                    episodeNumber = currentEpisodeNumber;
+                } else if (currentEpisodeNumber !== undefined && episodeNumber < currentEpisodeNumber) {
+                    episodeNumber = currentEpisodeNumber;
+                }
             }
         }
         return episodeNumber;

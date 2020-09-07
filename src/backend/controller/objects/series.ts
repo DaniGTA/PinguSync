@@ -517,7 +517,7 @@ export default class Series extends SeriesProviderExtension {
                 if (result.searchResultDetails.searchedProviders.length !== 0) {
                     logger.warn('Add TempSeries to MainList: ' + result.searchResultDetails.searchedProviders[0].provider + ': ' + result.searchResultDetails.searchedProviders[0].id);
                     const list = SeasonFindHelper.createTempSeriesFromPrequels(result.searchResultDetails.searchedProviders);
-                    await new MainListAdder().addSeries(...list);
+                    await new MainListAdder().addSeriesWithoutCleanUp(...list);
                     logger.info('Temp Series Successfull added.');
                 }
             }

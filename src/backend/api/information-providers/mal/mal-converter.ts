@@ -59,8 +59,7 @@ export default class MalConverter {
     }
 
     private static convertMalEpisodeToEpisode(ep: Jikan.Anime.EpisodeListItem): Episode {
-        const episode = new Episode(1);
-        episode.providerEpisodeId = ep.episode_id;
+        const episode = new Episode(ep.episode_id);
         episode.isFiller = ep.filler;
         episode.isRecap = ep.recap;
         episode.airDate = new Date(ep.aired as any);

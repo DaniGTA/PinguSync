@@ -34,7 +34,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                 logger.error(err);
             }
         }
-        await new MainListAdder().addSeries(...this.seriesThatShouldAdded);
+        await new MainListAdder().addSeriesWithoutCleanUp(...this.seriesThatShouldAdded);
         return finalResult;
     }
 
@@ -99,7 +99,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
     private async getProviderLocalDataFromFirstSeason(series: Series, providerInstance: ExternalProvider): Promise<ProviderLocalData | undefined> {
         logger.debug('[SeasonAwarenessCreatorSeasonNumber] [getProviderLocalDataFromFirstSeason] for provider instance: ' + providerInstance.providerName);
         try {
-            return (await series.getFirstSeason()).getProviderLocalData(providerInstance);
+            return (await series.getFirstSeason()).getOneProviderLocalDataByExternalProvider(providerInstance);
         } catch (err) {
             logger.debug(err);
             return undefined;

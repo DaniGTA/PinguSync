@@ -36,7 +36,7 @@ export default class MainListEntryUpdater {
     }
 
     public async updateSingleProviderData(provider: ProviderLocalDataWithSeasonInfo, series: Series): Promise<void> {
-        const oldProvider = series.getProviderLocalDataWithSeasonInfoByProviderName(provider.providerLocalData.provider);
+        const oldProvider = series.getOneProviderLocalDataWithSeasonInfoByProviderName(provider.providerLocalData.provider);
         series.addProviderDatasWithSeasonInfos(provider);
         if (oldProvider?.providerLocalData.getAllDetailedEpisodes().length !== provider.providerLocalData.getAllDetailedEpisodes().length) {
             const instance = await EpisodeMappingHelper.getEpisodeMappings(series);

@@ -4,10 +4,9 @@
     @mouseleave="isNotHovering()" @click="openDetailView()">
     <template v-if="id && visible">
         <BlockListEntryDetails :seriesId="id" ref="details"/>
-        <q-menu @mouseover="isHovering()" @mouseleave="isNotHovering()" 
-        auto-close anchor="top right" self="top left" content-class="hover-content"  v-model="hover" scroll-target=".block-list-entry" ref="menu">
-          <BlockListEntrySyncStatusHover :seriesId="id" ref="hoverStatus"/>
-        </q-menu>
+        <q-popup-proxy @mouseover="isHovering()" @mouseleave="isNotHovering()" anchor="top right" self="top left" content-class="hover-content"  v-model="hover" scroll-target=".block-list-entry" ref="menu">
+          <BlockListEntrySyncStatusHover v-on:click.stop.prevent="" :seriesId="id" ref="hoverStatus"/>
+        </q-popup-proxy>
     </template>
     </div>
   </q-intersection>
@@ -61,6 +60,7 @@ export default class BlockEntry extends Vue {
   }
 
   public async isNotHovering(): Promise<void> {
+    console.log('not hovering');
     this.newHoverStatus = false;
     await this.sleep(25);
     this.hover = this.newHoverStatus;
@@ -90,5 +90,8 @@ export default class BlockEntry extends Vue {
   height: 205px;
   border-radius: 5px;
   overflow: hidden;
+}
+.hover-content{
+  z-index: 10;
 }
 </style>

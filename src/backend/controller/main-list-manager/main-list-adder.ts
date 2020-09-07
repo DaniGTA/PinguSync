@@ -1,3 +1,4 @@
+import { MergeTypes } from './../objects/merge-types';
 import listHelper from '../../helpFunctions/list-helper';
 import NewProviderHelper from '../../helpFunctions/provider/new-provider-helper';
 import SeriesHelper from '../../helpFunctions/series-helper';
@@ -32,18 +33,35 @@ export default class MainListAdder {
      * @param series
      */
     public async addSeries(...series: Series[]): Promise<void> {
-        const trackId = StringHelper.randomString(50);
-        logger.log('info', '[MainListAdder] Start adding');
-        MainListAdder.instanceTracker.push(trackId);
+        const trackId = this.addTrackerId();
         await this.listWorker(series);
 
         if (MainListAdder.instanceTracker.length === 1 && MainListAdder.instanceTracker[0] === trackId) {
             await MainListManager.finishListFilling();
             this.requestSave();
         }
-        MainListAdder.instanceTracker = listHelper.removeEntrys(MainListAdder.instanceTracker, trackId);
+        this.removeTrackId(trackId);
         logger.log('info', '[MainListAdder] End adding');
     }
+
+    public async addSeriesWithoutCleanUp(...series: Series[]): Promise<void> {
+        const trackId = this.addTrackerId();
+        await this.listWorker(series);
+        this.removeTrackId(trackId);
+        logger.log('info', '[MainListAdder] End adding');
+    }
+
+    private addTrackerId(): string {
+        const trackId = StringHelper.randomString(50);
+        logger.log('info', '[MainListAdder] Start adding');
+        MainListAdder.instanceTracker.push(trackId);
+        return trackId;
+    }
+
+    private removeTrackId(trackId: string): void {
+        MainListAdder.instanceTracker = listHelper.removeEntrys(MainListAdder.instanceTracker, trackId);
+    }
+
 
 
     /**
@@ -96,9 +114,9 @@ export default class MainListAdder {
         try {
             logger.log('info', '[MainListAdder] Add existing Series.');
             series.id = existingEntry.id;
-            if (SeriesHelper.canUpdateSeries(series, existingEntry)) {
+            if (await SeriesHelper.canUpdateSeries(series, existingEntry)) {
                 const updateExistingEntry = await NewProviderHelper.getAllRelevantProviderInfosForSeries(existingEntry);
-                await MainListManager.updateSerieInList(updateExistingEntry);
+                await MainListManager.updateSerieInList(updateExistingEntry, MergeTypes.UPGRADE);
                 return;
             }
 

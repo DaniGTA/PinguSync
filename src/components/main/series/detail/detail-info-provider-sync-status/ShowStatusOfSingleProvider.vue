@@ -46,7 +46,7 @@ export default class ShowStatusOfSingleProvider extends Vue {
     }
 
     sync(): void{
-        providerController.syncAllEpisodes(this.provider.providerName, this.id);
+        providerController.syncAllEpisodes({providerName: this.provider.providerName, seriesId: this.id});
     }
 }
 </script>

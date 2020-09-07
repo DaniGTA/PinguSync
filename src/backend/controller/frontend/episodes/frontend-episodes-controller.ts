@@ -9,6 +9,8 @@ import logger from '../../../logger/logger';
 import { chSend } from '../../../communication/send-only-channels';
 import ProviderList from '../../provider-controller/provider-manager/provider-list';
 import { shell } from 'electron';
+import SyncExternalEpisodes from '../../sync-controller/sync-external-episodes';
+import WatchHistory from '../../objects/meta/episode/episode-watch-history';
 
 export default class FrontendEpisodesController {
     private com: IPCBackgroundController;
@@ -33,12 +35,22 @@ export default class FrontendEpisodesController {
 
     private async markEpisodeAsWatched(query: SingleEpisodeQuery): Promise<void> {
         const series = await MainListSearcher.findSeriesById(query.seriesId);
-        series?.episodeBindingPools.find(x => x.bindedEpisodeMappings.find(x2 => x2.id == query.episodeId))?.isWatched
+        const episode = await this.getSingleEpisode(query, series);
+        if (episode) {
+            episode?.watchHistory.push(new WatchHistory(new Date().getTime()));
+            if (episode?.provider && series) {
+                SyncExternalEpisodes.addSyncJob(episode?.provider, series);
+            }
+        }
     }
 
     private async markEpisodeAsUnwatched(query: SingleEpisodeQuery): Promise<void> {
         const episode = await this.getSingleEpisode(query);
-
+        if (episode) {
+            const watchHistory = new WatchHistory(new Date().getTime());
+            watchHistory.watched = false;
+            episode.watchHistory.push(watchHistory);
+        }
     }
 
     private async openEpisodeInExternalBrowser(query: SingleEpisodeQuery): Promise<void> {
