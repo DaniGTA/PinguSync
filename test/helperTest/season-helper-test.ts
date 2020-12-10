@@ -44,7 +44,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season, undefined);
+        expect(result.season).toBe(undefined);
     });
 
     test('should get the right season value: 2', async () => {
@@ -63,7 +63,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 2);
+        expect(result.season?.getSingleSeasonNumberAsNumber()).toBe(2);
     });
 
     test('should get the right season value: 3', async () => {
@@ -89,7 +89,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 3);
+        expect(result.season?.getSingleSeasonNumberAsNumber()).toBe(3);
     });
 
     test('should get the right season value: 4', async () => {
@@ -115,7 +115,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b, c];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 4);
+        expect(result.season?.getSingleSeasonNumberAsNumber()).toBe(4);
     });
 
     test('should get the right season value: 5', async () => {
@@ -135,7 +135,7 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a, b];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.season?.getSingleSeasonNumberAsNumber(), 5);
+        expect(result.season?.getSingleSeasonNumberAsNumber()).toBe(5);
     });
 
     test('should get none seasons', async () => {
@@ -147,27 +147,27 @@ describe('Season Helper', () => {
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [a];
         const result = await SeasonFindHelper.prepareSearchSeasonValue(a, SeasonSearchMode.ALL);
-        strictEqual(result.seasonError, SeasonError.CANT_GET_SEASON);
+        expect(result.seasonError).toBe(SeasonError.CANT_GET_SEASON);
     });
     describe('check if it is the first season', () => {
-        test('should be the first season (simple season 1)', async () => {
-            strictEqual(seasonHelper.isSeasonFirstSeason(new Season([1])), true);
+        test('should be the first season (simple season 1)', () => {
+            expect(seasonHelper.isSeasonFirstSeason(new Season([1]))).toBe(true);
         });
 
-        test('should be the first season (simple season 1 but part 1)', async () => {
-            strictEqual(seasonHelper.isSeasonFirstSeason(new Season([1], 1)), true);
+        test('should be the first season (simple season 1 but part 1)', () => {
+            expect(seasonHelper.isSeasonFirstSeason(new Season([1], 1))).toBe(true);
         });
 
-        test('should be not the first season (season undefined)', async () => {
-            strictEqual(seasonHelper.isSeasonFirstSeason(undefined), false);
+        test('should be not the first season (season undefined)', () => {
+            expect(seasonHelper.isSeasonFirstSeason(undefined)).toBe(false);
         });
 
-        test('should be not the first season (simple season 2)', async () => {
-            strictEqual(seasonHelper.isSeasonFirstSeason(new Season([2])), false);
+        test('should be not the first season (simple season 2)', () => {
+            expect(seasonHelper.isSeasonFirstSeason(new Season([2]))).toBe(false);
         });
 
-        test('should be not the first season (simple season 1 but part 2)', async () => {
-            strictEqual(seasonHelper.isSeasonFirstSeason(new Season([1], 2)), false);
+        test('should be not the first season (simple season 1 but part 2)', () => {
+            expect(seasonHelper.isSeasonFirstSeason(new Season([1], 2))).toBe(false);
         });
     });
 
