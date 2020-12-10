@@ -58,9 +58,8 @@ export default class EpisodeMappingHelper {
             const preResult = [];
             for (const provider of allProvidersWithEpisodes) {
                 if (targetProvider.providerLocalData.provider !== provider.providerLocalData.provider) {
-                    if (providerHasEpisodeTitles && this.detailedEpisodeHasTitle(provider.providerLocalData)) {
-                        preResult.push(provider);
-                    } else if (targetProvider.providerLocalData.getAllRegularEpisodes().length === provider.providerLocalData.getAllRegularEpisodes().length) {
+                    if (providerHasEpisodeTitles && this.detailedEpisodeHasTitle(provider.providerLocalData)
+                        || (targetProvider.providerLocalData.getAllRegularEpisodes().length === provider.providerLocalData.getAllRegularEpisodes().length)) {
                         preResult.push(provider);
                     }
                 }
