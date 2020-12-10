@@ -1,5 +1,5 @@
 <template>
-  <div class="hover">
+  <div class="hover" @click.prevent>
     <q-separator />
     <ShowStatusOfSingleProvider
       v-for="provider of providers"
@@ -55,5 +55,6 @@ export default class BlockListEntrySyncStatusHover extends Vue {
   height: 205px;
   display: flex;
   margin: 15px;
+  z-index: 10;
 }
 </style>

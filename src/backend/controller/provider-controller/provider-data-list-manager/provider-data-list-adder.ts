@@ -24,7 +24,9 @@ export default class ProviderDataListAdder {
      */
     public addNewProviderData(...providerData: ProviderLocalData[]): number | undefined {
         for (const entry of providerData) {
-            return ProviderDataListManager.addProviderLocalDataToMainList(entry);
+            const result = ProviderDataListManager.addProviderLocalDataToMainList(entry);
+            ProviderDataListManager.requestSaveProviderList();
+            return result;
         }
         return undefined;
     }

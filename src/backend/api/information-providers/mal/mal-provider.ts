@@ -28,7 +28,7 @@ export default class MalProvider extends ListProvider {
         throw new Error('Method not implemented.');
     }
     public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
-        return '';
+        return 'https://myanimelist.net/anime/' + provider.id + '/' + provider.getAllNames()[0].name + '/episode/' + episode.getEpNrAsNr();
     }
     public static getInstance(): MalProvider {
         if (!MalProvider.instance) {

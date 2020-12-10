@@ -1,8 +1,8 @@
 <template>
   <div class="header-provider-list">
-      <div v-for="provider in providers" class="header-provider-entry" :key="provider.providerName">
-          <ProviderImageBlock :provider="provider" :showText="false"/>
-        </div>
+    <div v-for="provider in providers" class="header-provider-entry" :key="provider.providerName">
+        <ProviderEntry :provider="provider"/>
+    </div>
   </div>    
 </template>
 
@@ -10,18 +10,19 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ProviderController from '../../../controller/provider-controller';
-import ProviderImageBlock from '../../../elements/provider-elements/ProviderImageBlock.vue';
+import ProviderEntry from './ProviderEntry.vue';
 import { getModule } from 'vuex-module-decorators';
 import { ListProviderInterface } from '../../../controller/model/list-provider-interface';
 const providerController = getModule(ProviderController);
 
 @Component({
 	components: {
-        ProviderImageBlock
+        ProviderEntry,
+        
 	}
 })
 export default class ProviderList extends Vue {
-
+    isLoginDialogOpen = false;
     providers: ListProviderInterface[] = [];
 
     mounted(): void{
@@ -46,6 +47,7 @@ export default class ProviderList extends Vue {
     height: 100%;
     align-items: center;
     width: 100%;
+    cursor: pointer;
 }
 
 .header-provider-entry{

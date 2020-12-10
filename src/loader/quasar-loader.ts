@@ -9,7 +9,9 @@ import {
     QSelect,
     QInput,
     QBadge,
-    QSeparator
+    QSeparator,
+    QDialog,
+    ClosePopup
 } from 'quasar';
 import Vue from 'vue';
 import './../styles/quasar.sass';
@@ -36,7 +38,11 @@ export default class QuasarLoader {
                 QSelect,
                 QInput,
                 QBadge,
-                QSeparator
+                QSeparator,
+                QDialog
+            },
+            directives: {
+                ClosePopup
             }
         });
     }

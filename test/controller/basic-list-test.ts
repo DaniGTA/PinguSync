@@ -66,8 +66,8 @@ describe('Basic List | Testrun', () => {
         const anilistResult = updatedProviders.find((x) => x.provider === AniListProvider.getInstance().providerName);
         const traktResult = updatedProviders.find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (anilistResult && traktResult) {
-            expect(anilistResult.detailEpisodeInfo.length).not.toEqual(0);
-            expect(traktResult.detailEpisodeInfo.length).not.toEqual(0);
+            expect(anilistResult.getDetailEpisodeInfos().length).not.toEqual(0);
+            expect(traktResult.getDetailEpisodeInfos().length).not.toEqual(0);
             expect(anilistResult.getAllNames().length).not.toEqual(0);
             expect(traktResult.getAllNames().length).not.toEqual(0);
             expect(traktResult.version).toEqual(ProviderInfoStatus.ADVANCED_BASIC_INFO);
@@ -115,20 +115,20 @@ describe('Basic List | Testrun', () => {
             const anilistResult2 = updatedProviders2.find((x) => x.provider === AniListProvider.getInstance().providerName);
             const traktResult2 = updatedProviders2.find((x) => x.provider === TraktProvider.getInstance().providerName);
             if (anilistResult && traktResult && anilistResult2 && traktResult2) {
-                expect(anilistResult.detailEpisodeInfo.length).not.toEqual(0);
-                expect(traktResult.detailEpisodeInfo.length).not.toEqual(0);
+                expect(anilistResult.getDetailEpisodeInfos().length).not.toEqual(0);
+                expect(traktResult.getDetailEpisodeInfos().length).not.toEqual(0);
                 expect(anilistResult.getAllNames().length).not.toEqual(0);
                 notStrictEqual(traktResult.getAllNames().length, 0);
                 strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                for (const anilistResultEntry of anilistResult.detailEpisodeInfo) {
+                for (const anilistResultEntry of anilistResult.getDetailEpisodeInfos()) {
                     strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools, anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
                 }
-                for (const anilistResult2Entry of anilistResult2.detailEpisodeInfo) {
+                for (const anilistResult2Entry of anilistResult2.getDetailEpisodeInfos()) {
                     const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(updatedSeries2.episodeBindingPools, anilistResult2Entry);
                     strictEqual(result[0].episodeNumber, anilistResult2Entry.episodeNumber);
                 }
-                for (const trakt of traktResult2.detailEpisodeInfo) {
+                for (const trakt of traktResult2.getDetailEpisodeInfos()) {
                     if (trakt.type === EpisodeType.SPECIAL) {
                         const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt);
                         strictEqual(r.length, 0);
@@ -323,10 +323,10 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         const provider = series.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
-            for (const iterator of provider.detailEpisodeInfo) {
+            for (const iterator of provider.getDetailEpisodeInfos()) {
                 logger.warn(iterator.episodeNumber + ' S: ' + iterator.season);
             }
-            expect(provider.detailEpisodeInfo.length).toEqual(341);
+            expect(provider.getDetailEpisodeInfos().length).toEqual(341);
         } else {
             fail();
         }
@@ -522,7 +522,7 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         const provider = series2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
-            for (const episode of provider.detailEpisodeInfo) {
+            for (const episode of provider.getDetailEpisodeInfos()) {
                 if (episode.season?.getSingleSeasonNumberAsNumber() === 1) {
                     const s1Result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode);
                     const relevantResult = s1Result.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));

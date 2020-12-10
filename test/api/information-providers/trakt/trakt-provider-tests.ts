@@ -93,7 +93,7 @@ describe('Provider: Trakt | Tests runs', () => {
 
             const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
             strictEqual(result.mainProvider.providerLocalData.id, 103803);
-            notStrictEqual(result.mainProvider.providerLocalData.detailEpisodeInfo.length, 0);
+            notStrictEqual(result.mainProvider.providerLocalData.getDetailEpisodeInfos().length, 0);
         });
     });
 });

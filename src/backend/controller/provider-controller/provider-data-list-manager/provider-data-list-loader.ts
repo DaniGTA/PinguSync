@@ -46,10 +46,10 @@ export default class ProviderDataListLoader {
     private static createProviderLocalDataInstance(loadedDataEntry: ProviderLocalData): ProviderLocalData {
         loadedDataEntry.lastUpdate = new Date(loadedDataEntry.lastUpdate);
         loadedDataEntry.lastExternalChange = new Date(loadedDataEntry.lastExternalChange);
-        for (let index2 = 0; index2 < loadedDataEntry.getAllDetailedEpisodes().length; index2++) {
-            const x = loadedDataEntry.getAllDetailedEpisodes()[index2];
+        for (let index2 = 0; index2 < loadedDataEntry['detailEpisodeInfo'].length; index2++) {
+            const x = loadedDataEntry['detailEpisodeInfo'][index2];
 
-            loadedDataEntry.getAllDetailedEpisodes()[index2] = Object.assign(new Episode(x.episodeNumber, x.season, x.title), x);
+            loadedDataEntry['detailEpisodeInfo'][index2] = Object.assign(new Episode(x.episodeNumber, x.season, x.title), x);
         }
 
         if (loadedDataEntry.instanceName === 'ListProviderLocalData') {

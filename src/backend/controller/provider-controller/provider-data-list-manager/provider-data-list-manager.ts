@@ -8,7 +8,7 @@ import ProviderDataListLoader from './provider-data-list-loader';
 import ProviderDataListSearcher from './provider-data-list-searcher';
 
 export default class ProviderDataListManager {
-
+    private static debounceSaving?: NodeJS.Timeout;
     /**
      * Adds a new provider local data to the mainlist.
      * It checks if there is already a same entry and merge it.
@@ -50,6 +50,7 @@ export default class ProviderDataListManager {
                 logger.error('[ProviderList] Failed update: Not same instance');
             }
         }
+        this.requestSaveProviderList();
     }
 
     /**
@@ -136,7 +137,9 @@ export default class ProviderDataListManager {
     }
 
     public static requestSaveProviderList(): void {
-        ProviderDataListLoader.saveData(this.getProviderDataList());
+        if (this.debounceSaving)
+            clearTimeout(this.debounceSaving);
+        this.debounceSaving = setTimeout(() => ProviderDataListLoader.saveData(this.getProviderDataList()), 2000);
     }
 
     private static providerDataList: ProviderLocalData[] = [];

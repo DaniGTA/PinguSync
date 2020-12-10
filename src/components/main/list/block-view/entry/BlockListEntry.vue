@@ -3,9 +3,17 @@
     <div class="block-list-entry" v-intersection="onIntersection" @mouseover="isHovering()"
     @mouseleave="isNotHovering()" @click="openDetailView()">
     <template v-if="id && visible">
-        <BlockListEntryDetails :seriesId="id" ref="details"/>
-        <q-popup-proxy @mouseover="isHovering()" @mouseleave="isNotHovering()" anchor="top right" self="top left" content-class="hover-content"  v-model="hover" scroll-target=".block-list-entry" ref="menu">
-          <BlockListEntrySyncStatusHover v-on:click.stop.prevent="" :seriesId="id" ref="hoverStatus"/>
+        <BlockListEntryDetails :seriesId="id"/>
+        <q-popup-proxy 
+        @click="isHovering()" 
+        @mouseover="isHovering()" 
+        @mouseleave="isNotHovering()" 
+        anchor="top right" 
+        self="top left" 
+        content-class="hover-content"  
+        v-model="hover" 
+        scroll-target="false" :no-parent-event="true" persistent auto-close>
+          <BlockListEntrySyncStatusHover @click.native.prevent :seriesId="id" ref="hoverStatus"/>
         </q-popup-proxy>
     </template>
     </div>
@@ -31,12 +39,6 @@ export default class BlockEntry extends Vue {
   public visible = false;
 
   @Ref()
-  public details!: any;
-
-  @Ref()
-  public menu!: any;
-
-  @Ref()
   public hoverStatus!: any;
 
   private hover = false;
@@ -44,14 +46,10 @@ export default class BlockEntry extends Vue {
 
   onIntersection(entry: IntersectionObserverEntry): void {
     this.visible = entry.isIntersecting;
-    if(!this.visible){
-      this.details?.$destroy();
-      this.menu?.$destroy();
-    }
   }
 
   public openDetailView(): void {
-    this.$router.push({ name: "SeriesDetail", params: { id: this.id } });
+    this.$router.push({ name: 'SeriesDetail', params: { id: this.id } });
   }
 
   public isHovering(): void {

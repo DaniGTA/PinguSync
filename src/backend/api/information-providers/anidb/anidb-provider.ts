@@ -126,9 +126,7 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     private allowDownload(): boolean {
-        if (typeof AniDBHelper.anidbNameManager.lastDownloadTime === 'undefined') {
-            return true;
-        } else if (this.dateDiffInDays(AniDBHelper.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 3) {
+        if (typeof AniDBHelper.anidbNameManager.lastDownloadTime === 'undefined' || (this.dateDiffInDays(AniDBHelper.anidbNameManager.lastDownloadTime, new Date(Date.now())) > 3)) {
             return true;
         }
         return false;

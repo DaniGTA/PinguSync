@@ -30,7 +30,7 @@ describe('Provider: TVMaze | Test runs', () => {
         const series = new Series();
         const unkownProvider = new ListProviderLocalData(-1);
         unkownProvider.addSeriesName(new Name('Sankarea', 'en'));
-        await series.addProviderDatas(unkownProvider);
+        series.addProviderDatas(unkownProvider);
 
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, providerInstance);
         strictEqual(result.getAllProviders().length, 2);

@@ -6,6 +6,9 @@
         <div class="oauth-login" v-if="provider.hasOAuthLogin">
             <ProviderOAuthLogin :provider="provider" />
         </div>
+        <div v-if="!provider.hasOAuthLogin & !provider.hasDefaultLogin">
+            Keine Anmeldung Verfügbar.
+        </div>
     </div>
 </template>
 

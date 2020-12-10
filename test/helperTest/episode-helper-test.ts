@@ -55,13 +55,13 @@ describe('Episode Helper Test', () => {
             const ep1 = new Episode(1);
             const ep2 = new Episode(2);
 
-            const result = EpisodeHelper.getMaxEpisodeNumberFromArray([ep1, ep2]);
+            const result = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray([ep1, ep2]);
             expect(result).toBe(2);
         });
 
         it('should return the max episode (0)', () => {
             const ep1 = new Episode(0);
-            const result = EpisodeHelper.getMaxEpisodeNumberFromArray([ep1]);
+            const result = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray([ep1]);
             expect(result).toBe(0);
         });
 
@@ -69,7 +69,7 @@ describe('Episode Helper Test', () => {
             const ep1 = new Episode('special');
             const ep2 = new Episode('very special');
 
-            const result = EpisodeHelper.getMaxEpisodeNumberFromArray([ep1, ep2]);
+            const result = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray([ep1, ep2]);
             expect(result).toBe(undefined);
         });
     });

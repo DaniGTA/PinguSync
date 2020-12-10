@@ -34,9 +34,6 @@
             "error",
             "single"
         ],
-        "semi": [
-            "warn"
-        ],
         "no-mixed-spaces-and-tabs": [
             "off"
         ],

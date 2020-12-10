@@ -165,7 +165,6 @@ describe('Provider Helper Test', () => {
             expect(anidbProvider.id).toBe(13244);
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.getSingleSeasonNumberAsNumber(), 3);
             strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart, 1);
-
         } else {
             fail();
         }

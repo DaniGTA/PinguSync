@@ -9,4 +9,5 @@ export enum ProviderInfoStatus {
     ADVANCED_BASIC_INFO,
     BASIC_INFO,
     ONLY_ID,
+    NOT_AVAILABLE
 }

@@ -13,4 +13,5 @@
     "i18n-ally.sourceLanguage": "de",
     "discord.enabled": true,
     "i18n-ally.keystyle": "nested",
+    "cmake.configureOnOpen": false,
 }

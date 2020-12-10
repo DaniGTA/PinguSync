@@ -486,7 +486,7 @@ export default class Series extends SeriesProviderExtension {
         if (average !== undefined) {
             return average;
         } else {
-            throw new Error('Cant get average provider info status');
+            return ProviderInfoStatus.NOT_AVAILABLE;
         }
     }
 

@@ -7,6 +7,7 @@ import MainListLoader from './main-list-loader';
 import MainListSaver from './main-list-saver';
 import MainListSearcher from './main-list-searcher';
 export default class MainListManager {
+    private static debounceSaving?: NodeJS.Timeout;
 
     /**
      * Adds a new Series to the mainlist.
@@ -188,7 +189,9 @@ export default class MainListManager {
     }
 
     public static requestSaveMainList(): void {
-        MainListSaver.saveMainList(this.getMainList());
+        if (this.debounceSaving)
+            clearTimeout(this.debounceSaving);
+        this.debounceSaving = setTimeout(() => MainListSaver.saveMainList(this.getMainList()), 2000);
     }
 
     private static mainList: Series[] = [];
