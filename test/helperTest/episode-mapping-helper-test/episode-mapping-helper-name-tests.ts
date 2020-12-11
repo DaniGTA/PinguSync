@@ -11,7 +11,7 @@ import ProviderList from '../../../src/backend/controller/provider-controller/pr
 import EpisodeBindingPoolHelper from '../../../src/backend/helpFunctions/episode-binding-pool-helper';
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestProvider from '../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../controller/objects/testClass/testListProvider';
 
 
 describe('Episode mapping | Name Mapping Tests Only', () => {

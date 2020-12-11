@@ -13,7 +13,7 @@ import ProviderList from '../../../src/backend/controller/provider-controller/pr
 import ProviderLoader from '../../../src/backend/controller/provider-controller/provider-manager/provider-loader';
 import EpisodeRatedEqualityHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-rated-equality-helper';
 import ProviderLocalDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestProvider from '../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../controller/objects/testClass/testListProvider';
 
 describe('Episode rated equality helper tests | Difference calc only', () => {
     beforeEach(() => {

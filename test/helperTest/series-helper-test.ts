@@ -10,7 +10,7 @@ import { ProviderInfoStatus } from '../../src/backend/controller/provider-contro
 import { ListProviderLocalData } from '../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestProvider from '../controller/objects/testClass/testProvider';
+import TestListProvider from '../controller/objects/testClass/testListProvider';
 import SeriesHelper from '../../src/backend/helpFunctions/series-helper';
 import EpisodeBindingPool from '../../src/backend/controller/objects/meta/episode/episode-binding-pool';
 import EpisodeMapping from '../../src/backend/controller/objects/meta/episode/episode-mapping';

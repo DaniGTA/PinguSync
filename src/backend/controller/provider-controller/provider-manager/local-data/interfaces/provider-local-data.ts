@@ -100,7 +100,7 @@ export default abstract class ProviderLocalData {
     /**
      * Cant get more info from this provider.
      */
-    public infoStatus: ProviderInfoStatus = ProviderInfoStatus.ONLY_ID;
+    public infoStatus: ProviderInfoStatus = ProviderInfoStatus.NOT_AVAILABLE;
     /**
      * The provider name
      */

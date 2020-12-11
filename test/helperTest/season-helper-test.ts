@@ -12,13 +12,13 @@ import ProviderList from '../../src/backend/controller/provider-controller/provi
 import SeasonFindHelper from '../../src/backend/helpFunctions/season-helper/season-find-helper';
 import seasonHelper from '../../src/backend/helpFunctions/season-helper/season-helper';
 import { SeasonSearchMode } from '../../src/backend/helpFunctions/season-helper/season-search-mode';
-import TestProvider from '../controller/objects/testClass/testProvider';
+import TestListProvider from '../controller/objects/testClass/testListProvider';
 
 
 describe('Season Helper', () => {
     beforeEach(() => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('test', true, false), new TestProvider('test2', true, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('test', true, false), new TestListProvider('test2', true, true)];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal

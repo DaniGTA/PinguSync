@@ -72,7 +72,7 @@ export default class SyncExternalEpisodes {
 
     private static needSeriesUpdate(series: Series, providerInstance: ListProvider): boolean {
         const providerLocalData = series.getOneProviderLocalDataByExternalProvider(providerInstance);
-        return ((providerLocalData?.infoStatus ?? 4 > ProviderInfoStatus.ADVANCED_BASIC_INFO) as boolean && providerLocalData?.version !== providerInstance.version);
+        return ((providerLocalData?.infoStatus ?? ProviderInfoStatus.NOT_AVAILABLE > ProviderInfoStatus.ADVANCED_BASIC_INFO) as boolean && providerLocalData?.version !== providerInstance.version);
     }
 
     private static async getUpdatedSeries(series: Series): Promise<Series | null> {

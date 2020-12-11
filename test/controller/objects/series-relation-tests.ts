@@ -7,7 +7,7 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestProvider from './testClass/testProvider';
+import TestListProvider from './testClass/testListProvider';
 
 describe('Series | Relations', () => {
 

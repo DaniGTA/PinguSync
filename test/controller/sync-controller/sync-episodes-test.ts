@@ -4,7 +4,7 @@ import Episode from '../../../src/backend/controller/objects/meta/episode/episod
 import WatchHistory from '../../../src/backend/controller/objects/meta/episode/episode-watch-history';
 import EpisodeMappingHelper from '../../../src/backend/helpFunctions/episode-mapping-helper/episode-mapping-helper';
 import SyncEpisodes from '../../../src/backend/controller/sync-controller/sync-episodes';
-import TestProvider from '../objects/testClass/testProvider';
+import TestListProvider from '../objects/testClass/testListProvider';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ListProvider from '../../../src/backend/api/provider/list-provider';
 

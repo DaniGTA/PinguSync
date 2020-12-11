@@ -12,7 +12,7 @@ import ProviderList from '../../../../src/backend/controller/provider-controller
 import ProviderNameManager from '../../../../src/backend/controller/provider-controller/provider-manager/provider-name-manager';
 import DownloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
 import DownloadProviderLocalDataToTargetHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-to-target-helper';
-import TestProvider from '../../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../../controller/objects/testClass/testListProvider';
 // tslint:disable: no-string-literal
 describe('Download provider local data to target info status helper test (download-provider-local-data-to-target-helper.ts)', () => {
     afterEach(() => {

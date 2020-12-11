@@ -10,7 +10,7 @@ import ProviderList from '../../../src/backend/controller/provider-controller/pr
 import ProviderLoader from '../../../src/backend/controller/provider-controller/provider-manager/provider-loader';
 import ProviderNameManager from '../../../src/backend/controller/provider-controller/provider-manager/provider-name-manager';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestProvider from '../objects/testClass/testProvider';
+import TestListProvider from '../objects/testClass/testListProvider';
 
 // tslint:disable: no-string-literal
 describe('MainList | Searcher tests', () => {
@@ -43,7 +43,7 @@ describe('MainList | Searcher tests', () => {
         expect(result.length).toBe(1);
     });
 
-    test('should find series 2',  () => {
+    test('should find series 2', () => {
 
         ProviderList['loadedListProvider'] = [new TraktProvider(), new AniListProvider()];
 
@@ -74,8 +74,8 @@ describe('MainList | Searcher tests', () => {
             MainListManager['mainList'].push(series);
             const result = await MainListSearcher.findSeriesById(series.id);
             expect(result?.id).toBe(series.id);
-        }); 
-        
+        });
+
         test('should return on no result', async () => {
             const result = await MainListSearcher.findSeriesById('id');
             expect(result).toBeNull();

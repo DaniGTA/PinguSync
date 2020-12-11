@@ -1,7 +1,7 @@
 import MainListPackageManager from '../../../src/backend/controller/main-list-manager/main-list-package-manager';
 import Series from '../../../src/backend/controller/objects/series';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
-import TestProvider from '../objects/testClass/testProvider';
+import TestListProvider from '../objects/testClass/testListProvider';
 
 
 

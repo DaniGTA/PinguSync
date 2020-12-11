@@ -18,12 +18,12 @@ import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/ep
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
 import ProviderLocalDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
-import TestProvider from '../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../controller/objects/testClass/testListProvider';
 
 // tslint:disable: no-string-literal
 describe('Episode mapping | Mapping Only', () => {
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test'), new TestListProvider('')];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
         ProviderDataListManager['providerDataList'] = [];

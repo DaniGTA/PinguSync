@@ -5,7 +5,7 @@ import { ProviderInfoStatus } from '../../../src/backend/controller/provider-con
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 
-import TestProvider from '../objects/testClass/testProvider';
+import TestListProvider from '../objects/testClass/testListProvider';
 // tslint:disable: no-string-literal
 describe('Provider data manager list tests', () => {
     beforeEach(() => {

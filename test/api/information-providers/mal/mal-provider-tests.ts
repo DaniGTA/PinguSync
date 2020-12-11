@@ -2,7 +2,6 @@ import MalProvider from '../../../../src/backend/api/information-providers/mal/m
 import ExternalProvider from '../../../../src/backend/api/provider/external-provider';
 import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
-import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import MalTestProvider from './mal-test-provider';
 

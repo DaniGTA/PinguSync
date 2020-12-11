@@ -1,6 +1,6 @@
-import TestProvider from '../../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../../controller/objects/testClass/testListProvider';
 
-export default class TVMazeTestProvider extends TestProvider {
+export default class TVMazeTestProvider extends TestListProvider {
     constructor() {
         super('');
     }

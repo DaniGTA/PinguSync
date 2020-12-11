@@ -3,7 +3,7 @@ import Name from '../../../../src/backend/controller/objects/meta/name';
 import Series from '../../../../src/backend/controller/objects/series';
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
 import DownloadProviderLocalDataWithoutId from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-without-id';
-import TestProvider from '../../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../../controller/objects/testClass/testListProvider';
 function getListOfName(): Name[] {
     const names: Name[] = [];
     names.push(new Name('a', 'a'));

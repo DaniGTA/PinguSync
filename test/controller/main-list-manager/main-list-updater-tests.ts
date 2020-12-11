@@ -4,7 +4,7 @@ import MainListEntryUpdater from '../../../src/backend/controller/main-list-mana
 import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
-import TestProvider from '../objects/testClass/testProvider';
+import TestListProvider from '../objects/testClass/testListProvider';
 
 
 describe('MainList | Entry update tests', () => {

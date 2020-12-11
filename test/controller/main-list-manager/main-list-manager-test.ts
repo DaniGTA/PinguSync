@@ -3,7 +3,7 @@ import MainListManager from '../../../src/backend/controller/main-list-manager/m
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
-import TestProvider from '../objects/testClass/testProvider';
+import TestListProvider from '../objects/testClass/testListProvider';
 
 describe('MainListPackageManager', () => {
     beforeEach(() => {

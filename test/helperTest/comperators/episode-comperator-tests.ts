@@ -7,7 +7,7 @@ import Season from '../../../src/backend/controller/objects/meta/season';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../../../src/backend/helpFunctions/comperators/episode-comperator';
-import TestProvider from '../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../controller/objects/testClass/testListProvider';
 
 // tslint:disable: no-string-literal
 describe('Episode comperator | Full test', () => {

@@ -10,8 +10,7 @@ import { InfoProviderLocalData } from '../../../../src/backend/controller/provid
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderLoader from '../../../../src/backend/controller/provider-controller/provider-manager/provider-loader';
-import providerInfoDownloaderhelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
-import TestProvider from '../../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../../controller/objects/testClass/testListProvider';
 import TVMazeTestProvider from './tvmaze-tets-provider';
 import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
 
@@ -21,7 +20,7 @@ describe('Provider: TVMaze | Test runs', () => {
         ProviderList['loadedListProvider'] = ProviderList['loadProviderList']([TVMazeTestProvider] as Array<(new () => ListProvider)>);
         ProviderList['loadedInfoProvider'] = ProviderList['loadProviderList']([TVMazeProvider] as Array<(new () => InfoProvider)>);
         ProviderList['loadedMappingProvider'] = [];
-        (ProviderLoader.prototype as any).listOfListProviders = [TestProvider];
+        (ProviderLoader.prototype as any).listOfListProviders = [TestListProvider];
         (ProviderLoader.prototype as any).listOfInfoProviders = [TVMazeProvider];
     });
 

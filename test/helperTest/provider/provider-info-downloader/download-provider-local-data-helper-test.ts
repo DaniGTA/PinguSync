@@ -10,7 +10,7 @@ import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctio
 import DownloadSettings from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-settings';
 import ProviderLocalDataWithSeasonInfo from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestInfoProvider from '../../../controller/objects/testClass/testInfoProvider';
-import TestProvider from '../../../controller/objects/testClass/testProvider';
+import TestListProvider from '../../../controller/objects/testClass/testListProvider';
 
 // tslint:disable: no-string-literal
 describe('Provider local data downloader tests (download-provider-local-data-helper.ts)', () => {

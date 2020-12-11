@@ -8,7 +8,7 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-con
 import ProviderList from '../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import stringHelper from '../../src/backend/helpFunctions/string-helper';
-import TestProvider from './objects/testClass/testProvider';
+import TestListProvider from './objects/testClass/testListProvider';
 // tslint:disable: no-string-literal
 describe('ListController | Combine', () => {
     const lc = new ListController(true);

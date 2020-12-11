@@ -11,7 +11,7 @@ import { ListProviderLocalData } from '../../../../src/backend/controller/provid
 import logger from '../../../../src/backend/logger/logger';
 
 
-export default class TestProvider extends ListProvider {
+export default class TestListProvider extends ListProvider {
     public hasOAuthLogin = false;
     public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
         throw new Error('Method not implemented.');

@@ -12,7 +12,7 @@ import ProviderList from '../../src/backend/controller/provider-controller/provi
 import { AbsoluteResult } from '../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import MultiProviderComperator from '../../src/backend/helpFunctions/comperators/multi-provider-results-comperator';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
-import TestProvider from '../controller/objects/testClass/testProvider';
+import TestListProvider from '../controller/objects/testClass/testListProvider';
 
 
 describe('Multi-Provider-Comperator | Examples', () => {
