@@ -1,4 +1,4 @@
-import { equal, fail, notStrictEqual, strictEqual } from 'assert';
+/* eslint-disable @typescript-eslint/require-await */
 import AniDBHelper from '../../src/backend/api/information-providers/anidb/anidb-helper';
 import AniDBProvider from '../../src/backend/api/information-providers/anidb/anidb-provider';
 import AniListProvider from '../../src/backend/api/information-providers/anilist/anilist-provider';
@@ -30,10 +30,10 @@ describe('Basic List | Testrun', () => {
 
     beforeAll(() => {
         const anilistInstance = ProviderList.getProviderInstanceByClass(AniListProvider);
-        if (!anilistInstance) { fail(); }
+        if (!anilistInstance) { throw new Error(); }
         jest.spyOn(anilistInstance, 'isUserLoggedIn').mockImplementation(async () => true);
         const traktInstance = ProviderList.getProviderInstanceByClass(TraktProvider);
-        if (!traktInstance) { fail(); }
+        if (!traktInstance) { throw new Error(); }
         jest.spyOn(traktInstance, 'isUserLoggedIn').mockImplementation(async () => true);
         const anidbNameManagerInstance = AniDBHelper['anidbNameManager'];
         anidbNameManagerInstance.data = new AniDBProvider()['convertXmlToJson']();
@@ -46,7 +46,7 @@ describe('Basic List | Testrun', () => {
 
     test('should find other provider and mapping them.', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         const series = new Series();
         const provider = new ListProviderLocalData(101348, AniListProvider);
@@ -56,7 +56,7 @@ describe('Basic List | Testrun', () => {
         await ListController.instance.addSeriesToMainList(series);
 
         // tslint:disable-next-line: no-string-literal
-        strictEqual(MainListManager['mainList'].length, 1);
+        expect(MainListManager['mainList'].length).toBe(1);
 
         // tslint:disable-next-line: no-string-literal
         const updatedProviders = MainListManager['mainList'][0].getAllProviderLocalDatas();
@@ -73,7 +73,7 @@ describe('Basic List | Testrun', () => {
             expect(traktResult.version).toEqual(ProviderInfoStatus.ADVANCED_BASIC_INFO);
             expect(anilistResult.version).toEqual(ProviderInfoStatus.ADVANCED_BASIC_INFO);
         } else {
-            fail();
+            throw new Error();
         }
     }, 4000);
 
@@ -81,7 +81,7 @@ describe('Basic List | Testrun', () => {
         'should find other provider and mapping two season together.',
         async () => {
             if (!ListController.instance) {
-                fail();
+                throw new Error();
             }
             // S1
             const series = new Series();
@@ -100,7 +100,7 @@ describe('Basic List | Testrun', () => {
             await ListController.instance.addSeriesToMainList(series2);
 
             // tslint:disable-next-line: no-string-literal
-            strictEqual(MainListManager['mainList'].length, 2);
+            expect(MainListManager['mainList'].length).toBe(2);
 
             // tslint:disable-next-line: no-string-literal
             const updatedProviders = MainListManager['mainList'][0].getAllProviderLocalDatas();
@@ -118,36 +118,36 @@ describe('Basic List | Testrun', () => {
                 expect(anilistResult.getDetailEpisodeInfos().length).not.toEqual(0);
                 expect(traktResult.getDetailEpisodeInfos().length).not.toEqual(0);
                 expect(anilistResult.getAllNames().length).not.toEqual(0);
-                notStrictEqual(traktResult.getAllNames().length, 0);
-                strictEqual(traktResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
-                strictEqual(anilistResult.version, ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                expect(traktResult.getAllNames().length).not.toEqual(0);
+                expect(traktResult.version).toBe(ProviderInfoStatus.ADVANCED_BASIC_INFO);
+                expect(anilistResult.version).toBe(ProviderInfoStatus.ADVANCED_BASIC_INFO);
                 for (const anilistResultEntry of anilistResult.getDetailEpisodeInfos()) {
-                    strictEqual(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools, anilistResultEntry)[0].episodeNumber, anilistResultEntry.episodeNumber);
+                    expect(EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series.episodeBindingPools, anilistResultEntry)[0].episodeNumber).toBe(anilistResultEntry.episodeNumber);
                 }
                 for (const anilistResult2Entry of anilistResult2.getDetailEpisodeInfos()) {
                     const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(updatedSeries2.episodeBindingPools, anilistResult2Entry);
-                    strictEqual(result[0].episodeNumber, anilistResult2Entry.episodeNumber);
+                    expect(result[0].episodeNumber).toBe(anilistResult2Entry.episodeNumber);
                 }
                 for (const trakt of traktResult2.getDetailEpisodeInfos()) {
                     if (trakt.type === EpisodeType.SPECIAL) {
                         const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt);
-                        strictEqual(r.length, 0);
+                        expect(r.length).toBe(0);
                     } else {
                         if (trakt?.season?.getSingleSeasonNumberAsNumber() === 2) {
                             const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt);
-                            notStrictEqual(r.length, 0);
-                            strictEqual(r[0].episodeNumber, trakt.episodeNumber);
+                            expect(r.length).not.toBe(0);
+                            expect(r[0].episodeNumber).toBe(trakt.episodeNumber);
                         }
                     }
                 }
             } else {
-                fail();
+                throw new Error();
             }
         }, 4000);
 
     test('should not merge them together', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
 
         // S1
@@ -201,7 +201,7 @@ describe('Basic List | Testrun', () => {
 
     test('should not merge different animes', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
 
         const series1 = new Series();
@@ -231,7 +231,7 @@ describe('Basic List | Testrun', () => {
 
     test('should not merge series with anime', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
 
         const series1 = new Series();
@@ -256,7 +256,7 @@ describe('Basic List | Testrun', () => {
 
     test('should not merge season 1 with season 2', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s1
         const series1 = new Series();
@@ -273,12 +273,12 @@ describe('Basic List | Testrun', () => {
         await MainListManager['finishListFilling']();
         // tslint:disable-next-line: no-string-literal
         expect(MainListManager['mainList'].length).toEqual(2);
-        strictEqual(await seriesHelper.isSameSeries(series1, series2), false);
+        expect(await seriesHelper.isSameSeries(series1, series2)).toBe(false);
     }, 4000);
 
     test('should create only 2 series', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s1
         const series1 = new Series();
@@ -307,7 +307,7 @@ describe('Basic List | Testrun', () => {
     // TODO SPEED UP TEST (THIS TEST TAKES 1 MINUTE)
     test('should not create too much detailed episodes', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s1
         const series1 = new Series();
@@ -328,13 +328,13 @@ describe('Basic List | Testrun', () => {
             }
             expect(provider.getDetailEpisodeInfos().length).toEqual(341);
         } else {
-            fail();
+            throw new Error();
         }
     }, 4000);
 
     test('should update anilist series (20605)', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s1
         const series1 = new Series();
@@ -356,7 +356,7 @@ describe('Basic List | Testrun', () => {
 
     test('should not get season 1 on season 2', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s1
         const series1 = new Series();
@@ -393,16 +393,16 @@ describe('Basic List | Testrun', () => {
                 expect(resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.getSingleSeasonNumberAsNumber()).toEqual(1);
                 expect(resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.getSingleSeasonNumberAsNumber()).toEqual(2);
             } else {
-                fail();
+                throw new Error();
             }
         } else {
-            fail();
+            throw new Error();
         }
     }, 4000);
 
     test('should get trakt info data on all seasons', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s1
         const series1 = new Series();
@@ -430,7 +430,7 @@ describe('Basic List | Testrun', () => {
 
     test('should get the right season. Trakt', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s1
         const series1 = new Series();
@@ -470,7 +470,7 @@ describe('Basic List | Testrun', () => {
 
     test('should get the right season. for shokugeki no souma', async () => {
         if (!ListController.instance) {
-            fail();
+            throw new Error();
         }
         // s2
         const series1 = new Series();
@@ -514,11 +514,11 @@ describe('Basic List | Testrun', () => {
 
         const result = await new DownloadProviderLocalDataWithoutId(series2, ProviderList.getProviderInstanceByClass(TraktProvider))['linkProviderDataFromRelations']();
 
-        strictEqual(series2.getProviderSeasonTarget(result.providerLocalData.provider)?.getSingleSeasonNumberAsNumber(), 2);
+        expect(series2.getProviderSeasonTarget(result.providerLocalData.provider)?.getSingleSeasonNumberAsNumber()).toBe(2);
 
         const seasonTarget = series2.getProviderSeasonTarget(TraktProvider.getInstance().providerName);
 
-        strictEqual(seasonTarget?.getSingleSeasonNumberAsNumber(), 2);
+        expect(seasonTarget?.getSingleSeasonNumberAsNumber()).toBe(2);
         // tslint:disable-next-line: no-string-literal
         const provider = series2.getAllProviderLocalDatas().find((x) => x.provider === TraktProvider.getInstance().providerName);
         if (provider != null) {
@@ -526,27 +526,27 @@ describe('Basic List | Testrun', () => {
                 if (episode.season?.getSingleSeasonNumberAsNumber() === 1) {
                     const s1Result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series1.episodeBindingPools, episode);
                     const relevantResult = s1Result.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
-                    notStrictEqual(relevantResult, undefined);
+                    expect(relevantResult).not.toBeUndefined();
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
                     const s2BindedEpisodeResult = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, episode);
                     const relevantResult = s2BindedEpisodeResult.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider));
-                    notStrictEqual(relevantResult, undefined);
+                    expect(relevantResult).not.toBeUndefined();
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
                     const allEpisodeBindingsPool = MainListManager.getMainList().flatMap((x) => x.episodeBindingPools);
                     const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode);
                     const s = len.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
                     if (episode.episodeNumber as number < 13) {
-                        strictEqual(s?.episodeNumber, episode.episodeNumber);
-                        equal(s?.providerSeriesId, 99255);
+                        expect(s?.episodeNumber).toBe(episode.episodeNumber);
+                        expect(s?.providerSeriesId).toBe(99255);
                     } else {
-                        strictEqual(s?.episodeNumber as number + 12, episode.episodeNumber);
-                        equal(s?.providerSeriesId, 100773);
+                        expect(s?.episodeNumber as number + 12).toBe(episode.episodeNumber);
+                        expect(s?.providerSeriesId).toBe(100773);
                     }
                     expect(len.length).toBeGreaterThanOrEqual(2);
                 } else if (episode.season?.getSingleSeasonNumberAsNumber() === 4) {
                     const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series4.episodeBindingPools, episode);
                     const relevantResult = result.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
-                    notStrictEqual(relevantResult, undefined);
+                    expect(relevantResult).not.toBeUndefined();
 
                 }
                 logger.warn(episode.episodeNumber + ' S: ' + episode.season?.getSingleSeasonNumberAsNumber());
@@ -554,7 +554,7 @@ describe('Basic List | Testrun', () => {
             const season = series2.getProviderSeasonTarget(provider.provider);
             expect(season?.getSingleSeasonNumberAsNumber()).toEqual(2);
         } else {
-            fail();
+            throw new Error();
         }
     }, 4000);
 
@@ -572,7 +572,7 @@ describe('Basic List | Testrun', () => {
 
         // Result checking
         const mainList = MainListManager.getMainList();
-        strictEqual(mainList.length, 1);
+        expect(mainList.length).toBe(1);
 
         const resultSeries = mainList[0];
 
@@ -580,12 +580,12 @@ describe('Basic List | Testrun', () => {
 
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
-        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        equal(aniListBinding?.providerLocalData.id, 2167);
+        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
+        expect(aniListBinding?.providerLocalData.id).toBe(2167);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
-        strictEqual(traktBinding?.providerLocalData.provider, traktName);
+        expect(traktBinding?.providerLocalData.provider).toBe(traktName);
         expect(traktBinding?.providerLocalData.id).toEqual(24724);
     });
 
@@ -603,7 +603,7 @@ describe('Basic List | Testrun', () => {
 
         // Result checking
         const mainList = MainListManager.getMainList();
-        strictEqual(mainList.length, 1);
+        expect(mainList.length).toBe(1);
 
         const resultSeries = mainList[0];
 
@@ -611,19 +611,19 @@ describe('Basic List | Testrun', () => {
 
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
-        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        equal(aniListBinding?.providerLocalData.id, 21051);
+        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
+        expect(aniListBinding?.providerLocalData.id).toBe(21051);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
-        strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        equal(traktBinding?.providerLocalData.id, 110252);
+        expect(traktBinding?.providerLocalData.provider).toBe(traktName);
+        expect(traktBinding?.providerLocalData.id).toBe(110252);
 
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
             const relevantResult = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
-            notStrictEqual(relevantResult, undefined);
+            expect(relevantResult).toBe(undefined);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber);
@@ -645,7 +645,7 @@ describe('Basic List | Testrun', () => {
 
         // Result checking
         const mainList = MainListManager.getMainList();
-        strictEqual(mainList.length, 1);
+        expect(mainList.length).toBe(1);
 
         const resultSeries = mainList[0];
 
@@ -653,18 +653,18 @@ describe('Basic List | Testrun', () => {
 
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
-        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        equal(aniListBinding?.providerLocalData.id, '934');
+        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
+        expect(aniListBinding?.providerLocalData.id).toEqual('934');
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
-        strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        equal(traktBinding?.providerLocalData.id, 61179);
+        expect(traktBinding?.providerLocalData.provider).toBe(traktName);
+        expect(traktBinding?.providerLocalData.id).toBe(61179);
 
         const epMappings = resultSeries.episodeBindingPools;
         for (const epMapping of epMappings) {
             const relevantResult = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
-            notStrictEqual(relevantResult, undefined);
+            expect(relevantResult).toBe(undefined);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber);
@@ -686,7 +686,7 @@ describe('Basic List | Testrun', () => {
 
         // Result checking
         const mainList = MainListManager.getMainList();
-        strictEqual(mainList.length, 1);
+        expect(mainList.length).toBe(1);
 
         const resultSeries = mainList[0];
 
@@ -694,20 +694,20 @@ describe('Basic List | Testrun', () => {
 
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
-        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        equal(aniListBinding?.providerLocalData.id, 849);
+        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
+        expect(aniListBinding?.providerLocalData.id).toBe(849);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
-        strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        equal(traktBinding?.providerLocalData.id, 60988);
+        expect(traktBinding?.providerLocalData.provider).toBe(traktName);
+        expect(traktBinding?.providerLocalData.id).toBe(60988);
 
 
         const epMappings = resultSeries.episodeBindingPools;
-        strictEqual(epMappings.length, 14);
+        expect(epMappings.length).toBe(14);
         for (const epMapping of epMappings) {
             const relevantResult = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
-            notStrictEqual(relevantResult, undefined);
+            expect(relevantResult).toBe(undefined);
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber);
@@ -729,7 +729,7 @@ describe('Basic List | Testrun', () => {
 
         // Result checking
         const mainList = MainListManager.getMainList();
-        strictEqual(mainList.length, 1);
+        expect(mainList.length).toBe(1);
 
         const resultSeries = mainList[0];
 
@@ -737,24 +737,24 @@ describe('Basic List | Testrun', () => {
 
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
-        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        equal(aniListBinding?.providerLocalData.id, '21131');
+        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
+        expect(aniListBinding?.providerLocalData.id).toEqual('21131');
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
-        strictEqual(traktBinding?.providerLocalData.provider, traktName);
-        equal(traktBinding?.providerLocalData.id, 97794);
-        strictEqual(traktBinding?.seasonTarget?.seasonNumbers[0], 1);
-        strictEqual(traktBinding?.seasonTarget?.seasonPart, 1);
+        expect(traktBinding?.providerLocalData.provider).toBe(traktName);
+        expect(traktBinding?.providerLocalData.id).toBe(97794);
+        expect(traktBinding?.seasonTarget?.seasonNumbers[0]).toBe(1);
+        expect(traktBinding?.seasonTarget?.seasonPart).toBe(1);
 
         const epMappings = resultSeries.episodeBindingPools;
-        strictEqual(epMappings.length, 12);
+        expect(epMappings.length).toBe(12);
         for (const epMapping of epMappings) {
             const anistListMapping = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(AniListProvider));
             const traktListMapping = epMapping.bindedEpisodeMappings.find((x) => x.provider === ProviderNameManager.getProviderName(TraktProvider));
 
-            notStrictEqual(anistListMapping, undefined);
-            notStrictEqual(traktListMapping, undefined);
+            expect(anistListMapping).toBeUndefined();
+            expect(traktListMapping).toBeUndefined();
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber);
@@ -783,19 +783,19 @@ describe('Basic List | Testrun', () => {
 
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
-        strictEqual(aniListBinding?.providerLocalData.provider, aniListName);
-        equal(aniListBinding?.providerLocalData.id, 21390);
+        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
+        expect(aniListBinding?.providerLocalData.id).toBe(21390);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
-        strictEqual(traktBinding?.providerLocalData.provider, ProviderNameManager.getProviderName(TraktProvider));
-        equal(traktBinding?.providerLocalData.id, 97794);
-        strictEqual(traktBinding?.seasonTarget?.seasonNumbers[0], 1);
-        strictEqual(traktBinding?.seasonTarget?.seasonPart, 2);
+        expect(traktBinding?.providerLocalData.provider).toBe(ProviderNameManager.getProviderName(TraktProvider));
+        expect(traktBinding?.providerLocalData.id).toBe(97794);
+        expect(traktBinding?.seasonTarget?.seasonNumbers[0]).toBe(1);
+        expect(traktBinding?.seasonTarget?.seasonPart).toBe(2);
 
 
         const epMappings = resultSeries.episodeBindingPools;
-        strictEqual(epMappings.length, 12);
+        expect(epMappings.length).toBe(12);
         for (const epMapping of epMappings) {
             const stra = epMapping.bindedEpisodeMappings.find((x) => x.provider === aniListName);
             expect(stra).not.toEqual(undefined);

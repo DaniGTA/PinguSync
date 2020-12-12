@@ -26,7 +26,7 @@ describe('Provider: OMDb | Test runs', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, omdbProvider);
-        strictEqual(result.getAllProviders().length, 1);
+        expect(result.getAllProviders().length).toBe(1);
         return;
     });
 
@@ -38,7 +38,7 @@ describe('Provider: OMDb | Test runs', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await omdbProvider.getMoreSeriesInfoByName('Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu');
-        strictEqual(result.length, 0);
+        expect(result.length).toBe(0);
         return;
     });
 
@@ -46,7 +46,7 @@ describe('Provider: OMDb | Test runs', () => {
     test('should get series by id', async () => {
         const unkownProvider = new InfoProviderLocalData('tt2341379', OMDbProvider);
         const result = await omdbProvider.getFullInfoById(unkownProvider);
-        strictEqual(result.mainProvider.providerLocalData.id, unkownProvider.id);
+        expect(result.mainProvider.providerLocalData.id).toBe(unkownProvider.id);
         return;
     });
 

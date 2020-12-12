@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/require-await */
 import { FailedRequestError } from '../../../../src/backend/controller/objects/meta/failed-request';
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Series from '../../../../src/backend/controller/objects/series';
@@ -27,7 +29,7 @@ describe('Download provider local data without provider id', () => {
 
     describe('Test function: downloadProviderSeriesInfoBySeriesName()', () => {
         test('should call request twice', async () => {
-            const instance = new DownloadProviderLocalDataWithoutId(new Series(), new TestProvider('test'));
+            const instance = new DownloadProviderLocalDataWithoutId(new Series(), new TestListProvider('test'));
             const spyedRequest = jest.spyOn(instance, 'getProviderLocalDataByName' as any);
             spyedRequest.mockImplementationOnce(async () => undefined);
 
@@ -39,13 +41,13 @@ describe('Download provider local data without provider id', () => {
         });
 
         test('should throw no result on no result', async () => {
-            const instance = new DownloadProviderLocalDataWithoutId(new Series(), new TestProvider('test'));
+            const instance = new DownloadProviderLocalDataWithoutId(new Series(), new TestListProvider('test'));
             await expect(instance['downloadProviderSeriesInfoBySeriesName']([])).rejects.toEqual(FailedRequestError.ProviderNoResult);
         });
     });
 
     test('should stop searching by naming (failing by no result)', async () => {
-        const provider = new TestProvider('Test');
+        const provider = new TestListProvider('Test');
         jest.spyOn(provider, 'getMoreSeriesInfoByName').mockImplementation(async () => []);
 
         const series = new Series();
@@ -57,7 +59,7 @@ describe('Download provider local data without provider id', () => {
 
 
     test('should stop searching by naming (failing by error msg)', async () => {
-        const provider = new TestProvider('Test');
+        const provider = new TestListProvider('Test');
         jest.spyOn(provider, 'getMoreSeriesInfoByName').mockImplementation(async () => { throw new Error('no result'); });
 
         const series = new Series();
@@ -68,7 +70,7 @@ describe('Download provider local data without provider id', () => {
     });
 
     test('should stop searching by naming (failing by error id)', async () => {
-        const provider = new TestProvider('Test');
+        const provider = new TestListProvider('Test');
         jest.spyOn(provider, 'getMoreSeriesInfoByName').mockImplementation(async () => { throw FailedRequestError.ProviderNoResult; });
 
         const series = new Series();
@@ -79,7 +81,7 @@ describe('Download provider local data without provider id', () => {
     });
 
     test('should stop searching by naming (failing by blocked provider)', async () => {
-        const provider = new TestProvider('Test');
+        const provider = new TestListProvider('Test');
         const spyedFunction = jest.spyOn(provider, 'getMoreSeriesInfoByName');
         spyedFunction.mockImplementation(async () => { throw FailedRequestError.ProviderNotAvailble; });
         const series = new Series();

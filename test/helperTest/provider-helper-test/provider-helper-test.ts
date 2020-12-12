@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import AniDBHelper from '../../../src/backend/api/information-providers/anidb/anidb-helper';
 import AniDBProvider from '../../../src/backend/api/information-providers/anidb/anidb-provider';
 import AniListProvider from '../../../src/backend/api/information-providers/anilist/anilist-provider';
@@ -163,10 +162,10 @@ describe('Provider Helper Test', () => {
         const anidbProvider = infoProvider.find((x) => x.provider === ProviderNameManager.getProviderName(AniDBProvider));
         if (anidbProvider) {
             expect(anidbProvider.id).toBe(13244);
-            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.getSingleSeasonNumberAsNumber(), 3);
-            strictEqual(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart, 1);
+            expect(series.getProviderSeasonTarget(anidbProvider.provider)?.getSingleSeasonNumberAsNumber()).toBe(3);
+            expect(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart).toBe(1);
         } else {
-            fail();
+            throw new Error('no provider');
         }
     });
 });

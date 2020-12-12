@@ -10,7 +10,7 @@ describe('Main list loader tests', () => {
     test('Load save file', async () => {
         const series = MainListLoader.loadData();
 
-        strictEqual(series.length, 1);
+        expect(series.length).toBe(1);
 
 
         for (const serie of series) {

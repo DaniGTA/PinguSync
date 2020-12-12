@@ -18,7 +18,7 @@ import TestListProvider from '../../controller/objects/testClass/testListProvide
 describe('Episode rated equality helper tests | Difference calc only', () => {
     beforeEach(() => {
         // tslint:disable: no-string-literal
-        (ProviderLoader.prototype as any).listOfListProviders = [TestProvider, AniListProvider];
+        (ProviderLoader.prototype as any).listOfListProviders = [TestListProvider, AniListProvider];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
     });
@@ -46,10 +46,10 @@ describe('Episode rated equality helper tests | Difference calc only', () => {
         const resultA = equalityInstance['getAllRelevantEpisodes'](aProviderWithSeason, bProviderWithSeason);
         const resultB = equalityInstance['getAllRelevantEpisodes'](bProviderWithSeason, aProviderWithSeason);
 
-        strictEqual(resultA.result.length, 2);
-        strictEqual(resultB.result.length, 2);
-        strictEqual(resultA.diff, 0);
-        strictEqual(resultB.diff, 0);
+        expect(resultA.result.length).toBe(2);
+        expect(resultB.result.length).toBe(2);
+        expect(resultA.diff).toBe(0);
+        expect(resultB.diff).toBe(0);
     });
 
     test('should not filter out', async () => {
@@ -77,10 +77,10 @@ describe('Episode rated equality helper tests | Difference calc only', () => {
         const resultA = equalityInstance['getAllRelevantEpisodes'](aProviderWithSeason, bProviderWithSeason);
         const resultB = equalityInstance['getAllRelevantEpisodes'](bProviderWithSeason, aProviderWithSeason);
 
-        strictEqual(resultA.result.length, 2);
-        strictEqual(resultB.result.length, 4);
-        strictEqual(resultA.diff, 0);
-        strictEqual(resultB.diff, 0);
+        expect(resultA.result.length).toBe(2);
+        expect(resultB.result.length).toBe(4);
+        expect(resultA.diff).toBe(0);
+        expect(resultB.diff).toBe(0);
     });
 
     test('should create diff', async () => {
@@ -117,9 +117,9 @@ describe('Episode rated equality helper tests | Difference calc only', () => {
         const resultA = equalityInstance['getAllRelevantEpisodes'](aProviderWithSeason, bProviderWithSeason);
         const resultB = equalityInstance['getAllRelevantEpisodes'](bProviderWithSeason, aProviderWithSeason);
 
-        strictEqual(resultA.result.length, 2);
-        strictEqual(resultB.result.length, 2);
-        strictEqual(resultA.diff, -2);
-        strictEqual(resultB.diff, 2);
+        expect(resultA.result.length).toBe(2);
+        expect(resultB.result.length).toBe(2);
+        expect(resultA.diff).toBe(-2);
+        expect(resultB.diff).toBe(2);
     });
 });

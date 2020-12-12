@@ -9,7 +9,7 @@ import TestListProvider from '../objects/testClass/testListProvider';
 // tslint:disable: no-string-literal
 describe('Provider data manager list tests', () => {
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test'), new TestListProvider('Test2')];
         ProviderList['loadedInfoProvider'] = [];
     });
 
@@ -27,9 +27,9 @@ describe('Provider data manager list tests', () => {
         newProvider.lastUpdate = new Date(1);
         ProviderDataListManager['updateProviderInList'](newProvider);
 
-        strictEqual(ProviderDataListManager['providerDataList'].length, 1);
-        strictEqual(ProviderDataListManager['providerDataList'][0].infoStatus, ProviderInfoStatus.FULL_INFO);
-        strictEqual(ProviderDataListManager['providerDataList'][0].runTime, 10);
+        expect(ProviderDataListManager['providerDataList'].length).toBe(1);
+        expect(ProviderDataListManager['providerDataList'][0].infoStatus).toBe(ProviderInfoStatus.FULL_INFO);
+        expect(ProviderDataListManager['providerDataList'][0].runTime).toBe(10);
         expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false);
     });
 
@@ -46,9 +46,9 @@ describe('Provider data manager list tests', () => {
 
         ProviderDataListManager['updateProviderInList'](newProvider);
 
-        strictEqual(ProviderDataListManager['providerDataList'].length, 1);
-        strictEqual(ProviderDataListManager['providerDataList'][0].infoStatus, ProviderInfoStatus.FULL_INFO);
-        strictEqual(ProviderDataListManager['providerDataList'][0].runTime, 10);
+        expect(ProviderDataListManager['providerDataList'].length).toBe(1);
+        expect(ProviderDataListManager['providerDataList'][0].infoStatus).toBe(ProviderInfoStatus.FULL_INFO);
+        expect(ProviderDataListManager['providerDataList'][0].runTime).toBe(10);
         expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false);
     });
 

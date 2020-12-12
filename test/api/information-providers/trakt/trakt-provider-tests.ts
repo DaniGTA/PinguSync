@@ -1,4 +1,3 @@
-import { notStrictEqual, strictEqual } from 'assert';
 import TraktProvider from '../../../../src/backend/api/information-providers/trakt/trakt-provider';
 import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import MainListManager from '../../../../src/backend/controller/main-list-manager/main-list-manager';
@@ -33,7 +32,7 @@ describe('Provider: Trakt | Tests runs', () => {
             series.addProviderDatas(unkownProvider);
 
             const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
-            strictEqual(result.getAllProviders().length, 2);
+            expect(result.getAllProviders().length).toBe(2);
         });
 
         test('should get a series (3/5)', async () => {
@@ -43,7 +42,7 @@ describe('Provider: Trakt | Tests runs', () => {
             series.addProviderDatas(unkownProvider);
 
             const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
-            strictEqual(result.getAllProviders().length, 2);
+            expect(result.getAllProviders().length).toBe(2);
         });
 
         test('should get a series (4/5)', async () => {
@@ -55,7 +54,7 @@ describe('Provider: Trakt | Tests runs', () => {
             series.addProviderDatas(unkownProvider);
 
             const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
-            strictEqual(result.getAllProviders().length, 2);
+            expect(result.getAllProviders().length).toBe(2);
         });
 
         test('should get a series (5/5)', async () => {
@@ -67,7 +66,7 @@ describe('Provider: Trakt | Tests runs', () => {
             series.addProviderDatas(unkownProvider);
 
             const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
-            strictEqual(result.getAllProviders().length, 2);
+            expect(result.getAllProviders().length).toBe(2);
         });
 
         test('should get a series (6/6) same result but different year', async () => {
@@ -80,8 +79,8 @@ describe('Provider: Trakt | Tests runs', () => {
 
 
             const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
-            strictEqual(result.mainProvider.providerLocalData.releaseYear, 2013);
-            strictEqual(result.mainProvider.providerLocalData.id, 72367);
+            expect(result.mainProvider.providerLocalData.releaseYear).toBe(2013);
+            expect(result.mainProvider.providerLocalData.id).toBe(72367);
         });
         test('should get a series and should mark the episodes right', async () => {
             const series = new Series();
@@ -92,8 +91,8 @@ describe('Provider: Trakt | Tests runs', () => {
 
 
             const result = await providerInfoDownloaderhelper['downloadProviderLocalData'](series, traktProviderInstance);
-            strictEqual(result.mainProvider.providerLocalData.id, 103803);
-            notStrictEqual(result.mainProvider.providerLocalData.getDetailEpisodeInfos().length, 0);
+            expect(result.mainProvider.providerLocalData.id).toBe(103803);
+            expect(result.mainProvider.providerLocalData.getDetailEpisodeInfos().length).not.toBe(0);
         });
     });
 });

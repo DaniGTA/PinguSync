@@ -20,7 +20,7 @@ describe('Series provider extension tests', () => {
 
         const result = series.getAllProviderLocalDatasWithSeasonInfo();
 
-        strictEqual(result.length, 2);
+        expect(result.length).toBe(2);
     });
 
     test('should upgrade providers with season info to series', async () => {
@@ -35,8 +35,8 @@ describe('Series provider extension tests', () => {
         await series.addProviderDatasWithSeasonInfos(...[provider2]);
         const result = series.getAllProviderLocalDatasWithSeasonInfo();
 
-        strictEqual(result.length, 1);
-        strictEqual(result[0]?.seasonTarget, season);
+        expect(result.length).toBe(1);
+        expect(result[0]?.seasonTarget).toBe(season);
     });
 
     test('should combine bindings and add them all without duplication', () => {
@@ -51,8 +51,8 @@ describe('Series provider extension tests', () => {
         series.addAllBindings(...[binding1, binding2, binding3, binding4]);
 
         const allBindings = series.getAllProviderBindings();
-        strictEqual(allBindings.length, 2);
-        strictEqual(allBindings[0].targetSeason, season);
+        expect(allBindings.length).toBe(2);
+        expect(allBindings[0].targetSeason).toBe(season);
     });
 
 });

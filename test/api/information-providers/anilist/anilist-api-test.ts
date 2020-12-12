@@ -22,9 +22,9 @@ describe('Provider: AniList | Test runs', () => {
 
         const a = new AniListProvider();
         const result = a['getGraphQLOptions']('query', 'variables');
-        assert.equal(options.body, result.body);
-        assert.equal(options.headers + '', result.headers + '');
-        assert.equal(options.method, result.method);
+        expect(options.body).toBe( result.body);
+        expect(options.headers + '').toBe( result.headers + '');
+        expect(options.method).toBe( result.method);
         expect(options.uri).toEqual(result.uri);
         return;
     });

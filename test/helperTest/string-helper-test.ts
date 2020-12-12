@@ -1,4 +1,3 @@
-import { notEqual, strictEqual } from 'assert';
 import StringHelper from '../../src/backend/helpFunctions/string-helper';
 
 describe('String Helper', () => {
@@ -6,7 +5,7 @@ describe('String Helper', () => {
         expect(StringHelper.randomString()).not.toEqual('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
         expect(StringHelper.randomString()).not.toEqual('');
         expect(typeof StringHelper.randomString()).not.toEqual('undefined');
-        notEqual(StringHelper.randomString(), null);
+        expect(StringHelper.randomString()).not.toEqual(null);
         return;
     });
     describe('should clean string', () => {
@@ -44,26 +43,26 @@ describe('String Helper', () => {
         expect(StringHelper.cleanString('この素晴らしい世界に祝福を! 紅伝説')).toEqual('この素晴らしい世界に祝福を 紅伝説');
     });
     test('should not crash on check kanij', () => {
-        strictEqual(StringHelper.hasKanji(null as unknown as string), false);
+        expect(StringHelper.hasKanji(null as unknown as string)).toBe(false);
     });
 
     test('should detect cryillic', () => {
-        strictEqual(StringHelper.hasCyrillic('Привіт'), true);
+        expect(StringHelper.hasCyrillic('Привіт')).toBe(true);
         return;
     });
 
     test('should not detect cryillic', () => {
-        strictEqual(StringHelper.hasCyrillic('Hello'), false);
+        expect(StringHelper.hasCyrillic('Hello')).toBe(false);
         return;
     });
 
     test('should detect hangul letters', () => {
-        strictEqual(StringHelper.hasHangul('안녕'), true);
+        expect(StringHelper.hasHangul('안녕')).toBe(true);
         return;
     });
 
     test('should not detect hangul letters', () => {
-        strictEqual(StringHelper.hasHangul('Hello'), false);
+        expect(StringHelper.hasHangul('Hello')).toBe(false);
         return;
     });
 
@@ -75,14 +74,14 @@ describe('String Helper', () => {
 
     describe('should detect basic latin', () => {
         test('should detect basic latin letters', () => {
-            strictEqual(StringHelper.isOnlyBasicLatin('Test: - 2'), true);
-            strictEqual(StringHelper.isOnlyBasicLatin('Test/test! - 2 (1990)'), true);
+            expect(StringHelper.isOnlyBasicLatin('Test: - 2')).toBe(true);
+            expect(StringHelper.isOnlyBasicLatin('Test/test! - 2 (1990)')).toBe(true);
             return;
         });
         test('should detect that is it no basic latin letters', () => {
-            strictEqual(StringHelper.isOnlyBasicLatin('この素晴らしい世界に祝福を! 紅伝説'), false);
-            strictEqual(StringHelper.isOnlyBasicLatin('Test: Привіт - 2'), false);
-            strictEqual(StringHelper.isOnlyBasicLatin('Test/test! - 2 (1990) 안녕'), false);
+            expect(StringHelper.isOnlyBasicLatin('この素晴らしい世界に祝福を! 紅伝説')).toBe(false);
+            expect(StringHelper.isOnlyBasicLatin('Test: Привіт - 2')).toBe(false);
+            expect(StringHelper.isOnlyBasicLatin('Test/test! - 2 (1990) 안녕')).toBe(false);
             return;
         });
     });

@@ -203,7 +203,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             try {
                 // tslint:disable-next-line: no-string-literal
                 await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
-                fail();
+                throw new Error();
             } catch (err) {
                 logger.error(err);
             }
@@ -338,7 +338,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
             try {
                 // tslint:disable-next-line: no-string-literal
                 await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a);
-                fail();
+                throw new Error();
             } catch (err) {
                 logger.error(err);
             }

@@ -8,7 +8,7 @@ import TestListProvider from '../objects/testClass/testListProvider';
 describe('MainListPackageManager', () => {
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('Test2')];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test'), new TestListProvider('Test2')];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
     });
@@ -18,7 +18,7 @@ describe('MainListPackageManager', () => {
         await series.addProviderDatas(new InfoProviderLocalData(1, 'Test'));
         const result = await MainListManager.addSerieToMainList(series);
 
-        strictEqual(result, true);
-        strictEqual(await (await MainListManager.getMainList()).length, 1);
+        expect(result).toBe(true);
+        expect(await (await MainListManager.getMainList()).length).toBe(1);
     });
 });

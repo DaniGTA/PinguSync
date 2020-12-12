@@ -10,7 +10,7 @@ import ListProvider from '../../../src/backend/api/provider/list-provider';
 
 describe('sync episode test', () => {
     beforeAll(() => {
-        ProviderList['loadedListProvider'] = [new TestProvider('A'), new TestProvider('B')];
+        ProviderList['loadedListProvider'] = [new TestListProvider('A'), new TestListProvider('B')];
     });
     describe('test series with provider', () => {
         const series: Series = new Series();

@@ -1,5 +1,3 @@
-
-import { notStrictEqual } from 'assert';
 import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
@@ -18,7 +16,7 @@ import TestListProvider from '../controller/objects/testClass/testListProvider';
 describe('Multi-Provider-Comperator | Examples', () => {
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('testA'), new TestProvider('testB')];
+        ProviderList['loadedListProvider'] = [new TestListProvider('testA'), new TestListProvider('testB')];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal
@@ -49,8 +47,7 @@ describe('Multi-Provider-Comperator | Examples', () => {
         // TEST
 
         const result = await MultiProviderComperator.compareMultiProviderWithSeries(aSeries, new MultiProviderResult(bProvider));
-        notStrictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
+        expect(result.isAbsolute).not.toEqual(AbsoluteResult.ABSOLUTE_FALSE);
     });
-
 
 });

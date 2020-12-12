@@ -18,7 +18,7 @@ describe('Provider Comperator | Testrun', () => {
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
         // tslint:disable-next-line: no-string-literal
         const result = instance['compareProviderAWithProviderB'](providerA, providerB);
-        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
+        expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_FALSE);
     });
 
     test('should be absolute true (same provider and same id)', async () => {
@@ -30,7 +30,7 @@ describe('Provider Comperator | Testrun', () => {
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
         // tslint:disable-next-line: no-string-literal
         const result = instance['compareProviderAWithProviderB'](providerA, providerB);
-        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
+        expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_TRUE);
     });
 
     test('should be false (same provider and same id and wrong season)', async () => {
@@ -50,7 +50,7 @@ describe('Provider Comperator | Testrun', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await instance.getCompareResult();
-        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
+        expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_FALSE);
     });
 
     test('should be false (same provider and same id and wrong season (Season binded on Series))', async () => {
@@ -74,7 +74,7 @@ describe('Provider Comperator | Testrun', () => {
 
         // tslint:disable-next-line: no-string-literal
         const result = await instance.getCompareResult();
-        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
+        expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_FALSE);
     });
 
     test('should be absolute false (same provider and wrong provider)', async () => {
@@ -100,6 +100,6 @@ describe('Provider Comperator | Testrun', () => {
         const result = await instance.getCompareResult();
         // tslint:disable-next-line: no-string-literal
 
-        strictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_FALSE);
+        expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_FALSE);
     });
 });

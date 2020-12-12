@@ -1,4 +1,3 @@
-import { notStrictEqual, strictEqual } from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';
@@ -13,7 +12,7 @@ import TestListProvider from '../../controller/objects/testClass/testListProvide
 describe('Episode comperator | Full test', () => {
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test'), new TestProvider('')];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test'), new TestListProvider('')];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal
@@ -22,69 +21,69 @@ describe('Episode comperator | Full test', () => {
     describe('season tests', () => {
         const aEpisode = new Episode(0, new Season([1]));
         const bEpisode = new Episode(0);
-        test('should compare seasons right (missing providerB season)', async () => {
+        test('should compare seasons right (missing providerB season)', () => {
             // tslint:disable-next-line: no-string-literal
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, new Season([1]), undefined, new Season([1]));
-            notStrictEqual(resultA.matchAble, 0);
-            strictEqual(resultA.matchAble, resultA.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).toBe(resultA.matches);
         });
-        test('should compare seasons right (missing providerA season)', async () => {
+        test('should compare seasons right (missing providerA season)', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, new Season([1]), new Season([1]));
-            notStrictEqual(resultA.matchAble, 0);
-            strictEqual(resultA.matchAble, resultA.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).toBe(resultA.matches);
         });
         test(
             'should compare seasons right (missing all provider season)',
-            async () => {
+            () => {
                 const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, new Season([1]));
                 const resultB = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, undefined, undefined, new Season([1]));
-                notStrictEqual(resultA.matchAble, 0);
-                strictEqual(resultA.matchAble, resultA.matches);
-                notStrictEqual(resultB.matchAble, 0);
-                strictEqual(resultB.matchAble, resultB.matches);
+                expect(resultA.matchAble).not.toBe(0);
+                expect(resultA.matchAble).toBe(resultA.matches);
+                expect(resultB.matchAble).not.toBe(0);
+                expect(resultB.matchAble).toBe(resultB.matches);
             });
-        test('should compare seasons right (missing series season)', async () => {
+        test('should compare seasons right (missing series season)', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, new Season([1]), new Season([1]), undefined);
             const resultB = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, new Season([1]), new Season([1]), undefined);
-            notStrictEqual(resultA.matchAble, 0);
-            strictEqual(resultA.matchAble, resultB.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).toBe(resultB.matches);
         });
         test(
             'should compare seasons right (missing provider season and series season)',
-            async () => {
+            () => {
                 const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, undefined);
-                notStrictEqual(resultA.matchAble, 0);
-                strictEqual(resultA.matchAble, resultA.matches);
+                expect(resultA.matchAble).not.toBe(0);
+                expect(resultA.matchAble).toBe(resultA.matches);
             });
         test('should compare seasons right (missing provider season and series season) v2', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](bEpisode, aEpisode, undefined, undefined, undefined);
-            notStrictEqual(resultA.matchAble, 0);
-            strictEqual(resultA.matchAble, resultA.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).toBe(resultA.matches);
         });
 
-        test('should compare seasons false', async () => {
+        test('should compare seasons false', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, new Season(2));
-            notStrictEqual(resultA.matchAble, 0);
-            notStrictEqual(resultA.matchAble, resultA.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).not.toBe(resultA.matches);
         });
-        test('should compare seasons right (no missing seasons)', async () => {
+        test('should compare seasons right (no missing seasons)', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, aEpisode, new Season([1]), new Season([1]), new Season([1]));
-            notStrictEqual(resultA.matchAble, 0);
-            strictEqual(resultA.matchAble, resultA.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).toBe(resultA.matches);
         });
-        test('should compare seasons false (false provider season)', async () => {
+        test('should compare seasons false (false provider season)', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, new Season([1]), new Season(2), new Season([1]));
-            notStrictEqual(resultA.matchAble, 0);
-            notStrictEqual(resultA.matchAble, resultA.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).not.toBe(resultA.matches);
         });
-        test('should compare seasons false (false series season)', async () => {
+        test('should compare seasons false (false series season)', () => {
             const resultA = EpisodeComperator['isEpisodeSameSeason'](aEpisode, bEpisode, undefined, undefined, new Season(2));
-            notStrictEqual(resultA.matchAble, 0);
-            notStrictEqual(resultA.matchAble, resultA.matches);
+            expect(resultA.matchAble).not.toBe(0);
+            expect(resultA.matchAble).not.toBe(resultA.matches);
         });
     });
 
-    test('should compare the episode as not the same', async () => {
+    test('should compare the episode as not the same', () => {
         const episodeA = new Episode(2, undefined);
         episodeA.provider = 'AniList';
         episodeA.type = EpisodeType.REGULAR_EPISODE;
@@ -99,7 +98,7 @@ describe('Episode comperator | Full test', () => {
         expect(result.matches).toBe(0);
     });
 
-    test('should compare the episode as the same', async () => {
+    test('should compare the episode as the same', () => {
         const episodeA = new Episode(2, undefined);
         episodeA.type = EpisodeType.OTHER;
         episodeA.summery = 'ABC';

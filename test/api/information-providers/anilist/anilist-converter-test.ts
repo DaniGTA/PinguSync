@@ -1,7 +1,4 @@
-
-import assert from 'assert';
 import { readFileSync } from 'fs';
-
 import anilistConverter from '../../../../src/backend/api/information-providers/anilist/anilist-converter';
 import { MediaFormat } from '../../../../src/backend/api/information-providers/anilist/graphql/mediaFormat';
 import { MediaListCollection } from '../../../../src/backend/api/information-providers/anilist/graphql/seriesList';
@@ -11,20 +8,19 @@ import { ListType } from '../../../../src/backend/controller/settings/models/pro
 
 // tslint:disable: no-string-literal
 describe('Provider: AniList | Converter tests', () => {
-    test('should convert', async () => {
+    test('should convert', () => {
         const rawdata = JSON.parse(readFileSync('./test/api/information-providers/anilist/testResponse/anilistUserListResponse.json', { encoding: 'UTF-8' }));
         const collection = rawdata.data.MediaListCollection as MediaListCollection;
         const entry = collection.lists[2].entries[3];
-        const anime = await anilistConverter.convertListEntryToAnime(entry, ListType.COMPLETED);
+        const anime = anilistConverter.convertListEntryToAnime(entry, ListType.COMPLETED);
         const providerInfo = anime.mainProvider.providerLocalData;
         if (providerInfo instanceof ListProviderLocalData) {
-            assert.strictEqual(anime.mainProvider.providerLocalData.episodes, 1);
-            assert.strictEqual(providerInfo.watchStatus, ListType.COMPLETED);
+            expect(anime.mainProvider.providerLocalData.episodes).toBe(1);
+            expect(providerInfo.watchStatus).toBe(ListType.COMPLETED);
         } else {
-            assert.fail();
+            throw new Error();
         }
         expect(providerInfo.score).toEqual(60);
-        return;
     });
 
     test('should convert format', () => {
@@ -34,6 +30,5 @@ describe('Provider: AniList | Converter tests', () => {
         expect(movieResult).toEqual(MediaType.MOVIE);
         expect(tvResult).toEqual(MediaType.ANIME);
         expect(tvShortResult).toEqual(MediaType.ANIME);
-        return;
     });
 });

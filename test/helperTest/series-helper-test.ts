@@ -130,7 +130,7 @@ describe('Series Helper', () => {
 
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('test', true, false), new TestProvider('test2', true, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('test', true, false), new TestListProvider('test2', true, true)];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal

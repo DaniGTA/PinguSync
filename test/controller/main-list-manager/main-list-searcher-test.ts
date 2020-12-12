@@ -16,7 +16,7 @@ import TestListProvider from '../objects/testClass/testListProvider';
 describe('MainList | Searcher tests', () => {
 
     beforeEach(() => {
-        (ProviderLoader.prototype as any).listOfListProviders = [TestProvider];
+        (ProviderLoader.prototype as any).listOfListProviders = [TestListProvider];
         ProviderList['loadedInfoProvider'] = [];
     });
 

@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-
-import { strictEqual } from 'assert';
 import TVMazeProvider from '../../../../src/backend/api/information-providers/tvmaze/tvmaze-provider';
 import InfoProvider from '../../../../src/backend/api/provider/info-provider';
 import ListProvider from '../../../../src/backend/api/provider/list-provider';
@@ -32,14 +31,14 @@ describe('Provider: TVMaze | Test runs', () => {
         series.addProviderDatas(unkownProvider);
 
         const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, providerInstance);
-        strictEqual(result.getAllProviders().length, 2);
+        expect(result.getAllProviders().length).toBe(2);
         return;
     });
     test('should get series by id', async () => {
         const providerInstance = ProviderList.getProviderInstanceByClass(TVMazeProvider);
         const unkownProvider = new InfoProviderLocalData(1505, '');
         const result = await providerInstance.getFullInfoById(unkownProvider);
-        strictEqual(result.mainProvider.providerLocalData.id, unkownProvider.id);
+        expect(result.mainProvider.providerLocalData.id).toBe(unkownProvider.id);
         return;
     });
 

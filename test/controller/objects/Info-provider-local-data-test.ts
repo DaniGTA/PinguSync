@@ -1,11 +1,10 @@
 
-import { strictEqual } from 'assert';
 import Cover from '../../../src/backend/controller/objects/meta/cover';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 
 
 describe('infoProviderLocalData tests', () => {
-    test('should merge two', async () => {
+    test('should merge two', () => {
         const a = new InfoProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
@@ -16,15 +15,15 @@ describe('infoProviderLocalData tests', () => {
         b.score = 40;
         b.covers.push(new Cover(''));
 
-        const merged = await InfoProviderLocalData.mergeProviderInfos(a, b);
-        strictEqual(merged.covers.length, 1, 'Cover merge failed');
-        strictEqual(merged.episodes, 14, 'Episodes merge failed');
-        strictEqual(merged.publicScore, 20, 'Public score merge failed');
-        strictEqual(merged.score, 40, 'Score merge failed');
+        const merged = InfoProviderLocalData.mergeProviderInfos(a, b);
+        expect(merged.covers.length).toBe(1);
+        expect(merged.episodes).toBe(14);
+        expect(merged.publicScore).toBe(20);
+        expect(merged.score).toBe(40);
         return;
     });
 
-    test('should merge three', async () => {
+    test('should merge three', () => {
         const a = new InfoProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
@@ -40,16 +39,15 @@ describe('infoProviderLocalData tests', () => {
         c.lastUpdate = new Date(20000);
         c.covers.push(new Cover('x'));
 
-
-        const merged = await InfoProviderLocalData.mergeProviderInfos(a, b, c);
-        strictEqual(merged.covers.length, 2, 'Cover merge failed');
-        strictEqual(merged.episodes, 15, 'Episodes merge failed');
-        strictEqual(merged.publicScore, 20, 'Public score merge failed');
-        strictEqual(merged.lastUpdate.getTime(), 20000, 'Last update merge failed');
+        const merged = InfoProviderLocalData.mergeProviderInfos(a, b, c);
+        expect(merged.covers.length).toBe(2);
+        expect(merged.episodes).toBe(15);
+        expect(merged.publicScore).toBe(20);
+        expect(merged.lastUpdate.getTime()).toBe(20000);
         return;
     });
 
-    test('should not merge same cover', async () => {
+    test('should not merge same cover', () => {
         const a = new InfoProviderLocalData(1);
         a.episodes = 13;
         a.publicScore = 20;
@@ -66,13 +64,12 @@ describe('infoProviderLocalData tests', () => {
         c.lastUpdate = new Date(2);
         c.covers.push(new Cover('c'));
 
-
-        const merged = await InfoProviderLocalData.mergeProviderInfos(c, b, a);
-        strictEqual(merged.covers.length, 1, 'Cover merge failed');
-        strictEqual(merged.episodes, 15);
-        strictEqual(merged.publicScore, 20);
-        strictEqual(merged.lastUpdate.getTime(), 2);
-        strictEqual(merged.score, 40);
+        const merged = InfoProviderLocalData.mergeProviderInfos(c, b, a);
+        expect(merged.covers.length).toBe(1);
+        expect(merged.episodes).toBe(15);
+        expect(merged.publicScore).toBe(20);
+        expect(merged.lastUpdate.getTime()).toBe(2);
+        expect(merged.score).toBe(40);
         return;
     });
 });

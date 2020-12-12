@@ -14,19 +14,19 @@ describe('Provider: Simkl | Converter tests', () => {
             test('should convert simkl episode "special" type to SPECIAL', () => {
                 simklEpisode.type = 'special';
                 const result = simklConverterInstance['convertSimklEpisodeTypeToEpisodeType'](simklEpisode);
-                strictEqual(result, EpisodeType.SPECIAL);
+                expect(result).toBe(EpisodeType.SPECIAL);
             });
 
             test('should convert simkl episode "episode" type to REGULAR EPISODE', () => {
                 simklEpisode.type = 'episode';
                 const result = simklConverterInstance['convertSimklEpisodeTypeToEpisodeType'](simklEpisode);
-                strictEqual(result, EpisodeType.REGULAR_EPISODE);
+                expect(result).toBe(EpisodeType.REGULAR_EPISODE);
             });
 
             test('should convert simkl episode "unkown" type to UNKNOWN', () => {
                 simklEpisode.type = 'unknown';
                 const result = simklConverterInstance['convertSimklEpisodeTypeToEpisodeType'](simklEpisode);
-                strictEqual(result, EpisodeType.UNKOWN);
+                expect(result).toBe(EpisodeType.UNKOWN);
             });
         });
 
@@ -34,13 +34,13 @@ describe('Provider: Simkl | Converter tests', () => {
             test('should convert img to 3 thumbnails (reason: thumbnail is present)', () => {
                 simklEpisode.img = 'x';
                 const result = simklConverterInstance['convertSimklEpisodeImgToEpisodeThumbnail'](simklEpisode);
-                strictEqual(result.length, 3);
+                expect(result.length).toBe(3);
             });
 
             test('should not convert img to 3 thumbnails (reason: thumbnail is not present)', () => {
                 simklEpisode.img = '';
                 const result = simklConverterInstance['convertSimklEpisodeImgToEpisodeThumbnail'](simklEpisode);
-                strictEqual(result.length, 0);
+                expect(result.length).toBe(0);
             });
         });
     });
@@ -49,27 +49,27 @@ describe('Provider: Simkl | Converter tests', () => {
         describe('Anime type tests', () => {
             test('should convert anime media type: tv to ANIME', () => {
                 const result = simklConverterInstance['convertAnimeTypeToMediaType']('tv');
-                strictEqual(result, MediaType.ANIME);
+                expect(result).toBe(MediaType.ANIME);
             });
 
             test('should convert anime media type: special to SPECIAL', () => {
                 const result = simklConverterInstance['convertAnimeTypeToMediaType']('special');
-                strictEqual(result, MediaType.SPECIAL);
+                expect(result).toBe(MediaType.SPECIAL);
             });
 
             test('should convert anime media type: ova to OVA', () => {
                 const result = simklConverterInstance['convertAnimeTypeToMediaType']('ova');
-                strictEqual(result, MediaType.OVA);
+                expect(result).toBe(MediaType.OVA);
             });
 
             test('should convert anime media type: movie to MOVIE', () => {
                 const result = simklConverterInstance['convertAnimeTypeToMediaType']('movie');
-                strictEqual(result, MediaType.MOVIE);
+                expect(result).toBe(MediaType.MOVIE);
             });
 
             test('should convert anime media type: unknown to ANIME', () => {
                 const result = simklConverterInstance['convertAnimeTypeToMediaType']('asdasd');
-                strictEqual(result, MediaType.ANIME);
+                expect(result).toBe(MediaType.ANIME);
             });
         });
     });

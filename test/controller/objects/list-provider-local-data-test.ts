@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import Banner from '../../../src/backend/controller/objects/meta/banner';
 import Cover from '../../../src/backend/controller/objects/meta/cover';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
@@ -26,12 +25,12 @@ describe('listProviderLocalData tests', () => {
         b.covers.push(new Cover(''));
 
         const merged = ListProviderLocalData.mergeProviderInfos(a, b);
-        strictEqual(merged.covers.length, 1, 'Cover merge failed');
-        strictEqual(merged.episodes, 14, 'Episodes merge failed');
-        strictEqual(merged.publicScore, 20, 'Public score merge failed');
+        expect(merged.covers.length).toBe(1);
+        expect(merged.episodes).toBe(14);
+        expect(merged.publicScore).toBe(20);
         expect(merged.score).toBe(40);
-        strictEqual(merged.infoStatus, ProviderInfoStatus.FULL_INFO, 'Should add latest hasFullInfo');
-        strictEqual(merged.watchStatus, ListType.COMPLETED, 'Should add latest watch status');
+        expect(merged.infoStatus).toBe(ProviderInfoStatus.FULL_INFO);
+        expect(merged.watchStatus).toBe(ListType.COMPLETED);
         return;
     });
 
@@ -53,10 +52,10 @@ describe('listProviderLocalData tests', () => {
 
 
         const merged = ListProviderLocalData.mergeProviderInfos(a, b, c);
-        strictEqual(merged.covers.length, 2, 'Cover merge failed');
-        strictEqual(merged.episodes, 15, 'Episodes merge failed');
+        expect(merged.covers.length).toBe(2);
+        expect(merged.episodes).toBe(15);
         expect(merged.publicScore).toBe(20);
-        strictEqual(merged.lastUpdate.getTime(), new Date(20000).getTime(), 'Last update merge failed');
+        expect(merged.lastUpdate.getTime()).toBe(new Date(20000).getTime());
         return;
     });
     test('should merge provider watchHistory', () => {
@@ -92,12 +91,12 @@ describe('listProviderLocalData tests', () => {
 
 
         const merged = ListProviderLocalData.mergeProviderInfos(c, b, a);
-        strictEqual(merged.covers.length, 1);
-        strictEqual(merged.episodes, 15);
-        strictEqual(merged.publicScore, 25);
-        strictEqual(merged.lastUpdate.getTime(), 2);
+        expect(merged.covers.length).toBe(1);
+        expect(merged.episodes).toBe(15);
+        expect(merged.publicScore).toBe(25);
+        expect(merged.lastUpdate.getTime()).toBe(2);
         expect(merged.score).toBe(40);
-        strictEqual(merged.isNSFW, true);
+        expect(merged.isNSFW).toBe(true);
         return;
     });
 

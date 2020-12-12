@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import Overview from '../../../src/backend/controller/objects/meta/overview';
@@ -29,7 +28,7 @@ describe('Series | Merge', () => {
         seriesB.addListProvider(lpld2);
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.getMaxEpisode(), 10);
+        expect(merged.getMaxEpisode()).toBe(10);
         return;
     });
 
@@ -46,8 +45,8 @@ describe('Series | Merge', () => {
         seriesB.addListProvider(lpld2);
 
         const merged = await seriesA.merge(seriesB);
-        const result = await merged.getAllProviderLocalDatas().flatMap(x => x.getAllDetailedEpisodes());
-        strictEqual(result.length, 20);
+        const result = merged.getAllProviderLocalDatas().flatMap(x => x.getAllDetailedEpisodes());
+        expect(result.length).toBe(20);
         return;
     });
     test('should merge episode (2)', async () => {
@@ -58,7 +57,7 @@ describe('Series | Merge', () => {
         seriesA.addListProvider(lpld);
         const seriesB = new Series();
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.getMaxEpisode(), 10);
+        expect(merged.getMaxEpisode()).toBe(10);
         return;
     });
     test('should merge overview', async () => {
@@ -91,7 +90,7 @@ describe('Series | Merge', () => {
 
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.getAllOverviews().length, 2);
+        expect(merged.getAllOverviews().length).toBe(2);
         return;
     });
     test('should merge overview (3)', async () => {
@@ -103,7 +102,7 @@ describe('Series | Merge', () => {
         const seriesB = new Series();
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual(merged.getAllOverviews().length, 1);
+        expect(merged.getAllOverviews().length).toBe(1);
         return;
     });
     test('should merge name', async () => {
@@ -117,7 +116,7 @@ describe('Series | Merge', () => {
         seriesB.addListProvider(lpld2);
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual((merged.getAllNames()).length, 1);
+        expect((merged.getAllNames()).length).toBe(1);
         return;
     });
     test('should merge name (2)', async () => {
@@ -130,7 +129,7 @@ describe('Series | Merge', () => {
         lpld2.addSeriesName(new Name('TestB', 'en'));
         seriesB.addListProvider(lpld2);
         const merged = await seriesA.merge(seriesB);
-        strictEqual((merged.getAllNames()).length, 2);
+        expect((merged.getAllNames()).length).toBe(2);
         return;
     });
     test('should merge name (3)', async () => {
@@ -145,7 +144,7 @@ describe('Series | Merge', () => {
         for (const name of names) {
             logger.info(name);
         }
-        strictEqual(names.length, 1);
+        expect(names.length).toBe(1);
         return;
     });
 
@@ -159,8 +158,8 @@ describe('Series | Merge', () => {
         seriesB.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season([1])));
 
         const merged = await seriesA.merge(seriesB);
-        strictEqual((merged.getListProvidersInfos()).length, 1);
-        strictEqual(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider)?.getSingleSeasonNumberAsNumber(), 1);
+        expect((merged.getListProvidersInfos()).length).toBe(1);
+        expect(merged.getProviderSeasonTarget((merged.getListProvidersInfos())[0].provider)?.getSingleSeasonNumberAsNumber()).toBe(1);
         return;
     });
 

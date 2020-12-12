@@ -1,4 +1,3 @@
-import { notStrictEqual, strictEqual } from 'assert';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
@@ -6,52 +5,50 @@ import SeasonComperator from '../../../src/backend/helpFunctions/comperators/sea
 
 
 describe('Season Comperator tests', () => {
-    beforeEach(() => {
-    });
     test('should equals true (same season)', () => {
         const season1 = new Season([1]);
         const season2 = new Season([1]);
 
-        strictEqual(SeasonComperator.isSameSeason(season1, season2), true);
+        expect(SeasonComperator.isSameSeason(season1, season2)).toBe(true);
     });
 
     test('should equals false (wrong season)', () => {
         const season1 = new Season([1]);
         const season2 = new Season([2]);
 
-        strictEqual(SeasonComperator.isSameSeason(season1, season2), false);
+        expect(SeasonComperator.isSameSeason(season1, season2)).toBe(false);
     });
 
     test('should equals false (right season and wrong part) ', () => {
         const season1 = new Season([1], 1);
         const season2 = new Season([1], 2);
 
-        strictEqual(SeasonComperator.isSameSeason(season1, season2), false);
+        expect(SeasonComperator.isSameSeason(season1, season2)).toBe(false);
     });
 
     test('should equals true (right season and part)', () => {
         const season1 = new Season([1], 2);
         const season2 = new Season([1], 2);
 
-        strictEqual(SeasonComperator.isSameSeason(season1, season2), true);
+        expect(SeasonComperator.isSameSeason(season1, season2)).toBe(true);
     });
 
     test('should equals false (wrong season and right part)', () => {
         const season1 = new Season([1], 2);
         const season2 = new Season([2], 2);
 
-        strictEqual(SeasonComperator.isSameSeason(season1, season2), false);
+        expect(SeasonComperator.isSameSeason(season1, season2)).toBe(false);
     });
 
     test('should equals false (wrong season and undefined part)', () => {
         const season1 = new Season([1], undefined);
         const season2 = new Season([2], 2);
 
-        strictEqual(SeasonComperator.isSameSeason(season1, season2), false);
+        expect(SeasonComperator.isSameSeason(season1, season2)).toBe(false);
     });
 
     test('should equals true (both undefined)', () => {
-        strictEqual(SeasonComperator.isSameSeason(undefined, undefined), true);
+        expect(SeasonComperator.isSameSeason(undefined, undefined)).toBe(true);
     });
 
     test('should not be anywhere equals in a comperation result', async () => {
@@ -64,10 +61,10 @@ describe('Season Comperator tests', () => {
 
         const result = await SeasonComperator.compareSeasons(a, b);
 
-        notStrictEqual(result.isAbsolute, AbsoluteResult.ABSOLUTE_TRUE);
-        strictEqual(result.matches, 0);
-        strictEqual(result.aFirstSeason, null);
-        strictEqual(result.bFirstSeason, null);
+        expect(result.isAbsolute).not.toBe(AbsoluteResult.ABSOLUTE_TRUE);
+        expect(result.matches).toBe(0);
+        expect(result.aFirstSeason).toBe(null);
+        expect(result.bFirstSeason).toBe(null);
     });
 
     describe('Season number comperation tests', () => {
@@ -78,8 +75,8 @@ describe('Season Comperator tests', () => {
             const result = SeasonComperator.isSameSeasonNumber(seasonOne, seasonB);
             const result2 = SeasonComperator.isSameSeasonNumber(seasonB, seasonOne);
 
-            strictEqual(result, true);
-            strictEqual(result2, true);
+            expect(result).toBe(true);
+            expect(result2).toBe(true);
         });
 
         test('season number: 2 and season number: undefined should be false', () => {
@@ -87,24 +84,24 @@ describe('Season Comperator tests', () => {
             const result = SeasonComperator.isSameSeasonNumber(seasonTwo, seasonB);
             const result2 = SeasonComperator.isSameSeasonNumber(seasonB, seasonTwo);
 
-            strictEqual(result, false);
-            strictEqual(result2, false);
+            expect(result).toBe(false);
+            expect(result2).toBe(false);
         });
 
         test('season number: 1 and season: undefined should be true', () => {
             const result = SeasonComperator.isSameSeasonNumber(seasonOne, undefined);
             const result2 = SeasonComperator.isSameSeasonNumber(undefined, seasonOne);
 
-            strictEqual(result, true);
-            strictEqual(result2, true);
+            expect(result).toBe(true);
+            expect(result2).toBe(true);
         });
 
         test('season number: 2 and season: undefined should be false', () => {
             const result = SeasonComperator.isSameSeasonNumber(seasonTwo, undefined);
             const result2 = SeasonComperator.isSameSeasonNumber(undefined, seasonTwo);
 
-            strictEqual(result, false);
-            strictEqual(result2, false);
+            expect(result).toBe(false);
+            expect(result2).toBe(false);
         });
     });
 
@@ -116,35 +113,35 @@ describe('Season Comperator tests', () => {
             const result = SeasonComperator.isSameSeasonPartNumber(seasonA, seasonB);
             const result2 = SeasonComperator.isSameSeasonPartNumber(seasonB, seasonA);
 
-            strictEqual(result, true);
-            strictEqual(result2, true);
+            expect(result).toBe(true);
+            expect(result2).toBe(true);
         });
 
-        test('season part: 1 and season part: undefined should be false', () => {
+        test('season part: 1 and season two: undefined should be false', () => {
             const seasonA = new Season([1], 2);
             const result = SeasonComperator.isSameSeasonPartNumber(seasonA, undefined);
             const result2 = SeasonComperator.isSameSeasonPartNumber(undefined, seasonA);
 
-            strictEqual(result, false);
-            strictEqual(result2, false);
+            expect(result).toBe(false);
+            expect(result2).toBe(false);
         });
 
-        test('season part: 1 and season part: undefined should be true', () => {
+        test('season part: 1 and season part: 1 should be true', () => {
             const seasonA = new Season([1], 1);
             const result = SeasonComperator.isSameSeasonPartNumber(seasonA, seasonOne);
             const result2 = SeasonComperator.isSameSeasonPartNumber(seasonOne, seasonA);
 
-            strictEqual(result, true);
-            strictEqual(result2, true);
+            expect(result).toBe(true);
+            expect(result2).toBe(true);
         });
 
-        test('season part: 1 and season part: undefined should be false', () => {
+        test('season part: 1 and season two: 1 should be false', () => {
             const seasonA = new Season([1], 2);
             const result = SeasonComperator.isSameSeasonPartNumber(seasonA, seasonOne);
             const result2 = SeasonComperator.isSameSeasonPartNumber(seasonOne, seasonA);
 
-            strictEqual(result, false);
-            strictEqual(result2, false);
+            expect(result).toBe(false);
+            expect(result2).toBe(false);
         });
     });
 });

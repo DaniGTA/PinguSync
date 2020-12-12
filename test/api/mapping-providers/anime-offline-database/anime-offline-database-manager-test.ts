@@ -36,7 +36,7 @@ describe('AnimeOfflineDatabaseManager | basic test', () => {
             AnimeOfflineDatabaseManager['LOCAL_DATA'].database = database;
             const r = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(providerLocalData);
             expect(r?.episodes).toEqual(37);
-        }, 5000);
+        }, 8000);
 
         test('should find IDatabaseEntry with aniList id', async () => {
             const providerLocalData = new ListProviderLocalData(1535, AniListProvider);

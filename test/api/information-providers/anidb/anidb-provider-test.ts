@@ -18,7 +18,7 @@ describe('Provider: AniDB | Online Test runs', () => {
 
         const result = await a.getFullInfoById(lpdld);
 
-        deepEqual(result.mainProvider.providerLocalData.id, '14444');
+        expect(result.mainProvider.providerLocalData.id).toBe('14444');
     });
 
 });

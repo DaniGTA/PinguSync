@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import { MediaType } from '../../src/backend/controller/objects/meta/media-type';
@@ -171,20 +170,20 @@ describe('Season Helper', () => {
         });
     });
 
-    test('should be check if season is undefined (simple undefined)', async () => {
-        strictEqual(seasonHelper.isSeasonUndefined(undefined), true);
+    test('should be check if season is undefined (simple undefined)', () => {
+        expect(seasonHelper.isSeasonUndefined(undefined)).toBe(true);
     });
 
-    test('should be check if season is undefined (simple undefined season number)', async () => {
-        strictEqual(seasonHelper.isSeasonUndefined(new Season()), true);
+    test('should be check if season is undefined (simple undefined season number)', () => {
+        expect(seasonHelper.isSeasonUndefined(new Season())).toBe(true);
     });
 
-    test('should be check if season is undefined (simple defined season number 1)', async () => {
-        strictEqual(seasonHelper.isSeasonUndefined(new Season([1])), false);
+    test('should be check if season is undefined (simple defined season number 1)', () => {
+        expect(seasonHelper.isSeasonUndefined(new Season([1]))).toBe(false);
     });
 
-    test('should be check if season is undefined (simple defined season number 0)', async () => {
-        strictEqual(seasonHelper.isSeasonUndefined(new Season([0])), false);
+    test('should be check if season is undefined (simple defined season number 0)', () => {
+        expect(seasonHelper.isSeasonUndefined(new Season([0]))).toBe(false);
     });
 
 });

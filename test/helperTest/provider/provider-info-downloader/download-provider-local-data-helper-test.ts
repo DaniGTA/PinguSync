@@ -1,4 +1,4 @@
-import { strictEqual } from 'assert';
+/* eslint-disable @typescript-eslint/require-await */
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { FailedRequestError } from '../../../../src/backend/controller/objects/meta/failed-request';
 import Name from '../../../../src/backend/controller/objects/meta/name';
@@ -20,13 +20,13 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
     test('should download provider local data (no id)', async () => {
 
-        ProviderList['loadedListProvider'] = [new TestProvider('Test2', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
         const series = new Series();
 
         const listProvider = new ListProviderLocalData(1, 'Test2');
         listProvider.addSeriesName(new Name('a', ''));
 
-        await series.addListProvider(listProvider);
+        series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
 
         const resultListProvider = new ListProviderLocalData(1, 'Test');
@@ -42,13 +42,13 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
     test('should dont have a result (no id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test2', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
         const series = new Series();
 
         const listProvider = new ListProviderLocalData(1, 'Test2');
         listProvider.addSeriesName(new Name('a', ''));
 
-        await series.addListProvider(listProvider);
+        series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
 
         const resultListProvider = new ListProviderLocalData(1, 'Test');
@@ -57,28 +57,28 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
             [new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(resultListProvider))]);
         try {
             await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            fail('should throw FailedRequestError.ProviderNoResult');
+            throw new Error('should throw FailedRequestError.ProviderNoResult');
         } catch (err) {
-            strictEqual(err, FailedRequestError.ProviderNoResult);
+            expect(err).toBe(FailedRequestError.ProviderNoResult);
         }
     });
 
     test('should say that provider is not avaible (no id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test2', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
         const series = new Series();
 
         const listProvider = new ListProviderLocalData(1, 'Test2');
         listProvider.addSeriesName(new Name('a', ''));
 
-        await series.addListProvider(listProvider);
+        series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
-        provider.isProviderAvailable = async () => false;
+        provider.isProviderAvailable = async (): Promise<boolean> => false;
         try {
             await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            fail();
+            throw new Error();
         } catch (err) {
-            strictEqual(err, FailedRequestError.ProviderNotAvailble);
+            expect(err).toBe(FailedRequestError.ProviderNotAvailble);
         }
     });
 
@@ -99,16 +99,16 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         test('should timeout (no id)', async () => {
 
             // tslint:disable: no-string-literal
-            ProviderList['loadedListProvider'] = [new TestProvider('Test2', false, true)];
+            ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
             const series = new Series();
 
             const listProvider = new ListProviderLocalData(1, 'Test2');
             listProvider.addSeriesName(new Name('a', ''));
 
-            await series.addListProvider(listProvider);
+            series.addListProvider(listProvider);
             const provider = new TestInfoProvider('Test');
             // Delay function
-            provider.getMoreSeriesInfoByName = async () => new Promise<MultiProviderResult[]>((resolve) => {
+            provider.getMoreSeriesInfoByName = async (): Promise<MultiProviderResult[]> => new Promise<MultiProviderResult[]>((resolve) => {
                 setTimeout(() => {
                     resolve([]);
                 }, 101);
@@ -119,52 +119,52 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
     test('should dont have a result (with id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test', false, true)];
         const series = new Series();
 
         const listProvider = new ListProviderLocalData(1, 'Test');
         listProvider.addSeriesName(new Name('a', ''));
 
-        await series.addListProvider(listProvider);
+        series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
-        jest.spyOn(provider, 'getFullInfoById').mockImplementation(async () => { throw new Error('no result'); });
+        jest.spyOn(provider, 'getFullInfoById').mockImplementation(async (): Promise<MultiProviderResult> => { throw new Error('no result'); });
 
         try {
             await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            fail('should throw FailedRequestError.ProviderNoResult');
+            throw new Error('should throw FailedRequestError.ProviderNoResult');
         } catch (err) {
-            strictEqual(err, FailedRequestError.ProviderNoResult);
+            expect(err).toBe(FailedRequestError.ProviderNoResult);
         }
     });
 
     test('should say that provider is not avaible (with id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test', false, true)];
         const series = new Series();
 
         const listProvider = new ListProviderLocalData(1, 'Test');
         listProvider.addSeriesName(new Name('a', ''));
 
-        await series.addListProvider(listProvider);
+        series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
-        jest.spyOn(provider, 'isProviderAvailable').mockImplementation(async () => false);
+        jest.spyOn(provider, 'isProviderAvailable').mockImplementation(async (): Promise<boolean> => false);
         await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.ProviderNotAvailble);
     });
 
     test('should timeout (with id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestProvider('Test', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider('Test', false, true)];
         const series = new Series();
 
         const listProvider = new ListProviderLocalData(1, 'Test');
         listProvider.addSeriesName(new Name('a', ''));
 
-        await series.addListProvider(listProvider);
+        series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
         // Delay function
-        provider.getFullInfoById = async () => new Promise<MultiProviderResult>((resolve) => {
+        provider.getFullInfoById = async (): Promise<MultiProviderResult> => new Promise<MultiProviderResult>((resolve) => {
             setTimeout(() => {
-                resolve();
+                resolve(undefined);
             }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100);
         });
         await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.Timeout);
