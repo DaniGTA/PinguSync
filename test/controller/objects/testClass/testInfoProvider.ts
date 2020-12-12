@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/require-await */
 import ExternalInformationProvider from '../../../../src/backend/api/provider/external-information-provider';
-import ExternalProvider from '../../../../src/backend/api/provider/external-provider';
 import InfoProvider from '../../../../src/backend/api/provider/info-provider';
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { UserData } from '../../../../src/backend/api/user-data';
@@ -12,20 +14,20 @@ import { ListProviderLocalData } from '../../../../src/backend/controller/provid
 
 
 export default class TestInfoProvider extends InfoProvider {
-    public isOffline: boolean = false;
+    public isOffline = false;
     public potentialSubProviders: Array<new () => ExternalInformationProvider> = [];
     public supportedOtherProvider: Array<new () => ExternalInformationProvider> = [];
 
     public version = 1;
     public hasUniqueIdForSeasons = false;
-    public providerName: string = '';
-    public hasOAuthCode: boolean = true;
+    public providerName = '';
+    public hasOAuthCode = true;
     public loggedIn: boolean;
     // tslint:disable-next-line: no-object-literal-type-assertion
     public userData: UserData = {} as UserData;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
 
-    constructor(providerName: string, loggedIn: boolean = true, hasUniqueIdForSeasons: boolean = false) {
+    constructor(providerName: string, loggedIn = true, hasUniqueIdForSeasons = false) {
         super();
         this.providerName = providerName;
         this.loggedIn = loggedIn;

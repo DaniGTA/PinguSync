@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import TraktProvider from '../../../src/backend/api/information-providers/trakt/trakt-provider';
 import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
@@ -9,7 +8,7 @@ import ProviderComperator from '../../../src/backend/helpFunctions/comperators/p
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 
 describe('Provider Comperator | Testrun', () => {
-    test('should be absolute false (same provider and wrong id)', async () => {
+    test('should be absolute false (same provider and wrong id)', () => {
         const instance = new ProviderComperator(new Series(), new Series());
 
         const providerA = new ListProviderLocalData(2, 'test');
@@ -21,7 +20,7 @@ describe('Provider Comperator | Testrun', () => {
         expect(result.isAbsolute).toBe(AbsoluteResult.ABSOLUTE_FALSE);
     });
 
-    test('should be absolute true (same provider and same id)', async () => {
+    test('should be absolute true (same provider and same id)', () => {
         const instance = new ProviderComperator(new Series(), new Series());
 
         const providerA = new ListProviderLocalData(2, 'test');
@@ -60,14 +59,14 @@ describe('Provider Comperator | Testrun', () => {
         series1['cachedSeason'] = new Season(1);
         const providerA = new ListProviderLocalData(2, TraktProvider);
         providerA.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
-        await series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerA));
+        series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerA));
 
         const series2 = new Series();
         // tslint:disable-next-line: no-string-literal
         series2['cachedSeason'] = new Season(2);
         const providerB = new ListProviderLocalData(2, TraktProvider);
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
-        await series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerB));
+        series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(providerB));
 
         const instance = new ProviderComperator(series1, series2);
 
@@ -84,8 +83,8 @@ describe('Provider Comperator | Testrun', () => {
         const provider2B = new ListProviderLocalData(2, 'test');
         provider2B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
-        await s2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2A, new Season(1)));
-        await s2.addProviderDatas(provider2B);
+        s2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2A, new Season(1)));
+        s2.addProviderDatas(provider2B);
 
         const s1 = new Series();
         const provider1A = new ListProviderLocalData(2, TraktProvider);
@@ -93,8 +92,8 @@ describe('Provider Comperator | Testrun', () => {
         const provider1B = new ListProviderLocalData(1, 'test');
         provider1B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
-        await s1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1A, new Season(1)));
-        await s1.addProviderDatas(provider1B);
+        s1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1A, new Season(1)));
+        s1.addProviderDatas(provider1B);
 
         const instance = new ProviderComperator(s1, s2);
         const result = await instance.getCompareResult();

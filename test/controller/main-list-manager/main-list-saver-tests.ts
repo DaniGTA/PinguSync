@@ -1,4 +1,3 @@
-import { equal } from 'assert';
 import { existsSync } from 'fs';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import MainListPath from '../../../src/backend/controller/main-list-manager/main-list-path';
@@ -11,7 +10,7 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 
 describe('Main list saver tests', () => {
     beforeEach(() => {
-        MainListPath.getPath = () => './test/controller/main-list-manager/files/saved-list.json';
+        MainListPath.getPath = (): string => './test/controller/main-list-manager/files/saved-list.json';
     });
 
     test('should save file', async () => {

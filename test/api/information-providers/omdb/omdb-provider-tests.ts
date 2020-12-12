@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import OMDbProvider from '../../../../src/backend/api/information-providers/omdb/omdb-provider';
 import Name from '../../../../src/backend/controller/objects/meta/name';
 import Series from '../../../../src/backend/controller/objects/series';

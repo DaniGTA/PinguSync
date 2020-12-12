@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from 'crypto';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'fs';
 import ExternalInformationProvider from '../src/backend/api/provider/external-information-provider';
@@ -33,7 +34,7 @@ export default class ResponseHelper {
     }
 
     private static cacheFolderName = './test-web-response-cache/';
-    private static mockGetByNameRequest(provider: (new () => ExternalInformationProvider)) {
+    private static mockGetByNameRequest(provider: (new () => ExternalInformationProvider)): void {
         const spyGetInfoByName = jest.spyOn(provider.prototype, 'getMoreSeriesInfoByName');
         const spyGetInfoByNameMock = async (searchTitle: string, season: number): Promise<MultiProviderResult[]> => {
             const requestId = this.generateRequestId(provider, (searchTitle + season));
@@ -66,7 +67,7 @@ export default class ResponseHelper {
         spyGetInfoByName.mockImplementation(spyGetInfoByNameMock as unknown as any);
     }
 
-    private static mockGetByIdRequest(provider: (new () => ExternalInformationProvider)) {
+    private static mockGetByIdRequest(provider: (new () => ExternalInformationProvider)): void {
         const spyGetInfoById = jest.spyOn(provider.prototype, 'getFullInfoById').mockImplementation(jest.fn());
         const spyGetInfoByIdMock = jest.fn().mockImplementation(async (providerLocalData: ProviderLocalData): Promise<MultiProviderResult> => {
             const requestId = this.generateRequestId(provider, (providerLocalData.provider + providerLocalData.id));

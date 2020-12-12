@@ -1,4 +1,3 @@
-import { fail, strictEqual } from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import EpisodeTitle from '../../../src/backend/controller/objects/meta/episode/episode-title';

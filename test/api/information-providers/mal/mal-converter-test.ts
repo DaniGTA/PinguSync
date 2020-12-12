@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ListType } from './../../../../src/backend/controller/settings/models/provider/list-types';
 import MalConverter from '../../../../src/backend/api/information-providers/mal/mal-converter';
 import { ImageSize } from '../../../../src/backend/controller/objects/meta/image-size';

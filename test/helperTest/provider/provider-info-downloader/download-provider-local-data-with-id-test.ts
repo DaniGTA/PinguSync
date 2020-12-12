@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';
 import { FailedRequestError } from '../../../../src/backend/controller/objects/meta/failed-request';
 import Name from '../../../../src/backend/controller/objects/meta/name';

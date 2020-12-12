@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/require-await */
 import ExternalInformationProvider from '../../../../src/backend/api/provider/external-information-provider';
 import ListProvider from '../../../../src/backend/api/provider/list-provider';
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result';

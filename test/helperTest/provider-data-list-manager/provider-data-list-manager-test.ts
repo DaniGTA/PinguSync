@@ -1,4 +1,3 @@
-import { isDeepStrictEqual } from 'util';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';
 import Name from '../../../src/backend/controller/objects/meta/name';
 import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
@@ -25,7 +24,7 @@ describe('Provider data list manager tests', () => {
         ProviderDataListManager.addProviderLocalDataToMainList(newProvider);
 
         expect(ProviderDataListManager['providerDataList'].length).toBe(1);
-        isDeepStrictEqual(ProviderDataListManager['providerDataList'][0], newProvider);
+        expect(ProviderDataListManager['providerDataList'][0]).toBe(newProvider);
     });
 
     test('It should not downgrade existing data', () => {
@@ -42,6 +41,6 @@ describe('Provider data list manager tests', () => {
         ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
 
         expect(ProviderDataListManager['providerDataList'].length).toBe(1);
-        isDeepStrictEqual(ProviderDataListManager['providerDataList'][0], newProvider);
+        expect(ProviderDataListManager['providerDataList'][0]).toBe(newProvider);
     });
 });

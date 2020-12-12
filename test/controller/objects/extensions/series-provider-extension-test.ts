@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import TraktProvider from '../../../../src/backend/api/information-providers/trakt/trakt-provider';
 import InfoLocalDataBind from '../../../../src/backend/controller/objects/extension/provider-extension/binding/info-local-data-bind';
 import ListLocalDataBind from '../../../../src/backend/controller/objects/extension/provider-extension/binding/list-local-data-bind';
@@ -10,29 +9,29 @@ import ProviderDataWithSeasonInfo from '../../../../src/backend/helpFunctions/pr
 
 
 describe('Series provider extension tests', () => {
-    test('should add providers with season info to series', async () => {
+    test('should add providers with season info to series', () => {
         const series = new Series();
 
         const provider1 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), new Season([2]));
         const provider2 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(2));
 
-        await series.addProviderDatasWithSeasonInfos(...[provider1, provider2]);
+        series.addProviderDatasWithSeasonInfos(...[provider1, provider2]);
 
         const result = series.getAllProviderLocalDatasWithSeasonInfo();
 
         expect(result.length).toBe(2);
     });
 
-    test('should upgrade providers with season info to series', async () => {
+    test('should upgrade providers with season info to series', () => {
         const series = new Series();
 
         const provider1 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider));
 
-        await series.addProviderDatasWithSeasonInfos(...[provider1]);
+        series.addProviderDatasWithSeasonInfos(...[provider1]);
 
         const season = new Season([2]);
         const provider2 = new ProviderDataWithSeasonInfo(new ListProviderLocalData(1, TraktProvider), season);
-        await series.addProviderDatasWithSeasonInfos(...[provider2]);
+        series.addProviderDatasWithSeasonInfos(...[provider2]);
         const result = series.getAllProviderLocalDatasWithSeasonInfo();
 
         expect(result.length).toBe(1);

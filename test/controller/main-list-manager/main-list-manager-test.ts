@@ -1,4 +1,3 @@
-import { strictEqual } from 'assert';
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
@@ -15,10 +14,10 @@ describe('MainListPackageManager', () => {
 
     test('should simply add the series to the main list.', async () => {
         const series = new Series();
-        await series.addProviderDatas(new InfoProviderLocalData(1, 'Test'));
+        series.addProviderDatas(new InfoProviderLocalData(1, 'Test'));
         const result = await MainListManager.addSerieToMainList(series);
 
         expect(result).toBe(true);
-        expect(await (await MainListManager.getMainList()).length).toBe(1);
+        expect(MainListManager.getMainList().length).toBe(1);
     });
 });

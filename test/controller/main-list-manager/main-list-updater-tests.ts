@@ -18,7 +18,7 @@ describe('MainList | Entry update tests', () => {
     test('should update provider', async () => {
         const seriesA = new Series();
         const providerA = new ListProviderLocalData('test', 'Test');
-        await seriesA.addProviderDatas(providerA);
+        seriesA.addProviderDatas(providerA);
 
         // tslint:disable-next-line: no-string-literal
         MainListManager['mainList'] = [seriesA];

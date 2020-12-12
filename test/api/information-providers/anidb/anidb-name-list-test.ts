@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { fail } from 'assert';
 import AniDBHelper from '../../../../src/backend/api/information-providers/anidb/anidb-helper';
 import AniDBProvider from '../../../../src/backend/api/information-providers/anidb/anidb-provider';
 import AniListProvider from '../../../../src/backend/api/information-providers/anilist/anilist-provider';

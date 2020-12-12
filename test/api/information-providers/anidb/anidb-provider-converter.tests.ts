@@ -1,7 +1,7 @@
-import { strictEqual } from 'assert';
-import AniDBConverter from '../../../src/backend/api/anidb/anidb-converter';
-import { EpisodeElement } from '../../../src/backend/api/anidb/objects/anidbFullInfoXML';
-import { EpisodeType } from '../../../src/backend/controller/objects/meta/episode/episode-type';
+import AniDBConverter from '../../../../src/backend/api/information-providers/anidb/anidb-converter';
+import { EpisodeElement } from '../../../../src/backend/api/information-providers/anidb/objects/anidbFullInfoXML';
+import { EpisodeType } from '../../../../src/backend/controller/objects/meta/episode/episode-type';
+
 
 // tslint:disable: no-string-literal
 describe('Provider: AniDB | Converter tests', () => {

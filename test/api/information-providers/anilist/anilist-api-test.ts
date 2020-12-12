@@ -1,5 +1,3 @@
-
-import assert from 'assert';
 import request from 'request';
 import AniListProvider from '../../../../src/backend/api/information-providers/anilist/anilist-provider';
 
@@ -22,9 +20,9 @@ describe('Provider: AniList | Test runs', () => {
 
         const a = new AniListProvider();
         const result = a['getGraphQLOptions']('query', 'variables');
-        expect(options.body).toBe( result.body);
-        expect(options.headers + '').toBe( result.headers + '');
-        expect(options.method).toBe( result.method);
+        expect(options.body).toBe(result.body);
+        expect(options.headers + '').toBe(result.headers + '');
+        expect(options.method).toBe(result.method);
         expect(options.uri).toEqual(result.uri);
         return;
     });

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager';
 import Episode from '../../../src/backend/controller/objects/meta/episode/episode';

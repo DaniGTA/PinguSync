@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import ListController from '../../src/backend/controller/list-controller';
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager';
 import Name from '../../src/backend/controller/objects/meta/name';
@@ -196,7 +195,7 @@ describe('ListController | Combine', () => {
 
         await lc.addSeriesToMainList(x1);
 
-        expect(MainListManager['mainList'].length).toBe( 1);
+        expect(MainListManager['mainList'].length).toBe(1);
         expect((ListController?.instance?.getMainList())?.length).toEqual(1);
 
     });

@@ -16,6 +16,7 @@ import TestListProvider from '../objects/testClass/testListProvider';
 describe('MainList | Searcher tests', () => {
 
     beforeEach(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (ProviderLoader.prototype as any).listOfListProviders = [TestListProvider];
         ProviderList['loadedInfoProvider'] = [];
     });

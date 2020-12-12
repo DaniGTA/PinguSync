@@ -1,5 +1,3 @@
-
-import { deepEqual } from 'assert';
 import AniDBProvider from '../../../../src/backend/api/information-providers/anidb/anidb-provider';
 import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';

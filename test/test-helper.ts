@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/require-await */
 import AniDBProvider from '../src/backend/api/information-providers/anidb/anidb-provider';
 import ExternalProvider from '../src/backend/api/provider/external-provider';
 import ListController from '../src/backend/controller/list-controller';
@@ -15,16 +17,16 @@ ResponseHelper.mockRequest();
 // tslint:disable: no-string-literal
 MainListManager['listLoaded'] = true;
 MainListManager['mainList'] = [];
-MainListPath.getPath = () => '/////- no path for testing -';
+MainListPath.getPath = (): string => '/////- no path for testing -';
 // tslint:disable-next-line: no-empty
 MainListSaver.saveMainList = jest.fn();
 
 ProviderDataListManager['listLoaded'] = true;
 // tslint:disable-next-line: no-empty
 ProviderDataListLoader['saveData'] = jest.fn();
-ProviderDataListLoader['loadData'] = () => [];
+ProviderDataListLoader['loadData'] = (): [] => [];
 ProviderDataListManager['providerDataList'] = [];
-AniDBProvider.prototype['downloadFile'] = async () => { throw new Error('Cant request file in test.'); };
+AniDBProvider.prototype['downloadFile'] = async (): Promise<string> => { throw new Error('Cant request file in test.'); };
 jest.spyOn(ExternalProvider.prototype, 'waitUntilItCanPerfomNextRequest').mockImplementation(jest.fn());
 jest.spyOn(SettingsManager.prototype, 'save' as any).mockImplementation(jest.fn());
 jest.spyOn(AnimeOfflineDatabaseProviderData.prototype, 'saveData' as any).mockImplementation(jest.fn());
