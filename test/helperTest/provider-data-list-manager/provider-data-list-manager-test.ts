@@ -24,7 +24,7 @@ describe('Provider data list manager tests', () => {
         ProviderDataListManager.addProviderLocalDataToMainList(newProvider);
 
         expect(ProviderDataListManager['providerDataList'].length).toBe(1);
-        expect(ProviderDataListManager['providerDataList'][0]).toBe(newProvider);
+        expect(ProviderDataListManager['providerDataList'][0]).toStrictEqual(newProvider);
     });
 
     test('It should not downgrade existing data', () => {
@@ -41,6 +41,6 @@ describe('Provider data list manager tests', () => {
         ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
 
         expect(ProviderDataListManager['providerDataList'].length).toBe(1);
-        expect(ProviderDataListManager['providerDataList'][0]).toBe(newProvider);
+        expect(ProviderDataListManager['providerDataList'][0]).toStrictEqual(newProvider);
     });
 });

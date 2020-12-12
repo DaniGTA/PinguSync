@@ -54,14 +54,10 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
         const resultListProvider = new ListProviderLocalData(1, 'Test');
 
+
         jest.spyOn(provider, 'getMoreSeriesInfoByName').mockImplementation(async () =>
             [new MultiProviderResult(new ProviderLocalDataWithSeasonInfo(resultListProvider))]);
-        try {
-            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            throw new Error('should throw FailedRequestError.ProviderNoResult');
-        } catch (err) {
-            expect(err).toBe(FailedRequestError.ProviderNoResult);
-        }
+        await expect(async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toBe(FailedRequestError.ProviderNoResult);
     });
 
     test('should say that provider is not avaible (no id)', async () => {
@@ -75,12 +71,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
         provider.isProviderAvailable = async (): Promise<boolean> => false;
-        try {
-            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            throw new Error();
-        } catch (err) {
-            expect(err).toBe(FailedRequestError.ProviderNotAvailble);
-        }
+        await expect(async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toBe(FailedRequestError.ProviderNotAvailble);
     });
 
     describe('timeout', () => {
@@ -129,13 +120,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         series.addListProvider(listProvider);
         const provider = new TestInfoProvider('Test');
         jest.spyOn(provider, 'getFullInfoById').mockImplementation(async (): Promise<MultiProviderResult> => { throw new Error('no result'); });
-
-        try {
-            await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider);
-            throw new Error('should throw FailedRequestError.ProviderNoResult');
-        } catch (err) {
-            expect(err).toBe(FailedRequestError.ProviderNoResult);
-        }
+        await expect(async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toBe(FailedRequestError.ProviderNoResult);
     });
 
     test('should say that provider is not avaible (with id)', async () => {
