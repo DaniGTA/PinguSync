@@ -79,7 +79,18 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
-
+        const query = print(UpdateSeriesEpisodeProgress);
+        const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode);
+        for (const groupedEpisode of groupedEpisodes) {
+            const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray(groupedEpisode);
+            const variables = {
+                mediaId: groupedEpisode[0].providerId,
+                progress: maxEpNumber
+            };
+            const options = this.getGraphQLOptions(query, variables);
+            await this.waitUntilItCanPerfomNextRequest();
+            await this.webRequest(options);
+        }
     }
 
     public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {

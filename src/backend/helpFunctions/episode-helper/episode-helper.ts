@@ -64,9 +64,18 @@ export default class EpisodeHelper {
         let episodeNumber: number | undefined;
         for (const episode of episodeArray) {
             const currentEpisodeNumber = episode.getEpNrAsNr();
-            if (episodeNumber === undefined) {
+            if (episodeNumber === undefined || (currentEpisodeNumber !== undefined && episodeNumber < currentEpisodeNumber)) {
                 episodeNumber = currentEpisodeNumber;
-            } else if (currentEpisodeNumber !== undefined && episodeNumber < currentEpisodeNumber) {
+            }
+        }
+        return episodeNumber;
+    }
+
+    public static getMinEpisodeNumberFromEpisodeArray(episodeArray: Episode[]): number | undefined {
+        let episodeNumber: number | undefined;
+        for (const episode of episodeArray) {
+            const currentEpisodeNumber = episode.getEpNrAsNr();
+            if (episodeNumber === undefined || (currentEpisodeNumber !== undefined && episodeNumber > currentEpisodeNumber)) {
                 episodeNumber = currentEpisodeNumber;
             }
         }

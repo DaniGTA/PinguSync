@@ -89,4 +89,45 @@ describe('Episode Helper Test', () => {
             expect(result[1].length).toBe(1);
         });
     });
+
+    describe('test fn: isSameEpisodeID()', () => {
+        test('should be true', () => {
+            const episode1 = new Episode(1, new Season(1));
+            const result = EpisodeHelper.isSameEpisodeID(episode1, episode1);
+            expect(result).toBeTruthy();
+        });
+
+        test('should be false', () => {
+            const episode1 = new Episode(1, new Season(1));
+            const episode2 = new Episode(2, new Season(1));
+            const result = EpisodeHelper.isSameEpisodeID(episode1, episode2);
+            expect(result).toBeTruthy();
+        });
+    });
+
+    describe('test fn: getMinEpisodeNumberFromEpisodeArray()', () => {
+        test('should get min episode number from detailed episodes', () => {
+            const episode1 = new Episode(1, new Season(1));
+            const episode2 = new Episode(2, new Season(2));
+            const episodeS = new Episode('S3');
+            const result = EpisodeHelper.getMinEpisodeNumberFromEpisodeArray([episode1, episode2, episodeS]);
+            expect(result).toBe(1);
+        });
+
+        test('should get min episode number from detailed episodes with no first episode', () => {
+            const episode1 = new Episode(2, new Season(1));
+            const episode2 = new Episode(3, new Season(2));
+            const episodeS = new Episode('S4');
+            const result = EpisodeHelper.getMinEpisodeNumberFromEpisodeArray([episode1, episode2, episodeS]);
+            expect(result).toBe(2);
+        });
+
+        test('should get min episode number from detailed episodes with special episode', () => {
+            const episode1 = new Episode(2, new Season(1));
+            const episode2 = new Episode(3, new Season(2));
+            const episodeS = new Episode('S1');
+            const result = EpisodeHelper.getMinEpisodeNumberFromEpisodeArray([episode1, episode2, episodeS]);
+            expect(result).toBe(2);
+        });
+    });
 });
