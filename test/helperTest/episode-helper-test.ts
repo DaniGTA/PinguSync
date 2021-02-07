@@ -101,7 +101,7 @@ describe('Episode Helper Test', () => {
             const episode1 = new Episode(1, new Season(1));
             const episode2 = new Episode(2, new Season(1));
             const result = EpisodeHelper.isSameEpisodeID(episode1, episode2);
-            expect(result).toBeTruthy();
+            expect(result).toBeFalsy();
         });
     });
 

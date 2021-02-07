@@ -1,5 +1,7 @@
 import MainListSearcher from '../../controller/main-list-manager/main-list-searcher';
 import EpisodeBindingPool from '../../controller/objects/meta/episode/episode-binding-pool';
+import EpisodeMapping from '../../controller/objects/meta/episode/episode-mapping';
+import Season from '../../controller/objects/meta/season';
 import Series from '../../controller/objects/series';
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import logger from '../../logger/logger';
@@ -16,7 +18,7 @@ export default class EpisodeMappingHelper {
      * static getEpisodeMappings
      */
     public static async getEpisodeMappings(series: Series): Promise<EpisodeBindingPool[]> {
-        const season = series.getSeason();
+        const asyncSeason = series.getSeason();
         const allProviders = series.getAllProviderLocalDatasWithSeasonInfo();
         const allEpisodeBindingPools = this.getAllEpisodeBindingsThatAreRelevant(allProviders);
         for (const provider of allProviders) {
@@ -25,29 +27,39 @@ export default class EpisodeMappingHelper {
                 provider.providerLocalData.addDetailedEpisodeInfos(...generateEpisodes);
             }
         }
-        allProviders.sort((a) => Number(this.detailedEpisodeHasTitle(a.providerLocalData) ? -1 : 1));
+        this.sortProviderWithEpisodeTitleAtFirst(allProviders);
         for (let index = 0; index < allProviders.length; index++) {
             const providerA = allProviders[index];
             const compareToProviders = this.getAllProviderThatCanBeMappedToEpisodeOfProvider(providerA, allProviders);
-            compareToProviders.sort((a) => Number(this.detailedEpisodeHasTitle(a.providerLocalData) ? -1 : 1));
+            this.sortProviderWithEpisodeTitleAtFirst(compareToProviders);
             for (const providerB of compareToProviders) {
-                try {
-                    const ratingInstance = new EpisodeRatedEqualityHelper(series.episodeBindingPools, allEpisodeBindingPools);
-                    const packageA = new ProviderAndSeriesPackage(providerA, series);
-                    const packageB = new ProviderAndSeriesPackage(providerB, series);
-                    const ratings = ratingInstance.getRatedEqualityFromTwoProviders(packageA, packageB, await season);
-                    const bestRatings = EpisodeRatedEqualityContainerHelper.getBestResultsFromEpisodeRatedEqualityContainer(ratings);
-                    for (const bestRating of bestRatings) {
-                        if (!this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(series.episodeBindingPools, bestRating)) {
-                            series.addEpisodeMapping(...bestRating.getEpisodeMappings());
-                        }
-                    }
-                } catch (err) {
-                    logger.debug(err);
-                }
+                series.addEpisodeBindingPools(...await this.getEpisodeMapping(series, providerA, providerB, asyncSeason, allEpisodeBindingPools));
             }
         }
         return series.episodeBindingPools;
+    }
+
+    private static async getEpisodeMapping(series: Series, providerA: ProviderLocalDataWithSeasonInfo, providerB: ProviderLocalDataWithSeasonInfo, season: Promise<Season>, allEpisodeBindingPools: EpisodeBindingPool[]): Promise<EpisodeBindingPool[]> {
+        const episodeMappingResult: EpisodeBindingPool[] = [];
+        try {
+            const ratingInstance = new EpisodeRatedEqualityHelper(series.episodeBindingPools, allEpisodeBindingPools);
+            const packageA = new ProviderAndSeriesPackage(providerA, series);
+            const packageB = new ProviderAndSeriesPackage(providerB, series);
+            const ratings = ratingInstance.getRatedEqualityFromTwoProviders(packageA, packageB, await season);
+            const bestRatings = EpisodeRatedEqualityContainerHelper.getBestResultsFromEpisodeRatedEqualityContainer(ratings);
+            for (const bestRating of bestRatings) {
+                if (!this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(series.episodeBindingPools, bestRating)) {
+                    episodeMappingResult.push(new EpisodeBindingPool(...bestRating.getEpisodeMappings()));
+                }
+            }
+        } catch (err) {
+            logger.debug(err);
+        }
+        return episodeMappingResult;
+    }
+
+    private static sortProviderWithEpisodeTitleAtFirst(allProviders: ProviderLocalDataWithSeasonInfo[]): void {
+        allProviders.sort((provider) => Number(this.detailedEpisodeHasTitle(provider.providerLocalData) ? -1 : 1));
     }
 
     private static getAllProviderThatCanBeMappedToEpisodeOfProvider(targetProvider: ProviderLocalDataWithSeasonInfo, allProviders: ProviderLocalDataWithSeasonInfo[]): ProviderLocalDataWithSeasonInfo[] {

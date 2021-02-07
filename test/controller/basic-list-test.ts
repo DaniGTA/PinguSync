@@ -654,7 +654,7 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
-        expect(aniListBinding?.providerLocalData.id).toEqual('934');
+        expect(aniListBinding?.providerLocalData.id).toEqual(934);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);
@@ -738,7 +738,7 @@ describe('Basic List | Testrun', () => {
         const aniListName = ProviderNameManager.getProviderName(AniListProvider);
         const aniListBinding = bindings.find((x) => x.providerLocalData.provider === aniListName);
         expect(aniListBinding?.providerLocalData.provider).toBe(aniListName);
-        expect(aniListBinding?.providerLocalData.id).toEqual('21131');
+        expect(aniListBinding?.providerLocalData.id).toEqual(21131);
 
         const traktName = ProviderNameManager.getProviderName(TraktProvider);
         const traktBinding = bindings.find((x) => x.providerLocalData.provider === traktName);

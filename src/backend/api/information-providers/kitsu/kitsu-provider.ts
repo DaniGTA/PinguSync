@@ -22,28 +22,9 @@ import { ISearchResult } from './objects/searchResult';
 import Episode from '../../../controller/objects/meta/episode/episode';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { NameType } from '../../../controller/objects/meta/name-type';
+import ProviderUserList from '../../../controller/objects/provider-user-list';
 export default class KitsuProvider extends ListProvider {
-    public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
-        throw new Error('Method not implemented.');
-    }
-    public getUsername(): Promise<string> {
-        throw new Error('Method not implemented.');
-    }
-    public logoutUser(): void {
-        throw new Error('Method not implemented.');
-    }
-    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
-        const slug = provider.getAllNames().find(x => x.nameType == NameType.SLUG)?.name;
-        const episodeNr = episode.episodeNumber;
-        return `https://kitsu.io/anime/${slug}/episodes/${episodeNr}`;
-    }
-    public static getInstance(): KitsuProvider {
-        if (!KitsuProvider.instance) {
-            KitsuProvider.instance = new KitsuProvider();
-            // ... any one time initialization goes here ...
-        }
-        return KitsuProvider.instance;
-    }
+
     private static instance: KitsuProvider;
     public version = 3;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SPECIAL];
@@ -57,6 +38,7 @@ export default class KitsuProvider extends ListProvider {
     public hasEpisodeTitleOnFullInfo = true;
     public userData: KitsuUserData;
     public api: Kitsu;
+
     constructor() {
         super();
         this.api = new Kitsu();
@@ -65,6 +47,30 @@ export default class KitsuProvider extends ListProvider {
         } else {
             this.userData = new KitsuUserData();
         }
+    }
+
+    public static getInstance(): KitsuProvider {
+        if (!KitsuProvider.instance) {
+            KitsuProvider.instance = new KitsuProvider();
+            // ... any one time initialization goes here ...
+        }
+        return KitsuProvider.instance;
+    }
+
+    public getAllLists(): Promise<ProviderUserList[]> {
+        throw new Error('Method not implemented.');
+    }
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        throw new Error('Method not implemented.');
+    }
+    // eslint-disable-next-line @typescript-eslint/require-await
+    public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
+        const slug = provider.getAllNames().find(x => x.nameType == NameType.SLUG)?.name;
+        const episodeNr = episode.episodeNumber;
+        return `https://kitsu.io/anime/${slug}/episodes/${episodeNr}`;
     }
 
     public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
@@ -78,15 +84,13 @@ export default class KitsuProvider extends ListProvider {
     public addOAuthCode(): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
+
     public removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error('Method not implemented.');
     }
+
     public updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error('Method not implemented.');
-    }
-
-    public async isProviderAvailable(): Promise<boolean> {
-        return true;
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
@@ -114,7 +118,7 @@ export default class KitsuProvider extends ListProvider {
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName) {
             this.informAWebRequest();
-            const getResult = await ((this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
+            const getResult = ((await this.api.get('anime/' + provider.id + '?include=genres,episodes,streamingLinks')) as unknown) as GetMediaResult;
             return kitsuConverter.convertMediaToAnime(getResult.data);
         }
         throw new Error('[Kitsu] Cant handle this provider id');
@@ -126,6 +130,7 @@ export default class KitsuProvider extends ListProvider {
     public logInUser(pass: string, username?: string | undefined): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
+    // eslint-disable-next-line @typescript-eslint/require-await
     public async isUserLoggedIn(): Promise<boolean> {
         return false;
     }
@@ -135,23 +140,11 @@ export default class KitsuProvider extends ListProvider {
 
     private async search(s: string): Promise<ISearchResult> {
         this.informAWebRequest();
-        return ((this.api.get('anime', {
+        return ((await this.api.get('anime', {
             filter: {
                 text: s,
             },
             include: 'mappings',
-
-        })) as unknown) as ISearchResult;
-    }
-
-    private async getByTraktId(traktId: string | number) {
-        this.informAWebRequest();
-        return ((this.api.get('mappings', {
-            filter: {
-                externalId: traktId,
-                externalSite: 'trakt',
-            },
-            include: 'item',
 
         })) as unknown) as ISearchResult;
     }

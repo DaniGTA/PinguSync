@@ -276,6 +276,9 @@ describe('Episode mapping | Mapping Only', () => {
     test(
         'should map find unmapped episodes in the sequel of the sequel',
         async () => {
+            /**
+             * testA provider has splitet the episode in the 3 season while testB only have all episodes in one season
+             */
             const aSeries = new Series();
             const sequelOfaSeries = new Series();
             const sequelOfSequelOfaSeries = new Series();

@@ -23,7 +23,8 @@
     },
     "plugins": [
         "vue",
-        "jest"
+        "jest",
+        "@typescript-eslint"
     ],
     "rules": {
         "linebreak-style": [
@@ -57,6 +58,7 @@
         ],
         "@typescript-eslint/no-inferrable-types": [
             "warn"
-        ]
+        ],
+        "@typescript-eslint/member-ordering": "warn"
     }
 }

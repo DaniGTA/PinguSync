@@ -35,25 +35,6 @@ import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 
 export default class AniListProvider extends ListProvider {
-    public async getAllLists(): Promise<ProviderUserList[]> {
-        const rawdata = await this.webRequest<GetUserSeriesListInfo>(this.getGraphQLOptions(getUserSeriesListInfoGql, { id: this.userData.viewer?.id, listType: 'ANIME' }));
-        return aniListConverter.convertUserSeriesListToProviderList(rawdata);
-    }
-
-    public getUsername(): Promise<string> {
-        throw new Error('Method not implemented.');
-    }
-    public logoutUser(): void {
-        this.userData.setTokens('', '', 0);
-    }
-
-    public static getInstance(): AniListProvider {
-        if (!AniListProvider.instance) {
-            AniListProvider.instance = new AniListProvider();
-            // ... any one time initialization goes here ...
-        }
-        return AniListProvider.instance;
-    }
     private static instance: AniListProvider;
     public hasUniqueIdForSeasons = true;
     public providerName = 'AniList';
@@ -78,14 +59,34 @@ export default class AniListProvider extends ListProvider {
         }
     }
 
+    public static getInstance(): AniListProvider {
+        if (!AniListProvider.instance) {
+            AniListProvider.instance = new AniListProvider();
+            // ... any one time initialization goes here ...
+        }
+        return AniListProvider.instance;
+    }
+
+    public async getAllLists(): Promise<ProviderUserList[]> {
+        const rawdata = await this.webRequest<GetUserSeriesListInfo>(this.getGraphQLOptions(getUserSeriesListInfoGql, { id: this.userData.viewer?.id, listType: 'ANIME' }));
+        return aniListConverter.convertUserSeriesListToProviderList(rawdata);
+    }
+
+    public getUsername(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+    public logoutUser(): void {
+        this.userData.setTokens('', '', 0);
+    }
+
     public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
         const query = print(UpdateSeriesEpisodeProgress);
         const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode);
         for (const groupedEpisode of groupedEpisodes) {
-            const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray(groupedEpisode);
+            const minEpisodeNumber = EpisodeHelper.getMinEpisodeNumberFromEpisodeArray(groupedEpisode);
             const variables = {
                 mediaId: groupedEpisode[0].providerId,
-                progress: maxEpNumber
+                progress: minEpisodeNumber
             };
             const options = this.getGraphQLOptions(query, variables);
             await this.waitUntilItCanPerfomNextRequest();
@@ -154,10 +155,6 @@ export default class AniListProvider extends ListProvider {
         return endResult;
     }
 
-    public async isProviderAvailable(): Promise<boolean> {
-        return true;
-    }
-
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName && provider.id) {
             const fullInfo: GetSeriesByID = await this.webRequest(this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' }));
@@ -171,8 +168,9 @@ export default class AniListProvider extends ListProvider {
         return 'https://anilist.co/api/v2/oauth/authorize?client_id=' + this.getApiId() + '&redirect_uri=' + this.redirectUri + '&response_type=code';
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     public async isUserLoggedIn(): Promise<boolean> {
-        return this.userData.access_token !== '';
+        return this.userData.accessToken !== '';
     }
 
     public logInUser(): Promise<boolean> {
@@ -318,11 +316,11 @@ export default class AniListProvider extends ListProvider {
             uri: 'https://graphql.anilist.co',
         };
 
-        if (this.userData.access_token !== '' && typeof this.userData.access_token !== 'undefined') {
+        if (this.userData.accessToken !== '' && typeof this.userData.accessToken !== 'undefined') {
             if (typeof options.headers !== 'undefined') {
                 options.headers = {
                     'Accept': 'application/json',
-                    'Authorization': 'Bearer ' + this.userData.access_token,
+                    'Authorization': 'Bearer ' + this.userData.accessToken,
                     'Content-Type': 'application/json',
                 };
             }

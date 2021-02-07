@@ -20,7 +20,7 @@ export default class DownloadProviderLocalDataWithId {
             if (isFailedRequestError(err)) {
                 throw err;
             }
-            logger.error(err);
+            logger.error(err + ' | ' + provider.providerName);
             throw FailedRequestError.ProviderNoResult;
         }
     }

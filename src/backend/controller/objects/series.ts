@@ -31,6 +31,7 @@ import RelationSearchResults from './transfer/relation-search-results';
 import { SeasonError } from './transfer/season-error';
 import { ListType } from '../settings/models/provider/list-types';
 import SeriesHelper from '../../helpFunctions/series-helper';
+import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1;
@@ -153,6 +154,11 @@ export default class Series extends SeriesProviderExtension {
     public getAllOverviews(): Overview[] {
         const overviews = this.getAllProviderLocalDatas().flatMap((provider) => provider.getAllOverviews());
         return listHelper.getUniqueOverviewList(overviews);
+    }
+
+    public async generateEpisodeMapping(): Promise<void> {
+        this.episodeBindingPools = await EpisodeMappingHelper.getEpisodeMappings(this);
+        this.episodeBindingPoolGeneratedAt = Date.now();
     }
 
     public addEpisodeMapping(...episodeMappings: EpisodeMapping[]): void {

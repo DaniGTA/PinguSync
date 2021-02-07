@@ -108,6 +108,9 @@ export default class MainListManager {
                      * Reset Cache and reload it
                      */
                     entry.resetCache();
+                    if (entry.episodeBindingPoolGeneratedAt == 0) {
+                        await entry.generateEpisodeMapping();
+                    }
                     try {
                         await entry.getSeason();
                     } catch (ignore) {

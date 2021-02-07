@@ -22,8 +22,10 @@ import Episode from '../../../controller/objects/meta/episode/episode';
 import { Movies } from './objects/movies';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { NameType } from '../../../controller/objects/meta/name-type';
+import { EpisodeHistoryUpdate } from './objects/episodes';
 
 export default class TraktProvider extends ListProvider {
+    // eslint-disable-next-line @typescript-eslint/require-await
     public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
         const slug = provider.getAllNames().find(x => x.nameType == NameType.SLUG)?.name;
         const seasonNr = episode.season?.getSingleSeasonNumberAsNumber();
@@ -31,20 +33,24 @@ export default class TraktProvider extends ListProvider {
         return `https://trakt.tv/shows/${slug}/seasons/${seasonNr}/episodes/${episodeNr}`;
     }
 
-    public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
-
+    public async markEpisodeAsUnwatched(episodes: Episode[]): Promise<void> {
+        const episodeUpdates: EpisodeHistoryUpdate = { episodes: [] };
+        for (const episode of episodes) {
+            if (episode.providerEpisodeId !== undefined) {
+                episodeUpdates.episodes.push({ ids: { trakt: episode.providerEpisodeId } })
+            }
+        }
+        await this.traktRequest<Movies>('https://api.trakt.tv/sync/history/remove', '', JSON.stringify(episodeUpdates));
     }
 
-    public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
-
-        const testmovie: Movies = { movies: [] };
-        testmovie.movies.push({ ids: { slug: 'no-game-no-life-zero-2017' }, watched_at: new Date() });
-        const response = await this.traktRequest<Movies>('https://api.trakt.tv/sync/history', '', JSON.stringify({ testmovie }));
-        if (response) {
-            logger.info('YAY Response is da');
-        } else {
-            throw new Error('YEET Response nicht da');
+    public async markEpisodeAsWatched(episodes: Episode[]): Promise<void> {
+        const episodeUpdates: EpisodeHistoryUpdate = { episodes: [] };
+        for (const episode of episodes) {
+            if (episode.providerEpisodeId !== undefined) {
+                episodeUpdates.episodes.push({ ids: { trakt: episode.providerEpisodeId } })
+            }
         }
+        await this.traktRequest<Movies>('https://api.trakt.tv/sync/history', '', JSON.stringify(episodeUpdates));
     }
 
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
@@ -52,7 +58,7 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async getUsername(): Promise<string> {
-        const url = 'https://api.trakt.tv/users/' + this.userData.username;
+        const url = 'https://api.trakt.tv/users/' + this.userData.userName;
         const response = await this.traktRequest<UserInfoSmall>(url);
         return response.name ?? response.username;
 
@@ -142,6 +148,7 @@ export default class TraktProvider extends ListProvider {
         return endResult;
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     public async isProviderAvailable(): Promise<boolean> {
         return true;
     }
@@ -187,6 +194,7 @@ export default class TraktProvider extends ListProvider {
     public getTokenAuthUrl(): string {
         return 'https://trakt.tv/oauth/authorize?response_type=code&client_id=' + this.getApiId() + '&redirect_uri=' + this.redirectUri;
     }
+    // eslint-disable-next-line @typescript-eslint/require-await
     public async isUserLoggedIn(): Promise<boolean> {
         return this.userData.accessToken !== '';
     }
@@ -210,7 +218,7 @@ export default class TraktProvider extends ListProvider {
         return [];
     }
 
-    public async getUserInfo() {
+    public async getUserInfo(): Promise<void> {
         const data = await this.traktRequest<TraktUserInfo>('https://api.trakt.tv/users/settings');
         this.userData.setUserData(data);
     }
@@ -237,7 +245,8 @@ export default class TraktProvider extends ListProvider {
         throw new Error('err');
     }
 
-    public async logInUser(code: string): Promise<boolean> {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    public async logInUser(): Promise<boolean> {
         throw new Error('cant login user with credentials');
     }
 

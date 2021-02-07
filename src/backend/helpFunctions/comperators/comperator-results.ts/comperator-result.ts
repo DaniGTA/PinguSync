@@ -12,4 +12,9 @@ export default class ComperatorResult {
     public matchAble = 0;
     public matches = 0;
     public isAbsolute: AbsoluteResult = AbsoluteResult.ABSOLUTE_NONE;
+
+    addResult(result: ComperatorResult, matchMultiplier = 1): void {
+        this.matchAble += result.matchAble * matchMultiplier;
+        this.matches += result.matches * matchMultiplier;
+    }
 }

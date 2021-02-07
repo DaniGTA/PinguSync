@@ -44,8 +44,8 @@ export default class EpisodeComperator {
             result.matches++;
             return result;
         } else if (aEpisode.provider && bEpsiode.provider) {
-            result.matchAble++;
             if (aEpisode.provider === bEpsiode.provider) {
+                result.matchAble++;
                 if (aEpisode.providerEpisodeId === bEpsiode.providerEpisodeId && aEpisode.providerEpisodeId !== undefined) {
                     result.isAbsolute = AbsoluteResult.ABSOLUTE_TRUE;
                     result.matches++;
@@ -62,8 +62,7 @@ export default class EpisodeComperator {
         if (aEpisode.episodeNumber === (!isNaN(bEpsiode.episodeNumber as unknown as number) && (bEpsiode.episodeNumber as number) + upshift)) {
             result.matches += 2;
             const seasonResult = this.isEpisodeSameSeason(aEpisode, bEpsiode, providerASeason, providerBSeason, season);
-            result.matchAble += seasonResult.matchAble;
-            result.matches += seasonResult.matches;
+            result.addResult(seasonResult);
             if (seasonResult.matchAble !== seasonResult.matches) {
                 result.isAbsolute = AbsoluteResult.NOT_ABSOLUTE_TRUE;
             }
@@ -72,16 +71,13 @@ export default class EpisodeComperator {
         }
 
         const episodeTitleResult = this.isSameEpisodeTitle(aEpisode, bEpsiode);
-        result.matchAble += episodeTitleResult.matchAble * 4;
-        result.matches += episodeTitleResult.matches * 4;
+        result.addResult(episodeTitleResult, 4);
         if (episodeTitleResult.isAbsolute !== AbsoluteResult.ABSOLUTE_NONE) {
             result.isAbsolute = episodeTitleResult.isAbsolute;
         }
 
         if (result.matches !== 0) {
-            const episodeTypeResult = this.isEpisodeSameType(aEpisode, bEpsiode);
-            result.matchAble += episodeTypeResult.matchAble;
-            result.matches += episodeTypeResult.matches;
+            result.addResult(this.isEpisodeSameType(aEpisode, bEpsiode));
         }
 
         return result;

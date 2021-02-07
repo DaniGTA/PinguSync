@@ -111,10 +111,4 @@ describe('Provider: Kitsu | Test runs', () => {
         expect(kitsuResult.providerLocalData.provider).toEqual(kitsuProvider.providerName);
         expect(kitsuResult.providerLocalData.id).toEqual('11578');
     }, 5000);
-
-    test('it should get a series by trakt id', async () => {
-        const a = new KitsuProvider();
-        const result = await a['getByTraktId'](94084);
-        expect(result.data[0].id).toEqual('87492');
-    });
 });

@@ -1,6 +1,5 @@
 import { Application } from 'express';
 import express from 'express';
-import { Request, Response } from 'request';
 import logger from '../../../logger/logger';
 
 export default class OAuthListener {
