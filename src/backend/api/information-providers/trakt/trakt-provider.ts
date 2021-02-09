@@ -40,7 +40,7 @@ export default class TraktProvider extends ListProvider {
                 episodeUpdates.episodes.push({ ids: { trakt: episode.providerEpisodeId } })
             }
         }
-        await this.traktRequest<Movies>('https://api.trakt.tv/sync/history/remove', '', JSON.stringify(episodeUpdates));
+        await this.traktRequest<Movies>('https://api.trakt.tv/sync/history/remove', 'POST', JSON.stringify(episodeUpdates));
     }
 
     public async markEpisodeAsWatched(episodes: Episode[]): Promise<void> {
@@ -50,7 +50,7 @@ export default class TraktProvider extends ListProvider {
                 episodeUpdates.episodes.push({ ids: { trakt: episode.providerEpisodeId } })
             }
         }
-        await this.traktRequest<Movies>('https://api.trakt.tv/sync/history', '', JSON.stringify(episodeUpdates));
+        await this.traktRequest<Movies>('https://api.trakt.tv/sync/history', 'POST', JSON.stringify(episodeUpdates));
     }
 
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {

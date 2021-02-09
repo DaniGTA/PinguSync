@@ -45,6 +45,7 @@ export default class FrontendProviderSyncController {
         const series = await MainListSearcher.findSeriesById(x.seriesId);
         if (series) {
             SyncExternalEpisodes.addSyncJob(x.providerName, series);
+            await SyncExternalEpisodes.cronJobProcessSyncing();
         }
     }
 }  

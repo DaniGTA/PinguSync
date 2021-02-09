@@ -67,6 +67,8 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+        await this.waitUntilItCanPerfomNextRequest();
+        this.informAWebRequest();
         const converter = new AniDBConverter();
         if (provider.provider === this.providerName && provider.id) {
 
