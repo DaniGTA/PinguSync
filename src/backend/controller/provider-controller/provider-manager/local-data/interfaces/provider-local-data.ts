@@ -1,4 +1,5 @@
 
+import ExternalProvider from '../../../../../api/provider/external-provider';
 import SeasonComperator from '../../../../../helpFunctions/comperators/season-comperator';
 import CoverHelper from '../../../../../helpFunctions/cover-helper/cover-helper';
 import EpisodeHelper from '../../../../../helpFunctions/episode-helper/episode-helper';
@@ -15,74 +16,10 @@ import { MediaType } from '../../../../objects/meta/media-type';
 import Name from '../../../../objects/meta/name';
 import Overview from '../../../../objects/meta/overview';
 import Season from '../../../../objects/meta/season';
+import ProviderNameManager from '../../provider-name-manager';
 import { ProviderInfoStatus } from './provider-info-status';
 
 export default abstract class ProviderLocalData {
-
-    /**
-     * b will be merged in to a. Includes all basic lists and ALL static values.
-     *
-     * All lists that are specific for other providers will merged but not be unique and doubled,
-     * they needed too be filtered by the merged function of the provider.
-     * @param a
-     * @param b
-     */
-    protected static mergeProviderLocalData(...providers: ProviderLocalData[]): ProviderLocalData {
-        providers.sort((a, b) => a.lastUpdate.getTime() - b.lastUpdate.getTime());
-        let finalProvider: any = {};
-        for (const provider of providers) {
-            finalProvider = this.mergeBasicEntrys(finalProvider, provider);
-        }
-
-        finalProvider.genres = finalProvider.genres ? listHelper.getUniqueObjectList(finalProvider.genres) : [];
-        finalProvider.banners = finalProvider.banners ? listHelper.getUniqueObjectList(finalProvider.banners) : [];
-        finalProvider.covers = finalProvider.covers ? CoverHelper.getUniqueCoverList(finalProvider.covers) : [];
-
-        finalProvider.names = finalProvider.names ? listHelper.getUniqueNameList(finalProvider.names) : [];
-        finalProvider.overviews = finalProvider.overviews ? listHelper.getUniqueOverviewList(finalProvider.overviews) : [];
-        return finalProvider;
-    }
-
-    private static mergeBasicEntrys(newProvider: ProviderLocalData, oldProvider: ProviderLocalData): ProviderLocalData {
-        const newP: any = newProvider;
-        for (const key in oldProvider) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (oldProvider.hasOwnProperty(key)) {
-                const oldValue = (oldProvider as any)[key];
-                if (Array.isArray(oldValue)) {
-                    if (newP[key] !== undefined) {
-                        if (key === 'sequelIds' || key === 'prequelIds' || key === 'alternativeIds') {
-                            if (oldValue.length !== 0) {
-                                newP[key] = oldValue;
-                            }
-                        } else if (key === 'detailEpisodeInfo') {
-                            newP[key] = listHelper.getUniqueEpisodeList(newP[key], oldValue);
-                        } else {
-                            newP[key] = [...newP[key], ...oldValue];
-                        }
-                        continue;
-                    }
-                } else if (key === 'infoStatus') {
-                    if (newP[key] !== undefined) {
-                        if (newP[key] > oldValue) {
-                            newP[key] = oldValue;
-                        }
-                        continue;
-                    }
-                } else if (key === 'isNSFW') {
-                    if (oldValue) {
-                        newP[key] = oldValue;
-                    }
-                    continue;
-                }
-                if (oldValue !== undefined) {
-                    newP[key] = oldValue;
-                }
-            }
-        }
-        return newP;
-    }
-
     // ------------------
     //  Provider metadata stuff
     // ------------------
@@ -171,6 +108,70 @@ export default abstract class ProviderLocalData {
         this.instanceName = this.constructor.name;
     }
 
+    /**
+ * b will be merged in to a. Includes all basic lists and ALL static values.
+ *
+ * All lists that are specific for other providers will merged but not be unique and doubled,
+ * they needed too be filtered by the merged function of the provider.
+ * @param a
+ * @param b
+ */
+    protected static mergeProviderLocalData(...providers: ProviderLocalData[]): ProviderLocalData {
+        providers.sort((a, b) => a.lastUpdate.getTime() - b.lastUpdate.getTime());
+        let finalProvider: any = {};
+        for (const provider of providers) {
+            finalProvider = this.mergeBasicEntrys(finalProvider, provider);
+        }
+
+        finalProvider.genres = finalProvider.genres ? listHelper.getUniqueObjectList(finalProvider.genres) : [];
+        finalProvider.banners = finalProvider.banners ? listHelper.getUniqueObjectList(finalProvider.banners) : [];
+        finalProvider.covers = finalProvider.covers ? CoverHelper.getUniqueCoverList(finalProvider.covers) : [];
+
+        finalProvider.names = finalProvider.names ? listHelper.getUniqueNameList(finalProvider.names) : [];
+        finalProvider.overviews = finalProvider.overviews ? listHelper.getUniqueOverviewList(finalProvider.overviews) : [];
+        return finalProvider;
+    }
+
+    private static mergeBasicEntrys(newProvider: ProviderLocalData, oldProvider: ProviderLocalData): ProviderLocalData {
+        const newP: any = newProvider;
+        for (const key in oldProvider) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (oldProvider.hasOwnProperty(key)) {
+                const oldValue = (oldProvider as any)[key];
+                if (Array.isArray(oldValue)) {
+                    if (newP[key] !== undefined) {
+                        if (key === 'sequelIds' || key === 'prequelIds' || key === 'alternativeIds') {
+                            if (oldValue.length !== 0) {
+                                newP[key] = oldValue;
+                            }
+                        } else if (key === 'detailEpisodeInfo') {
+                            newP[key] = listHelper.getUniqueEpisodeList(newP[key], oldValue);
+                        } else {
+                            newP[key] = [...newP[key], ...oldValue];
+                        }
+                        continue;
+                    }
+                } else if (key === 'infoStatus') {
+                    if (newP[key] !== undefined) {
+                        if (newP[key] > oldValue) {
+                            newP[key] = oldValue;
+                        }
+                        continue;
+                    }
+                } else if (key === 'isNSFW') {
+                    if (oldValue) {
+                        newP[key] = oldValue;
+                    }
+                    continue;
+                }
+                if (oldValue !== undefined) {
+                    newP[key] = oldValue;
+                }
+            }
+        }
+        return newP;
+    }
+
     public getDetailedEpisodeLength(): number {
         let length = 0;
 
@@ -194,7 +195,7 @@ export default abstract class ProviderLocalData {
     public addSeriesName(...names: Name[]): void {
         for (const name of names) {
             if (name?.name && name.name !== 'null') {
-                if (this.names.findIndex((x) => x.name === name.name && x.lang === x.lang) === -1) {
+                if (this.names.findIndex((x) => x.name === name.name && x.lang === name.lang) === -1) {
                     this.names.push(name);
                 }
             }
@@ -276,5 +277,20 @@ export default abstract class ProviderLocalData {
             array = array.filter((x) => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season));
         }
         return array;
+    }
+
+    protected getProviderName(lp?: ExternalProvider | string | (new () => ExternalProvider)): string {
+        if (lp) {
+            if (typeof lp === 'string') {
+                return lp;
+            } else if (lp instanceof ExternalProvider) {
+                this.version = lp.version;
+                return lp.providerName;
+            } else {
+                return ProviderNameManager.getProviderName(lp);
+            }
+        } else {
+            return '';
+        }
     }
 }

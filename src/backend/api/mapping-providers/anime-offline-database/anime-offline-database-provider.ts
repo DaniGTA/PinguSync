@@ -1,3 +1,4 @@
+import EpisodeBindingPool from '../../../controller/objects/meta/episode/episode-binding-pool';
 import { MediaType } from '../../../controller/objects/meta/media-type';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
@@ -12,9 +13,6 @@ import AnimeOfflineDatabaseConverter from './anime-offline-database-converter';
 import AnimeOfflineDatabaseManager from './anime-offline-database-manager';
 
 export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvider {
-    public getEpisodeMappings(provider: ProviderLocalData): Promise<import('../../../controller/objects/meta/episode/episode-mapping').default> {
-        throw new Error('Method not implemented.');
-    }
     public providerName = 'AnimeOfflineDatabase';
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.OVA, MediaType.SPECIAL, MediaType.MOVIE];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [AniDBProvider, AniListProvider, KitsuProvider, MalProvider];
@@ -22,18 +20,23 @@ export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvide
 
     public version = 1;
 
-    public async getSeriesMappings(provider: ProviderLocalData): Promise<MultiProviderResult> {
+    public getEpisodeMappings(provider: ProviderLocalData): Promise<EpisodeBindingPool[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    public async getSeriesMappings(provider: ProviderLocalData): Promise<MultiProviderResult[]> {
         const providerInstance = ProviderList.getProviderInstanceByLocalData(provider);
         const databaseEntry = await AnimeOfflineDatabaseManager.getMappingFromProviderLocalData(provider);
         if (databaseEntry) {
             const result = AnimeOfflineDatabaseConverter.convertDatabaseEntryToMultiProviderResult(databaseEntry, providerInstance);
             if (result) {
-                return result;
+                return [result];
             }
         }
         throw new Error(`[AnimeOfflineDatabaseProvider] No mapping found for provider: ${provider.provider} id: ${provider.id}`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     public async isProviderAvailable(): Promise<boolean> {
         return true;
     }

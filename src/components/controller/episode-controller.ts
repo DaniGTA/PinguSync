@@ -14,7 +14,7 @@ export default class EpisodeController {
         console.log('GetSingleEpisodeWithId: ' + episodeId + ' and ' + seriesId);
         const channel = chOnce.GetEpisodeByEpisodeId;
         WorkerController.send(channel, { episodeId, seriesId } as SingleEpisodeQuery);
-        return new Promise<Episode>((resolve, reject) => {
+        return new Promise<Episode>((resolve) => {
             WorkerController.getIpcRenderer().once(channel + '-' + episodeId, (event: Electron.IpcRendererEvent, data: Episode) => {
                 resolve(data);
             });

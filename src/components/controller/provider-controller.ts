@@ -4,7 +4,7 @@ import GetSyncStatusRecieved from '../../backend/controller/frontend/providers/s
 import GetSyncStatus from '../../backend/controller/frontend/providers/sync-status/model/get-sync-status';
 import { chListener } from '../../backend/communication/listener-channels';
 import FrontendSyncEpisodes from '../../backend/controller/frontend/providers/sync-status/model/sync-episodes';
-import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { Action, Module, VuexModule } from 'vuex-module-decorators';
 import store from '../../store';
 import { ListProviderInterface } from './model/list-provider-interface';
 

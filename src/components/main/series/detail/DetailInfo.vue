@@ -7,6 +7,7 @@
             <DetailInfoSyncStatus :seriesId="id" />
             <SeriesDescriptionBlock :seriesId="id"/>
         </div>
+        <button @click="saveSeries()">Save Series</button>
       </div>
         Id: {{id}}
         <DetailInfoEpisodes :seriesId="id" />
@@ -21,6 +22,11 @@ import SeriesNameBlock from '../../../elements/series-elements/SeriesNameBlock.v
 import SeriesDescriptionBlock from '../../../elements/series-elements/SeriesDescriptionBlock.vue';
 import DetailInfoSyncStatus from './DetailInfoSyncStatus.vue';
 import DetailInfoEpisodes from './DetailInfoEpisodes.vue';
+import SeriesListViewController from '../../../controller/series-list-view-controller';
+import { getModule } from 'vuex-module-decorators';
+
+const seriesListViewController = getModule(SeriesListViewController);
+
 @Component({
 	components: {
         SeriesImageBlock,
@@ -36,6 +42,12 @@ export default class SeriesDetailInfo extends Vue {
     public mounted(): void {
         this.id = this.$route.params.id;
         console.log('SeriesId: '+ this.id);
+    }
+
+    public saveSeries(): void {
+        if(this.id){
+            seriesListViewController.saveSeriesInDB(this.id);
+        }
     }
 }
 </script>

@@ -1,6 +1,5 @@
 import ListProvider from '../../../../api/provider/list-provider';
 import ProviderList from '../provider-list';
-import ProviderNameManager from '../provider-name-manager';
 import ProviderLocalData from './interfaces/provider-local-data';
 import { ListType } from '../../../settings/models/provider/list-types';
 
@@ -8,12 +7,6 @@ import { ListType } from '../../../settings/models/provider/list-types';
  * Contains info about the series and the user watch progress and the list that series is in.
  */
 export class ListProviderLocalData extends ProviderLocalData {
-
-    public static mergeProviderInfos(...providers: ListProviderLocalData[]): ListProviderLocalData {
-        const finalProvider = this.mergeProviderLocalData(...providers) as ListProviderLocalData;
-        return Object.assign(new ListProviderLocalData(finalProvider.id), finalProvider);
-    }
-
     public readonly provider: string;
 
     public canUpdateWatchProgress = false;
@@ -27,20 +20,13 @@ export class ListProviderLocalData extends ProviderLocalData {
     constructor(id: string | number, lp?: ListProvider | string | (new () => ListProvider)) {
         super(id);
         this.lastUpdate = new Date(Date.now());
-        if (lp) {
-            if (typeof lp === 'string') {
-                this.provider = lp;
-            } else if (lp instanceof ListProvider) {
-                this.provider = lp.providerName;
-                this.version = lp.version;
-            } else {
-                this.provider = ProviderNameManager.getProviderName(lp);
-            }
-        } else {
-            this.provider = '';
-        }
+        this.provider = this.getProviderName(lp);
     }
 
+    public static mergeProviderInfos(...providers: ListProviderLocalData[]): ListProviderLocalData {
+        const finalProvider = this.mergeProviderLocalData(...providers) as ListProviderLocalData;
+        return Object.assign(new ListProviderLocalData(finalProvider.id), finalProvider);
+    }
 
     public getProviderInstance(): ListProvider {
         for (const provider of ProviderList.getListProviderList()) {

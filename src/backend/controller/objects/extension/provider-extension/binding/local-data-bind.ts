@@ -16,6 +16,7 @@ export default abstract class LocalDataBind {
         this.instanceName = this.constructor.name;
         this.id = provider.id;
         this.providerName = provider.provider;
+        this.lastIndex = lastIndex;
         if (seasonNumber !== undefined) {
             this.targetSeason = seasonNumber;
         }

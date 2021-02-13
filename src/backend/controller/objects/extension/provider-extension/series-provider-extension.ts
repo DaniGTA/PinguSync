@@ -8,11 +8,13 @@ import ProviderDataListSearcher from '../../../provider-controller/provider-data
 import { InfoProviderLocalData } from '../../../provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../../provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../provider-controller/provider-manager/local-data/list-provider-local-data';
+import { MappingProviderLocalData } from '../../../provider-controller/provider-manager/local-data/mapping-provider-local-data';
 import FailedProviderRequest from '../../meta/failed-provider-request';
 import Season from '../../meta/season';
 import InfoLocalDataBind from './binding/info-local-data-bind';
 import ListLocalDataBind from './binding/list-local-data-bind';
 import LocalDataBind from './binding/local-data-bind';
+import MappingLocalDataBind from './binding/mapping-local-data-bind';
 import SeriesProviderExtensionInstanceCheck from './series-provider-extension-instance-check';
 
 
@@ -33,6 +35,15 @@ export default class SeriesProviderExtension {
 
     public getAllErrosForOneProvider(provider: ExternalProvider): FailedProviderRequest[] {
         return this.failedProviderRequest.filter((failedRequest) => failedRequest.providerName === provider.providerName);
+    }
+
+    /**
+     * Prevents too have double entrys of the same provider.
+     * @param infoProviders
+     */
+    public addMappingProvider(mappingProvider: MappingProviderLocalData, season?: Season): void {
+        const index = new ProviderDataListAdder().addNewProviderData(mappingProvider);
+        this.addInfoProviderBindings(new MappingLocalDataBind(mappingProvider, season, index));
     }
 
     /**
@@ -143,9 +154,7 @@ export default class SeriesProviderExtension {
                 ProviderComperator.simpleProviderIdCheck(x.id, listLocalDataBind.id));
             if (existingBindingIndex !== -1) {
                 const existingBinding = this.listProviderInfos[existingBindingIndex];
-                if (existingBinding.targetSeason !== listLocalDataBind.targetSeason && listLocalDataBind.targetSeason !== undefined) {
-                    this.listProviderInfos[existingBindingIndex] = listLocalDataBind;
-                } else if (seasonHelper.isSeasonUndefined(existingBinding.targetSeason)) {
+                if ((existingBinding.targetSeason !== listLocalDataBind.targetSeason && listLocalDataBind.targetSeason !== undefined) || seasonHelper.isSeasonUndefined(existingBinding.targetSeason)) {
                     this.listProviderInfos[existingBindingIndex] = listLocalDataBind;
                 }
             } else {

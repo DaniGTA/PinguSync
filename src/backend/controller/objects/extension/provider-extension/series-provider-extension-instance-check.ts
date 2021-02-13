@@ -4,14 +4,14 @@ import { ListProviderLocalData } from '../../../provider-controller/provider-man
 
 
 export default class SeriesProviderExtensionInstanceCheck {
-    public static instanceOfInfoProviderLocalData(pld: ProviderLocalData) {
+    public static instanceOfInfoProviderLocalData(pld: ProviderLocalData): boolean {
         if (pld instanceof InfoProviderLocalData || pld.instanceName === 'InfoProviderLocalData') {
             return true;
         }
         return false;
     }
 
-    public static instanceOfListProviderLocalData(pld: ProviderLocalData) {
+    public static instanceOfListProviderLocalData(pld: ProviderLocalData): boolean {
         if (pld instanceof ListProviderLocalData || pld.instanceName === 'ListProviderLocalData') {
             return true;
         }

@@ -12,6 +12,8 @@ import EpisodeMappingHelper from '../../../helpFunctions/episode-mapping-helper/
 import MainListManager from '../../main-list-manager/main-list-manager';
 import Overview from '../../objects/meta/overview';
 import logger from '../../../logger/logger';
+import ProviderList from '../../provider-controller/provider-manager/provider-list';
+import PinguSyncMappingProvider from '../../../api/mapping-providers/pingu-sync-mapping-provider/pingu-sync-mapping-provider';
 
 export default class FrontendSeriesController {
     private com: IPCBackgroundController;
@@ -32,6 +34,19 @@ export default class FrontendSeriesController {
         this.com.on(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, async (id) => this.sendSeriesData(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, id, await this.getSeriesMaxEpisodeNumberBy(id)));
         this.com.on(chListener.OnSeriesEpisodeListRefreshRequest, (id) => this.refreshSeriesEpisodeList(id));
         this.com.on(chOnce.GetOverviewBySeriesId, async (id) => { this.sendSeriesData(chOnce.GetOverviewBySeriesId, id, await this.getSeriesOverviewBySeriesId(id)); });
+        this.com.on(chOnce.SaveSeriesInDB, async (id) => { await this.saveSeriesData(id); })
+    }
+
+    private async saveSeriesData(id: string): Promise<void> {
+        const series = await MainListSearcher.findSeriesById(id);
+        if (series) {
+            const mapping = ProviderList.getProviderInstanceByClass(PinguSyncMappingProvider);
+            const localData = await mapping.saveSeries(series);
+            if (localData) {
+                series.addMappingProvider(localData);
+                MainListManager.updateSerieInList(series);
+            }
+        }
     }
 
     private async refreshSeriesEpisodeList(id: string): Promise<void> {

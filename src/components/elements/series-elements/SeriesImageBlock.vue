@@ -9,12 +9,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-import SeriesListViewController from "../../controller/series-list-view-controller";
-import { FailedCover } from "../../../backend/controller/frontend/series/model/failed-cover";
-import { getModule } from "vuex-module-decorators";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+import SeriesListViewController from '../../controller/series-list-view-controller';
+import { FailedCover } from '../../../backend/controller/frontend/series/model/failed-cover';
+import { getModule } from 'vuex-module-decorators';
 
 const seriesListViewController = getModule(SeriesListViewController);
 
@@ -23,7 +23,7 @@ export default class ProviderImageBlock extends Vue {
   @Prop({ required: true })
   public seriesId!: string;
 
-  public url = "";
+  public url = '';
   private failedUrls: string[] = [];
 
   public mounted(): void {
@@ -33,7 +33,7 @@ export default class ProviderImageBlock extends Vue {
   private async loadImg(): Promise<void> {
     const result =
       (await seriesListViewController.getSeriesCoverUrlById(this.seriesId)) ??
-      "";
+      '';
     if (!this.failedUrls.find((x) => x == result)) {
       this.url = result;
     }
@@ -47,15 +47,15 @@ export default class ProviderImageBlock extends Vue {
       };
       seriesListViewController.sendFailedCover(failedCover);
       this.failedUrls.push(this.url);
-      this.url = "";
+      this.url = '';
       await this.wait(750);
       await this.loadImg();
     } else {
-      console.error("No image src");
+      console.error('No image src');
     }
   }
 
-  private async wait(ms: number = 500) {
+  private async wait(ms = 500): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

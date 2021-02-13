@@ -92,4 +92,9 @@ export default class SeriesListViewController extends VuexModule {
     public sendFailedCover(failedCover: FailedCover): void {
         WorkerController.send(chListener.OnSeriesFailedCoverImage, failedCover);
     }
+
+    @Action
+    public saveSeriesInDB(id: string): void {
+        WorkerController.send(chOnce.SaveSeriesInDB, id)
+    }
 }
