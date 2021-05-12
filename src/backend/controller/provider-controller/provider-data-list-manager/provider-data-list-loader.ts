@@ -1,10 +1,13 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as path from 'path';
+import InfoProvider from '../../../api/provider/info-provider';
+import ListProvider from '../../../api/provider/list-provider';
 import logger from '../../../logger/logger';
 import Episode from '../../objects/meta/episode/episode';
 import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../provider-manager/provider-list';
 export default class ProviderDataListLoader {
     /**
      * Load json data from file.
@@ -53,9 +56,9 @@ export default class ProviderDataListLoader {
         }
 
         if (loadedDataEntry.instanceName === 'ListProviderLocalData') {
-            loadedDataEntry = Object.assign(new ListProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
+            loadedDataEntry = Object.assign(new ListProviderLocalData(loadedDataEntry.id, (ProviderList.getProviderInstanceByProviderName(loadedDataEntry.provider) as ListProvider)));
         } else if (loadedDataEntry.instanceName === 'InfoProviderLocalData') {
-            loadedDataEntry = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, loadedDataEntry.provider), loadedDataEntry);
+            loadedDataEntry = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, (ProviderList.getProviderInstanceByProviderName(loadedDataEntry.provider) as InfoProvider)));
         } else {
             logger.debug('[ProviderDataListLoader] Object cant be assigned');
         }

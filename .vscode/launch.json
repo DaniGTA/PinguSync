@@ -5,16 +5,14 @@
             "name": "Electron: Main",
             "type": "node",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+            "protocol": "inspector",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
             "windows": {
-                "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
             },
-            "runtimeArgs": [
-                "--enable-logging",
-                "--remote-debugging-port=9223",
-            ],
-            "args" : ["./dist_electron"],
+            "preLaunchTask": "electron-debug",
+            "args": ["--remote-debugging-port=9223", "./dist_electron"],
+            "outFiles": ["${workspaceFolder}/dist_electron/**/*.js"],
             "outputCapture": "std"
         },
         {
@@ -24,9 +22,7 @@
             "port": 9223,
             "timeout": 30000,
             "webRoot": "${workspaceFolder}",
-            "sourceMapPathOverrides": {
-                "webpack:///./*": "${webRoot}/*"
-            }
+            "sourceMaps": true
         },
 
         {

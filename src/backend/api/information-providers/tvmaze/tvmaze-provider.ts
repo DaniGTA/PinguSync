@@ -17,7 +17,6 @@ export default class TVMazeProvider extends InfoProvider {
     public static instance: TVMazeProvider;
     public isOffline = false;
     public hasOAuthCode = false;
-    public providerName = 'tvmaze';
     public hasUniqueIdForSeasons = false;
     public supportedMediaTypes: MediaType[] = [MediaType.SERIES, MediaType.ANIME];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];

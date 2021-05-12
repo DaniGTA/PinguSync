@@ -13,7 +13,6 @@ import AnimeOfflineDatabaseConverter from './anime-offline-database-converter';
 import AnimeOfflineDatabaseManager from './anime-offline-database-manager';
 
 export default class AnimeOfflineDatabaseProvider extends ExternalMappingProvider {
-    public providerName = 'AnimeOfflineDatabase';
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.OVA, MediaType.SPECIAL, MediaType.MOVIE];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [AniDBProvider, AniListProvider, KitsuProvider, MalProvider];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [AniDBProvider, AniListProvider, KitsuProvider, MalProvider];

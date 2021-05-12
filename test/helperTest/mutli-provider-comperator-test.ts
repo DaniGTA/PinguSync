@@ -11,12 +11,13 @@ import { AbsoluteResult } from '../../src/backend/helpFunctions/comperators/comp
 import MultiProviderComperator from '../../src/backend/helpFunctions/comperators/multi-provider-results-comperator';
 import ProviderDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestListProvider from '../controller/objects/testClass/testListProvider';
+import TestListProvider2 from '../controller/objects/testClass/testListProvider2';
 
 
 describe('Multi-Provider-Comperator | Examples', () => {
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('testA'), new TestListProvider('testB')];
+        ProviderList['loadedListProvider'] = [new TestListProvider(), new TestListProvider2()];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal
@@ -27,7 +28,7 @@ describe('Multi-Provider-Comperator | Examples', () => {
         // PART A
 
         const aSeries = new Series();
-        const aProvider = new ListProviderLocalData(1, 'testA');
+        const aProvider = new ListProviderLocalData(1, TestListProvider);
         aProvider.addSeriesName(new Name('Kimetsu no Yaiba: Mugen Ressha-hen', 'x-jap', NameType.OFFICIAL));
         aProvider.addSeriesName(new Name('Demon Slayer: Kimetsu no Yaiba The Movie: Mugen Train', '"unknown"', NameType.MAIN));
         aProvider.addSeriesName(new Name('鬼滅の刃無限列車編', '"jap"', NameType.UNKNOWN));
@@ -36,7 +37,7 @@ describe('Multi-Provider-Comperator | Examples', () => {
 
         // PART B
 
-        const bProvider = new ListProviderLocalData(1, 'testB');
+        const bProvider = new ListProviderLocalData(1, TestListProvider2);
         bProvider.addSeriesName(new Name('Demon Slayer Movie: InfinityTrain', 'en', NameType.UNKNOWN));
         bProvider.addSeriesName(new Name('kimetsu-no-yaiba-movie-mugen-ressha-hen', 'unknown', NameType.MAIN));
         bProvider.addSeriesName(new Name('劇場版 鬼滅の刃 無限列車編', 'jap', NameType.UNKNOWN));

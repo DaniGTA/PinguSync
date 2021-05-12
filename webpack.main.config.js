@@ -1,6 +1,7 @@
 import ThreadsPlugin from 'threads-plugin';
 // eslint-disable-next-line no-undef
 export const modules = {
+	devtool: 'source-map',
 	resolve: {
 		modules: [
 			'src',

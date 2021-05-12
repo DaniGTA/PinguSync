@@ -84,7 +84,7 @@ describe('Provider: Trakt | Tests runs', () => {
         });
         test('should get a series and should mark the episodes right', async () => {
             const series = new Series();
-            const unkownProvider = new ListProviderLocalData(103803, TraktProvider.getInstance().providerName);
+            const unkownProvider = new ListProviderLocalData(103803, TraktProvider);
             unkownProvider.addSeriesName(new Name('Yamada-kun and the Seven Witches', 'en'));
             unkownProvider.releaseYear = 2013;
             series.addProviderDatas(unkownProvider);

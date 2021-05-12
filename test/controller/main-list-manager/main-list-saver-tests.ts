@@ -7,6 +7,8 @@ import Season from '../../../src/backend/controller/objects/meta/season';
 import Series from '../../../src/backend/controller/objects/series';
 import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import TestInfoProvider from '../objects/testClass/testInfoProvider';
+import TestListProvider from '../objects/testClass/testListProvider';
 
 describe('Main list saver tests', () => {
     beforeEach(() => {
@@ -15,8 +17,8 @@ describe('Main list saver tests', () => {
 
     test('should save file', async () => {
         const a = new Series();
-        a.addInfoProviderBindings(new InfoLocalDataBind(new InfoProviderLocalData(1, 'Test'), new Season(1)));
-        a.addListProviderBindings(new ListLocalDataBind(new ListProviderLocalData(2, 'Test')));
+        a.addInfoProviderBindings(new InfoLocalDataBind(new InfoProviderLocalData(1, TestInfoProvider), new Season(1)));
+        a.addListProviderBindings(new ListLocalDataBind(new ListProviderLocalData(2, TestListProvider)));
         await MainListManager.addSerieToMainList(a);
 
         MainListManager.requestSaveMainList();

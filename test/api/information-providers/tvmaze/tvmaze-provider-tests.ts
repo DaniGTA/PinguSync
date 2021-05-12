@@ -12,6 +12,7 @@ import ProviderLoader from '../../../../src/backend/controller/provider-controll
 import TestListProvider from '../../../controller/objects/testClass/testListProvider';
 import TVMazeTestProvider from './tvmaze-tets-provider';
 import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
+import TestInfoProvider from '../../../controller/objects/testClass/testInfoProvider';
 
 // tslint:disable: no-string-literal
 describe('Provider: TVMaze | Test runs', () => {
@@ -36,7 +37,7 @@ describe('Provider: TVMaze | Test runs', () => {
     });
     test('should get series by id', async () => {
         const providerInstance = ProviderList.getProviderInstanceByClass(TVMazeProvider);
-        const unkownProvider = new InfoProviderLocalData(1505, '');
+        const unkownProvider = new InfoProviderLocalData(1505, TestInfoProvider);
         const result = await providerInstance.getFullInfoById(unkownProvider);
         expect(result.mainProvider.providerLocalData.id).toBe(unkownProvider.id);
         return;

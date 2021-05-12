@@ -1,12 +1,32 @@
-import cron from 'cron';
-import SyncExternalEpisodes from '../sync-controller/sync-external-episodes';
+import cron from 'cron'
+import SyncExternalEpisodes from '../sync-controller/sync-external-episodes'
 
 export default class CronRunSyncJobs {
-    public static runEpisodeSyncJobs(): cron.CronJob {
-        const job = cron.job('*/3 * * * *', () => {
-            SyncExternalEpisodes.cronJobProcessSyncing();
-        }, undefined, undefined, undefined, undefined, true);
+    private static isJobProcessSyncingRunning = false
+    public static getEpisodeSyncJobs(): cron.CronJob {
+        const job = cron.job(
+            '*/3 * * * *',
+            () => {
+                this.runEpisodeSyncJobs()
+            },
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            true
+        )
 
-        return job;
+        return job
+    }
+
+    private static async runEpisodeSyncJobs(): Promise<void> {
+        if (!this.isJobProcessSyncingRunning) {
+            this.isJobProcessSyncingRunning = true
+            try {
+                await SyncExternalEpisodes.cronJobProcessSyncing()
+            } finally {
+                this.isJobProcessSyncingRunning = false
+            }
+        }
     }
 }

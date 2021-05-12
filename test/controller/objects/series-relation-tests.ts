@@ -10,7 +10,7 @@ import TestListProvider from './testClass/testListProvider';
 describe('Series | Relations', () => {
 
     beforeEach(() => {
-        const testListProvider = new TestListProvider('Test');
+        const testListProvider = new TestListProvider();
         testListProvider.hasUniqueIdForSeasons = false;
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedListProvider'] = ProviderList.getListProviderList();
@@ -19,7 +19,7 @@ describe('Series | Relations', () => {
     });
 
     function getFilledAnime(id: string | number = 1, targetSeason = 3): Series {
-        const provider = new ListProviderLocalData(id, 'Test');
+        const provider = new ListProviderLocalData(id, TestListProvider);
         const anime = new Series();
         provider.addSeriesName(new Name('Test', 'en'));
         // tslint:disable-next-line: no-string-literal

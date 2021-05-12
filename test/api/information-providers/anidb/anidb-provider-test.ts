@@ -12,7 +12,7 @@ describe('Provider: AniDB | Online Test runs', () => {
 
     test('should get id 14444', async () => {
         const a = new AniDBProvider(false);
-        const lpdld = new InfoProviderLocalData(14444, a.providerName);
+        const lpdld = new InfoProviderLocalData(14444, a);
 
         const result = await a.getFullInfoById(lpdld);
 

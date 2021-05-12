@@ -7,6 +7,8 @@ import ProviderDataListManager from '../../../src/backend/controller/provider-co
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../../src/backend/logger/logger';
+import TestListProvider from './testClass/testListProvider';
+import TestListProvider2 from './testClass/testListProvider2';
 
 
 describe('Series | Merge', () => {
@@ -34,13 +36,13 @@ describe('Series | Merge', () => {
 
     test('should generate detailedEpisodes', async () => {
         const seriesA = new Series();
-        const lpld = new ListProviderLocalData(1, 'test');
+        const lpld = new ListProviderLocalData(1, TestListProvider);
         lpld.addSeriesName(new Name('Test', 'en'));
         lpld.episodes = 10;
         seriesA.addListProvider(lpld);
 
         const seriesB = new Series();
-        const lpld2 = new ListProviderLocalData(2, 'test2');
+        const lpld2 = new ListProviderLocalData(2, TestListProvider2);
         lpld2.episodes = 10;
         seriesB.addListProvider(lpld2);
 
@@ -121,11 +123,11 @@ describe('Series | Merge', () => {
     });
     test('should merge name (2)', async () => {
         const seriesA = new Series();
-        const lpld = new ListProviderLocalData(1, 'A');
+        const lpld = new ListProviderLocalData(1, TestListProvider);
         lpld.addSeriesName(new Name('TestA', 'en'));
         seriesA.addListProvider(lpld);
         const seriesB = new Series();
-        const lpld2 = new ListProviderLocalData(1, 'B');
+        const lpld2 = new ListProviderLocalData(1, TestListProvider2);
         lpld2.addSeriesName(new Name('TestB', 'en'));
         seriesB.addListProvider(lpld2);
         const merged = await seriesA.merge(seriesB);
@@ -150,11 +152,11 @@ describe('Series | Merge', () => {
 
     test('should merge listproviderSeason', async () => {
         const seriesA = new Series();
-        const lpld = new ListProviderLocalData(2, 'Test');
+        const lpld = new ListProviderLocalData(2, TestListProvider);
         lpld.addSeriesName(new Name('TestA', 'en'));
         seriesA.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld, new Season([1])));
         const seriesB = new Series();
-        const lpld2 = new ListProviderLocalData(2, 'Test');
+        const lpld2 = new ListProviderLocalData(2, TestListProvider);
         seriesB.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(lpld2, new Season([1])));
 
         const merged = await seriesA.merge(seriesB);

@@ -2,6 +2,6 @@ import TestListProvider from '../../../controller/objects/testClass/testListProv
 
 export default class TVMazeTestProvider extends TestListProvider {
     constructor() {
-        super('');
+        super();
     }
 }

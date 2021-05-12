@@ -1,13 +1,12 @@
-import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper';
-import listHelper from '../../helpFunctions/list-helper';
-import logger from '../../logger/logger';
-import { MergeTypes } from '../objects/merge-types';
-import Series from '../objects/series';
-import MainListLoader from './main-list-loader';
-import MainListSaver from './main-list-saver';
-import MainListSearcher from './main-list-searcher';
+import listHelper from '../../helpFunctions/list-helper'
+import logger from '../../logger/logger'
+import { MergeTypes } from '../objects/merge-types'
+import Series from '../objects/series'
+import MainListLoader from './main-list-loader'
+import MainListSaver from './main-list-saver'
+import MainListSearcher from './main-list-searcher'
 export default class MainListManager {
-    private static debounceSaving?: NodeJS.Timeout;
+    private static debounceSaving?: NodeJS.Timeout
 
     /**
      * Adds a new Series to the mainlist.
@@ -16,73 +15,73 @@ export default class MainListManager {
      * @param notfiyRenderer
      */
     public static async addSerieToMainList(series: Series, notfiyRenderer = false): Promise<boolean> {
-        this.checkIfListIsLoaded();
-        const searcher = new MainListSearcher();
-        const results = [];
+        this.checkIfListIsLoaded()
+        const searcher = new MainListSearcher()
+        const results = []
         if (series.getAllProviderBindings().length !== 0) {
             try {
-                const searchResults = await searcher.findSameSeriesInList(series, this.mainList);
+                const searchResults = await searcher.findSameSeriesInList(series, this.mainList)
                 if (searchResults.length !== 0) {
                     for (const entry of searchResults) {
                         try {
                             if (series.id === entry.id) {
-                                await this.updateSerieInList(series);
-                                return true;
+                                await this.updateSerieInList(series)
+                                return true
                             }
                             if (typeof series.merge !== 'function') {
-                                series = Object.assign(new Series(), series);
+                                series = Object.assign(new Series(), series)
                             }
 
-                            logger.log('info', '[MainList] Duplicate found: merging...');
-                            series = await series.merge(entry, false);
-                            MainListManager.removeSeriesFromMainList(entry, notfiyRenderer);
+                            logger.log('info', '[MainList] Duplicate found: merging...')
+                            series = await series.merge(entry, false)
+                            MainListManager.removeSeriesFromMainList(entry, notfiyRenderer)
                         } catch (err) {
-                            logger.error(err);
+                            logger.error(err)
                         }
                     }
                 } else {
-                    results.push(series);
+                    results.push(series)
                 }
                 if (results.length === 0) {
-                    results.push(series);
+                    results.push(series)
                 }
                 if (series.lastInfoUpdate === 0) {
-                    logger.error('[ERROR] Series no last info update! In MainList.');
+                    logger.error('[ERROR] Series no last info update! In MainList.')
                 }
-                logger.log('info', '[MainList] Series was added to MainList. New list size: ' + this.mainList.length);
-                MainListManager.mainList.push(...results);
+                logger.log('info', '[MainList] Series was added to MainList. New list size: ' + this.mainList.length)
+                MainListManager.mainList.push(...results)
             } catch (err) {
-                logger.error(err);
-                return false;
+                logger.error(err)
+                return false
             }
-            return true;
+            return true
         } else {
-            return false;
+            return false
         }
     }
 
     public static async updateSerieInList(series: Series, updateType = MergeTypes.UPDATE): Promise<void> {
-        logger.info('[MainList] Update series in mainlist ' + series.id);
-        const mainIndex = this.getIndexFromSeries(series, MainListManager.mainList);
+        logger.info('[MainList] Update series in mainlist ' + series.id)
+        const mainIndex = this.getIndexFromSeries(series, MainListManager.mainList)
         if (mainIndex !== -1) {
-            let outdatedSeries = MainListManager.mainList[mainIndex];
+            let outdatedSeries = MainListManager.mainList[mainIndex]
             if (typeof outdatedSeries.merge !== 'function') {
-                outdatedSeries = Object.assign(new Series(), outdatedSeries);
+                outdatedSeries = Object.assign(new Series(), outdatedSeries)
             }
-            const tempSeries = await outdatedSeries.merge(series, true, updateType);
-            tempSeries.id = series.id;
-            MainListManager.mainList[mainIndex] = tempSeries;
+            const tempSeries = await outdatedSeries.merge(series, true, updateType)
+            tempSeries.id = series.id
+            MainListManager.mainList[mainIndex] = tempSeries
         }
         if (MainListManager.listMaintance) {
-            const seconListIndex = this.getIndexFromSeries(series, MainListManager.secondList);
+            const seconListIndex = this.getIndexFromSeries(series, MainListManager.secondList)
             if (seconListIndex !== -1) {
-                let outdatedSecondListSeries = MainListManager.secondList[seconListIndex];
+                let outdatedSecondListSeries = MainListManager.secondList[seconListIndex]
                 if (typeof outdatedSecondListSeries.merge !== 'function') {
-                    outdatedSecondListSeries = Object.assign(new Series(), outdatedSecondListSeries);
+                    outdatedSecondListSeries = Object.assign(new Series(), outdatedSecondListSeries)
                 }
-                const tempSecondListSeries = await outdatedSecondListSeries.merge(series, true, updateType);
-                tempSecondListSeries.id = series.id;
-                MainListManager.secondList[seconListIndex] = tempSecondListSeries;
+                const tempSecondListSeries = await outdatedSecondListSeries.merge(series, true, updateType)
+                tempSecondListSeries.id = series.id
+                MainListManager.secondList[seconListIndex] = tempSecondListSeries
             }
         }
     }
@@ -92,89 +91,88 @@ export default class MainListManager {
      */
     public static async finishListFilling(): Promise<void> {
         if (MainListManager.listMaintance === true) {
-            return;
+            return
         }
-        logger.log('info', '[MainList] Cleanup Mainlist. Current list size: ' + this.mainList.length);
+        logger.log('info', '[MainList] Cleanup Mainlist. Current list size: ' + this.mainList.length)
 
-        MainListManager.listMaintance = true;
+        MainListManager.listMaintance = true
         try {
-            MainListManager.secondList = [...MainListManager.mainList];
-            logger.log('info', '[MainList] Temp List created. Temp list size: ' + this.secondList.length);
-            MainListManager.mainList = [];
-            for (const index = 0; this.secondList.length !== 0;) {
+            MainListManager.secondList = [...MainListManager.mainList]
+            logger.log('info', '[MainList] Temp List created. Temp list size: ' + this.secondList.length)
+            MainListManager.mainList = []
+            for (const index = 0; this.secondList.length !== 0; ) {
                 try {
-                    const entry = this.secondList[index];
+                    const entry = this.secondList[index]
                     /**
                      * Reset Cache and reload it
                      */
-                    entry.resetCache();
+                    entry.resetCache()
                     if (entry.episodeBindingPoolGeneratedAt == 0) {
-                        await entry.generateEpisodeMapping();
+                        await entry.generateEpisodeMapping()
                     }
                     try {
-                        await entry.getSeason();
+                        await entry.getSeason()
                     } catch (ignore) {
-                        logger.debug(ignore);
+                        logger.debug(ignore)
                     }
-                    await MainListManager.addSerieToMainList(entry);
+                    await MainListManager.addSerieToMainList(entry)
                 } catch (err) {
-                    logger.error(err);
+                    logger.error(err)
                 }
                 if (this.secondList.length !== 0) {
-                    this.secondList.shift();
+                    this.secondList.shift()
                 }
             }
-            MainListSaver.saveMainList(MainListManager.mainList);
-            logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length);
+            MainListSaver.saveMainList(MainListManager.mainList)
+            logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length)
         } catch (err) {
-            logger.error('Error at MainListManager.finishListFilling');
-            logger.error(err);
+            logger.error('Error at MainListManager.finishListFilling')
+            logger.error(err)
         }
-        MainListManager.listMaintance = false;
-        MainListManager.secondList = [];
+        MainListManager.listMaintance = false
+        MainListManager.secondList = []
     }
 
-
     public static removeSeriesFromMainList(series: Series, notifyRenderer = false): boolean {
-        let result = false;
+        let result = false
         if (this.listMaintance) {
-            const result1 = this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
-            const result2 = this.removeSeriesFromList(series, notifyRenderer, MainListManager.secondList);
-            return (result1 || result2);
+            const result1 = this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList)
+            const result2 = this.removeSeriesFromList(series, notifyRenderer, MainListManager.secondList)
+            return result1 || result2
         } else {
-            result = this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList);
+            result = this.removeSeriesFromList(series, notifyRenderer, MainListManager.mainList)
         }
-        return result;
+        return result
     }
 
     public static removeSeriesFromList(series: Series, notifyRenderer = false, list?: Series[]): boolean {
-        this.checkIfListIsLoaded();
+        this.checkIfListIsLoaded()
         if (!list) {
-            list = this.getMainList();
+            list = this.getMainList()
         }
-        logger.log('info', '[MainList] Remove Item in mainlist: ' + series.id);
-        const index = MainListManager.getIndexFromSeries(series, list);
+        logger.log('info', '[MainList] Remove Item in mainlist: ' + series.id)
+        const index = MainListManager.getIndexFromSeries(series, list)
         if (index !== -1) {
-            const oldSize = list.length;
-            let ref = list;
-            ref = listHelper.removeEntrys(ref, ref[index]);
-            this.requestSaveMainList();
-            return oldSize !== ref.length;
+            const oldSize = list.length
+            let ref = list
+            ref = listHelper.removeEntrys(ref, ref[index])
+            this.requestSaveMainList()
+            return oldSize !== ref.length
         }
-        return false;
+        return false
     }
 
     /**
      * Retunrs all series but in the maintaince phase it can return dublicated entrys.
      */
     public static getMainList(): Series[] {
-        this.checkIfListIsLoaded();
+        this.checkIfListIsLoaded()
         if (this.listMaintance) {
-            const arr = [...MainListManager.secondList, ...MainListManager.mainList];
-            logger.log('info', '[MainList] TempList served: (size= ' + arr.length + ')');
-            return arr;
+            const arr = [...MainListManager.secondList, ...MainListManager.mainList]
+            logger.log('info', '[MainList] TempList served: (size= ' + arr.length + ')')
+            return arr
         } else {
-            return MainListManager.mainList;
+            return MainListManager.mainList
         }
     }
 
@@ -185,27 +183,26 @@ export default class MainListManager {
      */
     public static getIndexFromSeries(anime: Series, seriesList?: Series[] | readonly Series[]): number {
         if (seriesList) {
-            return (seriesList).findIndex((x) => anime.id === x.id);
+            return seriesList.findIndex(x => anime.id === x.id)
         } else {
-            return (MainListManager.getMainList()).findIndex((x) => anime.id === x.id);
+            return MainListManager.getMainList().findIndex(x => anime.id === x.id)
         }
     }
 
     public static requestSaveMainList(): void {
-        if (this.debounceSaving)
-            clearTimeout(this.debounceSaving);
-        this.debounceSaving = setTimeout(() => MainListSaver.saveMainList(this.getMainList()), 2000);
+        if (this.debounceSaving) clearTimeout(this.debounceSaving)
+        this.debounceSaving = setTimeout(() => MainListSaver.saveMainList(this.getMainList()), 2000)
     }
 
-    private static mainList: Series[] = [];
-    private static listLoaded = false;
-    private static listMaintance = false;
-    private static secondList: Series[] = [];
+    private static mainList: Series[] = []
+    private static listLoaded = false
+    private static listMaintance = false
+    private static secondList: Series[] = []
 
     private static checkIfListIsLoaded(): void {
         if (!MainListManager.listLoaded) {
-            MainListManager.mainList = MainListLoader.loadData();
-            MainListManager.listLoaded = true;
+            MainListManager.mainList = MainListLoader.loadData()
+            MainListManager.listLoaded = true
         }
     }
 }

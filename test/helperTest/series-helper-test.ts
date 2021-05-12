@@ -15,13 +15,25 @@ import SeriesHelper from '../../src/backend/helpFunctions/series-helper';
 import EpisodeBindingPool from '../../src/backend/controller/objects/meta/episode/episode-binding-pool';
 import EpisodeMapping from '../../src/backend/controller/objects/meta/episode/episode-mapping';
 import Episode from '../../src/backend/controller/objects/meta/episode/episode';
+import TestListProvider2 from '../controller/objects/testClass/testListProvider2';
+import TestListProvider3 from '../controller/objects/testClass/testListProvider3';
+import TraktProvider from '../../src/backend/api/information-providers/trakt/trakt-provider';
+import AniListProvider from '../../src/backend/api/information-providers/anilist/anilist-provider';
+import TmdbProvider from '../../src/backend/api/information-providers/tmdb/tmdb-provider';
+import ImdbProvider from '../../src/backend/api/information-providers/imdb/imdb-provider';
+import TVDBProvider from '../../src/backend/api/information-providers/tvdb/tvdb-provider';
+import TVMazeProvider from '../../src/backend/api/information-providers/tvmaze/tvmaze-provider';
+import AniDBProvider from '../../src/backend/api/information-providers/anidb/anidb-provider';
+import TestListProvider4 from '../controller/objects/testClass/testListProvider4';
+import TestInfoProvider from '../controller/objects/testClass/testInfoProvider';
+import TestInfoProvider2 from '../controller/objects/testClass/testInfoProvider2';
 
 
 
 describe('Series Helper', () => {
     function fullseriesA(): Series {
         const series = new Series();
-        const anidb = new InfoProviderLocalData('10894', 'anidb');
+        const anidb = new InfoProviderLocalData('10894', AniDBProvider);
         anidb.addSeriesName(new Name('danmachi', 'x-jat', NameType.SHORT));
         anidb.addSeriesName(new Name('DanMachi : Familia Myth', 'fr', NameType.OFFICIAL));
         anidb.addSeriesName(new Name('DanMachi: ¿Está mal seducir chicas en un calabozo?', 'es-LA', NameType.OFFICIAL));
@@ -37,22 +49,22 @@ describe('Series Helper', () => {
         anidb.addSeriesName(new Name('在地下城寻求邂逅是否搞错了什么', 'zh-Hans', NameType.OFFICIAL));
         anidb.infoStatus = ProviderInfoStatus.BASIC_INFO;
         series.addInfoProvider(anidb);
-        const tvmaze = new InfoProviderLocalData('5312', 'tvmaze');
+        const tvmaze = new InfoProviderLocalData('5312', TVMazeProvider);
         tvmaze.mediaType = MediaType.ANIME;
         tvmaze.releaseYear = 2015;
         tvmaze.runTime = 25;
         tvmaze.score = 7.4;
         tvmaze.addSeriesName(new Name('Is It Wrong to Try to Pick Up Girls in a Dungeon?', 'en', NameType.OFFICIAL));
         series.addInfoProvider(tvmaze);
-        const tvdb = new InfoProviderLocalData(289882, 'tvdb');
+        const tvdb = new InfoProviderLocalData(289882, TVDBProvider);
         tvdb.addSeriesName(new Name('is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon', 'slug', NameType.SLUG));
         tvdb.addSeriesName(new Name('Is it Wrong to Try to Pick Up Girls in a Dungeon?', 'slug', NameType.SLUG));
         series.addInfoProvider(tvdb);
-        const imdb = new InfoProviderLocalData('tt4728568', 'imdb');
+        const imdb = new InfoProviderLocalData('tt4728568', ImdbProvider);
         series.addInfoProvider(imdb);
-        const tmdb = new InfoProviderLocalData(62745, 'tmdb');
+        const tmdb = new InfoProviderLocalData(62745, TmdbProvider);
         series.addInfoProvider(tmdb);
-        const trakt = new ListProviderLocalData(94090, 'Trakt');
+        const trakt = new ListProviderLocalData(94090, TraktProvider);
         trakt.episodes = 25;
         trakt.publicScore = 7.87259259259259;
         trakt.releaseYear = 2015;
@@ -61,7 +73,7 @@ describe('Series Helper', () => {
         trakt.addSeriesName(new Name('Is it Wrong to Try to Pick Up Girls in a Dungeon?', 'en', NameType.OFFICIAL));
         trakt.addSeriesName(new Name('is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon', 'slug', NameType.SLUG));
         series.addListProvider(trakt);
-        const anilist = new ListProviderLocalData(20920, 'AniList');
+        const anilist = new ListProviderLocalData(20920, AniListProvider);
         anilist.episodes = 13;
         anilist.releaseYear = 2015;
         anilist.sequelIds.push(21660);
@@ -76,7 +88,7 @@ describe('Series Helper', () => {
 
     function fullseriesB(): Series {
         const series = new Series();
-        const anidb = new InfoProviderLocalData('10894', 'anidb');
+        const anidb = new InfoProviderLocalData('10894', AniDBProvider);
         anidb.addSeriesName(new Name('danmachi', 'x-jat', NameType.SHORT));
         anidb.addSeriesName(new Name('DanMachi : Familia Myth', 'fr', NameType.OFFICIAL));
         anidb.addSeriesName(new Name('DanMachi: ¿Está mal seducir chicas en un calabozo?', 'es-LA', NameType.OFFICIAL));
@@ -91,22 +103,22 @@ describe('Series Helper', () => {
         anidb.addSeriesName(new Name('ダンジョンに出会いを求めるのは間違っているだろうか FAMILIA MYTH', 'jat', NameType.OFFICIAL));
         anidb.addSeriesName(new Name('在地下城寻求邂逅是否搞错了什么', 'zh-Hans', NameType.OFFICIAL));
         anidb.infoStatus = ProviderInfoStatus.BASIC_INFO;
-        const tvmaze = new InfoProviderLocalData('5312', 'tvmaze');
+        const tvmaze = new InfoProviderLocalData('5312', TVMazeProvider);
         tvmaze.mediaType = MediaType.ANIME;
         tvmaze.releaseYear = 2015;
         tvmaze.runTime = 25;
         tvmaze.score = 7.4;
         tvmaze.addSeriesName(new Name('Is It Wrong to Try to Pick Up Girls in a Dungeon?', 'en', NameType.OFFICIAL));
         series.addInfoProvider(tvmaze);
-        const tvdb = new InfoProviderLocalData(289882, 'tvdb');
+        const tvdb = new InfoProviderLocalData(289882, TVDBProvider);
         tvdb.addSeriesName(new Name('is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon', 'slug', NameType.SLUG));
         tvdb.addSeriesName(new Name('Is it Wrong to Try to Pick Up Girls in a Dungeon?', 'slug', NameType.SLUG));
         series.addInfoProvider(tvdb);
-        const imdb = new InfoProviderLocalData('tt4728568', 'imdb');
+        const imdb = new InfoProviderLocalData('tt4728568', ImdbProvider);
         series.addInfoProvider(imdb);
-        const tmdb = new InfoProviderLocalData(62745, 'tmdb');
+        const tmdb = new InfoProviderLocalData(62745, TmdbProvider);
         series.addInfoProvider(tmdb);
-        const trakt = new ListProviderLocalData(94090, 'Trakt');
+        const trakt = new ListProviderLocalData(94090, TraktProvider);
         trakt.episodes = 25;
         trakt.publicScore = 7.87259259259259;
         trakt.releaseYear = 2015;
@@ -115,7 +127,7 @@ describe('Series Helper', () => {
         trakt.addSeriesName(new Name('Is it Wrong to Try to Pick Up Girls in a Dungeon?', 'en', NameType.OFFICIAL));
         trakt.addSeriesName(new Name('is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon', 'slug', NameType.SLUG));
         series.addListProvider(trakt);
-        const anilist = new ListProviderLocalData(101167, 'AniList');
+        const anilist = new ListProviderLocalData(101167, AniListProvider);
         anilist.episodes = 12;
         anilist.releaseYear = 2019;
         anilist.prequelIds.push(20920);
@@ -130,7 +142,7 @@ describe('Series Helper', () => {
 
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('test', true, false), new TestListProvider('test2', true, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider(true, false), new TestListProvider2(true, true)];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal
@@ -144,9 +156,9 @@ describe('Series Helper', () => {
         a['cachedSeason'] = new Season([2]);
         // tslint:disable-next-line: no-string-literal
         // A is should not match with any of them.
-        const infoProviderA = new InfoProviderLocalData('14792', 'test3');
+        const infoProviderA = new InfoProviderLocalData('14792', TestInfoProvider2);
         a.addInfoProvider(infoProviderA);
-        const listProviderA = new ListProviderLocalData(108632, 'test2');
+        const listProviderA = new ListProviderLocalData(108632, TestListProvider2);
         listProviderA.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProviderA.prequelIds.push(21355);
         listProviderA.isNSFW = false;
@@ -157,10 +169,10 @@ describe('Series Helper', () => {
         // tslint:disable-next-line: no-string-literal
         b['cachedSeason'] = new Season([1]);
         // tslint:disable-next-line: no-string-literal
-        const infoProviderB = new InfoProviderLocalData(260449, 'test4');
+        const infoProviderB = new InfoProviderLocalData(260449, TestInfoProvider);
         infoProviderB.infoStatus = ProviderInfoStatus.FULL_INFO;
         b.addInfoProvider(infoProviderB);
-        const listProvider = new ListProviderLocalData(43973, 'test');
+        const listProvider = new ListProviderLocalData(43973, TestListProvider);
         listProvider.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProvider.releaseYear = 2013;
         listProvider.isNSFW = false;
@@ -174,7 +186,7 @@ describe('Series Helper', () => {
         // tslint:disable-next-line: no-string-literal
         c['cachedSeason'] = new Season([2]);
         // tslint:disable-next-line: no-string-literal
-        const listProviderB = new ListProviderLocalData(43973, 'test');
+        const listProviderB = new ListProviderLocalData(43973, TestListProvider);
         listProviderB.isNSFW = false;
         listProviderB.infoStatus = ProviderInfoStatus.FULL_INFO;
         listProviderB.addSeriesName(new Name('Series Test', 'x-jap'));

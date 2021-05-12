@@ -16,9 +16,41 @@ import logger from '../../../../src/backend/logger/logger';
 
 export default class TestListProvider extends ListProvider {
     public hasOAuthLogin = false;
+
+    public potentialSubProviders: Array<new () => ExternalInformationProvider> = [];
+    public supportedOtherProvider: Array<new () => ExternalInformationProvider> = [];
+
+    public version = 1;
+    public hasUniqueIdForSeasons = false;
+    public hasOAuthCode = true;
+    public loggedIn: boolean;
+    // tslint:disable-next-line: no-object-literal-type-assertion
+    public userData: UserData = {} as UserData;
+    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
+
+    constructor(loggedIn = true, hasUniqueIdForSeasons = false) {
+        super();
+        this.requestRateLimitInMs = 0;
+        this.loggedIn = loggedIn;
+        this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;
+    }
+    public getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
+        throw new Error('Method not implemented.');
+    }
+    public getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+        throw new Error('Method not implemented.');
+    }
+
+    public updateEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
+        throw new Error('Method not implemented.');
+    }
+    public removeEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
+        throw new Error('Method not implemented.');
+    }
     public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
         throw new Error('Method not implemented.');
     }
+
     public async markEpisodeAsUnwatched(): Promise<void> {
         logger.debug('Called markEpisodeAsUnwatched');
     }
@@ -35,38 +67,6 @@ export default class TestListProvider extends ListProvider {
         throw new Error('Method not implemented.');
     }
     public getAllLists(): Promise<import('../../../../src/backend/controller/objects/provider-user-list').default[]> {
-        throw new Error('Method not implemented.');
-    }
-    public potentialSubProviders: Array<new () => ExternalInformationProvider> = [];
-    public supportedOtherProvider: Array<new () => ExternalInformationProvider> = [];
-
-    public version = 1;
-    public hasUniqueIdForSeasons = false;
-    public providerName = '';
-    public hasOAuthCode = true;
-    public loggedIn: boolean;
-    // tslint:disable-next-line: no-object-literal-type-assertion
-    public userData: UserData = {} as UserData;
-    public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
-
-    constructor(providerName: string, loggedIn = true, hasUniqueIdForSeasons = false) {
-        super();
-        this.requestRateLimitInMs = 0;
-        this.providerName = providerName;
-        this.loggedIn = loggedIn;
-        this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;
-    }
-    public getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
-        throw new Error('Method not implemented.');
-    }
-    public getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
-        throw new Error('Method not implemented.');
-    }
-
-    public updateEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
-        throw new Error('Method not implemented.');
-    }
-    public removeEntry(anime: Series, watchProgress: any): Promise<ListProviderLocalData> {
         throw new Error('Method not implemented.');
     }
 

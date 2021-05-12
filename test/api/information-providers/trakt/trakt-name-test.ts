@@ -14,7 +14,7 @@ describe('Provider: Trakt | username/name get tested', () => {
         };
 
         WebRequestManager.request = jest.fn(async () => response) as any;
-        traktProviderInstance.userData.username = 'Sean Rudford';
+        traktProviderInstance.userData.userName = 'Sean Rudford';
         const a = await traktProviderInstance.getUsername();
         expect(a).toBe('Sean Rudford');
     });
@@ -26,7 +26,7 @@ describe('Provider: Trakt | username/name get tested', () => {
         };
 
         WebRequestManager.request = jest.fn(async () => response) as any;
-        traktProviderInstance.userData.username = 'sean';
+        traktProviderInstance.userData.userName = 'sean';
         const a = await traktProviderInstance.getUsername();
         expect(a).toBe('sean');
     });

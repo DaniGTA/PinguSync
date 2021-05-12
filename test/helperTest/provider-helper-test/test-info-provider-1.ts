@@ -2,6 +2,6 @@ import TestInfoProvider from '../../controller/objects/testClass/testInfoProvide
 
 export default class TestInfoProvider1 extends TestInfoProvider {
     constructor() {
-        super('test1');
+        super();
     }
 }

@@ -7,7 +7,10 @@ export enum ProviderInfoStatus {
      * Has episode number.
      */
     ADVANCED_BASIC_INFO,
+    /**
+     * Has no episode numbers but basic infos like name
+     */
     BASIC_INFO,
     ONLY_ID,
-    NOT_AVAILABLE
+    NOT_AVAILABLE,
 }

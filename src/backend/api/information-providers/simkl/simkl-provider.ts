@@ -44,7 +44,6 @@ export default class SimklProvider extends ListProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [TVDBProvider, AniDBProvider, MalProvider];
-    public providerName = 'Simkl';
     public version = 2;
     public hasOAuthLogin = true;
     public hasDefaultLogin = false;

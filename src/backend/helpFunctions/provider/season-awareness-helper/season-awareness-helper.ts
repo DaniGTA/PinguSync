@@ -1,3 +1,5 @@
+import InfoProvider from '../../../api/provider/info-provider';
+import ListProvider from '../../../api/provider/list-provider';
 import Series from '../../../controller/objects/series';
 import RelationSearchResults from '../../../controller/objects/transfer/relation-search-results';
 import ProviderDataListAdder from '../../../controller/provider-controller/provider-data-list-manager/provider-data-list-adder';
@@ -96,9 +98,9 @@ export default class SeasonAwarenessHelper {
         for (const provider of providerLocalDatas) {
             let prequelProvider: ProviderLocalData | undefined;
             if (provider instanceof ListProviderLocalData) {
-                prequelProvider = new ListProviderLocalData(provider.prequelIds[0], provider.provider);
+                prequelProvider = new ListProviderLocalData(provider.prequelIds[0], (ProviderList.getProviderInstanceByProviderName(provider.provider) as ListProvider));
             } else if (provider instanceof InfoProviderLocalData) {
-                prequelProvider = new InfoProviderLocalData(provider.prequelIds[0], provider.provider);
+                prequelProvider = new InfoProviderLocalData(provider.prequelIds[0], (ProviderList.getProviderInstanceByProviderName(provider.provider) as InfoProvider));
             }
             if (prequelProvider) {
                 allPrequelProviders.push(prequelProvider);

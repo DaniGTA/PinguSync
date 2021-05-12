@@ -1,40 +1,37 @@
-
-import { MediaType } from '../../controller/objects/meta/media-type';
-import timeHelper from '../../helpFunctions/time-helper';
-import ExternalInformationProvider from './external-information-provider';
-import ApiKeyController from '../../controller/key/api-key-controller';
+import { MediaType } from '../../controller/objects/meta/media-type'
+import timeHelper from '../../helpFunctions/time-helper'
+import ExternalInformationProvider from './external-information-provider'
+import ApiKeyController from '../../controller/key/api-key-controller'
 
 export default abstract class ExternalProvider {
+    public providerName = this.constructor.name
 
-    protected requestRateLimitInMs = 400;
+    protected requestRateLimitInMs = 400
 
-    private lastRequestTimestamp = 0;
-    private requestCounter = 0;
+    private lastRequestTimestamp = 0
+    private requestCounter = 0
 
-    public abstract providerName: string;
-
-    public abstract supportedMediaTypes: MediaType[];
-    public abstract supportedOtherProvider: Array<(new () => ExternalInformationProvider)>;
-    public abstract potentialSubProviders: Array<(new () => ExternalInformationProvider)>;
-    public abstract version: number;
+    public abstract supportedMediaTypes: MediaType[]
+    public abstract supportedOtherProvider: Array<new () => ExternalInformationProvider>
+    public abstract potentialSubProviders: Array<new () => ExternalInformationProvider>
+    public abstract version: number
 
     public async waitUntilItCanPerfomNextRequest(): Promise<void> {
-        await timeHelper.delay((this.lastRequestTimestamp + this.requestRateLimitInMs) - Date.now());
+        await timeHelper.delay(this.lastRequestTimestamp + this.requestRateLimitInMs - Date.now())
     }
 
     public informAWebRequest(): void {
-        this.requestCounter++;
-        this.lastRequestTimestamp = Date.now();
+        this.requestCounter++
+        this.lastRequestTimestamp = Date.now()
     }
 
-
     protected getApiSecret(): string | undefined {
-        return ApiKeyController.getApiSecret(this.providerName);
+        return ApiKeyController.getApiSecret(this.providerName)
     }
 
     protected getApiId(): string | undefined {
-        return ApiKeyController.getApiId(this.providerName);
+        return ApiKeyController.getApiId(this.providerName)
     }
 
-    public abstract isProviderAvailable(): Promise<boolean>;
+    public abstract isProviderAvailable(): Promise<boolean>
 }

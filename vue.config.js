@@ -86,5 +86,6 @@ module.exports = {
         prependData: '@import "@/styles/quasar.sass";'
       }
     }
-  }
+  },
+  
 };

@@ -12,6 +12,7 @@ import DownloadSettings from '../../../../src/backend/helpFunctions/provider/pro
 import ProviderLocalDataWithSeasonInfo from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestInfoProvider from '../../../controller/objects/testClass/testInfoProvider';
 import TestListProvider from '../../../controller/objects/testClass/testListProvider';
+import TestListProvider2 from '../../../controller/objects/testClass/testListProvider2';
 
 // tslint:disable: no-string-literal
 describe('Provider local data downloader tests (download-provider-local-data-helper.ts)', () => {
@@ -21,16 +22,16 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
     test('should download provider local data (no id)', async () => {
 
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider2(false, true)];
         const series = new Series();
 
-        const listProvider = new ListProviderLocalData(1, 'Test2');
+        const listProvider = new ListProviderLocalData(1, TestListProvider2);
         listProvider.addSeriesName(new Name('a', ''));
 
         series.addListProvider(listProvider);
-        const provider = new TestInfoProvider('Test');
+        const provider = new TestInfoProvider();
 
-        const resultListProvider = new ListProviderLocalData(1, 'Test');
+        const resultListProvider = new ListProviderLocalData(1, TestListProvider);
         resultListProvider.addSeriesName(new Name('a', ''));
 
         jest.spyOn(provider, 'getMoreSeriesInfoByName').mockImplementation(async () =>
@@ -43,16 +44,16 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
     test('should dont have a result (no id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider2(false, true)];
         const series = new Series();
 
-        const listProvider = new ListProviderLocalData(1, 'Test2');
+        const listProvider = new ListProviderLocalData(1, TestListProvider2);
         listProvider.addSeriesName(new Name('a', ''));
 
         series.addListProvider(listProvider);
-        const provider = new TestInfoProvider('Test');
+        const provider = new TestInfoProvider();
 
-        const resultListProvider = new ListProviderLocalData(1, 'Test');
+        const resultListProvider = new ListProviderLocalData(1, TestListProvider);
 
 
         jest.spyOn(provider, 'getMoreSeriesInfoByName').mockImplementation(async () =>
@@ -62,14 +63,14 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
     test('should say that provider is not avaible (no id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider(false, true)];
         const series = new Series();
 
-        const listProvider = new ListProviderLocalData(1, 'Test2');
+        const listProvider = new ListProviderLocalData(1, TestListProvider2);
         listProvider.addSeriesName(new Name('a', ''));
 
         series.addListProvider(listProvider);
-        const provider = new TestInfoProvider('Test');
+        const provider = new TestInfoProvider();
         provider.isProviderAvailable = async (): Promise<boolean> => false;
         await expect(async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toBe(FailedRequestError.ProviderNotAvailble);
     });
@@ -91,14 +92,14 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         test('should timeout (no id)', async () => {
 
             // tslint:disable: no-string-literal
-            ProviderList['loadedListProvider'] = [new TestListProvider('Test2', false, true)];
+            ProviderList['loadedListProvider'] = [new TestListProvider2(false, true)];
             const series = new Series();
 
-            const listProvider = new ListProviderLocalData(1, 'Test2');
+            const listProvider = new ListProviderLocalData(1, TestListProvider2);
             listProvider.addSeriesName(new Name('a', ''));
 
             series.addListProvider(listProvider);
-            const provider = new TestInfoProvider('Test');
+            const provider = new TestInfoProvider();
             // Delay function
             provider.getMoreSeriesInfoByName = async (): Promise<MultiProviderResult[]> => new Promise<MultiProviderResult[]>((resolve) => {
                 setTimeout(() => {
@@ -111,42 +112,42 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
 
     test('should dont have a result (with id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider(false, true)];
         const series = new Series();
 
-        const listProvider = new ListProviderLocalData(1, 'Test');
+        const listProvider = new ListProviderLocalData(1);
         listProvider.addSeriesName(new Name('a', ''));
 
         series.addListProvider(listProvider);
-        const provider = new TestInfoProvider('Test');
+        const provider = new TestInfoProvider();
         jest.spyOn(provider, 'getFullInfoById').mockImplementation(async (): Promise<MultiProviderResult> => { throw new Error('no result'); });
         await expect(async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toBe(FailedRequestError.ProviderNoResult);
     });
 
     test('should say that provider is not avaible (with id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider(false, true)];
         const series = new Series();
 
-        const listProvider = new ListProviderLocalData(1, 'Test');
+        const listProvider = new ListProviderLocalData(1, TestListProvider);
         listProvider.addSeriesName(new Name('a', ''));
 
         series.addListProvider(listProvider);
-        const provider = new TestInfoProvider('Test');
+        const provider = new TestInfoProvider();
         jest.spyOn(provider, 'isProviderAvailable').mockImplementation(async (): Promise<boolean> => false);
         await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(FailedRequestError.ProviderNotAvailble);
     });
 
     test('should timeout (with id)', async () => {
         // tslint:disable: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test', false, true)];
+        ProviderList['loadedListProvider'] = [new TestListProvider(false, true)];
         const series = new Series();
 
-        const listProvider = new ListProviderLocalData(1, 'Test');
+        const listProvider = new ListProviderLocalData(1, TestListProvider);
         listProvider.addSeriesName(new Name('a', ''));
 
         series.addListProvider(listProvider);
-        const provider = new TestInfoProvider('Test');
+        const provider = new TestInfoProvider();
         // Delay function
         provider.getFullInfoById = async (): Promise<MultiProviderResult> => new Promise<MultiProviderResult>((resolve) => {
             setTimeout(() => {

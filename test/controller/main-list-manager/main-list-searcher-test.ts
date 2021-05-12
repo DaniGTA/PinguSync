@@ -8,7 +8,6 @@ import Series from '../../../src/backend/controller/objects/series';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ProviderLoader from '../../../src/backend/controller/provider-controller/provider-manager/provider-loader';
-import ProviderNameManager from '../../../src/backend/controller/provider-controller/provider-manager/provider-name-manager';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import TestListProvider from '../objects/testClass/testListProvider';
 
@@ -25,16 +24,16 @@ describe('MainList | Searcher tests', () => {
         const searcher = new MainListSearcher();
 
         const series1 = new Series();
-        const provider1 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
+        const provider1 = new ListProviderLocalData(1, TraktProvider);
         series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([1])));
 
 
         const series2 = new Series();
-        const provider2 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
+        const provider2 = new ListProviderLocalData(1, TraktProvider);
         series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([2])));
 
         const series3 = new Series();
-        const provider3 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
+        const provider3 = new ListProviderLocalData(1, TraktProvider);
         series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season([1])));
 
         MainListManager['mainList'] = [series1, series2];
@@ -49,21 +48,21 @@ describe('MainList | Searcher tests', () => {
         ProviderList['loadedListProvider'] = [new TraktProvider(), new AniListProvider()];
 
         const series1 = new Series();
-        const provider1 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
+        const provider1 = new ListProviderLocalData(1, TraktProvider);
         series1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([1])));
 
 
         const series2 = new Series();
-        const provider2 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider));
+        const provider2 = new ListProviderLocalData(1, TraktProvider);
         series2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([2])));
 
         const series3 = new Series();
-        const provider3 = new ListProviderLocalData(1, ProviderNameManager.getProviderName(AniListProvider));
+        const provider3 = new ListProviderLocalData(1, AniListProvider);
         series3.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider3, new Season([1])));
 
         MainListManager['mainList'] = [series1, series2, series3];
 
-        const search = new MultiProviderResult(new ListProviderLocalData(1, ProviderNameManager.getProviderName(TraktProvider)));
+        const search = new MultiProviderResult(new ListProviderLocalData(1, TraktProvider));
         const result = MainListSearcher.findSeriesWithMultiProviderResult(search);
         expect(result).toBe(series1);
 

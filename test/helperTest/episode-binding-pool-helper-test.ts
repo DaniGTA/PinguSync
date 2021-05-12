@@ -6,17 +6,19 @@ import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-bi
 
 import Season from '../../src/backend/controller/objects/meta/season';
 import Series from '../../src/backend/controller/objects/series';
+import TestListProvider from '../controller/objects/testClass/testListProvider';
+import TestListProvider2 from '../controller/objects/testClass/testListProvider2';
 
 describe('Episode binding pool helper tests | Testrun', () => {
     test('should get all binded episode from an episode', () => {
         const episode = new Episode(1);
-        const episodeMapping1 = new EpisodeMapping(episode, new ListProviderLocalData(1, 'a'));
-        const episodeMapping2 = new EpisodeMapping(new Episode(1), new ListProviderLocalData(1, 'b'));
+        const episodeMapping1 = new EpisodeMapping(episode, new ListProviderLocalData(1, TestListProvider));
+        const episodeMapping2 = new EpisodeMapping(new Episode(1), new ListProviderLocalData(1, TestListProvider2));
         const episodeBindingPool = new EpisodeBindingPool(episodeMapping1, episodeMapping2);
 
         const episode2 = new Episode(2);
-        const episode2Mapping1 = new EpisodeMapping(episode2, new ListProviderLocalData(1, 'a'));
-        const episode2Mapping2 = new EpisodeMapping(new Episode(2), new ListProviderLocalData(1, 'b'));
+        const episode2Mapping1 = new EpisodeMapping(episode2, new ListProviderLocalData(1, TestListProvider));
+        const episode2Mapping2 = new EpisodeMapping(new Episode(2), new ListProviderLocalData(1, TestListProvider2));
         const episode2BindingPool = new EpisodeBindingPool(episode2Mapping1, episode2Mapping2);
 
         const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode([episodeBindingPool, episode2BindingPool], episode);
@@ -26,9 +28,9 @@ describe('Episode binding pool helper tests | Testrun', () => {
     test('should not get season 2 with special season', () => {
         const testEpsiode1 = new Episode(2, new Season(2));
         testEpsiode1.providerEpisodeId = 2454207;
-        const episodeMapping1 = new EpisodeMapping(testEpsiode1, new ListProviderLocalData(1, 'b'));
+        const episodeMapping1 = new EpisodeMapping(testEpsiode1, new ListProviderLocalData(1, TestListProvider));
 
-        const episodeMapping2 = new EpisodeMapping(new Episode(2), new ListProviderLocalData(1, 'a'));
+        const episodeMapping2 = new EpisodeMapping(new Episode(2), new ListProviderLocalData(1, TestListProvider2));
         const episodeBindingPool = new EpisodeBindingPool(episodeMapping1, episodeMapping2);
 
 
@@ -39,7 +41,7 @@ describe('Episode binding pool helper tests | Testrun', () => {
         specialEpisode.provider = 'b';
         specialEpisode.providerEpisodeId = 2293086;
 
-        const specialEpisodeMapping = new EpisodeMapping(specialEpisode, new ListProviderLocalData(1, 'b'));
+        const specialEpisodeMapping = new EpisodeMapping(specialEpisode, new ListProviderLocalData(1, TestListProvider2));
         series.addEpisodeMapping(specialEpisodeMapping);
 
 
@@ -53,12 +55,12 @@ describe('Episode binding pool helper tests | Testrun', () => {
         episode1.provider = 'a';
         const episode2 = new Episode(2);
         episode2.provider = 'b';
-        const episodeMapping1 = new EpisodeMapping(episode1, new ListProviderLocalData(1, 'a'));
-        const episodeMapping2 = new EpisodeMapping(episode2, new ListProviderLocalData(1, 'b'));
+        const episodeMapping1 = new EpisodeMapping(episode1, new ListProviderLocalData(1, TestListProvider));
+        const episodeMapping2 = new EpisodeMapping(episode2, new ListProviderLocalData(1, TestListProvider2));
 
         const episodeBindingPool = new EpisodeBindingPool(episodeMapping1, episodeMapping2);
         test('should find already binded episode', () => {
-            const result = EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider([episodeBindingPool], episode1, 'b');
+            const result = EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider([episodeBindingPool], episode1, TestListProvider2.name);
             expect(result).toBeTruthy();
         });
 

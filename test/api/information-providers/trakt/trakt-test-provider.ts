@@ -2,6 +2,6 @@ import TestListProvider from '../../../controller/objects/testClass/testListProv
 
 export default class TraktTestProvider extends TestListProvider {
     constructor() {
-        super('', true, true);
+        super(true, true);
     }
 }

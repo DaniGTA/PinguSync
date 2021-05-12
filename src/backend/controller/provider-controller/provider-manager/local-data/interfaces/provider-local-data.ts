@@ -1,23 +1,24 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 
-import ExternalProvider from '../../../../../api/provider/external-provider';
-import SeasonComperator from '../../../../../helpFunctions/comperators/season-comperator';
-import CoverHelper from '../../../../../helpFunctions/cover-helper/cover-helper';
-import EpisodeHelper from '../../../../../helpFunctions/episode-helper/episode-helper';
-import listHelper from '../../../../../helpFunctions/list-helper';
-import SeasonHelper from '../../../../../helpFunctions/season-helper/season-helper';
-import logger from '../../../../../logger/logger';
-import Banner from '../../../../objects/meta/banner';
-import Cover from '../../../../objects/meta/cover';
-import Episode from '../../../../objects/meta/episode/episode';
-import EpisodeMapping from '../../../../objects/meta/episode/episode-mapping';
-import { EpisodeType } from '../../../../objects/meta/episode/episode-type';
-import Genre from '../../../../objects/meta/genre';
-import { MediaType } from '../../../../objects/meta/media-type';
-import Name from '../../../../objects/meta/name';
-import Overview from '../../../../objects/meta/overview';
-import Season from '../../../../objects/meta/season';
-import ProviderNameManager from '../../provider-name-manager';
-import { ProviderInfoStatus } from './provider-info-status';
+import ExternalProvider from '../../../../../api/provider/external-provider'
+import SeasonComperator from '../../../../../helpFunctions/comperators/season-comperator'
+import CoverHelper from '../../../../../helpFunctions/cover-helper/cover-helper'
+import EpisodeHelper from '../../../../../helpFunctions/episode-helper/episode-helper'
+import listHelper from '../../../../../helpFunctions/list-helper'
+import SeasonHelper from '../../../../../helpFunctions/season-helper/season-helper'
+import logger from '../../../../../logger/logger'
+import Banner from '../../../../objects/meta/banner'
+import Cover from '../../../../objects/meta/cover'
+import Episode from '../../../../objects/meta/episode/episode'
+import EpisodeMapping from '../../../../objects/meta/episode/episode-mapping'
+import { EpisodeType } from '../../../../objects/meta/episode/episode-type'
+import Genre from '../../../../objects/meta/genre'
+import { MediaType } from '../../../../objects/meta/media-type'
+import Name from '../../../../objects/meta/name'
+import Overview from '../../../../objects/meta/overview'
+import Season from '../../../../objects/meta/season'
+import ProviderNameManager from '../../provider-name-manager'
+import { ProviderInfoStatus } from './provider-info-status'
 
 export default abstract class ProviderLocalData {
     // ------------------
@@ -28,20 +29,20 @@ export default abstract class ProviderLocalData {
      * The version number of the data object.
      * If this get raised the client knows it needs too update his own data.
      */
-    public abstract version: number = 1;
+    public abstract version: number = 1
     /**
      * Provider series id.
      */
-    public readonly id: number | string;
-    public readonly instanceName: string;
+    public readonly id: number | string
+    public readonly instanceName: string
     /**
      * Cant get more info from this provider.
      */
-    public infoStatus: ProviderInfoStatus = ProviderInfoStatus.NOT_AVAILABLE;
+    public infoStatus: ProviderInfoStatus = ProviderInfoStatus.NOT_AVAILABLE
     /**
      * The provider name
      */
-    public abstract readonly provider: string = '';
+    public abstract readonly provider: string = ''
     /**
      * Saves the raw response from the provider
      *
@@ -49,139 +50,146 @@ export default abstract class ProviderLocalData {
      *
      * Info: This var has no logic its just data that sits here.
      */
-    public rawEntry: any;
+    public rawEntry: unknown
     /**
      * Saves the last update from the last refresh of the data.
      */
-    public lastUpdate: Date = new Date();
+    public lastUpdate: Date = new Date()
     /**
      * Save the last update from the provider.
      */
-    public lastExternalChange: Date = new Date(0);
-
+    public lastExternalChange: Date = new Date(0)
 
     // ----------------------
     // Series metadata stuff
     // ----------------------
 
-    public score?: number;
-    public episodes?: number;
-    public publicScore?: number;
-    public covers: Cover[] = [];
-    public banners: Banner[] = [];
-    public mediaType: MediaType = MediaType.UNKOWN;
-    public releaseYear?: number;
-    public runTime?: number;
-    public isNSFW = false;
-    public country?: string;
-    public genres: Genre[] = [];
-    private detailEpisodeInfo: Episode[] = [];
+    public score?: number
+    public episodes?: number
+    public publicScore?: number
+    public covers: Cover[] = []
+    public banners: Banner[] = []
+    public mediaType: MediaType = MediaType.UNKOWN
+    public releaseYear?: number
+    public runTime?: number
+    public isNSFW = false
+    public country?: string
+    public genres: Genre[] = []
+    private detailEpisodeInfo: Episode[] = []
     /**
      * Only fill this if provider give sequel ids and have different ids for every season.
      */
-    public sequelIds: number[] = [];
+    public sequelIds: number[] = []
     /**
      * Only fill this if provider give prequel ids and have different ids for every season.
      */
-    public prequelIds: number[] = [];
+    public prequelIds: number[] = []
     /**
      *
      * Alternative IDs from the same provider.
      * This prevents merging alternatives together.
      */
-    public alternativeIds: number[] = [];
+    public alternativeIds: number[] = []
 
     /**
      * Protected
      */
-    protected names: Name[] = [];
-    protected overviews: Overview[] = [];
+    protected names: Name[] = []
+    protected overviews: Overview[] = []
 
     constructor(id: string | number) {
         if (id) {
-            this.id = id;
+            this.id = id
         } else {
-            const errorMsg = '[LOCALDATA] ERROR: INVALID ID. UNABLE TO CREATE LOCALDATA INSTANCE ! ID: ' + id;
-            logger.error(errorMsg);
-            throw new Error(errorMsg);
+            const errorMsg = '[LOCALDATA] ERROR: INVALID ID. UNABLE TO CREATE LOCALDATA INSTANCE ! ID: ' + id
+            logger.error(errorMsg)
+            throw new Error(errorMsg)
         }
-        this.instanceName = this.constructor.name;
+        this.instanceName = this.constructor.name
     }
 
     /**
- * b will be merged in to a. Includes all basic lists and ALL static values.
- *
- * All lists that are specific for other providers will merged but not be unique and doubled,
- * they needed too be filtered by the merged function of the provider.
- * @param a
- * @param b
- */
+     * b will be merged in to a. Includes all basic lists and ALL static values.
+     *
+     * All lists that are specific for other providers will merged but not be unique and doubled,
+     * they needed too be filtered by the merged function of the provider.
+     * @param a
+     * @param b
+     */
     protected static mergeProviderLocalData(...providers: ProviderLocalData[]): ProviderLocalData {
-        providers.sort((a, b) => a.lastUpdate.getTime() - b.lastUpdate.getTime());
-        let finalProvider: any = {};
+        providers.sort((a, b) => a.lastUpdate.getTime() - b.lastUpdate.getTime())
+        let finalProvider: ProviderLocalData = {} as ProviderLocalData
         for (const provider of providers) {
-            finalProvider = this.mergeBasicEntrys(finalProvider, provider);
+            finalProvider = this.mergeBasicEntrys(finalProvider, provider)
         }
 
-        finalProvider.genres = finalProvider.genres ? listHelper.getUniqueObjectList(finalProvider.genres) : [];
-        finalProvider.banners = finalProvider.banners ? listHelper.getUniqueObjectList(finalProvider.banners) : [];
-        finalProvider.covers = finalProvider.covers ? CoverHelper.getUniqueCoverList(finalProvider.covers) : [];
+        finalProvider.genres = finalProvider.genres ? listHelper.getUniqueObjectList(finalProvider.genres) : []
+        finalProvider.banners = finalProvider.banners ? listHelper.getUniqueObjectList(finalProvider.banners) : []
+        finalProvider.covers = finalProvider.covers ? CoverHelper.getUniqueCoverList(finalProvider.covers) : []
 
-        finalProvider.names = finalProvider.names ? listHelper.getUniqueNameList(finalProvider.names) : [];
-        finalProvider.overviews = finalProvider.overviews ? listHelper.getUniqueOverviewList(finalProvider.overviews) : [];
-        return finalProvider;
+        finalProvider.names = finalProvider.names ? listHelper.getUniqueNameList(finalProvider.names) : []
+        finalProvider.overviews = finalProvider.overviews
+            ? listHelper.getUniqueOverviewList(finalProvider.overviews)
+            : []
+        return finalProvider
     }
 
     private static mergeBasicEntrys(newProvider: ProviderLocalData, oldProvider: ProviderLocalData): ProviderLocalData {
-        const newP: any = newProvider;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const newP: any = newProvider
         for (const key in oldProvider) {
             // eslint-disable-next-line no-prototype-builtins
             if (oldProvider.hasOwnProperty(key)) {
-                const oldValue = (oldProvider as any)[key];
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const oldValue = (oldProvider as any)[key]
                 if (Array.isArray(oldValue)) {
                     if (newP[key] !== undefined) {
                         if (key === 'sequelIds' || key === 'prequelIds' || key === 'alternativeIds') {
                             if (oldValue.length !== 0) {
-                                newP[key] = oldValue;
+                                newP[key] = oldValue
                             }
                         } else if (key === 'detailEpisodeInfo') {
-                            newP[key] = listHelper.getUniqueEpisodeList(newP[key], oldValue);
+                            newP[key] = listHelper.getUniqueEpisodeList(newP[key], oldValue)
                         } else {
-                            newP[key] = [...newP[key], ...oldValue];
+                            newP[key] = [...newP[key], ...oldValue]
                         }
-                        continue;
+                        continue
                     }
                 } else if (key === 'infoStatus') {
                     if (newP[key] !== undefined) {
                         if (newP[key] > oldValue) {
-                            newP[key] = oldValue;
+                            newP[key] = oldValue
                         }
-                        continue;
+                        continue
                     }
                 } else if (key === 'isNSFW') {
                     if (oldValue) {
-                        newP[key] = oldValue;
+                        newP[key] = oldValue
                     }
-                    continue;
+                    continue
                 }
                 if (oldValue !== undefined) {
-                    newP[key] = oldValue;
+                    newP[key] = oldValue
                 }
             }
         }
-        return newP;
+        return newP
     }
 
     public getDetailedEpisodeLength(): number {
-        let length = 0;
+        let length = 0
 
         for (const episode of this.detailEpisodeInfo) {
-            if (episode.type === EpisodeType.REGULAR_EPISODE || episode.type === EpisodeType.SPECIAL || episode.type === EpisodeType.UNKOWN) {
-                length++;
+            if (
+                episode.type === EpisodeType.REGULAR_EPISODE ||
+                episode.type === EpisodeType.SPECIAL ||
+                episode.type === EpisodeType.UNKOWN
+            ) {
+                length++
             }
         }
 
-        return length;
+        return length
     }
 
     // ------------------
@@ -195,8 +203,8 @@ export default abstract class ProviderLocalData {
     public addSeriesName(...names: Name[]): void {
         for (const name of names) {
             if (name?.name && name.name !== 'null') {
-                if (this.names.findIndex((x) => x.name === name.name && x.lang === name.lang) === -1) {
-                    this.names.push(name);
+                if (this.names.findIndex(x => x.name === name.name && x.lang === name.lang) === -1) {
+                    this.names.push(name)
                 }
             }
         }
@@ -207,22 +215,22 @@ export default abstract class ProviderLocalData {
      * @param newOverview
      */
     public addOverview(...newOverviews: Overview[]): boolean {
-        this.overviews = [...this.overviews];
+        this.overviews = [...this.overviews]
         for (const newOverview of newOverviews) {
-            if (this.overviews.findIndex((x) => x === newOverview) === -1) {
-                this.overviews.push(newOverview);
-                return true;
+            if (this.overviews.findIndex(x => x === newOverview) === -1) {
+                this.overviews.push(newOverview)
+                return true
             }
         }
-        return false;
+        return false
     }
 
     public addDetailedEpisodeInfos(...episodes: Episode[]): void {
         for (const episode of episodes) {
-            episode.provider = this.provider;
-            episode.providerId = this.id;
-            this.detailEpisodeInfo.push(episode);
-            this.detailEpisodeInfo = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo);
+            episode.provider = this.provider
+            episode.providerId = this.id
+            this.detailEpisodeInfo.push(episode)
+            this.detailEpisodeInfo = EpisodeHelper.sortingEpisodeListByEpisodeNumber(this.detailEpisodeInfo)
         }
     }
 
@@ -231,7 +239,7 @@ export default abstract class ProviderLocalData {
      *
      */
     public getAllNames(): readonly Name[] {
-        return Object.freeze([...this.names]);
+        return Object.freeze([...this.names])
     }
 
     /**
@@ -239,58 +247,45 @@ export default abstract class ProviderLocalData {
      *
      */
     public getAllOverviews(): readonly Overview[] {
-        return Object.freeze([...this.overviews]);
+        return Object.freeze([...this.overviews])
     }
 
     /**
      * Simple function that checks if the provider data is from media type movie.
      */
     public isMediaTypeMovie(): boolean {
-        return this.mediaType === MediaType.MOVIE;
+        return this.mediaType === MediaType.MOVIE
     }
 
     public getDetailEpisodeInfos(): Episode[] {
-        return this.detailEpisodeInfo;
+        return this.detailEpisodeInfo
     }
 
     public getDetailEpisodeInfosByMapping(episdoeMapping: EpisodeMapping): Episode | undefined {
-        return this.detailEpisodeInfo.find((x) => x.id === episdoeMapping.id);
+        return this.detailEpisodeInfo.find(x => x.id === episdoeMapping.id)
     }
 
     public getAllRegularEpisodes(season?: Season): Episode[] {
-        const detailsEpisode = this.getAllDetailedEpisodes(season);
-        const result = [];
+        const detailsEpisode = this.getAllDetailedEpisodes(season)
+        const result = []
         for (const episode of detailsEpisode) {
             if (episode.type === EpisodeType.REGULAR_EPISODE || episode.type === EpisodeType.UNKOWN) {
-                result.push(episode);
+                result.push(episode)
             }
         }
-        return result;
+        return result
     }
 
     /**
      *
      */
     public getAllDetailedEpisodes(season?: Season): Episode[] {
-        let array = this.detailEpisodeInfo;
+        let array = this.detailEpisodeInfo
         if (season !== undefined && season.isSeasonNumberPresent()) {
-            array = array.filter((x) => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season));
+            array = array.filter(
+                x => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season)
+            )
         }
-        return array;
-    }
-
-    protected getProviderName(lp?: ExternalProvider | string | (new () => ExternalProvider)): string {
-        if (lp) {
-            if (typeof lp === 'string') {
-                return lp;
-            } else if (lp instanceof ExternalProvider) {
-                this.version = lp.version;
-                return lp.providerName;
-            } else {
-                return ProviderNameManager.getProviderName(lp);
-            }
-        } else {
-            return '';
-        }
+        return array
     }
 }

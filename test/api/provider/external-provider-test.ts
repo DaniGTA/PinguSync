@@ -2,7 +2,7 @@ import TestListProvider from '../../controller/objects/testClass/testListProvide
 
 describe('External provider tests', () => {
     test('should wait 50ms for next request', async () => {
-        const provider = new TestListProvider('a');
+        const provider = new TestListProvider();
         jest.restoreAllMocks();
         // tslint:disable-next-line: no-string-literal
         provider['requestRateLimitInMs'] = 50;

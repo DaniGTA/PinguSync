@@ -1,3 +1,5 @@
+import InfoProvider from '../../api/provider/info-provider';
+import ListProvider from '../../api/provider/list-provider';
 import MainListManager from '../../controller/main-list-manager/main-list-manager';
 import Name from '../../controller/objects/meta/name';
 import SeasonNumberResponse from '../../controller/objects/meta/response-object/season-number-response';
@@ -9,6 +11,7 @@ import { InfoProviderLocalData } from '../../controller/provider-controller/prov
 import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../logger/logger';
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result';
 import listHelper from '../list-helper';
@@ -164,12 +167,12 @@ export default class SeasonFindHelper {
                 if (prequelId !== undefined && prequelId !== null) {
                     const series = new Series();
                     if (entry instanceof ListProviderLocalData) {
-                        const newProvider = new ListProviderLocalData(prequelId, entry.provider);
+                        const newProvider = new ListProviderLocalData(prequelId, ProviderList.getProviderInstanceByProviderName(entry.provider) as ListProvider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
                         newProvider.sequelIds.push(entry.id as number);
                         series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(newProvider));
                     } else if (entry instanceof InfoProviderLocalData) {
-                        const newProvider = new InfoProviderLocalData(prequelId, entry.provider);
+                        const newProvider = new InfoProviderLocalData(prequelId, ProviderList.getProviderInstanceByProviderName(entry.provider) as InfoProvider);
                         newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
                         newProvider.sequelIds.push(entry.id as number);
                         series.addProviderDatas(newProvider);

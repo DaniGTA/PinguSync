@@ -14,7 +14,11 @@ import ProviderLocalData from '../../../controller/provider-controller/provider-
 import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import logger from '../../../logger/logger';
 import MultiProviderResult from '../../provider/multi-provider-result';
+import AnimeNfoProvider from '../anime-nfo/anime-nfo-provider';
+import AnnProvider from '../ann/ann-provider';
 import MalProvider from '../mal/mal-provider';
+import SyoboiProvider from '../syoboi/syoboi-provider';
+import VNDBProvider from '../vndb/vndb-provider';
 import AniDBProvider from './anidb-provider';
 import { AniDBAnimeAnime, AniDBAnimeFullInfo, AttributeInfo, EpisodeElement, ExternalentityElement, FluffyExternalentity, ResourceElement } from './objects/anidbFullInfoXML';
 import { Anime } from './objects/anidbNameListXML';
@@ -207,55 +211,55 @@ export default class AniDBConverter {
         if (id) {
             switch (resource._attributes.type) {
                 case '1':
-                    subipld = new InfoProviderLocalData(id, 'ANN');
+                    subipld = new InfoProviderLocalData(id, AnnProvider);
                     break;
                 case '2':
                     subipld = new ListProviderLocalData(id, MalProvider);
                     break;
                 case '3':
-                    subipld = new InfoProviderLocalData(id, 'AnimeNfo');
+                    subipld = new InfoProviderLocalData(id, AnimeNfoProvider);
                     break;
                 case '6':
-                    subipld = new InfoProviderLocalData(id, 'WikiEnglish');
+                    // subipld = new InfoProviderLocalData(id, 'WikiEnglish');
                     break;
                 case '7':
-                    subipld = new InfoProviderLocalData(id, 'WikiJapanese');
+                    // subipld = new InfoProviderLocalData(id, 'WikiJapanese');
                     break;
                 case '8':
-                    subipld = new InfoProviderLocalData(id, 'Syoboi');
+                    subipld = new InfoProviderLocalData(id, SyoboiProvider);
                     break;
                 case '9':
-                    subipld = new InfoProviderLocalData(id, 'AllCinema');
+                    // subipld = new InfoProviderLocalData(id, 'AllCinema');
                     break;
                 case '10':
-                    subipld = new InfoProviderLocalData(id, 'Anison');
+                    // subipld = new InfoProviderLocalData(id, 'Anison');
                     break;
                 case '11':
-                    subipld = new InfoProviderLocalData(id, 'LainGrJp');
+                    // subipld = new InfoProviderLocalData(id, 'LainGrJp');
                     break;
                 case '14':
-                    subipld = new InfoProviderLocalData(id, 'VNDB');
+                    subipld = new InfoProviderLocalData(id, VNDBProvider);
                     break;
                 case '15':
-                    subipld = new InfoProviderLocalData(id, 'MaruMegane');
+                    // subipld = new InfoProviderLocalData(id, 'MaruMegane');
                     break;
                 case '17':
-                    subipld = new InfoProviderLocalData(id, 'TVAnimation');
+                    //subipld = new InfoProviderLocalData(id, 'TVAnimation');
                     break;
                 case '19':
-                    subipld = new InfoProviderLocalData(id, 'WikiKorean');
+                    //subipld = new InfoProviderLocalData(id, 'WikiKorean');
                     break;
                 case '20':
-                    subipld = new InfoProviderLocalData(id, 'WikiChinese');
+                    //subipld = new InfoProviderLocalData(id, 'WikiChinese');
                     break;
                 case '23':
-                    subipld = new InfoProviderLocalData(id, 'twitter');
+                    //subipld = new InfoProviderLocalData(id, 'twitter');
                     break;
                 case '28':
-                    subipld = new InfoProviderLocalData(id, 'crunchyroll');
+                    // subipld = new InfoProviderLocalData(id, CrunchyrollProvider);
                     break;
                 case '32':
-                    subipld = new InfoProviderLocalData(id, 'amazon');
+                    //subipld = new InfoProviderLocalData(id, 'amazon');
                     break;
             }
 

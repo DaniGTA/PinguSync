@@ -20,16 +20,14 @@ export default class TestInfoProvider extends InfoProvider {
 
     public version = 1;
     public hasUniqueIdForSeasons = false;
-    public providerName = '';
     public hasOAuthCode = true;
     public loggedIn: boolean;
     // tslint:disable-next-line: no-object-literal-type-assertion
     public userData: UserData = {} as UserData;
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.MOVIE, MediaType.SPECIAL, MediaType.UNKOWN];
 
-    constructor(providerName: string, loggedIn = true, hasUniqueIdForSeasons = false) {
+    constructor(loggedIn = true, hasUniqueIdForSeasons = false) {
         super();
-        this.providerName = providerName;
         this.loggedIn = loggedIn;
         this.hasUniqueIdForSeasons = hasUniqueIdForSeasons;
     }

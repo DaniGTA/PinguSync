@@ -8,6 +8,9 @@ import { InfoProviderLocalData } from '../../../src/backend/controller/provider-
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
+import TestInfoProvider from './testClass/testInfoProvider';
+import TestListProvider from './testClass/testListProvider';
+import TestListProvider2 from './testClass/testListProvider2';
 
 describe('Series | Basic', () => {
     beforeEach(() => {
@@ -23,9 +26,9 @@ describe('Series | Basic', () => {
 
     test('should all episodes (1/3)', () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData(1, 'TestA');
+        const providerA = new ListProviderLocalData(1, TestListProvider);
         providerA.episodes = 10;
-        const providerB = new ListProviderLocalData(1, 'TestB');
+        const providerB = new ListProviderLocalData(1, TestListProvider2);
         providerB.episodes = 11;
         series.addProviderDatas(providerA, providerB);
         const allEpisodes = series.getAllEpisodes();
@@ -37,9 +40,9 @@ describe('Series | Basic', () => {
 
     test('should all episodes (2/3)', () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData(1, 'A');
+        const providerA = new ListProviderLocalData(1, TestListProvider);
         providerA.episodes = 10;
-        const providerB = new ListProviderLocalData(1, 'B');
+        const providerB = new ListProviderLocalData(1, TestListProvider2);
         providerB.episodes = 11;
         series.addProviderDatas(providerA, providerB);
         expect(series.getAllEpisodes()).toStrictEqual([10, 11]);
@@ -55,9 +58,9 @@ describe('Series | Basic', () => {
 
     test('should max episode (1/3)', () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData(1, 'TestA');
+        const providerA = new ListProviderLocalData(1, TestListProvider);
         providerA.episodes = 12;
-        const providerB = new ListProviderLocalData(1, 'TestB');
+        const providerB = new ListProviderLocalData(1, TestListProvider2);
         providerB.episodes = 11;
         series.addProviderDatas(providerA, providerB);
         expect(series.getMaxEpisode()).toBe(12);
@@ -66,9 +69,9 @@ describe('Series | Basic', () => {
 
     test('should max episode (2/3)', () => {
         const series = new Series();
-        const providerA = new ListProviderLocalData(1, 'TestA');
+        const providerA = new ListProviderLocalData(1, TestListProvider);
         providerA.episodes = 12;
-        const providerB = new ListProviderLocalData(1, 'TestB');
+        const providerB = new ListProviderLocalData(1, TestListProvider2);
         providerB.episodes = 24;
         series.addProviderDatas(providerA, providerB);
         expect(series.getMaxEpisode()).toBe(24);
@@ -104,8 +107,8 @@ describe('Series | Basic', () => {
 
     test('should replace existing info provider binding', () => {
         const series = new Series();
-        const provider1 = new InfoProviderLocalData(1, 'test');
-        const provider2 = new InfoProviderLocalData(2, 'test');
+        const provider1 = new InfoProviderLocalData(1, TestInfoProvider);
+        const provider2 = new InfoProviderLocalData(2, TestInfoProvider);
 
         series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1, new Season([3])));
         series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2, new Season([3])));
@@ -115,7 +118,7 @@ describe('Series | Basic', () => {
 
     test('should extract season number from series', async () => {
         const series = new Series();
-        const provider = new ListProviderLocalData(-1, '');
+        const provider = new ListProviderLocalData(-1, TestListProvider);
         provider.addSeriesName(new Name('title-2nd-season', 'slug', NameType.SLUG));
         series.addProviderDatas(provider);
         const season = series.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS);

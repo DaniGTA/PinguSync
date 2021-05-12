@@ -94,8 +94,8 @@ describe('Provider Helper Test', () => {
     test('It should get all list provider that need a update', async () => {
         // Series A
         const series = new Series();
-        series.addProviderDatas(new InfoProviderLocalData(1, 'test1'));
-        series.addProviderDatas(new InfoProviderLocalData(1, 'test2'));
+        series.addProviderDatas(new InfoProviderLocalData(1, TestInfoProvider1));
+        series.addProviderDatas(new InfoProviderLocalData(1, TestInfoProvider2));
         // tslint:disable-next-line: no-string-literal
         const result = await ProviderInfoHelper['getInfoProviderThatNeedUpdates'](series.getAllProviderLocalDatas());
         expect(result.length).toBe(2);

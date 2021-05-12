@@ -21,7 +21,6 @@ export default class AniDBProvider extends InfoProvider {
     public static instance: AniDBProvider;
 
     public requestRateLimitInMs = 3000;
-    public providerName = 'anidb';
     public version = 1;
     public isOffline = true;
     public hasUniqueIdForSeasons = true;

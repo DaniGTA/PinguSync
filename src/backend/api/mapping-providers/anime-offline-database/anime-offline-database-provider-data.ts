@@ -33,10 +33,10 @@ export default class AnimeOfflineDatabaseProviderData {
 
     private loadDatabase(): AnimeOfflineDatabase | null {
         logger.info('[AnimeOfflineDatabaseProviderData] Loading database from file');
-        const path = this.getPath();
-        if (existsSync(path)) {
+        const filePath = this.getPath();
+        if (existsSync(filePath)) {
             try {
-                const loadedString = readFileSync(path, 'UTF-8');
+                const loadedString = readFileSync(filePath, 'UTF-8');
                 const loadedData = JSON.parse(loadedString) as this;
                 Object.assign(this, loadedData);
                 return loadedData.database;

@@ -1,9 +1,12 @@
+import InfoProvider from '../../../../api/provider/info-provider';
+import ListProvider from '../../../../api/provider/list-provider';
 import MainListAdder from '../../../../controller/main-list-manager/main-list-adder';
 import Season from '../../../../controller/objects/meta/season';
 import Series from '../../../../controller/objects/series';
 import { InfoProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../../../logger/logger';
 import EpisodeRelationAnalyser from '../../../episode-helper/episode-relation-analyser';
 import ProviderLocalDataWithSeasonInfo from '../../provider-info-downloader/provider-data-with-season-info';
@@ -59,9 +62,9 @@ export default class SeasonAwarenessSequelPathController {
         const sequels = [];
         for (const sequelId of provider.sequelIds) {
             if (provider.instanceName === 'InfoProviderLocalData') {
-                sequels.push(new InfoProviderLocalData(sequelId, providerName));
+                sequels.push(new InfoProviderLocalData(sequelId, ProviderList.getProviderInstanceByProviderName(providerName) as InfoProvider));
             } else if (provider.instanceName === 'ListProviderLocalData') {
-                sequels.push(new ListProviderLocalData(sequelId, providerName));
+                sequels.push(new ListProviderLocalData(sequelId, ProviderList.getProviderInstanceByProviderName(providerName) as ListProvider));
             }
         }
         return sequels;

@@ -6,14 +6,15 @@ import { ListProviderLocalData } from '../../../src/backend/controller/provider-
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import ProviderComperator from '../../../src/backend/helpFunctions/comperators/provider-comperator';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
+import TestListProvider from '../../controller/objects/testClass/testListProvider';
 
 describe('Provider Comperator | Testrun', () => {
     test('should be absolute false (same provider and wrong id)', () => {
         const instance = new ProviderComperator(new Series(), new Series());
 
-        const providerA = new ListProviderLocalData(2, 'test');
+        const providerA = new ListProviderLocalData(2, TestListProvider);
         providerA.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
-        const providerB = new ListProviderLocalData(1, 'test');
+        const providerB = new ListProviderLocalData(1, TestListProvider);
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
         // tslint:disable-next-line: no-string-literal
         const result = instance['compareProviderAWithProviderB'](providerA, providerB);
@@ -23,9 +24,9 @@ describe('Provider Comperator | Testrun', () => {
     test('should be absolute true (same provider and same id)', () => {
         const instance = new ProviderComperator(new Series(), new Series());
 
-        const providerA = new ListProviderLocalData(2, 'test');
+        const providerA = new ListProviderLocalData(2, TestListProvider);
         providerA.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
-        const providerB = new ListProviderLocalData(2, 'test');
+        const providerB = new ListProviderLocalData(2, TestListProvider);
         providerB.infoStatus = ProviderInfoStatus.ADVANCED_BASIC_INFO;
         // tslint:disable-next-line: no-string-literal
         const result = instance['compareProviderAWithProviderB'](providerA, providerB);
@@ -80,7 +81,7 @@ describe('Provider Comperator | Testrun', () => {
         const s2 = new Series();
         const provider2A = new ListProviderLocalData(2, TraktProvider);
         provider2A.infoStatus = ProviderInfoStatus.BASIC_INFO;
-        const provider2B = new ListProviderLocalData(2, 'test');
+        const provider2B = new ListProviderLocalData(2, TestListProvider);
         provider2B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
         s2.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider2A, new Season(1)));
@@ -89,7 +90,7 @@ describe('Provider Comperator | Testrun', () => {
         const s1 = new Series();
         const provider1A = new ListProviderLocalData(2, TraktProvider);
         provider1A.infoStatus = ProviderInfoStatus.BASIC_INFO;
-        const provider1B = new ListProviderLocalData(1, 'test');
+        const provider1B = new ListProviderLocalData(1, TestListProvider);
         provider1B.infoStatus = ProviderInfoStatus.BASIC_INFO;
 
         s1.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider1A, new Season(1)));

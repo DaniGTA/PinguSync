@@ -1,28 +1,29 @@
-import ExternalInformationProvider from '../../../api/provider/external-information-provider';
-import MultiProviderResult from '../../../api/provider/multi-provider-result';
-import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request';
-import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import DownloadSettings from './download-settings';
-import logger from '../../../logger/logger';
+import ExternalInformationProvider from '../../../api/provider/external-information-provider'
+import MultiProviderResult from '../../../api/provider/multi-provider-result'
+import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request'
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import DownloadSettings from './download-settings'
+import logger from '../../../logger/logger'
 
 export default class DownloadProviderLocalDataWithId {
-    public static async download(provider: ExternalInformationProvider, providerLocalData: ProviderLocalData): Promise<MultiProviderResult> {
+    public static async download(
+        provider: ExternalInformationProvider,
+        providerLocalData: ProviderLocalData
+    ): Promise<MultiProviderResult> {
         if (provider.requireInternetAccessForGetFullById) {
-            await provider.waitUntilItCanPerfomNextRequest();
+            await provider.waitUntilItCanPerfomNextRequest()
         }
         try {
-            return await Promise.race(
-                [
-                    DownloadSettings.requestTimoutPromise<MultiProviderResult>(),
-                    provider.getFullInfoById(providerLocalData),
-                ]);
+            return await Promise.race([
+                DownloadSettings.requestTimoutPromise<MultiProviderResult>(),
+                provider.getFullInfoById(providerLocalData),
+            ])
         } catch (err) {
             if (isFailedRequestError(err)) {
-                throw err;
+                throw err
             }
-            logger.error(err + ' | ' + provider.providerName);
-            throw FailedRequestError.ProviderNoResult;
+            logger.error(err + ' | ' + provider.providerName)
+            throw FailedRequestError.ProviderNoResult
         }
     }
 }
-

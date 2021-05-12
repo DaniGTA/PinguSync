@@ -27,6 +27,8 @@ import { Show as WatchedShow, WatchedInfo } from './objects/watchedInfo';
 import TraktProvider from './trakt-provider';
 import { ListType } from '../../../controller/settings/models/provider/list-types';
 import WatchHistory from '../../../controller/objects/meta/episode/episode-watch-history';
+import ImdbProvider from '../imdb/imdb-provider';
+import TmdbProvider from '../tmdb/tmdb-provider';
 
 export default new class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
@@ -138,10 +140,10 @@ export default new class TraktConverter {
             multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider.Instance));
         }
         if (fullShow.ids.imdb) {
-            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.imdb, 'imdb'));
+            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.imdb, ImdbProvider));
         }
         if (fullShow.ids.tmdb) {
-            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.tmdb, 'tmdb'));
+            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.tmdb, TmdbProvider));
         }
 
         return new MultiProviderResult(provider, ...multiProviderResult);

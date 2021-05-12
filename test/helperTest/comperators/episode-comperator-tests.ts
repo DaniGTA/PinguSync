@@ -7,12 +7,13 @@ import ProviderList from '../../../src/backend/controller/provider-controller/pr
 import { AbsoluteResult } from '../../../src/backend/helpFunctions/comperators/comperator-results.ts/comperator-result';
 import EpisodeComperator from '../../../src/backend/helpFunctions/comperators/episode-comperator';
 import TestListProvider from '../../controller/objects/testClass/testListProvider';
+import TestListProvider2 from '../../controller/objects/testClass/testListProvider2';
 
 // tslint:disable: no-string-literal
 describe('Episode comperator | Full test', () => {
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test'), new TestListProvider('')];
+        ProviderList['loadedListProvider'] = [new TestListProvider(), new TestListProvider2()];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
         // tslint:disable-next-line: no-string-literal

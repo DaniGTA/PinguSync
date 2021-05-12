@@ -1,27 +1,36 @@
 <template>
     <div class="provider-image-block">
-        <img class="provider-image-block-image" :src="require('@/assets/'+provider.providerName.toLowerCase() + '-logo.png')" :width="size" :height="size" />
-        <q-skeleton class="provider-image-block-image"  v-if="!provider"/>
-        <div class="provider-name-block-name" v-if="showText">{{provider.providerName}}</div>
+        <img
+            class="provider-image-block-image"
+            :src="require('@/assets/' + getName().toLowerCase() + '-logo.png')"
+            :width="size"
+            :height="size"
+        />
+        <q-skeleton class="provider-image-block-image" v-if="!provider" />
+        <div class="provider-name-block-name" v-if="showText">{{ getName() }}</div>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
-import { ListProviderInterface } from '../../controller/model/list-provider-interface';
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import { Prop } from 'vue-property-decorator'
+import { ListProviderInterface } from '../../controller/model/list-provider-interface'
 
 @Component
 export default class ProviderImageBlock extends Vue {
-    @Prop({required: true})
-    provider!: ListProviderInterface;
+    @Prop({ required: true })
+    provider!: ListProviderInterface
 
-    @Prop({default: 50})
-    size!: number;
+    @Prop({ default: 50 })
+    size!: number
 
-    @Prop({default: true})
-    showText!: boolean;
+    @Prop({ default: true })
+    showText!: boolean
+
+    getName(): string {
+        return this.provider?.providerName ?? ''
+    }
 }
 </script>
 
@@ -41,7 +50,7 @@ export default class ProviderImageBlock extends Vue {
     grid-template-columns: auto;
     grid-template-rows: auto auto;
     gap: 1px 1px;
-    grid-template-areas: "Image" "Name";
+    grid-template-areas: 'Image' 'Name';
     width: 100%;
     place-content: center;
 }

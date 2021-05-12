@@ -1,4 +1,3 @@
-import ExternalProvider from '../../../api/provider/external-provider';
 import ListProvider from '../../../api/provider/list-provider';
 import InfoProvider from '../../../api/provider/info-provider';
 import ExternalMappingProvider from '../../../api/provider/external-mapping-provider';
@@ -13,13 +12,9 @@ import OMDbProvider from '../../../api/information-providers/omdb/omdb-provider'
 import TVDBProvider from '../../../api/information-providers/tvdb/tvdb-provider';
 import AniDBProvider from '../../../api/information-providers/anidb/anidb-provider';
 import AnimeOfflineDatabaseProvider from '../../../api/mapping-providers/anime-offline-database/anime-offline-database-provider';
-import PinguSyncMappingProvider from '../../../api/mapping-providers/pingu-sync-mapping-provider/pingu-sync-mapping-provider';
 
 
 export default class ProviderLoader {
-
-    protected static providerNameList: Map<(new () => ExternalProvider), string> = new Map();
-
     protected static loadedListProvider: ListProvider[] | undefined;
     protected static loadedInfoProvider: InfoProvider[] | undefined;
     protected static loadedMappingProvider: ExternalMappingProvider[] | undefined;
@@ -31,7 +26,7 @@ export default class ProviderLoader {
      */
     protected listOfListProviders: Array<(new () => ListProvider)> = [KitsuProvider, AniListProvider, TraktProvider, SimklProvider, MalProvider];
     protected listOfInfoProviders: Array<(new () => InfoProvider)> = [TVMazeProvider, OMDbProvider, TVDBProvider, AniDBProvider];
-    protected listOfMappingProviders: Array<(new () => ExternalMappingProvider)> = [AnimeOfflineDatabaseProvider, PinguSyncMappingProvider];
+    protected listOfMappingProviders: Array<(new () => ExternalMappingProvider)> = [AnimeOfflineDatabaseProvider];
 
     protected static loadListProviderList(): ListProvider[] {
         return this.loadProviderList(new ProviderLoader().listOfListProviders);
@@ -49,9 +44,6 @@ export default class ProviderLoader {
         const loadedList = [];
         for (const provider of listOfProviders) {
             try {
-                const providerInstance = new provider();
-                const providerName = (providerInstance as unknown as ExternalProvider).providerName;
-                this.providerNameList.set(provider as unknown as (new () => ExternalProvider), providerName);
                 loadedList.push(new provider());
             } catch (err) {
                 logger.error('FAILED TO LOAD PROVIDER: ' + provider);

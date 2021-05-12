@@ -17,7 +17,6 @@ export default class OMDbProvider extends InfoProvider {
     public static instance: OMDbProvider;
     public isOffline = false;
     public hasOAuthCode = false;
-    public providerName = 'omdb';
     public hasUniqueIdForSeasons = false;
     public supportedMediaTypes: MediaType[] = [MediaType.MOVIE, MediaType.SERIES];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];

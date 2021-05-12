@@ -7,10 +7,11 @@ import SyncEpisodes from '../../../src/backend/controller/sync-controller/sync-e
 import TestListProvider from '../objects/testClass/testListProvider';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import ListProvider from '../../../src/backend/api/provider/list-provider';
+import TestListProvider2 from '../objects/testClass/testListProvider2';
 
 describe('sync episode test', () => {
     beforeAll(() => {
-        ProviderList['loadedListProvider'] = [new TestListProvider('A'), new TestListProvider('B')];
+        ProviderList['loadedListProvider'] = [new TestListProvider(), new TestListProvider2()];
     });
     describe('test series with provider', () => {
         const series: Series = new Series();
@@ -21,7 +22,7 @@ describe('sync episode test', () => {
             const loadedList = ProviderList['loadedListProvider'] ?? [];
             providerB = loadedList[1];
             providerA = loadedList[0];
-            const provider1 = new ListProviderLocalData(1, 'A');
+            const provider1 = new ListProviderLocalData(1, TestListProvider);
 
             ep1.watchHistory.push(new WatchHistory());
             provider1.addDetailedEpisodeInfos(ep1);
@@ -30,7 +31,7 @@ describe('sync episode test', () => {
 
             provider1.addDetailedEpisodeInfos(ep2);
 
-            const provider2 = new ListProviderLocalData(1, 'B');
+            const provider2 = new ListProviderLocalData(1, TestListProvider2);
             provider2.addDetailedEpisodeInfos(new Episode(1));
             provider2.addDetailedEpisodeInfos(new Episode(2));
 

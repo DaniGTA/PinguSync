@@ -19,7 +19,6 @@ export default class TVDBProvider extends InfoProvider {
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.SERIES, MediaType.SPECIAL];
     public supportedOtherProvider: Array<(new () => ExternalInformationProvider)> = [];
     public potentialSubProviders: Array<(new () => ExternalInformationProvider)> = [];
-    public providerName = 'tvdb';
     public isOffline = false;
     public hasUniqueIdForSeasons = false;
     public version = 1;

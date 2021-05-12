@@ -2,13 +2,14 @@ import MainListPackageManager from '../../../src/backend/controller/main-list-ma
 import Series from '../../../src/backend/controller/objects/series';
 import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
 import TestListProvider from '../objects/testClass/testListProvider';
+import TestListProvider2 from '../objects/testClass/testListProvider2';
 
 
 
 describe('MainListPackageManager', () => {
     beforeEach(() => {
         // tslint:disable-next-line: no-string-literal
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test'), new TestListProvider('Test2')];
+        ProviderList['loadedListProvider'] = [new TestListProvider(), new TestListProvider2()];
         // tslint:disable-next-line: no-string-literal
         ProviderList['loadedInfoProvider'] = [];
     });

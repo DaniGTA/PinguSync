@@ -18,12 +18,15 @@ import EpisodeRatedEqualityContainer from '../../../src/backend/helpFunctions/ep
 import listHelper from '../../../src/backend/helpFunctions/list-helper';
 import ProviderLocalDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import sortHelper from '../../../src/backend/helpFunctions/sort-helper';
+import TestInfoProvider from '../../controller/objects/testClass/testInfoProvider';
 import TestListProvider from '../../controller/objects/testClass/testListProvider';
+import TestListProvider2 from '../../controller/objects/testClass/testListProvider2';
+import TestListProvider3 from '../../controller/objects/testClass/testListProvider3';
 
 // tslint:disable: no-string-literal
 describe('Episode mapping | Mapping Only', () => {
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestListProvider('Test'), new TestListProvider('')];
+        ProviderList['loadedListProvider'] = [new TestListProvider(), new TestListProvider2()];
         ProviderList['loadedInfoProvider'] = [];
         MainListManager['mainList'] = [];
         ProviderDataListManager['providerDataList'] = [];
@@ -33,7 +36,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // A Site
 
-        const aProvider = new InfoProviderLocalData('1', 'testA');
+        const aProvider = new InfoProviderLocalData('1', TestInfoProvider);
         aProvider.addDetailedEpisodeInfos(new Episode(1));
         aProvider.addDetailedEpisodeInfos(new Episode(2));
         aProvider.addDetailedEpisodeInfos(new Episode(3));
@@ -42,7 +45,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // B Site
 
-        const bProvider = new ListProviderLocalData(1, 'testB');
+        const bProvider = new ListProviderLocalData(1, TestListProvider);
         bProvider.addDetailedEpisodeInfos(new Episode(1, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
@@ -90,7 +93,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // A Site
 
-        const aProvider = new InfoProviderLocalData('1', 'testA');
+        const aProvider = new InfoProviderLocalData('1', TestInfoProvider);
         aProvider.addDetailedEpisodeInfos(new Episode(1));
         aProvider.addDetailedEpisodeInfos(new Episode(2));
         aProvider.addDetailedEpisodeInfos(new Episode(3));
@@ -99,7 +102,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // B Site
 
-        const bProvider = new ListProviderLocalData('1', 'testB');
+        const bProvider = new ListProviderLocalData('1', TestListProvider);
         bProvider.addDetailedEpisodeInfos(new Episode(1, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
@@ -109,7 +112,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // C Site
 
-        const cProvider = new ListProviderLocalData('1', 'testC');
+        const cProvider = new ListProviderLocalData('1', TestListProvider3);
         cProvider.addDetailedEpisodeInfos(new Episode(1, new Season([1])));
         cProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         cProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
@@ -159,21 +162,21 @@ describe('Episode mapping | Mapping Only', () => {
 
             // A Site
 
-            const aProvider = new InfoProviderLocalData('1', 'testA');
+            const aProvider = new InfoProviderLocalData('1', TestInfoProvider);
             aProvider.episodes = 250;
 
             aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
             // B Site
 
-            const bProvider = new ListProviderLocalData('1', 'testB');
+            const bProvider = new ListProviderLocalData('1', TestListProvider);
             bProvider.episodes = 250;
 
             aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(bProvider, new Season([1])));
 
             // C Site
 
-            const cProvider = new ListProviderLocalData('1', 'testC');
+            const cProvider = new ListProviderLocalData('1', TestListProvider2);
             cProvider.episodes = 250;
 
             aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(cProvider, new Season([1])));
@@ -197,14 +200,14 @@ describe('Episode mapping | Mapping Only', () => {
 
         // A Site
 
-        const aProvider = new InfoProviderLocalData('1', 'testA');
+        const aProvider = new InfoProviderLocalData('1', TestInfoProvider);
         aProvider.episodes = 3;
 
         aSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(aProvider, new Season([1])));
 
         // B Site
 
-        const bProvider = new ListProviderLocalData('1', 'testB');
+        const bProvider = new ListProviderLocalData('1', TestListProvider);
         bProvider.addDetailedEpisodeInfos(new Episode(1));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
@@ -230,7 +233,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // A Site
 
-        const aProvider = new InfoProviderLocalData('1', 'testA');
+        const aProvider = new InfoProviderLocalData('1', TestInfoProvider);
         aProvider.episodes = 3;
         aProvider.sequelIds.push(2);
 
@@ -238,7 +241,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // B Site
 
-        const bProvider = new ListProviderLocalData('1', 'testB');
+        const bProvider = new ListProviderLocalData('1', TestListProvider);
         bProvider.addDetailedEpisodeInfos(new Episode(1));
         bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
         bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
@@ -251,7 +254,7 @@ describe('Episode mapping | Mapping Only', () => {
 
         // Sequel
 
-        const cProvider = new InfoProviderLocalData(2, 'testA');
+        const cProvider = new InfoProviderLocalData(2, TestInfoProvider);
         cProvider.episodes = 3;
 
         sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(cProvider, new Season([2])));
@@ -285,7 +288,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             // A Site
 
-            const aProvider = new InfoProviderLocalData('1', 'testA');
+            const aProvider = new InfoProviderLocalData('1', TestInfoProvider);
             aProvider.episodes = 3;
             aProvider.sequelIds.push(2);
 
@@ -293,7 +296,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             // B Site
 
-            const bProvider = new ListProviderLocalData('1', 'testB');
+            const bProvider = new ListProviderLocalData('1', TestListProvider);
             bProvider.addDetailedEpisodeInfos(new Episode(1));
             bProvider.addDetailedEpisodeInfos(new Episode(2, new Season([1])));
             bProvider.addDetailedEpisodeInfos(new Episode(3, new Season([1])));
@@ -308,7 +311,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             // Sequel
 
-            const cProvider = new InfoProviderLocalData(2, 'testA');
+            const cProvider = new InfoProviderLocalData(2, TestInfoProvider);
             cProvider.episodes = 3;
             cProvider.sequelIds.push(3);
             sequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(cProvider, new Season([2])));
@@ -317,7 +320,7 @@ describe('Episode mapping | Mapping Only', () => {
 
             // Sequel 2
 
-            const dProvider = new InfoProviderLocalData(3, 'testA');
+            const dProvider = new InfoProviderLocalData(3, TestInfoProvider);
             dProvider.episodes = 3;
 
             sequelOfSequelOfaSeries.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(dProvider, new Season([3])));

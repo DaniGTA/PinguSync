@@ -1,7 +1,10 @@
+import InfoProvider from '../../../../api/provider/info-provider';
+import ListProvider from '../../../../api/provider/list-provider';
 import Season from '../../../../controller/objects/meta/season';
 import { InfoProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
 import ProviderLocalData from '../../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
+import ProviderList from '../../../../controller/provider-controller/provider-manager/provider-list';
 import logger from '../../../../logger/logger';
 import SeasonComperator from '../../../comperators/season-comperator';
 import EpisodeRelationAnalyser from '../../../episode-helper/episode-relation-analyser';
@@ -47,9 +50,9 @@ export default class SeasonAwarenessPrequelPathController {
         const prequels = [];
         for (const prequelId of provider.prequelIds) {
             if (provider.instanceName === 'InfoProviderLocalData') {
-                prequels.push(new InfoProviderLocalData(prequelId, providerName));
+                prequels.push(new InfoProviderLocalData(prequelId, ProviderList.getProviderInstanceByProviderName(providerName) as InfoProvider));
             } else if (provider.instanceName === 'ListProviderLocalData') {
-                prequels.push(new ListProviderLocalData(prequelId, providerName));
+                prequels.push(new ListProviderLocalData(prequelId, ProviderList.getProviderInstanceByProviderName(providerName) as ListProvider));
             }
         }
         return prequels;

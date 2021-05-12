@@ -14,11 +14,12 @@ import { InfoProviderLocalData } from '../../../controller/provider-controller/p
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
 import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
-import { StreamingProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/streaming-provider-local-data';
 import ProviderLocalDataWithSeasonInfo from '../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import logger from '../../../logger/logger';
 import MultiProviderResult from '../../provider/multi-provider-result';
 import AniDBProvider from '../anidb/anidb-provider';
+import AnnProvider from '../ann/ann-provider';
+import ImdbProvider from '../imdb/imdb-provider';
 import MalProvider from '../mal/mal-provider';
 import TVDBProvider from '../tvdb/tvdb-provider';
 import { ISimklEpisodeInfo } from './objects/simklEpisodeInfo';
@@ -127,13 +128,13 @@ export default class SimklConverter {
     private async convertSerieIdsToProviders(serieIds: ISeriesIDS): Promise<ProviderLocalData[]> {
         const providers: ProviderLocalData[] = [];
         if (serieIds.imdb) {
-            providers.push(new InfoProviderLocalData(serieIds.imdb, 'imdb'));
+            providers.push(new InfoProviderLocalData(serieIds.imdb, ImdbProvider));
         }
         if (serieIds.tvdb) {
             providers.push(new InfoProviderLocalData(serieIds.tvdb, TVDBProvider));
         }
         if (serieIds.zap2it) {
-            providers.push(new InfoProviderLocalData(serieIds.zap2it, 'zap2it'));
+            //providers.push(new InfoProviderLocalData(serieIds.zap2it, 'zap2it'));
         }
 
         return providers;
@@ -204,28 +205,28 @@ export default class SimklConverter {
     private convertAnimeIdsToProviders(animeIds: ISimklFullInfoIDS): ProviderLocalDataWithSeasonInfo[] {
         const providers: ProviderLocalData[] = [];
         if (animeIds.allcin) {
-            providers.push(new InfoProviderLocalData(animeIds.allcin, 'allcin'));
+            //providers.push(new InfoProviderLocalData(animeIds.allcin, 'allcin'));
         }
         if (animeIds.anfo) {
-            providers.push(new InfoProviderLocalData(animeIds.anfo, 'anfo'));
+            //providers.push(new InfoProviderLocalData(animeIds.anfo, 'anfo'));
         }
         if (animeIds.anidb) {
             providers.push(new InfoProviderLocalData(animeIds.anidb, AniDBProvider));
         }
         if (animeIds.ann) {
-            providers.push(new InfoProviderLocalData(animeIds.ann, 'ann'));
+            providers.push(new InfoProviderLocalData(animeIds.ann, AnnProvider));
         }
         if (animeIds.mal) {
             providers.push(new ListProviderLocalData(animeIds.mal, MalProvider));
         }
         if (animeIds.crunchyroll) {
-            providers.push(new StreamingProviderLocalData(animeIds.crunchyroll, 'crunchyroll'));
+            //providers.push(new StreamingProviderLocalData(animeIds.crunchyroll, CrunchyrollProvider));
         }
         if (animeIds.imdb) {
-            providers.push(new InfoProviderLocalData(animeIds.imdb, 'imdb'));
+            providers.push(new InfoProviderLocalData(animeIds.imdb, ImdbProvider));
         }
         if (animeIds.wikien) {
-            providers.push(new InfoProviderLocalData(animeIds.wikien, 'wikien'));
+            //providers.push(new InfoProviderLocalData(animeIds.wikien, 'wikien'));
         }
         const result: ProviderLocalDataWithSeasonInfo[] = [];
         for (const iterator of providers) {

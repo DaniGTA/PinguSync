@@ -4,6 +4,8 @@ import ProviderDataListManager from '../../../src/backend/controller/provider-co
 import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import { ListType } from '../../../src/backend/controller/settings/models/provider/list-types';
+import TestListProvider from '../../controller/objects/testClass/testListProvider';
+import TestListProvider2 from '../../controller/objects/testClass/testListProvider2';
 
 // tslint:disable: no-string-literal
 describe('Provider data list manager tests', () => {
@@ -12,10 +14,10 @@ describe('Provider data list manager tests', () => {
     });
 
     test('It should update provider data in list', () => {
-        const oldProvider = new ListProviderLocalData(1, 'test');
+        const oldProvider = new ListProviderLocalData(1, TestListProvider);
         ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
 
-        const newProvider = new ListProviderLocalData(1, 'test');
+        const newProvider = new ListProviderLocalData(1, TestListProvider);
         newProvider.addDetailedEpisodeInfos(new Episode(1));
         newProvider.watchStatus = ListType.COMPLETED;
         newProvider.infoStatus = ProviderInfoStatus.BASIC_INFO;
@@ -28,10 +30,10 @@ describe('Provider data list manager tests', () => {
     });
 
     test('It should not downgrade existing data', () => {
-        const oldProvider = new ListProviderLocalData(1, 'test');
+        const oldProvider = new ListProviderLocalData(1, TestListProvider);
         ProviderDataListManager.addProviderLocalDataToMainList(oldProvider);
 
-        const newProvider = new ListProviderLocalData(1, 'test');
+        const newProvider = new ListProviderLocalData(1, TestListProvider);
         newProvider.addDetailedEpisodeInfos(new Episode(1));
         newProvider.watchStatus = ListType.COMPLETED;
         newProvider.infoStatus = ProviderInfoStatus.BASIC_INFO;

@@ -7,6 +7,8 @@ import { ProviderInfoStatus } from '../../../src/backend/controller/provider-con
 import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
 import ProviderDataWithSeasonInfo from '../../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info';
 import { SeasonSearchMode } from '../../../src/backend/helpFunctions/season-helper/season-search-mode';
+import TestListProvider from './testClass/testListProvider';
+import TestListProvider2 from './testClass/testListProvider2';
 
 
 describe('Series | Season', () => {
@@ -17,7 +19,7 @@ describe('Series | Season', () => {
     });
     test('should return season 1', async () => {
         const series = new Series();
-        const provider = new ListProviderLocalData(1, 'TestA');
+        const provider = new ListProviderLocalData(1, TestListProvider);
         series.addProviderDatasWithSeasonInfos(new ProviderDataWithSeasonInfo(provider, new Season([1])));
         expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(1);
         return;
@@ -25,7 +27,7 @@ describe('Series | Season', () => {
 
     test('should return season 2', async () => {
         const series = new Series();
-        const provider = new ListProviderLocalData(1, 'TestA');
+        const provider = new ListProviderLocalData(1, TestListProvider);
         provider.addSeriesName(new Name('Test 3', 'en'));
         series.addListProvider(provider);
         expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(3);
@@ -34,7 +36,7 @@ describe('Series | Season', () => {
 
     test('should return season 3', async () => {
         const series = new Series();
-        const provider = new ListProviderLocalData(1, 'TestA');
+        const provider = new ListProviderLocalData(1, TestListProvider);
         provider.addSeriesName(new Name('Test III', 'en'));
         series.addListProvider(provider);
         expect((await series.getSeason()).getSingleSeasonNumberAsNumber()).toBe(3);
@@ -72,13 +74,13 @@ describe('Series | Season', () => {
 
     test('should return season by name 6', async () => {
         const series = new Series();
-        const lpld = new ListProviderLocalData(1, 'test2');
+        const lpld = new ListProviderLocalData(1, TestListProvider2);
         lpld.prequelIds.push(6);
         lpld.addSeriesName(new Name('Test III', 'en'));
         series.addListProvider(lpld);
 
         const series2 = new Series();
-        const lpld2 = new ListProviderLocalData(1, 'test');
+        const lpld2 = new ListProviderLocalData(1, TestListProvider);
         lpld2.prequelIds.push(5);
         lpld2.sequelIds.push(6);
         lpld2.addSeriesName(new Name('Test II', 'en'));
@@ -90,13 +92,13 @@ describe('Series | Season', () => {
 
     test('should return season 7', async () => {
         const series = new Series();
-        const lpld = new ListProviderLocalData(6, 'Test');
+        const lpld = new ListProviderLocalData(6, TestListProvider);
         lpld.prequelIds.push(5);
         lpld.addSeriesName(new Name('Test Cool', 'en'));
         series.addListProvider(lpld);
 
         const series2 = new Series();
-        const lpld2 = new ListProviderLocalData(5, 'Test');
+        const lpld2 = new ListProviderLocalData(5, TestListProvider);
         lpld2.sequelIds.push(6);
         lpld2.addSeriesName(new Name('Test Test', 'en'));
         series2.addListProvider(lpld2);

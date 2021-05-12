@@ -37,7 +37,6 @@ import ProviderLocalData from '../../../controller/provider-controller/provider-
 export default class AniListProvider extends ListProvider {
     private static instance: AniListProvider;
     public hasUniqueIdForSeasons = true;
-    public providerName = 'AniList';
     public version = 1;
     public hasOAuthLogin = true;
     public hasDefaultLogin = false;
