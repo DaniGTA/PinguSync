@@ -107,7 +107,10 @@ export default class DownloadProviderLocalDataWithoutId {
     }
 
     private async getProviderSeriesInfoBySeriesName(): Promise<MultiProviderResult | undefined> {
-        const names = this.getNamesSortedBySearchAbleScore(this.series)
+        let names = this.getNamesSortedBySearchAbleScore(this.series)
+        if (names.length === 0) {
+            names = this.series.getAllNamesUnique()
+        }
         return this.downloadProviderSeriesInfoBySeriesName(names)
     }
 
