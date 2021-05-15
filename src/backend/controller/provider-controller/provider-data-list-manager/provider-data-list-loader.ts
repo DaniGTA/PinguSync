@@ -1,39 +1,39 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
-import * as path from 'path';
-import InfoProvider from '../../../api/provider/info-provider';
-import ListProvider from '../../../api/provider/list-provider';
-import logger from '../../../logger/logger';
-import Episode from '../../objects/meta/episode/episode';
-import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../provider-manager/provider-list';
+import { existsSync, readFileSync, writeFileSync } from 'fs'
+import * as path from 'path'
+import InfoProvider from '../../../api/provider/info-provider'
+import ListProvider from '../../../api/provider/list-provider'
+import logger from '../../../logger/logger'
+import Episode from '../../objects/meta/episode/episode'
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data'
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data'
+import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data'
+import ProviderList from '../provider-manager/provider-list'
 export default class ProviderDataListLoader {
     /**
      * Load json data from file.
      * The json file contains all series that got added to the mainlist.
      */
     public static loadData(): ProviderLocalData[] {
-        logger.log('info', 'Load list file...');
+        logger.log('info', 'Load list file...')
         try {
             if (existsSync(this.getPath())) {
-                const dataPath = this.getPath();
-                const loadedString = readFileSync(dataPath, 'UTF-8');
-                const loadedData = JSON.parse(loadedString) as ProviderLocalData[];
-                logger.log('info', 'Items loaded: ' + loadedData.length);
+                const dataPath = this.getPath()
+                const loadedString = readFileSync(dataPath, { encoding: 'utf8' })
+                const loadedData = JSON.parse(loadedString) as ProviderLocalData[]
+                logger.log('info', 'Items loaded: ' + loadedData.length)
                 for (let index = 0; index < loadedData.length; index++) {
-                    const loadedDataEntry = loadedData[index];
-                    loadedData[index] = this.createProviderLocalDataInstance(loadedDataEntry);
+                    const loadedDataEntry = loadedData[index]
+                    loadedData[index] = this.createProviderLocalDataInstance(loadedDataEntry)
                 }
-                return loadedData;
+                return loadedData
             } else {
-                logger.error('File not exist');
+                logger.error('File not exist')
             }
         } catch (err) {
-            logger.error(err);
-            return [];
+            logger.error(err)
+            return []
         }
-        return [];
+        return []
     }
 
     /**
@@ -41,33 +41,48 @@ export default class ProviderDataListLoader {
      * @param list the main list.
      */
     public static saveData(list: ProviderLocalData[]): void {
-        logger.log('info', 'Save list: ' + list.length);
-        logger.log('info', this.getPath());
-        writeFileSync(this.getPath(), JSON.stringify(list));
+        logger.log('info', 'Save list: ' + list.length)
+        logger.log('info', this.getPath())
+        writeFileSync(this.getPath(), JSON.stringify(list))
     }
 
     private static createProviderLocalDataInstance(loadedDataEntry: ProviderLocalData): ProviderLocalData {
-        loadedDataEntry.lastUpdate = new Date(loadedDataEntry.lastUpdate);
-        loadedDataEntry.lastExternalChange = new Date(loadedDataEntry.lastExternalChange);
+        loadedDataEntry.lastUpdate = new Date(loadedDataEntry.lastUpdate)
+        loadedDataEntry.lastExternalChange = new Date(loadedDataEntry.lastExternalChange)
         for (let index2 = 0; index2 < loadedDataEntry['detailEpisodeInfo'].length; index2++) {
-            const x = loadedDataEntry['detailEpisodeInfo'][index2];
+            const x = loadedDataEntry['detailEpisodeInfo'][index2]
 
-            loadedDataEntry['detailEpisodeInfo'][index2] = Object.assign(new Episode(x.episodeNumber, x.season, x.title), x);
+            loadedDataEntry['detailEpisodeInfo'][index2] = Object.assign(
+                new Episode(x.episodeNumber, x.season, x.title),
+                x
+            )
         }
 
         if (loadedDataEntry.instanceName === 'ListProviderLocalData') {
-            loadedDataEntry = Object.assign(new ListProviderLocalData(loadedDataEntry.id, (ProviderList.getProviderInstanceByProviderName(loadedDataEntry.provider) as ListProvider)));
+            loadedDataEntry = Object.assign(
+                new ListProviderLocalData(
+                    loadedDataEntry.id,
+                    ProviderList.getProviderInstanceByProviderName(loadedDataEntry.provider) as ListProvider
+                ),
+                loadedDataEntry
+            )
         } else if (loadedDataEntry.instanceName === 'InfoProviderLocalData') {
-            loadedDataEntry = Object.assign(new InfoProviderLocalData(loadedDataEntry.id, (ProviderList.getProviderInstanceByProviderName(loadedDataEntry.provider) as InfoProvider)));
+            loadedDataEntry = Object.assign(
+                new InfoProviderLocalData(
+                    loadedDataEntry.id,
+                    ProviderList.getProviderInstanceByProviderName(loadedDataEntry.provider) as InfoProvider
+                ),
+                loadedDataEntry
+            )
         } else {
-            logger.debug('[ProviderDataListLoader] Object cant be assigned');
+            logger.debug('[ProviderDataListLoader] Object cant be assigned')
         }
-        return loadedDataEntry;
+        return loadedDataEntry
     }
 
     private static getPath(): string {
-        const userDataPath = './';
+        const userDataPath = './'
         // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-        return path.join(userDataPath, 'provider_data_list.json');
+        return path.join(userDataPath, 'provider_data_list.json')
     }
 }

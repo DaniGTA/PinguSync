@@ -55,8 +55,8 @@ export default class MultiProviderComperator {
         }
 
         const releaseYearResult = await ReleaseYearComperator.compareReleaseYear(series, tempSeries)
-        finalResult.matchAble += releaseYearResult.matchAble
-        finalResult.matches += releaseYearResult.matches
+        finalResult.matchAble += releaseYearResult.matchAble * 2
+        finalResult.matches += releaseYearResult.matches * 2
 
         const providerComperatorInstance = new ProviderComperator(series, tempSeries)
         const providerResult = await providerComperatorInstance.getCompareResult()
@@ -78,17 +78,24 @@ export default class MultiProviderComperator {
             }
         } else {
             try {
-                logger.debug(
-                    '[MultiProviderComperator] not the same series' +
-                        result.mainProvider.providerLocalData.getAllNames()[0].name +
-                        '(' +
-                        result.mainProvider.providerLocalData.provider +
-                        ')' +
-                        ' &' +
-                        series.getAllNames()[0].name
-                )
+                if (series.getAllNames().length == 0) {
+                    logger.debug('[MultiProviderComperator] Series dont have names')
+                } else if (result.mainProvider.providerLocalData.getAllNames().length == 0) {
+                    logger.debug('[MultiProviderComperator] Result dont have names')
+                } else {
+                    logger.debug(
+                        '[MultiProviderComperator] not the same series "' +
+                            result.mainProvider.providerLocalData.getAllNames()[0].name +
+                            '" (' +
+                            result.mainProvider.providerLocalData.provider +
+                            ')' +
+                            ' & "' +
+                            series.getAllNames()[0].name +
+                            '"'
+                    )
+                }
             } catch (err) {
-                logger.debug('[MultiProviderComperator] cant print error msg.')
+                logger.debug('[MultiProviderComperator] See error below:')
                 logger.debug(err)
             }
         }

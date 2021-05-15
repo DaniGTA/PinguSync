@@ -1,56 +1,56 @@
-import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager';
-import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
-import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
-import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list';
-import TestInfoProvider from '../objects/testClass/testInfoProvider';
+import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager'
+import { InfoProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data'
+import { ProviderInfoStatus } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
+import { ListProviderLocalData } from '../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data'
+import ProviderList from '../../../src/backend/controller/provider-controller/provider-manager/provider-list'
+import TestInfoProvider from '../objects/testClass/testInfoProvider'
 
-import TestListProvider from '../objects/testClass/testListProvider';
-import TestListProvider2 from '../objects/testClass/testListProvider2';
+import TestListProvider from '../objects/testClass/testListProvider'
+import TestListProvider2 from '../objects/testClass/testListProvider2'
 // tslint:disable: no-string-literal
 describe('Provider data manager list tests', () => {
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = [new TestListProvider(), new TestListProvider2()];
-        ProviderList['loadedInfoProvider'] = [];
-    });
+        ProviderList['loadedListProvider'] = [new TestListProvider(), new TestListProvider2()]
+        ProviderList['loadedInfoProvider'] = []
+        ProviderDataListManager['providerDataList'] = []
+    })
 
     test('should update list provider and hold the right info status', () => {
-        const provider = new ListProviderLocalData(1, TestListProvider);
-        provider.infoStatus = ProviderInfoStatus.FULL_INFO;
-        provider.runTime = 10;
-        provider.lastUpdate = new Date(0);
-        provider.isNSFW = false;
+        const provider = new ListProviderLocalData(1, TestListProvider)
+        provider.infoStatus = ProviderInfoStatus.FULL_INFO
+        provider.runTime = 10
+        provider.lastUpdate = new Date(0)
+        provider.isNSFW = false
 
-        ProviderDataListManager.addProviderLocalDataToMainList(provider);
+        ProviderDataListManager.addProviderLocalDataToMainList(provider)
 
-        const newProvider = new ListProviderLocalData(1, TestListProvider);
-        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
-        newProvider.lastUpdate = new Date(1);
-        ProviderDataListManager['updateProviderInList'](newProvider);
+        const newProvider = new ListProviderLocalData(1, TestListProvider)
+        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID
+        newProvider.lastUpdate = new Date(1)
+        ProviderDataListManager['updateProviderInList'](newProvider)
 
-        expect(ProviderDataListManager['providerDataList'].length).toBe(1);
-        expect(ProviderDataListManager['providerDataList'][0].infoStatus).toBe(ProviderInfoStatus.FULL_INFO);
-        expect(ProviderDataListManager['providerDataList'][0].runTime).toBe(10);
-        expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false);
-    });
+        expect(ProviderDataListManager['providerDataList'].length).toBe(1)
+        expect(ProviderDataListManager['providerDataList'][0].infoStatus).toBe(ProviderInfoStatus.FULL_INFO)
+        expect(ProviderDataListManager['providerDataList'][0].runTime).toBe(10)
+        expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false)
+    })
 
     test('should update info provider and hold the right info status', () => {
-        const provider = new InfoProviderLocalData(1, TestInfoProvider);
-        provider.infoStatus = ProviderInfoStatus.FULL_INFO;
-        provider.runTime = 10;
-        provider.isNSFW = false;
+        const provider = new InfoProviderLocalData(1, TestInfoProvider)
+        provider.infoStatus = ProviderInfoStatus.FULL_INFO
+        provider.runTime = 10
+        provider.isNSFW = false
 
-        ProviderDataListManager.addProviderLocalDataToMainList(provider);
+        ProviderDataListManager.addProviderLocalDataToMainList(provider)
 
-        const newProvider = new InfoProviderLocalData(1, TestInfoProvider);
-        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID;
+        const newProvider = new InfoProviderLocalData(1, TestInfoProvider)
+        newProvider.infoStatus = ProviderInfoStatus.ONLY_ID
 
-        ProviderDataListManager['updateProviderInList'](newProvider);
+        ProviderDataListManager['updateProviderInList'](newProvider)
 
-        expect(ProviderDataListManager['providerDataList'].length).toBe(1);
-        expect(ProviderDataListManager['providerDataList'][0].infoStatus).toBe(ProviderInfoStatus.FULL_INFO);
-        expect(ProviderDataListManager['providerDataList'][0].runTime).toBe(10);
-        expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false);
-    });
-
-});
+        expect(ProviderDataListManager['providerDataList'].length).toBe(1)
+        expect(ProviderDataListManager['providerDataList'][0].infoStatus).toBe(ProviderInfoStatus.FULL_INFO)
+        expect(ProviderDataListManager['providerDataList'][0].runTime).toBe(10)
+        expect(ProviderDataListManager['providerDataList'][0].isNSFW).toBe(false)
+    })
+})

@@ -1,52 +1,50 @@
-import OMDbProvider from '../../../../src/backend/api/information-providers/omdb/omdb-provider';
-import Name from '../../../../src/backend/controller/objects/meta/name';
-import Series from '../../../../src/backend/controller/objects/series';
-import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data';
-import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list';
+import OMDbProvider from '../../../../src/backend/api/information-providers/omdb/omdb-provider'
+import Name from '../../../../src/backend/controller/objects/meta/name'
+import Series from '../../../../src/backend/controller/objects/series'
+import { InfoProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/info-provider-local-data'
+import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data'
+import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list'
 
-import OmdbTestProvider from './omdb-test-provider';
-import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper';
+import OmdbTestProvider from './omdb-test-provider'
+import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper'
 // tslint:disable: no-string-literal
 describe('Provider: OMDb | Test runs', () => {
-    const omdbProvider = new OMDbProvider();
+    const omdbProvider = new OMDbProvider()
 
     beforeEach(() => {
-        ProviderList['loadedListProvider'] = ProviderList['loadProviderList']([OmdbTestProvider]);
-        ProviderList['loadedInfoProvider'] = ProviderList['loadProviderList']([OMDbProvider]);
-        ProviderList['loadedMappingProvider'] = [];
-    });
+        ProviderList['loadedListProvider'] = ProviderList['loadProviderList']([OmdbTestProvider])
+        ProviderList['loadedInfoProvider'] = ProviderList['loadProviderList']([OMDbProvider])
+        ProviderList['loadedMappingProvider'] = []
+    })
 
     test('should get a series (1/1)', async () => {
+        const series = new Series()
+        const unkownProvider = new ListProviderLocalData(-1)
+        unkownProvider.addSeriesName(new Name('Ghost World', 'en'))
+        series.addProviderDatas(unkownProvider)
 
-        const series = new Series();
-        const unkownProvider = new ListProviderLocalData(-1);
-        unkownProvider.addSeriesName(new Name('Sankarea: Undying Love', 'en'));
-        series.addProviderDatas(unkownProvider);
-
-        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, omdbProvider);
-        expect(result.getAllProviders().length).toBe(1);
-        return;
-    });
+        const result = await downloadProviderLocalDataHelper.downloadProviderLocalData(series, omdbProvider)
+        expect(result.mainProvider.providerLocalData.id).toEqual('tt0162346')
+        return
+    })
 
     test('should not crash', async () => {
+        const series = new Series()
+        const unkownProvider = new ListProviderLocalData('-1')
+        unkownProvider.addSeriesName(new Name('Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu', 'en'))
+        series.addProviderDatas(unkownProvider)
 
-        const series = new Series();
-        const unkownProvider = new ListProviderLocalData('-1');
-        unkownProvider.addSeriesName(new Name('Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu', 'en'));
-        series.addProviderDatas(unkownProvider);
-
-        const result = await omdbProvider.getMoreSeriesInfoByName('Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu');
-        expect(result.length).toBe(0);
-        return;
-    });
-
+        const result = await omdbProvider.getMoreSeriesInfoByName(
+            'Kono Subarashii Sekai ni Shukufuku wo Kurenai Densetsu'
+        )
+        expect(result.length).toBe(0)
+        return
+    })
 
     test('should get series by id', async () => {
-        const unkownProvider = new InfoProviderLocalData('tt2341379', OMDbProvider);
-        const result = await omdbProvider.getFullInfoById(unkownProvider);
-        expect(result.mainProvider.providerLocalData.id).toBe(unkownProvider.id);
-        return;
-    });
-
-});
+        const unkownProvider = new InfoProviderLocalData('tt2341379', OMDbProvider)
+        const result = await omdbProvider.getFullInfoById(unkownProvider)
+        expect(result.mainProvider.providerLocalData.id).toBe(unkownProvider.id)
+        return
+    })
+})

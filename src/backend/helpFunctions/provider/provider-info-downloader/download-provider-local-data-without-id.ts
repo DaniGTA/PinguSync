@@ -58,6 +58,7 @@ export default class DownloadProviderLocalDataWithoutId {
     public async downloadProviderSeriesInfoBySeriesName(names: Name[]): Promise<MultiProviderResult | undefined> {
         let trys = 0
         const alreadySearchedNames: string[] = []
+        logger.debug(`[${this.provider.providerName}] Searching Series with ${names.length} name/s`)
         for (const name of names) {
             if (
                 !this.provider.supportOnlyBasicLatinForNameSearch ||
@@ -70,13 +71,19 @@ export default class DownloadProviderLocalDataWithoutId {
                     }
                     trys++
                     try {
+                        logger.info(
+                            `[${this.requestId}][${this.provider.providerName}] Starting request with name ${name.name}`
+                        )
                         const result = await this.getProviderLocalDataByName(name)
                         if (result) {
-                            logger.log(
-                                'info',
+                            logger.info(
                                 `[${this.requestId}][${this.provider.providerName}] ByName ${name.name} Request success 🎉`
                             )
                             return result
+                        } else {
+                            logger.warn(
+                                `[${this.requestId}][${this.provider.providerName}] The search with the name "${name.name}" has no results. ❌`
+                            )
                         }
                     } catch (err) {
                         logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo')
@@ -91,6 +98,10 @@ export default class DownloadProviderLocalDataWithoutId {
 
                     alreadySearchedNames.push(name.name)
                 }
+            } else {
+                logger.warn(
+                    `[${this.requestId}][${this.provider.providerName}] The name "${name.name}" is not latin and cant be searched. ❌`
+                )
             }
             logger.warn(`[${this.requestId}][${this.provider.providerName}] ByName ${name.name} Request failed. ❌`)
         }
@@ -206,13 +217,14 @@ export default class DownloadProviderLocalDataWithoutId {
             season.getSingleSeasonNumberAsNumber() === 1 ||
             this.provider.hasUniqueIdForSeasons
         ) {
-            logger.log(
-                'info',
-                `[${this.provider.providerName}] Request (Search series info by name) with value: ${name.name} | S${season.seasonNumbers}`
+            logger.info(
+                `[${this.provider.providerName}] Request (Search series info by name) with value: "${name.name}" | Season: ${season.seasonNumbers}`
             )
             const result = await this.getMoreSeriesInfoByNameResults(name, season)
             if (result) {
                 return result
+            } else {
+                logger.debug('getProviderLocalDataByName no results')
             }
         } else {
             logger.warn(
@@ -231,10 +243,13 @@ export default class DownloadProviderLocalDataWithoutId {
         if (this.provider.requireInternetAccessGetMoreSeriesInfoByName) {
             await this.provider.waitUntilItCanPerfomNextRequest()
         }
+        logger.debug(`Starting search request with name value: ${name.name} and season number: ${seasonNumber}`)
+        const timeoutId = DownloadSettings.getTimeoutId()
         searchResult = await Promise.race([
-            DownloadSettings.requestTimoutPromise<MultiProviderResult[]>(),
-            this.provider.getMoreSeriesInfoByName(name.name, seasonNumber),
+            DownloadSettings.requestTimoutPromise<MultiProviderResult[]>(timeoutId),
+            this.provider.getMoreSeriesInfoByName(name.name.trim(), seasonNumber),
         ])
+        DownloadSettings.stopTimeout(timeoutId)
         return this.processResultsOfGetMoreSeriesInfoByName(searchResult)
     }
 
@@ -255,6 +270,8 @@ export default class DownloadProviderLocalDataWithoutId {
                 if (bestResult) {
                     logger.log('info', `[${this.provider.providerName}] Request success 🎉`)
                     return bestResult.result
+                } else {
+                    logger.debug(`[${this.provider.providerName}] Request no best result`)
                 }
             }
         }

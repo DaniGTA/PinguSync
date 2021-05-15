@@ -11,8 +11,13 @@
                 "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
             },
             "preLaunchTask": "electron-debug",
-            "args": ["--remote-debugging-port=9223", "./dist_electron"],
-            "outFiles": ["${workspaceFolder}/dist_electron/**/*.js"],
+            "args": [
+                "--remote-debugging-port=9223",
+                "./dist_electron"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist_electron/**/*.js"
+            ],
             "outputCapture": "std"
         },
         {
@@ -24,7 +29,6 @@
             "webRoot": "${workspaceFolder}",
             "sourceMaps": true
         },
-
         {
             "name": "Debug Jest Tests",
             "type": "node",
@@ -42,20 +46,21 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug Jest Current File",
+            "name": "vscode-jest-tests",
             "program": "${workspaceFolder}/node_modules/.bin/jest",
             "args": [
                 "${fileBasenameNoExtension}",
                 "--config",
+                  "--runInBand",
                 "jest.config.js"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "disableOptimisticBPs": true,
             "windows": {
-                "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+                "program": "${workspaceFolder}/node_modules/jest/bin/jest"
             }
-        }
+        },
     ],
     "compounds": [
         {

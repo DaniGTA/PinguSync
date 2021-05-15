@@ -20,6 +20,7 @@ module.exports = {
 			'expand': true
 		}]
 	],
+	'watchPathIgnorePatterns': ['node_modules'],
 	'testTimeout': 3500,
 	'verbose': false,
 	'globals': {
@@ -29,7 +30,7 @@ module.exports = {
 	},
 	'testEnvironment': 'node',
 	'setupFilesAfterEnv': ['<rootDir>/test/test-helper.ts'],
-	'maxWorkers': 6
+	'maxWorkers': 8
 };
 
 

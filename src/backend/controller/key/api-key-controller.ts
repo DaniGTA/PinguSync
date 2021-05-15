@@ -16,7 +16,7 @@ export default class ApiKeyController {
 
     private static loadApiCredentials(providerName: string): ApiKey | undefined {
         try {
-            return JSON.parse(readFileSync('./src/keys/api/' + providerName + '.json', 'UTF-8')) as ApiKey
+            return JSON.parse(readFileSync('./src/keys/api/' + providerName + '.json', { encoding: 'utf8' })) as ApiKey
         } catch (err) {
             logger.error(err)
             logger.error(`!! API Credentials error for provider: ${providerName}`)
@@ -26,6 +26,5 @@ export default class ApiKeyController {
                 )
             }
         }
-        return
     }
 }

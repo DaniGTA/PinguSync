@@ -14,4 +14,5 @@
     "discord.enabled": true,
     "i18n-ally.keystyle": "nested",
     "cmake.configureOnOpen": false,
+    "jest.jestCommandLine": "jest",
 }

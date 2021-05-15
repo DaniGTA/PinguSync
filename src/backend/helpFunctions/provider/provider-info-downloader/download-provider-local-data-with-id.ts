@@ -14,10 +14,13 @@ export default class DownloadProviderLocalDataWithId {
             await provider.waitUntilItCanPerfomNextRequest()
         }
         try {
-            return await Promise.race([
-                DownloadSettings.requestTimoutPromise<MultiProviderResult>(),
+            const timeoutId = DownloadSettings.getTimeoutId()
+            const result = await Promise.race([
+                DownloadSettings.requestTimoutPromise<MultiProviderResult>(timeoutId),
                 provider.getFullInfoById(providerLocalData),
             ])
+            DownloadSettings.stopTimeout(timeoutId)
+            return result
         } catch (err) {
             if (isFailedRequestError(err)) {
                 throw err

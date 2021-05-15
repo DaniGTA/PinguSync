@@ -12,7 +12,7 @@ export default abstract class ProviderFileSettings {
             const filePath = this.getPath()
             logger.debug(`[IO] Read ${this.getConfigFileName()} user file. | path: ${filePath} `)
             if (fs.existsSync(filePath)) {
-                const loadedString = fs.readFileSync(filePath, 'UTF-8')
+                const loadedString = fs.readFileSync(filePath, { encoding: 'utf8' })
                 const loadedData = JSON.parse(loadedString) as this
                 Object.assign(this, loadedData)
             }
