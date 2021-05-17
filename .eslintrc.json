@@ -38,9 +38,6 @@
         "no-mixed-spaces-and-tabs": [
             "off"
         ],
-        "camelcase": [
-            "off"
-        ],
         "jest/excpect-expect": [
             "off"
         ],
@@ -52,9 +49,6 @@
             {
             "checksConditionals": false
             }
-        ],
-        "@typescript-eslint/camelcase": [
-            "warn"
         ],
         "@typescript-eslint/no-inferrable-types": [
             "warn"

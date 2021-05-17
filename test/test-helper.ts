@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/require-await */
 import AniDBProvider from '../src/backend/api/information-providers/anidb/anidb-provider'
@@ -43,6 +45,11 @@ jest.spyOn(AnimeOfflineDatabaseProviderData.prototype, 'saveData' as any).mockIm
 new ListController(true)
 
 logger.on('data', function(log) {
-    addMsg(log.timestamp + ' ' + log.level + ': ' + log.message)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (log?.timestamp !== undefined && log?.level !== undefined && log?.message !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        addMsg(`${log.timestamp} ${log.level}: ${log.message}`)
+    }
 })
 logger.info('Finished env setup')
+logger.level = 'debug'

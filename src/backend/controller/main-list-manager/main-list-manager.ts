@@ -7,7 +7,10 @@ import MainListSaver from './main-list-saver'
 import MainListSearcher from './main-list-searcher'
 export default class MainListManager {
     private static debounceSaving?: NodeJS.Timeout
-
+    private static mainList: Series[] = []
+    private static listLoaded = false
+    private static listMaintance = false
+    private static secondList: Series[] = []
     /**
      * Adds a new Series to the mainlist.
      * It checks if there is already a same entry and merge it.
@@ -32,7 +35,7 @@ export default class MainListManager {
                                 series = Object.assign(new Series(), series)
                             }
 
-                            logger.log('info', '[MainList] Duplicate found: merging...')
+                            logger.info('[MainList] Duplicate found: merging...')
                             series = await series.merge(entry, false)
                             MainListManager.removeSeriesFromMainList(entry, notfiyRenderer)
                         } catch (err) {
@@ -48,8 +51,8 @@ export default class MainListManager {
                 if (series.lastInfoUpdate === 0) {
                     logger.error('[ERROR] Series no last info update! In MainList.')
                 }
-                logger.log('info', '[MainList] Series was added to MainList. New list size: ' + this.mainList.length)
-                MainListManager.mainList.push(...results)
+                logger.info(`[MainList] Series was added to MainList. New list size: ${this.mainList.length}`)
+                await this.addSeriesToList(...results)
             } catch (err) {
                 logger.error(err)
                 return false
@@ -93,12 +96,12 @@ export default class MainListManager {
         if (MainListManager.listMaintance === true) {
             return
         }
-        logger.log('info', '[MainList] Cleanup Mainlist. Current list size: ' + this.mainList.length)
+        logger.info(`[MainList] Cleanup Mainlist. Current list size: ${this.mainList.length}`)
 
         MainListManager.listMaintance = true
         try {
             MainListManager.secondList = [...MainListManager.mainList]
-            logger.log('info', '[MainList] Temp List created. Temp list size: ' + this.secondList.length)
+            logger.info(`[MainList] Temp List created. Temp list size: ${this.secondList.length}`)
             MainListManager.mainList = []
             for (const index = 0; this.secondList.length !== 0; ) {
                 try {
@@ -124,7 +127,7 @@ export default class MainListManager {
                 }
             }
             MainListSaver.saveMainList(MainListManager.mainList)
-            logger.log('info', '[MainList] Finish Cleanup Mainlist. Current list size: ' + this.mainList.length)
+            logger.info(`[MainList] Finish Cleanup Mainlist. Current list size: ${this.mainList.length}`)
         } catch (err) {
             logger.error('Error at MainListManager.finishListFilling')
             logger.error(err)
@@ -150,7 +153,7 @@ export default class MainListManager {
         if (!list) {
             list = this.getMainList()
         }
-        logger.log('info', '[MainList] Remove Item in mainlist: ' + series.id)
+        logger.info('[MainList] Remove Item in mainlist: ' + series.id)
         const index = MainListManager.getIndexFromSeries(series, list)
         if (index !== -1) {
             const oldSize = list.length
@@ -169,7 +172,7 @@ export default class MainListManager {
         this.checkIfListIsLoaded()
         if (this.listMaintance) {
             const arr = [...MainListManager.secondList, ...MainListManager.mainList]
-            logger.log('info', '[MainList] TempList served: (size= ' + arr.length + ')')
+            logger.info(`[MainList] TempList served: (size= ${arr.length})`)
             return arr
         } else {
             return MainListManager.mainList
@@ -194,15 +197,17 @@ export default class MainListManager {
         this.debounceSaving = setTimeout(() => MainListSaver.saveMainList(this.getMainList()), 2000)
     }
 
-    private static mainList: Series[] = []
-    private static listLoaded = false
-    private static listMaintance = false
-    private static secondList: Series[] = []
-
     private static checkIfListIsLoaded(): void {
         if (!MainListManager.listLoaded) {
             MainListManager.mainList = MainListLoader.loadData()
             MainListManager.listLoaded = true
+        }
+    }
+
+    private static async addSeriesToList(...allSeries: Series[]) {
+        for (const series of allSeries) {
+            await series.generateEpisodeMapping()
+            MainListManager.mainList.push(series)
         }
     }
 }

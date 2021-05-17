@@ -57,18 +57,6 @@ export default class SettingsManager {
         this.save()
     }
 
-    private getProviderSetting(providerName: string): ProviderSettings {
-        const settings = this.getSetting().providerSettings
-        for (const providerSetting of this.getSetting().providerSettings) {
-            if (providerSetting.providerName === providerName) {
-                return providerSetting
-            }
-        }
-        const newProvider = new ProviderSettings(providerName)
-        settings.push(newProvider)
-        return newProvider
-    }
-
     public async getAllListSettings(providerName: string): Promise<ListSettings[]> {
         const providerInstance = ProviderList.getProviderInstanceByProviderName(providerName)
         if (providerInstance instanceof ListProvider) {
@@ -133,5 +121,17 @@ export default class SettingsManager {
 
     private save(): void {
         writeFileSync('settings.json', JSON.stringify(this.loadedSetting))
+    }
+
+    private getProviderSetting(providerName: string): ProviderSettings {
+        const settings = this.getSetting().providerSettings
+        for (const providerSetting of this.getSetting().providerSettings) {
+            if (providerSetting.providerName === providerName) {
+                return providerSetting
+            }
+        }
+        const newProvider = new ProviderSettings(providerName)
+        settings.push(newProvider)
+        return newProvider
     }
 }

@@ -3,14 +3,6 @@ const ThreadsPlugin = require('threads-plugin');
 
 // eslint-disable-next-line no-undef
 module.exports = {
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === 'production') {
-      // mutate config for production...
-    } else {
-    }
-
-  },
-
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
@@ -68,7 +60,7 @@ module.exports = {
     },
     quasar: {
       importStrategy: 'kebab',
-      rtlSupport: true
+      rtlSupport: true,
     }
   },
 

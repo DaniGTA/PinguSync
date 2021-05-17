@@ -8,13 +8,13 @@ export default class MainListLoader {
      * The json file contains all series that got added to the mainlist.
      */
     public static loadData(): Series[] {
-        logger.log('info', 'Load list file...')
+        logger.info('Load list file...')
         try {
             if (existsSync(MainListPath.getPath())) {
                 const dataPath = MainListPath.getPath()
                 const loadedString = readFileSync(dataPath, { encoding: 'utf8' })
                 const loadedData = JSON.parse(loadedString)
-                logger.log('info', 'Items loaded: ' + loadedData.length)
+                logger.info('Items loaded: ' + loadedData.length)
                 return this.convertJSONArrayToSeriesArray(loadedData)
             } else {
                 logger.warn('File not exist, creating file...')

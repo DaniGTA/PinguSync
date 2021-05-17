@@ -14,13 +14,13 @@ export default class ProviderDataListLoader {
      * The json file contains all series that got added to the mainlist.
      */
     public static loadData(): ProviderLocalData[] {
-        logger.log('info', 'Load list file...')
+        logger.info('Load list file...')
         try {
             if (existsSync(this.getPath())) {
                 const dataPath = this.getPath()
                 const loadedString = readFileSync(dataPath, { encoding: 'utf8' })
                 const loadedData = JSON.parse(loadedString) as ProviderLocalData[]
-                logger.log('info', 'Items loaded: ' + loadedData.length)
+                logger.info(`Items loaded: ${loadedData.length}`)
                 for (let index = 0; index < loadedData.length; index++) {
                     const loadedDataEntry = loadedData[index]
                     loadedData[index] = this.createProviderLocalDataInstance(loadedDataEntry)
@@ -41,8 +41,8 @@ export default class ProviderDataListLoader {
      * @param list the main list.
      */
     public static saveData(list: ProviderLocalData[]): void {
-        logger.log('info', 'Save list: ' + list.length)
-        logger.log('info', this.getPath())
+        logger.info(`Save list: ${list.length}`)
+        logger.info(this.getPath())
         writeFileSync(this.getPath(), JSON.stringify(list))
     }
 

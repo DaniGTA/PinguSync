@@ -133,7 +133,7 @@ export default new (class KitsuConverter {
                     providerLocalData.push(localdata)
                 }
             } catch (err) {
-                logger.log('info', err)
+                logger.info(err)
             }
         }
         try {
@@ -148,7 +148,7 @@ export default new (class KitsuConverter {
                 providerLocalData.push(localdata)
             }
         } catch (err) {
-            logger.log('info', err)
+            logger.info(err)
         }
         return providerLocalData
     }

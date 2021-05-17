@@ -25,7 +25,8 @@ export default class DownloadProviderLocalDataWithId {
             if (isFailedRequestError(err)) {
                 throw err
             }
-            logger.error(err + ' | ' + provider.providerName)
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            logger.error(`${err} | ${provider.providerName}`)
             throw FailedRequestError.ProviderNoResult
         }
     }

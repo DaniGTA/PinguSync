@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 'use strict'
 /* global process */
 // tslint:disable-next-line: no-implicit-dependencies
@@ -16,15 +18,15 @@ import AppUpdateController from './backend/controller/auto-updater/app-update-co
 import CronManager from './backend/controller/cron-jobs/cron-manager'
 import * as os from 'os'
 const nodeThreads = os.cpus().length * 2
-logger.info('Loaded Node.js with: ' + nodeThreads + ' Threads')
-process.env.UV_THREADPOOL_SIZE = nodeThreads + ''
+logger.info(`Loaded Node.js with: ${nodeThreads} Threads`)
+process.env.UV_THREADPOOL_SIZE = `${nodeThreads}`
 try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
         if (err) {
-            logger.error(err.message)
+            logger.error(err?.message)
         } else {
-            logger.log('info', 'Successfully Connected!')
+            logger.info('Successfully Connected!')
         }
     })
 } catch (err) {
@@ -57,7 +59,7 @@ function createWindow(): void {
     fc.mainInit(win.webContents)
     if (process.env.WEBPACK_DEV_SERVER_URL) {
         // Load the url of the dev server if in development mode
-        win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+        void win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
         try {
             if (!process.env.IS_TEST) {
                 win.webContents.openDevTools()
@@ -68,7 +70,7 @@ function createWindow(): void {
     } else {
         createProtocol('app')
         // Load the index.html when not in development
-        win.loadURL('app://./index.html')
+        void win.loadURL('app://./index.html')
     }
 
     win.on('closed', () => {
@@ -76,7 +78,7 @@ function createWindow(): void {
     })
 
     ipcMain.on('open-url', (event: Electron.IpcMainEvent, data: string) => {
-        shell.openExternal(data)
+        void shell.openExternal(data)
     })
 }
 
@@ -104,13 +106,13 @@ app.on('ready', () => {
     if (isDevelopment && !process.env.IS_TEST) {
         // Install Vue Devtools
         try {
-            installVueDevtools()
+            void installVueDevtools()
         } catch (e) {
-            logger.error('Vue Devtools failed to install:', e.toString())
+            logger.error('Vue Devtools failed to install:', e?.toString())
         }
     }
     createWindow()
-    AppUpdateController.checkUpdate()
+    void AppUpdateController.checkUpdate()
     CronManager.init()
 })
 

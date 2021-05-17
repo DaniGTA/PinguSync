@@ -21,7 +21,7 @@ export default class IPCBackgroundController implements ICommunication {
                     }
                 }
                 this.webcontents.send(channel, onlyData)
-                logger.log('info', 'worker send: ' + channel)
+                logger.info('worker send: ' + channel)
                 success = true
             } catch (err) {
                 logger.error(err)
@@ -31,7 +31,7 @@ export default class IPCBackgroundController implements ICommunication {
 
     public async on(channel: string, f: ((data: any) => void) | ((data: any) => Promise<void>)): Promise<void> {
         ipcMain.on(channel, async (event: Electron.IpcMainEvent, data: any) => {
-            logger.log('info', 'recieved: ' + channel)
+            logger.info('recieved: ' + channel)
             try {
                 if (data) {
                     await f(JSON.parse(data))

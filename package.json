@@ -10,7 +10,8 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "test": "jest"
+    "test": "jest",
+    "eslint": "npx eslint **/src/**/*.ts"
   },
   "main": "background.js",
   "dependencies": {
@@ -30,7 +31,7 @@
     "@types/request": "^2.48.5",
     "@types/resolve": "1.20.0",
     "@types/sinon": "^10.0.0",
-    "autoprefixer": "^10.2.5",
+    "autoprefixer": "^9.0.0",
     "cd": "^0.3.3",
     "class-converter": "1.2.0",
     "core-js": "^3.12.1",
@@ -54,7 +55,8 @@
     "node-cron": "^3.0.0",
     "node-myanimelist": "^3.0.4",
     "pkce-challenge": "^2.1.0",
-    "quasar": "^1.15.14",
+    "postcss": "^8.2.15",
+    "quasar": "^1.15.15",
     "resolve": "^1.20.0",
     "rewire": "^5.0.0",
     "scramjet": "^4.35.16",
@@ -107,9 +109,9 @@
     "jest": "^26.6.3",
     "jest-html-reporters": "^2.1.6",
     "jest-slow-test-reporter": "^1.0.0",
-    "node-sass": "^6.0.0",
+    "node-sass": "^4.14.1",
     "postcss-rtl": "^1.7.3",
-    "sass-loader": "^11.1.1",
+    "sass-loader": "^8.0.2",
     "threads-plugin": "^1.4.0",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
@@ -119,7 +121,7 @@
     "vue-cli-plugin-quasar": "~3.0.1",
     "vue-eslint-parser": "^7.6.0",
     "vue-template-compiler": "^2.6.12",
-    "webpack": "^5.37.0",
+    "webpack": "^4.4.0",
     "worker-loader": "^3.0.8"
   },
   "eslintConfig": {

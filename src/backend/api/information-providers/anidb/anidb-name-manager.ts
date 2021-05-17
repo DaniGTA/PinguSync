@@ -17,7 +17,7 @@ export default class AniDBNameManager {
     }
 
     public updateData(time: Date, data?: AniDBNameListXML): void {
-        logger.log('info', '[update] -> anidb -> data')
+        logger.info('[update] -> anidb -> data')
         this.lastDownloadTime = time
         this.data = data
         this.saveData()
@@ -30,7 +30,7 @@ export default class AniDBNameManager {
 
     private saveData(): void {
         try {
-            logger.log('info', '[Save] -> AniDB -> Names')
+            logger.info('[Save] -> AniDB -> Names')
             fs.writeFileSync(this.getPath(), JSON.stringify(this))
         } catch (err) {
             logger.error('Error at AniDBNameManager.save:')

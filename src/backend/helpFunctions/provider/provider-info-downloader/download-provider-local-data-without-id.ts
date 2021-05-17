@@ -218,7 +218,7 @@ export default class DownloadProviderLocalDataWithoutId {
             this.provider.hasUniqueIdForSeasons
         ) {
             logger.info(
-                `[${this.provider.providerName}] Request (Search series info by name) with value: "${name.name}" | Season: ${season.seasonNumbers}`
+                `[${this.provider.providerName}] Request (Search series info by name) with value: "${name.name}" | Seasons: ${season.seasonNumbers.length}`
             )
             const result = await this.getMoreSeriesInfoByNameResults(name, season)
             if (result) {
@@ -228,7 +228,7 @@ export default class DownloadProviderLocalDataWithoutId {
             }
         } else {
             logger.warn(
-                `[${this.provider.providerName}] Season number problem. On name: ${name.name} SeasonNumber: ${season.seasonNumbers}`
+                `[${this.provider.providerName}] Season number problem. On name: ${name.name} SeasonNumbers: ${season.seasonNumbers.length}`
             )
         }
         throw FailedRequestError.ProviderNoResult
@@ -243,7 +243,7 @@ export default class DownloadProviderLocalDataWithoutId {
         if (this.provider.requireInternetAccessGetMoreSeriesInfoByName) {
             await this.provider.waitUntilItCanPerfomNextRequest()
         }
-        logger.debug(`Starting search request with name value: ${name.name} and season number: ${seasonNumber}`)
+        logger.debug(`Starting search request with name value: ${name.name} and season number: ${seasonNumber ?? ''}`)
         const timeoutId = DownloadSettings.getTimeoutId()
         searchResult = await Promise.race([
             DownloadSettings.requestTimoutPromise<MultiProviderResult[]>(timeoutId),
@@ -268,7 +268,7 @@ export default class DownloadProviderLocalDataWithoutId {
             if (resultContainer.length !== 0) {
                 const bestResult = this.getBestResultOutOfSearchResultRatingContainer(resultContainer)
                 if (bestResult) {
-                    logger.log('info', `[${this.provider.providerName}] Request success 🎉`)
+                    logger.info(`[${this.provider.providerName}] Request success 🎉`)
                     return bestResult.result
                 } else {
                     logger.debug(`[${this.provider.providerName}] Request no best result`)

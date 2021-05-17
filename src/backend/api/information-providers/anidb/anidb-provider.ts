@@ -218,10 +218,10 @@ export default class AniDBProvider extends InfoProvider {
 
     private async webRequest<T>(url: string): Promise<T> {
         this.informAWebRequest()
-        logger.log('info', '[AniDB] Start WebRequest')
+        logger.info('[AniDB] Start WebRequest')
 
         const response = await WebRequestManager.request({ method: 'GET', uri: url, gzip: true })
-        logger.log('info', '[AniDB] statusCode:', response && response.statusCode) // Print the response status code if a response was received
+        logger.info('[AniDB] statusCode:', response && response.statusCode) // Print the response status code if a response was received
         if (response.statusCode === 200) {
             if (response.body === '<error code="500">banned</error>') {
                 this.bannedTimestamp = new Date().getTime()

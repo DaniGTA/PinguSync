@@ -16,6 +16,15 @@ import MediaTypeComperator from './media-type-comperator'
 import SeasonComperator from './season-comperator'
 
 export default class ProviderComperator {
+    private readonly aSeries: Series
+    private readonly bSeries: Series
+    private aSeriesSeason: Season | undefined
+    private bSeriesSeason: Season | undefined
+    constructor(aSeries: Series, bSeries: Series) {
+        this.aSeries = aSeries
+        this.bSeries = bSeries
+    }
+
     /**
      * Checks if a and b have the same provider with the same id and the same season if the provider has no unique id for seasons.
      * If the check fails the function will return always false.
@@ -152,16 +161,6 @@ export default class ProviderComperator {
         }
         return false
     }
-
-    private readonly aSeries: Series
-    private readonly bSeries: Series
-    private aSeriesSeason: Season | undefined
-    private bSeriesSeason: Season | undefined
-    constructor(aSeries: Series, bSeries: Series) {
-        this.aSeries = aSeries
-        this.bSeries = bSeries
-    }
-
     public async getCompareResult(): Promise<ComperatorResult> {
         const comperatorResults: ComperatorResult[] = []
 

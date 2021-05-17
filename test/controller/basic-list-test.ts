@@ -158,7 +158,7 @@ describe('Basic List | Testrun', () => {
         } else {
             throw new Error()
         }
-    }, 4000)
+    }, 8000)
 
     test('should not merge them together', async () => {
         if (!ListController.instance) {

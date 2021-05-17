@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/member-ordering */
-
-import ExternalProvider from '../../../../../api/provider/external-provider'
 import SeasonComperator from '../../../../../helpFunctions/comperators/season-comperator'
 import CoverHelper from '../../../../../helpFunctions/cover-helper/cover-helper'
 import EpisodeHelper from '../../../../../helpFunctions/episode-helper/episode-helper'
@@ -17,7 +17,6 @@ import { MediaType } from '../../../../objects/meta/media-type'
 import Name from '../../../../objects/meta/name'
 import Overview from '../../../../objects/meta/overview'
 import Season from '../../../../objects/meta/season'
-import ProviderNameManager from '../../provider-name-manager'
 import { ProviderInfoStatus } from './provider-info-status'
 
 export default abstract class ProviderLocalData {
@@ -101,7 +100,7 @@ export default abstract class ProviderLocalData {
         if (id) {
             this.id = id
         } else {
-            const errorMsg = '[LOCALDATA] ERROR: INVALID ID. UNABLE TO CREATE LOCALDATA INSTANCE ! ID: ' + id
+            const errorMsg = `[LOCALDATA] ERROR: INVALID ID. UNABLE TO CREATE LOCALDATA INSTANCE ! ID: ${id}`
             logger.error(errorMsg)
             throw new Error(errorMsg)
         }
@@ -173,7 +172,7 @@ export default abstract class ProviderLocalData {
                 }
             }
         }
-        return newP
+        return newP as ProviderLocalData
     }
 
     public getDetailedEpisodeLength(): number {

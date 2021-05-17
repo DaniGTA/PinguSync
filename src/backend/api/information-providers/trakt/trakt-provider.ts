@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { MediaType } from '../../../controller/objects/meta/media-type'
 import WatchProgress from '../../../controller/objects/meta/watch-progress'
 import Series from '../../../controller/objects/series'
@@ -59,7 +61,11 @@ export default class TraktProvider extends ListProvider {
         const slug = provider.getAllNames().find(x => x.nameType == NameType.SLUG)?.name
         const seasonNr = episode.season?.getSingleSeasonNumberAsNumber()
         const episodeNr = episode.episodeNumber
-        return `https://trakt.tv/shows/${slug}/seasons/${seasonNr}/episodes/${episodeNr}`
+        if (slug !== undefined && seasonNr !== undefined) {
+            return `https://trakt.tv/shows/${slug}/seasons/${seasonNr}/episodes/${episodeNr}`
+        } else {
+            throw new Error('[Trakt] cant generate url for a single episode. slug or seasonNr is missing')
+        }
     }
 
     public async markEpisodeAsUnwatched(episodes: Episode[]): Promise<void> {
@@ -91,9 +97,13 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async getUsername(): Promise<string> {
-        const url = 'https://api.trakt.tv/users/' + this.userData.userName
-        const response = await this.traktRequest<UserInfoSmall>(url)
-        return response.name ?? response.username
+        if (this.userData.userName !== undefined) {
+            const url = `https://api.trakt.tv/users/${this.userData.userName}`
+            const response = await this.traktRequest<UserInfoSmall>(url)
+            return response.name ?? response.username
+        } else {
+            return ''
+        }
     }
 
     public logoutUser(): void {
@@ -107,14 +117,10 @@ export default class TraktProvider extends ListProvider {
                 'Content-Type': 'application/json',
             },
             json: {
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 client_id: this.getApiId(),
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 client_secret: this.getApiSecret(),
                 code, // The Authorization Code received previously
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 grant_type: 'authorization_code',
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 redirect_uri: this.redirectUri,
             },
             method: 'POST',
@@ -126,7 +132,7 @@ export default class TraktProvider extends ListProvider {
         if (response.body.access_token) {
             const body = response.body
             this.userData.setTokens(body.access_token, body.refresh_token, body.expires_in)
-            this.getUserInfo()
+            await this.getUserInfo()
             return true
         }
         return false
@@ -162,20 +168,20 @@ export default class TraktProvider extends ListProvider {
             if (provider.provider === this.providerName) {
                 if (provider.isMediaTypeMovie()) {
                     const res = await this.traktRequest<FullShowInfo>(
-                        'https://api.trakt.tv/movies/' + provider.id + '?extended=full'
+                        `https://api.trakt.tv/movies/${provider.id}?extended=full`
                     )
                     return traktConverter.convertFullShowInfoToLocalData(res, MediaType.MOVIE)
                 } else {
                     const res = await this.traktRequest<FullShowInfo>(
-                        'https://api.trakt.tv/shows/' + provider.id + '?extended=full'
+                        `https://api.trakt.tv/shows/${provider.id}?extended=full`
                     )
-                    this.waitUntilItCanPerfomNextRequest()
+                    await this.waitUntilItCanPerfomNextRequest()
                     const seasonEpisodeInfo = await this.traktRequest<ITraktShowSeasonInfo[]>(
-                        'https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=episodes'
+                        `https://api.trakt.tv/shows/${res.ids.trakt}/seasons?extended=episodes`
                     )
-                    this.waitUntilItCanPerfomNextRequest()
+                    await this.waitUntilItCanPerfomNextRequest()
                     const seasonInfo = await this.traktRequest<ITraktShowSeasonInfo[]>(
-                        'https://api.trakt.tv/shows/' + res.ids.trakt + '/seasons?extended=full'
+                        `https://api.trakt.tv/shows/${res.ids.trakt}/seasons?extended=full`
                     )
                     const fullSeasonInfo = traktConverter.combineSeasonInfoAndSeasonEpisodeInfo(
                         seasonInfo,
@@ -185,7 +191,7 @@ export default class TraktProvider extends ListProvider {
                 }
             } else if (provider.provider === ProviderNameManager.getProviderName(TVDBProvider)) {
                 const res = await this.traktRequest<TraktSearch[]>(
-                    'https://api.trakt.tv/search/tvdb/' + provider.id + '?extended=full'
+                    `https://api.trakt.tv/search/tvdb/${provider.id}?extended=full`
                 )
                 for (const result of res) {
                     try {
@@ -208,19 +214,16 @@ export default class TraktProvider extends ListProvider {
     }
 
     public getTokenAuthUrl(): string {
-        return (
-            'https://trakt.tv/oauth/authorize?response_type=code&client_id=' +
-            this.getApiId() +
-            '&redirect_uri=' +
+        return `https://trakt.tv/oauth/authorize?response_type=code&client_id=${this.getApiId() ?? ''}&redirect_uri=${
             this.redirectUri
-        )
+        }`
     }
     // eslint-disable-next-line @typescript-eslint/require-await
     public async isUserLoggedIn(): Promise<boolean> {
         return this.userData.accessToken !== ''
     }
     public async getAllSeries(disableCache = false): Promise<MultiProviderResult[]> {
-        logger.log('info', '[Request] -> Trakt -> AllSeries')
+        logger.info('[Request] -> Trakt -> AllSeries')
         if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
             return this.userData.list
         } else if (this.userData.userInfo != null) {
@@ -275,12 +278,12 @@ export default class TraktProvider extends ListProvider {
 
     private async traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
         this.informAWebRequest()
-        logger.log('info', '[Trakt] Start WebRequest ♗')
+        logger.info('[Trakt] Start WebRequest ♗')
 
         const response = await WebRequestManager.request({
             body,
             headers: {
-                Authorization: 'Bearer ' + this.userData.accessToken,
+                Authorization: `Bearer ${this.userData.accessToken ?? ''}`,
                 'Content-Type': 'application/json',
                 'trakt-api-key': this.getApiId(),
                 'trakt-api-version': '2',
@@ -296,11 +299,11 @@ export default class TraktProvider extends ListProvider {
         } else if (response.statusMessage === 'Unauthorized' && response.statusCode === 401) {
             this.userData.removeTokens()
             logger.error('[Trakt] User is no longer logged in')
-            throw new Error('[Trakt] User is not logged in: ' + response.statusCode)
+            throw new Error(`[Trakt] User is not logged in: ${response.statusCode}`)
         } else {
-            logger.error('[Trakt] status code:' + response.statusCode)
+            logger.error(`[Trakt] status code: ${response.statusCode}`)
             logger.error(responseBody)
-            throw new Error('[Trakt] Status code error:' + response.statusCode)
+            throw new Error(`[Trakt] Status code error: ${response.statusCode}`)
         }
     }
 }

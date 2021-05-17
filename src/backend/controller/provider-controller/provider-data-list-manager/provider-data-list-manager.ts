@@ -1,32 +1,39 @@
-import listHelper from '../../../helpFunctions/list-helper';
-import logger from '../../../logger/logger';
-import SeriesProviderExtensionInstanceCheck from '../../objects/extension/provider-extension/series-provider-extension-instance-check';
-import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data';
-import ProviderDataListLoader from './provider-data-list-loader';
-import ProviderDataListSearcher from './provider-data-list-searcher';
+import listHelper from '../../../helpFunctions/list-helper'
+import logger from '../../../logger/logger'
+import SeriesProviderExtensionInstanceCheck from '../../objects/extension/provider-extension/series-provider-extension-instance-check'
+import { InfoProviderLocalData } from '../provider-manager/local-data/info-provider-local-data'
+import ProviderLocalData from '../provider-manager/local-data/interfaces/provider-local-data'
+import { ListProviderLocalData } from '../provider-manager/local-data/list-provider-local-data'
+import ProviderDataListLoader from './provider-data-list-loader'
+import ProviderDataListSearcher from './provider-data-list-searcher'
 
 export default class ProviderDataListManager {
-    private static debounceSaving?: NodeJS.Timeout;
+    private static debounceSaving?: NodeJS.Timeout
+    private static providerDataList: ProviderLocalData[] = []
+    private static listLoaded = false
+    private static listMaintance = false
+    private static secondList: ProviderLocalData[] = []
     /**
      * Adds a new provider local data to the mainlist.
      * It checks if there is already a same entry and merge it.
      * @param provider
      * @param notfiyRenderer
      */
-    public static addProviderLocalDataToMainList(provider: ProviderLocalData, notfiyRenderer = false): number | undefined {
+    public static addProviderLocalDataToMainList(
+        provider: ProviderLocalData,
+        notfiyRenderer = false
+    ): number | undefined {
         try {
-            const alreadyExistingEntry = ProviderDataListSearcher.getProviderLDByProviderLD(provider);
+            const alreadyExistingEntry = ProviderDataListSearcher.getProviderLDByProviderLD(provider)
             if (alreadyExistingEntry != null) {
-                this.updateProviderInList(provider);
-                return undefined;
+                this.updateProviderInList(provider)
+                return undefined
             } else {
-                return this.providerDataList.push(provider);
+                return this.providerDataList.push(provider)
             }
         } catch (err) {
-            logger.error(err);
-            return undefined;
+            logger.error(err)
+            return undefined
         }
     }
 
@@ -35,77 +42,102 @@ export default class ProviderDataListManager {
      * @param provider
      */
     public static updateProviderInList(provider: ProviderLocalData): void {
-        const providerIndex = ProviderDataListSearcher.getIndexByProviderLD(provider);
+        const providerIndex = ProviderDataListSearcher.getIndexByProviderLD(provider)
         if (providerIndex != null) {
-            const oldProvider = this.providerDataList[providerIndex];
-            if (SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(oldProvider) &&
-                SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(provider)) {
-                const lpld = ListProviderLocalData.mergeProviderInfos(provider as ListProviderLocalData, oldProvider as ListProviderLocalData);
-                this.providerDataList[providerIndex] = lpld;
-            } else if (SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(oldProvider) &&
-                SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(provider)) {
-                const ipld = InfoProviderLocalData.mergeProviderInfos(provider as InfoProviderLocalData, oldProvider as InfoProviderLocalData);
-                this.providerDataList[providerIndex] = ipld;
+            const oldProvider = this.providerDataList[providerIndex]
+            if (
+                SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(oldProvider) &&
+                SeriesProviderExtensionInstanceCheck.instanceOfListProviderLocalData(provider)
+            ) {
+                const lpld = ListProviderLocalData.mergeProviderInfos(
+                    provider as ListProviderLocalData,
+                    oldProvider as ListProviderLocalData
+                )
+                this.providerDataList[providerIndex] = lpld
+            } else if (
+                SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(oldProvider) &&
+                SeriesProviderExtensionInstanceCheck.instanceOfInfoProviderLocalData(provider)
+            ) {
+                const ipld = InfoProviderLocalData.mergeProviderInfos(
+                    provider as InfoProviderLocalData,
+                    oldProvider as InfoProviderLocalData
+                )
+                this.providerDataList[providerIndex] = ipld
             } else {
-                logger.error('[ProviderList] Failed update: Not same instance');
+                logger.error('[ProviderList] Failed update: Not same instance')
             }
         }
-        this.requestSaveProviderList();
+        this.requestSaveProviderList()
     }
 
     /**
      * Refresh cached data and clean up double entrys.
      */
     public static finishListFilling(): void {
-        logger.log('info', '[ProviderList] Cleanup Mainlist');
-        ProviderDataListManager.listMaintance = true;
-        ProviderDataListManager.listMaintance = false;
+        logger.info('[ProviderList] Cleanup Mainlist')
+        ProviderDataListManager.listMaintance = true
+        ProviderDataListManager.listMaintance = false
     }
-
 
     public static removeSeriesFromMainList(providerLocalData: ProviderLocalData, notifyRenderer = false): boolean {
-        let result = false;
+        let result = false
         if (this.listMaintance) {
-            const result1 = this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.providerDataList);
-            const result2 = this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.secondList);
-            return (result1 || result2);
+            const result1 = this.removeSeriesFromList(
+                providerLocalData,
+                notifyRenderer,
+                ProviderDataListManager.providerDataList
+            )
+            const result2 = this.removeSeriesFromList(
+                providerLocalData,
+                notifyRenderer,
+                ProviderDataListManager.secondList
+            )
+            return result1 || result2
         } else {
-            result = this.removeSeriesFromList(providerLocalData, notifyRenderer, ProviderDataListManager.providerDataList);
+            result = this.removeSeriesFromList(
+                providerLocalData,
+                notifyRenderer,
+                ProviderDataListManager.providerDataList
+            )
         }
-        return result;
+        return result
     }
 
-    public static removeSeriesFromList(provider: ProviderLocalData, notifyRenderer = false, list?: ProviderLocalData[]): boolean {
-        this.checkIfListIsLoaded();
+    public static removeSeriesFromList(
+        provider: ProviderLocalData,
+        notifyRenderer = false,
+        list?: ProviderLocalData[]
+    ): boolean {
+        this.checkIfListIsLoaded()
         if (!list) {
-            list = this.getProviderDataList();
+            list = this.getProviderDataList()
         }
-        logger.log('info', '[ProviderList] Remove Item in mainlist: ' + provider.id + '(' + provider.provider + ')');
-        const index = ProviderDataListManager.getIndexFromProviderLocalData(provider, list);
+        logger.info(`[ProviderList] Remove Item in mainlist: ${provider.id}(${provider.provider})`)
+        const index = ProviderDataListManager.getIndexFromProviderLocalData(provider, list)
         if (index !== -1) {
-            const oldSize = list.length;
-            let ref = list;
-            ref = listHelper.removeEntrys(ref, ref[index]);
+            const oldSize = list.length
+            let ref = list
+            ref = listHelper.removeEntrys(ref, ref[index])
             if (notifyRenderer) {
                 // FrontendController.getInstance().removeEntryFromList(index);
             }
-            this.requestSaveProviderList();
-            return oldSize !== ref.length;
+            this.requestSaveProviderList()
+            return oldSize !== ref.length
         }
-        return false;
+        return false
     }
 
     /**
      * Retunrs all provider local data but in the maintaince phase it can return dublicated entrys.
      */
     public static getProviderDataList(): ProviderLocalData[] {
-        this.checkIfListIsLoaded();
+        this.checkIfListIsLoaded()
         if (this.listMaintance) {
-            const arr = [...ProviderDataListManager.secondList, ...ProviderDataListManager.providerDataList];
-            logger.log('info', '[ProviderList] TempList served: (size= ' + arr.length + ')');
-            return arr;
+            const arr = [...ProviderDataListManager.secondList, ...ProviderDataListManager.providerDataList]
+            logger.info(`[ProviderList] TempList served: (size= ${arr.length})`)
+            return arr
         } else {
-            return ProviderDataListManager.providerDataList;
+            return ProviderDataListManager.providerDataList
         }
     }
 
@@ -113,13 +145,13 @@ export default class ProviderDataListManager {
      * Retunrs all series but in the maintaince phase it can return dublicated entrys.
      */
     public static getProviderDataListSync(): ProviderLocalData[] {
-        this.checkIfListIsLoaded();
+        this.checkIfListIsLoaded()
         if (this.listMaintance) {
-            const arr = [...ProviderDataListManager.secondList, ...ProviderDataListManager.providerDataList];
-            logger.log('info', '[ProviderList] TempList served: (size= ' + arr.length + ')');
-            return arr;
+            const arr = [...ProviderDataListManager.secondList, ...ProviderDataListManager.providerDataList]
+            logger.info(`[ProviderList] TempList served: (size= ${arr.length})`)
+            return arr
         } else {
-            return ProviderDataListManager.providerDataList;
+            return ProviderDataListManager.providerDataList
         }
     }
 
@@ -128,29 +160,26 @@ export default class ProviderDataListManager {
      * INFO: In the maintance phase the index number can be valid very shortly.
      * @param anime
      */
-    public static getIndexFromProviderLocalData(anime: ProviderLocalData, seriesList?: ProviderLocalData[] | readonly ProviderLocalData[]): number {
+    public static getIndexFromProviderLocalData(
+        anime: ProviderLocalData,
+        seriesList?: ProviderLocalData[] | readonly ProviderLocalData[]
+    ): number {
         if (seriesList) {
-            return (seriesList).findIndex((x) => anime.id === x.id);
+            return seriesList.findIndex(x => anime.id === x.id)
         } else {
-            return (ProviderDataListManager.getProviderDataList()).findIndex((x) => anime.id === x.id);
+            return ProviderDataListManager.getProviderDataList().findIndex(x => anime.id === x.id)
         }
     }
 
     public static requestSaveProviderList(): void {
-        if (this.debounceSaving)
-            clearTimeout(this.debounceSaving);
-        this.debounceSaving = setTimeout(() => ProviderDataListLoader.saveData(this.getProviderDataList()), 2000);
+        if (this.debounceSaving) clearTimeout(this.debounceSaving)
+        this.debounceSaving = setTimeout(() => ProviderDataListLoader.saveData(this.getProviderDataList()), 2000)
     }
-
-    private static providerDataList: ProviderLocalData[] = [];
-    private static listLoaded = false;
-    private static listMaintance = false;
-    private static secondList: ProviderLocalData[] = [];
 
     private static checkIfListIsLoaded(): void {
         if (!ProviderDataListManager.listLoaded) {
-            ProviderDataListManager.providerDataList = ProviderDataListLoader.loadData();
-            ProviderDataListManager.listLoaded = true;
+            ProviderDataListManager.providerDataList = ProviderDataListLoader.loadData()
+            ProviderDataListManager.listLoaded = true
         }
     }
 }

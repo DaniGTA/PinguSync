@@ -170,7 +170,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
             provider.getFullInfoById = async (): Promise<MultiProviderResult> =>
                 new Promise<MultiProviderResult>(resolve => {
                     setTimeout(() => {
-                        resolve(undefined)
+                        resolve(undefined as any)
                     }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 50)
                 })
             await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(
