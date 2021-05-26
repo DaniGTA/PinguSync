@@ -1,3 +1,4 @@
+import { throws } from 'assert'
 import { createReadStream, createWriteStream, existsSync, readFileSync } from 'fs'
 // tslint:disable-next-line: no-implicit-dependencies
 import { xml2json } from 'xml-js'
@@ -179,7 +180,7 @@ export default class AniDBProvider extends InfoProvider {
                     stream.on('finish', fulfill)
                     stream.on('close', fulfill)
                 })
-                return this.convertXmlToJson()
+                return this.loadXML()
             }
         } catch (err) {
             logger.error(err)
@@ -187,15 +188,29 @@ export default class AniDBProvider extends InfoProvider {
         throw new Error('convert from anidb xml to json failed')
     }
 
-    private convertXmlToJson(filePath = './anidb-anime-titles.xml') {
+    private convertXmlToJson(filePath = './anidb-anime-titles.xml'): AniDBNameListXML {
         if (existsSync(filePath)) {
             const data = readFileSync(filePath, { encoding: 'utf8' })
+
             const json = xml2json(data, { compact: true, spaces: 0 })
             if (json) {
                 return JSON.parse(json) as AniDBNameListXML
             }
         }
         throw new Error('convert from ' + filePath + ' to JSON has failed')
+    }
+
+    private loadXML(): AniDBNameListXML {
+        let trys = 0
+        do {
+            try {
+                return this.convertXmlToJson()
+            } catch (err) {
+                logger.error(err)
+            }
+            trys++
+        } while (trys < 3)
+        throw new Error('Failed to load xml')
     }
 
     private downloadFile(url: string, filePath: string): Promise<string> {

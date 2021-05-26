@@ -32,7 +32,8 @@ export default class DownloadProviderLocalDataHelper {
                     if (isFailedRequestError(err)) {
                         throw err
                     }
-                    throw new Error('[' + provider.providerName + '] Unkown error: ' + err)
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    throw new Error(`[${provider.providerName}] Unkown error: ${err}`)
                 }
             }
         }

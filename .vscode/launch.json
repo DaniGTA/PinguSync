@@ -37,7 +37,8 @@
                 "--inspect-brk",
                 "${workspaceRoot}/node_modules/jest/bin/jest.js",
                 "-i",
-                "--runInBand"
+                "--runInBand",
+                "--testTimeout=5000000"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
@@ -52,6 +53,7 @@
                 "${fileBasenameNoExtension}",
                 "--config",
                   "--runInBand",
+                  "--testTimeout=5000000",
                 "jest.config.js"
             ],
             "console": "integratedTerminal",

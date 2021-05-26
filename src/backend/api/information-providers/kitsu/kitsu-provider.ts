@@ -43,7 +43,7 @@ export default class KitsuProvider extends ListProvider {
 
     constructor() {
         super()
-        this.api = new Kitsu()
+        this.api = this.getKitsuInstance()
         if (KitsuProvider.instance) {
             this.userData = KitsuProvider.instance.userData
         } else {
@@ -96,7 +96,7 @@ export default class KitsuProvider extends ListProvider {
         try {
             let searchResults = await this.search(seriesName)
             if (searchResults.data.length === 0) {
-                this.waitUntilItCanPerfomNextRequest()
+                await this.waitUntilItCanPerfomNextRequest()
                 searchResults = await this.search(seriesName)
             }
             for (const result of searchResults.data) {
@@ -117,7 +117,7 @@ export default class KitsuProvider extends ListProvider {
         if (provider.provider === this.providerName) {
             this.informAWebRequest()
             const getResult = ((await this.api.get(
-                'anime/' + provider.id + '?include=genres,episodes,streamingLinks'
+                `anime/${provider.id}?include=genres,episodes,streamingLinks`
             )) as unknown) as GetMediaResult
             return kitsuConverter.convertMediaToAnime(getResult.data)
         }
@@ -146,5 +146,9 @@ export default class KitsuProvider extends ListProvider {
             },
             include: 'mappings',
         } as any)) as ISearchResult
+    }
+
+    private getKitsuInstance() {
+        return new Kitsu({})
     }
 }

@@ -171,8 +171,8 @@ describe('Provider Helper Test', () => {
         const infoProvider = series.getAllProviderLocalDatas()
 
         const anidbProvider = infoProvider.find(x => x.provider === ProviderNameManager.getProviderName(AniDBProvider))
-        expect(anidbProvider.id).toBe(13244)
-        expect(series.getProviderSeasonTarget(anidbProvider.provider)?.getSingleSeasonNumberAsNumber()).toBe(3)
-        expect(series.getProviderSeasonTarget(anidbProvider.provider)?.seasonPart).toBe(1)
+        expect(anidbProvider?.id).toBe(13244)
+        expect(series.getProviderSeasonTarget(anidbProvider?.provider ?? '')?.getSingleSeasonNumberAsNumber()).toBe(3)
+        expect(series.getProviderSeasonTarget(anidbProvider?.provider ?? '')?.seasonPart).toBe(1)
     }, 20000)
 })

@@ -13,12 +13,7 @@ module.exports = {
 		'^.+\\.(ts|tsx)$': 'ts-jest'
 	},
 	'reporters': [
-		'default',
-		['jest-html-reporters', {
-			'publicPath': './html-report',
-			'filename': 'report.html',
-			'expand': true
-		}]
+		'default'
 	],
 	'watchPathIgnorePatterns': ['node_modules'],
 	'testTimeout': 3500,
@@ -30,7 +25,7 @@ module.exports = {
 	},
 	'testEnvironment': 'node',
 	'setupFilesAfterEnv': ['<rootDir>/test/test-helper.ts'],
-	'maxWorkers': 8
+	'maxWorkers': 2
 };
 
 

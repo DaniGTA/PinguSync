@@ -1,72 +1,99 @@
-import InfoProvider from '../../../../api/provider/info-provider';
-import ListProvider from '../../../../api/provider/list-provider';
-import MainListAdder from '../../../../controller/main-list-manager/main-list-adder';
-import Season from '../../../../controller/objects/meta/season';
-import Series from '../../../../controller/objects/series';
-import { InfoProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../../../../controller/provider-controller/provider-manager/provider-list';
-import logger from '../../../../logger/logger';
-import EpisodeRelationAnalyser from '../../../episode-helper/episode-relation-analyser';
-import ProviderLocalDataWithSeasonInfo from '../../provider-info-downloader/provider-data-with-season-info';
-import SeasonAwarenessPathController from '../season-awareness-path-controller';
+import InfoProvider from '../../../../api/provider/info-provider'
+import ListProvider from '../../../../api/provider/list-provider'
+import MainListAdder from '../../../../controller/main-list-manager/main-list-adder'
+import Season from '../../../../controller/objects/meta/season'
+import Series from '../../../../controller/objects/series'
+import { InfoProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data'
+import ProviderLocalData from '../../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import { ListProviderLocalData } from '../../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data'
+import ProviderList from '../../../../controller/provider-controller/provider-manager/provider-list'
+import logger from '../../../../logger/logger'
+import EpisodeRelationAnalyser from '../../../episode-helper/episode-relation-analyser'
+import ProviderLocalDataWithSeasonInfo from '../../provider-info-downloader/provider-data-with-season-info'
+import SeasonAwarenessPathController from '../season-awareness-path-controller'
+import { SeasonAwarenessPath } from '../season-awarness-path'
 
 export default class SeasonAwarenessSequelPathController {
     public static getSequel(providerThatHasAwareness: ProviderLocalData): ProviderLocalData | undefined {
         if (providerThatHasAwareness.sequelIds.length !== 0) {
-            const sequels = this.getSequelProviderLocalDatas(providerThatHasAwareness, providerThatHasAwareness.provider);
+            const sequels = this.getSequelProviderLocalDatas(
+                providerThatHasAwareness,
+                providerThatHasAwareness.provider
+            )
             for (const sequel of sequels) {
-                return sequel;
+                return sequel
             }
         }
     }
 
-
     public static async processSequel(
         providerThatHasAwareness: ProviderLocalData,
-        providerWithoutAwareness: ProviderLocalData, targetSeason: Season): Promise<ProviderLocalDataWithSeasonInfo[]> {
+        providerWithoutAwareness: ProviderLocalData,
+        targetSeason: Season
+    ): Promise<ProviderLocalDataWithSeasonInfo[]> {
         if (providerThatHasAwareness.sequelIds.length !== 0) {
-            const sequels = this.getSequelProviderLocalDatas(providerThatHasAwareness, providerThatHasAwareness.provider);
+            const sequels = this.getSequelProviderLocalDatas(
+                providerThatHasAwareness,
+                providerThatHasAwareness.provider
+            )
             for (const sequel of sequels) {
                 try {
-                    const seasonPathInstance = new SeasonAwarenessPathController(sequel, providerWithoutAwareness, targetSeason);
-                    const result = await seasonPathInstance.getSeasonAwarnessResult(targetSeason);
+                    const seasonPathInstance = new SeasonAwarenessPathController(
+                        sequel,
+                        providerWithoutAwareness,
+                        targetSeason,
+                        SeasonAwarenessPath.SEQUEL
+                    )
+                    const result = await seasonPathInstance.getSeasonAwarnessResult(targetSeason)
                     if (result.length !== 0) {
-                        return result;
+                        return result
                     }
                 } catch (err) {
-                    logger.debug('[SeasonAwarenessCreatorSeason] Sequel processing error:');
-                    logger.debug(err);
+                    logger.debug('[SeasonAwarenessCreatorSeason] Sequel processing error:')
+                    logger.debug(err)
                 }
             }
         }
-        throw new Error('no sequel avaible for provider: ' + providerThatHasAwareness.provider);
+        throw new Error('no sequel avaible for provider: ' + providerThatHasAwareness.provider)
     }
 
     public static addSequelTooMainList(
         providerWithAwareness: ProviderLocalData,
-        providerWithoutAwareness: ProviderLocalData, result: EpisodeRelationAnalyser): void {
-        const sequel = this.getSequel(providerWithAwareness);
+        providerWithoutAwareness: ProviderLocalData,
+        result: EpisodeRelationAnalyser
+    ): void {
+        const sequel = this.getSequel(providerWithAwareness)
         if (sequel) {
-            const sequelSeasonResult = new Season(result.finalSeasonNumbers, 2);
-            const sequelResult = [new ProviderLocalDataWithSeasonInfo(sequel, sequelSeasonResult),
-            new ProviderLocalDataWithSeasonInfo(providerWithoutAwareness, sequelSeasonResult)];
-            const sequelTempSeries = new Series();
-            sequelTempSeries.addProviderDatasWithSeasonInfos(...sequelResult);
-            new MainListAdder().addSeriesWithoutCleanUp(sequelTempSeries);
+            const sequelSeasonResult = new Season(result.finalSeasonNumbers, 2)
+            const sequelResult = [
+                new ProviderLocalDataWithSeasonInfo(sequel, sequelSeasonResult),
+                new ProviderLocalDataWithSeasonInfo(providerWithoutAwareness, sequelSeasonResult),
+            ]
+            const sequelTempSeries = new Series()
+            sequelTempSeries.addProviderDatasWithSeasonInfos(...sequelResult)
+            void new MainListAdder().addSeriesWithoutCleanUp(sequelTempSeries)
         }
     }
 
     private static getSequelProviderLocalDatas(provider: ProviderLocalData, providerName: string): ProviderLocalData[] {
-        const sequels = [];
+        const sequels = []
         for (const sequelId of provider.sequelIds) {
             if (provider.instanceName === 'InfoProviderLocalData') {
-                sequels.push(new InfoProviderLocalData(sequelId, ProviderList.getProviderInstanceByProviderName(providerName) as InfoProvider));
+                sequels.push(
+                    new InfoProviderLocalData(
+                        sequelId,
+                        ProviderList.getProviderInstanceByProviderName(providerName) as InfoProvider
+                    )
+                )
             } else if (provider.instanceName === 'ListProviderLocalData') {
-                sequels.push(new ListProviderLocalData(sequelId, ProviderList.getProviderInstanceByProviderName(providerName) as ListProvider));
+                sequels.push(
+                    new ListProviderLocalData(
+                        sequelId,
+                        ProviderList.getProviderInstanceByProviderName(providerName) as ListProvider
+                    )
+                )
             }
         }
-        return sequels;
+        return sequels
     }
 }

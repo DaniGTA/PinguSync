@@ -2,8 +2,8 @@ import ExternalInformationProvider from '../../../api/provider/external-informat
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
 import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
-import DownloadSettings from './download-settings'
 import logger from '../../../logger/logger'
+import Timeout from '../../connection/timeout/timeout'
 
 export default class DownloadProviderLocalDataWithId {
     public static async download(
@@ -13,15 +13,16 @@ export default class DownloadProviderLocalDataWithId {
         if (provider.requireInternetAccessForGetFullById) {
             await provider.waitUntilItCanPerfomNextRequest()
         }
+        const timeout = new Timeout()
         try {
-            const timeoutId = DownloadSettings.getTimeoutId()
             const result = await Promise.race([
-                DownloadSettings.requestTimoutPromise<MultiProviderResult>(timeoutId),
+                timeout.onTimeoutPromise<MultiProviderResult>(),
                 provider.getFullInfoById(providerLocalData),
             ])
-            DownloadSettings.stopTimeout(timeoutId)
+            timeout.cancel()
             return result
         } catch (err) {
+            timeout.cancel()
             if (isFailedRequestError(err)) {
                 throw err
             }

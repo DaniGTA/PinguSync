@@ -17,7 +17,6 @@ import 'threads/register'
 import logger from '../src/backend/logger/logger'
 import winston, { format } from 'winston'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { addMsg } = require('jest-html-reporters/helper')
 
 ResponseHelper.mockRequest()
 // tslint:disable: no-string-literal
@@ -48,7 +47,7 @@ logger.on('data', function(log) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (log?.timestamp !== undefined && log?.level !== undefined && log?.message !== undefined) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        addMsg(`${log.timestamp} ${log.level}: ${log.message}`)
+        //addMsg(`${log.timestamp} ${log.level}: ${log.message}`)
     }
 })
 logger.info('Finished env setup')

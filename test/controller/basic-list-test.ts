@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-conditional-expect */
 /* eslint-disable @typescript-eslint/require-await */
 import AniDBHelper from '../../src/backend/api/information-providers/anidb/anidb-helper'
 import AniDBProvider from '../../src/backend/api/information-providers/anidb/anidb-provider'
@@ -24,7 +25,6 @@ import { ListProviderLocalData } from '../../src/backend/controller/provider-con
 import ProviderList from '../../src/backend/controller/provider-controller/provider-manager/provider-list'
 import ProviderNameManager from '../../src/backend/controller/provider-controller/provider-manager/provider-name-manager'
 import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-binding-pool-helper'
-import DownloadProviderLocalDataWithoutId from '../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-without-id'
 import ProviderLocalDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info'
 import seriesHelper from '../../src/backend/helpFunctions/series-helper'
 import logger from '../../src/backend/logger/logger'
@@ -342,15 +342,11 @@ describe('Basic List | Testrun', () => {
         const provider = series
             .getAllProviderLocalDatas()
             .find(x => x.provider === TraktProvider.getInstance().providerName)
-        if (provider != null) {
-            for (const iterator of provider.getDetailEpisodeInfos()) {
-                logger.warn(iterator.episodeNumber + ' S: ' + iterator.season)
-            }
-            expect(provider.getDetailEpisodeInfos().length).toEqual(341)
-        } else {
-            throw new Error()
+        for (const iterator of provider?.getDetailEpisodeInfos() ?? []) {
+            logger.warn(`${iterator.episodeNumber} S: ${iterator?.season?.getSingleSeasonNumberAsNumber() ?? ''}`)
         }
-    }, 4000)
+        expect(provider?.getDetailEpisodeInfos().length).toEqual(341)
+    }, 8000)
 
     test('should update anilist series (20605)', async () => {
         if (!ListController.instance) {
@@ -405,26 +401,18 @@ describe('Basic List | Testrun', () => {
         const mpr2 = new MultiProviderResult(s2provider1)
         const resultS1 = MainListSearcher['findSeriesWithMultiProviderResult'](mpr1)
         const resultS2 = MainListSearcher['findSeriesWithMultiProviderResult'](mpr2)
-        if (resultS1 && resultS2) {
-            const traktProviderS1 = resultS1
-                .getAllProviderLocalDatas()
-                .find(x => x.provider === TraktProvider.getInstance().providerName)
-            const traktProviderS2 = resultS2
-                .getAllProviderLocalDatas()
-                .find(x => x.provider === TraktProvider.getInstance().providerName)
-            if (traktProviderS1 && traktProviderS2) {
-                expect(
-                    resultS1.getProviderSeasonTarget(traktProviderS1.provider)?.getSingleSeasonNumberAsNumber()
-                ).toEqual(1)
-                expect(
-                    resultS2.getProviderSeasonTarget(traktProviderS2.provider)?.getSingleSeasonNumberAsNumber()
-                ).toEqual(2)
-            } else {
-                throw new Error()
-            }
-        } else {
-            throw new Error()
-        }
+        const traktProviderS1 = resultS1
+            ?.getAllProviderLocalDatas()
+            .find(x => x.provider === TraktProvider.getInstance().providerName)
+        const traktProviderS2 = resultS2
+            ?.getAllProviderLocalDatas()
+            .find(x => x.provider === TraktProvider.getInstance().providerName)
+        expect(
+            resultS1?.getProviderSeasonTarget(traktProviderS1?.provider ?? '')?.getSingleSeasonNumberAsNumber()
+        ).toEqual(1)
+        expect(
+            resultS2?.getProviderSeasonTarget(traktProviderS2?.provider ?? '')?.getSingleSeasonNumberAsNumber()
+        ).toEqual(2)
     }, 4000)
 
     test('should get trakt info data on all seasons', async () => {
@@ -541,72 +529,56 @@ describe('Basic List | Testrun', () => {
         await ListController.instance.addSeriesToMainList(series3)
         await ListController.instance.addSeriesToMainList(series4)
 
-        const result = await new DownloadProviderLocalDataWithoutId(
-            series2,
-            ProviderList.getProviderInstanceByClass(TraktProvider)
-        )['linkProviderDataFromRelations']()
-
-        expect(
-            series2.getProviderSeasonTarget(result.providerLocalData.provider)?.getSingleSeasonNumberAsNumber()
-        ).toBe(2)
-
-        const seasonTarget = series2.getProviderSeasonTarget(TraktProvider.getInstance().providerName)
-
-        expect(seasonTarget?.getSingleSeasonNumberAsNumber()).toBe(2)
         // tslint:disable-next-line: no-string-literal
         const provider = series2
             .getAllProviderLocalDatas()
             .find(x => x.provider === TraktProvider.getInstance().providerName)
-        if (provider != null) {
-            for (const episode of provider.getDetailEpisodeInfos()) {
-                if (episode.season?.getSingleSeasonNumberAsNumber() === 1) {
-                    const s1Result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                        series1.episodeBindingPools,
-                        episode
-                    )
-                    const relevantResult = s1Result.find(
-                        x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
-                    )
-                    expect(relevantResult).not.toBeUndefined()
-                } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
-                    const s2BindedEpisodeResult = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                        series2.episodeBindingPools,
-                        episode
-                    )
-                    const relevantResult = s2BindedEpisodeResult.find(
-                        x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
-                    )
-                    expect(relevantResult).not.toBeUndefined()
-                } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
-                    const allEpisodeBindingsPool = MainListManager.getMainList().flatMap(x => x.episodeBindingPools)
-                    const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode)
-                    const s = len.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider))
-                    if ((episode.episodeNumber as number) < 13) {
-                        expect(s?.episodeNumber).toBe(episode.episodeNumber)
-                        expect(s?.providerSeriesId).toBe(99255)
-                    } else {
-                        expect((s?.episodeNumber as number) + 12).toBe(episode.episodeNumber)
-                        expect(s?.providerSeriesId).toBe(100773)
-                    }
-                    expect(len.length).toBeGreaterThanOrEqual(2)
-                } else if (episode.season?.getSingleSeasonNumberAsNumber() === 4) {
-                    const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                        series4.episodeBindingPools,
-                        episode
-                    )
-                    const relevantResult = result.find(
-                        x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
-                    )
-                    expect(relevantResult).not.toBeUndefined()
+        for (const episode of provider?.getDetailEpisodeInfos() ?? []) {
+            if (episode.season?.getSingleSeasonNumberAsNumber() === 1) {
+                const s1Result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
+                    series1.episodeBindingPools,
+                    episode
+                )
+                const relevantResult = s1Result.find(
+                    x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
+                )
+                expect(relevantResult).not.toBeUndefined()
+            } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
+                const s2BindedEpisodeResult = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
+                    series2.episodeBindingPools,
+                    episode
+                )
+                const relevantResult = s2BindedEpisodeResult.find(
+                    x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
+                )
+                expect(relevantResult).not.toBeUndefined()
+            } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
+                const allEpisodeBindingsPool = MainListManager.getMainList().flatMap(x => x.episodeBindingPools)
+                const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode)
+                const s = len.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider))
+                if ((episode.episodeNumber as number) < 13) {
+                    expect(s?.episodeNumber).toBe(episode.episodeNumber)
+                    expect(s?.providerSeriesId).toBe(99255)
+                } else {
+                    expect((s?.episodeNumber as number) + 12).toBe(episode.episodeNumber)
+                    expect(s?.providerSeriesId).toBe(100773)
                 }
-                logger.warn(episode.episodeNumber + ' S: ' + episode.season?.getSingleSeasonNumberAsNumber())
+                expect(len.length).toBeGreaterThanOrEqual(2)
+            } else if (episode.season?.getSingleSeasonNumberAsNumber() === 4) {
+                const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
+                    series4.episodeBindingPools,
+                    episode
+                )
+                const relevantResult = result.find(
+                    x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
+                )
+                expect(relevantResult).not.toBeUndefined()
             }
-            const season = series2.getProviderSeasonTarget(provider.provider)
-            expect(season?.getSingleSeasonNumberAsNumber()).toEqual(2)
-        } else {
-            throw new Error()
+            logger.warn(`${episode.episodeNumber} S: ${episode.season?.getSingleSeasonNumberAsNumber() ?? ''}`)
         }
-    }, 4000)
+        const season = series2.getProviderSeasonTarget(provider?.provider ?? '')
+        expect(season?.getSingleSeasonNumberAsNumber()).toEqual(2)
+    }, 16000)
 
     test('should get series and should map episodes right (Series: Clannad) (Has different max episode number on S1)', async () => {
         const provider = new ListProviderLocalData(2167, AniListProvider)

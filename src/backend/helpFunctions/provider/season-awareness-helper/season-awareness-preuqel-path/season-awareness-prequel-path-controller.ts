@@ -10,6 +10,7 @@ import SeasonComperator from '../../../comperators/season-comperator'
 import EpisodeRelationAnalyser from '../../../episode-helper/episode-relation-analyser'
 import ProviderLocalDataWithSeasonInfo from '../../provider-info-downloader/provider-data-with-season-info'
 import SeasonAwarenessPathController from '../season-awareness-path-controller'
+import { SeasonAwarenessPath } from '../season-awarness-path'
 
 export default class SeasonAwarenessPrequelPathController {
     public static async getSeasonAwarenessFromPrequel(
@@ -43,7 +44,8 @@ export default class SeasonAwarenessPrequelPathController {
                     const seasonPathInstance = new SeasonAwarenessPathController(
                         prequel,
                         providerWithoutAwareness,
-                        targetSeason
+                        targetSeason,
+                        SeasonAwarenessPath.PREQUEL
                     )
                     const result = await seasonPathInstance.getSeasonAwarnessResult(targetSeason)
                     if (result.length !== 0) {

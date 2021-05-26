@@ -14,6 +14,7 @@ import { AbsoluteResult } from '../../comperators/comperator-results.ts/comperat
 import MediaTypeComperator from '../../comperators/media-type-comperator'
 import MultiProviderComperator from '../../comperators/multi-provider-results-comperator'
 import SeasonComperator from '../../comperators/season-comperator'
+import Timeout from '../../connection/timeout/timeout'
 import listHelper from '../../list-helper'
 import MediaTypeHelper from '../../media-type-helper'
 import TitleHelper from '../../name-helper/title-helper'
@@ -244,12 +245,20 @@ export default class DownloadProviderLocalDataWithoutId {
             await this.provider.waitUntilItCanPerfomNextRequest()
         }
         logger.debug(`Starting search request with name value: ${name.name} and season number: ${seasonNumber ?? ''}`)
-        const timeoutId = DownloadSettings.getTimeoutId()
-        searchResult = await Promise.race([
-            DownloadSettings.requestTimoutPromise<MultiProviderResult[]>(timeoutId),
-            this.provider.getMoreSeriesInfoByName(name.name.trim(), seasonNumber),
-        ])
-        DownloadSettings.stopTimeout(timeoutId)
+        const timeout = new Timeout()
+        try {
+            searchResult = await Promise.race([
+                timeout.onTimeoutPromise<MultiProviderResult[]>(),
+                this.provider.getMoreSeriesInfoByName(name.name.trim(), seasonNumber),
+            ])
+            timeout.cancel()
+        } catch (err) {
+            timeout.cancel()
+            if (isFailedRequestError(err)) {
+                throw err
+            }
+            throw FailedRequestError.ProviderNoResult
+        }
         return this.processResultsOfGetMoreSeriesInfoByName(searchResult)
     }
 
