@@ -2,9 +2,11 @@ import { MediaType } from '../../controller/objects/meta/media-type'
 import timeHelper from '../../helpFunctions/time-helper'
 import ExternalInformationProvider from './external-information-provider'
 import ApiKeyController from '../../controller/key/api-key-controller'
+import { InformationTrustRank } from './information-trust-rank'
 
 export default abstract class ExternalProvider {
     public providerName = this.constructor.name
+    public canTrustInformations = InformationTrustRank.TRUST
 
     protected requestRateLimitInMs = 400
 

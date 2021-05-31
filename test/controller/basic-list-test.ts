@@ -28,6 +28,7 @@ import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-bi
 import ProviderLocalDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info'
 import seriesHelper from '../../src/backend/helpFunctions/series-helper'
 import logger from '../../src/backend/logger/logger'
+
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
     beforeAll(() => {
@@ -345,7 +346,7 @@ describe('Basic List | Testrun', () => {
         for (const iterator of provider?.getDetailEpisodeInfos() ?? []) {
             logger.warn(`${iterator.episodeNumber} S: ${iterator?.season?.getSingleSeasonNumberAsNumber() ?? ''}`)
         }
-        expect(provider?.getDetailEpisodeInfos().length).toEqual(341)
+        expect(provider?.getDetailEpisodeInfos().length).toEqual(337)
     }, 8000)
 
     test('should update anilist series (20605)', async () => {
@@ -645,7 +646,7 @@ describe('Basic List | Testrun', () => {
             const relevantResult = epMapping.bindedEpisodeMappings.find(
                 x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
             )
-            expect(relevantResult).toBe(undefined)
+            expect(relevantResult).not.toBeUndefined()
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber)
@@ -688,7 +689,7 @@ describe('Basic List | Testrun', () => {
             const relevantResult = epMapping.bindedEpisodeMappings.find(
                 x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
             )
-            expect(relevantResult).toBe(undefined)
+            expect(relevantResult).not.toBe(undefined)
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber)
@@ -732,7 +733,7 @@ describe('Basic List | Testrun', () => {
             const relevantResult = epMapping.bindedEpisodeMappings.find(
                 x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
             )
-            expect(relevantResult).toBe(undefined)
+            expect(relevantResult).not.toBe(undefined)
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber)

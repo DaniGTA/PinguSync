@@ -158,6 +158,8 @@ export default class NewProviderHelper {
                 if (oldLocalData) {
                     // tslint:disable-next-line: triple-equals
                     return oldLocalData.id != providerLocalData.providerLocalData.id
+                } else {
+                    return true
                 }
             }
         }

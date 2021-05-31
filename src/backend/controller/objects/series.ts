@@ -553,15 +553,12 @@ export default class Series extends SeriesProviderExtension {
         ) {
             // UKNOWN SEASON
             if (result.searchResultDetails && this.cachedSeason === undefined && allowAddNewEntry) {
-                if (result.searchResultDetails.searchedProviders.length !== 0) {
+                if (result.searchResultDetails.foundedProviderLocalDatas.length !== 0) {
                     logger.warn(
-                        'Add TempSeries to MainList: ' +
-                            result.searchResultDetails.searchedProviders[0].provider +
-                            ': ' +
-                            result.searchResultDetails.searchedProviders[0].id
+                        `Add TempSeries to MainList: ${result.searchResultDetails.foundedProviderLocalDatas[0].provider}: ${result.searchResultDetails.foundedProviderLocalDatas[0].id}`
                     )
                     const list = SeasonFindHelper.createTempSeriesFromPrequels(
-                        result.searchResultDetails.searchedProviders
+                        result.searchResultDetails.foundedProviderLocalDatas
                     )
                     await new MainListAdder().addSeriesWithoutCleanUp(...list)
                     logger.info('Temp Series Successfull added.')

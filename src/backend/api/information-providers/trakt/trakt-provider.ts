@@ -25,6 +25,7 @@ import { Movies } from './objects/movies'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import { NameType } from '../../../controller/objects/meta/name-type'
 import { EpisodeHistoryUpdate } from './objects/episodes'
+import { InformationTrustRank } from '../../provider/information-trust-rank'
 
 export default class TraktProvider extends ListProvider {
     private static instance: TraktProvider
@@ -35,6 +36,8 @@ export default class TraktProvider extends ListProvider {
     public hasEpisodeTitleOnFullInfo = true
     public hasOAuthLogin = true
     public hasDefaultLogin = false
+    // Some Series have false entries
+    public canTrustInformations = InformationTrustRank.CURRUPT_DATA
     public userData: TraktUserData
     public version = 1
 

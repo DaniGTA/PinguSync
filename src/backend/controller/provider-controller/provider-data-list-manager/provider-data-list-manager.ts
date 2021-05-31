@@ -1,3 +1,4 @@
+import ExternalInformationProvider from '../../../api/provider/external-information-provider'
 import listHelper from '../../../helpFunctions/list-helper'
 import logger from '../../../logger/logger'
 import SeriesProviderExtensionInstanceCheck from '../../objects/extension/provider-extension/series-provider-extension-instance-check'
@@ -174,6 +175,14 @@ export default class ProviderDataListManager {
     public static requestSaveProviderList(): void {
         if (this.debounceSaving) clearTimeout(this.debounceSaving)
         this.debounceSaving = setTimeout(() => ProviderDataListLoader.saveData(this.getProviderDataList()), 2000)
+    }
+
+    public static markProviderDataAsCorrupt(providerInstance: ExternalInformationProvider, id: number | string): void {
+        const providerData = ProviderDataListSearcher.getOneProviderLocalData(id, providerInstance.providerName)
+        if (providerData) {
+            providerData.corruptData = true
+            this.requestSaveProviderList()
+        }
     }
 
     private static checkIfListIsLoaded(): void {

@@ -38,6 +38,7 @@ export default abstract class ProviderLocalData {
      * Cant get more info from this provider.
      */
     public infoStatus: ProviderInfoStatus = ProviderInfoStatus.NOT_AVAILABLE
+    public corruptData = false
     /**
      * The provider name
      */

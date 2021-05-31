@@ -1,10 +1,15 @@
+import ProviderController from '../../../components/controller/provider-controller'
+import { InformationTrustRank } from '../../api/provider/information-trust-rank'
 import Episode from '../../controller/objects/meta/episode/episode'
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type'
 import Season from '../../controller/objects/meta/season'
+import ProviderDataListManager from '../../controller/provider-controller/provider-data-list-manager/provider-data-list-manager'
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list'
 import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-result'
 import EpisodeComperator from '../comperators/episode-comperator'
 import SeasonComperator from '../comperators/season-comperator'
 import listHelper from '../list-helper'
+import ProviderHelper from '../provider/provider-helper'
 import EpisodeHelper from './episode-helper'
 
 export default class EpisodeRelationAnalyser {
@@ -23,6 +28,7 @@ export default class EpisodeRelationAnalyser {
     public missingEpisodes: number
     public seasonComplete = false
     public maxSeasonNumber: number | undefined
+    public curruptData = false
 
     constructor(private seasonHolder: Episode[], private currentSeason: Episode[]) {
         this.calcAllInformations()
@@ -61,13 +67,27 @@ export default class EpisodeRelationAnalyser {
     }
 
     private calcAllInformations(): void {
+        const canSeasonHolderBeCurrupt = this.canBeCorrupted(this.seasonHolder[0])
         for (const episode of this.seasonHolder) {
+            let founds = 0
             for (const newEpisodes of this.currentSeason) {
                 const result = EpisodeComperator.isSameEpisodeTitle(episode, newEpisodes)
                 if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                     this.updateAllInformations(episode, newEpisodes)
-                    break
+                    if (!canSeasonHolderBeCurrupt) {
+                        break
+                    } else {
+                        founds++
+                    }
                 }
+            }
+            if (founds > 1) {
+                const providerInstance = ProviderList.getProviderInstanceByProviderName(episode.provider ?? '')
+                if (providerInstance && episode.providerId !== undefined) {
+                    ProviderDataListManager.markProviderDataAsCorrupt(providerInstance, episode.providerId)
+                }
+                this.curruptData = true
+                break
             }
         }
         this.updateMaxSeasonNumber(this.seasonHolder)
@@ -194,5 +214,16 @@ export default class EpisodeRelationAnalyser {
             }
         }
         return true
+    }
+
+    private canBeCorrupted(ep: Episode): boolean {
+        try {
+            return (
+                ProviderList.getProviderInstanceByProviderName(ep?.provider ?? '')?.canTrustInformations ==
+                InformationTrustRank.CURRUPT_DATA
+            )
+        } catch (err) {
+            return false
+        }
     }
 }

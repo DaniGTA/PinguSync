@@ -43,22 +43,6 @@ export default class AniDBProvider extends InfoProvider {
         }
     }
 
-    private async loadAniDBNameManagerData(): Promise<void> {
-        if (this.allowDownload() && this.download) {
-            await this.getData()
-        } else if (
-            !AniDBHelper.anidbNameManager.data ||
-            Object.entries(AniDBHelper.anidbNameManager.data).length === 0
-        ) {
-            try {
-                AniDBHelper.anidbNameManager.updateOnlyData(this.convertXmlToJson())
-            } catch (err) {
-                logger.error('Error at AniDBProvider.constructor:')
-                logger.error(err)
-            }
-        }
-    }
-
     public async getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
         const nameDBList = AniDBHelper.anidbNameManager.data
         if (nameDBList) {
@@ -74,9 +58,7 @@ export default class AniDBProvider extends InfoProvider {
         this.informAWebRequest()
         const converter = new AniDBConverter()
         if (provider.provider === this.providerName && provider.id) {
-            const url =
-                `http://api.anidb.net:9001/httpapi?request=anime&client=${this.clientName}&clientver=${this.clientVersion}&protover=1&aid=` +
-                provider.id
+            const url = `http://api.anidb.net:9001/httpapi?request=anime&client=${this.clientName}&clientver=${this.clientVersion}&protover=1&aid=${provider.id}`
             try {
                 const fullInfo = await this.webRequest<AniDBAnimeFullInfo>(url)
                 return converter.convertFullInfoToProviderLocalData(fullInfo)
@@ -156,6 +138,22 @@ export default class AniDBProvider extends InfoProvider {
         return Math.floor((utc2 - utc1) / _MS_PER_DAY)
     }
 
+    private async loadAniDBNameManagerData(): Promise<void> {
+        if (this.allowDownload() && this.download) {
+            await this.getData()
+        } else if (
+            !AniDBHelper.anidbNameManager.data ||
+            Object.entries(AniDBHelper.anidbNameManager.data).length === 0
+        ) {
+            try {
+                AniDBHelper.anidbNameManager.updateOnlyData(this.convertXmlToJson())
+            } catch (err) {
+                logger.error('Error at AniDBProvider.constructor:')
+                logger.error(err)
+            }
+        }
+    }
+
     private async getData(): Promise<void> {
         logger.warn('[ANIDB] Download anime names.')
         try {
@@ -226,7 +224,7 @@ export default class AniDBProvider extends InfoProvider {
                     resolve(readFileSync(filePath, { encoding: 'utf8' }))
                 })
             } else {
-                rejects(new Error('Status Code: ' + res.statusCode))
+                rejects(new Error(`Status Code: ${res.statusCode}`))
             }
         })
     }

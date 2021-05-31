@@ -74,7 +74,7 @@ export default class MainListAdder {
     private async listWorker(list: Series[]): Promise<void> {
         const searcher = new MainListSearcher()
         const providerCacheManager = new AdderProviderCacheManager()
-        logger.debug('[MainListAdder] Worker started to process ' + list.length + ' Items.')
+        logger.debug(`[MainListAdder] Worker started to process ${list.length} Items.`)
         let addCounter = 0
         for (const series of list) {
             const providerCache = providerCacheManager.convertSeriesToProviderCache(series)
@@ -98,7 +98,7 @@ export default class MainListAdder {
                         }
                     }
                     addCounter++
-                    logger.info('[MainListAdder] Adding Series to list. Progress: ' + addCounter + '/' + list.length)
+                    logger.info(`[MainListAdder] Adding Series to list. Progress: ${addCounter}/${list.length}`)
                 } catch (err) {
                     logger.error('[MainListAdder] [listWorker]: (error below)')
                     logger.error(err)
@@ -106,7 +106,7 @@ export default class MainListAdder {
                 listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache)
             }
         }
-        logger.info('Added ' + addCounter + '/' + list.length + ' to mainList')
+        logger.info(`Added ${addCounter}/${list.length} to mainList`)
         logger.info('End waitlist worker')
         return
     }

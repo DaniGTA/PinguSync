@@ -116,14 +116,10 @@ export default class AniListProvider extends ListProvider {
                 'Content-Type': 'application/json',
             },
             json: {
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 client_id: this.getApiId(),
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 client_secret: this.getApiSecret(),
                 code, // The Authorization Code received previously
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 grant_type: 'authorization_code',
-                // eslint-disable-next-line @typescript-eslint/camelcase
                 redirect_uri: this.redirectUri,
             },
             method: 'POST',
