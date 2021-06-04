@@ -1,6 +1,8 @@
-import { createWriteStream, ReadStream, WriteStream } from 'fs'
+import { createWriteStream, ReadStream, writeFileSync, WriteStream } from 'fs'
+import moment from 'moment'
 import { Readable } from 'stream'
 import { createGunzip } from 'zlib'
+import RequestBundle from '../../../controller/web-request-manager/request-bundle'
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager'
 
 export default class TMDBOfflineMetdataDownloadManager {
@@ -20,27 +22,29 @@ export default class TMDBOfflineMetdataDownloadManager {
         const movies = `movie_ids_${yesterday}${this.EXTENSION}`
         const series = `tv_series_ids_${yesterday}${this.EXTENSION}`
 
-        const movies_response = await WebRequestManager.request({ uri: movies, baseUrl: this.BASE_URL })
-        const series_response = await WebRequestManager.request({ uri: series, baseUrl: this.BASE_URL })
+        const movies_response = await WebRequestManager.request(
+            new RequestBundle(this.BASE_URL + movies, { decompress: true })
+        )
+        const series_response = await WebRequestManager.request(
+            new RequestBundle(this.BASE_URL + series, { decompress: true })
+        )
+        if (movies_response.statusCode === 200 && series_response.statusCode === 200) {
+            writeFileSync(this.getMovieFilePath(), movies_response.body, { flag: 'w' })
+            writeFileSync(this.getSeriesFilePath(), series_response.body, { flag: 'w' })
+        }
 
-        await this.decompressFile(Readable.from(movies_response.body), createWriteStream(this.getMovieFilePath()))
-        await this.decompressFile(Readable.from(series_response.body), createWriteStream(this.getSeriesFilePath()))
         return
     }
 
     private static getOfflineMetadataDateFormat(): string {
-        const yesterday = new Date(new Date().getDay() - 1)
-        return `${yesterday.getMonth()}_${yesterday.getDay()}_${yesterday.getFullYear()}`
+        const yesterday = moment().subtract(1, 'days')
+        const month = this.addZeroToHighNumbers(yesterday.month() + 1)
+        const date = this.addZeroToHighNumbers(yesterday.date())
+        const year = this.addZeroToHighNumbers(yesterday.year())
+        return `${month}_${date}_${year}`
     }
 
-    private static async decompressFile(compressedFile: ReadStream | Readable, decrompressedFile: WriteStream) {
-        const unzip = createGunzip()
-
-        const stream = compressedFile.pipe(unzip).pipe(decrompressedFile)
-        // Wait until the Stream ends.
-        await new Promise(fulfill => {
-            stream.on('finish', fulfill)
-            stream.on('close', fulfill)
-        })
+    private static addZeroToHighNumbers(n: number) {
+        return n > 9 ? `${n}` : `0${n}`
     }
 }

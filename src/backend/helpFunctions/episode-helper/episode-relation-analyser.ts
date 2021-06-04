@@ -1,4 +1,3 @@
-import ProviderController from '../../../components/controller/provider-controller'
 import { InformationTrustRank } from '../../api/provider/information-trust-rank'
 import Episode from '../../controller/objects/meta/episode/episode'
 import { EpisodeType } from '../../controller/objects/meta/episode/episode-type'
@@ -9,7 +8,6 @@ import { AbsoluteResult } from '../comperators/comperator-results.ts/comperator-
 import EpisodeComperator from '../comperators/episode-comperator'
 import SeasonComperator from '../comperators/season-comperator'
 import listHelper from '../list-helper'
-import ProviderHelper from '../provider/provider-helper'
 import EpisodeHelper from './episode-helper'
 
 export default class EpisodeRelationAnalyser {

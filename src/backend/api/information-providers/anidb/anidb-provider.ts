@@ -1,5 +1,5 @@
 import { throws } from 'assert'
-import { createReadStream, createWriteStream, existsSync, readFileSync } from 'fs'
+import { createReadStream, createWriteStream, existsSync, readFileSync, writeFileSync } from 'fs'
 // tslint:disable-next-line: no-implicit-dependencies
 import { xml2json } from 'xml-js'
 import { createGunzip } from 'zlib'
@@ -8,6 +8,7 @@ import { MediaType } from '../../../controller/objects/meta/media-type'
 import Name from '../../../controller/objects/meta/name'
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import RequestBundle from '../../../controller/web-request-manager/request-bundle'
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager'
 import logger from '../../../logger/logger'
 import ExternalInformationProvider from '../../provider/external-information-provider'
@@ -157,7 +158,8 @@ export default class AniDBProvider extends InfoProvider {
     private async getData(): Promise<void> {
         logger.warn('[ANIDB] Download anime names.')
         try {
-            await this.downloadFile('http://anidb.net/api/anime-titles.xml.gz', './anidb-anime-titles.xml.gz')
+            const fileContent = await this.downloadFile('http://anidb.net/api/anime-titles.xml.gz')
+            writeFileSync('./anidb-anime-titles.xml', fileContent, { flag: 'w' })
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML())
         } catch (err) {
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), AniDBHelper.anidbNameManager.data)
@@ -211,29 +213,23 @@ export default class AniDBProvider extends InfoProvider {
         throw new Error('Failed to load xml')
     }
 
-    private downloadFile(url: string, filePath: string): Promise<string> {
+    private async downloadFile(url: string): Promise<string> {
         this.informAWebRequest()
         // eslint-disable-next-line no-async-promise-executor
-        return new Promise<string>(async (resolve, rejects) => {
-            const res = await WebRequestManager.request({ uri: url, gzip: true })
-            if (res.statusCode === 200) {
-                const file = createWriteStream(filePath)
-                res.body.pipe(file)
-                file.on('finish', () => {
-                    file.close() // close() is async, call cb after close completes.
-                    resolve(readFileSync(filePath, { encoding: 'utf8' }))
-                })
-            } else {
-                rejects(new Error(`Status Code: ${res.statusCode}`))
-            }
-        })
+
+        const res = await WebRequestManager.request(new RequestBundle(url, { decompress: true }))
+        if (res.statusCode === 200) {
+            return res.body
+        } else {
+            throw new Error(`Status Code: ${res.statusCode}`)
+        }
     }
 
     private async webRequest<T>(url: string): Promise<T> {
         this.informAWebRequest()
         logger.info('[AniDB] Start WebRequest')
 
-        const response = await WebRequestManager.request({ method: 'GET', uri: url, gzip: true })
+        const response = await WebRequestManager.request(new RequestBundle(url, { decompress: true }))
         logger.info('[AniDB] statusCode:', response && response.statusCode) // Print the response status code if a response was received
         if (response.statusCode === 200) {
             if (response.body === '<error code="500">banned</error>') {
@@ -249,7 +245,7 @@ export default class AniDBProvider extends InfoProvider {
                 throw new Error('[AniDB] no json to parse. URL: ' + url)
             }
         } else {
-            throw new Error('[AniDB] wrong status code: ' + response.statusCode)
+            throw new Error(`[AniDB] wrong status code: ${response.statusCode}`)
         }
     }
 }

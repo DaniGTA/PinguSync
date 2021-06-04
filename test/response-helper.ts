@@ -2,17 +2,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from 'crypto'
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'fs'
-import request from 'request'
+import RequestBundle from '../src/backend/controller/web-request-manager/request-bundle'
 import WebRequestManager from '../src/backend/controller/web-request-manager/web-request-manager'
 import logger from '../src/backend/logger/logger'
-
+import got from 'got'
 export default class ResponseHelper {
     private static cacheFolderName = './test-web-response-cache/'
 
     public static mockRequest(): void {
         jest.mock('../src/backend/controller/web-request-manager/web-request-manager')
 
-        const cachedRequest = async (options: request.UriOptions & request.CoreOptions): Promise<any> => {
+        const cachedRequest = async (options: RequestBundle): Promise<any> => {
             const requestId = createHash('sha256')
                 .update(JSON.stringify(options))
                 .digest('hex')
@@ -22,19 +22,20 @@ export default class ResponseHelper {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                 return this.loadCache(requestId)
             } else {
-                return new Promise<request.Response>((resolve, rejects) => {
+                return new Promise<got.Response<string>>((resolve, rejects) => {
                     try {
-                        request(options, (errormsg: any, response: request.Response, body: any) => {
-                            this.cacheNewRequest(response, requestId)
-
-                            resolve(response)
-                        }).on('error', err => {
-                            logger.error(err)
-                            rejects()
-                        })
+                        got(options.url, options.options)
+                            .then(response => {
+                                this.cacheNewRequest(response, requestId)
+                                resolve(response)
+                            })
+                            .catch(err => {
+                                logger.error(err)
+                                rejects(err)
+                            })
                     } catch (err) {
                         logger.error(err)
-                        rejects()
+                        rejects(err)
                     }
                 })
             }

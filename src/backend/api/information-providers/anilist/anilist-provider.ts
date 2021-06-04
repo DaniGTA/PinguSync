@@ -1,5 +1,4 @@
 // tslint:disable-next-line: no-implicit-dependencies
-import request from 'request'
 import * as meta from '../../../controller/objects/meta/media-type'
 import WatchProgress from '../../../controller/objects/meta/watch-progress'
 import Series from '../../../controller/objects/series'
@@ -32,7 +31,8 @@ import UpdateSeriesEpisodeProgress from './graphql/mutation/saveMediaListEntry_U
 import { print } from 'graphql'
 import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
-
+import RequestBundle from '../../../controller/web-request-manager/request-bundle'
+import { OutgoingHttpHeaders } from 'http'
 export default class AniListProvider extends ListProvider {
     private static instance: AniListProvider
     public hasUniqueIdForSeasons = true
@@ -67,7 +67,10 @@ export default class AniListProvider extends ListProvider {
 
     public async getAllLists(): Promise<ProviderUserList[]> {
         const rawdata = await this.webRequest<GetUserSeriesListInfo>(
-            this.getGraphQLOptions(getUserSeriesListInfoGql, { id: this.userData.viewer?.id, listType: 'ANIME' })
+            this.getGraphQLOptions(getUserSeriesListInfoGql, {
+                id: this.userData.viewer?.id,
+                listType: 'ANIME',
+            })
         )
         return aniListConverter.convertUserSeriesListToProviderList(rawdata)
     }
@@ -110,23 +113,22 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async addOAuthCode(code: string): Promise<boolean> {
-        const options = {
+        const options = new RequestBundle('https://anilist.co/api/v2/oauth/token', {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            json: {
+            body: JSON.stringify({
                 client_id: this.getApiId(),
                 client_secret: this.getApiSecret(),
                 code, // The Authorization Code received previously
                 grant_type: 'authorization_code',
                 redirect_uri: this.redirectUri,
-            },
+            }),
             method: 'POST',
-            uri: 'https://anilist.co/api/v2/oauth/token',
-        }
+        })
 
-        const body = await this.webRequest<any>(options)
+        const body = await this.webRequest<{ access_token: string; refresh_token: string; expires_in: number }>(options)
 
         if (body.access_token) {
             this.userData.setTokens(body.access_token, body.refresh_token, body.expires_in)
@@ -165,13 +167,9 @@ export default class AniListProvider extends ListProvider {
     }
 
     public getTokenAuthUrl(): string {
-        return (
-            'https://anilist.co/api/v2/oauth/authorize?client_id=' +
-            this.getApiId() +
-            '&redirect_uri=' +
-            this.redirectUri +
-            '&response_type=code'
-        )
+        return `https://anilist.co/api/v2/oauth/authorize?client_id=${this.getApiId() ?? ''}&redirect_uri=${
+            this.redirectUri
+        }&response_type=code`
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -189,8 +187,8 @@ export default class AniListProvider extends ListProvider {
         // Storing it in a separate .graphql/.gql file is also possible
         const query = getViewerGql
         const options = this.getGraphQLOptions(query)
-        this.webRequest<any>(options).then(value => {
-            const data = value.Viewer as IViewer
+        void this.webRequest<{ Viewer: IViewer }>(options).then(value => {
+            const data = value.Viewer
             this.userData.setViewer(data)
         })
     }
@@ -282,59 +280,60 @@ export default class AniListProvider extends ListProvider {
             }
             const options = this.getGraphQLOptions(query, variables)
 
-            return (await this.webRequest<any>(options)).MediaListCollection as MediaListCollection
+            return (await this.webRequest<{ MediaListCollection: MediaListCollection }>(options)).MediaListCollection
         } else {
             throw new Error('NoUser')
         }
     }
 
-    private async webRequest<T>(options: request.UriOptions & request.CoreOptions): Promise<T> {
+    private async webRequest<T>(requestOptions: RequestBundle): Promise<T> {
         this.informAWebRequest()
 
         logger.info('[AniList] Start WebRequest')
 
-        const response = await WebRequestManager.request(options)
+        const response = await WebRequestManager.request(requestOptions)
 
         logger.info('[AniList] statusCode: {0}', response && response.statusCode) // Print the response status code if a response was received
         if (response.statusCode === 200) {
             try {
-                const rawdata = JSON.parse(response.body)
-                return rawdata.data as T
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                return JSON.parse(response.body)?.data as T
             } catch (err) {
-                return response.body as T
+                return (response.body as unknown) as T
             }
         } else if (response.statusCode === 429) {
-            timeHelper.delay(2000)
-            return this.webRequest(options)
+            await timeHelper.delay(2000)
+            return this.webRequest(requestOptions)
         } else {
-            throw new Error('Wrong Status Code: ' + response.statusCode)
+            throw new Error(`Wrong Status Code: ${response.statusCode}`)
         }
     }
 
-    private getGraphQLOptions(query: string, variables?: any): request.UriOptions & request.CoreOptions {
-        const options: request.UriOptions & request.CoreOptions = {
-            body: JSON.stringify({
-                query,
-                variables,
-            }),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            uri: 'https://graphql.anilist.co',
+    private getGraphQLOptions(query: string, variables?: any): RequestBundle {
+        const body = JSON.stringify({
+            query,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            variables,
+        })
+        let headers: OutgoingHttpHeaders = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         }
 
         if (this.userData.accessToken !== '' && typeof this.userData.accessToken !== 'undefined') {
-            if (typeof options.headers !== 'undefined') {
-                options.headers = {
+            if (typeof headers !== 'undefined') {
+                headers = {
                     Accept: 'application/json',
-                    Authorization: 'Bearer ' + this.userData.accessToken,
+                    Authorization: `Bearer ${this.userData.accessToken}`,
                     'Content-Type': 'application/json',
                 }
             }
         }
 
-        return options
+        return new RequestBundle('https://graphql.anilist.co', {
+            method: 'POST',
+            body,
+            headers,
+        })
     }
 }

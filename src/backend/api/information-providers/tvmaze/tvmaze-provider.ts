@@ -5,6 +5,7 @@ import { MediaType } from '../../../controller/objects/meta/media-type'
 import { InfoProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/info-provider-local-data'
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import RequestBundle from '../../../controller/web-request-manager/request-bundle'
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager'
 import logger from '../../../logger/logger'
 import ExternalInformationProvider from '../../provider/external-information-provider'
@@ -63,7 +64,7 @@ export default class TVMazeProvider extends InfoProvider {
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         const converter = new TVMazeConverter()
         const result = await this.webRequest<Show>(
-            'http://api.tvmaze.com/shows/' + provider.id + '?embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons'
+            `http://api.tvmaze.com/shows/${provider.id}?embed[]=episodes&embed[]=akas&embed[]=akas&embed[]=seasons`
         )
         return converter.convertShowToResult(result)
     }
@@ -71,20 +72,21 @@ export default class TVMazeProvider extends InfoProvider {
     private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
         this.informAWebRequest()
         logger.info('[TVMaze] Start WebRequest')
-        const response = await WebRequestManager.request({
-            method,
-            uri: url,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            timeout: 5000,
-        })
+        const response = await WebRequestManager.request(
+            new RequestBundle(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                timeout: 5000,
+            })
+        )
         if (response.statusCode === 200 || response.statusCode === 201) {
             const data: T = JSON.parse(response.body) as T
             return data
         } else {
-            logger.info('[TVMaze] status code: ' + response.statusCode)
-            throw new Error('[TVMaze] status code: ' + response.statusCode)
+            logger.info(`[TVMaze] status code: ${response.statusCode}`)
+            throw new Error(`[TVMaze] status code: ${response.statusCode}`)
         }
     }
 }

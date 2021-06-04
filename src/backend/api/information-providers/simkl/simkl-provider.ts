@@ -25,6 +25,7 @@ import SimklConverter from './simkl-converter'
 import { SimklUserData } from './simkl-user-data'
 import Episode from '../../../controller/objects/meta/episode/episode'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import RequestBundle from '../../../controller/web-request-manager/request-bundle'
 
 export default class SimklProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
@@ -68,7 +69,7 @@ export default class SimklProvider extends ListProvider {
 
     public async addOAuthCode(code: string): Promise<boolean> {
         const result = await this.simklRequest<CodeResponse>(
-            this.apiUrl + 'oauth/pin/' + code + '?client_id=' + this.getApiId()
+            `${this.apiUrl}oauth/pin/${code}?client_id=${this.getApiId() ?? ''}`
         )
         if (result.access_token) {
             this.userData.setAccessToken(result.access_token)
@@ -109,13 +110,13 @@ export default class SimklProvider extends ListProvider {
                     return result
                 }
             } else if (provider.mediaType === MediaType.MOVIE) {
-                const url = this.apiUrl + 'movie/' + provider.id + '?extended=full&client_id=' + this.getApiId()
+                const url = `${this.apiUrl}movie/${provider.id}?extended=full&client_id=${this.getApiId() ?? ''}`
                 const result = await this.simklRequest<ISimklFullInfoMovieResponse>(url)
                 if (result) {
                     return this.simklConverter.convertFullMovieInfoToProviderLocalData(result)
                 }
             } else if (provider.mediaType === MediaType.SERIES) {
-                const url = this.apiUrl + 'tv/' + provider.id + '?extended=full&client_id=' + this.getApiId()
+                const url = `${this.apiUrl}tv/${provider.id}?extended=full&client_id=${this.getApiId() ?? ''}`
                 const result = await this.simklRequest<ISimklFullInfoSeriesResponse>(url)
                 if (result) {
                     return this.simklConverter.convertFullSeriesInfoToProviderLocalData(result)
@@ -148,7 +149,7 @@ export default class SimklProvider extends ListProvider {
         throw new Error('Method not implemented.')
     }
     public getTokenAuthUrl(): string {
-        return 'https://api.simkl.com/oauth/pin?client_id=' + this.getApiId() + '&redirect=' + this.redirectUri
+        return `https://api.simkl.com/oauth/pin?client_id=${this.getApiId() ?? ''}&redirect=${this.redirectUri}`
     }
     public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
         throw new Error('Method not implemented.')
@@ -166,51 +167,52 @@ export default class SimklProvider extends ListProvider {
 
     private async animeTextSearch(text: string): Promise<MultiProviderResult[]> {
         const result = await this.simklRequest<ISimklTextSearchResults[]>(
-            this.apiUrl + 'search/anime?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.getApiId()
+            `${this.apiUrl}search/anime?q=${text}&page=1&limit=50&extended=full&client_id=${this.getApiId() ?? ''}`
         )
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.ANIME)
     }
 
     private async tvTextSearch(text: string): Promise<MultiProviderResult[]> {
         const result = await this.simklRequest<ISimklTextSearchResults[]>(
-            this.apiUrl + 'search/tv?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.getApiId()
+            `${this.apiUrl}search/tv?q=${text}&page=1&limit=50&extended=full&client_id=${this.getApiId() ?? ''}`
         )
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.SERIES)
     }
 
     private async movieTextSearch(text: string): Promise<MultiProviderResult[]> {
         const result = await this.simklRequest<ISimklTextSearchResults[]>(
-            this.apiUrl + 'search/movie?q=' + text + '&page=1&limit=50&extended=full&client_id=' + this.getApiId()
+            `${this.apiUrl}search/movie?q=${text}&page=1&limit=50&extended=full&client_id=${this.getApiId() ?? ''}`
         )
         return this.simklConverter.convertSimklTextSearchResultsToMultiProviderResults(result, MediaType.MOVIE)
     }
 
     private async getFullAnimeInfo(id: string | number): Promise<MultiProviderResult> {
-        const fullInfoUrl = this.apiUrl + 'anime/' + id + '?extended=full&client_id=' + this.getApiId()
+        const fullInfoUrl = `${this.apiUrl}anime/${id}?extended=full&client_id=${this.getApiId() ?? ''}`
         const fullInfoResult = await this.simklRequest<ISimklFullInfoAnimeResponse>(fullInfoUrl)
         await this.waitUntilItCanPerfomNextRequest()
-        const episodeInfoResultUrl = this.apiUrl + 'anime/episodes/' + id + '?client_id=' + this.getApiId()
+        const episodeInfoResultUrl = `${this.apiUrl}anime/episodes/${id}?client_id=${this.getApiId() ?? ''}`
         const episodeInfoResult = await this.simklRequest<ISimklEpisodeInfo[]>(episodeInfoResultUrl)
         return this.simklConverter.convertFullAnimeInfoToProviderLocalData(fullInfoResult, episodeInfoResult)
     }
 
-    private async simklRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+    private async simklRequest<T>(url: string, method = 'GET', body: string = ''): Promise<T> {
         this.informAWebRequest()
         if (!(await this.isProviderAvailable())) {
             throw new Error('timeout active')
         }
 
         try {
-            const response = await WebRequestManager.request({
-                method: method,
-                uri: url,
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + this.userData.accessToken,
-                },
-                body: body,
-                timeout: 1000,
-            })
+            const response = await WebRequestManager.request(
+                new RequestBundle(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${this.userData.accessToken ?? ''}`,
+                    },
+                    body: body,
+                    timeout: 1000,
+                })
+            )
             logger.info('[Simkl] Start WebRequest')
 
             if (response.statusCode === 200 || response.statusCode === 201) {
@@ -226,7 +228,7 @@ export default class SimklProvider extends ListProvider {
                 throw new Error('[Simkl] Reached request limit')
             } else {
                 logger.error('[Simkl] status code:', response.statusCode)
-                throw new Error('[Simkl] status code:' + response.statusCode)
+                throw new Error(`[Simkl] status code: ${response.statusCode}`)
             }
         } catch (err) {
             logger.error(err)

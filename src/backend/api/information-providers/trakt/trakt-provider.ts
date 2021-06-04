@@ -26,6 +26,8 @@ import ProviderLocalData from '../../../controller/provider-controller/provider-
 import { NameType } from '../../../controller/objects/meta/name-type'
 import { EpisodeHistoryUpdate } from './objects/episodes'
 import { InformationTrustRank } from '../../provider/information-trust-rank'
+import RequestBundle from '../../../controller/web-request-manager/request-bundle'
+import { json } from 'express'
 
 export default class TraktProvider extends ListProvider {
     private static instance: TraktProvider
@@ -114,23 +116,23 @@ export default class TraktProvider extends ListProvider {
     }
 
     public async addOAuthCode(code: string): Promise<boolean> {
-        const options = {
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            json: {
-                client_id: this.getApiId(),
-                client_secret: this.getApiSecret(),
-                code, // The Authorization Code received previously
-                grant_type: 'authorization_code',
-                redirect_uri: this.redirectUri,
-            },
-            method: 'POST',
-            uri: 'https://api.trakt.tv/oauth/token',
-        }
         this.informAWebRequest()
-        const response = await WebRequestManager.request(options)
+        const response = await WebRequestManager.request(
+            new RequestBundle('https://api.trakt.tv/oauth/token', {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    client_id: this.getApiId(),
+                    client_secret: this.getApiSecret(),
+                    code, // The Authorization Code received previously
+                    grant_type: 'authorization_code',
+                    redirect_uri: this.redirectUri,
+                }),
+                method: 'POST',
+            })
+        )
 
         if (response.body.access_token) {
             const body = response.body
@@ -279,21 +281,22 @@ export default class TraktProvider extends ListProvider {
         throw new Error('cant login user with credentials')
     }
 
-    private async traktRequest<T>(url: string, method = 'GET', body?: string): Promise<T> {
+    private async traktRequest<T>(url: string, method = 'GET', body = ''): Promise<T> {
         this.informAWebRequest()
         logger.info('[Trakt] Start WebRequest ♗')
 
-        const response = await WebRequestManager.request({
-            body,
-            headers: {
-                Authorization: `Bearer ${this.userData.accessToken ?? ''}`,
-                'Content-Type': 'application/json',
-                'trakt-api-key': this.getApiId(),
-                'trakt-api-version': '2',
-            },
-            method,
-            uri: url,
-        })
+        const response = await WebRequestManager.request(
+            new RequestBundle(url, {
+                body,
+                headers: {
+                    Authorization: `Bearer ${this.userData.accessToken ?? ''}`,
+                    'Content-Type': 'application/json',
+                    'trakt-api-key': this.getApiId(),
+                    'trakt-api-version': '2',
+                },
+                method,
+            })
+        )
 
         const responseBody = response.body
         if (response.statusCode === 200 || response.statusCode === 201) {
