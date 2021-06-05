@@ -30,3 +30,6 @@ report.*.json
 
 #APIKEYS
 src/keys/api/*.json
+
+#data
+*.data

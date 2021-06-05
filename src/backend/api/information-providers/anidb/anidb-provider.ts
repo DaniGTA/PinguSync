@@ -1,4 +1,4 @@
-import { throws } from 'assert'
+import got from 'got'
 import { createReadStream, createWriteStream, existsSync, readFileSync, writeFileSync } from 'fs'
 // tslint:disable-next-line: no-implicit-dependencies
 import { xml2json } from 'xml-js'
@@ -158,8 +158,7 @@ export default class AniDBProvider extends InfoProvider {
     private async getData(): Promise<void> {
         logger.warn('[ANIDB] Download anime names.')
         try {
-            const fileContent = await this.downloadFile('http://anidb.net/api/anime-titles.xml.gz')
-            writeFileSync('./anidb-anime-titles.xml', fileContent, { flag: 'w' })
+            await this.downloadFile('http://anidb.net/api/anime-titles.xml.gz', './anidb-anime-titles.xml')
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML())
         } catch (err) {
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), AniDBHelper.anidbNameManager.data)
@@ -213,13 +212,15 @@ export default class AniDBProvider extends InfoProvider {
         throw new Error('Failed to load xml')
     }
 
-    private async downloadFile(url: string): Promise<string> {
+    private async downloadFile(url: string, filePath: string): Promise<string> {
         this.informAWebRequest()
         // eslint-disable-next-line no-async-promise-executor
 
-        const res = await WebRequestManager.request(new RequestBundle(url, { decompress: true }))
+        const res = await ((got(url) as unknown) as got.GotPromise<Buffer>)
         if (res.statusCode === 200) {
-            return res.body
+            logger.debug('Write ANIDB download stream to file...')
+            writeFileSync(filePath, res.body, { flag: 'w' })
+            return readFileSync(filePath, { encoding: 'utf8' })
         } else {
             throw new Error(`Status Code: ${res.statusCode}`)
         }

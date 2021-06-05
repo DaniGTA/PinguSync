@@ -25,7 +25,7 @@ try {
             transports.push(new winston.transports.File({ filename: 'logs/log.log' }))
         }
     } catch (err) {
-        console.log('No Electron envoirmoent!')
+        // ignore
     }
 
     logger = winston.createLogger({

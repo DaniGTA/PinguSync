@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { MediaType } from '../../../controller/objects/meta/media-type'
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import logger from '../../../logger/logger'
 import externalInformationProvider from '../../provider/external-information-provider'
 import InfoProvider from '../../provider/info-provider'
 import MultiProviderResult from '../../provider/multi-provider-result'
@@ -11,6 +13,7 @@ import { TMDBProviderData } from './tmdb-provider-data'
 export default class TMDBProvider extends InfoProvider {
     public isOffline = true
     public hasUniqueIdForSeasons = false
+    public hasEpisodeTitleOnFullInfo = true
     public supportedMediaTypes: MediaType[] = [
         MediaType.ANIME,
         MediaType.MOVIE,
@@ -24,26 +27,36 @@ export default class TMDBProvider extends InfoProvider {
     public version = 1
 
     private providerData: TMDBProviderData
-
+    private currentTasks: Promise<any>[] = []
     constructor() {
         super()
         this.providerData = new TMDBProviderData()
+        this.providerData.loadData()
         if (this.canDownloadMetadata()) {
-            void this.downloadMetadata()
+            this.currentTasks.push(this.downloadMetadata())
         }
     }
 
     public async getMoreSeriesInfoByName(searchTitle: string): Promise<MultiProviderResult[]> {
-        const result = await TMDBOfflineMetdataNameSearch.search(searchTitle)
+        await this.waitForTasks()
+        let result: MultiProviderResult[] = []
+        try {
+            result = await TMDBOfflineMetdataNameSearch.search(searchTitle)
+        } catch (err) {
+            logger.error(err)
+        }
         if (result.length == 0) {
+            await this.waitUntilItCanPerfomNextRequest()
+            this.informAWebRequest()
             const api = new TMDBOnlineApi(this.getApiSecret() ?? '')
             result.push(...(await api.search(searchTitle)))
         }
         return result
     }
 
-    public getFullInfoById(): Promise<MultiProviderResult> {
-        throw new Error('Method not implemented.')
+    public async getFullInfoById(provider: ProviderLocalData): Promise<MultiProviderResult> {
+        const api = new TMDBOnlineApi(this.getApiSecret() ?? '')
+        return await api.getDetails(provider.id, provider.mediaType)
     }
 
     public getUrlToSingleEpisode(): Promise<string> {
@@ -55,7 +68,11 @@ export default class TMDBProvider extends InfoProvider {
     }
 
     private async downloadMetadata() {
-        await TMDBOfflineMetdataDownloadManager.downloadOfflineMetadata()
+        try {
+            await TMDBOfflineMetdataDownloadManager.downloadOfflineMetadata()
+        } catch (err) {
+            logger.error(err)
+        }
         this.providerData.setLastOfflineMetadataDownload()
     }
 
@@ -64,5 +81,10 @@ export default class TMDBProvider extends InfoProvider {
         return (
             this.providerData.lastOfflineMetdataDownload === undefined || before30days.getTime() > new Date().getTime()
         )
+    }
+
+    private async waitForTasks() {
+        await Promise.allSettled(this.currentTasks)
+        return
     }
 }

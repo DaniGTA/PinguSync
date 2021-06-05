@@ -38,7 +38,8 @@
                 "${workspaceRoot}/node_modules/jest/bin/jest.js",
                 "-i",
                 "--runInBand",
-                "--testTimeout=5000000"
+                "--testTimeout=5000000",
+                "--verbose=false"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
@@ -52,8 +53,9 @@
             "args": [
                 "${fileBasenameNoExtension}",
                 "--config",
-                  "--runInBand",
-                  "--testTimeout=5000000",
+                "--runInBand",
+                "--testTimeout=5000000",
+                "--verbos=false",
                 "jest.config.js"
             ],
             "console": "integratedTerminal",

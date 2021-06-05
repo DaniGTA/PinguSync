@@ -180,11 +180,9 @@ export default class TraktProvider extends ListProvider {
                     const res = await this.traktRequest<FullShowInfo>(
                         `https://api.trakt.tv/shows/${provider.id}?extended=full`
                     )
-                    await this.waitUntilItCanPerfomNextRequest()
                     const seasonEpisodeInfo = await this.traktRequest<ITraktShowSeasonInfo[]>(
                         `https://api.trakt.tv/shows/${res.ids.trakt}/seasons?extended=episodes`
                     )
-                    await this.waitUntilItCanPerfomNextRequest()
                     const seasonInfo = await this.traktRequest<ITraktShowSeasonInfo[]>(
                         `https://api.trakt.tv/shows/${res.ids.trakt}/seasons?extended=full`
                     )
@@ -282,6 +280,7 @@ export default class TraktProvider extends ListProvider {
     }
 
     private async traktRequest<T>(url: string, method = 'GET', body = ''): Promise<T> {
+        await this.waitUntilItCanPerfomNextRequest()
         this.informAWebRequest()
         logger.info('[Trakt] Start WebRequest ♗')
 
@@ -298,9 +297,8 @@ export default class TraktProvider extends ListProvider {
             })
         )
 
-        const responseBody = response.body
         if (response.statusCode === 200 || response.statusCode === 201) {
-            const data: T = JSON.parse(responseBody) as T
+            const data: T = JSON.parse(response.body) as T
             return data
         } else if (response.statusMessage === 'Unauthorized' && response.statusCode === 401) {
             this.userData.removeTokens()
@@ -308,7 +306,7 @@ export default class TraktProvider extends ListProvider {
             throw new Error(`[Trakt] User is not logged in: ${response.statusCode}`)
         } else {
             logger.error(`[Trakt] status code: ${response.statusCode}`)
-            logger.error(responseBody)
+            logger.error(response.body)
             throw new Error(`[Trakt] Status code error: ${response.statusCode}`)
         }
     }

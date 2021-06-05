@@ -9,20 +9,16 @@ import MainListManager from '../src/backend/controller/main-list-manager/main-li
 import MainListPath from '../src/backend/controller/main-list-manager/main-list-path'
 import ProviderDataListLoader from '../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-loader'
 import ProviderDataListManager from '../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager'
-import ResponseHelper from './response-helper'
 import SettingsManager from '../src/backend/controller/settings/settings-manager'
 import MainListSaver from '../src/backend/controller/main-list-manager/main-list-saver'
 import AnimeOfflineDatabaseProviderData from '../src/backend/api/mapping-providers/anime-offline-database/anime-offline-database-provider-data'
 import 'threads/register'
 import logger from '../src/backend/logger/logger'
-import winston, { format } from 'winston'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 
-ResponseHelper.mockRequest()
 // tslint:disable: no-string-literal
 MainListManager['listLoaded'] = true
 MainListManager['mainList'] = []
-MainListPath.getPath = (): string => '/////- no path for testing -'
+MainListPath.getPath = (): string => './mainlist-test-cache (can be deleted).data'
 // tslint:disable-next-line: no-empty
 MainListSaver.saveMainList = jest.fn()
 

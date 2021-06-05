@@ -1,8 +1,7 @@
+import { rejects } from 'assert/strict'
 import { createWriteStream, ReadStream, writeFileSync, WriteStream } from 'fs'
 import moment from 'moment'
-import { Readable } from 'stream'
-import { createGunzip } from 'zlib'
-import RequestBundle from '../../../controller/web-request-manager/request-bundle'
+import { createGunzip, gunzipSync } from 'zlib'
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager'
 
 export default class TMDBOfflineMetdataDownloadManager {
@@ -22,17 +21,21 @@ export default class TMDBOfflineMetdataDownloadManager {
         const movies = `movie_ids_${yesterday}${this.EXTENSION}`
         const series = `tv_series_ids_${yesterday}${this.EXTENSION}`
 
-        const movies_response = await WebRequestManager.request(
-            new RequestBundle(this.BASE_URL + movies, { decompress: true })
-        )
-        const series_response = await WebRequestManager.request(
-            new RequestBundle(this.BASE_URL + series, { decompress: true })
-        )
-        if (movies_response.statusCode === 200 && series_response.statusCode === 200) {
-            writeFileSync(this.getMovieFilePath(), movies_response.body, { flag: 'w' })
-            writeFileSync(this.getSeriesFilePath(), series_response.body, { flag: 'w' })
-        }
+        const moviesUnzip = createGunzip()
+        const seriesUnzip = createGunzip()
 
+        const moviesResponse = WebRequestManager.stream(this.BASE_URL + movies)
+            .pipe(moviesUnzip)
+            .pipe(createWriteStream(this.getMovieFilePath()))
+
+        const seriesResponse = WebRequestManager.stream(this.BASE_URL + series)
+            .pipe(seriesUnzip)
+            .pipe(createWriteStream(this.getSeriesFilePath()))
+
+        await Promise.allSettled([
+            new Promise(fulfill => moviesResponse.on('finish', fulfill)),
+            new Promise(fulfill => seriesResponse.on('finish', fulfill)),
+        ])
         return
     }
 
@@ -46,5 +49,9 @@ export default class TMDBOfflineMetdataDownloadManager {
 
     private static addZeroToHighNumbers(n: number) {
         return n > 9 ? `${n}` : `0${n}`
+    }
+
+    private static decrompessString(s: string) {
+        return gunzipSync(Buffer.from(s)).toString('utf-8')
     }
 }

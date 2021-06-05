@@ -24,7 +24,7 @@ module.exports = {
 		}
 	},
 	'testEnvironment': 'node',
-	'setupFilesAfterEnv': ['<rootDir>/test/test-helper.ts'],
+	'setupFilesAfterEnv': ['<rootDir>/test/setup-test-after-env.ts','<rootDir>/test/setup-nock.ts'],
 	'maxWorkers': 2
 };
 

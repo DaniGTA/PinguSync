@@ -64,9 +64,9 @@ export default abstract class ProviderLocalData {
     // Series metadata stuff
     // ----------------------
 
-    public score?: number
-    public episodes?: number
-    public publicScore?: number
+    public score?: number | undefined
+    public episodes?: number | undefined
+    public publicScore?: number | undefined
     public covers: Cover[] = []
     public banners: Banner[] = []
     public mediaType: MediaType = MediaType.UNKOWN

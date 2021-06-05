@@ -7,12 +7,12 @@ export default abstract class ProviderFileSettings {
         this.loadData()
     }
 
-    protected loadData(): void {
+    public loadData(): void {
         try {
             const filePath = this.getPath()
             logger.debug(`[IO] Read ${this.getConfigFileName()} user file. | path: ${filePath} `)
             if (fs.existsSync(filePath)) {
-                const loadedString = fs.readFileSync(filePath, { encoding: 'utf8' })
+                const loadedString = fs.readFileSync(filePath, { encoding: 'utf8', flag: 'r' })
                 const loadedData = JSON.parse(loadedString) as this
                 Object.assign(this, loadedData)
             }
@@ -21,10 +21,14 @@ export default abstract class ProviderFileSettings {
         }
     }
 
-    protected saveData(): void {
+    public saveData(): void {
         try {
             logger.debug(`[IO] Write ${this.getConfigFileName()} user file.`)
-            fs.writeFileSync(this.getPath(), JSON.stringify(this))
+            const filePath = this.getPath()
+            if (!fs.existsSync(filePath)) {
+                fs.mkdirSync(filePath)
+            }
+            fs.writeFileSync(filePath, JSON.stringify(this), { encoding: 'utf8', flag: 'w+' })
         } catch (err) {
             logger.error(err)
         }

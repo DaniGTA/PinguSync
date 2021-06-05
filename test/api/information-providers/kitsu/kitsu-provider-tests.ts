@@ -1,6 +1,4 @@
 import KitsuProvider from '../../../../src/backend/api/information-providers/kitsu/kitsu-provider'
-import ExternalProvider from '../../../../src/backend/api/provider/external-provider'
-import ListProvider from '../../../../src/backend/api/provider/list-provider'
 import { MediaType } from '../../../../src/backend/controller/objects/meta/media-type'
 import Name from '../../../../src/backend/controller/objects/meta/name'
 import Season from '../../../../src/backend/controller/objects/meta/season'
@@ -9,16 +7,14 @@ import ProviderDataListManager from '../../../../src/backend/controller/provider
 import { ListProviderLocalData } from '../../../../src/backend/controller/provider-controller/provider-manager/local-data/list-provider-local-data'
 import ProviderList from '../../../../src/backend/controller/provider-controller/provider-manager/provider-list'
 import downloadProviderLocalDataHelper from '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-provider-local-data-helper'
-import KitsuTestProvider from './kitsu-test-provider'
 // tslint:disable: no-string-literal
 describe('Provider: Kitsu | Test runs', () => {
     const kitsuProvider = new KitsuProvider()
 
     beforeAll(() => {
-        ;((ExternalProvider.prototype.waitUntilItCanPerfomNextRequest as unknown) as jest.SpyInstance<
-            Promise<void>,
-            []
-        >).mockRestore()
+        // tslint:disable: no-string-literal
+        ProviderList['loadedListProvider'] = undefined
+        ProviderList['loadedMappingProvider'] = []
     })
 
     beforeEach(() => {

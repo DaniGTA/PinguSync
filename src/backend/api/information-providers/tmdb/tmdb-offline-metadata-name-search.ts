@@ -19,25 +19,61 @@ export default class TMDBOfflineMetdataNameSearch {
     private static async searchSeries(name: string): Promise<MultiProviderResult[]> {
         const result: MultiProviderResult[] = []
         logger.debug('[TMDB] Reading offline metadata series')
-        for await (const line of this.getReadInterface(TMDBOfflineMetdataDownloadManager.getSeriesFilePath())) {
-            const series = JSON.parse(line) as TMDBOfflineSeriesMetadata
-            if (TitleCheckHelper.checkNames([name], [series.original_title])) {
-                result.push(TMDBConverter.convertOfflineSeriesMetadata(series))
+        try {
+            for await (const line of this.getReadInterface(TMDBOfflineMetdataDownloadManager.getSeriesFilePath())) {
+                const lineResult = this.getSeriesLineResults(line, name)
+                if (lineResult) {
+                    result.push(lineResult)
+                }
             }
+        } catch (err) {
+            logger.error('[TMDB] Failed to read file:' + TMDBOfflineMetdataDownloadManager.getSeriesFilePath())
+            logger.error(err)
         }
         return result
     }
+
+    private static getSeriesLineResults(line: string, name: string) {
+        try {
+            const series = JSON.parse(line) as TMDBOfflineSeriesMetadata
+            if (TitleCheckHelper.checkNames([name], [series.original_title])) {
+                return TMDBConverter.convertOfflineSeriesMetadata(series)
+            }
+        } catch (err) {
+            logger.error('[TMDB] Failed to read a line in series meta file. ERR at following line')
+            logger.error(err)
+        }
+    }
+
     private static async searchMovies(name: string): Promise<MultiProviderResult[]> {
         const result: MultiProviderResult[] = []
         logger.debug('[TMDB] Reading offline metadata movies')
-        for await (const line of this.getReadInterface(TMDBOfflineMetdataDownloadManager.getSeriesFilePath())) {
-            const movie = JSON.parse(line) as TMDBOfflineMovieMetadata
-            if (TitleCheckHelper.checkNames([name], [movie.original_title])) {
-                result.push(TMDBConverter.convertOfflineMovieMetadata(movie))
+        try {
+            for await (const line of this.getReadInterface(TMDBOfflineMetdataDownloadManager.getSeriesFilePath())) {
+                const lineResult = this.getMovieLineResults(line, name)
+                if (lineResult) {
+                    result.push(lineResult)
+                }
             }
+        } catch (err) {
+            logger.error('[TMDB] Failed to read file:' + TMDBOfflineMetdataDownloadManager.getSeriesFilePath())
+            logger.error(err)
         }
         return result
     }
+
+    private static getMovieLineResults(line: string, name: string) {
+        try {
+            const series = JSON.parse(line) as TMDBOfflineMovieMetadata
+            if (TitleCheckHelper.checkNames([name], [series.original_title])) {
+                return TMDBConverter.convertOfflineMovieMetadata(series)
+            }
+        } catch (err) {
+            logger.error('[TMDB] Failed to read a line in movie meta file. ERR at following line')
+            logger.error(err)
+        }
+    }
+
     private static getReadInterface(path: string) {
         return readline.createInterface({ input: createReadStream(path), crlfDelay: Infinity })
     }
