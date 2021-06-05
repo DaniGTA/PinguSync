@@ -7,7 +7,7 @@
 import * as nock from 'nock'
 import { dirname, basename, join } from 'path'
 import 'reflect-metadata'
-
+import crypto from 'crypto'
 function prepareScope(scope: any) {
     scope.filteringRequestBody = (body: any, aRecordedBody: any) => {
         if (typeof body !== 'string' || typeof aRecordedBody !== 'string') {
@@ -42,8 +42,11 @@ function getTestState(): any {
     }
 }
 
-function getBase64(s: string) {
-    return Buffer.from(s).toString('base64')
+function getMD5(s: string) {
+    return crypto
+        .createHash('md5')
+        .update(s)
+        .digest('hex')
 }
 
 interface NockBackValue {
@@ -52,20 +55,15 @@ interface NockBackValue {
 }
 
 let value: NockBackValue | undefined
-let testPath: string | undefined
 
 global.beforeEach(async () => {
     const state = getTestState()
-    const newPath = state.testPath
-
-    if (!newPath) {
-        return
-    }
+    const testPath = state.testPath
 
     const nockBack = nock.back
     nockBack.setMode('record')
     nockBack.fixtures = join(dirname(testPath), '__nocks__')
-    value = await nockBack(`${basename(testPath)}.${getBase64(state.currentTestName)}.json`, { before: prepareScope })
+    value = await nockBack(`${basename(testPath)}.${getMD5(state.currentTestName)}.json`, { before: prepareScope })
     nock.enableNetConnect('127.0.0.1')
 })
 

@@ -10,7 +10,7 @@ describe('Provider: Trakt | username/name get tested', () => {
 
     test('should get name', async () => {
         nock('https://api.trakt.tv')
-            .get('/users/Sean Rudford')
+            .get('/users/Sean%20Rudford')
             .reply(
                 200,
                 '{"username":"sean","private":false,"name":"Sean Rudford","vip":true,"vip_ep":true,"ids":{"slug":"sean"}}'
