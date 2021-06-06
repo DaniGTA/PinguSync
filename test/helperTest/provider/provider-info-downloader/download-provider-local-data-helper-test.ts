@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/require-await */
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result'
@@ -80,41 +81,31 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
     })
 
     describe('timeout', () => {
-        let spy: jest.SpyInstance<any, unknown[]>
-        beforeAll(() => {
-            jest.mock(
-                '../../../../src/backend/helpFunctions/provider/provider-info-downloader/download-settings',
-                () => ({
-                    REQUEST_TIMEOUT_IN_MS: 12500,
-                })
-            )
-        })
+        test(
+            'should timeout (no id)',
+            async () => {
+                // tslint:disable: no-string-literal
+                ProviderList['loadedListProvider'] = [new TestListProvider2(false, true)]
+                const series = new Series()
 
-        afterAll(() => {
-            spy?.mockClear()
-        })
+                const listProvider = new ListProviderLocalData(1, TestListProvider2)
+                listProvider.addSeriesName(new Name('a', ''))
 
-        test('should timeout (no id)', async () => {
-            // tslint:disable: no-string-literal
-            ProviderList['loadedListProvider'] = [new TestListProvider2(false, true)]
-            const series = new Series()
-
-            const listProvider = new ListProviderLocalData(1, TestListProvider2)
-            listProvider.addSeriesName(new Name('a', ''))
-
-            series.addListProvider(listProvider)
-            const provider = new TestInfoProvider()
-            // Delay function
-            provider.getMoreSeriesInfoByName = async (): Promise<MultiProviderResult[]> =>
-                new Promise<MultiProviderResult[]>(resolve => {
-                    setTimeout(() => {
-                        resolve([])
-                    }, 101)
-                })
-            await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(
-                FailedRequestError.Timeout
-            )
-        })
+                series.addListProvider(listProvider)
+                const provider = new TestInfoProvider()
+                // Delay function
+                provider.getMoreSeriesInfoByName = async (): Promise<MultiProviderResult[]> =>
+                    new Promise<MultiProviderResult[]>(resolve => {
+                        setTimeout(() => {
+                            resolve([])
+                        }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100)
+                    })
+                await expect(
+                    downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
+                ).rejects.toEqual(FailedRequestError.Timeout)
+            },
+            DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100
+        )
     })
 
     test('should dont have a result (with id)', async () => {

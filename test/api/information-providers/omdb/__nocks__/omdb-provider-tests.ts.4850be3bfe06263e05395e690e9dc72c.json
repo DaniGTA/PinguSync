@@ -1,0 +1,52 @@
+[
+    {
+        "scope": "https://www.omdbapi.com:443",
+        "method": "GET",
+        "path": "/?apikey=728e1e03&s=Kono%20Subarashii%20Sekai%20ni%20Shukufuku%20wo%20Kurenai%20Densetsu",
+        "body": "",
+        "status": 200,
+        "response": {
+            "Response": "False",
+            "Error": "Movie not found!"
+        },
+        "rawHeaders": [
+            "Date",
+            "Sat, 05 Jun 2021 14:23:31 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Content-Length",
+            "47",
+            "Connection",
+            "close",
+            "Cache-Control",
+            "public, max-age=86400",
+            "Expires",
+            "Sat, 05 Jun 2021 12:21:48 GMT",
+            "Last-Modified",
+            "Sat, 05 Jun 2021 11:21:48 GMT",
+            "Vary",
+            "*, Accept-Encoding",
+            "X-AspNet-Version",
+            "4.0.30319",
+            "X-Powered-By",
+            "ASP.NET",
+            "Access-Control-Allow-Origin",
+            "*",
+            "CF-Cache-Status",
+            "HIT",
+            "Age",
+            "10903",
+            "Accept-Ranges",
+            "bytes",
+            "cf-request-id",
+            "0a7e27cef20000cbc4cda03000000001",
+            "Expect-CT",
+            "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "65aa0f2b1ecdcbc4-VIE"
+        ],
+        "responseIsBinary": false
+    }
+]

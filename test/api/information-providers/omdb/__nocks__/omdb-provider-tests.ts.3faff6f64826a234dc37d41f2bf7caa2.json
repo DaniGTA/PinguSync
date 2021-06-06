@@ -1,0 +1,51 @@
+[
+    {
+        "scope": "https://www.omdbapi.com:443",
+        "method": "GET",
+        "path": "/?apikey=728e1e03&s=Ghost%20World",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800000000000003ad91d16eda3014865f059d9bde64c48e436973b54d612ca8360302c1adaa2a032f718863169bb549d5779fa25e6c2952a5497b80ffffce77fe675889b4dee510dc3d432c6d29208069ae8d1d24ba2ef7e00017690d017808617040aafdf7288400ac45f8d223fe25381037c72ea7f42f29c0816fda58d165726b8f26705d3554622fd30fa94a5b5d0d775ab952a599302e75e966f49925fc711e2e4b5e64761eae9f58831057b4b949268425dcb298b7b76afdc8c299bc9d6ecaed61d26c0f5f7eeea67bb1d86e1a1a2f9e584b5b16461f870f1bfcb0da128486c5318317e78f174d0fb2ca06fac7e0e22fc58b9ea3f7c6918c09f6f03b8eccfdd483bc367f3d55565659f08ae89036178344c8baff52bf8fc3fef88a8cafff194785b0e67c313cead7fbe36b82d1d5ff582c8c3c962c7cdaae2d2b28662b847831cb6f92593e0f33cb138a68111136e5fe3c9e90b3c50a3e626de4b36277b6d8bd0356dbb45c0a732aad8100ba2f2d8539eaca7457c7f549c0cb6f3fc73123bb020000"
+        ],
+        "rawHeaders": [
+            "Date",
+            "Sat, 05 Jun 2021 14:23:30 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Cache-Control",
+            "public, max-age=86400",
+            "Expires",
+            "Sat, 05 Jun 2021 12:21:47 GMT",
+            "Last-Modified",
+            "Sat, 05 Jun 2021 11:21:47 GMT",
+            "Vary",
+            "*, Accept-Encoding",
+            "X-AspNet-Version",
+            "4.0.30319",
+            "X-Powered-By",
+            "ASP.NET",
+            "Access-Control-Allow-Origin",
+            "*",
+            "CF-Cache-Status",
+            "HIT",
+            "Age",
+            "10903",
+            "cf-request-id",
+            "0a7e27ce6b0000fcb580aa4000000001",
+            "Expect-CT",
+            "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "65aa0f2a49effcb5-VIE",
+            "Content-Encoding",
+            "gzip"
+        ],
+        "responseIsBinary": false
+    }
+]

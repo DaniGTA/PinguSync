@@ -23,18 +23,18 @@ export default class DownloadProviderLocalDataHelper {
             const allLocalProviders = series.getAllProviderLocalDatas()
             const providerLocalForIdRequest = this.getProviderLocalForIdRequest(provider, allLocalProviders)
 
-            if (!providerLocalForIdRequest) {
-                return new DownloadProviderLocalDataWithoutId(series, provider).download()
-            } else {
-                try {
+            try {
+                if (!providerLocalForIdRequest) {
+                    return await new DownloadProviderLocalDataWithoutId(series, provider).download()
+                } else {
                     return await DownloadProviderLocalDataWithId.download(provider, providerLocalForIdRequest)
-                } catch (err) {
-                    if (isFailedRequestError(err)) {
-                        throw err
-                    }
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    throw new Error(`[${provider.providerName}] Unkown error: ${err}`)
                 }
+            } catch (err) {
+                if (isFailedRequestError(err)) {
+                    throw err
+                }
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                throw new Error(`[${provider.providerName}] Unkown error: ${err}`)
             }
         }
         throw FailedRequestError.ProviderNotAvailble

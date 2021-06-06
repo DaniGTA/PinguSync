@@ -1,0 +1,51 @@
+[
+    {
+        "scope": "https://www.omdbapi.com:443",
+        "method": "GET",
+        "path": "/?apikey=728e1e03&i=tt2341379",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b080000000000000345935b4f1b410c85ff8ae5e765738356e4a9813408c4a685a4b95055c89935bb93eccca4335ec282f8efd56c407df43747c7f691e70de75a2ac621cec8eec83361826b268f43ec777b7d4cf09e84731ce27c71928d62cd15536851f70c467b0f9fc2da8a36d1ab7f0a465b4cf08aad8f6064b521d1ce2670e90ce74d02634f86129890150a4d02f7ce90558c098eb567252e8e30edc48e4baf85ff97a3f818e2449ae0b6b1162ea8aac8e7098cc83b0b631d4cbde304265cb1d204235b7055710237643443465e951a13fc5939c1214e6a5f370425052078a2a0b46d878527e7e1d5998de600647350aeaa584900f1daee588ef440a2ca56d18071cf9a5bbaafa839b2820cc3414b0952b2016d414b0acb922d943a8022813c7628dd819fd983445abacda6810d2b67384070860f2509b827200b6e133884382185344d31c15bb2454d45ccfa86f66439c4242f5d6dc5379f306677209fc7ec7a609df9d8331afc74e1987129b20fc34ec7a486734d2764e8d5d95439d3d1860a0e9dac932dce2e1e4c3698f6b3c374fb4ba6e6babf6ebadde93c2f6f97936db65ccbdadcf5b2fe6297cdd5cbc3fc61bbda7d6f56bbc95f7595f3dd6ad164afc5cb8f71763add66dfd2c745ef71b61a74bbe9765f1c6f4edb22e0f0f71bce5ced555cecda0a7bcb02591bf2988436d4eeb9a0aa8e8a2fe979a7d7c5f73f09662c14946bafef7836dae49ba3ef51f981164e3806723e187c90eb310e51a43f38ed0dbe46d9bcd9479bc05e73c004c5095533a6e06c1b65fb29c2ded91065735f33beff03f3aab93c59030000"
+        ],
+        "rawHeaders": [
+            "Date",
+            "Sat, 05 Jun 2021 14:23:31 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Cache-Control",
+            "public, max-age=86400",
+            "Expires",
+            "Sat, 05 Jun 2021 12:21:48 GMT",
+            "Last-Modified",
+            "Sat, 05 Jun 2021 11:21:48 GMT",
+            "Vary",
+            "*, Accept-Encoding",
+            "X-AspNet-Version",
+            "4.0.30319",
+            "X-Powered-By",
+            "ASP.NET",
+            "Access-Control-Allow-Origin",
+            "*",
+            "CF-Cache-Status",
+            "HIT",
+            "Age",
+            "10903",
+            "cf-request-id",
+            "0a7e27cf58000038bd16821000000001",
+            "Expect-CT",
+            "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "65aa0f2bc9c538bd-VIE",
+            "Content-Encoding",
+            "gzip"
+        ],
+        "responseIsBinary": false
+    }
+]

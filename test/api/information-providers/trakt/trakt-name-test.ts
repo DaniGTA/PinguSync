@@ -7,23 +7,24 @@ import nock from 'nock'
 
 describe('Provider: Trakt | username/name get tested', () => {
     const traktProviderInstance = ProviderList.getProviderInstanceByClass(TraktProvider)
-
-    test('should get name', async () => {
+    test('should get name [DISABLE_AUTO_NOCK_BACK]', async () => {
         nock('https://api.trakt.tv')
             .get('/users/Sean%20Rudford')
             .reply(
                 200,
                 '{"username":"sean","private":false,"name":"Sean Rudford","vip":true,"vip_ep":true,"ids":{"slug":"sean"}}'
             )
+            .persist()
         traktProviderInstance.userData.userName = 'Sean Rudford'
         const a = await traktProviderInstance.getUsername()
         expect(a).toBe('Sean Rudford')
     })
 
-    test('should get username when name is missing', async () => {
+    test('should get username when name is missing [DISABLE_AUTO_NOCK_BACK]', async () => {
         nock('https://api.trakt.tv')
             .get('/users/sean')
             .reply(200, '{"username":"sean","private":false,"vip":true,"vip_ep":true,"ids":{"slug":"sean"}}')
+            .persist()
         traktProviderInstance.userData.userName = 'sean'
         const a = await traktProviderInstance.getUsername()
         expect(a).toBe('sean')

@@ -42,5 +42,5 @@ describe('Basic List | Testrun', () => {
         expect(MainListManager['mainList'].length).toBe(1)
 
         const updatedProviders = MainListManager['mainList'][0].getAllProviderLocalDatas()
-    })
+    }, 10000)
 })

@@ -38,11 +38,14 @@ export default class DownloadProviderLocalDataWithoutId {
         const seriesMediaType = this.series.getMediaType()
         let result: MultiProviderResult | undefined
         if (MediaTypeHelper.providerSupportMediaType(this.provider, seriesMediaType)) {
-            result = await this.getProviderSeriesInfoByRelation()
-            if (result) {
-                return result
+            try {
+                result = await this.getProviderSeriesInfoByRelation()
+                if (result) {
+                    return result
+                }
+            } catch (err) {
+                logger.error(err)
             }
-
             result = await this.getProviderSeriesInfoBySeriesName()
             if (result) {
                 return result

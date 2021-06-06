@@ -8,6 +8,8 @@ import * as nock from 'nock'
 import { dirname, basename, join } from 'path'
 import 'reflect-metadata'
 import crypto from 'crypto'
+import logger from '../src/backend/logger/logger'
+
 function prepareScope(scope: any) {
     scope.filteringRequestBody = (body: any, aRecordedBody: any) => {
         if (typeof body !== 'string' || typeof aRecordedBody !== 'string') {
@@ -63,8 +65,13 @@ global.beforeEach(async () => {
     const nockBack = nock.back
     nockBack.setMode('record')
     nockBack.fixtures = join(dirname(testPath), '__nocks__')
-    value = await nockBack(`${basename(testPath)}.${getMD5(state.currentTestName)}.json`, { before: prepareScope })
-    nock.enableNetConnect('127.0.0.1')
+    const testName = state.currentTestName as string
+    if (!testName.includes('[DISABLE_AUTO_NOCK_BACK]')) {
+        const fileName = `${basename(testPath)}.${getMD5(testName)}.json`
+        logger.info('fixture: ' + fileName)
+        value = await nockBack(fileName, { before: prepareScope })
+        nock.enableNetConnect('127.0.0.1')
+    }
 })
 
 global.afterEach(async () => {
@@ -72,4 +79,5 @@ global.afterEach(async () => {
         value.nockDone()
         value = undefined
     }
+    nock.restore()
 })

@@ -1,0 +1,39 @@
+[
+    {
+        "scope": "https://api.thetvdb.com:443",
+        "method": "POST",
+        "path": "/login",
+        "body": {
+            "apikey": "790G98VXW5MZHGV0"
+        },
+        "status": 200,
+        "response": {
+            "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MjM1MDc4MTQsImlkIjoiTGlzdFN5bmMiLCJvcmlnX2lhdCI6MTYyMjkwMzAxNH0.sFbzLCIBLsonn0IWZhE3f4speJxBoNoBoDt_LJXvhxeVQu1k5Tz32mBArlvrcbqBsSASQ3Agy_xtl30QGLknZ6RPZymiLn2Jrl_CSRCOdCy2Ayuuss2ods9OOh4YrAVLcFYeVxE_TmgMygALKl8n-xc6R7xh0hETJ1BGevJBRAoW9kGUO5Ag03JO-NV_KbFM2yGZBiCXKEokx8jCvsO-RV0ghKJd1WfGiFceaBlLVue6RcfY1i93Kt6cm80D_Wgowcnk8gXHUEz4KKUoC6J86rPk6ORerhHX7b6JQpg1fBYyBkweB63vcmdqsiIu2Vxq3wLl1hD34EIakXgyeW6Xrg"
+        },
+        "rawHeaders": [
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Content-Length",
+            "467",
+            "Connection",
+            "close",
+            "Date",
+            "Sat, 05 Jun 2021 14:23:34 GMT",
+            "Vary",
+            "Accept-Language",
+            "X-Powered-By",
+            "Thundar!",
+            "X-Thetvdb-Api-Version",
+            "3.0.0",
+            "X-Cache",
+            "Miss from cloudfront",
+            "Via",
+            "1.1 1ee1abe42f3acbda66e5d1252319566a.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Pop",
+            "FRA56-C2",
+            "X-Amz-Cf-Id",
+            "ypUNOYrvp830oreayRVnGfTm_9LsUlfRMNa-GdGhbbU20vYGNc70Ow=="
+        ],
+        "responseIsBinary": false
+    }
+]

@@ -56,8 +56,7 @@ export default class SeasonProviderMapper {
                 seasonAD.pWithoutAwarness.getAllDetailedEpisodes(),
                 seasonAD.pWithAwareness.getAllDetailedEpisodes()
             )
-            const seasonResult = await this.processEpisodeRelationAnalyserResult(result, targetSeason, seasonAD)
-            return seasonResult
+            return await this.processEpisodeRelationAnalyserResult(result, targetSeason, seasonAD)
         }
         throw new Error('[Season-Provider-Mapper] Can`t start Episode Relation Analyser without Detailed Episodes.')
     }
@@ -82,6 +81,9 @@ export default class SeasonProviderMapper {
         targetSeason: Season | undefined,
         seasonAD: SeasonAwarenessData
     ): Promise<SeasonAwarenessResult> {
+        if (result.curruptData) {
+            throw new Error('Currupted Data')
+        }
         if (result.finalSeasonNumbers?.length === 1 && (!targetSeason || this.isSeasonSame(result, targetSeason))) {
             return this.finalizeFinishedEpisodeRelationResult(result, targetSeason, seasonAD)
         } else {
@@ -222,9 +224,7 @@ export default class SeasonProviderMapper {
     }
 
     private isFirstEpisode(minEpisodeNumberOfSeasonHolder: number | undefined): boolean {
-        if (minEpisodeNumberOfSeasonHolder === 1) {
-            return true
-        } else if (minEpisodeNumberOfSeasonHolder === 2) {
+        if (minEpisodeNumberOfSeasonHolder === 1 || minEpisodeNumberOfSeasonHolder === 2) {
             return true
         }
         return false

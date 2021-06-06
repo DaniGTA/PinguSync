@@ -7,7 +7,7 @@ import MultiProviderResult from '../../provider/multi-provider-result'
 import { TMDBOnlineApiMoviesGetDetailsResult } from './objects/online/tmdb-online-api-movies-get-details'
 import { TMDBOnlineApiSearchResult } from './objects/online/tmdb-online-api-search-result'
 import { TMDBOnlineAPISeasonDetails } from './objects/online/tmdb-online-api-season-get-details'
-import { TMDBOnlineApiSeriesGetDetailsResult, TMDBSeason } from './objects/online/tmdb-online-api-series-get-details'
+import { TMDBOnlineApiSeriesGetDetailsResult } from './objects/online/tmdb-online-api-series-get-details'
 import TMDBConverter from './tmdb-converter'
 
 export default class TMDBOnlineApi {
