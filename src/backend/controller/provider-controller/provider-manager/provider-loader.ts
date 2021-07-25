@@ -12,6 +12,10 @@ import OMDbProvider from '../../../api/information-providers/omdb/omdb-provider'
 import TVDBProvider from '../../../api/information-providers/tvdb/tvdb-provider'
 import AniDBProvider from '../../../api/information-providers/anidb/anidb-provider'
 import AnimeOfflineDatabaseProvider from '../../../api/mapping-providers/anime-offline-database/anime-offline-database-provider'
+import TMDBProvider from '../../../api/information-providers/tmdb/tmdb-provider'
+import SyoboiProvider from '../../../api/information-providers/syoboi/syoboi-provider'
+import ImdbProvider from '../../../api/information-providers/imdb/imdb-provider'
+import VNDBProvider from '../../../api/information-providers/vndb/vndb-provider'
 
 export default class ProviderLoader {
     protected static loadedListProvider: ListProvider[] | undefined
@@ -35,6 +39,11 @@ export default class ProviderLoader {
         OMDbProvider,
         TVDBProvider,
         AniDBProvider,
+        TMDBProvider,
+        SyoboiProvider,
+        ImdbProvider,
+        TVMazeProvider,
+        VNDBProvider,
     ]
     protected listOfMappingProviders: Array<new () => ExternalMappingProvider> = [AnimeOfflineDatabaseProvider]
 

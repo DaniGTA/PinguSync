@@ -118,7 +118,7 @@ export default class EpisodeMappingHelper {
         for (let index = 0; index < episodeBinds.length; index++) {
             for (let index2 = index + 1; index2 < episodeBinds.length; index2++) {
                 if (
-                    EpisodeBindingPoolHelper.isEpisodeAlreadyBindedToAProvider(
+                    EpisodeBindingPoolHelper.isEpisodeAlreadyBinded(
                         episodeBindingPools,
                         episodeBinds[index].episode,
                         episodeBinds[index2].provider.provider

@@ -206,7 +206,11 @@ export default class MainListManager {
 
     private static async addSeriesToList(...allSeries: Series[]) {
         for (const series of allSeries) {
-            await series.generateEpisodeMapping()
+            try {
+                await series.generateEpisodeMapping()
+            } catch (err) {
+                logger.error(err)
+            }
             MainListManager.mainList.push(series)
         }
     }

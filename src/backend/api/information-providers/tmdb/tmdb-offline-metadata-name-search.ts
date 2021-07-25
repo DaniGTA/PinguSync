@@ -11,8 +11,10 @@ import MultiProviderResult from '../../provider/multi-provider-result'
 export default class TMDBOfflineMetdataNameSearch {
     public static async search(name: string): Promise<MultiProviderResult[]> {
         const result: MultiProviderResult[] = []
-        result.push(...(await this.searchSeries(name)))
-        result.push(...(await this.searchMovies(name)))
+        const seriesSearch = this.searchSeries(name)
+        const movieSearch = this.searchMovies(name)
+        result.push(...(await seriesSearch))
+        result.push(...(await movieSearch))
         return result
     }
 
@@ -75,6 +77,6 @@ export default class TMDBOfflineMetdataNameSearch {
     }
 
     private static getReadInterface(path: string) {
-        return readline.createInterface({ input: createReadStream(path), crlfDelay: Infinity })
+        return readline.createInterface({ input: createReadStream(path) })
     }
 }

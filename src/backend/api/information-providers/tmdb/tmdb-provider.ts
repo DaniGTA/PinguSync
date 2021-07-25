@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/require-await */
+import { statSync } from 'fs'
 import { MediaType } from '../../../controller/objects/meta/media-type'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import logger from '../../../logger/logger'
@@ -79,12 +80,12 @@ export default class TMDBProvider extends InfoProvider {
     private canDownloadMetadata() {
         const before30days = new Date(new Date().getDay() - 30)
         return (
-            this.providerData.lastOfflineMetdataDownload === undefined || before30days.getTime() > new Date().getTime()
+            before30days.getTime() > statSync(TMDBOfflineMetdataDownloadManager.getSeriesFilePath()).birthtimeMs ||
+            before30days.getTime() > statSync(TMDBOfflineMetdataDownloadManager.getMovieFilePath()).birthtimeMs
         )
     }
 
     private async waitForTasks() {
         await Promise.allSettled(this.currentTasks)
-        return
     }
 }

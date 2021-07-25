@@ -27,15 +27,17 @@ export default class DownloadProviderLocalDataToTargetHelper {
         const result: Array<MultiProviderResult | FailedProviderRequest> = []
         let firstSeason: Series | undefined
 
-        if (this.isProviderIdPresent()) {
+        if (this.isCurrentProviderIdInSeriesPresent()) {
             result.push(...(await this.getLocalDataIdFromOtherProviders()))
+        }
+        if (!this.provider.hasUniqueIdForSeasons) {
             firstSeason = await this.getFistSeasonSeriesFromSeries()
         }
         const requestResult = await this.downloadUntilTargetLogic(firstSeason)
         if (requestResult) {
             result.push(requestResult)
         }
-        if (result.length === 0) {
+        if (result.filter(x => x instanceof MultiProviderResult).length === 0) {
             const resultByOtherProvider = await this.getProviderResultByOtherProvider()
             if (resultByOtherProvider) {
                 result.push(resultByOtherProvider)
@@ -182,7 +184,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         return true
     }
 
-    private isProviderIdPresent(): boolean {
+    private isCurrentProviderIdInSeriesPresent(): boolean {
         const currentLocalData = this.series
             .getAllProviderLocalDatasWithSeasonInfo()
             .find(entry => entry.providerLocalData.provider === this.provider.providerName)

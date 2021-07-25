@@ -28,6 +28,7 @@ export default class TMDBConverter {
         infoProviderLocalData.addSeriesName(new Name(movie.original_title, 'unknown', NameType.MAIN))
         infoProviderLocalData.publicScore = movie.popularity
         infoProviderLocalData.mediaType = MediaType.MOVIE
+        infoProviderLocalData.infoStatus = ProviderInfoStatus.BASIC_INFO
         return new MultiProviderResult(infoProviderLocalData)
     }
 
@@ -36,6 +37,7 @@ export default class TMDBConverter {
         infoProviderLocalData.addSeriesName(new Name(series.original_title, 'unknown', NameType.MAIN))
         infoProviderLocalData.publicScore = series.popularity
         infoProviderLocalData.mediaType = MediaType.UNKOWN_SERIES
+        infoProviderLocalData.infoStatus = ProviderInfoStatus.BASIC_INFO
         return new MultiProviderResult(infoProviderLocalData)
     }
 

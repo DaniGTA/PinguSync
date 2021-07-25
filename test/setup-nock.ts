@@ -9,6 +9,8 @@ import { dirname, basename, join } from 'path'
 import 'reflect-metadata'
 import crypto from 'crypto'
 import logger from '../src/backend/logger/logger'
+import { existsSync } from 'fs'
+import ExternalProvider from '../src/backend/api/provider/external-provider'
 
 function prepareScope(scope: any) {
     scope.filteringRequestBody = (body: any, aRecordedBody: any) => {
@@ -69,6 +71,9 @@ global.beforeEach(async () => {
     if (!testName.includes('[DISABLE_AUTO_NOCK_BACK]')) {
         const fileName = `${basename(testPath)}.${getMD5(testName)}.json`
         logger.info('fixture: ' + fileName)
+        if (existsSync(fileName)) {
+            jest.spyOn(ExternalProvider.prototype, 'waitUntilItCanPerfomNextRequest').mockImplementation(async () => {})
+        }
         value = await nockBack(fileName, { before: prepareScope })
         nock.enableNetConnect('127.0.0.1')
     }

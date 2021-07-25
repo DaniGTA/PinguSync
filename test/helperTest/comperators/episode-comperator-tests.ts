@@ -245,6 +245,10 @@ describe('Episode comperator | Full test', () => {
             const result = EpisodeComperator['isEpisodeTitleEquals']('Title & title', 'title and title')
             expect(result).toBeTruthy()
         })
+
+        test('shoueld be equals (should split: -)', () => {
+            const result = EpisodeComperator['isEpisodeTitleEquals']('File 1 - test', 'test')
+        })
     })
 
     describe('checks if episode a season number is higher then episode b or not', () => {

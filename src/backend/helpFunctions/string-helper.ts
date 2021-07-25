@@ -11,8 +11,7 @@ export default class StringHelper {
      */
     public static reverseString(s: string): string {
         const splitString = s.split('')
-        const reversedArray = splitString.reverse()
-        return reversedArray.join('')
+        return splitString.reverse().join('')
     }
     /**
      * Generates a randome string.
@@ -74,12 +73,7 @@ export default class StringHelper {
             if (this.isNumber(lastChar) && reversedTitle.charAt(1) !== '^' && !title.match(/\d{4,}$/gm)) {
                 response.seasonNumber = parseInt(lastChar, 10)
                 return response
-            } else if (['I'].includes(lastChar)) {
-                while (lastChar === reversedTitle.charAt(0)) {
-                    countLastChar++
-                    reversedTitle = reversedTitle.substr(1)
-                }
-            } else if (['X'].includes(lastChar)) {
+            } else if (['I'].includes(lastChar) || ['X'].includes(lastChar)) {
                 while (lastChar === reversedTitle.charAt(0)) {
                     countLastChar++
                     reversedTitle = reversedTitle.substr(1)

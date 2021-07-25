@@ -32,6 +32,8 @@ import { SeasonError } from './transfer/season-error'
 import { ListType } from '../settings/models/provider/list-types'
 import SeriesHelper from '../../helpFunctions/series-helper'
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper'
+import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info'
+import { brotliCompress } from 'zlib'
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1
@@ -168,8 +170,15 @@ export default class Series extends SeriesProviderExtension {
 
     public addEpisodeMapping(...episodeMappings: EpisodeMapping[]): void {
         const existingBindingPool = this.findExistingBindingPoolByEpisodeMapping(...episodeMappings)
-        if (existingBindingPool) {
-            existingBindingPool.addEpisodeMappingToBindings(...episodeMappings)
+        if (existingBindingPool.length === 1) {
+            existingBindingPool[0].addEpisodeMappingToBindings(...episodeMappings)
+        } else if (existingBindingPool.length !== 0) {
+            this.episodeBindingPools = listHelper.removeEntrys(this.episodeBindingPools, ...existingBindingPool)
+            const newBindingPool = new EpisodeBindingPool(
+                ...[...existingBindingPool.flatMap(x => x.bindedEpisodeMappings), ...episodeMappings]
+            )
+            this.episodeBindingPools.push(newBindingPool)
+            logger.debug(`[Series] (${this.id}) Merging episode bindings`)
         } else {
             const newBindingPool = new EpisodeBindingPool(...episodeMappings)
             this.episodeBindingPools.push(newBindingPool)
@@ -183,15 +192,16 @@ export default class Series extends SeriesProviderExtension {
         this.episodeBindingPoolGeneratedAt = Date.now()
     }
 
-    public findExistingBindingPoolByEpisodeMapping(...episodeMappings: EpisodeMapping[]): EpisodeBindingPool | null {
+    public findExistingBindingPoolByEpisodeMapping(...episodeMappings: EpisodeMapping[]): EpisodeBindingPool[] {
+        const existingBindingPools = []
         for (const bindingPool of this.episodeBindingPools) {
             for (const episodeMapping of episodeMappings) {
                 if (bindingPool.bindingPoolHasEpisodeMapping(episodeMapping)) {
-                    return bindingPool
+                    existingBindingPools.push(bindingPool)
                 }
             }
         }
-        return null
+        return existingBindingPools
     }
 
     /**
@@ -605,32 +615,48 @@ export default class Series extends SeriesProviderExtension {
                             !SeasonComperator.isSameSeason(providerATargetSeason, providerBTargetSeason)
                         ) {
                             return a
-                        }
-                        for (const prequelIdB of providerB.prequelIds) {
-                            if (ProviderComperator.simpleProviderIdCheck(prequelIdB, providerA.id)) {
-                                return a
-                            }
-                        }
-                        for (const preqielIdA of providerA.prequelIds) {
-                            if (ProviderComperator.simpleProviderIdCheck(preqielIdA, providerB.id)) {
-                                return a
-                            }
-                        }
-                        for (const sequelIdB of providerB.sequelIds) {
-                            if (ProviderComperator.simpleProviderIdCheck(sequelIdB, providerA.id)) {
-                                return a
-                            }
-                        }
-                        for (const sequelIdA of providerA.sequelIds) {
-                            if (ProviderComperator.simpleProviderIdCheck(sequelIdA, providerB.id)) {
-                                return a
-                            }
+                        } else if (this.relationIdCheck(providerA, providerB)) {
+                            return a
                         }
                     }
                 }
             }
         }
         throw new Error('[Series] no relations found in the providers SeriesID: ' + this.id)
+    }
+
+    private relationIdCheck(a: ProviderLocalData, b: ProviderLocalData) {
+        for (const prequelIdB of b.prequelIds) {
+            if (ProviderComperator.simpleProviderIdCheck(prequelIdB, a.id)) {
+                return true
+            }
+            for (const sequelIdA of a.sequelIds) {
+                if (ProviderComperator.simpleProviderIdCheck(prequelIdB, sequelIdA)) {
+                    return true
+                }
+            }
+        }
+        for (const prequelIdA of a.prequelIds) {
+            if (ProviderComperator.simpleProviderIdCheck(prequelIdA, b.id)) {
+                return true
+            }
+            for (const sequelIdB of b.sequelIds) {
+                if (ProviderComperator.simpleProviderIdCheck(prequelIdA, sequelIdB)) {
+                    return true
+                }
+            }
+        }
+        for (const sequelIdB of b.sequelIds) {
+            if (ProviderComperator.simpleProviderIdCheck(sequelIdB, a.id)) {
+                return true
+            }
+        }
+        for (const sequelIdA of a.sequelIds) {
+            if (ProviderComperator.simpleProviderIdCheck(sequelIdA, b.id)) {
+                return true
+            }
+        }
+        return false
     }
 
     /**

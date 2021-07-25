@@ -79,7 +79,7 @@ export default class ListController {
     }
 
     public async addSeriesToMainList(...animes: Series[]): Promise<void> {
-        logger.debug('Add ' + animes.length + ' to mainList')
+        logger.debug(`[ListController] [addSeriesToMainList] adding ${animes.length} animes to mainList`)
         await new MainListAdder().addSeries(...animes)
     }
 

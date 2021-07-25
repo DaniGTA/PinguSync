@@ -323,6 +323,13 @@ export default class EpisodeComperator {
         if (textA === textB) {
             return true
         }
+        if (textA.split('-')[1]?.trim() === textB) {
+            return true
+        }
+        if (textB.split('-')[1]?.trim() === textA) {
+            return true
+        }
+
         return false
     }
 

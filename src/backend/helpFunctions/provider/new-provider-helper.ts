@@ -110,7 +110,7 @@ export default class NewProviderHelper {
         return result
     }
 
-    private static addRequestResultToSeries(
+    public static addRequestResultToSeries(
         series: Series,
         results: Array<MultiProviderResult | FailedProviderRequest>
     ): Series {
@@ -122,6 +122,32 @@ export default class NewProviderHelper {
             }
         }
         return series
+    }
+
+    public static async getAllRequestResultsFromListOfProviders(
+        series: Series,
+        providers: ExternalInformationProvider[],
+        target: ProviderInfoStatus
+    ): Promise<Array<MultiProviderResult | FailedProviderRequest>> {
+        const results: Array<MultiProviderResult | FailedProviderRequest> = []
+        for (const provider of providers) {
+            try {
+                const result = await new DownloadProviderLocalDataToTargetHelper(
+                    series,
+                    provider,
+                    target
+                ).upgradeToTarget()
+                if (result) {
+                    results.push(result)
+                }
+            } catch (err) {
+                if (isFailedRequestError(err)) {
+                    results.push(new FailedProviderRequest(provider, err))
+                }
+                logger.debug(err)
+            }
+        }
+        return results
     }
 
     private static isProviderLocalDataProviderAndIdInList(
@@ -164,32 +190,6 @@ export default class NewProviderHelper {
             }
         }
         return false
-    }
-
-    private static async getAllRequestResultsFromListOfProviders(
-        series: Series,
-        providers: ExternalInformationProvider[],
-        target: ProviderInfoStatus
-    ): Promise<Array<MultiProviderResult | FailedProviderRequest>> {
-        const results: Array<MultiProviderResult | FailedProviderRequest> = []
-        for (const provider of providers) {
-            try {
-                const result = await new DownloadProviderLocalDataToTargetHelper(
-                    series,
-                    provider,
-                    target
-                ).upgradeToTarget()
-                if (result) {
-                    results.push(result)
-                }
-            } catch (err) {
-                if (isFailedRequestError(err)) {
-                    results.push(new FailedProviderRequest(provider, err))
-                }
-                logger.debug(err)
-            }
-        }
-        return results
     }
 
     private static getAllOfflineInfoProviders(): InfoProvider[] {

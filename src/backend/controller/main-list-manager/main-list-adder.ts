@@ -108,7 +108,6 @@ export default class MainListAdder {
         }
         logger.info(`Added ${addCounter}/${list.length} to mainList`)
         logger.info('End waitlist worker')
-        return
     }
 
     private async updateExistingEntry(series: Series, existingEntry: Series): Promise<void> {

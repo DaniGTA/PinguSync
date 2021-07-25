@@ -66,28 +66,34 @@ export default class EpisodeRelationAnalyser {
 
     private calcAllInformations(): void {
         const canSeasonHolderBeCurrupt = this.canBeCorrupted(this.seasonHolder[0])
+        const map = new Map<string | number, number>()
         for (const episode of this.seasonHolder) {
-            let founds = 0
             for (const newEpisodes of this.currentSeason) {
                 const result = EpisodeComperator.isSameEpisodeTitle(episode, newEpisodes)
                 if (result.isAbsolute === AbsoluteResult.ABSOLUTE_TRUE) {
                     this.updateAllInformations(episode, newEpisodes)
-                    if (!canSeasonHolderBeCurrupt) {
-                        break
+                    if (canSeasonHolderBeCurrupt) {
+                        const foundCountSeasonHolder = (map.get(episode.id) ?? 0) + 1
+                        map.set(episode.id, foundCountSeasonHolder)
+                        const foundCountNewEpisodes = (map.get(newEpisodes.id) ?? 0) + 1
+                        map.set(newEpisodes.id, foundCountNewEpisodes)
+                        if (foundCountNewEpisodes > 1 || foundCountSeasonHolder > 1) {
+                            const providerInstance = ProviderList.getProviderInstanceByProviderName(
+                                episode.provider ?? ''
+                            )
+                            if (providerInstance && episode.providerId !== undefined) {
+                                ProviderDataListManager.markProviderDataAsCorrupt(providerInstance, episode.providerId)
+                            }
+                            this.curruptData = true
+                            break
+                        }
                     } else {
-                        founds++
+                        break
                     }
                 }
             }
-            if (founds > 1) {
-                const providerInstance = ProviderList.getProviderInstanceByProviderName(episode.provider ?? '')
-                if (providerInstance && episode.providerId !== undefined) {
-                    ProviderDataListManager.markProviderDataAsCorrupt(providerInstance, episode.providerId)
-                }
-                this.curruptData = true
-                break
-            }
         }
+
         this.updateMaxSeasonNumber(this.seasonHolder)
     }
 
@@ -223,5 +229,9 @@ export default class EpisodeRelationAnalyser {
         } catch (err) {
             return false
         }
+    }
+
+    private getEpisodeId(episode: Episode) {
+        return episode.providerEpisodeId ?? episode.id
     }
 }

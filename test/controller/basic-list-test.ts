@@ -28,6 +28,7 @@ import EpisodeBindingPoolHelper from '../../src/backend/helpFunctions/episode-bi
 import ProviderLocalDataWithSeasonInfo from '../../src/backend/helpFunctions/provider/provider-info-downloader/provider-data-with-season-info'
 import seriesHelper from '../../src/backend/helpFunctions/series-helper'
 import logger from '../../src/backend/logger/logger'
+import { MediaType } from '../../src/backend/controller/objects/meta/media-type'
 
 // tslint:disable: no-string-literal
 describe('Basic List | Testrun', () => {
@@ -177,6 +178,7 @@ describe('Basic List | Testrun', () => {
         const s1provider6 = new InfoProviderLocalData('tt4728568', ImdbProvider)
         s1provider6.infoStatus = ProviderInfoStatus.ONLY_ID
         const s1provider7 = new InfoProviderLocalData(62745, TmdbProvider)
+        s1provider7.mediaType = MediaType.UNKOWN_SERIES
         s1provider7.infoStatus = ProviderInfoStatus.ONLY_ID
         const s1provider8 = new InfoProviderLocalData(5312, TVMazeProvider)
         s1provider8.infoStatus = ProviderInfoStatus.ONLY_ID
@@ -198,6 +200,7 @@ describe('Basic List | Testrun', () => {
         const s2provider6 = new InfoProviderLocalData('tt4728568', ImdbProvider)
         s2provider6.infoStatus = ProviderInfoStatus.ONLY_ID
         const s2provider7 = new InfoProviderLocalData(62745, TmdbProvider)
+        s2provider7.mediaType = MediaType.UNKOWN_SERIES
         s2provider7.infoStatus = ProviderInfoStatus.ONLY_ID
         const s2provider8 = new InfoProviderLocalData(5312, TVMazeProvider)
         s2provider8.infoStatus = ProviderInfoStatus.ONLY_ID
@@ -268,7 +271,7 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         expect(MainListManager['mainList'].length).toEqual(2)
         expect(await seriesHelper.isSameSeries(series1, series2)).toEqual(false)
-    }, 4000)
+    }, 40000)
 
     test('should not merge season 1 with season 2', async () => {
         if (!ListController.instance) {
@@ -318,7 +321,7 @@ describe('Basic List | Testrun', () => {
         await MainListManager['finishListFilling']()
         // tslint:disable-next-line: no-string-literal
         expect(MainListManager['mainList'].length).toEqual(2)
-    }, 4000)
+    }, 30000)
 
     // TODO SPEED UP TEST (THIS TEST TAKES 1 MINUTE)
     test('should not create too much detailed episodes', async () => {
@@ -347,7 +350,7 @@ describe('Basic List | Testrun', () => {
             logger.warn(`${iterator.episodeNumber} S: ${iterator?.season?.getSingleSeasonNumberAsNumber() ?? ''}`)
         }
         expect(provider?.getDetailEpisodeInfos().length).toEqual(337)
-    }, 8000)
+    }, 60000)
 
     test('should update anilist series (20605)', async () => {
         if (!ListController.instance) {
@@ -368,7 +371,7 @@ describe('Basic List | Testrun', () => {
         const result = MainListSearcher['findSeriesWithMultiProviderResult'](mpr)
 
         expect(result).not.toBeNull()
-    }, 4000)
+    }, 30000)
 
     test('should not get season 1 on season 2', async () => {
         if (!ListController.instance) {
@@ -414,7 +417,7 @@ describe('Basic List | Testrun', () => {
         expect(
             resultS2?.getProviderSeasonTarget(traktProviderS2?.provider ?? '')?.getSingleSeasonNumberAsNumber()
         ).toEqual(2)
-    }, 4000)
+    }, 180000)
 
     test('should get trakt info data on all seasons', async () => {
         if (!ListController.instance) {
@@ -442,7 +445,7 @@ describe('Basic List | Testrun', () => {
         const list2 = series2.getAllProviderLocalDatas()
         const trakprovider2 = list2.find(x => x.provider === TraktProvider.getInstance().providerName)
         expect(trakprovider2).not.toBeUndefined()
-    }, 4000)
+    }, 60000)
 
     test('should get the right season. Trakt', async () => {
         if (!ListController.instance) {
@@ -484,7 +487,7 @@ describe('Basic List | Testrun', () => {
             aniListProviderName
         )[0].getProviderSeasonTarget(traktProviderName)
         expect(season3?.getSingleSeasonNumberAsNumber()).toEqual(3)
-    }, 4000)
+    }, 60000)
 
     test('should get the right season. for shokugeki no souma', async () => {
         if (!ListController.instance) {
@@ -557,7 +560,7 @@ describe('Basic List | Testrun', () => {
                 const allEpisodeBindingsPool = MainListManager.getMainList().flatMap(x => x.episodeBindingPools)
                 const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode)
                 const s = len.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider))
-                if ((episode.episodeNumber as number) < 13) {
+                if ((episode.episodeNumber as number) < 12) {
                     expect(s?.episodeNumber).toBe(episode.episodeNumber)
                     expect(s?.providerSeriesId).toBe(99255)
                 } else {
@@ -579,7 +582,7 @@ describe('Basic List | Testrun', () => {
         }
         const season = series2.getProviderSeasonTarget(provider?.provider ?? '')
         expect(season?.getSingleSeasonNumberAsNumber()).toEqual(2)
-    }, 16000)
+    }, 60000)
 
     test('should get series and should map episodes right (Series: Clannad) (Has different max episode number on S1)', async () => {
         const provider = new ListProviderLocalData(2167, AniListProvider)
@@ -771,7 +774,6 @@ describe('Basic List | Testrun', () => {
         expect(traktBinding?.providerLocalData.provider).toBe(traktName)
         expect(traktBinding?.providerLocalData.id).toBe(97794)
         expect(traktBinding?.seasonTarget?.seasonNumbers[0]).toBe(1)
-        expect(traktBinding?.seasonTarget?.seasonPart).toBe(1)
 
         const epMappings = resultSeries.episodeBindingPools
         expect(epMappings.length).toBe(12)
@@ -783,15 +785,15 @@ describe('Basic List | Testrun', () => {
                 x => x.provider === ProviderNameManager.getProviderName(TraktProvider)
             )
 
-            expect(anistListMapping).toBeUndefined()
-            expect(traktListMapping).toBeUndefined()
+            expect(anistListMapping).not.toBeUndefined()
+            expect(traktListMapping).not.toBeUndefined()
             for (const ep of epMapping.bindedEpisodeMappings) {
                 for (const ep2 of epMapping.bindedEpisodeMappings) {
                     expect(ep.episodeNumber).toEqual(ep2.episodeNumber)
                 }
             }
         }
-    })
+    }, 60000)
 
     test('should get series and should map episodes right from AniList (Series: Gakusen Toshi Asterisk S2)', async () => {
         const provider = new ListProviderLocalData(21390, AniListProvider)
@@ -811,6 +813,8 @@ describe('Basic List | Testrun', () => {
 
         const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo()
 
+        expect((await resultSeries.getSeason()).seasonNumbers[0]).toEqual(2)
+
         const aniListName = ProviderNameManager.getProviderName(AniListProvider)
         const aniListBinding = bindings.find(x => x.providerLocalData.provider === aniListName)
         expect(aniListBinding?.providerLocalData.provider).toBe(aniListName)
@@ -820,8 +824,6 @@ describe('Basic List | Testrun', () => {
         const traktBinding = bindings.find(x => x.providerLocalData.provider === traktName)
         expect(traktBinding?.providerLocalData.provider).toBe(ProviderNameManager.getProviderName(TraktProvider))
         expect(traktBinding?.providerLocalData.id).toBe(97794)
-        expect(traktBinding?.seasonTarget?.seasonNumbers[0]).toBe(1)
-        expect(traktBinding?.seasonTarget?.seasonPart).toBe(2)
 
         const epMappings = resultSeries.episodeBindingPools
         expect(epMappings.length).toBe(12)
@@ -829,6 +831,6 @@ describe('Basic List | Testrun', () => {
             const stra = epMapping.bindedEpisodeMappings.find(x => x.provider === aniListName)
             expect(stra).not.toEqual(undefined)
         }
-    })
+    }, 60000)
     test.todo('Trakt id: 65266 (All season seperate)')
 })

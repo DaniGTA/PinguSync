@@ -148,13 +148,19 @@ export default new (class TraktConverter {
         }
         const multiProviderResult = []
         if (fullShow.ids.tvdb) {
-            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider.Instance))
+            const tvdb = new InfoProviderLocalData(fullShow.ids.tvdb, TVDBProvider)
+            tvdb.mediaType = mediaType
+            multiProviderResult.push(tvdb)
         }
         if (fullShow.ids.imdb) {
-            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.imdb, ImdbProvider))
+            const imdb = new InfoProviderLocalData(fullShow.ids.imdb, ImdbProvider)
+            imdb.mediaType = mediaType
+            multiProviderResult.push(imdb)
         }
         if (fullShow.ids.tmdb) {
-            multiProviderResult.push(new InfoProviderLocalData(fullShow.ids.tmdb, TMDBProvider))
+            const tmbd = new InfoProviderLocalData(fullShow.ids.tmdb, TMDBProvider)
+            tmbd.mediaType = mediaType
+            multiProviderResult.push(tmbd)
         }
 
         return new MultiProviderResult(provider, ...multiProviderResult)

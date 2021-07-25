@@ -1,22 +1,22 @@
-import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator';
-import Episode from './episode';
-import EpisodeMapping from './episode-mapping';
+import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator'
+import Episode from './episode'
+import EpisodeMapping from './episode-mapping'
 
 export default class EpisodeBindingPool {
-    public readonly bindedEpisodeMappings: EpisodeMapping[] = [];
-    public isWatched: boolean | undefined;
+    public readonly bindedEpisodeMappings: EpisodeMapping[] = []
+    public isWatched: boolean | undefined
     // tslint:disable-next-line: variable-name
-    private readonly __className: string;
+    private readonly __className: string
 
     constructor(...episodes: EpisodeMapping[]) {
-        this.__className = this.constructor.name;
-        this.bindedEpisodeMappings.push(...episodes);
+        this.__className = this.constructor.name
+        this.addEpisodeMappingToBindings(...episodes)
     }
 
     public loadPrototypes(): void {
         for (let index = 0; index < this.bindedEpisodeMappings.length; index++) {
-            Object.setPrototypeOf(this.bindedEpisodeMappings[index], EpisodeMapping.prototype);
-            this.bindedEpisodeMappings[index].loadPrototypes();
+            Object.setPrototypeOf(this.bindedEpisodeMappings[index], EpisodeMapping.prototype)
+            this.bindedEpisodeMappings[index].loadPrototypes()
         }
     }
 
@@ -27,17 +27,16 @@ export default class EpisodeBindingPool {
     public addEpisodeMappingToBindings(...episodeMappings: EpisodeMapping[]): void {
         for (const episodeMapping of episodeMappings) {
             if (this.isBindingpoolHaveThisProvider(episodeMapping.provider)) {
-                continue;
+                continue
             }
-            let found = false;
+            let found = false
             for (const currentEpisodeMapping of this.bindedEpisodeMappings) {
                 if (EpisodeComperator.isSameEpisodeMapping(episodeMapping, currentEpisodeMapping)) {
-                    found = true;
-                    continue;
+                    found = true
                 }
             }
             if (!found) {
-                this.bindedEpisodeMappings.push(episodeMapping);
+                this.bindedEpisodeMappings.push(episodeMapping)
             }
         }
     }
@@ -45,22 +44,22 @@ export default class EpisodeBindingPool {
     public bindingPoolHasEpisodeMapping(episodeMapping: EpisodeMapping): boolean {
         for (const episode of this.bindedEpisodeMappings) {
             if (EpisodeComperator.isSameEpisodeMapping(episode, episodeMapping)) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 
     public isBindingpoolHaveThisProvider(provider: string): boolean {
-        return this.bindedEpisodeMappings.findIndex((x) => x.provider === provider) !== -1;
+        return this.bindedEpisodeMappings.findIndex(x => x.provider === provider) !== -1
     }
 
     public bindingPoolHasEpisode(episode: Episode): boolean {
         for (const bindedEpisode of this.bindedEpisodeMappings) {
             if (EpisodeComperator.isSameEpisodeMappingToEpisode(bindedEpisode, episode)) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 }
