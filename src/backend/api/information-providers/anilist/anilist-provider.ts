@@ -32,7 +32,6 @@ import { print } from 'graphql'
 import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
-import { OutgoingHttpHeaders } from 'http'
 export default class AniListProvider extends ListProvider {
     private static instance: AniListProvider
     public hasUniqueIdForSeasons = true
@@ -291,7 +290,7 @@ export default class AniListProvider extends ListProvider {
 
         logger.info('[AniList] Start WebRequest')
 
-        const response = await WebRequestManager.request(requestOptions)
+        const response = await WebRequestManager.request<string>(requestOptions)
 
         logger.info('[AniList] statusCode: {0}', response && response.statusCode) // Print the response status code if a response was received
         if (response.statusCode === 200) {
@@ -315,7 +314,7 @@ export default class AniListProvider extends ListProvider {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             variables,
         })
-        let headers: OutgoingHttpHeaders = {
+        let headers: any = {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         }

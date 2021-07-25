@@ -76,7 +76,7 @@ export default class AnimeOfflineDatabaseManager {
     }
 
     private static async downloadDatabase(): Promise<AnimeOfflineDatabase> {
-        const res = await WebRequestManager.request(new RequestBundle(AnimeOfflineDatabaseManager.DATABASE_URL))
+        const res = await WebRequestManager.request<string>(new RequestBundle(AnimeOfflineDatabaseManager.DATABASE_URL))
         if (res.statusCode === 200) {
             return JSON.parse(res.body) as AnimeOfflineDatabase
         } else {

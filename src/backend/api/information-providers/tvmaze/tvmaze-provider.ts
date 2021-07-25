@@ -1,3 +1,4 @@
+import { Method } from 'got/dist/source'
 import Episode from '../../../controller/objects/meta/episode/episode'
 // tslint:disable-next-line: no-implicit-dependencies
 import { MediaType } from '../../../controller/objects/meta/media-type'
@@ -69,10 +70,10 @@ export default class TVMazeProvider extends InfoProvider {
         return converter.convertShowToResult(result)
     }
 
-    private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
+    private async webRequest<T>(url: string, method: Method = 'GET'): Promise<T> {
         this.informAWebRequest()
         logger.info('[TVMaze] Start WebRequest')
-        const response = await WebRequestManager.request(
+        const response = await WebRequestManager.request<string>(
             new RequestBundle(url, {
                 method,
                 headers: {
@@ -82,8 +83,7 @@ export default class TVMazeProvider extends InfoProvider {
             })
         )
         if (response.statusCode === 200 || response.statusCode === 201) {
-            const data: T = JSON.parse(response.body) as T
-            return data
+            return JSON.parse(response.body) as T
         } else {
             logger.info(`[TVMaze] status code: ${response.statusCode}`)
             throw new Error(`[TVMaze] status code: ${response.statusCode}`)

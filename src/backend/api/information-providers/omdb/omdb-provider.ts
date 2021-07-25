@@ -1,3 +1,4 @@
+import { Method } from 'got/dist/source'
 import Episode from '../../../controller/objects/meta/episode/episode'
 // tslint:disable-next-line: no-implicit-dependencies
 import { MediaType } from '../../../controller/objects/meta/media-type'
@@ -78,24 +79,16 @@ export default class OMDbProvider extends InfoProvider {
                 )
                 return converter.convertIdRequest(result)
             } catch (err) {
-                logger.error(err)
-                throw new Error(err)
+                throw new Error(err as string)
             }
         }
         throw new Error('[Omdb] Cant handle this provider id')
     }
 
-    private async webRequest<T>(url: string, method = 'GET'): Promise<T> {
+    private async webRequest<T>(url: string, method: Method = 'GET'): Promise<T> {
         this.informAWebRequest()
-        const request = {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method,
-            timeout: 5000,
-            uri: url,
-        }
-        const response = await WebRequestManager.request(new RequestBundle(url))
+
+        const response = await WebRequestManager.request<string>(new RequestBundle(url, { method }))
         try {
             if (response.statusCode === 200 || response.statusCode === 201) {
                 const data: T = JSON.parse(response.body) as T
@@ -105,7 +98,6 @@ export default class OMDbProvider extends InfoProvider {
                 throw response.statusCode
             }
         } catch (err) {
-            logger.error(err)
             throw err
         }
     }

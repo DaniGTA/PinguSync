@@ -16,7 +16,7 @@ export default class TMDBOnlineApi {
     constructor(private apiKey: string) {}
 
     public async search(name: string): Promise<MultiProviderResult[]> {
-        const result = await WebRequestManager.request(
+        const result = await WebRequestManager.request<string>(
             new RequestBundle(`${this.baseUrl}search/multi?api_key=${this.apiKey}&query=${name}&include_adult=true`)
         )
 
@@ -27,14 +27,14 @@ export default class TMDBOnlineApi {
 
     public async getDetails(id: number | string, mediaType: MediaType): Promise<MultiProviderResult> {
         if (MediaTypeComperator.isMediaTypeANormalSeries(mediaType)) {
-            const result = await WebRequestManager.request(
+            const result = await WebRequestManager.request<string>(
                 new RequestBundle(`${this.baseUrl}tv/${id}?api_key=${this.apiKey}`)
             )
             const seriesDetailsBody = JSON.parse(result.body) as TMDBOnlineApiSeriesGetDetailsResult
             const seasons: TMDBOnlineAPISeasonDetails[] = []
             for (const season of seriesDetailsBody.seasons) {
                 await timeHelper.delay(1000)
-                const seasonInfo = await WebRequestManager.request(
+                const seasonInfo = await WebRequestManager.request<string>(
                     new RequestBundle(`${this.baseUrl}tv/${id}/season/${season.season_number}?api_key=${this.apiKey}`)
                 )
                 if (seasonInfo.statusCode === 200) {
@@ -44,7 +44,7 @@ export default class TMDBOnlineApi {
 
             return TMDBConverter.convertOnlineApiSeriesGetDetailsResult(seriesDetailsBody, mediaType, seasons)
         } else {
-            const result = await WebRequestManager.request(
+            const result = await WebRequestManager.request<string>(
                 new RequestBundle(`${this.baseUrl}movie/${id}?api_key=${this.apiKey}`)
             )
             const body = JSON.parse(result.body) as TMDBOnlineApiMoviesGetDetailsResult

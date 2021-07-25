@@ -27,7 +27,7 @@ import { NameType } from '../../../controller/objects/meta/name-type'
 import { EpisodeHistoryUpdate } from './objects/episodes'
 import { InformationTrustRank } from '../../provider/information-trust-rank'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
-import { json } from 'express'
+import { Method } from 'got/dist/source'
 
 export default class TraktProvider extends ListProvider {
     private static instance: TraktProvider
@@ -117,7 +117,7 @@ export default class TraktProvider extends ListProvider {
 
     public async addOAuthCode(code: string): Promise<boolean> {
         this.informAWebRequest()
-        const response = await WebRequestManager.request(
+        const response = await WebRequestManager.request<any>(
             new RequestBundle('https://api.trakt.tv/oauth/token', {
                 headers: {
                     Accept: 'application/json',
@@ -279,12 +279,12 @@ export default class TraktProvider extends ListProvider {
         throw new Error('cant login user with credentials')
     }
 
-    private async traktRequest<T>(url: string, method = 'GET', body = ''): Promise<T> {
+    private async traktRequest<T>(url: string, method: Method = 'GET', body = ''): Promise<T> {
         await this.waitUntilItCanPerfomNextRequest()
         this.informAWebRequest()
         logger.info('[Trakt] Start WebRequest ♗')
 
-        const response = await WebRequestManager.request(
+        const response = await WebRequestManager.request<string>(
             new RequestBundle(url, {
                 body,
                 headers: {

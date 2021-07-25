@@ -75,7 +75,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        prependData: '@import "@/styles/quasar.sass";'
+        additionalData: '@import "@/styles/quasar.variables.sass";'
       }
     }
   },

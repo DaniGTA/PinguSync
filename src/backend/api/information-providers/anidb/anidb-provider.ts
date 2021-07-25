@@ -65,7 +65,7 @@ export default class AniDBProvider extends InfoProvider {
                 return converter.convertFullInfoToProviderLocalData(fullInfo)
             } catch (err) {
                 logger.error('[AniDB] Failed to get FullInfoById: ' + url)
-                throw new Error(err)
+                throw new Error(err as string)
             }
         }
         throw new Error('False provider - AniDB')
@@ -216,7 +216,7 @@ export default class AniDBProvider extends InfoProvider {
         this.informAWebRequest()
         // eslint-disable-next-line no-async-promise-executor
 
-        const res = await ((got(url) as unknown) as got.GotPromise<Buffer>)
+        const res = await got(url)
         if (res.statusCode === 200) {
             logger.debug('Write ANIDB download stream to file...')
             writeFileSync(filePath, res.body, { flag: 'w' })
@@ -239,7 +239,7 @@ export default class AniDBProvider extends InfoProvider {
                 console.warn('Changed AniDB API Available status to false')
                 throw new Error('[AniDB] [API_ERROR]: 500 = BANNED')
             }
-            const json = xml2json(response.body, { compact: true, spaces: 0 })
+            const json = xml2json(response.body as string, { compact: true, spaces: 0 })
             if (json) {
                 return JSON.parse(json) as T
             } else {

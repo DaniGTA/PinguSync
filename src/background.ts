@@ -10,7 +10,7 @@ import {
     // tslint:disable-next-line: no-implicit-dependencies tslint:disable-next-line: no-submodule-imports
 } from 'vue-cli-plugin-electron-builder/lib'
 // tslint:disable-next-line: no-implicit-dependencies
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 import FrontendController from './backend/controller/frontend-controller'
 import DatabaseLoader from './backend/controller/stats-manager/database-loader'
 import logger from './backend/logger/logger'
@@ -22,7 +22,7 @@ logger.info(`Loaded Node.js with: ${nodeThreads} Threads`)
 process.env.UV_THREADPOOL_SIZE = `${nodeThreads}`
 try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mongoose.connect(DatabaseLoader.uri, { useNewUrlParser: true }, (err: any) => {
+    mongoose.connect(DatabaseLoader.uri, (err: any) => {
         if (err) {
             logger.error(err?.message)
         } else {

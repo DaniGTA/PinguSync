@@ -83,7 +83,7 @@ export default class PinguSyncMappingProvider extends ExternalMappingProvider {
                 }
             }
         } catch (err) {
-            throw new Error(err)
+            throw new Error(err as string)
         }
         return result
     }
@@ -109,7 +109,7 @@ export default class PinguSyncMappingProvider extends ExternalMappingProvider {
     ): Promise<ProviderMappingBaseDocument[]> {
         const ProviderMappingModelDB =
             this.mongoDB?.model('ProviderMapping', ProviderMappingSchema) ?? ProviderMappingModel
-        return await ProviderMappingModelDB.find({ Ids: { providerId: id, provider: provider } }).exec()
+        return ProviderMappingModelDB.find({ Ids: { providerId: id, provider: provider } }).exec()
     }
 
     public async getProviderWithEpisodeMapping(
@@ -118,7 +118,7 @@ export default class PinguSyncMappingProvider extends ExternalMappingProvider {
     ): Promise<ProviderMappingBaseDocument[]> {
         const ProviderMappingModelDB =
             this.mongoDB?.model('ProviderMapping', ProviderMappingSchema) ?? ProviderMappingModel
-        return await ProviderMappingModelDB?.find({ Ids: { providerId: id, provider: provider } }).exec()
+        return ProviderMappingModelDB?.find({ Ids: { providerId: id, provider: provider } }).exec()
     }
 
     public async saveSeries(series: Series): Promise<MappingProviderLocalData | undefined> {
@@ -172,20 +172,16 @@ export default class PinguSyncMappingProvider extends ExternalMappingProvider {
             season.confirmed = episdoeMapping.season.confirmed
         }
         const episode = new Episode(episdoeMapping.episodeNumber, season)
-        const epMappingResult = new EpisodeMapping(episode, provider)
-        return epMappingResult
+        return new EpisodeMapping(episode, provider)
     }
 
     private async connect(): Promise<void> {
-        //const uri = 'mongodb+srv://PinguSync:3b86syFYVCkYZoup@cluster0.eleme.mongodb.net/PinguSync?retryWrites=true&w=majority';
         const uri =
-            'mongodb+srv://PinguSyncAdmin:ksF27QkRSkZ5gch6@cluster0.eleme.mongodb.net/PinguSync?retryWrites=true&w=majority'
+            'mongodb+srv://PinguSync:3b86syFYVCkYZoup@cluster0.eleme.mongodb.net/PinguSync?retryWrites=true&w=majority'
+
         try {
             this.mongoDB = await mongoose.createConnection(uri, {
-                useNewUrlParser: true,
-                autoReconnect: false,
                 maxIdleTimeMS: 1000,
-                useUnifiedTopology: true,
             })
         } catch (err) {
             logger.error(err)

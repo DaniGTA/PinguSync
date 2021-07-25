@@ -14,6 +14,7 @@ import { InfoProviderLocalData } from '../../../controller/provider-controller/p
 import Episode from '../../../controller/objects/meta/episode/episode'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
+import { Method } from 'got/dist/source'
 
 export default class TVDBProvider extends InfoProvider {
     public static Instance: TVDBProvider
@@ -85,7 +86,7 @@ export default class TVDBProvider extends InfoProvider {
             return this.apiData.accessToken
         } else {
             let token: string | null = null
-            const data = await WebRequestManager.request(
+            const data = await WebRequestManager.request<string>(
                 new RequestBundle(this.baseUrl + '/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -104,11 +105,11 @@ export default class TVDBProvider extends InfoProvider {
         }
     }
 
-    private async webRequest<T>(url: string, method = 'GET', body = ''): Promise<T> {
+    private async webRequest<T>(url: string, method: Method = 'GET', body = ''): Promise<T> {
         this.informAWebRequest()
 
         try {
-            const response = await WebRequestManager.request(
+            const response = await WebRequestManager.request<string>(
                 new RequestBundle(url, {
                     method,
                     headers: {
@@ -122,15 +123,13 @@ export default class TVDBProvider extends InfoProvider {
             )
 
             if (response.statusCode === 200 || response.statusCode === 201) {
-                const data: T = JSON.parse(response.body) as T
-                return data
+                return JSON.parse(response.body) as T
             } else {
                 logger.error(`[TVDB] status code: ${response.statusCode}`)
                 throw new Error(`[TVDB] status code: ${response.statusCode}`)
             }
         } catch (err) {
-            logger.error(err)
-            throw new Error(err)
+            throw new Error(err as string)
         }
     }
 }

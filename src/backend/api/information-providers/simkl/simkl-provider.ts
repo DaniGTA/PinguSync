@@ -26,6 +26,7 @@ import { SimklUserData } from './simkl-user-data'
 import Episode from '../../../controller/objects/meta/episode/episode'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
+import { Method } from 'got/dist/source'
 
 export default class SimklProvider extends ListProvider {
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
@@ -195,14 +196,14 @@ export default class SimklProvider extends ListProvider {
         return this.simklConverter.convertFullAnimeInfoToProviderLocalData(fullInfoResult, episodeInfoResult)
     }
 
-    private async simklRequest<T>(url: string, method = 'GET', body: string = ''): Promise<T> {
+    private async simklRequest<T>(url: string, method: Method = 'GET', body: string = ''): Promise<T> {
         this.informAWebRequest()
         if (!(await this.isProviderAvailable())) {
             throw new Error('timeout active')
         }
 
         try {
-            const response = await WebRequestManager.request(
+            const response = await WebRequestManager.request<string>(
                 new RequestBundle(url, {
                     method: method,
                     headers: {
@@ -216,8 +217,7 @@ export default class SimklProvider extends ListProvider {
             logger.info('[Simkl] Start WebRequest')
 
             if (response.statusCode === 200 || response.statusCode === 201) {
-                const data: T = JSON.parse(response.body) as T
-                return data
+                return JSON.parse(response.body) as T
             } else if (response.statusCode === 412) {
                 const e: SimklErrorResponse = JSON.parse(response.body) as SimklErrorResponse
                 if (e.message === 'Total Requests Limit Exceeded') {
@@ -231,8 +231,7 @@ export default class SimklProvider extends ListProvider {
                 throw new Error(`[Simkl] status code: ${response.statusCode}`)
             }
         } catch (err) {
-            logger.error(err)
-            throw new Error(err)
+            throw new Error(err as string)
         }
     }
 }

@@ -27,7 +27,7 @@ export default class EregnyAnimeRelationsManager {
     }
 
     private static async downloadDatabase(): Promise<any> {
-        const res = await WebRequestManager.request(new RequestBundle(EregnyAnimeRelationsManager.DATABASE_URL))
+        const res = await WebRequestManager.request<string>(new RequestBundle(EregnyAnimeRelationsManager.DATABASE_URL))
         if (res.statusCode === 200) {
             return this.convertXmlToJson(res.body)
         } else {
