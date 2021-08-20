@@ -196,7 +196,7 @@ export default class SimklProvider extends ListProvider {
         return this.simklConverter.convertFullAnimeInfoToProviderLocalData(fullInfoResult, episodeInfoResult)
     }
 
-    private async simklRequest<T>(url: string, method: Method = 'GET', body: string = ''): Promise<T> {
+    private async simklRequest<T>(url: string, method: Method = 'GET', body = ''): Promise<T> {
         this.informAWebRequest()
         if (!(await this.isProviderAvailable())) {
             throw new Error('timeout active')
