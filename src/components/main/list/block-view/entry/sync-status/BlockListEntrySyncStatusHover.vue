@@ -1,60 +1,56 @@
 <template>
-  <div class="hover" @click.prevent>
-    <q-separator />
-    <ShowStatusOfSingleProvider
-      v-for="provider of providers"
-      :provider="provider"
-      :key="provider.providerName+'syncHover'"
-    />
-  </div>
+    <div class="hover" @click.prevent>
+        <q-separator />
+        <ShowStatusOfSingleProvider
+            v-for="provider of providers"
+            :provider="provider"
+            :key="provider.providerName + 'syncHover'"
+        />
+    </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import ProviderController from '../../../../../controller/provider-controller';
-import ShowStatusOfSingleProvider from './provider-sync-status/ShowStatusOfSingleProvider.vue';
-import { Prop } from 'vue-property-decorator';
-import SeriesHoverController from './../../../../../controller/series-hover-controller';
-import { getModule } from 'vuex-module-decorators';
-import { ListProviderInterface } from '../../../../../controller/model/list-provider-interface';
+import { Vue, Options } from 'vue-class-component'
+import ProviderController from '../../../../../controller/provider-controller'
+import ShowStatusOfSingleProvider from './provider-sync-status/ShowStatusOfSingleProvider.vue'
+import SeriesHoverController from './../../../../../controller/series-hover-controller'
+import { ListProviderInterface } from '../../../../../controller/model/list-provider-interface'
 
-@Component({
-  components: {
-    ShowStatusOfSingleProvider,
-  },
-  methods: {
-    destroyed: () => {
-      console.error('ALARM COMPONENT FÄLLT');
+class Props {
+    seriesId!: string
+}
+
+@Options({
+    components: {
+        ShowStatusOfSingleProvider,
     },
-  },
+    methods: {
+        destroyed: () => {
+            console.error('ALARM COMPONENT FÄLLT')
+        },
+    },
 })
-export default class BlockListEntrySyncStatusHover extends Vue {
-  providers: ListProviderInterface[] = [];
+export default class BlockListEntrySyncStatusHover extends Vue.with(Props) {
+    providers: ListProviderInterface[] = []
 
-  private providerController = getModule(ProviderController);
-  private seriesHoverController = getModule(SeriesHoverController);
+    created(): void {
+        this.loadProviders()
+        console.log('Hover entry: ' + this.seriesId)
+        SeriesHoverController.currentlyHoveringSeriesId = this.seriesId
+    }
 
-  @Prop({ required: true })
-  seriesId!: string;
-  created(): void {
-    this.loadProviders();
-    console.log('Hover entry: ' + this.seriesId);
-    this.seriesHoverController.SET_currentlyHoveringSeriesId(this.seriesId);
-  }
-
-  async loadProviders(): Promise<void> {
-    console.log('Providers loaded');
-    this.providers = await this.providerController.getAllProviderWithConnectedUser();
-  }
+    async loadProviders(): Promise<void> {
+        console.log('Providers loaded')
+        this.providers = await ProviderController.getAllProviderWithConnectedUser()
+    }
 }
 </script>
 
 <style scoped>
 .hover {
-  height: 205px;
-  display: flex;
-  margin: 15px;
-  z-index: 10;
+    height: 205px;
+    display: flex;
+    margin: 15px;
+    z-index: 10;
 }
 </style>

@@ -1,66 +1,58 @@
 <template>
-  <div class="list-type-choser-container">
-    <q-select
-      label-color="white"
-      class="list-type-choser-select"
-      filled
-      v-model="model"
-      :dense="true"
-      :options="getListTypes()"
-      :label="$t('ListTypeChooser.selected-list')"
-      @input="changeSelectedListType"
-    >
-      <template v-slot:selected>
-        <div class="list-type-choser-selected">{{ model }}</div>
-      </template>
-    </q-select>
-  </div>
+    <div class="list-type-choser-container">
+        <q-select
+            label-color="white"
+            class="list-type-choser-select"
+            filled
+            v-model="model"
+            :dense="true"
+            :options="getListTypes()"
+            :label="$t('ListTypeChooser.selected-list')"
+            @input="changeSelectedListType"
+        >
+            <template v-slot:selected>
+                <div class="list-type-choser-selected">{{ model }}</div>
+            </template>
+        </q-select>
+    </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { ListType } from "../../../../backend/controller/settings/models/provider/list-types";
-import SeriesListViewController from "../../../controller/series-list-view-controller";
-import { getModule } from "vuex-module-decorators";
+import { ListType } from '@backend/controller/settings/models/provider/list-types'
+import { Vue, Options } from 'vue-class-component'
+import SeriesListViewController from '../../../controller/series-list-view-controller'
 
-const seriesListViewController = getModule(SeriesListViewController);
-
-@Component({
-  components: {},
+@Options({
+    components: {},
 })
 export default class ListTypeChooser extends Vue {
-  public listTypeEnum: string[] = Object.keys(ListType).filter(
-    (x) => !isNaN(x as any)
-  );
-  public model = "ALL";
+    public listTypeEnum: string[] = Object.keys(ListType).filter((x) => !isNaN(x as any))
+    public model = 'ALL'
 
-  public getListTypes(): string[] {
-    return this.listTypeEnum.map((x) => this.$t(x + "_LISTTYPE").toString());
-  }
+    public getListTypes(): string[] {
+        return this.listTypeEnum.map((x) => this.$t(x + '_LISTTYPE').toString())
+    }
 
-  public changeSelectedListType(newSelection: string): void {
-    const type = this.getListTypes().findIndex((x) => x == newSelection);
-    seriesListViewController.changeListSelection(
-      (this.listTypeEnum[type] as unknown) as number
-    );
-  }
+    public changeSelectedListType(newSelection: string): void {
+        const type = this.getListTypes().findIndex((x) => x == newSelection)
+        SeriesListViewController.changeListSelection(this.listTypeEnum[type] as unknown as number)
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 .list-type-choser-container {
-  background: $primary-background;
-  width: 200px;
-  height: 38px;
+    background: $primary-background;
+    width: 200px;
+    height: 38px;
 }
 
 .list-type-choser-select {
-  width: 200px;
-  height: 38px;
+    width: 200px;
+    height: 38px;
 }
 
 .list-type-choser-selected {
-  color: $primary-text;
+    color: $primary-text;
 }
 </style>

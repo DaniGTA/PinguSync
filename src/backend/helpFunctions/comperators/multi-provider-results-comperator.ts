@@ -25,7 +25,7 @@ export default class MultiProviderComperator {
         const seasonB = await tempSeries.getSeason(SeasonSearchMode.NO_EXTRA_TRACE_REQUESTS)
 
         finalResult.matchAble += 6
-        if (await titleCheckHelper.checkSeriesNames(series, tempSeries)) {
+        if (titleCheckHelper.checkSeriesNames(series, tempSeries)) {
             finalResult.matches += 2
             if (this.isSeriesNameAbsoluteSame(series, tempSeries)) {
                 finalResult.matches += 2
@@ -111,9 +111,9 @@ export default class MultiProviderComperator {
     }
 
     private static isNameListAbsoluteSame(nameAList: Name[], nameBList: Name[]): boolean {
-        const cleanedStringListA = nameAList.flatMap(x => StringHelper.cleanString(x.name))
-        const cleanedStringListB = nameBList.flatMap(x => StringHelper.cleanString(x.name))
+        const cleanedStringListA = nameAList.flatMap((x) => StringHelper.cleanString(x.name))
+        const cleanedStringListB = nameBList.flatMap((x) => StringHelper.cleanString(x.name))
 
-        return !!cleanedStringListA.find(nameA => cleanedStringListB.findIndex(nameB => nameA === nameB) !== -1)
+        return !!cleanedStringListA.find((nameA) => cleanedStringListB.findIndex((nameB) => nameA === nameB) !== -1)
     }
 }

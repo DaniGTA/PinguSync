@@ -22,23 +22,22 @@ export default class FrontendProviderAuthController {
 
     /**
      *Creates an instance of FrontendProviderAuthController.
-     * @param {Electron.WebContents} webcontents
      * @memberof FrontendProviderAuthController
      */
-    constructor(webcontents: Electron.WebContents) {
-        this.com = new IPCBackgroundController(webcontents)
+    constructor() {
+        this.com = new IPCBackgroundController()
         this.init()
     }
 
     private init(): void {
-        this.com.on('oauth-login-provider', providerName => this.oAuthLogin(providerName))
-        this.com.on(chSend.DefaultProviderLogin, data => this.defaultLogin(data))
-        this.com.on(chSend.LogoutUser, providerName => this.logoutProvider(providerName))
-        this.com.on(chOnce.IsAnyProviderLoggedIn, async () =>
-            this.com.send(chOnce.IsAnyProviderLoggedIn, await this.isAnyProviderLoggedIn())
+        IPCBackgroundController.on('oauth-login-provider', providerName => this.oAuthLogin(providerName))
+        IPCBackgroundController.on(chSend.DefaultProviderLogin, data => this.defaultLogin(data))
+        IPCBackgroundController.on(chSend.LogoutUser, providerName => this.logoutProvider(providerName))
+        IPCBackgroundController.on(chOnce.IsAnyProviderLoggedIn, async () =>
+            IPCBackgroundController.send(chOnce.IsAnyProviderLoggedIn, await this.isAnyProviderLoggedIn())
         )
-        this.com.on(chOnce.GetLoggedInStatus, async providerName =>
-            this.com.send(chOnce.GetLoggedInStatus, await this.isUserLoggedIn(providerName))
+        IPCBackgroundController.on(chOnce.GetLoggedInStatus, async providerName =>
+            IPCBackgroundController.send(chOnce.GetLoggedInStatus, await this.isUserLoggedIn(providerName))
         )
     }
 
@@ -100,6 +99,6 @@ export default class FrontendProviderAuthController {
     private async sendLoginStatus(provider: ListProvider): Promise<void> {
         const newStatus = await provider.isUserLoggedIn()
         const data: UpdateProviderLoginStatus = { providerName: provider.providerName, isLoggedIn: newStatus }
-        this.com.send(chListener.OnLoggedInStatusChange, data)
+        IPCBackgroundController.send(chListener.OnLoggedInStatusChange, data)
     }
 }

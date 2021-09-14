@@ -1,35 +1,28 @@
 <template>
-  <div id="version">
-    <button @click="installUpdate()" class="update" v-if="updateReady">
-      <i class="fas fa-download"></i>
-    </button><VersionText/></div>
+    <div id="version">
+        <button @click="installUpdate()" class="update" v-if="updateReady">
+            <i class="fas fa-download"></i></button
+        ><VersionText />
+    </div>
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
-import Vue from 'vue';
-import WorkerController from '../../../backend/communication/ipc-renderer-controller';
-import { chListener } from '../../../backend/communication/listener-channels';
-import { chSend } from '../../../backend/communication/send-only-channels';
-import VersionText from './VersionText.vue';
+import { Vue, Options } from 'vue-class-component'
+import VersionText from './VersionText.vue'
 
-@Component({
-	components: {
-      VersionText
-	}
+@Options({
+    components: { VersionText },
 })
-export default class Providers extends Vue {
-  public updateReady = false;
-  constructor(){
-    super();
-    WorkerController.on(chListener.OnUpdateReady, ()=> {
-      this.updateReady = true;
-    });
-  }
+export default class VersionView extends Vue {
+    public updateReady = false
+    constructor() {
+        super()
+        //TODO on Update Ready
+    }
 
-  public installUpdate(): void{
-    WorkerController.send(chSend.QuitAndInstall);
-  }
+    public installUpdate(): void {
+        window.electron.controller.appController.updateController.isUpdateAvailable()
+    }
 }
 </script>
 
@@ -44,10 +37,10 @@ export default class Providers extends Vue {
     width: fit-content;
 }
 
-.update{
-  width: fit-content;
-  display: inline-block;
-  color: green;
-  margin: 0px 5px;
+.update {
+    width: fit-content;
+    display: inline-block;
+    color: green;
+    margin: 0px 5px;
 }
 </style>

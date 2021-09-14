@@ -1,24 +1,23 @@
 <template>
-  <div class="block-list-entry-info-section">
-    <SeriesNameBlock :seriesId="seriesId" />
-  </div>
+    <div class="block-list-entry-info-section">
+        <SeriesNameBlock :seriesId="seriesId" />
+    </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-import SeriesNameBlock from "./../../../../elements/series-elements/SeriesNameBlock.vue";
-import { chListener } from "../../../../../backend/communication/listener-channels";
-@Component({
-  components: {
-    SeriesNameBlock,
-  },
-})
-export default class BlockEntry extends Vue {
-  @Prop()
-  public seriesId!: string;
+import { Vue, Options } from 'vue-class-component'
+import SeriesNameBlock from './../../../../elements/series-elements/SeriesNameBlock.vue'
+
+class Props {
+    seriesId!: string
 }
+
+@Options({
+    components: {
+        SeriesNameBlock,
+    },
+})
+export default class BlockEntry extends Vue.with(Props) {}
 </script>
 <style>
 .block-list-entry-info-section {

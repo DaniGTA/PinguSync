@@ -1,47 +1,44 @@
 <template>
-    <div>
-        <ProviderImageBlock :provider="provider" :showText="false" @click.native="openDialog()" />
+    <div v-if="provider">
+        <ProviderImageBlock :provider="provider" :showText="false" @click="openDialog()" />
         <button @click="checkLogin()">check</button>
-        <q-dialog v-model="isLoginDialogOpen">
-            <q-card>
+        <GDialog v-model="isLoginDialogOpen">
+            <div class="q-card">
                 <template v-if="!isProviderLoggedIn">
                     <MultiProviderLogin :provider="provider"></MultiProviderLogin>
                 </template>
-                <template v-else>
-                    Already logged in
-                </template>
-            </q-card>
-        </q-dialog>
+                <template v-else> Already logged in </template>
+            </div>
+        </GDialog>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import ProviderController from '../../../controller/provider-controller'
+import { chOnce } from '@/backend/communication/channels'
+import { ListProviderInterface } from '@/components/controller/model/list-provider-interface'
+import WorkerController from '@backend/communication/ipc-renderer-controller'
+import { chListener } from '@backend/communication/listener-channels'
+import UpdateProviderLoginStatus from '@backend/controller/frontend/providers/model/update-provider-login-status'
+import { Vue, Options, WithDefault, prop } from 'vue-class-component'
 import ProviderImageBlock from '../../../elements/provider-elements/ProviderImageBlock.vue'
 import MultiProviderLogin from '../../../first-start/provider-setup/provider-login-elements/MultiProviderLoginView.vue'
-import { getModule } from 'vuex-module-decorators'
-import { Prop } from 'vue-property-decorator'
-import WorkerController from '../../../../backend/communication/ipc-renderer-controller'
-import { chListener } from '../../../../backend/communication/listener-channels'
-import UpdateProviderLoginStatus from '../../../../backend/controller/frontend/providers/model/update-provider-login-status'
-import ListProvider from '../../../../backend/api/provider/list-provider'
-import { chOnce } from '../../../../backend/communication/channels'
+import 'gitart-vue-dialog/dist/style.css'
+import { GDialog } from 'gitart-vue-dialog'
 
-const providerController = getModule(ProviderController)
+class Props {
+    provider: WithDefault<ListProviderInterface> = prop<ListProviderInterface>({ default: null })
+}
 
-@Component({
+@Options({
     components: {
+        GDialog,
         MultiProviderLogin,
         ProviderImageBlock,
     },
 })
-export default class ProviderEntry extends Vue {
+export default class ProviderEntry extends Vue.with(Props) {
     isLoginDialogOpen = false
     isProviderLoggedIn = false
-    @Prop({ required: true })
-    provider!: ListProvider
 
     openDialog(): void {
         console.log('Open dialog')

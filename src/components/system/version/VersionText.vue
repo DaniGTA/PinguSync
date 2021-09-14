@@ -1,17 +1,16 @@
 <template>
     <div>
-    v0.0.1
+        {{ version }}
     </div>
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
-import Vue from 'vue';
+import { Vue, Options } from 'vue-class-component'
 
-@Component
-export default class Providers extends Vue {
+@Options({
+    components: {},
+})
+export default class VersionText extends Vue {
+    version = 'v0.1.0'
 }
 </script>
-
-<style>
-</style>

@@ -1,54 +1,53 @@
 <template>
     <div>
-        <div>
-            Dieser Provider werden
-        </div>
+        <div>Dieser Provider werden</div>
         <div>
             <div v-for="singleProvider in allProvidersThatWillBeSyncedWithThis" :key="singleProvider.providerName">
-                <ProviderImageBlock :provider="singleProvider"/>
+                <ProviderImageBlock :provider="singleProvider" />
             </div>
         </div>
-        <div>
-        </div>
+        <div></div>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
-import ListProvider from '../../../../backend/api/provider/list-provider';
-import WorkerController from '../../../../backend/communication/ipc-renderer-controller';
-import AddSyncProvidersModel from '../../../../backend/controller/frontend/providers/model/add-sync-providers-model';
-import { chOnce } from '../../../../backend/communication/channels';
-import ProviderImageBlock from '../../../elements/provider-elements/ProviderImageBlock.vue';
+import ListProvider from '@backend/api/provider/list-provider'
+import { chOnce } from '@backend/communication/channels'
+import WorkerController from '@backend/communication/ipc-renderer-controller'
+import AddSyncProvidersModel from '@backend/controller/frontend/providers/model/add-sync-providers-model'
+import { Vue, Options } from 'vue-class-component'
+import ProviderImageBlock from '../../../elements/provider-elements/ProviderImageBlock.vue'
 
-@Component({
+class Props {
+    provider!: ListProvider
+}
+
+@Options({
     components: {
         ProviderImageBlock,
-    }
+    },
 })
-export default class ProviderSyncSettings extends Vue {
-    @Prop()
-    provider!: ListProvider;
+export default class ProviderSyncSettings extends Vue.with(Props) {
+    allProvidersThatWillBeSyncedWithThis: ListProvider[] = [
+        { providerName: 'Trakt' } as ListProvider,
+        { providerName: 'Trakt' } as ListProvider,
+    ]
 
-    allProvidersThatWillBeSyncedWithThis: ListProvider[] = [{providerName: 'Trakt'} as ListProvider, {providerName: 'Trakt'} as ListProvider];
-
-
-    async getAllProviderThatWillBeSynced(): Promise<ListProvider[]>{
-        return await WorkerController.getOnce<ListProvider[]>(chOnce.GetSyncProviderSettings, this.provider.providerName);
+    async getAllProviderThatWillBeSynced(): Promise<ListProvider[]> {
+        return await WorkerController.getOnce<ListProvider[]>(
+            chOnce.GetSyncProviderSettings,
+            this.provider.providerName
+        )
     }
 
-    addProviderToSync(): void{
+    addProviderToSync(): void {
         const data: AddSyncProvidersModel = {
             providerName: this.provider.providerName,
-            providerNameThatWillBeAddedToSync: ''
-        };
-        WorkerController.send('add-sync-with-provider', data);
+            providerNameThatWillBeAddedToSync: '',
+        }
+        WorkerController.send('add-sync-with-provider', data)
     }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

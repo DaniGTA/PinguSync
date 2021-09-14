@@ -1,4 +1,3 @@
-import { isArray } from 'util'
 import Banner from '../../../controller/objects/meta/banner'
 import Cover from '../../../controller/objects/meta/cover'
 import Episode from '../../../controller/objects/meta/episode/episode'
@@ -14,7 +13,6 @@ import { InfoProviderLocalData } from '../../../controller/provider-controller/p
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import { ListProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/list-provider-local-data'
-import { StreamingProviderLocalData } from '../../../controller/provider-controller/provider-manager/local-data/streaming-provider-local-data'
 import ProviderNameManager from '../../../controller/provider-controller/provider-manager/provider-name-manager'
 import ProviderLocalDataWithSeasonInfo from '../../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info'
 import logger from '../../../logger/logger'
@@ -137,7 +135,7 @@ export default new (class KitsuConverter {
             }
         }
         try {
-            const result = mappings.find(x => x.externalSite.includes('thetvdb') && x.externalId.includes('/'))
+            const result = mappings.find((x) => x.externalSite.includes('thetvdb') && x.externalId.includes('/'))
             if (result) {
                 const idSeason = result.externalId.split('/')
                 const seasonnumber = Number(idSeason[1])

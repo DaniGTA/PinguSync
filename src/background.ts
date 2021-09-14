@@ -32,7 +32,7 @@ try {
 } catch (err) {
     logger.error(err)
 }
-
+const frontend = new FrontendController()
 // eslint-disable-next-line no-undef
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -43,20 +43,18 @@ let win: BrowserWindow | null
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
-const fc = new FrontendController()
-
 function createWindow(): void {
     // Create the browser window.
     win = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             nodeIntegration: true,
             contextIsolation: false,
+            enableRemoteModule: false,
         },
     })
-    fc.mainInit(win.webContents)
+    frontend.mainInit(win.webContents)
     if (process.env.WEBPACK_DEV_SERVER_URL) {
         // Load the url of the dev server if in development mode
         void win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)

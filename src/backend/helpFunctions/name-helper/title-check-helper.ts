@@ -4,11 +4,11 @@ import logger from '../../logger/logger'
 import StringHelper from '../string-helper'
 
 export default class TitleCheckHelper {
-    public static async checkSeriesNames(a: Series, b: Series): Promise<boolean> {
+    public static checkSeriesNames(a: Series, b: Series): boolean {
         const aNamesUnique = a.getAllNamesUnique()
         const bNamesUnique = b.getAllNamesUnique()
-        const aNameList: string[] = aNamesUnique.flatMap(x => x.name)
-        const bNameList: string[] = bNamesUnique.flatMap(x => x.name)
+        const aNameList: string[] = aNamesUnique.flatMap((x) => x.name)
+        const bNameList: string[] = bNamesUnique.flatMap((x) => x.name)
         return this.checkNames(aNameList, bNameList)
     }
 
@@ -99,10 +99,7 @@ export default class TitleCheckHelper {
             if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gim)) {
                 const match = /Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gim.exec(title)
                 if (match != null) {
-                    return title
-                        .replace(match[0], '')
-                        .replace('  ', ' ')
-                        .trim()
+                    return title.replace(match[0], '').replace('  ', ' ').trim()
                 }
             } else if (title.toLocaleLowerCase().includes('episode')) {
                 return title
@@ -116,9 +113,7 @@ export default class TitleCheckHelper {
                 }
 
                 if (countLastChar !== 1) {
-                    return StringHelper.reverseString(reversedTitle)
-                        .replace('  ', ' ')
-                        .trim()
+                    return StringHelper.reverseString(reversedTitle).replace('  ', ' ').trim()
                 }
             }
         }

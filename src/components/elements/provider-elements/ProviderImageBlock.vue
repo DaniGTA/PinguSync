@@ -1,10 +1,11 @@
 <template>
-    <div class="provider-image-block">
+    <div class="provider-image-block" v-if="provider">
         <img
             class="provider-image-block-image"
             :src="require('@/assets/' + getName().toLowerCase() + '-logo.png')"
             :width="size"
             :height="size"
+            alt="episode image"
         />
         <q-skeleton class="provider-image-block-image" v-if="!provider" />
         <div class="provider-name-block-name" v-if="showText">{{ getName() }}</div>
@@ -12,22 +13,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import { ListProviderInterface } from '../../controller/model/list-provider-interface'
 
-@Component
-export default class ProviderImageBlock extends Vue {
-    @Prop({ required: true })
-    provider!: ListProviderInterface
+class Props {
+    provider: WithDefault<ListProviderInterface> = prop<ListProviderInterface>({ default: null })
+    size: WithDefault<number> = prop<number>({ default: 50 })
+    showText: WithDefault<boolean> = prop<boolean>({ default: true })
+}
 
-    @Prop({ default: 50 })
-    size!: number
-
-    @Prop({ default: true })
-    showText!: boolean
-
+@Options({})
+export default class ProviderImageBlock extends Vue.with(Props) {
     getName(): string {
         return this.provider?.providerName ?? ''
     }

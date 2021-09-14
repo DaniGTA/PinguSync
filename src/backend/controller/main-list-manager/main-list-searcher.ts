@@ -8,8 +8,6 @@ import Season from '../objects/meta/season'
 import Series from '../objects/series'
 import MainListManager from './main-list-manager'
 import { ListType } from '../settings/models/provider/list-types'
-import { spawn, Worker } from 'threads'
-import { MainListSearchIdWorker } from './worker/main-list-search-id-worker'
 
 /**
  * Has search function to find series in the main list.
@@ -69,11 +67,20 @@ export default class MainListSearcher {
      *
      * @param id the series id.
      */
-    public static async findSeriesById(id: string): Promise<Series | null> {
+    public static findSeriesById(id: string): Series | null {
         const list = MainListManager.getMainList()
-        return list.find(x => x.id === id) ?? null
+        return list.find((x) => x.id === id) ?? null
     }
 
+    public static getAllSeriesWithTypeList(list: ListType): Series[] {
+        const seriesList: Series[] = []
+        for (const entry of MainListManager.getMainList()) {
+            if (entry.hasListType(list) || list === ListType.ALL) {
+                seriesList.push(entry)
+            }
+        }
+        return seriesList
+    }
     /**
      * Search with id and it will look on other meta data if it is a same series already in the mainlist
      * @param series
@@ -90,7 +97,7 @@ export default class MainListSearcher {
     }
 
     public async findSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
-        logger.info('[Search] Find search series in list of size: ' + list.length)
+        logger.info(`[Search] Find search series in list of size: ${list.length}`)
         const foundedSameSeries = []
         for (const listEntry of list) {
             if (listEntry.id === entry.id) {
@@ -101,22 +108,12 @@ export default class MainListSearcher {
                 }
             }
         }
-        logger.info('Found: ' + foundedSameSeries.length)
+        logger.info(`Found: ${foundedSameSeries.length}`)
         return foundedSameSeries
     }
 
-    public static getAllSeriesWithTypeList(list: ListType): Series[] {
-        const seriesList: Series[] = []
-        for (const entry of MainListManager.getMainList()) {
-            if (entry.hasListType(list) || list === ListType.ALL) {
-                seriesList.push(entry)
-            }
-        }
-        return seriesList
-    }
-
     private async quickFindSameSeriesInList(entry: Series, list: Series[]): Promise<Series[]> {
-        logger.log('debug', '[Search] Quick find search series in list of size: ' + list.length)
+        logger.log('debug', `[Search] Quick find search series in list of size: ${list.length}`)
         const foundedSameSeries = []
         for (const listEntry of list) {
             if (listEntry.id === entry.id) {
@@ -129,7 +126,7 @@ export default class MainListSearcher {
                 foundedSameSeries.push(listEntry)
             }
         }
-        logger.log('debug', 'Found: ' + foundedSameSeries.length)
+        logger.log('debug', `Found: ${foundedSameSeries.length}`)
         return foundedSameSeries
     }
 }

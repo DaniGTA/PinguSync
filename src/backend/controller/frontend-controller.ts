@@ -3,6 +3,7 @@ import logger from '../logger/logger'
 import ListController from './list-controller'
 import ProviderList from './provider-controller/provider-manager/provider-list'
 import FrontendCommmunicationEventController from './frontend/frontend-communication-event-controller'
+import IPCBackgroundController from '../communication/ipc-background-controller'
 
 export default class FrontendController {
     public static getInstance(): FrontendController {
@@ -24,11 +25,12 @@ export default class FrontendController {
         // tslint:disable-next-line: no-unused-expression
         new ListController()
         if (webcontents) {
-            this.mainInit(webcontents)
+            this.mainInit()
         }
     }
     public mainInit(webcontents: Electron.WebContents): void {
-        new FrontendCommmunicationEventController(webcontents)
+        IPCBackgroundController.webcontents = webcontents
+        new FrontendCommmunicationEventController()
     }
 
     public getPath(): string {

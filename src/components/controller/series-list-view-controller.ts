@@ -6,19 +6,13 @@ import { chListener } from '../../backend/communication/listener-channels'
 import IdListWithListType from './model/id-list-with-list-type'
 import Overview from '../../backend/controller/objects/meta/overview'
 import ApiRequestController from './api-request-controller'
-import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import store from '../../store'
+
 import { SearchQuery } from '../../backend/controller/frontend/series/model/search-query'
 
-@Module({
-    dynamic: true,
-    name: 'seriesListViewController',
-    store,
-})
-export default class SeriesListViewController extends VuexModule {
-    selectedListType: ListType = ListType.ALL
-    ids: IdListWithListType[] = []
-    get GET_selectedListType(): ListType {
+export default class SeriesListViewController {
+    static selectedListType: ListType = ListType.ALL
+    static ids: IdListWithListType[] = []
+    static get GET_selectedListType(): ListType {
         return this.selectedListType
     }
 
@@ -34,14 +28,12 @@ export default class SeriesListViewController extends VuexModule {
         return idListsWN
     }
 
-    @Mutation
-    SET_selectedListType(value: ListType): void {
+    static SET_selectedListType(value: ListType): void {
         console.log(`SetList ${value}`)
         this.selectedListType = value
     }
 
-    @Mutation
-    public async getSeriesIdsFromCurrentlySelectedListType(): Promise<IdListWithListType[]> {
+    public static async getSeriesIdsFromCurrentlySelectedListType(): Promise<IdListWithListType[]> {
         const currentSelectedType = this.selectedListType
         console.log(`GetList: ${currentSelectedType}`)
         if (currentSelectedType == ListType.ALL) {
@@ -57,19 +49,16 @@ export default class SeriesListViewController extends VuexModule {
         return this.ids
     }
 
-    @Action
-    public async changeListSelection(newSelection: ListType): Promise<void> {
+    public static async changeListSelection(newSelection: ListType): Promise<void> {
         this.SET_selectedListType(newSelection)
         await this.getSeriesIdsFromCurrentlySelectedListType()
     }
 
-    @Action
-    public async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
+    public static async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
         return await ApiRequestController.getDataWithId(chOnce.GetPreferedCoverUrlBySeriesId, id)
     }
 
-    @Action
-    public async search(query: SearchQuery): Promise<void> {
+    public static async search(query: SearchQuery): Promise<void> {
         if (query.searchString) {
             await this.loadSearchResultToIdList(query)
         } else {
@@ -77,27 +66,24 @@ export default class SeriesListViewController extends VuexModule {
         }
     }
 
-    @Mutation
-    public async loadSearchResultToIdList(query: SearchQuery): Promise<void> {
+    public static async loadSearchResultToIdList(query: SearchQuery): Promise<void> {
         const result: string[] = await WorkerController.getOnce<string[]>(chOnce.SearchSeries, query)
         this.ids = [{ ids: result, listType: ListType.SearchResult }]
     }
 
-    @Action
-    public async getSeriesNameById(id: string): Promise<string | undefined> {
+    public static async getSeriesNameById(id: string): Promise<string | undefined> {
         return await ApiRequestController.getDataWithId(chOnce.GetPreferedNameBySeriesId, id)
     }
-    @Action
-    public async getSeriesDescriptionById(id: string): Promise<Overview | undefined> {
+
+    public static async getSeriesDescriptionById(id: string): Promise<Overview | undefined> {
         return await ApiRequestController.getDataWithId(chOnce.GetOverviewBySeriesId, id)
     }
-    @Action
-    public sendFailedCover(failedCover: FailedCover): void {
+
+    public static sendFailedCover(failedCover: FailedCover): void {
         WorkerController.send(chListener.OnSeriesFailedCoverImage, failedCover)
     }
 
-    @Action
-    public saveSeriesInDB(id: string): void {
+    public static saveSeriesInDB(id: string): void {
         WorkerController.send(chOnce.SaveSeriesInDB, id)
     }
 }

@@ -1,15 +1,10 @@
 import { ipcMain } from 'electron'
 import logger from '../logger/logger'
-import ICommunication from './icommunication'
 
-export default class IPCBackgroundController implements ICommunication {
-    private webcontents: Electron.webContents
+export default class IPCBackgroundController {
+    public static webcontents: Electron.WebContents | null = null
 
-    constructor(webcontents: Electron.webContents) {
-        this.webcontents = webcontents
-    }
-
-    public send(channel: string, data?: any): void {
+    public static send(channel: string, data?: any): void {
         let success = false
         while (!success) {
             try {
@@ -20,7 +15,11 @@ export default class IPCBackgroundController implements ICommunication {
                         onlyData = data
                     }
                 }
-                this.webcontents.send(channel, onlyData)
+                if (this.webcontents) {
+                    this.webcontents.send(channel, onlyData)
+                } else {
+                    logger.error('No webcontents to send data')
+                }
                 logger.info('worker send: ' + channel)
                 success = true
             } catch (err) {
@@ -29,7 +28,7 @@ export default class IPCBackgroundController implements ICommunication {
         }
     }
 
-    public async on(channel: string, f: ((data: any) => void) | ((data: any) => Promise<void>)): Promise<void> {
+    public static async on(channel: string, f: ((data: any) => void) | ((data: any) => Promise<void>)): Promise<void> {
         ipcMain.on(channel, async (event: Electron.IpcMainEvent, data: any) => {
             logger.info('recieved: ' + channel)
             try {

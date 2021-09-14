@@ -1,16 +1,7 @@
-import { Module, Mutation, VuexModule } from 'vuex-module-decorators';
-import store from '../../store';
+export default class SeriesHoverController {
+    public static currentlyHoveringSeriesId = ''
 
-@Module({
-    dynamic: true,
-    name: 'seriesHoverController',
-    store
-})
-export default class SeriesHoverController extends VuexModule {
-    public currentlyHoveringSeriesId = '';
-
-    @Mutation
-    SET_currentlyHoveringSeriesId(value: string): void {
-        this.currentlyHoveringSeriesId = value;
+    static SET_currentlyHoveringSeriesId(value: string): void {
+        this.currentlyHoveringSeriesId = value
     }
 }

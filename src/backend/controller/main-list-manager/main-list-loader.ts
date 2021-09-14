@@ -13,8 +13,8 @@ export default class MainListLoader {
             if (existsSync(MainListPath.getPath())) {
                 const dataPath = MainListPath.getPath()
                 const loadedString = readFileSync(dataPath, { encoding: 'utf8' })
-                const loadedData = JSON.parse(loadedString)
-                logger.info('Items loaded: ' + loadedData.length)
+                const loadedData = JSON.parse(loadedString) as any
+                logger.info(`Items loaded: ${loadedData?.length}`)
                 return this.convertJSONArrayToSeriesArray(loadedData)
             } else {
                 logger.warn('File not exist, creating file...')
@@ -38,7 +38,7 @@ export default class MainListLoader {
     }
 
     private static convertJSONToSeries(jsonEntity: any): Series {
-        const series: Series = Object.setPrototypeOf(jsonEntity, Series.prototype)
+        const series: Series = Object.setPrototypeOf(jsonEntity, Series.prototype) as Series
         series.loadPrototypes()
         return series
     }

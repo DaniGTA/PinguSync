@@ -3,7 +3,7 @@ import logger from '../../../logger/logger'
 import DownloadSettings from '../../provider/provider-info-downloader/download-settings'
 
 export default class Timeout {
-    private onTimeoutList: (() => any)[] = []
+    private onTimeoutList: (() => void)[] = []
     private timeoutFinished = false
     private timeoutCanceled = false
     private timeoutInstance: NodeJS.Timeout
@@ -16,7 +16,7 @@ export default class Timeout {
         }, timeout)
     }
 
-    onTimeout(x: () => any): void {
+    onTimeout(x: () => void): void {
         this.onTimeoutList.push(x)
     }
 

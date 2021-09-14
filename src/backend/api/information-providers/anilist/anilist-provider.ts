@@ -82,7 +82,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
-        const query = print(UpdateSeriesEpisodeProgress)
+        const query = print(UpdateSeriesEpisodeProgress as any)
         const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode)
         for (const groupedEpisode of groupedEpisodes) {
             const minEpisodeNumber = EpisodeHelper.getMinEpisodeNumberFromEpisodeArray(groupedEpisode)
@@ -97,7 +97,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {
-        const query = print(UpdateSeriesEpisodeProgress)
+        const query = print(UpdateSeriesEpisodeProgress as any)
         const groupedEpisodes = EpisodeHelper.groupBySeriesIds(episode)
         for (const groupedEpisode of groupedEpisodes) {
             const maxEpNumber = EpisodeHelper.getMaxEpisodeNumberFromEpisodeArray(groupedEpisode)
@@ -186,7 +186,7 @@ export default class AniListProvider extends ListProvider {
         // Storing it in a separate .graphql/.gql file is also possible
         const query = getViewerGql
         const options = this.getGraphQLOptions(query)
-        void this.webRequest<{ Viewer: IViewer }>(options).then(value => {
+        void this.webRequest<{ Viewer: IViewer }>(options).then((value) => {
             const data = value.Viewer
             this.userData.setViewer(data)
         })
@@ -233,7 +233,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async updateEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        const aniListProvider = anime.getListProvidersInfos().find(x => x.provider === this.providerName)
+        const aniListProvider = anime.getListProvidersInfos().find((x) => x.provider === this.providerName)
         if (aniListProvider) {
             let watchStatus = ''
             if (watchProgress.episode === 0) {
@@ -261,7 +261,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async removeEntry(anime: Series, watchProgress: WatchProgress): Promise<ListProviderLocalData> {
-        const providerInfo = anime.getListProvidersInfos().find(x => x.provider === this.providerName)
+        const providerInfo = anime.getListProvidersInfos().find((x) => x.provider === this.providerName)
         if (typeof providerInfo !== 'undefined') {
             return providerInfo
         }
@@ -298,7 +298,7 @@ export default class AniListProvider extends ListProvider {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 return JSON.parse(response.body)?.data as T
             } catch (err) {
-                return (response.body as unknown) as T
+                return response.body as unknown as T
             }
         } else if (response.statusCode === 429) {
             await timeHelper.delay(2000)

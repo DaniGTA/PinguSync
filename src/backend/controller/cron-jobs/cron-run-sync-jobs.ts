@@ -7,7 +7,7 @@ export default class CronRunSyncJobs {
         const job = cron.job(
             '*/3 * * * *',
             () => {
-                this.runEpisodeSyncJobs()
+                void this.runEpisodeSyncJobs()
             },
             undefined,
             undefined,

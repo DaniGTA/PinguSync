@@ -32,8 +32,6 @@ import { SeasonError } from './transfer/season-error'
 import { ListType } from '../settings/models/provider/list-types'
 import SeriesHelper from '../../helpFunctions/series-helper'
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper'
-import ProviderLocalDataWithSeasonInfo from '../../helpFunctions/provider/provider-info-downloader/provider-data-with-season-info'
-import { brotliCompress } from 'zlib'
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1
@@ -159,7 +157,7 @@ export default class Series extends SeriesProviderExtension {
      * + It prevents double entrys.
      */
     public getAllOverviews(): Overview[] {
-        const overviews = this.getAllProviderLocalDatas().flatMap(provider => provider.getAllOverviews())
+        const overviews = this.getAllProviderLocalDatas().flatMap((provider) => provider.getAllOverviews())
         return listHelper.getUniqueOverviewList(overviews)
     }
 
@@ -175,7 +173,7 @@ export default class Series extends SeriesProviderExtension {
         } else if (existingBindingPool.length !== 0) {
             this.episodeBindingPools = listHelper.removeEntrys(this.episodeBindingPools, ...existingBindingPool)
             const newBindingPool = new EpisodeBindingPool(
-                ...[...existingBindingPool.flatMap(x => x.bindedEpisodeMappings), ...episodeMappings]
+                ...[...existingBindingPool.flatMap((x) => x.bindedEpisodeMappings), ...episodeMappings]
             )
             this.episodeBindingPools.push(newBindingPool)
             logger.debug(`[Series] (${this.id}) Merging episode bindings`)
@@ -237,8 +235,8 @@ export default class Series extends SeriesProviderExtension {
     public getMaxEpisode(): number {
         logger.debug('[Episode] [Serve]: Serve Max Episodes')
         const providers = this.getAllProviderLocalDatas()
-        const array = providers.flatMap(x => x.episodes) as number[]
-        const onlyNumbers = array.filter(v => Number.isInteger(v))
+        const array = providers.flatMap((x) => x.episodes) as number[]
+        const onlyNumbers = array.filter((v) => Number.isInteger(v))
         if (onlyNumbers.length === 0) {
             throw new Error('[Series] no episode found SeriesID: ' + this.id)
         }
@@ -252,7 +250,7 @@ export default class Series extends SeriesProviderExtension {
         logger.debug('[Episode] [Serve]: Serve all Episodes')
         let result
         try {
-            result = listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap(x => x.episodes))
+            result = listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap((x) => x.episodes))
         } catch (e) {
             logger.error(e)
         }
@@ -316,7 +314,7 @@ export default class Series extends SeriesProviderExtension {
                             // tslint:disable-next-line: triple-equals
                             if (entryListProvider.providerName === listProvider.provider) {
                                 if (
-                                    listProvider.prequelIds.findIndex(x =>
+                                    listProvider.prequelIds.findIndex((x) =>
                                         ProviderComperator.simpleProviderIdCheck(entryListProvider.id, x)
                                     ) !== -1
                                 ) {
@@ -350,7 +348,7 @@ export default class Series extends SeriesProviderExtension {
                         for (const entryListProvider of entry.getAllProviderBindings()) {
                             if (entryListProvider.providerName === listProvider.provider) {
                                 if (
-                                    listProvider.sequelIds.findIndex(x =>
+                                    listProvider.sequelIds.findIndex((x) =>
                                         ProviderComperator.simpleProviderIdCheck(entryListProvider.id, x)
                                     ) !== -1
                                 ) {
@@ -370,7 +368,7 @@ export default class Series extends SeriesProviderExtension {
 
     public getProviderSeasonTarget(providerName: string): Season | undefined {
         const bindings = this.getAllProviderBindings()
-        const result = bindings.find(x => x.providerName === providerName)
+        const result = bindings.find((x) => x.providerName === providerName)
         if (result) {
             return Object.assign(new Season(), result.targetSeason)
         }
@@ -401,7 +399,7 @@ export default class Series extends SeriesProviderExtension {
             list = MainListManager.getMainList()
         }
         if (this.firstSeasonSeriesId) {
-            const result = await MainListSearcher.findSeriesById(this.firstSeasonSeriesId)
+            const result = MainListSearcher.findSeriesById(this.firstSeasonSeriesId)
             if (result) {
                 return result
             } else {
@@ -460,11 +458,11 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public isAnySequelPresent(): boolean {
-        return this.getAllProviderLocalDatas().findIndex(provider => provider.sequelIds.length !== 0) !== -1
+        return this.getAllProviderLocalDatas().findIndex((provider) => provider.sequelIds.length !== 0) !== -1
     }
 
     public isAnyPrequelPresent(): boolean {
-        return this.getAllProviderLocalDatas().findIndex(provider => provider.prequelIds.length !== 0) !== -1
+        return this.getAllProviderLocalDatas().findIndex((provider) => provider.prequelIds.length !== 0) !== -1
     }
 
     public getMediaType(): MediaType {
@@ -523,7 +521,7 @@ export default class Series extends SeriesProviderExtension {
 
     public getAverageProviderInfoStatus(): ProviderInfoStatus {
         const providers = this.getAllProviderLocalDatas()
-        const providerInfoStatusCollection = providers.flatMap(provider => provider.infoStatus)
+        const providerInfoStatusCollection = providers.flatMap((provider) => provider.infoStatus)
         const average = listHelper.getMostFrequentNumberFromList(providerInfoStatusCollection)
         if (average !== undefined) {
             return average

@@ -7,15 +7,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { ListProviderInterface } from '@/components/controller/model/list-provider-interface'
+import { Vue, Options } from 'vue-class-component'
 import ProviderController from '../../../controller/provider-controller'
 import ProviderEntry from './ProviderEntry.vue'
-import { getModule } from 'vuex-module-decorators'
-import { ListProviderInterface } from '../../../controller/model/list-provider-interface'
-const providerController = getModule(ProviderController)
 
-@Component({
+@Options({
     components: {
         ProviderEntry,
     },
@@ -29,7 +26,7 @@ export default class ProviderList extends Vue {
     }
 
     async loadProviders(): Promise<void> {
-        this.providers = await providerController.getAllAvaibleProviders()
+        this.providers = await ProviderController.getAllAvaibleProviders()
     }
 }
 </script>

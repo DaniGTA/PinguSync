@@ -8,7 +8,6 @@ import ProviderList from '../../controller/provider-controller/provider-manager/
 import logger from '../../logger/logger'
 import SeasonComperator from '../comperators/season-comperator'
 import dateHelper from '../date-helper'
-import SeasonHelper from '../season-helper/season-helper'
 import DownloadProviderLocalDataToTargetHelper from './provider-info-downloader/download-provider-local-data-to-target-helper'
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info'
 import ProviderMappingDownloadHelper from './provider-info-downloader/provider-mapping-download-helper'
@@ -18,7 +17,7 @@ export default class ProviderHelper {
         return (
             series
                 .getAllProviderLocalDatas()
-                .findIndex(existingProvider => existingProvider.provider === provider.providerName) !== -1
+                .findIndex((existingProvider) => existingProvider.provider === provider.providerName) !== -1
         )
     }
 
@@ -27,7 +26,7 @@ export default class ProviderHelper {
             series
                 .getAllProviderLocalDatas()
                 .findIndex(
-                    existingProvider =>
+                    (existingProvider) =>
                         existingProvider.provider === provider.provider && existingProvider.id === provider.id
                 ) !== -1
         )
@@ -41,7 +40,7 @@ export default class ProviderHelper {
             series
                 .getAllProviderLocalDatasWithSeasonInfo()
                 .findIndex(
-                    existingProvider =>
+                    (existingProvider) =>
                         existingProvider.providerLocalData.provider === provider.providerLocalData.provider &&
                         existingProvider.providerLocalData.id === provider.providerLocalData.id &&
                         SeasonComperator.isSameSeason(existingProvider.seasonTarget, provider.seasonTarget)
@@ -49,10 +48,7 @@ export default class ProviderHelper {
         )
     }
 
-    public static async requestUpgradeAllCurrentinfos(
-        series: Series,
-        force: boolean
-    ): Promise<ProviderLocalDataWithSeasonInfo[]> {
+    public static async requestUpgradeAllCurrentinfos(series: Series): Promise<ProviderLocalDataWithSeasonInfo[]> {
         const resultList: ProviderLocalDataWithSeasonInfo[] = []
         const providerLocalDatas = series.getAllProviderLocalDatas()
         for (const providerLocalData of providerLocalDatas) {
@@ -114,7 +110,7 @@ export default class ProviderHelper {
         try {
             const tempSeries = new Series()
             tempSeries.addProviderDatas(...currentLocalDatas)
-            const currentProviderLocalData = currentLocalDatas.find(x => x.provider === providerInstance.providerName)
+            const currentProviderLocalData = currentLocalDatas.find((x) => x.provider === providerInstance.providerName)
             if (currentProviderLocalData?.infoStatus !== ProviderInfoStatus.FULL_INFO) {
                 const infoResult = await new DownloadProviderLocalDataToTargetHelper(
                     tempSeries,
@@ -132,7 +128,7 @@ export default class ProviderHelper {
         } catch (err) {
             logger.error(err)
         }
-        return currentLocalDatas.find(x => x.provider === providerInstance.providerName)
+        return currentLocalDatas.find((x) => x.provider === providerInstance.providerName)
     }
 
     /**

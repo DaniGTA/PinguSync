@@ -1,98 +1,109 @@
-
-
 <template>
-  <div class="setup-guide">
-    <div class="setup-title">{{$t('SetupGuide.title')}}</div>
-    <div class="setup-steps">
-      <SetupGuideEntry v-bind:required = "true" :completed="anyConnectedProvider"  v-bind:description = "$t('SetupGuide.provider-login-description')" v-bind:syncCompleted.sync= "anyConnectedProvider" />
-      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('SetupGuide.provider-setup-description')" />
-      <SetupGuideEntry v-bind:required = "false" v-bind:description = "$t('SetupGuide.provider-setup-more-description')" />
+    <div class="setup-guide">
+        <div class="setup-title">{{ $t('SetupGuide.title') }}</div>
+        <div class="setup-steps">
+            <SetupGuideEntry
+                v-bind:required="true"
+                :completed="anyConnectedProvider"
+                v-bind:description="$t('SetupGuide.provider-login-description')"
+                v-model:syncCompleted="anyConnectedProvider"
+            />
+            <SetupGuideEntry v-bind:required="false" v-bind:description="$t('SetupGuide.provider-setup-description')" />
+            <SetupGuideEntry
+                v-bind:required="false"
+                v-bind:description="$t('SetupGuide.provider-setup-more-description')"
+            />
+        </div>
+        <button :disabled="!anyConnectedProvider" @click="finishSetup()" class="setup-confirm-button">
+            {{ $t('SetupGuide.complete-setup') }}
+        </button>
     </div>
-    <button :disabled="!anyConnectedProvider" @click="finishSetup()" class="setup-confirm-button">{{$t('SetupGuide.complete-setup')}}</button>
-  </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import SetupGuideEntry from './SetupGuideEntry.vue';
-import WorkerController from '../../../backend/communication/ipc-renderer-controller';
-import { chOnce } from '../../../backend/communication/channels';
-import UpdateProviderLoginStatus from '../../../backend/controller/frontend/providers/model/update-provider-login-status';
-import { chListener } from '../../../backend/communication/listener-channels';
-import { chSend } from '../../../backend/communication/send-only-channels';
+import WorkerController from '@backend/communication/ipc-renderer-controller'
+import { chListener } from '@backend/communication/listener-channels'
+import { chSend } from '@backend/communication/send-only-channels'
+import UpdateProviderLoginStatus from '@backend/controller/frontend/providers/model/update-provider-login-status'
+import { Vue, Options } from 'vue-class-component'
+import SetupGuideEntry from './SetupGuideEntry.vue'
 
-@Component({
-	components: {
-    SetupGuideEntry
-	}
+@Options({
+    components: {
+        SetupGuideEntry,
+    },
 })
-export default class SetupGuide extends Vue {  
-  public anyConnectedProvider = false;
+export default class SetupGuide extends Vue {
+    public anyConnectedProvider = false
 
-  async mounted(): Promise<void> {
-    WorkerController.on(chListener.OnLoggedInStatusChange, async (data: UpdateProviderLoginStatus) => await this.providerLoginStatusChange(data.isLoggedIn));
-    this.anyConnectedProvider = await WorkerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
-  }
-
-  finishSetup(): void {
-    WorkerController.send(chSend.FinishFirstSetup);
-    this.$router.push({name: 'List'});
-  }
-
-  async providerLoginStatusChange(isLoggedIn: boolean): Promise<void>{
-    console.log('Login status change detected.');
-    if(isLoggedIn){
-      this.anyConnectedProvider = true;
-    } else {
-      this.anyConnectedProvider = await WorkerController.getOnce<boolean>(chOnce.IsAnyProviderLoggedIn);
+    async mounted(): Promise<void> {
+        WorkerController.on(
+            chListener.OnLoggedInStatusChange,
+            async (data: UpdateProviderLoginStatus) => await this.providerLoginStatusChange(data.isLoggedIn)
+        )
+        this.anyConnectedProvider =
+            await window.electron.controller.providerController.authController.isAnyProviderLoggedIn()
     }
-  }
+
+    finishSetup(): void {
+        window.electron.controller.frontendSettingsController.userSettingsController.finishFirstSetup()
+        this.$router.push({ name: 'List' })
+    }
+
+    async providerLoginStatusChange(isLoggedIn: boolean): Promise<void> {
+        console.log('Login status change detected.')
+        if (isLoggedIn) {
+            this.anyConnectedProvider = true
+        } else {
+            this.anyConnectedProvider =
+                await window.electron.controller.providerController.authController.isAnyProviderLoggedIn()
+        }
+    }
 }
 </script>
 
 <style>
-.setup-guide{
-  padding-top: 10px;
-  background-color: #34495e;
-  color: white;
-  min-width: 50px;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto auto;
-  gap: 1px 1px;
-  grid-template-areas: "Title" "Content" "Button";
-  min-width: 200px;
+.setup-guide {
+    padding-top: 10px;
+    background-color: #34495e;
+    color: white;
+    min-width: 50px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 1px 1px;
+    grid-template-areas: 'Title' 'Content' 'Button';
+    min-width: 200px;
 }
 .setup-steps > div {
-  margin: 15px 5px;
+    margin: 15px 5px;
 }
-.setup-steps{
-  grid-area: Content; 
-  padding: 10px;
+.setup-steps {
+    grid-area: Content;
+    padding: 10px;
 }
 
-.setup-title{
-  grid-area: Title; 
-  width: 100%;
-  text-align: center;
-  align-self: self-start;
+.setup-title {
+    grid-area: Title;
+    width: 100%;
+    text-align: center;
+    align-self: self-start;
 }
 
 .setup-confirm-button:disabled {
-  background-color: gray;
-  color: lightgray;
+    background-color: gray;
+    color: lightgray;
 }
 
-.setup-confirm-button{
-  grid-area: Button; 
-  background-color: green;
-  color: white;
-  width: 100%;
-  height: 50px;
-  cursor: pointer;
-  font-size: 18px;
-  border: none;
-  align-self: end;
+.setup-confirm-button {
+    grid-area: Button;
+    background-color: green;
+    color: white;
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    border: none;
+    align-self: end;
 }
 </style>

@@ -3,16 +3,16 @@
         <div class="icon">
             <template v-if="required">
                 <template v-if="completed">
-                <span class="fa-stack">
-                    <i class="fas fa-circle fa-stack-2x check-circle-completed"></i>
-                    <i class="fas fa-check fa-stack-2x fa-inverse" data-fa-transform="shrink-6"></i>
-                </span>
+                    <span class="fa-stack">
+                        <i class="fas fa-circle fa-stack-2x check-circle-completed"></i>
+                        <i class="fas fa-check fa-stack-2x fa-inverse" data-fa-transform="shrink-6"></i>
+                    </span>
                 </template>
                 <template v-else>
-                <span class="fa-stack">
-                    <i class="fas fa-circle fa-stack-2x check-circle"></i>
-                    <i class="fas fa-check fa-stack-2x fa-inverse" data-fa-transform="shrink-6"></i>
-                </span>
+                    <span class="fa-stack">
+                        <i class="fas fa-circle fa-stack-2x check-circle"></i>
+                        <i class="fas fa-check fa-stack-2x fa-inverse" data-fa-transform="shrink-6"></i>
+                    </span>
                 </template>
             </template>
 
@@ -25,64 +25,51 @@
         </div>
         <div class="entry-content">
             <div class="description">
-                {{description}}
+                {{ description }}
             </div>
 
-            <div v-if="required" class="type">
-                ({{requiredText}})
-            </div>
+            <div v-if="required" class="type">({{ requiredText }})</div>
 
-            <div v-else class="type">
-                ({{optionalText}})
-            </div>
+            <div v-else class="type">({{ optionalText }})</div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop, PropSync } from 'vue-property-decorator';
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 
-@Component({
-	components: {
+class Props {
+    required!: boolean
+    description!: string
+    completed: WithDefault<boolean> = prop<boolean>({ default: false })
+}
 
-	}
+@Options({
+    components: {},
 })
-export default class SetupGuideEntry extends Vue {
-    @Prop({required: true})
-    required!: boolean;
-
-    @Prop({required: true})
-    description!: string;
-
-    @PropSync('syncCompleted', { type: Boolean, default: false})   
-    completed!: boolean;
-
-    optionalText = 'Optional';
-
+export default class SetupGuideEntry extends Vue.with(Props) {
+    optionalText = 'Optional'
     requiredText = 'Benötigt'
 }
 </script>
 
 <style>
-.entry{
+.entry {
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: .25fr 1fr;
+    grid-template-rows: 0.25fr 1fr;
     gap: 1px 1px;
-    grid-template-areas: "Icon Content" "Icon Content";
+    grid-template-areas: 'Icon Content' 'Icon Content';
 }
 
 .entry-content {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto;
-  grid-template-areas: "Title" "Type";
-  grid-area: Content;
-  align-self: center;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    grid-template-areas: 'Title' 'Type';
+    grid-area: Content;
+    align-self: center;
 }
-
 
 .icon {
     -webkit-box-align: center;
@@ -102,9 +89,8 @@ export default class SetupGuideEntry extends Vue {
 }
 
 .description {
-    grid-area: Title; 
+    grid-area: Title;
     font-weight: 200;
-
 }
 
 .check-circle {
@@ -115,7 +101,7 @@ export default class SetupGuideEntry extends Vue {
     color: green;
 }
 
-.info-circle{
-    color: #2196F3;
+.info-circle {
+    color: #2196f3;
 }
 </style>

@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import logger from '../../../../src/backend/logger/logger'
 import got from 'got'
+import logger from '@/backend/logger/logger'
 import RequestBundle from './request-bundle'
 /**
  * The web request manager handels all request that goes from this application to the web.

@@ -1,12 +1,16 @@
-import SettingsManager from './settings-manager';
+import SettingsManager from './settings-manager'
 
 export default class UserSettingsManager {
-    constructor(public settingsManager: SettingsManager) {
-    }
+    constructor(public settingsManager: SettingsManager) {}
 
     public finishFirstSetup(): void {
-        const userSettings = this.settingsManager.getUserSettings();
-        userSettings.finishedFirstSetup = true;
-        this.settingsManager.saveUserSettings(userSettings);
+        const userSettings = this.settingsManager.getUserSettings()
+        userSettings.finishedFirstSetup = true
+        this.settingsManager.saveUserSettings(userSettings)
+    }
+
+    public isFirstSetupFinished(): boolean {
+        const userSettings = this.settingsManager.getUserSettings()
+        return userSettings.finishedFirstSetup
     }
 }

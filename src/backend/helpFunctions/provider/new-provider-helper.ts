@@ -45,7 +45,7 @@ export default class NewProviderHelper {
     }
 
     public static async getAllRelevantProviderInfosForSeries(series: Series): Promise<Series> {
-        const upgradedinfos = await ProviderHelper.requestUpgradeAllCurrentinfos(series, false)
+        const upgradedinfos = await ProviderHelper.requestUpgradeAllCurrentinfos(series)
         series.addProviderDatasWithSeasonInfos(...upgradedinfos)
 
         let proivderLocalDataFromMappings = await this.requestAllMappingProvider(series)

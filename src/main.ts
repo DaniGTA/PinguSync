@@ -1,24 +1,14 @@
-import Vue from 'vue';
-import App from './App.vue';
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './routes/index'
+import { createI18n } from 'vue-i18n'
 
-import LangLoader from './loader/lang-loader';
-import QuasarLoader from './loader/quasar-loader';
-import RouterLoader from './loader/router-loader';
-import FontLoader from './loader/font-loader';
-import './loader/vuex-loader';
-import store from './store';
+const i18n = createI18n({
+    // ...
+})
 
-Vue.config.productionTip = false;
+const app = createApp(App)
 
-QuasarLoader.loadQuasar();
-FontLoader.loadFont();
-const i18n = LangLoader.getI18n();
-const router = RouterLoader.loadVueRouter();
-
-new Vue({
-  i18n,
-  store,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  render: (h): any => h(App),
-  router,
-}).$mount('#app');
+app.use(i18n)
+    .use(router)
+    .mount('#app')

@@ -1,41 +1,36 @@
 <template>
-  <div class="series-name-block-text"> 
-    <template v-if="name"> 
-    {{name}}
-    </template>
-    <template v-else>
-      <q-skeleton type="text" animation="fade"/>
-      <q-skeleton type="text" animation="fade"/>
-    </template>
+    <div class="series-name-block-text">
+        <template v-if="name">
+            {{ name }}
+        </template>
+        <template v-else>
+            <q-skeleton type="text" animation="fade" />
+            <q-skeleton type="text" animation="fade" />
+        </template>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
-import SeriesListViewController from '../../controller/series-list-view-controller';
-import { getModule } from 'vuex-module-decorators';
+import { Vue, Options } from 'vue-class-component'
+import SeriesListViewController from '../../controller/series-list-view-controller'
 
-const seriesListViewController = getModule(SeriesListViewController);
+class Props {
+    seriesId!: string
+}
 
-@Component
-export default class ProviderImageBlock extends Vue {
-    @Prop({required: true})
-    public seriesId!: string;
-
-    public name = '';
+@Options({})
+export default class ProviderImageBlock extends Vue.with(Props) {
+    public name = ''
 
     public async mounted(): Promise<void> {
-        this.name = await seriesListViewController.getSeriesNameById(this.seriesId) ?? '';
+        this.name = (await SeriesListViewController.getSeriesNameById(this.seriesId)) ?? ''
     }
 }
 </script>
 
-
 <style>
-.series-name-block-text{
-    color: #F5EEEE;
+.series-name-block-text {
+    color: #f5eeee;
     z-index: 100;
 }
 </style>

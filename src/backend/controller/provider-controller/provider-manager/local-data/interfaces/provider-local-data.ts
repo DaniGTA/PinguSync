@@ -28,7 +28,7 @@ export default abstract class ProviderLocalData {
      * The version number of the data object.
      * If this get raised the client knows it needs too update his own data.
      */
-    public abstract version: number = 1
+    public version: number = 1
     /**
      * Provider series id.
      */
@@ -42,7 +42,7 @@ export default abstract class ProviderLocalData {
     /**
      * The provider name
      */
-    public abstract readonly provider: string = ''
+    public readonly provider: string = ''
     /**
      * Saves the raw response from the provider
      *
@@ -203,7 +203,7 @@ export default abstract class ProviderLocalData {
     public addSeriesName(...names: Name[]): void {
         for (const name of names) {
             if (name?.name && name.name !== 'null') {
-                if (this.names.findIndex(x => x.name === name.name && x.lang === name.lang) === -1) {
+                if (this.names.findIndex((x) => x.name === name.name && x.lang === name.lang) === -1) {
                     this.names.push(name)
                 }
             }
@@ -217,7 +217,7 @@ export default abstract class ProviderLocalData {
     public addOverview(...newOverviews: Overview[]): boolean {
         this.overviews = [...this.overviews]
         for (const newOverview of newOverviews) {
-            if (this.overviews.findIndex(x => x === newOverview) === -1) {
+            if (this.overviews.findIndex((x) => x === newOverview) === -1) {
                 this.overviews.push(newOverview)
                 return true
             }
@@ -262,7 +262,7 @@ export default abstract class ProviderLocalData {
     }
 
     public getDetailEpisodeInfosByMapping(episdoeMapping: EpisodeMapping): Episode | undefined {
-        return this.detailEpisodeInfo.find(x => x.id === episdoeMapping.id)
+        return this.detailEpisodeInfo.find((x) => x.id === episdoeMapping.id)
     }
 
     public getAllRegularEpisodes(season?: Season): Episode[] {
@@ -283,7 +283,7 @@ export default abstract class ProviderLocalData {
         let array = this.detailEpisodeInfo
         if (season !== undefined && season.isSeasonNumberPresent()) {
             array = array.filter(
-                x => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season)
+                (x) => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season)
             )
         }
         return array

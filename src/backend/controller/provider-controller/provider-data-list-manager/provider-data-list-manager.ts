@@ -20,10 +20,7 @@ export default class ProviderDataListManager {
      * @param provider
      * @param notfiyRenderer
      */
-    public static addProviderLocalDataToMainList(
-        provider: ProviderLocalData,
-        notfiyRenderer = false
-    ): number | undefined {
+    public static addProviderLocalDataToMainList(provider: ProviderLocalData): number | undefined {
         try {
             const alreadyExistingEntry = ProviderDataListSearcher.getProviderLDByProviderLD(provider)
             if (alreadyExistingEntry != null) {
@@ -166,9 +163,9 @@ export default class ProviderDataListManager {
         seriesList?: ProviderLocalData[] | readonly ProviderLocalData[]
     ): number {
         if (seriesList) {
-            return seriesList.findIndex(x => anime.id === x.id)
+            return seriesList.findIndex((x) => anime.id === x.id)
         } else {
-            return ProviderDataListManager.getProviderDataList().findIndex(x => anime.id === x.id)
+            return ProviderDataListManager.getProviderDataList().findIndex((x) => anime.id === x.id)
         }
     }
 

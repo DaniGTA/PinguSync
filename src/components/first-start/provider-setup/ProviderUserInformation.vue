@@ -1,34 +1,28 @@
 <template>
-  <div class="provider-user-name" v-if="username !== ''"><i class="fas fa-user"></i> {{username}}</div>
+    <div class="provider-user-name" v-if="username !== ''"><i class="fas fa-user"></i> {{ username }}</div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import ListProvider from '../../../backend/api/provider/list-provider';
-import { Prop } from 'vue-property-decorator';
-import WorkerController from '../../../backend/communication/ipc-renderer-controller';
-import { chOnce } from '../../../backend/communication/channels';
+import ListProvider from '@backend/api/provider/list-provider'
+import { Vue, Options } from 'vue-class-component'
 
-@Component({
-	components: {
+class Props {
+    provider!: ListProvider
+}
 
-	}
+@Options({
+    components: {},
 })
-export default class ProviderUserInformation extends Vue {
-  public username = '';
+export default class ProviderUserInformation extends Vue.with(Props) {
+    public username = ''
 
-  @Prop({required: true})
-  provider!: ListProvider;
-
-  async mounted(): Promise<void>{
-    if(this.provider){
-      this.username = await WorkerController.getOnce(chOnce.GetUserNameFromProvider, this.provider.providerName);
+    async mounted(): Promise<void> {
+        if (this.provider) {
+            this.username = await window.electron.controller.providerController.getUsername(this.provider.providerName)
+        }
     }
-  }
 }
 </script>
-
 
 <style lang="scss" scoped>
 .provider-user-name {

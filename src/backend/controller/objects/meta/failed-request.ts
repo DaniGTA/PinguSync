@@ -7,5 +7,5 @@ export enum FailedRequestError {
 }
 
 export const isFailedRequestError = (s: string): boolean => {
-    return Object.values(FailedRequestError).includes(s as any);
-};
+    return Object.values(FailedRequestError).includes(s as FailedRequestError)
+}

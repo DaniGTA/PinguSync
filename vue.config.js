@@ -1,83 +1,81 @@
-const { config } = require('process');
-const ThreadsPlugin = require('threads-plugin');
-
+const path = require('path')
+function resolve(dir) {
+    return path.join(__dirname, dir)
+}
 // eslint-disable-next-line no-undef
 module.exports = {
-  pluginOptions: {
-    electronBuilder: {
-      builderOptions: {
-        asar: true,
-        asarUnpack: [
-          '**/0.worker.js ',
-          '**/0.worker.js.map '
-        ],
-        appId: 'pingu-sync',
-        productName: 'PinguSync',
-        mac: {
-          icon: './src/assets/logo/app/icon/mac/icon.icns',
-          category: 'public.app-category.utilities'
-        },
-        win: {
-          icon: './src/assets/logo/app/icon/windows/512x512.png'
-        },
-        extraFiles: [
-          {
-            from: './src/keys',
-            to: 'src/keys',
-            filter: [
-              '**/*'
-            ]
-          }
-        ]
-      },
-      disableMainProcessTypescript: false,
-      mainProcessTypeChecking: false,
-      nodeIntegration: true,
-      chainWebpackRendererProcess: (config) => {
-        config.module.rules.delete('eslint');
-        config.plugins.delete('prefetch');
-
-        config.module.rule('i18n')
-          .resourceQuery(/blockType=i18n/)
-          .type('javascript/auto')
-          .use('i18n')
-          .loader('@kazupon/vue-i18n-loader')
-          .end();
-
-      },
-      chainWebpackMainProcess: (config) => {
-        config.module.rule('graphql')
-          .test(/\.(graphql|gql)$/)
-          .use('graphql-tag/loader')
-          .loader('graphql-tag/loader')
-          .end();
-        config.plugin('ThreadsPlugin').use(ThreadsPlugin);
-
-      }
+    configureWebpack: {
+        target: 'web',
     },
-    i18n: {
-      localDir: 'locales'
+    pluginOptions: {
+        electronBuilder: {
+            builderOptions: {
+                asar: true,
+                appId: 'pingu-sync',
+                productName: 'PinguSync',
+                mac: {
+                    icon: './src/assets/logo/app/icon/mac/icon.icns',
+                    category: 'public.app-category.utilities',
+                },
+                win: {
+                    icon: './src/assets/logo/app/icon/windows/512x512.png',
+                },
+                extraFiles: [
+                    {
+                        from: './src/keys',
+                        to: 'src/keys',
+                        filter: ['**/*'],
+                    },
+                ],
+            },
+            disableMainProcessTypescript: false,
+            mainProcessTypeChecking: false,
+            nodeIntegration: true,
+            chainWebpackRendererProcess: config => {
+                config.module.rules.delete('eslint')
+                config.plugins.delete('prefetch')
+
+                config.module
+                    .rule('i18n')
+                    .resourceQuery(/blockType=i18n/)
+                    .type('javascript/auto')
+                    .use('i18n')
+                    .loader('@kazupon/vue-i18n-loader')
+                    .end()
+                config.resolve.alias.set('@backend', resolve('src/backend'))
+                config.resolve.alias.set('@', resolve('src'))
+                config.resolve.alias.set('/@', resolve('src'))
+            },
+            chainWebpackMainProcess: config => {
+                config.module
+                    .rule('graphql')
+                    .test(/\.(graphql|gql)$/)
+                    .use('graphql-tag/loader')
+                    .loader('graphql-tag/loader')
+                    .end()
+                config.resolve.alias.set('@backend', resolve('src/backend'))
+                config.resolve.alias.set('@', resolve('src'))
+                config.resolve.alias.set('/@', resolve('src'))
+            },
+        },
+        i18n: {
+            localDir: 'locales',
+        },
+        quasar: {
+            importStrategy: 'kebab',
+            rtlSupport: true,
+        },
     },
-    quasar: {
-      importStrategy: 'kebab',
-      rtlSupport: true,
-    }
-  },
 
-  runtimeCompiler: true,
+    runtimeCompiler: true,
 
-  lintOnSave: false,
+    lintOnSave: false,
 
-  transpileDependencies: [
-    'quasar',
-    /[\\/]node_modules[\\/]quasar[\\/]/,
-  ],
-  css: {
-    loaderOptions: {
-      sass: {
-        additionalData: '@import "@/styles/quasar.variables.sass";'
-      }
-    }
-  },
-  
-};
+    css: {
+        loaderOptions: {
+            sass: {
+                additionalData: '@import "@/styles/quasar.variables.sass";',
+            },
+        },
+    },
+}

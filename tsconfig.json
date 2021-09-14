@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
+    "baseUrl": "./",
     "importHelpers": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -15,7 +16,6 @@
     "sourceMap": true,
     "outDir": "out",
     "types": [
-      "webpack-env",
       "jest",
       "node"
     ],
@@ -26,7 +26,12 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
+    "paths": {
+      "@/*": ["src/*"],
+      "/@/*": ["src/*"],
+      "@backend/*": ["src/backend/*"]
+    },
   },
   "include": [
     "src/**/*.ts",
@@ -35,7 +40,5 @@
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
-  "paths": {
-      "@/*": ["src/*"],
-  },
+
 }

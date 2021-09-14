@@ -1,33 +1,29 @@
 <template>
-  <q-layout view="hHh lpR fFf main">
-      <MainHeader />
-      <q-page-container class="page">
-        <router-view />
-      </q-page-container>
-  </q-layout>
+    <div class="layout" view="hHh lpR fFf main">
+        <MainHeader />
+        <div class="container page">
+            <router-view />
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import MainHeader from './header/HeaderView.vue';
+import { Vue, Options } from 'vue-class-component'
+import MainHeader from './header/HeaderView.vue'
 
-@Component({
-	components: {
+@Options({
+    components: {
         MainHeader,
-          
-	}
+    },
 })
-export default class Main extends Vue {
-
-}
+export default class Main extends Vue {}
 </script>
 
 <style scoped>
-.main{
-  height: 100%;
+.main {
+    height: 100%;
 }
 .page {
-  height: 100%;
+    height: 100%;
 }
 </style>

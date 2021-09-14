@@ -10,23 +10,26 @@ import FrontendProviderSyncController from './sync-status/frontend-provider-sync
 export default class FrontendProviderController {
     private com: ICommunication
 
-    constructor(webcontents: Electron.WebContents) {
-        this.com = new IPCBackgroundController(webcontents)
+    constructor() {
+        this.com = new IPCBackgroundController()
         this.init()
         // tslint:disable-next-line: no-unused-expression
-        new FrontendProviderAuthController(webcontents)
-        new FrontendProviderSyncController(webcontents)
+        new FrontendProviderAuthController()
+        new FrontendProviderSyncController()
     }
 
     private init(): void {
-        this.com.on(chOnce.GetAllListProviders, () =>
-            this.com.send(chOnce.GetAllListProviders, this.getAllListProviders())
+        IPCBackgroundController.on(chOnce.GetAllListProviders, () =>
+            IPCBackgroundController.send(chOnce.GetAllListProviders, this.getAllListProviders())
         )
-        this.com.on(chOnce.GetUserNameFromProvider, async providerName =>
-            this.com.send(chOnce.GetUserNameFromProvider, await this.getUsername(providerName))
+        IPCBackgroundController.on(chOnce.GetUserNameFromProvider, async providerName =>
+            IPCBackgroundController.send(chOnce.GetUserNameFromProvider, await this.getUsername(providerName))
         )
-        this.com.on(chOnce.GetAllListProvidersWithConnectedUser, async () =>
-            this.com.send(chOnce.GetAllListProvidersWithConnectedUser, await this.getAllListProvidersWithLoggedInUser())
+        IPCBackgroundController.on(chOnce.GetAllListProvidersWithConnectedUser, async () =>
+            IPCBackgroundController.send(
+                chOnce.GetAllListProvidersWithConnectedUser,
+                await this.getAllListProvidersWithLoggedInUser()
+            )
         )
     }
 

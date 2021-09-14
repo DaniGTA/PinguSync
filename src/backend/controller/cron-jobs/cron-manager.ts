@@ -13,7 +13,7 @@ export default class CronManager {
         }
     }
 
-    public static loadAllCronJobs(): cron.CronJob[] {
+    private static loadAllCronJobs(): cron.CronJob[] {
         const cronJobs: cron.CronJob[] = []
 
         cronJobs.push(CronUpdateSeriesList.getUpdateSeriesListCronJob())
@@ -23,6 +23,6 @@ export default class CronManager {
     }
 
     public static startAllCronJobs(): void {
-        this.runningCronJobs.forEach(x => x.start())
+        this.runningCronJobs.forEach((x) => x.start())
     }
 }

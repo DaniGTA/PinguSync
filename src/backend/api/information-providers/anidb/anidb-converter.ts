@@ -84,10 +84,9 @@ export default class AniDBConverter {
             ipld.covers.push(
                 new Cover('https://cdn.anidb.net/images/main/' + fullInfo.anime.picture._text, ImageSize.ORIGINAL)
             )
-            const mpr = new MultiProviderResult(ipld, ...this.getSubProviders(fullInfo.anime))
-            return mpr
+            return new MultiProviderResult(ipld, ...this.getSubProviders(fullInfo.anime))
         }
-        throw new Error('no anime present ' + (fullInfo as any).error._text)
+        throw new Error(`no anime present ${(fullInfo as any)?.error._text}`)
     }
 
     public getDetailEpisodeInfo(anime: AniDBAnimeAnime): Episode[] {
@@ -96,7 +95,7 @@ export default class AniDBConverter {
             for (const episode of anime.episodes.episode) {
                 if (episode.epno !== undefined && episode.epno._text !== undefined) {
                     let id
-                    if (isNaN((episode.epno._text as unknown) as number)) {
+                    if (isNaN(episode.epno._text as unknown as number)) {
                         id = episode.epno._text
                     } else {
                         id = +episode.epno._text

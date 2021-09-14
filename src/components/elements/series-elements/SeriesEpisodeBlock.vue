@@ -1,19 +1,16 @@
-<template> </template>
+<template></template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
-import ListProvider from '../../../backend/api/provider/list-provider'
+import ListProvider from '@backend/api/provider/list-provider'
+import { Vue, Options, prop } from 'vue-class-component'
 
-@Component
-export default class ProviderImageBlock extends Vue {
-    @Prop({ required: true })
+class Props {
     provider!: ListProvider
-
-    @Prop()
-    showText = true
+    showText = prop<boolean>({ default: true })
 }
+
+@Options({})
+export default class ProviderImageBlock extends Vue.with(Props) {}
 </script>
 
 <style></style>

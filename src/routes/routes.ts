@@ -26,7 +26,6 @@ const routes = [
     },
     { path: '/setup', component: FirstSetupView },
     { path: '/', component: LoadingScreen },
-    { path: '*', redirect: '/' },
 ]
 
 export default routes

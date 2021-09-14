@@ -1,19 +1,20 @@
-import { autoUpdater } from 'electron-updater';
-import logger from '../../logger/logger';
+import { ipcRenderer } from 'electron'
+import { autoUpdater } from 'electron-updater'
+import logger from '../../logger/logger'
 export default class AppUpdateController {
-    public initListeners(webContents: Electron.WebContents): void {
+    public initListeners(): void {
         autoUpdater.on('update-downloaded', () => {
-            webContents.send('updateReady');
-        });
+            ipcRenderer.sendToHost('updateReady')
+        })
     }
 
     public static async checkUpdate(): Promise<void> {
-        autoUpdater.logger = logger;
-        autoUpdater.autoDownload = true;
-        await autoUpdater.checkForUpdatesAndNotify();
+        autoUpdater.logger = logger
+        autoUpdater.autoDownload = true
+        await autoUpdater.checkForUpdatesAndNotify()
     }
 
     public installUpdate(): void {
-        autoUpdater.quitAndInstall();
+        autoUpdater.quitAndInstall()
     }
 }

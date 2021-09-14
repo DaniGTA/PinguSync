@@ -1,39 +1,43 @@
 <template>
-  <div class="episode-list">
-      <EpisodeBlock v-for="episodeId of episodeIds" :key="episodeId.length + '-entry'" :episodeIds="episodeId" :seriesId="seriesId"/>
-  </div>
+    <div class="episode-list">
+        <EpisodeBlock
+            v-for="episodeId of episodeIds"
+            :key="episodeId.length + '-entry'"
+            :episodeIds="episodeId"
+            :seriesId="seriesId"
+        />
+    </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import EpisodeBlock from '../../../elements/episode-elements/EpisodeBlock.vue';
-import EpisodeController from '../../../controller/episode-controller';
-import { Prop } from 'vue-property-decorator';
+import { Vue, Options } from 'vue-class-component'
+import EpisodeBlock from '../../../elements/episode-elements/EpisodeBlock.vue'
+import EpisodeController from '../../../controller/episode-controller'
 
+class Props {
+    seriesId!: string
+}
 
-@Component({
-	components: {
-        EpisodeBlock
-	}
+@Options({
+    components: {
+        EpisodeBlock,
+    },
 })
-export default class DetailInfoEpisodes extends Vue {
-    public episodeIds: string[][] = [];
-    @Prop({required:true})
-    seriesId!: string;
-    mounted(): void{
-        this.loadEpisodeIds();
+export default class DetailInfoEpisodes extends Vue.with(Props) {
+    public episodeIds: string[][] = []
+    mounted(): void {
+        void this.loadEpisodeIds()
     }
 
     async loadEpisodeIds(): Promise<void> {
-        this.episodeIds = await EpisodeController.getEpisodeIdList(this.seriesId) ?? [];
-        console.log(this.episodeIds);
+        this.episodeIds = (await EpisodeController.getEpisodeIdList(this.seriesId)) ?? []
+        console.log(this.episodeIds)
     }
 }
 </script>
 
 <style>
-.episode-list{
+.episode-list {
     text-align: center;
     overflow-x: auto;
 }

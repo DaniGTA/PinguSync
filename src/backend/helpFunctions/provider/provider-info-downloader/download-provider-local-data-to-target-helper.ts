@@ -37,7 +37,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         if (requestResult) {
             result.push(requestResult)
         }
-        if (result.filter(x => x instanceof MultiProviderResult).length === 0) {
+        if (result.filter((x) => x instanceof MultiProviderResult).length === 0) {
             const resultByOtherProvider = await this.getProviderResultByOtherProvider()
             if (resultByOtherProvider) {
                 result.push(resultByOtherProvider)
@@ -99,8 +99,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         provider: ExternalMappingProvider
     ): Promise<MultiProviderResult | undefined> {
         const mappingResult = await ProviderMappingDownloadHelper.getMappingForSeries(this.series)
-        const result = ProviderExtractor.extractTargetProviderFromMultiProviderResults(this.provider, ...mappingResult)
-        return result
+        return ProviderExtractor.extractTargetProviderFromMultiProviderResults(provider, ...mappingResult)
     }
 
     private async getProviderByTargetProvider(
@@ -187,7 +186,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
     private isCurrentProviderIdInSeriesPresent(): boolean {
         const currentLocalData = this.series
             .getAllProviderLocalDatasWithSeasonInfo()
-            .find(entry => entry.providerLocalData.provider === this.provider.providerName)
+            .find((entry) => entry.providerLocalData.provider === this.provider.providerName)
         return !currentLocalData
     }
 
