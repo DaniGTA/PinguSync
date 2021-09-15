@@ -29,9 +29,8 @@
     ],
     "paths": {
       "@/*": ["src/*"],
-      "/@/*": ["src/*"],
       "@backend/*": ["src/backend/*"]
-    },
+    }
   },
   "include": [
     "src/**/*.ts",
@@ -39,5 +38,5 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+  ]
 }

@@ -7,10 +7,9 @@
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "eslint.lintTask.enable": true,
-    "i18n-ally.localesPaths": "src/assets/locales",
+    "i18n-ally.localesPaths": "src/locales",
     "i18n-ally.sourceLanguage": "de",
     "discord.enabled": true,
-    "i18n-ally.keystyle": "nested",
     "jest.jestCommandLine": "jest",
     "eslint.format.enable": false
 }

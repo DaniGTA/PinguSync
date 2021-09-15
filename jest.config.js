@@ -1,5 +1,6 @@
 'use strict'
 const { pathsToModuleNameMapper } = require('ts-jest/utils')
+const { compilerOptions } = require('./tsconfig')
 
 module.exports = {
     roots: ['<rootDir>'],
@@ -9,6 +10,8 @@ module.exports = {
         '^.+\\.(ts|tsx)$': 'ts-jest',
     },
     reporters: ['default'],
+    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+    modulePaths: ['<rootDir>'],
     watchPathIgnorePatterns: ['node_modules'],
     testTimeout: 3500,
     verbose: false,
