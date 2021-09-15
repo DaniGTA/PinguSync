@@ -27,14 +27,14 @@ export default class TitleComperator {
             return comperatorResult
         } else {
             comperatorResult.matchAble += 4
-            if (await titleCheckHelper.checkSeriesNames(a, b)) {
+            if (titleCheckHelper.checkSeriesNames(a, b)) {
                 comperatorResult.matches += 2
             } else if (aFirstSeason) {
-                if (await titleCheckHelper.checkSeriesNames(aFirstSeason, b)) {
+                if (titleCheckHelper.checkSeriesNames(aFirstSeason, b)) {
                     comperatorResult.matches += 2
                 }
             } else if (bFirstSeason) {
-                if (await titleCheckHelper.checkSeriesNames(a, bFirstSeason)) {
+                if (titleCheckHelper.checkSeriesNames(a, bFirstSeason)) {
                     comperatorResult.matches += 2
                 }
             }

@@ -13,6 +13,10 @@ export default class CronManager {
         }
     }
 
+    public static startAllCronJobs(): void {
+        this.runningCronJobs.forEach(x => x.start())
+    }
+
     private static loadAllCronJobs(): cron.CronJob[] {
         const cronJobs: cron.CronJob[] = []
 
@@ -20,9 +24,5 @@ export default class CronManager {
         cronJobs.push(CronRunSyncJobs.getEpisodeSyncJobs())
 
         return cronJobs
-    }
-
-    public static startAllCronJobs(): void {
-        this.runningCronJobs.forEach((x) => x.start())
     }
 }

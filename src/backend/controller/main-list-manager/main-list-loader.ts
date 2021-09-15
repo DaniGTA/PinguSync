@@ -13,7 +13,7 @@ export default class MainListLoader {
             if (existsSync(MainListPath.getPath())) {
                 const dataPath = MainListPath.getPath()
                 const loadedString = readFileSync(dataPath, { encoding: 'utf8' })
-                const loadedData = JSON.parse(loadedString) as any
+                const loadedData = JSON.parse(loadedString) 
                 logger.info(`Items loaded: ${loadedData?.length}`)
                 return this.convertJSONArrayToSeriesArray(loadedData)
             } else {

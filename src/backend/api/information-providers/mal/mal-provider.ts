@@ -14,6 +14,7 @@ import ProviderLocalData from '../../../controller/provider-controller/provider-
 import MalConverter from './mal-converter'
 import pkceChallenge from 'pkce-challenge'
 import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper'
+import ProviderUserList from '@/backend/controller/objects/provider-user-list'
 
 export default class MalProvider extends ListProvider {
     private static instance: MalProvider
@@ -39,7 +40,7 @@ export default class MalProvider extends ListProvider {
         }
     }
 
-    public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
+    public async getAllLists(): Promise<ProviderUserList[]> {
         throw new Error('Method not implemented.')
     }
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -55,14 +56,9 @@ export default class MalProvider extends ListProvider {
     }
     // eslint-disable-next-line @typescript-eslint/require-await
     public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
-        return (
-            'https://myanimelist.net/anime/' +
-            provider.id +
-            '/' +
-            provider.getAllNames()[0].name +
-            '/episode/' +
-            episode.getEpNrAsNr()
-        )
+        return `https://myanimelist.net/anime/${provider.id}/${
+            provider.getAllNames()[0].name
+        }/episode/${episode.getEpNrAsNr()}`
     }
     public static getInstance(): MalProvider {
         if (!MalProvider.instance) {

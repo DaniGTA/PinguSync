@@ -28,7 +28,7 @@ export default abstract class ProviderLocalData {
      * The version number of the data object.
      * If this get raised the client knows it needs too update his own data.
      */
-    public version: number = 1
+    public version = 1
     /**
      * Provider series id.
      */

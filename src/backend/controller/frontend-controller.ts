@@ -15,7 +15,7 @@ export default class FrontendController {
                 return provider
             }
         }
-        throw new Error('[FrontendController] NoProviderFound: ' + providerString)
+        throw new Error(`[FrontendController] NoProviderFound: ${providerString}`)
     }
 
     private static instance: FrontendController

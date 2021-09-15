@@ -1,4 +1,3 @@
-import ICommunication from '../../../../communication/icommunication'
 import SettingsManager from '../../../settings/settings-manager'
 import IPCBackgroundController from '../../../../communication/ipc-background-controller'
 import { chSend } from '../../../../communication/send-only-channels'
@@ -10,10 +9,10 @@ export default class FrontendUserSettingsController {
     }
 
     private init(): void {
-        IPCBackgroundController.on(chSend.FinishFirstSetup, () =>
+        void IPCBackgroundController.on(chSend.FinishFirstSetup, () =>
             this.settingManager.getUserSettingsManager().finishFirstSetup()
         )
-        IPCBackgroundController.on(chOnce.FinishedFirstSetup, (unused, token) =>
+        void IPCBackgroundController.on(chOnce.FinishedFirstSetup, (unused, token) =>
             IPCBackgroundController.send(
                 chOnce.FinishedFirstSetup,
                 this.settingManager.getUserSettings().finishedFirstSetup,

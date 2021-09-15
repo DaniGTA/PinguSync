@@ -95,7 +95,7 @@ export default class AniDBConverter {
             for (const episode of anime.episodes.episode) {
                 if (episode.epno !== undefined && episode.epno._text !== undefined) {
                     let id
-                    if (isNaN(episode.epno._text as unknown as number)) {
+                    if (isNaN((episode.epno._text as unknown) as number)) {
                         id = episode.epno._text
                     } else {
                         id = +episode.epno._text

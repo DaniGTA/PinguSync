@@ -99,7 +99,7 @@ export default class ListController {
                 try {
                     const mainList = MainListManager.getMainList()
                     const result = await NewProviderHelper.getAllRelevantProviderInfosForSeries(mainList[index])
-                    this.addSeriesToMainList(result)
+                    void this.addSeriesToMainList(result)
                 } catch (err) {
                     logger.error('[ListController] [forceRefreshProviderInfo]: (see error next line)')
                     logger.error(err)
@@ -119,15 +119,15 @@ export default class ListController {
         for (const provider of ProviderList.getListProviderList()) {
             try {
                 if (await provider.isUserLoggedIn()) {
-                    logger.info('[Request] -> ' + provider.providerName + ' -> AllSeries')
+                    logger.info(`[Request] -> ${provider.providerName} -> AllSeries`)
                     const allSeries = await provider.getAllSeries(forceDownload)
                     for (const iterator of allSeries) {
                         multiProviderResults.push(iterator)
                     }
-                    logger.info('[Request] -> result: ' + allSeries.length + ' items')
+                    logger.info(`[Request] -> result: ${allSeries.length} items`)
                 }
             } catch (err) {
-                logger.error('[Error] -> ' + provider.providerName + ' -> AllSeries')
+                logger.error(`[Error] -> ${provider.providerName} -> AllSeries`)
                 logger.error(err)
             }
         }

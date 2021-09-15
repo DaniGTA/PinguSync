@@ -3,10 +3,10 @@ import SyncSeries from '../sync-controller/sync-series'
 export default class CronUpdateSeriesList {
     static isCurrentlyUpdatingSeriesList = false
     public static getUpdateSeriesListCronJob(): cron.CronJob {
-        const job = cron.job(
+        return cron.job(
             '*/120 * * * *',
             () => {
-                this.runUpdateSeriesListCronJob()
+                void this.runUpdateSeriesListCronJob()
             },
             undefined,
             undefined,
@@ -14,8 +14,6 @@ export default class CronUpdateSeriesList {
             undefined,
             true
         )
-
-        return job
     }
 
     private static async runUpdateSeriesListCronJob(): Promise<void> {

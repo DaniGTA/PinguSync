@@ -1,4 +1,3 @@
-import ICommunication from '../../../../communication/icommunication'
 import IPCBackgroundController from '../../../../communication/ipc-background-controller'
 import { chOnce } from '../../../../communication/channels'
 import ListProvider from '../../../../api/provider/list-provider'

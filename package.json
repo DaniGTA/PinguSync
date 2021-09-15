@@ -21,6 +21,7 @@
     "cron": "^1.8.2",
     "electron-is-dev": "^2.0.0",
     "electron-updater": "^4.4.6",
+    "eslint-plugin-jest": "^24.4.0",
     "express": "^4.17.1",
     "gitart-vue-dialog": "^1.0.3",
     "got": "^11.8.2",
@@ -40,9 +41,6 @@
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "simple-git-hooks": "^2.6.1",
-    "tsconfig-paths-webpack-plugin": "^3.5.1",
-    "tslib": "^2.3.1",
     "@jagi/jest-transform-graphql": "^1.0.2",
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "@types/cron": "^1.7.3",
@@ -75,11 +73,14 @@
     "node-sass": "^6.0.1",
     "postcss-rtl": "^1.7.3",
     "sass-loader": "^10.0.0",
+    "simple-git-hooks": "^2.6.1",
     "tape-nock": "^1.6.6",
     "threads-plugin": "^1.4.0",
     "ts-jest": "^27.0.4",
     "ts-node": "^10.1.0",
     "ts-transform-graphql-tag": "^0.2.1",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "tslib": "^2.3.1",
     "typescript": "^4.3.5",
     "vue-cli-plugin-electron-builder": "^2.1.1",
     "vue-cli-plugin-tailwind": "~2.0.6",
@@ -123,8 +124,5 @@
   "lint-staged": {
     "*.{js,ts,vue}": "eslint --cache --fix"
   },
-  "simple-git-hooks": {
-    "pre-commit": "npx lint-staged",
-    "pre-push": "npm run typecheck"
-  }
+  "simple-git-hooks": {}
 }

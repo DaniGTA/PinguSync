@@ -6,7 +6,7 @@ import SeriesPackage from '../objects/series-package'
 import MainListManager from './main-list-manager'
 export default class MainListPackageManager {
     public static getIndexFromPackageId(packageId: string, list: readonly Series[] | Series[]): number {
-        return list.findIndex((x) => packageId === x.id)
+        return list.findIndex(x => packageId === x.id)
     }
 
     public static async getSeriesPackages(list: readonly Series[] | Series[]): Promise<SeriesPackage[]> {
@@ -16,8 +16,8 @@ export default class MainListPackageManager {
 
         for (const entryList of tempList) {
             try {
-                if (seriesPackageList.findIndex((x) => x.id === entryList.packageId) === -1) {
-                    const tempPackage = await this.createSeriesPackage(entryList, tempList)
+                if (seriesPackageList.findIndex(x => x.id === entryList.packageId) === -1) {
+                    const tempPackage = this.createSeriesPackage(entryList, tempList)
                     for (const entry of tempPackage.allRelations) {
                         for (const entry2 of tempPackage.allRelations) {
                             const seasonA = entry.getSeason()
@@ -26,9 +26,8 @@ export default class MainListPackageManager {
                                 const result = await SeriesHelper.isSameSeries(entry, entry2)
                                 if (result) {
                                     logger.warn(
-                                        `Same season in package. Detected as same series: ${
-                                            entry.getAllNames()[0] ?? ''
-                                        }`
+                                        `Same season in package. Detected as same series: ${entry.getAllNames()[0] ??
+                                            ''}`
                                     )
                                 }
                             }
@@ -45,7 +44,7 @@ export default class MainListPackageManager {
 
     public static async getSeriesPackage(series: Series, list: Series[]): Promise<SeriesPackage> {
         if (series.packageId) {
-            const allSeriesInThePackage = list.filter((x) => x.packageId === series.packageId)
+            const allSeriesInThePackage = list.filter(x => x.packageId === series.packageId)
             const seriesPackage = new SeriesPackage(...allSeriesInThePackage)
             seriesPackage.id = series.packageId
             return seriesPackage
@@ -55,7 +54,7 @@ export default class MainListPackageManager {
     }
 
     public static removeSeriesPackage(packageId: string, list: Series[] | readonly Series[]): void {
-        const allSeriesInThePackage = list.filter((x) => x.packageId === packageId)
+        const allSeriesInThePackage = list.filter(x => x.packageId === packageId)
         for (const series of allSeriesInThePackage) {
             MainListManager.removeSeriesFromMainList(series)
         }
@@ -68,7 +67,7 @@ export default class MainListPackageManager {
             const tempPackage = new SeriesPackage(...relations)
 
             for (const relation of relations) {
-                const index = list.findIndex((x) => x.id === relation.id)
+                const index = list.findIndex(x => x.id === relation.id)
                 if (index !== -1) {
                     relation.packageId = tempPackage.id
                     list[index] = relation

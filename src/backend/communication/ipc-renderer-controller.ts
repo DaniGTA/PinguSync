@@ -1,14 +1,15 @@
+import { IpcRenderer } from 'electron'
 import DataPackage from './data-package'
 
 const electron = window.require('electron')
 
 export default class WorkerController {
-    public static getIpcRenderer() {
+    public static getIpcRenderer(): IpcRenderer {
         return electron.ipcRenderer
     }
 
     public static send<T>(channel: string, data?: T, trackingToken?: string): void {
-        console.log('info', 'frontend send: ' + channel)
+        console.log('info', `frontend send: ${channel}`)
         try {
             this.getIpcRenderer().send(channel, new DataPackage(data, trackingToken))
         } catch (err) {
@@ -20,10 +21,10 @@ export default class WorkerController {
 
     public static on<T>(channel: string, f: (data: T) => void): void {
         if (this.getIpcRenderer().listenerCount(channel) !== 0) {
-            console.error('Multi listeners: ' + this.getIpcRenderer().listenerCount(channel))
+            console.error(`Multi listeners: ${this.getIpcRenderer().listenerCount(channel)}`)
         }
         this.getIpcRenderer().on(channel, (event: Electron.IpcRendererEvent, dataPackage: DataPackage<T>) => {
-            console.log('info', 'frontend recieved data on: ' + channel)
+            console.log('info', `frontend recieved data on: ${channel}`)
             f(dataPackage.data as T)
         })
     }
@@ -38,9 +39,7 @@ export default class WorkerController {
      */
     public static async getOnce<T>(channel: string, sendData?: any): Promise<T> {
         if (this.getIpcRenderer().listenerCount(channel) !== 0) {
-            console.error(
-                'Multi listeners on channel: ' + channel + ' :' + this.getIpcRenderer().listenerCount(channel)
-            )
+            console.error(`Multi listeners on channel: ${channel} :${this.getIpcRenderer().listenerCount(channel)}`)
         }
         const trackingToken = (+new Date()).toString(36).slice(-5)
         const promise = this.once<T>(channel, trackingToken)
@@ -51,18 +50,12 @@ export default class WorkerController {
     public static once<T>(channel: string, trackingToken?: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             try {
-                console.log('info', 'frontend list once: ' + channel)
+                console.log('info', `frontend list once: ${channel}`)
                 this.getIpcRenderer().once(channel, (event: Electron.IpcRendererEvent, dataPackage: DataPackage<T>) => {
                     console.log(
                         'info',
-                        'frontend recieved: ' +
-                            channel +
-                            ' (requestedToken: ' +
-                            trackingToken +
-                            ')' +
-                            ' (dataToken: ' +
-                            dataPackage.trackingToken +
-                            ')'
+                        `frontend recieved: ${channel} (requestedToken: ${trackingToken ??
+                            ''}) (dataToken: ${dataPackage.trackingToken ?? ''})`
                     )
                     console.debug('recieved data: ')
                     console.debug(dataPackage)
