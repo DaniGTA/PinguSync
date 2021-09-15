@@ -29,7 +29,7 @@ class Props {
 export default class MultiProviderLogin extends Vue.with(Props) {}
 </script>
 
-<style class="scss" scoped>
+<style lang="scss" scoped>
 .provider-login-choice {
     display: flex;
     justify-content: space-evenly;

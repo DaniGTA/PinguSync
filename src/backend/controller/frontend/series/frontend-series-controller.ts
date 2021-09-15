@@ -27,32 +27,33 @@ export default class FrontendSeriesController {
     }
 
     private init(): void {
-        IPCBackgroundController.on(chOnce.GetSeriesById, id =>
-            this.sendSeriesData(chOnce.GetSeriesById, id, this.getSeriesById(id))
+        IPCBackgroundController.on<string>(chOnce.GetSeriesById, (id, token) =>
+            this.sendSeriesData(chOnce.GetSeriesById, id, this.getSeriesById(id), token)
         )
-        IPCBackgroundController.on(chOnce.GetPreferedCoverUrlBySeriesId, async id =>
-            this.sendSeriesData(chOnce.GetPreferedCoverUrlBySeriesId, id, await this.getCoverUrlById(id))
+        IPCBackgroundController.on<string>(chOnce.GetPreferedCoverUrlBySeriesId, async (id, token) =>
+            this.sendSeriesData(chOnce.GetPreferedCoverUrlBySeriesId, id, await this.getCoverUrlById(id), token)
         )
-        IPCBackgroundController.on(chListener.OnSeriesFailedCoverImage, (failedCover: FailedCover) =>
+        IPCBackgroundController.on<FailedCover>(chListener.OnSeriesFailedCoverImage, failedCover =>
             this.markCoverAsFailed(failedCover)
         )
-        IPCBackgroundController.on(chOnce.GetPreferedNameBySeriesId, async id =>
-            this.sendSeriesData(chOnce.GetPreferedNameBySeriesId, id, await this.getSeriesPreferedName(id))
+        IPCBackgroundController.on<string>(chOnce.GetPreferedNameBySeriesId, async (id, token) =>
+            this.sendSeriesData(chOnce.GetPreferedNameBySeriesId, id, await this.getSeriesPreferedName(id), token)
         )
-        IPCBackgroundController.on(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, async id =>
+        IPCBackgroundController.on<string>(chOnce.GetSeriesMaxEpisodeNumberBySeriesId, async (id, token) =>
             this.sendSeriesData(
                 chOnce.GetSeriesMaxEpisodeNumberBySeriesId,
                 id,
-                await this.getSeriesMaxEpisodeNumberBy(id)
+                await this.getSeriesMaxEpisodeNumberBy(id),
+                token
             )
         )
-        IPCBackgroundController.on(chListener.OnSeriesEpisodeListRefreshRequest, id =>
+        IPCBackgroundController.on<string>(chListener.OnSeriesEpisodeListRefreshRequest, id =>
             this.refreshSeriesEpisodeList(id)
         )
-        IPCBackgroundController.on(chOnce.GetOverviewBySeriesId, async id => {
-            this.sendSeriesData(chOnce.GetOverviewBySeriesId, id, await this.getSeriesOverviewBySeriesId(id))
+        IPCBackgroundController.on<string>(chOnce.GetOverviewBySeriesId, async (id, token) => {
+            this.sendSeriesData(chOnce.GetOverviewBySeriesId, id, await this.getSeriesOverviewBySeriesId(id), token)
         })
-        IPCBackgroundController.on(chOnce.SaveSeriesInDB, async id => {
+        IPCBackgroundController.on<string>(chOnce.SaveSeriesInDB, async id => {
             await this.saveSeriesData(id)
         })
     }
@@ -142,7 +143,7 @@ export default class FrontendSeriesController {
         }
     }
 
-    private sendSeriesData(channel: string, id: string, data: any): void {
-        IPCBackgroundController.send(channel + '-' + id, data)
+    private sendSeriesData(channel: string, id: string, data: any, token?: string): void {
+        IPCBackgroundController.send(channel + '-' + id, data, token)
     }
 }

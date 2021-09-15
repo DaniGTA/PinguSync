@@ -1,3 +1,5 @@
+import DataPackage from './data-package'
+
 const electron = window.require('electron')
 
 export default class WorkerController {
@@ -5,24 +7,24 @@ export default class WorkerController {
         return electron.ipcRenderer
     }
 
-    public static send(channel: string, data?: any): void {
+    public static send<T>(channel: string, data?: T, trackingToken?: string): void {
         console.log('info', 'frontend send: ' + channel)
         try {
-            this.getIpcRenderer().send(channel, data)
+            this.getIpcRenderer().send(channel, new DataPackage(data, trackingToken))
         } catch (err) {
             console.error(data)
             console.error(err)
-            throw new Error(err)
+            throw new Error(err as string)
         }
     }
 
-    public static on(channel: string, f: (data: any) => void): void {
+    public static on<T>(channel: string, f: (data: T) => void): void {
         if (this.getIpcRenderer().listenerCount(channel) !== 0) {
             console.error('Multi listeners: ' + this.getIpcRenderer().listenerCount(channel))
         }
-        this.getIpcRenderer().on(channel, (event: Electron.IpcRendererEvent, data: any) => {
+        this.getIpcRenderer().on(channel, (event: Electron.IpcRendererEvent, dataPackage: DataPackage<T>) => {
             console.log('info', 'frontend recieved data on: ' + channel)
-            f(data)
+            f(dataPackage.data as T)
         })
     }
 
@@ -40,22 +42,41 @@ export default class WorkerController {
                 'Multi listeners on channel: ' + channel + ' :' + this.getIpcRenderer().listenerCount(channel)
             )
         }
-        const promise = this.once<T>(channel)
-        this.send(channel, sendData)
-        return await promise
+        const trackingToken = (+new Date()).toString(36).slice(-5)
+        const promise = this.once<T>(channel, trackingToken)
+        this.send(channel, sendData, trackingToken)
+        return promise
     }
 
-    public static once<T>(channel: string): Promise<T> {
+    public static once<T>(channel: string, trackingToken?: string): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             try {
                 console.log('info', 'frontend list once: ' + channel)
-                this.getIpcRenderer().once(channel, (event: Electron.IpcRendererEvent, data: T) => {
-                    console.log('info', 'frontend recieved: ' + channel)
+                this.getIpcRenderer().once(channel, (event: Electron.IpcRendererEvent, dataPackage: DataPackage<T>) => {
+                    console.log(
+                        'info',
+                        'frontend recieved: ' +
+                            channel +
+                            ' (requestedToken: ' +
+                            trackingToken +
+                            ')' +
+                            ' (dataToken: ' +
+                            dataPackage.trackingToken +
+                            ')'
+                    )
                     console.debug('recieved data: ')
-                    console.debug(data)
-                    console.debug('recieved event: ')
-                    console.debug(event)
-                    resolve((data as any) as T)
+                    console.debug(dataPackage)
+                    if (trackingToken !== undefined) {
+                        if (trackingToken == dataPackage.trackingToken) {
+                            resolve(dataPackage.data as T)
+                        } else {
+                            this.once<T>(channel, trackingToken)
+                                .then(x => resolve(x))
+                                .catch(x => reject(x))
+                        }
+                    } else {
+                        resolve(dataPackage.data as T)
+                    }
                 })
             } catch (err) {
                 console.log('warn', 'frontend recieved error on channel: ' + channel)

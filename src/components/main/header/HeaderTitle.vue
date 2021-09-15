@@ -1,11 +1,13 @@
 <template>
     <div class="main-header-title-box">
         <div class="main-header-title" @click="openDefaultSite()">PinguSync</div>
-        <q-badge color="primary"><VersionText class="main-header-title-version-text" /></q-badge>
+        <q-badge color="primary"><VersionText class="main-header-title-version-text"/></q-badge>
     </div>
 </template>
 
 <script lang="ts">
+import { chOnce } from '@/backend/communication/channels'
+import WorkerController from '@/backend/communication/ipc-renderer-controller'
 import { Vue, Options } from 'vue-class-component'
 import VersionText from '../../system/version/VersionText.vue'
 
@@ -16,7 +18,7 @@ import VersionText from '../../system/version/VersionText.vue'
 })
 export default class MainHeaderTitle extends Vue {
     async openDefaultSite(): Promise<void> {
-        if (window.electron.controller.frontendSettingsController.userSettingsController.isFirstSetupFinished()) {
+        if (await WorkerController.getOnce<boolean>(chOnce.FinishedFirstSetup)) {
             await this.$router.push({ name: 'List' })
         } else {
             await this.$router.push('setup')

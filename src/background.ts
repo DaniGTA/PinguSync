@@ -106,7 +106,7 @@ app.on('ready', () => {
         try {
             void installVueDevtools()
         } catch (e) {
-            logger.error('Vue Devtools failed to install:', e?.toString())
+            logger.error('Vue Devtools failed to install:', (e as any)?.toString())
         }
     }
     createWindow()

@@ -1,0 +1,40 @@
+{
+  "0_LISTTYPE": "Unknown",
+  "1_LISTTYPE": "Custom",
+  "2_LISTTYPE": "Planning",
+  "3_LISTTYPE": "Current",
+  "4_LISTTYPE": "Paused",
+  "5_LISTTYPE": "Dropped",
+  "6_LISTTYPE": "Completed",
+  "7_LISTTYPE": "Repeating",
+  "8_LISTTYPE": "ALL",
+  "providerSingleListSetting": {
+    "syncTo": "Sync to"
+  },
+  "SetupGuide": {
+    "provider-login-description": "Bei mindestens einem Provider anmelden.",
+    "provider-setup-description": "Ein Provider einstellen",
+    "provider-setup-more-description": "Weitere Provider einrichten.",
+    "title": "Einrichtung",
+    "complete-setup": "Complete Setup"
+  },
+  "ListTypeChooser": {
+    "selected-list": "Selected list"
+  },
+  "ProviderSetupHeader": {
+    "logout": "Logout"
+  },
+  "ListSearch": {
+    "search": "Search"
+  },
+  "ProviderListSettings": {
+    "list_settings": "List Settings"
+  },
+  "Main": {
+    "provider-entry": {
+      "loading": "Loading...",
+      "logged-in": "Logged in",
+      "logged-out": "Logged out"
+    }
+  }
+}

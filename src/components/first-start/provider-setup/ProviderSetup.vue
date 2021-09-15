@@ -56,14 +56,14 @@ export default class ProviderSetup extends Vue.with(Props) {
         try {
             this.isLoggedIn = false
             if (oldVal) {
-                WorkerController.removeListener('provider-any-login-status-changed', (x) =>
-                    this.anyUpdateLoginStatus(x)
-                )
+                WorkerController.removeListener('provider-any-login-status-changed', x => this.anyUpdateLoginStatus(x))
             }
             if (val) {
                 console.log('listen for auth status')
                 this.updateLoginStatus(await WorkerController.getOnce(chOnce.GetLoggedInStatus, val.providerName))
-                WorkerController.on(chListener.OnLoggedInStatusChange, (x) => this.anyUpdateLoginStatus(x))
+                WorkerController.on<UpdateProviderLoginStatus>(chListener.OnLoggedInStatusChange, x =>
+                    this.anyUpdateLoginStatus(x)
+                )
                 console.log('listen for auth status finished')
             }
         } catch (err) {

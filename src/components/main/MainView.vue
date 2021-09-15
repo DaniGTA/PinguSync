@@ -1,7 +1,7 @@
 <template>
-    <div class="layout" view="hHh lpR fFf main">
+    <div class="h-100">
         <MainHeader />
-        <div class="container page">
+        <div class="h-100">
             <router-view />
         </div>
     </div>
@@ -18,12 +18,3 @@ import MainHeader from './header/HeaderView.vue'
 })
 export default class Main extends Vue {}
 </script>
-
-<style scoped>
-.main {
-    height: 100%;
-}
-.page {
-    height: 100%;
-}
-</style>

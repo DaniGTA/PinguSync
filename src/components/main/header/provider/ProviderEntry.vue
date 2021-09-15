@@ -1,7 +1,11 @@
 <template>
-    <div v-if="provider">
-        <ProviderImageBlock :provider="provider" :showText="false" @click="openDialog()" />
-        <button @click="checkLogin()">check</button>
+    <div v-if="provider" class="w-auto h-full flex flex-col flex-shrink">
+        <div class="h-1/2 cursor-pointer" v-on:click="openDialog()">
+            <ProviderImageBlock :provider="provider" :showText="false" />
+        </div>
+        <template v-if="isProviderLoggedIn == null">{{ this.$t('Main.provider-entry.loading') }}</template>
+        <template v-else-if="isProviderLoggedIn">{{ this.$t('Main.provider-entry.logged-in') }}</template>
+        <template v-else>{{ $t('Main.provider-entry.logged-out') }}</template>
         <GDialog v-model="isLoginDialogOpen">
             <div class="q-card">
                 <template v-if="!isProviderLoggedIn">
@@ -38,15 +42,17 @@ class Props {
 })
 export default class ProviderEntry extends Vue.with(Props) {
     isLoginDialogOpen = false
-    isProviderLoggedIn = false
+    isProviderLoggedIn: boolean | null = null
 
     openDialog(): void {
         console.log('Open dialog')
         this.isLoginDialogOpen = true
     }
 
-    async mounted(): Promise<void> {
-        WorkerController.on(chListener.OnLoggedInStatusChange, x => this.anyUpdateLoginStatus(x))
+    mounted(): void {
+        WorkerController.on<UpdateProviderLoginStatus>(chListener.OnLoggedInStatusChange, x =>
+            this.anyUpdateLoginStatus(x)
+        )
         this.checkLogin()
     }
 
@@ -55,10 +61,10 @@ export default class ProviderEntry extends Vue.with(Props) {
             chOnce.GetLoggedInStatus,
             this.provider.providerName
         )
-        console.log(this.isProviderLoggedIn)
     }
 
     anyUpdateLoginStatus(newLoginStatus: UpdateProviderLoginStatus): void {
+        console.log(newLoginStatus)
         if (newLoginStatus.providerName === this.provider.providerName) {
             this.isLoginDialogOpen = false
             this.isProviderLoggedIn = newLoginStatus.isLoggedIn
@@ -66,5 +72,3 @@ export default class ProviderEntry extends Vue.with(Props) {
     }
 }
 </script>
-
-<style></style>

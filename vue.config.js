@@ -60,10 +60,13 @@ module.exports = {
         },
         i18n: {
             localDir: 'locales',
-        },
-        quasar: {
-            importStrategy: 'kebab',
-            rtlSupport: true,
+            locale: 'en',
+            fallbackLocale: 'en',
+            localeDir: 'locales',
+            enableLegacy: false,
+            runtimeOnly: false,
+            compositionOnly: false,
+            fullInstall: true,
         },
     },
 
@@ -74,7 +77,7 @@ module.exports = {
     css: {
         loaderOptions: {
             sass: {
-                additionalData: '@import "@/styles/quasar.variables.sass";',
+                additionalData: '@import "@/style/variables.sass";',
             },
         },
     },

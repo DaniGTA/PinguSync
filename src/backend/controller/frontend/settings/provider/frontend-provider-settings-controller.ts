@@ -10,38 +10,33 @@ import UpdateUserListType from '../../providers/model/update-user-list-type'
 
 export default class FrontendProviderSettingsController {
     /**
-     * Communication instance to the frontend.
-     * @private
-     * @type {ICommunication}
-     * @memberof FrontendProviderAuthController
-     */
-    private com: ICommunication
-
-    /**
      *Creates an instance of FrontendProviderAuthController.
 
      * @memberof FrontendProviderAuthController
      */
     constructor(private settingManager: SettingsManager) {
-        this.com = new IPCBackgroundController()
         this.init()
     }
 
     private init(): void {
-        IPCBackgroundController.on(chOnce.GetSyncProviderSettings, providerName =>
+        IPCBackgroundController.on<string>(chOnce.GetSyncProviderSettings, (providerName, token) =>
             IPCBackgroundController.send(
                 chOnce.GetSyncProviderSettings,
-                this.getAllSyncWithProviderSettings(providerName)
+                this.getAllSyncWithProviderSettings(providerName),
+                token
             )
         )
-        IPCBackgroundController.on('add-sync-with-provider', data => this.addSyncProviderToSettings(data))
-        IPCBackgroundController.on(chOnce.GetProviderListSettings, async providerName =>
+        IPCBackgroundController.on<AddSyncProvidersModel>('add-sync-with-provider', data =>
+            this.addSyncProviderToSettings(data)
+        )
+        IPCBackgroundController.on<string>(chOnce.GetProviderListSettings, async (providerName, token) =>
             IPCBackgroundController.send(
                 chOnce.GetProviderListSettings,
-                await this.settingManager.getAllListSettings(providerName)
+                await this.settingManager.getAllListSettings(providerName),
+                token
             )
         )
-        IPCBackgroundController.on(chSend.UpdateListType, data => this.updateUserListType(data))
+        IPCBackgroundController.on<UpdateUserListType>(chSend.UpdateListType, data => this.updateUserListType(data))
     }
 
     private addSyncProviderToSettings(data: AddSyncProvidersModel): void {

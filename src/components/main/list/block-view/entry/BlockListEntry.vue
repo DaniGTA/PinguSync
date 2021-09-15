@@ -22,7 +22,7 @@
                     persistent
                     auto-close
                 >
-                    <BlockListEntrySyncStatusHover @click.native.prevent :seriesId="id" ref="hoverStatus" />
+                    <BlockListEntrySyncStatusHover @click.prevent :seriesId="id" ref="hoverStatus" />
                 </q-popup-proxy>
             </template>
         </div>

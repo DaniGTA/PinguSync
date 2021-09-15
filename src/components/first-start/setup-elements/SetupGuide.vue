@@ -23,7 +23,6 @@
 <script lang="ts">
 import WorkerController from '@backend/communication/ipc-renderer-controller'
 import { chListener } from '@backend/communication/listener-channels'
-import { chSend } from '@backend/communication/send-only-channels'
 import UpdateProviderLoginStatus from '@backend/controller/frontend/providers/model/update-provider-login-status'
 import { Vue, Options } from 'vue-class-component'
 import SetupGuideEntry from './SetupGuideEntry.vue'
@@ -41,8 +40,7 @@ export default class SetupGuide extends Vue {
             chListener.OnLoggedInStatusChange,
             async (data: UpdateProviderLoginStatus) => await this.providerLoginStatusChange(data.isLoggedIn)
         )
-        this.anyConnectedProvider =
-            await window.electron.controller.providerController.authController.isAnyProviderLoggedIn()
+        this.anyConnectedProvider = await window.electron.controller.providerController.authController.isAnyProviderLoggedIn()
     }
 
     finishSetup(): void {
@@ -55,8 +53,7 @@ export default class SetupGuide extends Vue {
         if (isLoggedIn) {
             this.anyConnectedProvider = true
         } else {
-            this.anyConnectedProvider =
-                await window.electron.controller.providerController.authController.isAnyProviderLoggedIn()
+            this.anyConnectedProvider = await window.electron.controller.providerController.authController.isAnyProviderLoggedIn()
         }
     }
 }

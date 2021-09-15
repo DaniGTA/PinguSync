@@ -22,17 +22,27 @@ export default class FrontendEpisodesController {
 
     private init(): void {
         //          Recieve Channel                     Recieved Data                  Response
-        IPCBackgroundController.on(chOnce.GetEpisodeIdsListBySeriesId, async id =>
-            this.sendSeriesData(chOnce.GetEpisodeIdsListBySeriesId, id, await this.getEpisodeIdsList(id))
+        IPCBackgroundController.on<string>(chOnce.GetEpisodeIdsListBySeriesId, async (id, token) =>
+            this.sendSeriesData(chOnce.GetEpisodeIdsListBySeriesId, id, await this.getEpisodeIdsList(id), token)
         )
-        IPCBackgroundController.on(chOnce.GetEpisodeByEpisodeId, async (query: SingleEpisodeQuery) =>
-            this.sendSeriesData(chOnce.GetEpisodeByEpisodeId, query.episodeId, await this.getSingleEpisode(query))
+        IPCBackgroundController.on(chOnce.GetEpisodeByEpisodeId, async (query: SingleEpisodeQuery, token) =>
+            this.sendSeriesData(
+                chOnce.GetEpisodeByEpisodeId,
+                query.episodeId,
+                await this.getSingleEpisode(query),
+                token
+            )
         )
-        IPCBackgroundController.on(chOnce.IsEpisodeSync, async (query: SingleEpisodeQuery) =>
-            this.sendSeriesData(chOnce.IsEpisodeSync, query.episodeId, await this.isEpisodeSync(query))
+        IPCBackgroundController.on(chOnce.IsEpisodeSync, async (query: SingleEpisodeQuery, token) =>
+            this.sendSeriesData(chOnce.IsEpisodeSync, query.episodeId, await this.isEpisodeSync(query), token)
         )
-        IPCBackgroundController.on(chOnce.WatchedEpisode, async (query: SingleEpisodeQuery) =>
-            this.sendSeriesData(chOnce.WatchedEpisode, query.episodeId, await this.hasEpisodeAnyWatchedStatus(query))
+        IPCBackgroundController.on(chOnce.WatchedEpisode, async (query: SingleEpisodeQuery, token) =>
+            this.sendSeriesData(
+                chOnce.WatchedEpisode,
+                query.episodeId,
+                await this.hasEpisodeAnyWatchedStatus(query),
+                token
+            )
         )
 
         IPCBackgroundController.on(chSend.OpenEpisodeInExternalBrowser, (query: SingleEpisodeQuery) =>
@@ -126,7 +136,7 @@ export default class FrontendEpisodesController {
         }
     }
 
-    private sendSeriesData(channel: string, id: string, data: any): void {
-        IPCBackgroundController.send(channel + '-' + id, data)
+    private sendSeriesData(channel: string, id: string, data: any, token?: string): void {
+        IPCBackgroundController.send(channel + '-' + id, data, token)
     }
 }

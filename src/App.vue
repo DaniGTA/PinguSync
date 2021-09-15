@@ -5,7 +5,7 @@
 import { Vue } from 'vue-class-component'
 import { chOnce } from './backend/communication/channels'
 import WorkerController from './backend/communication/ipc-renderer-controller'
-//useElectron().startController({} as any)
+import './index.css'
 
 export default class App extends Vue {
     async mounted(): Promise<void> {

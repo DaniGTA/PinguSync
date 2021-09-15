@@ -8,10 +8,7 @@ import logger from '../../../logger/logger'
 import FrontendProviderSyncController from './sync-status/frontend-provider-sync-controller'
 
 export default class FrontendProviderController {
-    private com: ICommunication
-
     constructor() {
-        this.com = new IPCBackgroundController()
         this.init()
         // tslint:disable-next-line: no-unused-expression
         new FrontendProviderAuthController()
@@ -19,16 +16,21 @@ export default class FrontendProviderController {
     }
 
     private init(): void {
-        IPCBackgroundController.on(chOnce.GetAllListProviders, () =>
-            IPCBackgroundController.send(chOnce.GetAllListProviders, this.getAllListProviders())
+        IPCBackgroundController.on(chOnce.GetAllListProviders, (unused, trackingToken) =>
+            IPCBackgroundController.send(chOnce.GetAllListProviders, this.getAllListProviders(), trackingToken)
         )
-        IPCBackgroundController.on(chOnce.GetUserNameFromProvider, async providerName =>
-            IPCBackgroundController.send(chOnce.GetUserNameFromProvider, await this.getUsername(providerName))
+        IPCBackgroundController.on<string>(chOnce.GetUserNameFromProvider, async (providerName, trackingToken) =>
+            IPCBackgroundController.send(
+                chOnce.GetUserNameFromProvider,
+                await this.getUsername(providerName),
+                trackingToken
+            )
         )
-        IPCBackgroundController.on(chOnce.GetAllListProvidersWithConnectedUser, async () =>
+        IPCBackgroundController.on(chOnce.GetAllListProvidersWithConnectedUser, async (unused, trackingToken) =>
             IPCBackgroundController.send(
                 chOnce.GetAllListProvidersWithConnectedUser,
-                await this.getAllListProvidersWithLoggedInUser()
+                await this.getAllListProvidersWithLoggedInUser(),
+                trackingToken
             )
         )
     }

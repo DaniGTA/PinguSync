@@ -1,10 +1,11 @@
 import { ipcMain } from 'electron'
 import logger from '../logger/logger'
+import DataPackage from './data-package'
 
 export default class IPCBackgroundController {
     public static webcontents: Electron.WebContents | null = null
 
-    public static send(channel: string, data?: any): void {
+    public static send(channel: string, data?: any, trackingToken?: string): void {
         let success = false
         while (!success) {
             try {
@@ -16,7 +17,7 @@ export default class IPCBackgroundController {
                     }
                 }
                 if (this.webcontents) {
-                    this.webcontents.send(channel, onlyData)
+                    this.webcontents.send(channel, new DataPackage(onlyData, trackingToken))
                 } else {
                     logger.error('No webcontents to send data')
                 }
@@ -28,20 +29,21 @@ export default class IPCBackgroundController {
         }
     }
 
-    public static async on(channel: string, f: ((data: any) => void) | ((data: any) => Promise<void>)): Promise<void> {
-        ipcMain.on(channel, async (event: Electron.IpcMainEvent, data: any) => {
+    public static async on<T>(
+        channel: string,
+        f: ((data: T, trackingToken?: string) => void) | ((data: T, trackingToken?: string) => Promise<void>)
+    ): Promise<void> {
+        ipcMain.on(channel, async (event: Electron.IpcMainEvent, data: DataPackage<T>) => {
             logger.info('recieved: ' + channel)
             try {
-                if (data) {
-                    await f(JSON.parse(data))
-                } else {
-                    await f(data)
+                if (typeof data.data == 'string') {
+                    await f(JSON.parse(data.data as string), data.trackingToken)
                 }
             } catch (err) {
                 logger.debug(err)
             }
             try {
-                await f(data)
+                await f(data.data as T, data.trackingToken)
             } catch (err) {
                 logger.error(err)
             }

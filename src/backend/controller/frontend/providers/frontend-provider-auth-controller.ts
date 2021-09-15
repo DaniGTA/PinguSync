@@ -10,38 +10,36 @@ import { chSend } from '../../../communication/send-only-channels'
 import { chOnce } from '../../../communication/channels'
 import { chListener } from '../../../communication/listener-channels'
 import logger from '../../../logger/logger'
+import { Token } from 'graphql'
 
 export default class FrontendProviderAuthController {
-    /**
-     * Communication instance to the frontend.
-     * @private
-     * @type {ICommunication}
-     * @memberof FrontendProviderAuthController
-     */
-    private com: ICommunication
-
     /**
      *Creates an instance of FrontendProviderAuthController.
      * @memberof FrontendProviderAuthController
      */
     constructor() {
-        this.com = new IPCBackgroundController()
         this.init()
     }
 
     private init(): void {
-        IPCBackgroundController.on('oauth-login-provider', providerName => this.oAuthLogin(providerName))
-        IPCBackgroundController.on(chSend.DefaultProviderLogin, data => this.defaultLogin(data))
-        IPCBackgroundController.on(chSend.LogoutUser, providerName => this.logoutProvider(providerName))
-        IPCBackgroundController.on(chOnce.IsAnyProviderLoggedIn, async () =>
-            IPCBackgroundController.send(chOnce.IsAnyProviderLoggedIn, await this.isAnyProviderLoggedIn())
+        IPCBackgroundController.on<string>('oauth-login-provider', (providerName, token) =>
+            this.oAuthLogin(providerName, token)
         )
-        IPCBackgroundController.on(chOnce.GetLoggedInStatus, async providerName =>
-            IPCBackgroundController.send(chOnce.GetLoggedInStatus, await this.isUserLoggedIn(providerName))
+        IPCBackgroundController.on<FrontendDefaultLogin>(chSend.DefaultProviderLogin, (data, token) =>
+            this.defaultLogin(data, token)
+        )
+        IPCBackgroundController.on<string>(chSend.LogoutUser, (providerName, token) =>
+            this.logoutProvider(providerName, token)
+        )
+        IPCBackgroundController.on<string>(chOnce.IsAnyProviderLoggedIn, async (unused, token) =>
+            IPCBackgroundController.send(chOnce.IsAnyProviderLoggedIn, await this.isAnyProviderLoggedIn(), token)
+        )
+        IPCBackgroundController.on<string>(chOnce.GetLoggedInStatus, async (providerName, token) =>
+            IPCBackgroundController.send(chOnce.GetLoggedInStatus, await this.isUserLoggedIn(providerName), token)
         )
     }
 
-    private logoutProvider(providerName: string): void {
+    private logoutProvider(providerName: string, token?: string): void {
         const provider = ProviderList.getProviderInstanceByProviderName(providerName)
         if (provider instanceof ListProvider) {
             try {
@@ -49,7 +47,7 @@ export default class FrontendProviderAuthController {
             } catch (err) {
                 logger.error(err)
             }
-            this.sendLoginStatus(provider)
+            this.sendLoginStatus(provider, token)
         }
     }
 
@@ -79,26 +77,29 @@ export default class FrontendProviderAuthController {
         return false
     }
 
-    private async oAuthLogin(providerName: string): Promise<void> {
+    private async oAuthLogin(providerName: string, token?: string): Promise<void> {
         const provider = ProviderList.getProviderInstanceByProviderName(providerName)
         if (provider instanceof ListProvider && provider.hasOAuthLogin) {
             shell.openExternal(provider.getTokenAuthUrl())
             await new OAuthController(provider).isOAuthFlowSuccessfull()
-            this.sendLoginStatus(provider)
+            this.sendLoginStatus(provider, token)
         }
     }
 
-    private async defaultLogin(defaultLoginData: FrontendDefaultLogin): Promise<void> {
+    private async defaultLogin(defaultLoginData: FrontendDefaultLogin, token?: string): Promise<void> {
         const provider = ProviderList.getProviderInstanceByProviderName(defaultLoginData.providerName)
         if (provider instanceof ListProvider) {
             await provider.logInUser(defaultLoginData.password, defaultLoginData.username)
-            this.sendLoginStatus(provider)
+            this.sendLoginStatus(provider, token)
         }
     }
 
-    private async sendLoginStatus(provider: ListProvider): Promise<void> {
+    private async sendLoginStatus(provider: ListProvider, token?: string): Promise<void> {
         const newStatus = await provider.isUserLoggedIn()
-        const data: UpdateProviderLoginStatus = { providerName: provider.providerName, isLoggedIn: newStatus }
-        IPCBackgroundController.send(chListener.OnLoggedInStatusChange, data)
+        const data: UpdateProviderLoginStatus = {
+            providerName: provider.providerName,
+            isLoggedIn: newStatus,
+        }
+        IPCBackgroundController.send(chListener.OnLoggedInStatusChange, data, token)
     }
 }

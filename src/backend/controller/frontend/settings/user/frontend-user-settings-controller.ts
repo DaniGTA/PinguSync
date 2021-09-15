@@ -13,10 +13,11 @@ export default class FrontendUserSettingsController {
         IPCBackgroundController.on(chSend.FinishFirstSetup, () =>
             this.settingManager.getUserSettingsManager().finishFirstSetup()
         )
-        IPCBackgroundController.on(chOnce.FinishedFirstSetup, () =>
+        IPCBackgroundController.on(chOnce.FinishedFirstSetup, (unused, token) =>
             IPCBackgroundController.send(
                 chOnce.FinishedFirstSetup,
-                this.settingManager.getUserSettings().finishedFirstSetup
+                this.settingManager.getUserSettings().finishedFirstSetup,
+                token
             )
         )
     }

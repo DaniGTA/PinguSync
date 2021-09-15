@@ -13,19 +13,17 @@ import FrontendSyncEpisodes from './model/sync-episodes'
 import SyncEpisodes from '../../../sync-controller/sync-episodes'
 
 export default class FrontendProviderSyncController {
-    private com: ICommunication
-
     constructor() {
-        this.com = new IPCBackgroundController()
         this.init()
         // tslint:disable-next-line: no-unused-expression
     }
 
     private init(): void {
-        IPCBackgroundController.on(chOnce.GetSyncStatusOfProviderFromASeries, async (x: GetSyncStatus) =>
+        IPCBackgroundController.on(chOnce.GetSyncStatusOfProviderFromASeries, async (x: GetSyncStatus, token) =>
             IPCBackgroundController.send(
                 chOnce.GetSyncStatusOfProviderFromASeries + x.providerName,
-                await this.getSyncStatusOfProviderFromASeries(x)
+                await this.getSyncStatusOfProviderFromASeries(x),
+                token
             )
         )
         IPCBackgroundController.on(

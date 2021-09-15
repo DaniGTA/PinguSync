@@ -1,6 +1,6 @@
 <template>
-    <div class="header-provider-list">
-        <div v-for="provider in providers" class="header-provider-entry" :key="provider.providerName">
+    <div class="flex w-full h-full flex-row-reverse">
+        <div v-for="provider in providers" class="m-2 h-full" :key="provider.providerName">
             <ProviderEntry :provider="provider" />
         </div>
     </div>
@@ -30,18 +30,3 @@ export default class ProviderList extends Vue {
     }
 }
 </script>
-
-<style>
-.header-provider-list {
-    display: flex;
-    justify-content: flex-end;
-    height: 100%;
-    align-items: center;
-    width: 100%;
-    cursor: pointer;
-}
-
-.header-provider-entry {
-    margin: 0px 5px;
-}
-</style>

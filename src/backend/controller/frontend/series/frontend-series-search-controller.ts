@@ -13,8 +13,8 @@ export default class FrontendSeriesSearchController {
     }
 
     private init(): void {
-        IPCBackgroundController.on(chOnce.SearchSeries, (searchQuery: SearchQuery) =>
-            IPCBackgroundController.send(chOnce.SearchSeries, this.getSearchResult(searchQuery))
+        IPCBackgroundController.on(chOnce.SearchSeries, (searchQuery: SearchQuery, token) =>
+            IPCBackgroundController.send(chOnce.SearchSeries, this.getSearchResult(searchQuery), token)
         )
     }
 

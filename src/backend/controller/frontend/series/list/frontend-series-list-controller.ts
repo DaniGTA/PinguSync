@@ -12,8 +12,12 @@ export default class FrontendSeriesListController {
     }
 
     private init(): void {
-        IPCBackgroundController.on(chOnce.GetSeriesIdsWithListType, async list =>
-            IPCBackgroundController.send(chOnce.GetSeriesIdsWithListType, await this.GetSeriesIdsWithListType(list))
+        IPCBackgroundController.on<ListType>(chOnce.GetSeriesIdsWithListType, async (list, token) =>
+            IPCBackgroundController.send(
+                chOnce.GetSeriesIdsWithListType,
+                await this.GetSeriesIdsWithListType(list),
+                token
+            )
         )
     }
 

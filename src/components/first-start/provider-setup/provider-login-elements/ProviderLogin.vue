@@ -62,13 +62,9 @@ export default class ProviderLogin extends Vue.with(Props) {
 
 .provider-login-title {
     grid-area: Title;
-    grid-area: Title;
-    grid-area: Title;
 }
 
 .provider-login-credentials {
-    grid-area: Credentials;
-    grid-area: Credentials;
     grid-area: Credentials;
     display: grid;
     grid-template-columns: 1fr;
@@ -79,8 +75,6 @@ export default class ProviderLogin extends Vue.with(Props) {
 }
 
 .provider-login-button {
-    grid-area: Button;
-    grid-area: Button;
     grid-area: Button;
     background-color: green;
     border: none;

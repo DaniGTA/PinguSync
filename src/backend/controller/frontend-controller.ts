@@ -25,7 +25,7 @@ export default class FrontendController {
         // tslint:disable-next-line: no-unused-expression
         new ListController()
         if (webcontents) {
-            this.mainInit()
+            this.mainInit(webcontents)
         }
     }
     public mainInit(webcontents: Electron.WebContents): void {
