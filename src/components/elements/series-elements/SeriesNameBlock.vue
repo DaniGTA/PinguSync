@@ -1,36 +1,34 @@
 <template>
-    <div class="series-name-block-text">
-        <template v-if="name">
+    <Intersect @enter="this.loadSeriesName()">
+        <template>
             {{ name }}
         </template>
-        <template v-else>
-            <q-skeleton type="text" animation="fade" />
-            <q-skeleton type="text" animation="fade" />
-        </template>
-    </div>
+    </Intersect>
 </template>
 
 <script lang="ts">
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import SeriesListViewController from '../../controller/series-list-view-controller'
+import Intersect from 'vue-intersect'
 
 class Props {
-    seriesId!: string
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
-@Options({})
+@Options({
+    components: {
+        Intersect,
+    },
+})
 export default class ProviderImageBlock extends Vue.with(Props) {
     public name = ''
 
-    public async mounted(): Promise<void> {
-        this.name = (await SeriesListViewController.getSeriesNameById(this.seriesId)) ?? ''
+    async loadSeriesName() {
+        try {
+            this.name = (await SeriesListViewController.getSeriesNameById(this.seriesId)) ?? ''
+        } catch (err) {
+            console.error(err)
+        }
     }
 }
 </script>
-
-<style>
-.series-name-block-text {
-    color: #f5eeee;
-    z-index: 100;
-}
-</style>

@@ -1,37 +1,33 @@
 <template>
-    <div v-intersection="onIntersection" class="episode-block">
+    <div class="inline-block w-48 h-32 bg-gray-50 shadow-md m-4 p-2 rounded" v-if="seriesId && episodeIds">
         <div v-if="episode" class="episode div">
-            <q-img class="img" :src="imgUrl">
-                <EpisodeMenu style="top: 8px; right: 8px; float: right" />
-            </q-img>
-            <div class="row justify-between no-margin title div-actions">
-                <div class="col col-md-8 text-left">Episode: {{ getEpisodeNumber() }}</div>
-                <q-badge class="col-3" v-if="duration">{{ duration }}min</q-badge>
-            </div>
             <div class="no-padding no-margin div-actions">
-                <div class="text-h7">{{ getEpisodeTitle() }}</div>
+                <h3 class="">{{ getEpisodeTitle() }}</h3>
             </div>
-            <div class="providers div-actions">
+            <img class="img" :src="imgUrl" />
+            <div class="flex justify-between w-100">
+                <div
+                    class="inline-flex items-center justify-center px-2 py-1 rounded bg-blue-400 m-2 text-xs font-bold text-white"
+                >
+                    Episode: {{ getEpisodeNumber() }}
+                </div>
+                <div
+                    class="inline-flex items-center justify-center px-2 py-1 rounded bg-blue-400 m-2 text-xs font-bold text-white"
+                    v-if="duration"
+                >
+                    {{ duration }}min
+                </div>
+            </div>
+
+            <div class="flex">
                 <template v-for="e of episode">
-                    <div v-if="e.provider" :key="e.id + e.provider" v-on:click="openUrl(e)">
-                        <q-tooltip>{{ e.provider }}</q-tooltip>
-                        <ProviderImageBlock
-                            :provider="{ providerName: e.provider }"
-                            :showText="false"
-                            :size="20"
-                            class="cursor-pointer"
-                        />
+                    <div v-if="e.provider" :key="e.id + e.provider" v-on:click="openUrl(e)" class="cursor-pointer m-1">
+                        <ProviderImageBlock :provider="{ providerName: e.provider }" :showText="false" />
                     </div>
                 </template>
             </div>
         </div>
-        <div v-else class="episode">
-            <q-skeleton class="img" square animation="fade" />
-            <div>
-                <q-skeleton class="number" animation="fade" type="text" />
-                <q-skeleton class="duration" animation="fade" type="QBadge" />
-            </div>
-        </div>
+        <div v-else class="episode"></div>
     </div>
 </template>
 
@@ -39,15 +35,15 @@
 import Episode from '@backend/controller/objects/meta/episode/episode'
 import EpisodeThumbnail from '@backend/controller/objects/meta/episode/episode-thumbnail'
 import EpisodeTitle from '@backend/controller/objects/meta/episode/episode-title'
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 
 import EpisodeController from '../../controller/episode-controller'
 import ProviderImageBlock from '../provider-elements/ProviderImageBlock.vue'
 import EpisodeMenu from './EpisodeMenu.vue'
 
 class Props {
-    episodeIds!: string[]
-    seriesId!: string
+    episodeIds: WithDefault<string[]> = prop<string[]>({ default: [] })
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
 @Options({
@@ -61,9 +57,9 @@ export default class SeriesDescriptionBlock extends Vue.with(Props) {
 
     public duration: number | null = null
     public imgUrl: string | null = null
-    private visible = false
+    private visible = true
 
-    created(): void {
+    mounted(): void {
         this.loadEpisodeIds()
     }
 
@@ -128,22 +124,3 @@ export default class SeriesDescriptionBlock extends Vue.with(Props) {
     }
 }
 </script>
-
-<style scoped lang="scss">
-.episode-block {
-    display: inline-block;
-}
-
-.episode {
-    max-width: 225px;
-    margin: 5px;
-}
-.title {
-    padding: 5px;
-    margin: 0px;
-}
-.img {
-    width: 225px;
-    height: 100px;
-}
-</style>

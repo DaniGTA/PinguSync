@@ -1,7 +1,11 @@
 <template>
-    <div class="main-header-title-box">
-        <div class="main-header-title" @click="openDefaultSite()">PinguSync</div>
-        <q-badge color="primary"><VersionText class="main-header-title-version-text"/></q-badge>
+    <div class="m-2">
+        <h2 class="cursor-pointer" @click="openDefaultSite()">PinguSync</h2>
+        <div
+            class="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs font-bold leading-none text-white bg-green-600 rounded-full"
+        >
+            <VersionText />
+        </div>
     </div>
 </template>
 
@@ -26,15 +30,3 @@ export default class MainHeaderTitle extends Vue {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.main-header-title-box {
-    margin: 5px;
-}
-
-.main-header-title {
-    cursor: pointer;
-    font-size: 24px;
-    color: $primary-text;
-}
-</style>

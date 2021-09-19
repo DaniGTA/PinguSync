@@ -1,15 +1,15 @@
 <template>
-    <div once transition="scale">
+    <div>
         <i class="fas fa-sync fa-5x sync-symbol"></i>
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import BlockListEntrySyncStatusHover from './BlockListEntrySyncStatusHover.vue'
 
 class Props {
-    seriesId!: string
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
 @Options({

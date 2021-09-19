@@ -1,8 +1,8 @@
 <template>
-    <q-header reveal class="main-header">
+    <div reveal class="w-100 flex h-16 bg-white shadow-md">
         <HeaderTitle />
         <ProviderList />
-    </q-header>
+    </div>
 </template>
 
 <script lang="ts">
@@ -23,7 +23,6 @@ export default class MainHeader extends Vue {}
 .main-header {
     width: 100%;
     height: 70px;
-    background-color: $primary-background;
     display: flex;
 }
 </style>

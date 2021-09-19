@@ -1,8 +1,8 @@
 <template>
-    <div class="list-view">
-        <div v-for="item of seriesIds" :key="item.listType">
+    <div v-if="loaded && store">
+        <div v-for="item of seriesIdList" :key="item.listType">
             <template v-if="true">
-                <BlockView v-model:items="item.ids" :title="item.listType" />
+                <BlockView :items="[...item.ids]" :title="item.listType" />
             </template>
             <template v-else>
                 <SmallList />
@@ -16,8 +16,7 @@ import { Vue, Options } from 'vue-class-component'
 import SmallList from './list-view/SmallList.vue'
 import BlockView from './block-view/BlockList.vue'
 import SeriesListViewController from '../../controller/series-list-view-controller'
-import IdListWithName from '../../controller/model/id-list-with-list-type'
-import { ListType } from '@backend/controller/settings/models/provider/list-types'
+import { Store, useStore } from '@/store'
 
 @Options({
     components: {
@@ -26,21 +25,17 @@ import { ListType } from '@backend/controller/settings/models/provider/list-type
     },
 })
 export default class ListViewSwitcher extends Vue {
-    private currentLoadedListType: ListType = ListType.ALL
-    get seriesIds(): IdListWithName[] {
-        return SeriesListViewController.ids
+    private store?: Store
+    private loaded = false
+    async mounted(): Promise<void> {
+        this.store = useStore()
+        const controller = new SeriesListViewController(this.store)
+        controller.getSeriesIdsFromCurrentlySelectedListType()
+        this.loaded = true
     }
-    created(): void {
-        void SeriesListViewController.getSeriesIdsFromCurrentlySelectedListType()
+
+    get seriesIdList() {
+        return this.store?.state.seriesList.seriesIdList ?? []
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.list-view {
-    background: $primary-background;
-    margin: 0px 25px;
-    height: calc(100% - 140px);
-    overflow-y: scroll;
-}
-</style>

@@ -1,23 +1,22 @@
 <template>
-    <div class="hover" @click.prevent>
-        <q-separator />
+    <div class="bg-gray-800 flex" @click.prevent>
         <ShowStatusOfSingleProvider
             v-for="provider of providers"
             :provider="provider"
+            :seriesId="seriesId"
             :key="provider.providerName + 'syncHover'"
         />
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import ProviderController from '../../../../../controller/provider-controller'
 import ShowStatusOfSingleProvider from './provider-sync-status/ShowStatusOfSingleProvider.vue'
-import SeriesHoverController from './../../../../../controller/series-hover-controller'
 import { ListProviderInterface } from '../../../../../controller/model/list-provider-interface'
 
 class Props {
-    seriesId!: string
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
 @Options({
@@ -35,8 +34,6 @@ export default class BlockListEntrySyncStatusHover extends Vue.with(Props) {
 
     created(): void {
         this.loadProviders()
-        console.log('Hover entry: ' + this.seriesId)
-        SeriesHoverController.currentlyHoveringSeriesId = this.seriesId
     }
 
     async loadProviders(): Promise<void> {
@@ -45,12 +42,3 @@ export default class BlockListEntrySyncStatusHover extends Vue.with(Props) {
     }
 }
 </script>
-
-<style scoped>
-.hover {
-    height: 205px;
-    display: flex;
-    margin: 15px;
-    z-index: 10;
-}
-</style>

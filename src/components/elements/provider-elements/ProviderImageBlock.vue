@@ -1,7 +1,7 @@
 <template>
     <img
         v-if="provider"
-        class="w-auto h-full"
+        class="w-6 h-6"
         :src="require('@/assets/' + getName().toLowerCase() + '-logo.png')"
         alt="episode image"
     />

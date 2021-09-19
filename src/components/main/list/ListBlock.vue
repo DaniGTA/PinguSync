@@ -1,8 +1,8 @@
 <template>
-    <q-page class="list-block-view">
+    <div class="h-100">
         <ListHeader />
         <ListViewSwitcher />
-    </q-page>
+    </div>
 </template>
 
 <script lang="ts">
@@ -17,9 +17,3 @@ import ListViewSwitcher from './ListViewSwitcher.vue'
 })
 export default class ListBlock extends Vue {}
 </script>
-
-<style>
-.list-block-view {
-    height: 100%;
-}
-</style>

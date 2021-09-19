@@ -26,6 +26,8 @@
     "gitart-vue-dialog": "^1.0.3",
     "got": "^11.8.2",
     "graphql": "^15.5.1",
+    "graphql-tag": "^2.12.5",
+    "idb-keyval": "^6.0.1",
     "is-online": "^9.0.1",
     "jest": "^27.2.0",
     "kitsu": "^10.0.0-alpha.14",
@@ -39,7 +41,11 @@
     "vue": "^3.2.4",
     "vue-class-component": "8.0.0-rc.1",
     "vue-i18n": "^9.2.0-beta.3",
+    "vue-intersect": "^3.0.0",
     "vue-router": "^4.0.11",
+    "vue3-lazyload": "^0.2.2-beta",
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.0.0",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {

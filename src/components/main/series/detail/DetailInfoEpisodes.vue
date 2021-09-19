@@ -1,5 +1,5 @@
 <template>
-    <div class="episode-list">
+    <div class="episode-list" v-if="seriesId">
         <EpisodeBlock
             v-for="episodeId of episodeIds"
             :key="episodeId.length + '-entry'"
@@ -10,12 +10,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import EpisodeBlock from '../../../elements/episode-elements/EpisodeBlock.vue'
 import EpisodeController from '../../../controller/episode-controller'
 
 class Props {
-    seriesId!: string
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
 @Options({

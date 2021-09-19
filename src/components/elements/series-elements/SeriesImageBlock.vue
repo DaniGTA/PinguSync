@@ -1,35 +1,36 @@
 <template>
-    <div class="series-image-block">
-        <q-img class="series-image-block" :src="url" transition="fade" @error="onImageError">
-            <template v-slot:loading>
-                <q-skeleton square width="100%" height="100%" animation="fade" />
-            </template>
-        </q-img>
+    <div v-if="seriesId">
+        <Intersect @enter="loadImg()">
+            <img class="h-100 w-100 shadow-md rounded" :src="url" />
+        </Intersect>
     </div>
 </template>
 
 <script lang="ts">
 import { FailedCover } from '@backend/controller/frontend/series/model/failed-cover'
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import SeriesListViewController from '../../controller/series-list-view-controller'
+import Intersect from 'vue-intersect'
 
 class Props {
-    seriesId!: string
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
-@Options({})
+@Options({
+    components: {
+        Intersect,
+    },
+})
 export default class ProviderImageBlock extends Vue.with(Props) {
     public url = ''
     private failedUrls: string[] = []
 
-    public mounted(): void {
-        this.loadImg()
-    }
-
     private async loadImg(): Promise<void> {
-        const result = (await SeriesListViewController.getSeriesCoverUrlById(this.seriesId)) ?? ''
-        if (!this.failedUrls.find((x) => x == result)) {
-            this.url = result
+        if (!this.url) {
+            const result = (await SeriesListViewController.getSeriesCoverUrlById(this.seriesId)) ?? ''
+            if (!this.failedUrls.find(x => x == result)) {
+                this.url = result
+            }
         }
     }
 
@@ -50,19 +51,7 @@ export default class ProviderImageBlock extends Vue.with(Props) {
     }
 
     private async wait(ms = 500): Promise<void> {
-        await new Promise((resolve) => setTimeout(resolve, ms))
+        await new Promise(resolve => setTimeout(resolve, ms))
     }
 }
 </script>
-
-<style>
-.series-image-block {
-    height: 100%;
-    width: 100%;
-}
-
-.series-image-block img {
-    height: 100%;
-    width: 100%;
-}
-</style>

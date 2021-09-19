@@ -6,11 +6,11 @@
 
 <script lang="ts">
 import Overview from '@backend/controller/objects/meta/overview'
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import SeriesListViewController from '../../controller/series-list-view-controller'
 
 class Props {
-    seriesId!: string
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
 @Options({})

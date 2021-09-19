@@ -1,17 +1,17 @@
 <template>
-    <div>
+    <div v-if="seriesId && providers">
         <ShowStatusOfSingleProvider v-for="provider of providers" :provider="provider" :id="seriesId" :key="provider" />
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import ShowStatusOfSingleProvider from './detail-info-provider-sync-status/ShowStatusOfSingleProvider.vue'
 import ProviderController from '../../../controller/provider-controller'
 import { ListProviderInterface } from '../../../controller/model/list-provider-interface'
 
 class Props {
-    seriesId!: string
+    seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
 @Options({

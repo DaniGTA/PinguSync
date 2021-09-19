@@ -1,5 +1,5 @@
 <template>
-    <div class="row provider-status">
+    <div class="row provider-status" v-if="id">
         <ProviderImageBlock class="col provider-img" :provider="provider" :showText="false" size="25" />
         <div class="col justify-center status">
             <i v-if="result && result.isSync" color="green" class="fas fa-check success-status"></i>

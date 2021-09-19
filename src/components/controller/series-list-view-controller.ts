@@ -8,15 +8,29 @@ import Overview from '../../backend/controller/objects/meta/overview'
 import ApiRequestController from './api-request-controller'
 
 import { SearchQuery } from '../../backend/controller/frontend/series/model/search-query'
+import { Store } from '@/store'
+import { SeriesListMutationTypes } from '@/store/modules/series-list/mutations-types'
 
 export default class SeriesListViewController {
-    static selectedListType: ListType = ListType.ALL
-    static ids: IdListWithListType[] = []
-    static get GET_selectedListType(): ListType {
-        return this.selectedListType
+    get ids(): IdListWithListType[] {
+        return this.store.state.seriesList.seriesIdList
     }
 
-    public static async getSeriesIdsFromListTypes(listTypes: ListType[]): Promise<IdListWithListType[]> {
+    set ids(ids: IdListWithListType[]) {
+        this.store.commit(SeriesListMutationTypes.SET_SERIES_ID_LIST, ids)
+    }
+
+    get selectedListType(): ListType {
+        return this.store.getters.getSelectedListType
+    }
+
+    set selectedListType(value: ListType) {
+        console.log(`SetList ${value}`)
+        this.store.commit(SeriesListMutationTypes.SET_SERIES_LIST_TYPE, value)
+    }
+    constructor(private store: Store) {}
+
+    public async getSeriesIdsFromListTypes(listTypes: ListType[]): Promise<IdListWithListType[]> {
         console.log(`Get Series from listType: ${listTypes.length}`)
         const idListsWN: IdListWithListType[] = []
         for (const listType of listTypes) {
@@ -28,12 +42,7 @@ export default class SeriesListViewController {
         return idListsWN
     }
 
-    static SET_selectedListType(value: ListType): void {
-        console.log(`SetList ${value}`)
-        this.selectedListType = value
-    }
-
-    public static async getSeriesIdsFromCurrentlySelectedListType(): Promise<IdListWithListType[]> {
+    public async getSeriesIdsFromCurrentlySelectedListType(): Promise<IdListWithListType[]> {
         const currentSelectedType = this.selectedListType
         console.log(`GetList: ${currentSelectedType}`)
         if (currentSelectedType == ListType.ALL) {
@@ -41,24 +50,20 @@ export default class SeriesListViewController {
                 .map(x => Number.parseInt(x) as ListType)
                 .filter(x => x !== ListType.ALL)
                 .reverse()
-            this.ids = await SeriesListViewController.getSeriesIdsFromListTypes(allListTypesWithoutAll)
+            this.ids = await this.getSeriesIdsFromListTypes(allListTypesWithoutAll)
         } else {
-            this.ids = await SeriesListViewController.getSeriesIdsFromListTypes([currentSelectedType])
+            this.ids = await this.getSeriesIdsFromListTypes([currentSelectedType])
         }
         console.log(`ListSite: ${this.ids.length}`)
         return this.ids
     }
 
-    public static async changeListSelection(newSelection: ListType): Promise<void> {
-        this.SET_selectedListType(newSelection)
+    public async changeListSelection(newSelection: ListType): Promise<void> {
+        this.selectedListType = newSelection
         await this.getSeriesIdsFromCurrentlySelectedListType()
     }
 
-    public static async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
-        return await ApiRequestController.getDataWithId(chOnce.GetPreferedCoverUrlBySeriesId, id)
-    }
-
-    public static async search(query: SearchQuery): Promise<void> {
+    public async search(query: SearchQuery): Promise<void> {
         if (query.searchString) {
             await this.loadSearchResultToIdList(query)
         } else {
@@ -66,17 +71,21 @@ export default class SeriesListViewController {
         }
     }
 
-    public static async loadSearchResultToIdList(query: SearchQuery): Promise<void> {
+    public async loadSearchResultToIdList(query: SearchQuery): Promise<void> {
         const result: string[] = await WorkerController.getOnce<string[]>(chOnce.SearchSeries, query)
         this.ids = [{ ids: result, listType: ListType.SearchResult }]
     }
 
+    public static async getSeriesCoverUrlById(id: string): Promise<string | undefined> {
+        return ApiRequestController.getDataWithId(chOnce.GetPreferedCoverUrlBySeriesId, id)
+    }
+
     public static async getSeriesNameById(id: string): Promise<string | undefined> {
-        return await ApiRequestController.getDataWithId(chOnce.GetPreferedNameBySeriesId, id)
+        return ApiRequestController.getDataWithId(chOnce.GetPreferedNameBySeriesId, id)
     }
 
     public static async getSeriesDescriptionById(id: string): Promise<Overview | undefined> {
-        return await ApiRequestController.getDataWithId(chOnce.GetOverviewBySeriesId, id)
+        return ApiRequestController.getDataWithId(chOnce.GetOverviewBySeriesId, id)
     }
 
     public static sendFailedCover(failedCover: FailedCover): void {

@@ -1,12 +1,15 @@
 <template>
-    <div id="version">
-        <button @click="installUpdate()" class="update" v-if="updateReady">
+    <div class="m-1 text-gray-400 absolute bottom-0 right-0 text-left">
+        <button @click="installUpdate()" class="text-green-600 inline-block" v-if="updateReady">
             <i class="fas fa-download"></i></button
         ><VersionText />
     </div>
 </template>
 
 <script lang="ts">
+import WorkerController from '@/backend/communication/ipc-renderer-controller'
+import { chListener } from '@/backend/communication/listener-channels'
+import { chSend } from '@/backend/communication/send-only-channels'
 import { Vue, Options } from 'vue-class-component'
 import VersionText from './VersionText.vue'
 
@@ -17,11 +20,13 @@ export default class VersionView extends Vue {
     public updateReady = false
     constructor() {
         super()
-        //TODO on Update Ready
+        WorkerController.on(chListener.OnUpdateReady, () => {
+            this.updateReady = true
+        })
     }
 
     public installUpdate(): void {
-        window.electron.controller.appController.updateController.isUpdateAvailable()
+        WorkerController.send(chSend.QuitAndInstall)
     }
 }
 </script>
@@ -35,12 +40,5 @@ export default class VersionView extends Vue {
     bottom: 0;
     right: 0;
     width: fit-content;
-}
-
-.update {
-    width: fit-content;
-    display: inline-block;
-    color: green;
-    margin: 0px 5px;
 }
 </style>

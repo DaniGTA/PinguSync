@@ -45,7 +45,6 @@ export default class ProviderEntry extends Vue.with(Props) {
     isProviderLoggedIn: boolean | null = null
 
     openDialog(): void {
-        console.log('Open dialog')
         this.isLoginDialogOpen = true
     }
 

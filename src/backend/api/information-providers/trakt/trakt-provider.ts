@@ -279,7 +279,7 @@ export default class TraktProvider extends ListProvider {
         throw new Error('cant login user with credentials')
     }
 
-    private async traktRequest<T>(url: string, method: Method = 'GET', body = ''): Promise<T> {
+    private async traktRequest<T>(url: string, method: Method = 'GET', body?: any): Promise<T> {
         await this.waitUntilItCanPerfomNextRequest()
         this.informAWebRequest()
         logger.info('[Trakt] Start WebRequest ♗')

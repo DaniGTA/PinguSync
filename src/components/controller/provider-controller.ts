@@ -16,9 +16,11 @@ export default class ProviderController {
     }
 
     public static async isProviderSync(data: GetSyncStatus): Promise<GetSyncStatusRecieved> {
-        WorkerController.send(chOnce.GetSyncStatusOfProviderFromASeries, data)
+        const token = WorkerController.getNewTrackingToken()
+        WorkerController.send(chOnce.GetSyncStatusOfProviderFromASeries, data, token)
         return WorkerController.once<GetSyncStatusRecieved>(
-            chOnce.GetSyncStatusOfProviderFromASeries + data.providerName
+            chOnce.GetSyncStatusOfProviderFromASeries + data.providerName,
+            token
         )
     }
 

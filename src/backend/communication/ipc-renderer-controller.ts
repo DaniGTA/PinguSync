@@ -41,7 +41,7 @@ export default class WorkerController {
         if (this.getIpcRenderer().listenerCount(channel) !== 0) {
             console.error(`Multi listeners on channel: ${channel} :${this.getIpcRenderer().listenerCount(channel)}`)
         }
-        const trackingToken = (+new Date()).toString(36).slice(-5)
+        const trackingToken = this.getNewTrackingToken()
         const promise = this.once<T>(channel, trackingToken)
         this.send(channel, sendData, trackingToken)
         return promise
@@ -52,15 +52,15 @@ export default class WorkerController {
             try {
                 console.log('info', `frontend list once: ${channel}`)
                 this.getIpcRenderer().once(channel, (event: Electron.IpcRendererEvent, dataPackage: DataPackage<T>) => {
-                    console.log(
-                        'info',
-                        `frontend recieved: ${channel} (requestedToken: ${trackingToken ??
-                            ''}) (dataToken: ${dataPackage.trackingToken ?? ''})`
-                    )
-                    console.debug('recieved data: ')
-                    console.debug(dataPackage)
                     if (trackingToken !== undefined) {
                         if (trackingToken == dataPackage.trackingToken) {
+                            console.log(
+                                'info',
+                                `frontend recieved: ${channel} (requestedToken: ${trackingToken ??
+                                    ''}) (dataToken: ${dataPackage.trackingToken ?? ''})`
+                            )
+                            console.debug('recieved data: ')
+                            console.debug(dataPackage)
                             resolve(dataPackage.data as T)
                         } else {
                             this.once<T>(channel, trackingToken)
@@ -68,6 +68,13 @@ export default class WorkerController {
                                 .catch(x => reject(x))
                         }
                     } else {
+                        console.log(
+                            'info',
+                            `frontend recieved: ${channel} (requestedToken: ${trackingToken ??
+                                ''}) (dataToken: ${dataPackage.trackingToken ?? ''})`
+                        )
+                        console.debug('recieved data: ')
+                        console.debug(dataPackage)
                         resolve(dataPackage.data as T)
                     }
                 })
@@ -78,5 +85,9 @@ export default class WorkerController {
                 reject(err)
             }
         })
+    }
+
+    public static getNewTrackingToken(): string {
+        return (+new Date()).toString(36).slice(-5)
     }
 }

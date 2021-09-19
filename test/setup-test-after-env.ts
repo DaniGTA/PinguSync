@@ -12,7 +12,6 @@ import ProviderDataListManager from '../src/backend/controller/provider-controll
 import SettingsManager from '../src/backend/controller/settings/settings-manager'
 import MainListSaver from '../src/backend/controller/main-list-manager/main-list-saver'
 import AnimeOfflineDatabaseProviderData from '../src/backend/api/mapping-providers/anime-offline-database/anime-offline-database-provider-data'
-import 'threads/register'
 import logger from '../src/backend/logger/logger'
 
 // tslint:disable: no-string-literal

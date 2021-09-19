@@ -14,6 +14,7 @@
 </template>
 
 <script lang="ts">
+import { useStore } from '@/store'
 import { SearchQuery } from '@backend/controller/frontend/series/model/search-query'
 import { Vue, Options } from 'vue-class-component'
 import SeriesListViewController from '../../../controller/series-list-view-controller'
@@ -23,45 +24,10 @@ import SeriesListViewController from '../../../controller/series-list-view-contr
 })
 export default class ListSearch extends Vue {
     private searchText: string = ''
+    private store = useStore()
     search(): void {
         const searchQuery: SearchQuery = { searchString: this.searchText }
-        SeriesListViewController.search(searchQuery)
+        new SeriesListViewController(this.store).search(searchQuery)
     }
 }
 </script>
-
-<style scoped lang="scss">
-.list-search {
-    display: flex;
-    background-color: $primary-background;
-    border-left: solid $primary-background 2px;
-    min-width: 300px;
-    height: 40px;
-    align-items: center;
-    margin: 10px;
-}
-
-.list-search-logo {
-    color: $second-text;
-    margin: 5px;
-}
-
-.list-search-input {
-    border: none;
-    border-bottom: solid $primary-background 3px;
-    background-color: $primary-background;
-    font-size: 16px;
-    color: $primary-text;
-    min-width: 265px;
-    outline: none;
-    height: inherit;
-}
-
-.q-field__native {
-    color: white;
-}
-
-.list-search-input input {
-    color: white;
-}
-</style>

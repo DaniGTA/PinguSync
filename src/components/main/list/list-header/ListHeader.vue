@@ -6,7 +6,7 @@
 
         <div class="list-header-right">
             <ListSearch />
-            <q-btn color="black" label="Black">Test</q-btn>
+            <button color="black" label="Black">Test</button>
             <ListListTypes />
         </div>
     </div>
