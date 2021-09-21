@@ -13,11 +13,18 @@ import ProviderNameManager from '../../controller/provider-controller/provider-m
 import logger from '../../logger/logger'
 import EpisodeStatsHelper from '../episode-helper/episode-stats-helper'
 import ProviderHelper from './provider-helper'
+import DownloadProviderLocalDataHelper from './provider-info-downloader/download-provider-local-data-helper'
 import DownloadProviderLocalDataToTargetHelper from './provider-info-downloader/download-provider-local-data-to-target-helper'
 import ProviderLocalDataWithSeasonInfo from './provider-info-downloader/provider-data-with-season-info'
 import ProviderListHelper from './provider-list-helper'
 
 export default class ProviderInfoHelper {
+    public static async refreshProviderInfo(series: Series, provider: ExternalInformationProvider): Promise<Series> {
+        const result = await DownloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
+        series.addProviderDatasWithSeasonInfos(...result.getAllProvidersWithSeason())
+        return series
+    }
+
     public static async requestAllInfoProviderInfos(
         series: Series,
         force: boolean,

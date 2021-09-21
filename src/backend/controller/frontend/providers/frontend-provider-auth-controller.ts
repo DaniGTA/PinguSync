@@ -11,6 +11,7 @@ import { chOnce } from '../../../communication/channels'
 import { chListener } from '../../../communication/listener-channels'
 import logger from '../../../logger/logger'
 import { Token } from 'graphql'
+import OAuthListProvider from '@/backend/api/provider/o-auth-list-provider'
 
 export default class FrontendProviderAuthController {
     /**
@@ -79,7 +80,7 @@ export default class FrontendProviderAuthController {
 
     private async oAuthLogin(providerName: string, token?: string): Promise<void> {
         const provider = ProviderList.getProviderInstanceByProviderName(providerName)
-        if (provider instanceof ListProvider && provider.hasOAuthLogin) {
+        if (provider instanceof OAuthListProvider && provider.hasOAuthLogin) {
             shell.openExternal(provider.getTokenAuthUrl())
             await new OAuthController(provider).isOAuthFlowSuccessfull()
             this.sendLoginStatus(provider, token)

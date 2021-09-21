@@ -16,11 +16,11 @@ export default abstract class ListProvider extends ExternalInformationProvider {
      */
     public hasDefaultLogin = true
     /**
-     * This will allow access to the function: addOAuthCode();
+     * Use @link OAuthListProvider to use OAuthLogin
      * @memberof ListProvider
      */
+    public hasOAuthLogin = false
 
-    public abstract hasOAuthLogin: boolean
     /**
      * Simple user data container to save user information like token, username, userimage ...
      *
@@ -47,10 +47,7 @@ export default abstract class ListProvider extends ExternalInformationProvider {
      */
     public abstract getAllSeries(disableCache?: boolean): Promise<MultiProviderResult[]>
     public abstract logInUser(pass: string, username?: string): Promise<boolean>
-    /**
-     * Process Recieved OAUth token.
-     */
-    public abstract addOAuthCode(code: string): Promise<boolean>
+
     /**
      * Simple boolean check if the user is logged in.
      */
@@ -63,10 +60,6 @@ export default abstract class ListProvider extends ExternalInformationProvider {
      * Get User's username in a simple string format.
      */
     public abstract getUsername(): Promise<string>
-    /**
-     * OAuth 2.0 Token Auth URL.
-     */
-    public abstract getTokenAuthUrl(): string
     /**
      *
      * @param anime

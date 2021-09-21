@@ -9,7 +9,6 @@ import ProviderNameManager from '../../../controller/provider-controller/provide
 import WebRequestManager from '../../../controller/web-request-manager/web-request-manager'
 import logger from '../../../logger/logger'
 import ExternalInformationProvider from '../../provider/external-information-provider'
-import ListProvider from '../../provider/list-provider'
 import MultiProviderResult from '../../provider/multi-provider-result'
 import TVDBProvider from '../tvdb/tvdb-provider'
 import { FullShowInfo } from './objects/fullShowInfo'
@@ -28,8 +27,12 @@ import { EpisodeHistoryUpdate } from './objects/episodes'
 import { InformationTrustRank } from '../../provider/information-trust-rank'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
 import { Method } from 'got/dist/source'
+import OAuthListProvider from '../../provider/o-auth-list-provider'
+import { TraktOAuthResponse } from './objects/traktOAuthResponse'
+import OAuth from '../../provider/auth/o-auth'
+import ProviderUserList from '@/backend/controller/objects/provider-user-list'
 
-export default class TraktProvider extends ListProvider {
+export default class TraktProvider extends OAuthListProvider {
     private static instance: TraktProvider
     public supportedMediaTypes: MediaType[] = [MediaType.ANIME, MediaType.MOVIE, MediaType.SERIES, MediaType.SPECIAL]
     public supportedOtherProvider: Array<new () => ExternalInformationProvider> = [TVDBProvider]
@@ -97,8 +100,8 @@ export default class TraktProvider extends ListProvider {
         await this.traktRequest<Movies>('https://api.trakt.tv/sync/history', 'POST', JSON.stringify(episodeUpdates))
     }
 
-    public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
-        throw new Error('Method not implemented.')
+    public getAllLists(): Promise<ProviderUserList[]> {
+        throw new Error('Trakt dont have custom lists')
     }
 
     public async getUsername(): Promise<string> {
@@ -115,9 +118,8 @@ export default class TraktProvider extends ListProvider {
         this.userData.removeTokens()
     }
 
-    public async addOAuthCode(code: string): Promise<boolean> {
-        this.informAWebRequest()
-        const response = await WebRequestManager.request<any>(
+    protected async addOAuthCode(code: string): Promise<OAuth> {
+        const response = await WebRequestManager.request<string>(
             new RequestBundle('https://api.trakt.tv/oauth/token', {
                 headers: {
                     Accept: 'application/json',
@@ -133,14 +135,18 @@ export default class TraktProvider extends ListProvider {
                 method: 'POST',
             })
         )
-
-        if (response.body.access_token) {
-            const body = response.body
-            this.userData.setTokens(body.access_token, body.refresh_token, body.expires_in)
-            await this.getUserInfo()
-            return true
+        const typedResponse = JSON.parse(response.body) as TraktOAuthResponse
+        if (typedResponse.access_token) {
+            return traktConverter.convertOAuthResponse(typedResponse)
         }
-        return false
+        throw new Error('[Trakt] Failed to get access_token')
+    }
+
+    public getOAuthData(): OAuth {
+        if (this.userData.oAuth) {
+            return this.userData.oAuth
+        }
+        throw new Error('[Trakt] no o-auth data')
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
@@ -223,8 +229,9 @@ export default class TraktProvider extends ListProvider {
     }
     // eslint-disable-next-line @typescript-eslint/require-await
     public async isUserLoggedIn(): Promise<boolean> {
-        return this.userData.accessToken !== ''
+        return this.userData.oAuth !== undefined
     }
+
     public async getAllSeries(disableCache = false): Promise<MultiProviderResult[]> {
         logger.info('[Request] -> Trakt -> AllSeries')
         if (this.userData.list != null && this.userData.list.length !== 0 && !disableCache) {
@@ -284,11 +291,18 @@ export default class TraktProvider extends ListProvider {
         this.informAWebRequest()
         logger.info('[Trakt] Start WebRequest ♗')
 
+        let accessToken
+        try {
+            accessToken = await this.getAccessToken()
+        } catch (err) {
+            accessToken = ''
+        }
+
         const response = await WebRequestManager.request<string>(
             new RequestBundle(url, {
                 body,
                 headers: {
-                    Authorization: `Bearer ${this.userData.accessToken ?? ''}`,
+                    Authorization: `Bearer ${accessToken ?? ''}`,
                     'Content-Type': 'application/json',
                     'trakt-api-key': this.getApiId(),
                     'trakt-api-version': '2',
@@ -298,8 +312,7 @@ export default class TraktProvider extends ListProvider {
         )
 
         if (response.statusCode === 200 || response.statusCode === 201) {
-            const data: T = JSON.parse(response.body) as T
-            return data
+            return JSON.parse(response.body) as T
         } else if (response.statusMessage === 'Unauthorized' && response.statusCode === 401) {
             this.userData.removeTokens()
             logger.error('[Trakt] User is no longer logged in')
@@ -309,5 +322,38 @@ export default class TraktProvider extends ListProvider {
             logger.error(response.body)
             throw new Error(`[Trakt] Status code error: ${response.statusCode}`)
         }
+    }
+
+    protected async refreshAccessToken() {
+        const response = await WebRequestManager.request<string>(
+            new RequestBundle('https://api.trakt.tv/oauth/token', {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    refresh_token: this.userData.oAuth?.refreshToken,
+                    client_id: this.getApiId(),
+                    client_secret: this.getApiSecret(),
+                    grant_type: 'refresh_token',
+                    redirect_uri: this.redirectUri,
+                }),
+                method: 'POST',
+            })
+        )
+        const typedResponse = JSON.parse(response.body ?? '') as TraktOAuthResponse
+
+        if (typedResponse.access_token) {
+            return traktConverter.convertOAuthResponse(typedResponse)
+        } else if (response.statusCode === 401) {
+            throw new Error('[Trakt] refresh_token is invalid... login out user')
+        } else {
+            throw new Error('[Trakt] failed to get refresh_token | statusCode: ' + response.statusCode)
+        }
+    }
+
+    public setOAuthData(oAuth: OAuth): void {
+        this.userData.setTokens(oAuth)
+        this.getUserInfo()
     }
 }

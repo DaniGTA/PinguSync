@@ -34,8 +34,8 @@ export default class MalProvider extends ListProvider {
     constructor() {
         super()
         this.userData = new MalUserData()
-        if (this.userData.accessToken) {
-            const token = Mal.MalToken.fromJsonString(this.userData.accessToken)
+        if (this.userData.loginData) {
+            const token = Mal.MalToken.fromJsonString(this.userData.loginData)
             MalProvider.currentAcount = this.malAuth.loadToken(token)
         }
     }
@@ -180,7 +180,7 @@ export default class MalProvider extends ListProvider {
     }
     // eslint-disable-next-line @typescript-eslint/require-await
     public async isUserLoggedIn(): Promise<boolean> {
-        if (this.userData.accessToken) {
+        if (this.userData.loginData) {
             return true
         }
         return false

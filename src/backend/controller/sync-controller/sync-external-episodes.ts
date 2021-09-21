@@ -8,6 +8,7 @@ import logger from '../../logger/logger'
 import listHelper from '../../helpFunctions/list-helper'
 import { ProviderInfoStatus } from '../provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import MainListAdder from '../main-list-manager/main-list-adder'
+import ProviderInfoHelper from '@/backend/helpFunctions/provider/provider-info-helper'
 
 export default class SyncExternalEpisodes {
     private static plannedJobList: SyncJob[] = []
@@ -69,6 +70,8 @@ export default class SyncExternalEpisodes {
         )
         if (allEpisodesThatNeedSync.length !== 0) {
             await providerInstance.markEpisodeAsWatched(allEpisodesThatNeedSync)
+            series = await ProviderInfoHelper.refreshProviderInfo(series, providerInstance)
+            new MainListAdder().addSeriesWithoutCleanUp(series)
         }
     }
 

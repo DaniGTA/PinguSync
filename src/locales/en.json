@@ -35,6 +35,19 @@
       "loading": "Loading...",
       "logged-in": "Logged in",
       "logged-out": "Logged out"
+    },
+    "Series": {
+      "Description": "Description",
+      "Sync": {
+        "NoData": "Data not loaded from Provider"
+      },
+      "Episode": {
+        "Status": {
+          "Watched": "Watched"
+        },
+        "Name": "Episode",
+        "Time": "min"
+      }
     }
   }
 }

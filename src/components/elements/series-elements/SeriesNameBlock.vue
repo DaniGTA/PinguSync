@@ -1,9 +1,5 @@
 <template>
-    <Intersect @enter="this.loadSeriesName()">
-        <template>
-            {{ name }}
-        </template>
-    </Intersect>
+    {{ name }}
 </template>
 
 <script lang="ts">
@@ -22,6 +18,10 @@ class Props {
 })
 export default class ProviderImageBlock extends Vue.with(Props) {
     public name = ''
+
+    mounted() {
+        this.loadSeriesName()
+    }
 
     async loadSeriesName() {
         try {

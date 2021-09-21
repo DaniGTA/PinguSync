@@ -11,5 +11,6 @@
     "i18n-ally.sourceLanguage": "de",
     "discord.enabled": true,
     "jest.jestCommandLine": "jest",
-    "eslint.format.enable": false
+    "eslint.format.enable": false,
+    "i18n-ally.keystyle": "nested"
 }

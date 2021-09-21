@@ -27,8 +27,24 @@ import Episode from '../../../controller/objects/meta/episode/episode'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
 import { Method } from 'got/dist/source'
+import OAuthListProvider from '../../provider/o-auth-list-provider'
+import OAuth from '../../provider/auth/o-auth'
+import { OAuthTokenType } from '../../provider/auth/o-auth-token-type'
 
-export default class SimklProvider extends ListProvider {
+export default class SimklProvider extends OAuthListProvider {
+    public setOAuthData(oAuth: OAuth): void {
+        this.userData.oAuth = oAuth
+        this.userData.saveData()
+    }
+    public getOAuthData(): OAuth {
+        if (this.userData.oAuth) {
+            return this.userData.oAuth
+        }
+        throw new Error('[Simkl] no o auth data')
+    }
+    protected refreshAccessToken(): Promise<OAuth> {
+        throw new Error('Method not implemented.')
+    }
     public getAllLists(): Promise<import('../../../controller/objects/provider-user-list').default[]> {
         throw new Error('Method not implemented.')
     }
@@ -68,16 +84,14 @@ export default class SimklProvider extends ListProvider {
 
     public async markEpisodeAsWatched(episode: Episode[]): Promise<void> {}
 
-    public async addOAuthCode(code: string): Promise<boolean> {
+    public async addOAuthCode(code: string): Promise<OAuth> {
         const result = await this.simklRequest<CodeResponse>(
             `${this.apiUrl}oauth/pin/${code}?client_id=${this.getApiId() ?? ''}`
         )
         if (result.access_token) {
-            this.userData.setAccessToken(result.access_token)
-            return true
+            return new OAuth(result.access_token, OAuthTokenType.BEARER)
         }
-
-        return false
+        throw new Error('[Simkl] failed to get oauth access_token')
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
@@ -196,10 +210,16 @@ export default class SimklProvider extends ListProvider {
         return this.simklConverter.convertFullAnimeInfoToProviderLocalData(fullInfoResult, episodeInfoResult)
     }
 
-    private async simklRequest<T>(url: string, method: Method = 'GET', body = ''): Promise<T> {
+    private async simklRequest<T>(url: string, method: Method = 'GET', body?: string): Promise<T> {
         this.informAWebRequest()
         if (!(await this.isProviderAvailable())) {
             throw new Error('timeout active')
+        }
+        let accessToken
+        try {
+            accessToken = await this.getAccessToken()
+        } catch (err) {
+            accessToken = ''
         }
 
         try {
@@ -208,13 +228,12 @@ export default class SimklProvider extends ListProvider {
                     method: method,
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${this.userData.accessToken ?? ''}`,
+                        Authorization: `Bearer ${accessToken ?? ''}`,
                     },
                     body: body,
                     timeout: 1000,
                 })
             )
-            logger.info('[Simkl] Start WebRequest')
 
             if (response.statusCode === 200 || response.statusCode === 201) {
                 return JSON.parse(response.body) as T

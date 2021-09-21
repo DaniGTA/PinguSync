@@ -1,16 +1,15 @@
+import OAuth from '../../provider/auth/o-auth'
 import MultiProviderResult from '../../provider/multi-provider-result'
 import { UserData } from '../../user-data'
 import { TraktUserInfo } from './objects/userInfo'
 
 export class TraktUserData extends UserData {
-    public expiresIn?: number
     public userInfo?: TraktUserInfo | null
     public list: MultiProviderResult[] | undefined
     public lastListUpdate: Date | undefined
 
     constructor() {
         super()
-        this.expiresIn = this.expiresIn ?? 0
         this.userInfo = this.userInfo ?? null
     }
 
@@ -21,16 +20,12 @@ export class TraktUserData extends UserData {
     }
 
     public removeTokens(): void {
-        this.accessToken = ''
-        this.refreshToken = ''
-        this.expiresIn = 0
+        this.oAuth = undefined
         this.saveData()
     }
 
-    public setTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
-        this.accessToken = accessToken
-        this.refreshToken = refreshToken
-        this.expiresIn = expiresIn
+    public setTokens(oAuth: OAuth): void {
+        this.oAuth = oAuth
         this.saveData()
     }
 

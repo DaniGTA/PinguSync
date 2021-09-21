@@ -1,11 +1,14 @@
 <template>
     <div v-if="id">
         <div class="series-basic-info-header">
-            <SeriesImageBlock class="detail-info-img" :seriesId="id" />
-            <div class="series-basic-info">
-                <SeriesNameBlock class="text-h3" :seriesId="id" />
-                <DetailInfoSyncStatus :seriesId="id" />
-                <SeriesDescriptionBlock :seriesId="id" />
+            <SeriesImageBlock class="w-60 shadow-md" :seriesId="id" />
+            <div>
+                <div class="text-5xl text-black font-bold mb-4 ml-8"><SeriesNameBlock :seriesId="id" /></div>
+
+                <div class="p-8 shadow-xl">
+                    <DetailInfoSyncStatus :seriesId="id" />
+                    <SeriesDescriptionBlock :seriesId="id" />
+                </div>
             </div>
             <button @click="saveSeries()">Save Series</button>
         </div>
@@ -55,16 +58,5 @@ export default class SeriesDetailInfo extends Vue {
     grid-template-rows: 1fr;
     gap: 1px 1px;
     grid-template-areas: '. .';
-}
-
-.series-basic-info {
-    background: $primary-background;
-    margin: 35px 0px;
-}
-
-.detail-info-img {
-    width: 250px;
-    z-index: 10;
-    box-shadow: black 0px 0px 5px 1px;
 }
 </style>

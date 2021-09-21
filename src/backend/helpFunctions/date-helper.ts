@@ -1,12 +1,12 @@
 class DateHelper {
     // Given a string in m/d/y format, return a string in the same format with n days added
     public addDays(s: Date, days: number): Date {
-        return new Date(s.getTime() + this.convertDaysToTimestamp(days));
+        return new Date(s.getTime() + this.convertDaysToTimestamp(days))
     }
 
     // Given a string in m/d/y format, return a string in the same format with n days removed
     public removeDays(s: Date, days: number): Date {
-        return new Date(s.getTime() - this.convertDaysToTimestamp(days));
+        return new Date(s.getTime() - this.convertDaysToTimestamp(days))
     }
 
     /**
@@ -15,14 +15,13 @@ class DateHelper {
      * @param date2 date 2
      */
     public differenceBetweenTwoDatesInDays(date1: Date, date2: Date): number {
-        const oneDay = 24 * 60 * 60 * 1000;
-        const diffDays = Math.round(Math.abs((date1.getTime() - date2.getTime()) / oneDay));
-        return diffDays;
+        const oneDay = 24 * 60 * 60 * 1000
+        return Math.round(Math.abs((date1.getTime() - date2.getTime()) / oneDay))
     }
 
     private convertDaysToTimestamp(days: number): number {
-        return (days * 24 * 60 * 60 * 1000);
+        return days * 24 * 60 * 60 * 1000
     }
 }
 
-export default new DateHelper();
+export default new DateHelper()

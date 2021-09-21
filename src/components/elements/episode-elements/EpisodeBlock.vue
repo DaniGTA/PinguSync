@@ -1,24 +1,34 @@
 <template>
-    <div class="inline-block w-48 h-32 bg-gray-50 shadow-md m-4 p-2 rounded" v-if="seriesId && episodeIds">
+    <div class="inline-block w-64 bg-gray-100 shadow-md m-4 p-2 rounded">
         <div v-if="episode" class="episode div">
             <div class="no-padding no-margin div-actions">
-                <h3 class="">{{ getEpisodeTitle() }}</h3>
+                <h3 class="h-12 font-medium">{{ getEpisodeTitle() }}</h3>
             </div>
-            <img class="img" :src="imgUrl" />
-            <div class="flex justify-between w-100">
+            <div class="relative h-40">
                 <div
-                    class="inline-flex items-center justify-center px-2 py-1 rounded bg-blue-400 m-2 text-xs font-bold text-white"
+                    class="absolute px-1 py-1 rounded bg-green-400 mx-2 text-xs font-bold text-white shadow z-10"
+                    v-if="isWatched()"
                 >
-                    Episode: {{ getEpisodeNumber() }}
+                    {{ $t('Main.Series.Episode.Status.Watched') }}
                 </div>
-                <div
-                    class="inline-flex items-center justify-center px-2 py-1 rounded bg-blue-400 m-2 text-xs font-bold text-white"
-                    v-if="duration"
-                >
-                    {{ duration }}min
+                <div class="w-60 h-36 py-2">
+                    <img v-if="imgUrl" class="w-full h-full object-cover rounded shadow" :src="imgUrl" />
+                    <div v-else class="w-full h-full animate-pulse bg-blue-400 rounded shadow"></div>
+                </div>
+                <div class="flex justify-between w-100 absolute bottom-0 z-10">
+                    <div
+                        class="inline-flex items-center justify-center px-1 py-1 rounded bg-blue-400 m-2 text-xs font-bold text-white shadow"
+                    >
+                        {{ $t('Main.Series.Episode.Name') }}: {{ getEpisodeNumber() }}
+                    </div>
+                    <div
+                        class="inline-flex items-center justify-center px-1 py-1 rounded bg-blue-400 m-2 text-xs font-bold text-white shadow"
+                        v-if="duration != null"
+                    >
+                        {{ duration }}{{ $t('Main.Series.Episode.Time') }}
+                    </div>
                 </div>
             </div>
-
             <div class="flex">
                 <template v-for="e of episode">
                     <div v-if="e.provider" :key="e.id + e.provider" v-on:click="openUrl(e)" class="cursor-pointer m-1">
@@ -109,6 +119,7 @@ export default class SeriesDescriptionBlock extends Vue.with(Props) {
         }
         return titles[0]?.text ?? ''
     }
+
     getEpisodeDuration(): number | undefined {
         for (const episode of this.episode ?? []) {
             if (episode?.duration !== undefined) {
@@ -116,6 +127,15 @@ export default class SeriesDescriptionBlock extends Vue.with(Props) {
             }
         }
         return
+    }
+
+    isWatched(): boolean {
+        const watchHistorys = this.episode?.flatMap(x => x.watchHistory) ?? []
+        if (watchHistorys.length == 0) return false
+        const latestWatchHistory = watchHistorys.reduce((m, v, i) =>
+            (v.timestamp ?? Date.now()) > (m.timestamp ?? Date.now()) && i ? v : m
+        )
+        return latestWatchHistory.watched ?? false
     }
 
     openUrl(episode: Episode): void {

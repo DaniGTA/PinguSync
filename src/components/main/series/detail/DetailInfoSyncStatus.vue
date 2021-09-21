@@ -1,5 +1,5 @@
 <template>
-    <div v-if="seriesId && providers">
+    <div v-if="seriesId">
         <ShowStatusOfSingleProvider v-for="provider of providers" :provider="provider" :id="seriesId" :key="provider" />
     </div>
 </template>

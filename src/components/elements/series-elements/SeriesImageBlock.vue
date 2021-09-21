@@ -1,6 +1,7 @@
 <template>
-    <div class="h-100 w-100 " v-if="seriesId">
-        <img class="h-100 w-100 shadow-md rounded" :src="url" />
+    <div class="h-full w-full ">
+        <img v-if="seriesId" class="h-full w-full shadow-md rounded" :src="url" />
+        <div v-else class="h-full w-full animate-pulse bg-blue-400"></div>
     </div>
 </template>
 

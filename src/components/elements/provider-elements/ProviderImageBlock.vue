@@ -1,10 +1,5 @@
 <template>
-    <img
-        v-if="provider"
-        class="w-6 h-6"
-        :src="require('@/assets/' + getName().toLowerCase() + '-logo.png')"
-        alt="episode image"
-    />
+    <img v-if="provider" class="w-6 h-6" :src="getProviderImage()" alt="episode image" />
     <div class="bg-gray-400" v-if="!provider"></div>
     <div class="w-full center" v-if="showText">{{ getName() }}</div>
 </template>
@@ -22,6 +17,20 @@ class Props {
 export default class ProviderImageBlock extends Vue.with(Props) {
     getName(): string {
         return this.provider?.providerName ?? ''
+    }
+
+    getProviderImage() {
+        const providerName = this.getName().toLowerCase()
+        try {
+            return require('@/assets/' + providerName + '-logo.png')
+        } catch (err) {
+            try {
+                return require('@/assets/' + providerName + '-logo.svg')
+            } catch (err) {
+                console.error('Cant find provider image for provider: ' + providerName)
+                return ''
+            }
+        }
     }
 }
 </script>

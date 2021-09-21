@@ -28,6 +28,9 @@ import { ListType } from '../../../controller/settings/models/provider/list-type
 import WatchHistory from '../../../controller/objects/meta/episode/episode-watch-history'
 import ImdbProvider from '../imdb/imdb-provider'
 import TMDBProvider from '../tmdb/tmdb-provider'
+import OAuth from '../../provider/auth/o-auth'
+import { TraktOAuthResponse } from './objects/traktOAuthResponse'
+import { OAuthTokenType } from '../../provider/auth/o-auth-token-type'
 
 export default new (class TraktConverter {
     public async convertSeasonsToMultiProviderResult(watchedInfo: WatchedInfo): Promise<MultiProviderResult[]> {
@@ -291,5 +294,15 @@ export default new (class TraktConverter {
             return sendEntryUpdate
         }
         throw new Error('failed convert')
+    }
+
+    convertOAuthResponse(response: TraktOAuthResponse): OAuth {
+        return new OAuth(
+            response.access_token,
+            OAuthTokenType.BEARER,
+            new Date(response.created_at),
+            response.refresh_token,
+            new Date(response.created_at + response.expires_in)
+        )
     }
 })()
