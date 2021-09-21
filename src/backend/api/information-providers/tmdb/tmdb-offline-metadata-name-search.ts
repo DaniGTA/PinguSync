@@ -30,7 +30,7 @@ export default class TMDBOfflineMetdataNameSearch {
             }
         } catch (err) {
             logger.error('[TMDB] Failed to read file:' + TMDBOfflineMetdataDownloadManager.getSeriesFilePath())
-            logger.error(err)
+            logger.error(err as string)
         }
         return result
     }
@@ -43,7 +43,7 @@ export default class TMDBOfflineMetdataNameSearch {
             }
         } catch (err) {
             logger.error('[TMDB] Failed to read a line in series meta file. ERR at following line')
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 
@@ -59,7 +59,7 @@ export default class TMDBOfflineMetdataNameSearch {
             }
         } catch (err) {
             logger.error('[TMDB] Failed to read file:' + TMDBOfflineMetdataDownloadManager.getSeriesFilePath())
-            logger.error(err)
+            logger.error(err as string)
         }
         return result
     }
@@ -72,7 +72,7 @@ export default class TMDBOfflineMetdataNameSearch {
             }
         } catch (err) {
             logger.error('[TMDB] Failed to read a line in movie meta file. ERR at following line')
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 

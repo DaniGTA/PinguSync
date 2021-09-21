@@ -66,7 +66,7 @@ export default class ProviderLoader {
                 loadedList.push(new provider())
             } catch (err) {
                 logger.error('FAILED TO LOAD PROVIDER')
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return loadedList

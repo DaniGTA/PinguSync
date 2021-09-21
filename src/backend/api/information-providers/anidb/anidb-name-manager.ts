@@ -34,7 +34,7 @@ export default class AniDBNameManager {
             fs.writeFileSync(this.getPath(), JSON.stringify(this))
         } catch (err) {
             logger.error('Error at AniDBNameManager.save:')
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 

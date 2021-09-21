@@ -52,7 +52,7 @@ export default class Timeout {
             try {
                 timeout()
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         this.onTimeoutList = []

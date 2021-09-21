@@ -66,7 +66,7 @@ export default class EpisodeMappingHelper {
                 }
             }
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
         return episodeMappingResult
     }

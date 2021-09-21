@@ -29,7 +29,7 @@ export default class ProviderListHelper {
                     }
                 } catch (err) {
                     logger.error('Failed to get UserLoggedIn status from provider: ' + provider.providerName)
-                    logger.error(err)
+                    logger.error(err as string)
                 }
             }
         }

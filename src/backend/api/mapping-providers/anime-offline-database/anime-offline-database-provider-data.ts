@@ -41,7 +41,7 @@ export default class AnimeOfflineDatabaseProviderData {
                 Object.assign(this, loadedData)
                 return loadedData.database
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
                 this.saveData()
             }
         }
@@ -53,7 +53,7 @@ export default class AnimeOfflineDatabaseProviderData {
             logger.info('[AnimeOfflineDatabaseProviderData] Write user data to hard drive')
             writeFileSync(this.getPath(), JSON.stringify(this))
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 

@@ -37,7 +37,7 @@ export default class ShowStatusOfSingleProvider extends Vue.with(Props) {
         try {
             this.result = await this.isSynced()
         } catch (err) {
-            console.error(err)
+            console.error(err as string)
         }
     }
 

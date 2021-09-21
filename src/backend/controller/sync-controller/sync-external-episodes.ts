@@ -18,14 +18,14 @@ export default class SyncExternalEpisodes {
     }
 
     public static isSeriesOnWaitlist(seriesId: string, providerName: string): boolean {
-        const result = this.plannedJobList.find((x) => x.seriesId === seriesId && x.providerName === providerName)
+        const result = this.plannedJobList.find(x => x.seriesId === seriesId && x.providerName === providerName)
         return !!result
     }
 
     public static async cronJobProcessSyncing(): Promise<void> {
         const plannedJobs: SyncJob[] = []
         for (const plannedJob of this.plannedJobList) {
-            const isProviderAlreadyInList = plannedJobs.find((x) => plannedJob.providerName === x.providerName)
+            const isProviderAlreadyInList = plannedJobs.find(x => plannedJob.providerName === x.providerName)
             if (!isProviderAlreadyInList) {
                 plannedJobs.push(plannedJob)
             }
@@ -42,7 +42,7 @@ export default class SyncExternalEpisodes {
             try {
                 await runningJob
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
     }

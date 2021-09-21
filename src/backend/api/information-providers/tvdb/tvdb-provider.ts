@@ -61,7 +61,7 @@ export default class TVDBProvider extends InfoProvider {
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return result
     }

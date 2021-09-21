@@ -48,11 +48,11 @@ export default class FrontendProviderController {
                         allLoggedInProviders.push(provider)
                     }
                 } catch (err) {
-                    logger.debug(err)
+                    logger.debug(err as string)
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return allLoggedInProviders
     }

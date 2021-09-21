@@ -30,7 +30,7 @@ export default class DownloadProviderLocalDataHelper {
                     return await DownloadProviderLocalDataWithId.download(provider, providerLocalForIdRequest)
                 }
             } catch (err) {
-                if (isFailedRequestError(err)) {
+                if (isFailedRequestError(err as string)) {
                     throw err
                 }
                 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

@@ -220,7 +220,7 @@ class ListHelper {
                 aName = Name.getRomajiName(aNames)
                 bName = Name.getRomajiName(bNames)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
 
             aName = aName.toLocaleLowerCase()

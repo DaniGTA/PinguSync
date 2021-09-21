@@ -85,19 +85,19 @@ export default class SimklProvider extends ListProvider {
         try {
             endResults.push(...(await this.animeTextSearch(seriesName)))
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
         await this.waitUntilItCanPerfomNextRequest()
         try {
             endResults.push(...(await this.tvTextSearch(seriesName)))
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
         await this.waitUntilItCanPerfomNextRequest()
         try {
             endResults.push(...(await this.movieTextSearch(seriesName)))
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
 
         return endResults

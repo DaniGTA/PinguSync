@@ -45,7 +45,7 @@ export default class FrontendProviderAuthController {
             try {
                 provider.logoutUser()
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
             this.sendLoginStatus(provider, token)
         }
@@ -59,7 +59,7 @@ export default class FrontendProviderAuthController {
                     return true
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return false
@@ -71,7 +71,7 @@ export default class FrontendProviderAuthController {
             try {
                 return await provider.isUserLoggedIn()
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return false

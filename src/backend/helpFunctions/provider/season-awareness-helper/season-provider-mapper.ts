@@ -127,14 +127,14 @@ export default class SeasonProviderMapper {
                 seasonAD.seasonTargetTrackerTrack(SeasonAwarenessPath.PREQUEL)
                 seasonPart = await this.getSeasonPartByPrequel(result, targetSeason, seasonAD)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         } else if (result.maxEpisodeNumberOfSeasonHolder != result.maxEpisodes) {
             try {
                 seasonAD.seasonTargetTrackerTrack(SeasonAwarenessPath.SEQUEL)
                 seasonPart = await this.getSeasonPartBySequel(result, targetSeason, seasonAD)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         } else if (seasonAD.seasonPartTargetTrackerDirection != SeasonAwarenessPath.UNKNOWN) {
             seasonAD.seasonTargetTrackerTrack(seasonAD.seasonPartTargetTrackerDirection)
@@ -187,7 +187,7 @@ export default class SeasonProviderMapper {
             } catch (err) {
                 seasonAD.loadTrackingData(relationSeasonAD)
                 logger.debug('[SeasonAwarenessCreatorSeason] Sequel processing error:')
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         throw new Error()

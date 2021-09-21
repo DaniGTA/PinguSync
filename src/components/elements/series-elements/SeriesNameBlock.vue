@@ -27,7 +27,7 @@ export default class ProviderImageBlock extends Vue.with(Props) {
         try {
             this.name = (await SeriesListViewController.getSeriesNameById(this.seriesId)) ?? ''
         } catch (err) {
-            console.error(err)
+            console.error(err as string)
         }
     }
 }

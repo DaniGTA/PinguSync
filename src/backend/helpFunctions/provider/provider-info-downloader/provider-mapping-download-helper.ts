@@ -19,11 +19,11 @@ export default class ProviderMappingDownloadHelper {
                     try {
                         result.push(...(await mappingProvider.getSeriesMappings(localData)))
                     } catch (err) {
-                        logger.error(err)
+                        logger.error(err as string)
                     }
                 }
             } catch (err) {
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         return result

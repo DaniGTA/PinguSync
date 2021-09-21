@@ -23,7 +23,7 @@ export default class DownloadProviderLocalDataWithId {
             return result
         } catch (err) {
             timeout.cancel()
-            if (isFailedRequestError(err)) {
+            if (isFailedRequestError(err as string)) {
                 throw err
             }
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

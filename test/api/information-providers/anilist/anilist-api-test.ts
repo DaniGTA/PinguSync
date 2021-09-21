@@ -1,29 +1,31 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import request from 'request'
 import AniListProvider from '../../../../src/backend/api/information-providers/anilist/anilist-provider'
+import RequestBundle from '../../../../src/backend/controller/web-request-manager/request-bundle'
 
 // tslint:disable: no-string-literal
 describe('Provider: AniList | Test runs', () => {
     test('should return headers', () => {
-        const options: request.UriOptions & request.CoreOptions = {
-            body: JSON.stringify({
-                query: 'query',
-                variables: 'variables',
-            }),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
+        const options: RequestBundle = {
+            options: {
+                body: JSON.stringify({
+                    query: 'query',
+                    variables: 'variables',
+                }),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
             },
-            method: 'POST',
-            uri: 'https://graphql.anilist.co',
+            url: 'https://graphql.anilist.co',
         }
 
         const a = new AniListProvider()
         const result = a['getGraphQLOptions']('query', 'variables')
-        expect(options.body).toBe(result.options.body)
-        expect(options.headers + '').toBe(result.options.headers + '')
-        expect(options.method).toBe(result.options.method)
-        expect(options.uri).toEqual(result.url)
+        expect(options.options.body).toBe(result.options.body)
+        expect(options.options.headers + '').toBe(result.options.headers + '')
+        expect(options.options.method).toBe(result.options.method)
+        expect(options.url).toEqual(result.url)
         return
     })
 })

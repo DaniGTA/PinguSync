@@ -1,64 +1,86 @@
-import InfoProvider from '../api/provider/info-provider';
-import ListProvider from '../api/provider/list-provider';
-import { MediaType } from '../controller/objects/meta/media-type';
-import Season from '../controller/objects/meta/season';
-import Series from '../controller/objects/series';
-import { InfoProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/info-provider-local-data';
-import ProviderLocalData from '../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import { ListProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/list-provider-local-data';
-import ProviderList from '../controller/provider-controller/provider-manager/provider-list';
-import logger from '../logger/logger';
-import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result';
-import MediaTypeComperator from './comperators/media-type-comperator';
-import NewProviderHelper from './provider/new-provider-helper';
-import ProviderLocalDataWithSeasonInfo from './provider/provider-info-downloader/provider-data-with-season-info';
+import InfoProvider from '../api/provider/info-provider'
+import ListProvider from '../api/provider/list-provider'
+import { MediaType } from '../controller/objects/meta/media-type'
+import Season from '../controller/objects/meta/season'
+import Series from '../controller/objects/series'
+import { InfoProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/info-provider-local-data'
+import ProviderLocalData from '../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import { ListProviderLocalData } from '../controller/provider-controller/provider-manager/local-data/list-provider-local-data'
+import ProviderList from '../controller/provider-controller/provider-manager/provider-list'
+import logger from '../logger/logger'
+import { AbsoluteResult } from './comperators/comperator-results.ts/comperator-result'
+import MediaTypeComperator from './comperators/media-type-comperator'
+import NewProviderHelper from './provider/new-provider-helper'
+import ProviderLocalDataWithSeasonInfo from './provider/provider-info-downloader/provider-data-with-season-info'
 
 export default class PrequelGeneratorHelper {
-    private series: Series;
+    private series: Series
     constructor(series: Series) {
-        this.series = series;
+        this.series = series
     }
-    public async generatePrequel(series: Series, season: Season, lowerSeasonNumber = true, mediaType?: MediaType): Promise<Series | null> {
-        let newSNumber;
-        const currentSeasonNumber = season.getSingleSeasonNumberAsNumber();
+    public async generatePrequel(
+        series: Series,
+        season: Season,
+        lowerSeasonNumber = true,
+        mediaType?: MediaType
+    ): Promise<Series | null> {
+        let newSNumber
+        const currentSeasonNumber = season.getSingleSeasonNumberAsNumber()
         if (season.isSeasonNumberPresent() && currentSeasonNumber !== undefined && currentSeasonNumber > 0) {
             if (lowerSeasonNumber) {
-                newSNumber = currentSeasonNumber - 1;
+                newSNumber = currentSeasonNumber - 1
             }
             for (const localdataProvider of series.getAllProviderLocalDatas()) {
                 try {
                     if (localdataProvider.prequelIds && localdataProvider.prequelIds.length !== 0) {
                         for (const id of localdataProvider.prequelIds) {
-                            return await this.createPrequel(localdataProvider, id, new Season(newSNumber), mediaType);
+                            return await this.createPrequel(localdataProvider, id, new Season(newSNumber), mediaType)
                         }
-
                     }
                 } catch (err) {
-                    logger.error(err);
+                    logger.error(err as string)
                 }
             }
         }
-        return null;
+        return null
     }
 
-    private async createPrequel(localdataProvider: ProviderLocalData, id: number | string, season: Season, mediaType?: MediaType): Promise<Series | null> {
-        let newProvider = null;
-        const currentMediaType = mediaType ? mediaType : localdataProvider.mediaType;
+    private async createPrequel(
+        localdataProvider: ProviderLocalData,
+        id: number | string,
+        season: Season,
+        mediaType?: MediaType
+    ): Promise<Series | null> {
+        let newProvider = null
+        const currentMediaType = mediaType ? mediaType : localdataProvider.mediaType
         if (localdataProvider instanceof ListProviderLocalData) {
-            newProvider = new ProviderLocalDataWithSeasonInfo(new ListProviderLocalData(id, ProviderList.getProviderInstanceByProviderName(localdataProvider.provider) as ListProvider));
+            newProvider = new ProviderLocalDataWithSeasonInfo(
+                new ListProviderLocalData(
+                    id,
+                    ProviderList.getProviderInstanceByProviderName(localdataProvider.provider) as ListProvider
+                )
+            )
         } else if (localdataProvider instanceof InfoProviderLocalData) {
-            newProvider = new ProviderLocalDataWithSeasonInfo(new InfoProviderLocalData(id, ProviderList.getProviderInstanceByProviderName(localdataProvider.provider) as InfoProvider));
+            newProvider = new ProviderLocalDataWithSeasonInfo(
+                new InfoProviderLocalData(
+                    id,
+                    ProviderList.getProviderInstanceByProviderName(localdataProvider.provider) as InfoProvider
+                )
+            )
         }
-        let newSeries = new Series();
+        let newSeries = new Series()
         if (newProvider) {
-            newSeries.addProviderDatasWithSeasonInfos(newProvider);
-            newSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(newSeries);
-            const mediaTypeComperatorResult = MediaTypeComperator.comperaMediaType(newSeries.getMediaType(), currentMediaType);
+            newSeries.addProviderDatasWithSeasonInfos(newProvider)
+            newSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(newSeries)
+            const mediaTypeComperatorResult = MediaTypeComperator.comperaMediaType(
+                newSeries.getMediaType(),
+                currentMediaType
+            )
             if (mediaTypeComperatorResult.isAbsolute === AbsoluteResult.ABSOLUTE_FALSE) {
-                return this.generatePrequel(newSeries, season, false, currentMediaType);
+                return this.generatePrequel(newSeries, season, false, currentMediaType)
             }
-            return newSeries.getFirstSeason(undefined, season);
+            return newSeries.getFirstSeason(undefined, season)
         }
-        return null;
+        return null
     }
 }

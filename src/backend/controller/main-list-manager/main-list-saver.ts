@@ -10,7 +10,7 @@ export default class MainListSaver {
             logger.info(`Saved list at: ${MainListPath.getPath()}`)
             writeFileSync(MainListPath.getPath(), JSON.stringify(series))
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 }

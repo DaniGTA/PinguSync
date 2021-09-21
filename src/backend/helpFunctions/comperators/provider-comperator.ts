@@ -41,7 +41,7 @@ export default class ProviderComperator {
             }
         } catch (err) {
             logger.error('Error at ProviderComperator.simpleProviderSameIdAndSameSeasonCheckOnSeries')
-            logger.error(err)
+            logger.error(err as string)
         }
         return false
     }
@@ -95,7 +95,7 @@ export default class ProviderComperator {
                             }
                         }
                     } catch (err) {
-                        logger.warn(err)
+                        logger.warn(err as string)
                     }
                 }
             }
@@ -157,7 +157,7 @@ export default class ProviderComperator {
             }
         } catch (err) {
             logger.error('Error at ProviderComperator.hasSameListProvider')
-            logger.error(err)
+            logger.error(err as string)
         }
         return false
     }
@@ -264,7 +264,7 @@ export default class ProviderComperator {
                     comperatorResult.matches -= 0.5
                 }
                 logger.debug('Error at ProviderComperator.compareProviderAWithProviderB')
-                logger.debug(err)
+                logger.debug(err as string)
             }
         } else {
             if (

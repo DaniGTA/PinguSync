@@ -44,7 +44,7 @@ export default class TMDBProvider extends InfoProvider {
         try {
             result = await TMDBOfflineMetdataNameSearch.search(searchTitle)
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         if (result.length == 0) {
             await this.waitUntilItCanPerfomNextRequest()
@@ -72,7 +72,7 @@ export default class TMDBProvider extends InfoProvider {
         try {
             await TMDBOfflineMetdataDownloadManager.downloadOfflineMetadata()
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         this.providerData.setLastOfflineMetadataDownload()
     }

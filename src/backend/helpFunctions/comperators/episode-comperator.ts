@@ -25,7 +25,7 @@ export default class EpisodeComperator {
             }
         } catch (err) {
             logger.error('Error at EpisodeComperator.compareEpisodes')
-            logger.error(err)
+            logger.error(err as string)
         }
         return result
     }
@@ -278,7 +278,7 @@ export default class EpisodeComperator {
                             }
                         }
                     } catch (err) {
-                        logger.error(err)
+                        logger.error(err as string)
                     }
                 }
                 if (found) {

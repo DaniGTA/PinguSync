@@ -63,7 +63,7 @@ export default class MalConverter {
         lpd.publicScore = animeInfo.score ?? undefined
 
         if (animeInfo.related['Side story'])
-            lpd.alternativeIds.push(...animeInfo.related['Side story'].map((x) => x.mal_id))
+            lpd.alternativeIds.push(...animeInfo.related['Side story'].map(x => x.mal_id))
         if ((animeInfo.related as any)['Other'])
             lpd.alternativeIds.push(
                 ...(animeInfo.related as any)['Other'].map((x: Jikan.Types.Common.MalUrl) => x.mal_id)
@@ -113,7 +113,7 @@ export default class MalConverter {
     }
 
     private static getGeneres(info: Jikan.Anime.AnimeInfo): Genre[] {
-        return info.genres.map((x) => new Genre(x.name))
+        return info.genres.map(x => new Genre(x.name))
     }
 
     private static getTitles(info: Jikan.Anime.AnimeInfo): Name[] {
@@ -121,7 +121,7 @@ export default class MalConverter {
         titles.push(new Name(info.title, 'unknown', NameType.MAIN))
         if (info.title_english) titles.push(new Name(info.title_english, 'en', NameType.OFFICIAL))
         if (info.title_japanese) titles.push(new Name(info.title_japanese, 'jap', NameType.OFFICIAL))
-        titles.push(...info.title_synonyms.map((x) => new Name(x, 'unknown', NameType.SYN)))
+        titles.push(...info.title_synonyms.map(x => new Name(x, 'unknown', NameType.SYN)))
         return titles
     }
 

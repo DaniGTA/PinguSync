@@ -14,7 +14,7 @@ export default class WorkerController {
             this.getIpcRenderer().send(channel, new DataPackage(data, trackingToken))
         } catch (err) {
             console.error(data)
-            console.error(err)
+            console.error(err as string)
             throw new Error(err as string)
         }
     }
@@ -80,9 +80,9 @@ export default class WorkerController {
                 })
             } catch (err) {
                 console.log('warn', 'frontend recieved error on channel: ' + channel)
-                console.error(err)
+                console.error(err as string)
 
-                reject(err)
+                reject(err as string)
             }
         })
     }

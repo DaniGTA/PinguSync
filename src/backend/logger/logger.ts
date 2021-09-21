@@ -40,7 +40,7 @@ try {
         transports: transports,
     })
 } catch (err) {
-    console.log(err)
+    console.log(err as string)
 }
 
 export default logger

@@ -1,8 +1,6 @@
 <template>
-    <div v-if="seriesId">
-        <Intersect @enter="loadImg()">
-            <img class="h-100 w-100 shadow-md rounded" :src="url" />
-        </Intersect>
+    <div class="h-100 w-100 " v-if="seriesId">
+        <img class="h-100 w-100 shadow-md rounded" :src="url" />
     </div>
 </template>
 
@@ -10,20 +8,19 @@
 import { FailedCover } from '@backend/controller/frontend/series/model/failed-cover'
 import { Vue, Options, prop, WithDefault } from 'vue-class-component'
 import SeriesListViewController from '../../controller/series-list-view-controller'
-import Intersect from 'vue-intersect'
 
 class Props {
     seriesId: WithDefault<string> = prop<string>({ default: '' })
 }
 
-@Options({
-    components: {
-        Intersect,
-    },
-})
+@Options({})
 export default class ProviderImageBlock extends Vue.with(Props) {
     public url = ''
     private failedUrls: string[] = []
+
+    mounted() {
+        this.loadImg()
+    }
 
     private async loadImg(): Promise<void> {
         if (!this.url) {

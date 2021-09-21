@@ -17,7 +17,7 @@ export default class ProviderHelper {
         return (
             series
                 .getAllProviderLocalDatas()
-                .findIndex((existingProvider) => existingProvider.provider === provider.providerName) !== -1
+                .findIndex(existingProvider => existingProvider.provider === provider.providerName) !== -1
         )
     }
 
@@ -26,7 +26,7 @@ export default class ProviderHelper {
             series
                 .getAllProviderLocalDatas()
                 .findIndex(
-                    (existingProvider) =>
+                    existingProvider =>
                         existingProvider.provider === provider.provider && existingProvider.id === provider.id
                 ) !== -1
         )
@@ -40,7 +40,7 @@ export default class ProviderHelper {
             series
                 .getAllProviderLocalDatasWithSeasonInfo()
                 .findIndex(
-                    (existingProvider) =>
+                    existingProvider =>
                         existingProvider.providerLocalData.provider === provider.providerLocalData.provider &&
                         existingProvider.providerLocalData.id === provider.providerLocalData.id &&
                         SeasonComperator.isSameSeason(existingProvider.seasonTarget, provider.seasonTarget)
@@ -69,7 +69,7 @@ export default class ProviderHelper {
                 }
             } catch (err) {
                 logger.debug('Error at ProviderHelper.requestUpgradeAllCurrentinfos')
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         return resultList
@@ -110,7 +110,7 @@ export default class ProviderHelper {
         try {
             const tempSeries = new Series()
             tempSeries.addProviderDatas(...currentLocalDatas)
-            const currentProviderLocalData = currentLocalDatas.find((x) => x.provider === providerInstance.providerName)
+            const currentProviderLocalData = currentLocalDatas.find(x => x.provider === providerInstance.providerName)
             if (currentProviderLocalData?.infoStatus !== ProviderInfoStatus.FULL_INFO) {
                 const infoResult = await new DownloadProviderLocalDataToTargetHelper(
                     tempSeries,
@@ -126,9 +126,9 @@ export default class ProviderHelper {
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
-        return currentLocalDatas.find((x) => x.provider === providerInstance.providerName)
+        return currentLocalDatas.find(x => x.provider === providerInstance.providerName)
     }
 
     /**
@@ -152,7 +152,7 @@ export default class ProviderHelper {
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return true
     }

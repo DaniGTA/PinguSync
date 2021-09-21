@@ -1,10 +1,10 @@
-import Episode from '../../controller/objects/meta/episode/episode';
-import { EpisodeType } from '../../controller/objects/meta/episode/episode-type';
-import Season from '../../controller/objects/meta/season';
-import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../controller/provider-controller/provider-manager/provider-list';
-import logger from '../../logger/logger';
-import EpisodeComperator from '../comperators/episode-comperator';
+import Episode from '../../controller/objects/meta/episode/episode'
+import { EpisodeType } from '../../controller/objects/meta/episode/episode-type'
+import Season from '../../controller/objects/meta/season'
+import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import ProviderList from '../../controller/provider-controller/provider-manager/provider-list'
+import logger from '../../logger/logger'
+import EpisodeComperator from '../comperators/episode-comperator'
 
 export default class EpisodeGeneratorHelper {
     /**
@@ -13,51 +13,60 @@ export default class EpisodeGeneratorHelper {
      * @param season
      */
     public static generateMissingEpisodes(provider: ProviderLocalData, season?: Season): Episode[] {
-        const episodeSeason: undefined | Season = this.getEpisodeSeason(provider, season);
+        const episodeSeason: undefined | Season = this.getEpisodeSeason(provider, season)
         if (this.canGenerateMissingEpisodes(provider)) {
-            const numberOfMissingEpisodes = this.getNumberOfMissingEpisodes(provider);
-            return this.generateAllEpisodes(provider, episodeSeason, 1, numberOfMissingEpisodes);
+            const numberOfMissingEpisodes = this.getNumberOfMissingEpisodes(provider)
+            return this.generateAllEpisodes(provider, episodeSeason, 1, numberOfMissingEpisodes)
         }
-        return [];
+        return []
     }
 
-    private static generateAllEpisodes(provider: ProviderLocalData, episodeSeason?: Season, startEpisode = 1, numberOfEpiodes = 0): Episode[] {
-        const generatedEpisodes: Episode[] = [];
+    private static generateAllEpisodes(
+        provider: ProviderLocalData,
+        episodeSeason?: Season,
+        startEpisode = 1,
+        numberOfEpiodes = 0
+    ): Episode[] {
+        const generatedEpisodes: Episode[] = []
         for (let episodeNumber = startEpisode; episodeNumber <= numberOfEpiodes; episodeNumber++) {
-            const isEpisodePresent = this.isEpisodePresent(episodeNumber, provider, episodeSeason);
+            const isEpisodePresent = this.isEpisodePresent(episodeNumber, provider, episodeSeason)
             if (!isEpisodePresent) {
-                generatedEpisodes.push(this.generateSingleEpisode(episodeNumber, provider));
+                generatedEpisodes.push(this.generateSingleEpisode(episodeNumber, provider))
             }
         }
-        return generatedEpisodes;
+        return generatedEpisodes
     }
 
     private static canGenerateMissingEpisodes(provider: ProviderLocalData): boolean {
         if (provider.episodes) {
-            const numberOfMissingEpisodes = this.getNumberOfMissingEpisodes(provider);
+            const numberOfMissingEpisodes = this.getNumberOfMissingEpisodes(provider)
             if (numberOfMissingEpisodes !== 0) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 
     private static getNumberOfMissingEpisodes(provider: ProviderLocalData): number {
         if (provider.episodes) {
-            return provider.episodes - provider.getDetailedEpisodeLength();
+            return provider.episodes - provider.getDetailedEpisodeLength()
         }
-        return 0;
+        return 0
     }
 
-    private static isEpisodePresent(episodeNumber: number, provider: ProviderLocalData, episodeSeason: Season | undefined): boolean {
-        let episodeFounded = false;
+    private static isEpisodePresent(
+        episodeNumber: number,
+        provider: ProviderLocalData,
+        episodeSeason: Season | undefined
+    ): boolean {
+        let episodeFounded = false
         for (const detailedEpisode of provider.getAllDetailedEpisodes()) {
             if (EpisodeComperator.isEpisodeSameAsDetailedEpisode(episodeNumber, detailedEpisode, episodeSeason)) {
-                episodeFounded = true;
-                break;
+                episodeFounded = true
+                break
             }
         }
-        return episodeFounded;
+        return episodeFounded
     }
 
     /**
@@ -66,18 +75,18 @@ export default class EpisodeGeneratorHelper {
     private static getEpisodeSeason(provider: ProviderLocalData, season?: Season): Season | undefined {
         try {
             if (!ProviderList.getProviderInstanceByLocalData(provider).hasUniqueIdForSeasons) {
-                return season;
+                return season
             }
         } catch (err) {
-            logger.debug(err);
+            logger.debug(err as string)
         }
     }
 
     private static generateSingleEpisode(episodeNumber: number, provider: ProviderLocalData): Episode {
-        const episode = new Episode(episodeNumber);
-        episode.provider = provider.provider;
-        episode.providerId = provider.id;
-        episode.type = EpisodeType.REGULAR_EPISODE;
-        return episode;
+        const episode = new Episode(episodeNumber)
+        episode.provider = provider.provider
+        episode.providerId = provider.id
+        episode.type = EpisodeType.REGULAR_EPISODE
+        return episode
     }
 }

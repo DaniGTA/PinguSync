@@ -24,7 +24,7 @@ export default class SyncSeries {
                 }
             } catch (err) {
                 logger.error('[Error] -> ' + provider.providerName + ' -> AllSeries')
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return multiProviderResults

@@ -70,7 +70,7 @@ export default class KitsuProvider extends ListProvider {
     }
     // eslint-disable-next-line @typescript-eslint/require-await
     public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
-        const slug = provider.getAllNames().find((x) => x.nameType == NameType.SLUG)?.name
+        const slug = provider.getAllNames().find(x => x.nameType == NameType.SLUG)?.name
         const episodeNr = episode.episodeNumber
         return `https://kitsu.io/anime/${slug}/episodes/${episodeNr}`
     }
@@ -107,11 +107,11 @@ export default class KitsuProvider extends ListProvider {
                 try {
                     endResults.push(await kitsuConverter.convertMediaToAnime(result, ProviderInfoStatus.BASIC_INFO))
                 } catch (err) {
-                    logger.error(err)
+                    logger.error(err as string)
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
 
         return endResults
@@ -120,9 +120,9 @@ export default class KitsuProvider extends ListProvider {
     public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName) {
             this.informAWebRequest()
-            const getResult = (await this.api.get(
+            const getResult = ((await this.api.get(
                 `anime/${provider.id}?include=genres,episodes,streamingLinks`
-            )) as unknown as GetMediaResult
+            )) as unknown) as GetMediaResult
             return kitsuConverter.convertMediaToAnime(getResult.data)
         }
         throw new Error('[Kitsu] Cant handle this provider id')

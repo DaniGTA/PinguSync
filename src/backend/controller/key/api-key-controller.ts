@@ -18,7 +18,7 @@ export default class ApiKeyController {
         try {
             return JSON.parse(readFileSync(`./src/keys/api/${providerName}.json`, { encoding: 'utf8' })) as ApiKey
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
             logger.error(`!! API Credentials error for provider: ${providerName}`)
             if (!existsSync(`/src/keys/api/${providerName}.json`)) {
                 logger.error(

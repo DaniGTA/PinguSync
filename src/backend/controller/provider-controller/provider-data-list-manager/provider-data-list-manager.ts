@@ -30,7 +30,7 @@ export default class ProviderDataListManager {
                 return this.providerDataList.push(provider)
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
             return undefined
         }
     }
@@ -163,9 +163,9 @@ export default class ProviderDataListManager {
         seriesList?: ProviderLocalData[] | readonly ProviderLocalData[]
     ): number {
         if (seriesList) {
-            return seriesList.findIndex((x) => anime.id === x.id)
+            return seriesList.findIndex(x => anime.id === x.id)
         } else {
-            return ProviderDataListManager.getProviderDataList().findIndex((x) => anime.id === x.id)
+            return ProviderDataListManager.getProviderDataList().findIndex(x => anime.id === x.id)
         }
     }
 

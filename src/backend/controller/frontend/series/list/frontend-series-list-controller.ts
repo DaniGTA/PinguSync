@@ -26,7 +26,7 @@ export default class FrontendSeriesListController {
             const list = MainListSearcher.getAllSeriesWithTypeList(listType)
             return list.map(x => x.id)
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return []
     }

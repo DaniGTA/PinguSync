@@ -42,7 +42,7 @@ export default class SeriesPackage {
                     break
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
             if (!preferedName) {
                 const names = relation.getAllNames()

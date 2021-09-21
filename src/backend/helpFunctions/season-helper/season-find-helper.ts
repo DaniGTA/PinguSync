@@ -202,7 +202,7 @@ export default class SeasonFindHelper {
             return result
         } catch (err) {
             listHelper.removeEntrys(SeasonFindHelper.currentSeriesSeasonRequest, series)
-            throw new Error(err)
+            throw new Error(err as string)
         }
     }
 
@@ -312,7 +312,7 @@ export default class SeasonFindHelper {
                 return new SearchSeasonValueResult(new Season([1]), 'NoPrequelButSequel')
             }
         } catch (err) {
-            logger.warn(err)
+            logger.warn(err as string)
         }
 
         if (prequelResult && prequelResult.seasonError === SeasonError.SEASON_TRACING_CAN_BE_COMPLETED_LATER) {

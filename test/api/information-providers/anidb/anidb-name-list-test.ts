@@ -98,7 +98,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
                 new Name('Kono Subarashii Sekai ni Shukufuku wo! Kurenai Densetsu', 'x-jap', NameType.OFFICIAL)
             )
             lpdld.addSeriesName(
-                new Name('KONOSUBA -God\'s blessing on this wonderful world! Movie', 'en', NameType.MAIN)
+                new Name("KONOSUBA -God's blessing on this wonderful world! Movie", 'en', NameType.MAIN)
             )
             lpdld.addSeriesName(new Name('この素晴らしい世界に祝福を！紅伝説', 'jap', NameType.UNKNOWN))
             series.addListProvider(lpdld)
@@ -204,7 +204,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
                 await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a)
                 throw new Error()
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         })
 
@@ -342,7 +342,7 @@ describe('Provider: AniDB | Offline Test runs', () => {
                 await downloadProviderLocalDataHelper.downloadProviderLocalData(series, a)
                 throw new Error()
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         })
     })

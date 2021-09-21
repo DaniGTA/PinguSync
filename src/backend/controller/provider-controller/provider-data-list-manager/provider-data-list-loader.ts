@@ -30,7 +30,7 @@ export default class ProviderDataListLoader {
                 logger.error('File not exist')
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
             return []
         }
         return []

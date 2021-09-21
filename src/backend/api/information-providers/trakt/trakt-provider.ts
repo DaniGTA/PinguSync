@@ -157,7 +157,7 @@ export default class TraktProvider extends ListProvider {
                     endResult.push(await traktConverter.convertMovieToLocalData(result.movie))
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return endResult
@@ -205,7 +205,7 @@ export default class TraktProvider extends ListProvider {
                             return await traktConverter.convertMovieToLocalData(result.movie)
                         }
                     } catch (err) {
-                        logger.error(err)
+                        logger.error(err as string)
                     }
                 }
             }

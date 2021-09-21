@@ -23,14 +23,14 @@ process.env.UV_THREADPOOL_SIZE = `${nodeThreads}`
 try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mongoose.connect(DatabaseLoader.uri, (err: any) => {
-        if (err) {
+        if (err as string) {
             logger.error(err?.message)
         } else {
             logger.info('Successfully Connected!')
         }
     })
 } catch (err) {
-    logger.error(err)
+    logger.error(err as string)
 }
 const frontend = new FrontendController()
 // eslint-disable-next-line no-undef
@@ -63,7 +63,7 @@ function createWindow(): void {
                 win.webContents.openDevTools()
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     } else {
         createProtocol('app')

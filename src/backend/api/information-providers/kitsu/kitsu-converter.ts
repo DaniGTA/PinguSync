@@ -67,7 +67,7 @@ export default new (class KitsuConverter {
             providerInfos.covers.push(new Cover(media.posterImage.small, ImageSize.SMALL))
             providerInfos.covers.push(new Cover(media.posterImage.large, ImageSize.LARGE))
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
 
         try {
@@ -76,7 +76,7 @@ export default new (class KitsuConverter {
             providerInfos.banners.push(new Banner(media.coverImage.small, ImageSize.SMALL))
             providerInfos.banners.push(new Banner(media.coverImage.large, ImageSize.LARGE))
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
 
         providerInfos.infoStatus = fullInfo
@@ -131,11 +131,11 @@ export default new (class KitsuConverter {
                     providerLocalData.push(localdata)
                 }
             } catch (err) {
-                logger.info(err)
+                logger.info(err as string)
             }
         }
         try {
-            const result = mappings.find((x) => x.externalSite.includes('thetvdb') && x.externalId.includes('/'))
+            const result = mappings.find(x => x.externalSite.includes('thetvdb') && x.externalId.includes('/'))
             if (result) {
                 const idSeason = result.externalId.split('/')
                 const seasonnumber = Number(idSeason[1])
@@ -146,7 +146,7 @@ export default new (class KitsuConverter {
                 providerLocalData.push(localdata)
             }
         } catch (err) {
-            logger.info(err)
+            logger.info(err as string)
         }
         return providerLocalData
     }

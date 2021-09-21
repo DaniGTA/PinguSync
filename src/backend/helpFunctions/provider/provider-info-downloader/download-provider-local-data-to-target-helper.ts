@@ -37,7 +37,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         if (requestResult) {
             result.push(requestResult)
         }
-        if (result.filter((x) => x instanceof MultiProviderResult).length === 0) {
+        if (result.filter(x => x instanceof MultiProviderResult).length === 0) {
             const resultByOtherProvider = await this.getProviderResultByOtherProvider()
             if (resultByOtherProvider) {
                 result.push(resultByOtherProvider)
@@ -91,7 +91,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
             }
             return finalResult
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 
@@ -127,17 +127,17 @@ export default class DownloadProviderLocalDataToTargetHelper {
             try {
                 requestResult = await this.downloadProviderLocalDataUntilTarget(firstSeason)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         if (!requestResult) {
             try {
                 requestResult = await this.downloadProviderLocalDataUntilTarget(this.series)
             } catch (err) {
-                if (isFailedRequestError(err)) {
-                    return new FailedProviderRequest(this.provider, err)
+                if (isFailedRequestError(err as any)) {
+                    return new FailedProviderRequest(this.provider, err as FailedRequestError)
                 }
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return requestResult
@@ -158,7 +158,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
                 currentResult = requestResult.mainProvider
             } catch (err) {
                 if (err !== FailedRequestError.ProviderNoResult) {
-                    throw new Error(err)
+                    throw new Error(err as string)
                 }
             }
         } while (!this.isProviderTargetReached(currentResult, lastLocalDataResult))
@@ -186,7 +186,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
     private isCurrentProviderIdInSeriesPresent(): boolean {
         const currentLocalData = this.series
             .getAllProviderLocalDatasWithSeasonInfo()
-            .find((entry) => entry.providerLocalData.provider === this.provider.providerName)
+            .find(entry => entry.providerLocalData.provider === this.provider.providerName)
         return !currentLocalData
     }
 
@@ -195,7 +195,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         try {
             firstSeason = await this.series.getFirstSeason()
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
         return firstSeason
     }
@@ -216,9 +216,9 @@ export default class DownloadProviderLocalDataToTargetHelper {
                 this.series.addProviderDatasWithSeasonInfos(...idProviderResult.getAllProvidersWithSeason())
             } catch (err) {
                 logger.error('Error at ProviderHelper.requestProviderInfo (See error details below):')
-                logger.error(err)
-                if (isFailedRequestError(err)) {
-                    result.push(new FailedProviderRequest(idProvider, err))
+                logger.error(err as string)
+                if (isFailedRequestError(err as any)) {
+                    result.push(new FailedProviderRequest(idProvider, err as FailedRequestError))
                 }
             }
         }
@@ -245,7 +245,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
                     result.push(instance)
                 }
             } catch (err) {
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         return result
@@ -262,7 +262,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
                     return true
                 }
             } catch (err) {
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         return false

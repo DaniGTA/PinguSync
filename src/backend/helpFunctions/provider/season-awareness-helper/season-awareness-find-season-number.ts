@@ -1,84 +1,106 @@
-import logger from '../../../../backend/logger/logger';
-import MultiProviderResult from '../../../api/provider/multi-provider-result';
-import Season from '../../../controller/objects/meta/season';
-import Series from '../../../controller/objects/series';
-import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status';
-import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data';
-import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list';
-import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser';
-import ProviderHelper from '../provider-helper';
-import DownloadProviderLocalDataToTargetHelper from '../provider-info-downloader/download-provider-local-data-to-target-helper';
-import SeasonAwarenessHelper from './season-awareness-helper';
+import logger from '../../../../backend/logger/logger'
+import MultiProviderResult from '../../../api/provider/multi-provider-result'
+import Season from '../../../controller/objects/meta/season'
+import Series from '../../../controller/objects/series'
+import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
+import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
+import ProviderList from '../../../controller/provider-controller/provider-manager/provider-list'
+import EpisodeRelationAnalyser from '../../episode-helper/episode-relation-analyser'
+import ProviderHelper from '../provider-helper'
+import DownloadProviderLocalDataToTargetHelper from '../provider-info-downloader/download-provider-local-data-to-target-helper'
+import SeasonAwarenessHelper from './season-awareness-helper'
 
 export default class SeasonAwarenessFindSeasonNumber {
     public static async getSeasonForProvider(series: Series, localData: ProviderLocalData): Promise<Season> {
-        const externalProviderInstance = ProviderList.getProviderInstanceByLocalData(localData);
+        const externalProviderInstance = ProviderList.getProviderInstanceByLocalData(localData)
         if (localData) {
             if (externalProviderInstance.hasEpisodeTitleOnFullInfo) {
-                return this.searchSeasonForProvider(series, localData);
+                return this.searchSeasonForProvider(series, localData)
             }
         }
-        throw new Error('Provider local data not existing in series (at SeasonAwarenessFindSeasonNumber.getSeasonForProvider)');
+        throw new Error(
+            'Provider local data not existing in series (at SeasonAwarenessFindSeasonNumber.getSeasonForProvider)'
+        )
     }
 
-    private static async searchSeasonForProvider(series: Series, existingLocalDataProvider: ProviderLocalData): Promise<Season> {
-        const otherProviders = SeasonAwarenessHelper.getOtherProvidersWithSeasonAwareness(series, existingLocalDataProvider);
+    private static async searchSeasonForProvider(
+        series: Series,
+        existingLocalDataProvider: ProviderLocalData
+    ): Promise<Season> {
+        const otherProviders = SeasonAwarenessHelper.getOtherProvidersWithSeasonAwareness(
+            series,
+            existingLocalDataProvider
+        )
         for (let otherProvider of otherProviders) {
-            const providerInstance = ProviderList.getProviderInstanceByLocalData(otherProvider);
+            const providerInstance = ProviderList.getProviderInstanceByLocalData(otherProvider)
             try {
                 if (otherProvider.getAllDetailedEpisodes().length === 0) {
-                    const maybeFullInfoResult =
-                        await new DownloadProviderLocalDataToTargetHelper(series, providerInstance, ProviderInfoStatus.FULL_INFO).upgradeToTarget();
+                    const maybeFullInfoResult = await new DownloadProviderLocalDataToTargetHelper(
+                        series,
+                        providerInstance,
+                        ProviderInfoStatus.FULL_INFO
+                    ).upgradeToTarget()
                     if (maybeFullInfoResult instanceof MultiProviderResult) {
-                        otherProvider = maybeFullInfoResult.mainProvider.providerLocalData;
-                        series.addProviderDatas(...maybeFullInfoResult.getAllProviders());
+                        otherProvider = maybeFullInfoResult.mainProvider.providerLocalData
+                        series.addProviderDatas(...maybeFullInfoResult.getAllProviders())
                     }
                 }
-                const updatedOtherProvide =
-                    await ProviderHelper.simpleProviderLocalDataUpgradeRequest([otherProvider], providerInstance) as ProviderLocalData | null;
+                const updatedOtherProvide = (await ProviderHelper.simpleProviderLocalDataUpgradeRequest(
+                    [otherProvider],
+                    providerInstance
+                )) as ProviderLocalData | null
                 if (updatedOtherProvide) {
-                    return await this.calcSeasonForTargetProvider(series, updatedOtherProvide, existingLocalDataProvider);
+                    return await this.calcSeasonForTargetProvider(
+                        series,
+                        updatedOtherProvide,
+                        existingLocalDataProvider
+                    )
                 }
             } catch (err) {
-                logger.error(err);
+                logger.error(err as string)
             }
         }
-        throw new Error('No season found');
+        throw new Error('No season found')
     }
     /**
      * TODO Should generate parts.
      * @param otherProvider where the season is present.
      * @param targetLocalDataProvider where the season is missing.
      */
-    private static async calcSeasonForTargetProvider(series: Series, otherProvider: ProviderLocalData, targetLocalDataProvider: ProviderLocalData): Promise<Season> {
-        const result = new EpisodeRelationAnalyser(targetLocalDataProvider.getAllDetailedEpisodes(), otherProvider.getAllDetailedEpisodes());
+    private static async calcSeasonForTargetProvider(
+        series: Series,
+        otherProvider: ProviderLocalData,
+        targetLocalDataProvider: ProviderLocalData
+    ): Promise<Season> {
+        const result = new EpisodeRelationAnalyser(
+            targetLocalDataProvider.getAllDetailedEpisodes(),
+            otherProvider.getAllDetailedEpisodes()
+        )
         if (result.finalSeasonNumbers !== undefined && result.seasonComplete) {
-            return new Season(result.finalSeasonNumbers);
+            return new Season(result.finalSeasonNumbers)
         } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder !== 1) {
-            const prequel = series.getPrequel();
+            const prequel = series.getPrequel()
             if (prequel.foundedSeries) {
-                const prequelSeason = await this.searchSeasonForProvider(prequel.foundedSeries, targetLocalDataProvider);
+                const prequelSeason = await this.searchSeasonForProvider(prequel.foundedSeries, targetLocalDataProvider)
                 if (prequelSeason.seasonPart !== undefined) {
-                    return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart);
+                    return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart)
                 }
             } else {
-                const tempPrequel = SeasonAwarenessHelper.createTempPrequelFromRelationSearchResults(prequel);
+                const tempPrequel = SeasonAwarenessHelper.createTempPrequelFromRelationSearchResults(prequel)
                 if (tempPrequel) {
-                    tempPrequel.addProviderDatas(targetLocalDataProvider);
-                    const prequelSeason = await this.searchSeasonForProvider(tempPrequel, targetLocalDataProvider);
+                    tempPrequel.addProviderDatas(targetLocalDataProvider)
+                    const prequelSeason = await this.searchSeasonForProvider(tempPrequel, targetLocalDataProvider)
                     if (prequelSeason.seasonPart !== undefined) {
-                        return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart);
+                        return new Season(result.finalSeasonNumbers, ++prequelSeason.seasonPart)
                     }
                 }
             }
         } else if (result.finalSeasonNumbers?.length === 1 && result.minEpisodeNumberOfSeasonHolder === 1) {
-            return new Season(result.finalSeasonNumbers, 1);
+            return new Season(result.finalSeasonNumbers, 1)
         } else {
-            logger.error('SEASON IS NOT COMPLETE CANT EXTRACT SEASON NUMBER !!!');
-            throw new Error('Failed to get Season');
+            logger.error('SEASON IS NOT COMPLETE CANT EXTRACT SEASON NUMBER !!!')
+            throw new Error('Failed to get Season')
         }
-        throw new Error('Failed to calc season for target provider: ' + targetLocalDataProvider.provider);
+        throw new Error('Failed to calc season for target provider: ' + targetLocalDataProvider.provider)
     }
-
-
 }

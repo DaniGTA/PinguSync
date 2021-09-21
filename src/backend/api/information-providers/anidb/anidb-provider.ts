@@ -105,7 +105,7 @@ export default class AniDBProvider extends InfoProvider {
                     }
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         if (lastResults.length !== 0) {
@@ -150,7 +150,7 @@ export default class AniDBProvider extends InfoProvider {
                 AniDBHelper.anidbNameManager.updateOnlyData(this.convertXmlToJson())
             } catch (err) {
                 logger.error('Error at AniDBProvider.constructor:')
-                logger.error(err)
+                logger.error(err as string)
             }
         }
     }
@@ -162,7 +162,7 @@ export default class AniDBProvider extends InfoProvider {
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), await this.getAniDBNameListXML())
         } catch (err) {
             AniDBHelper.anidbNameManager.updateData(new Date(Date.now()), AniDBHelper.anidbNameManager.data)
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 
@@ -182,7 +182,7 @@ export default class AniDBProvider extends InfoProvider {
                 return this.loadXML()
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         throw new Error('convert from anidb xml to json failed')
     }
@@ -205,7 +205,7 @@ export default class AniDBProvider extends InfoProvider {
             try {
                 return this.convertXmlToJson()
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
             trys++
         } while (trys < 3)

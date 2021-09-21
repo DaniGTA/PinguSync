@@ -118,7 +118,7 @@ export default class Series extends SeriesProviderExtension {
             try {
                 covers.push(...provider.covers)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
                 logger.error(
                     `[COVER] [GET] [ALL]: Failed to get all Covers from provider: ${provider.provider} (ID: ${provider.id})`
                 )
@@ -157,7 +157,7 @@ export default class Series extends SeriesProviderExtension {
      * + It prevents double entrys.
      */
     public getAllOverviews(): Overview[] {
-        const overviews = this.getAllProviderLocalDatas().flatMap((provider) => provider.getAllOverviews())
+        const overviews = this.getAllProviderLocalDatas().flatMap(provider => provider.getAllOverviews())
         return listHelper.getUniqueOverviewList(overviews)
     }
 
@@ -173,7 +173,7 @@ export default class Series extends SeriesProviderExtension {
         } else if (existingBindingPool.length !== 0) {
             this.episodeBindingPools = listHelper.removeEntrys(this.episodeBindingPools, ...existingBindingPool)
             const newBindingPool = new EpisodeBindingPool(
-                ...[...existingBindingPool.flatMap((x) => x.bindedEpisodeMappings), ...episodeMappings]
+                ...[...existingBindingPool.flatMap(x => x.bindedEpisodeMappings), ...episodeMappings]
             )
             this.episodeBindingPools.push(newBindingPool)
             logger.debug(`[Series] (${this.id}) Merging episode bindings`)
@@ -235,8 +235,8 @@ export default class Series extends SeriesProviderExtension {
     public getMaxEpisode(): number {
         logger.debug('[Episode] [Serve]: Serve Max Episodes')
         const providers = this.getAllProviderLocalDatas()
-        const array = providers.flatMap((x) => x.episodes) as number[]
-        const onlyNumbers = array.filter((v) => Number.isInteger(v))
+        const array = providers.flatMap(x => x.episodes) as number[]
+        const onlyNumbers = array.filter(v => Number.isInteger(v))
         if (onlyNumbers.length === 0) {
             throw new Error('[Series] no episode found SeriesID: ' + this.id)
         }
@@ -250,7 +250,7 @@ export default class Series extends SeriesProviderExtension {
         logger.debug('[Episode] [Serve]: Serve all Episodes')
         let result
         try {
-            result = listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap((x) => x.episodes))
+            result = listHelper.cleanArray(this.getAllProviderLocalDatas().flatMap(x => x.episodes))
         } catch (e) {
             logger.error(e)
         }
@@ -293,7 +293,7 @@ export default class Series extends SeriesProviderExtension {
                 return Object.assign(new Season(), this.cachedSeason)
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         logger.warn('Created undefined temp season')
         return new Season()
@@ -314,7 +314,7 @@ export default class Series extends SeriesProviderExtension {
                             // tslint:disable-next-line: triple-equals
                             if (entryListProvider.providerName === listProvider.provider) {
                                 if (
-                                    listProvider.prequelIds.findIndex((x) =>
+                                    listProvider.prequelIds.findIndex(x =>
                                         ProviderComperator.simpleProviderIdCheck(entryListProvider.id, x)
                                     ) !== -1
                                 ) {
@@ -326,7 +326,7 @@ export default class Series extends SeriesProviderExtension {
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return new RelationSearchResults(null, ...searchedProviders)
     }
@@ -348,7 +348,7 @@ export default class Series extends SeriesProviderExtension {
                         for (const entryListProvider of entry.getAllProviderBindings()) {
                             if (entryListProvider.providerName === listProvider.provider) {
                                 if (
-                                    listProvider.sequelIds.findIndex((x) =>
+                                    listProvider.sequelIds.findIndex(x =>
                                         ProviderComperator.simpleProviderIdCheck(entryListProvider.id, x)
                                     ) !== -1
                                 ) {
@@ -361,14 +361,14 @@ export default class Series extends SeriesProviderExtension {
             }
         } catch (err) {
             logger.error('Error at Series.getSequel')
-            logger.error(err)
+            logger.error(err as string)
         }
         return new RelationSearchResults(null, ...searchedProviders)
     }
 
     public getProviderSeasonTarget(providerName: string): Season | undefined {
         const bindings = this.getAllProviderBindings()
-        const result = bindings.find((x) => x.providerName === providerName)
+        const result = bindings.find(x => x.providerName === providerName)
         if (result) {
             return Object.assign(new Season(), result.targetSeason)
         }
@@ -445,7 +445,7 @@ export default class Series extends SeriesProviderExtension {
                     try {
                         relations.push(this.searchInProviderForRelations(entry, entry2))
                     } catch (err) {
-                        logger.debug(err)
+                        logger.debug(err as string)
                     }
                 }
             }
@@ -458,11 +458,11 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public isAnySequelPresent(): boolean {
-        return this.getAllProviderLocalDatas().findIndex((provider) => provider.sequelIds.length !== 0) !== -1
+        return this.getAllProviderLocalDatas().findIndex(provider => provider.sequelIds.length !== 0) !== -1
     }
 
     public isAnyPrequelPresent(): boolean {
-        return this.getAllProviderLocalDatas().findIndex((provider) => provider.prequelIds.length !== 0) !== -1
+        return this.getAllProviderLocalDatas().findIndex(provider => provider.prequelIds.length !== 0) !== -1
     }
 
     public getMediaType(): MediaType {
@@ -521,7 +521,7 @@ export default class Series extends SeriesProviderExtension {
 
     public getAverageProviderInfoStatus(): ProviderInfoStatus {
         const providers = this.getAllProviderLocalDatas()
-        const providerInfoStatusCollection = providers.flatMap((provider) => provider.infoStatus)
+        const providerInfoStatusCollection = providers.flatMap(provider => provider.infoStatus)
         const average = listHelper.getMostFrequentNumberFromList(providerInfoStatusCollection)
         if (average !== undefined) {
             return average

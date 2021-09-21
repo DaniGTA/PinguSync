@@ -36,7 +36,7 @@ export default class MainListPackageManager {
                     seriesPackageList.push(tempPackage)
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return seriesPackageList

@@ -72,7 +72,7 @@ export default class ListController {
                 }
             } catch (err) {
                 logger.error('[ListController] [updateWatchProgressTo]: (see error next line)')
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         await this.addSeriesToMainList(anime)
@@ -102,7 +102,7 @@ export default class ListController {
                     void this.addSeriesToMainList(result)
                 } catch (err) {
                     logger.error('[ListController] [forceRefreshProviderInfo]: (see error next line)')
-                    logger.error(err)
+                    logger.error(err as string)
                 }
             }
         }
@@ -128,7 +128,7 @@ export default class ListController {
                 }
             } catch (err) {
                 logger.error(`[Error] -> ${provider.providerName} -> AllSeries`)
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return multiProviderResults
@@ -151,7 +151,7 @@ export default class ListController {
             }
         } catch (err) {
             logger.error('[ListController] [checkIfProviderExistInMainList]: (see error next line)')
-            logger.error(err)
+            logger.error(err as string)
         }
         return entry
     }

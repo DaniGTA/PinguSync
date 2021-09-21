@@ -38,7 +38,7 @@ export default class OAuthListener {
             try {
                 listener(code)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
     }

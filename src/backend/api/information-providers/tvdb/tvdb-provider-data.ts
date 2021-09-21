@@ -26,7 +26,7 @@ export class TVDBProviderData {
             logger.warn('[IO] Write tvdb user file.')
             fs.writeFileSync(dataPath, JSON.stringify(this))
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 
@@ -40,7 +40,7 @@ export class TVDBProviderData {
                 Object.assign(this, loadedData)
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 

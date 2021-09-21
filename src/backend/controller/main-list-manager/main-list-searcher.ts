@@ -29,7 +29,7 @@ export default class MainListSearcher {
                     return serie
                 }
             } catch (err) {
-                logger.warn(err)
+                logger.warn(err as string)
             }
         }
         logger.debug('serch series with multiprovider result: NOT FOUND')
@@ -69,7 +69,7 @@ export default class MainListSearcher {
      */
     public static findSeriesById(id: string): Series | null {
         const list = MainListManager.getMainList()
-        return list.find((x) => x.id === id) ?? null
+        return list.find(x => x.id === id) ?? null
     }
 
     public static getAllSeriesWithTypeList(list: ListType): Series[] {

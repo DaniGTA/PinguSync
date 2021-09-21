@@ -4,7 +4,7 @@ import InfoProvider from '../../api/provider/info-provider'
 import ListProvider from '../../api/provider/list-provider'
 import MultiProviderResult from '../../api/provider/multi-provider-result'
 import FailedProviderRequest from '../../controller/objects/meta/failed-provider-request'
-import { isFailedRequestError } from '../../controller/objects/meta/failed-request'
+import { FailedRequestError, isFailedRequestError } from '../../controller/objects/meta/failed-request'
 import Series from '../../controller/objects/series'
 import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
@@ -51,8 +51,8 @@ export default class ProviderInfoHelper {
                     }
                 }
             } catch (err) {
-                if (isFailedRequestError(err)) {
-                    new FailedProviderRequest(infoProvider, err)
+                if (isFailedRequestError(err as string)) {
+                    new FailedProviderRequest(infoProvider, err as FailedRequestError)
                 }
                 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 logger.error(`[ProviderHelper] requestFullProviderUpdate #1: ${err}`)
@@ -120,7 +120,7 @@ export default class ProviderInfoHelper {
                 }
             } catch (err) {
                 logger.debug('[ProviderInfoHelper]: Cant get instance from provider: ' + currentProvider.provider)
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         const maxEpisodeNumber = this.getFromAllProviderLocalDataMaxEpisodeNumber(allNonSeasonAwareProviderLocalDatas)
@@ -150,7 +150,7 @@ export default class ProviderInfoHelper {
                     maxSeasonNumber = seasonNumber
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return maxSeasonNumber
@@ -166,7 +166,7 @@ export default class ProviderInfoHelper {
                     maxEpisodeNumber = episodeNumber
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
 

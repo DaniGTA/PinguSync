@@ -3,7 +3,7 @@ import InfoProvider from '../../api/provider/info-provider'
 import ListProvider from '../../api/provider/list-provider'
 import MultiProviderResult from '../../api/provider/multi-provider-result'
 import FailedProviderRequest from '../../controller/objects/meta/failed-provider-request'
-import { isFailedRequestError } from '../../controller/objects/meta/failed-request'
+import { FailedRequestError, isFailedRequestError } from '../../controller/objects/meta/failed-request'
 import Series from '../../controller/objects/series'
 import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
@@ -30,7 +30,7 @@ export default class NewProviderHelper {
                     return true
                 }
             } catch (err) {
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         return false
@@ -141,10 +141,10 @@ export default class NewProviderHelper {
                     results.push(result)
                 }
             } catch (err) {
-                if (isFailedRequestError(err)) {
-                    results.push(new FailedProviderRequest(provider, err))
+                if (isFailedRequestError(err as any)) {
+                    results.push(new FailedProviderRequest(provider, err as FailedRequestError))
                 }
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         return results
@@ -272,7 +272,7 @@ export default class NewProviderHelper {
         try {
             return await provider.isUserLoggedIn()
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
         return false
     }

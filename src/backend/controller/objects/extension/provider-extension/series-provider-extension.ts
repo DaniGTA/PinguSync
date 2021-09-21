@@ -90,7 +90,7 @@ export default class SeriesProviderExtension {
             }
         } catch (err) {
             logger.error('Error at SeriesProviderExtension.addProviderDatasWithSeasonInfos')
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 

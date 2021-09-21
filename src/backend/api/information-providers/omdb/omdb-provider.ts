@@ -66,7 +66,7 @@ export default class OMDbProvider extends InfoProvider {
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return results
     }

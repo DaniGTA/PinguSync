@@ -69,7 +69,7 @@ export default new (class TraktConverter {
         try {
             provider.addSeriesName(new Name(show.title, 'en', NameType.OFFICIAL))
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
 
         provider.addSeriesName(new Name(show.ids.slug, 'slug', NameType.SLUG))
@@ -94,7 +94,7 @@ export default new (class TraktConverter {
         try {
             provider.addSeriesName(new Name(traktMovie.title, 'en', NameType.OFFICIAL))
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
         provider.addSeriesName(new Name(traktMovie.ids.slug, 'slug', NameType.SLUG))
         provider.releaseYear = traktMovie.year
@@ -143,7 +143,7 @@ export default new (class TraktConverter {
                 provider.addDetailedEpisodeInfos(...(await this.getDetailedEpisodeInfo(seasonInfo)))
             } catch (err) {
                 logger.error('[Trakt] Error: Failed to convert episode infos.')
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         const multiProviderResult = []

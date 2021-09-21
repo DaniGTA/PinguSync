@@ -44,7 +44,7 @@ export default class DownloadProviderLocalDataWithoutId {
                     return result
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
             result = await this.getProviderSeriesInfoBySeriesName()
             if (result) {
@@ -91,8 +91,8 @@ export default class DownloadProviderLocalDataWithoutId {
                         }
                     } catch (err) {
                         logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo')
-                        logger.error(err)
-                        if (isFailedRequestError(err) && err !== FailedRequestError.ProviderNoResult) {
+                        logger.error(err as string)
+                        if (isFailedRequestError(err as string) && err !== FailedRequestError.ProviderNoResult) {
                             throw err
                         }
                     }
@@ -117,7 +117,7 @@ export default class DownloadProviderLocalDataWithoutId {
             const linkResult = await this.linkProviderDataFromRelations()
             return new MultiProviderResult(linkResult)
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
         }
     }
 
@@ -163,7 +163,7 @@ export default class DownloadProviderLocalDataWithoutId {
                         }
                     } catch (err) {
                         logger.error('Error at ProviderInfoDownloadHelper.linkProviderDataFromRelations')
-                        logger.error(err)
+                        logger.error(err as string)
                     }
                 }
             }
@@ -199,7 +199,7 @@ export default class DownloadProviderLocalDataWithoutId {
                 )
             } catch (err) {
                 logger.debug('[ERROR] [ProviderInfoDownloadHelper] [getNamesSortedBySearchAbleScore]:')
-                logger.debug(err)
+                logger.debug(err as string)
             }
             return listHelper.getLazyUniqueStringList(names)
         } else {
@@ -257,7 +257,7 @@ export default class DownloadProviderLocalDataWithoutId {
             timeout.cancel()
         } catch (err) {
             timeout.cancel()
-            if (isFailedRequestError(err)) {
+            if (isFailedRequestError(err as string)) {
                 throw err
             }
             throw FailedRequestError.ProviderNoResult

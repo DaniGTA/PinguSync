@@ -7,8 +7,8 @@ export default class TitleCheckHelper {
     public static checkSeriesNames(a: Series, b: Series): boolean {
         const aNamesUnique = a.getAllNamesUnique()
         const bNamesUnique = b.getAllNamesUnique()
-        const aNameList: string[] = aNamesUnique.flatMap((x) => x.name)
-        const bNameList: string[] = bNamesUnique.flatMap((x) => x.name)
+        const aNameList: string[] = aNamesUnique.flatMap(x => x.name)
+        const bNameList: string[] = bNamesUnique.flatMap(x => x.name)
         return this.checkNames(aNameList, bNameList)
     }
 
@@ -86,7 +86,7 @@ export default class TitleCheckHelper {
             }
             return false
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
             return false
         }
     }
@@ -99,7 +99,10 @@ export default class TitleCheckHelper {
             if (title.match(/Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gim)) {
                 const match = /Season\s{1,}(\d{1,})|(\d{1,})nd.Season|(\d{1,})nd/gim.exec(title)
                 if (match != null) {
-                    return title.replace(match[0], '').replace('  ', ' ').trim()
+                    return title
+                        .replace(match[0], '')
+                        .replace('  ', ' ')
+                        .trim()
                 }
             } else if (title.toLocaleLowerCase().includes('episode')) {
                 return title
@@ -113,7 +116,9 @@ export default class TitleCheckHelper {
                 }
 
                 if (countLastChar !== 1) {
-                    return StringHelper.reverseString(reversedTitle).replace('  ', ' ').trim()
+                    return StringHelper.reverseString(reversedTitle)
+                        .replace('  ', ' ')
+                        .trim()
                 }
             }
         }
@@ -199,7 +204,7 @@ export default class TitleCheckHelper {
                 }
             } catch (err) {
                 logger.debug('Cant clean string list.')
-                logger.debug(err)
+                logger.debug(err as string)
                 continue
             }
         }

@@ -1,30 +1,29 @@
-import ListProvider from '../../../api/provider/list-provider';
-import OAuthListener from './o-auth-listener';
+import ListProvider from '../../../api/provider/list-provider'
+import OAuthListener from './o-auth-listener'
 
 export default class OAuthController {
-    constructor(private provider: ListProvider) {
-    }
+    constructor(private provider: ListProvider) {}
 
     public async isOAuthFlowSuccessfull(): Promise<boolean> {
-        const code = await this.getRedirectCode();
-        return this.provider.addOAuthCode(code);
+        const code = await this.getRedirectCode()
+        return this.provider.addOAuthCode(code)
     }
     private async getRedirectCode(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             try {
-                OAuthListener.listen();
-                OAuthListener.onCallback((s) => {
+                OAuthListener.listen()
+                OAuthListener.onCallback(s => {
                     if (s) {
-                        resolve(s);
+                        resolve(s)
                     } else {
-                        reject();
+                        reject()
                     }
-                    OAuthListener.stopListen();
-                });
+                    OAuthListener.stopListen()
+                })
             } catch (err) {
-                OAuthListener.stopListen();
-                reject(err);
+                OAuthListener.stopListen()
+                reject(err as string)
             }
-        });
+        })
     }
 }

@@ -106,7 +106,7 @@ export default class MalProvider extends ListProvider {
                 return true
             }
         } catch (err) {
-            logger.warn(err)
+            logger.warn(err as string)
             return false
         }
         return false
@@ -139,7 +139,7 @@ export default class MalProvider extends ListProvider {
                 }
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
 
         return endResults
@@ -174,7 +174,7 @@ export default class MalProvider extends ListProvider {
                 return this.isUserLoggedIn()
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return false
     }

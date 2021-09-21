@@ -17,7 +17,7 @@ export default abstract class ProviderFileSettings {
                 Object.assign(this, loadedData)
             }
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 
@@ -30,7 +30,7 @@ export default abstract class ProviderFileSettings {
             }
             fs.writeFileSync(filePath, JSON.stringify(this), { encoding: 'utf8', flag: 'w+' })
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 

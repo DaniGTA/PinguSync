@@ -67,7 +67,7 @@ export default class ProviderSetup extends Vue.with(Props) {
                 console.log('listen for auth status finished')
             }
         } catch (err) {
-            console.log(err)
+            console.log(err as string)
         }
     }
 

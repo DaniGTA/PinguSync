@@ -117,7 +117,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                     }
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return finalResult
@@ -156,7 +156,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                     }
                 }
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return []
@@ -188,7 +188,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
                 ).downloadProviderSeriesInfoBySeriesName(names)
                 providerLocalData = result?.mainProvider.providerLocalData
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         return providerLocalData
@@ -205,7 +205,7 @@ export default class SeasonAwarenessCreatorSeasonNumber {
         try {
             return (await series.getFirstSeason()).getOneProviderLocalDataByExternalProvider(providerInstance)
         } catch (err) {
-            logger.debug(err)
+            logger.debug(err as string)
             return undefined
         }
     }

@@ -39,7 +39,7 @@ export default class MainListManager {
                             series = await series.merge(entry, false)
                             MainListManager.removeSeriesFromMainList(entry, notfiyRenderer)
                         } catch (err) {
-                            logger.error(err)
+                            logger.error(err as string)
                         }
                     }
                 } else {
@@ -54,7 +54,7 @@ export default class MainListManager {
                 logger.info(`[MainList] Series was added to MainList. New list size: ${this.mainList.length}`)
                 await this.addSeriesToList(...results)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
                 return false
             }
             return true
@@ -120,7 +120,7 @@ export default class MainListManager {
                     }
                     await MainListManager.addSerieToMainList(entry)
                 } catch (err) {
-                    logger.error(err)
+                    logger.error(err as string)
                 }
                 if (this.secondList.length !== 0) {
                     this.secondList.shift()
@@ -130,7 +130,7 @@ export default class MainListManager {
             logger.info(`[MainList] Finish Cleanup Mainlist. Current list size: ${this.mainList.length}`)
         } catch (err) {
             logger.error('Error at MainListManager.finishListFilling')
-            logger.error(err)
+            logger.error(err as string)
         }
         MainListManager.listMaintance = false
         MainListManager.secondList = []
@@ -209,7 +209,7 @@ export default class MainListManager {
             try {
                 await series.generateEpisodeMapping()
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
             MainListManager.mainList.push(series)
         }

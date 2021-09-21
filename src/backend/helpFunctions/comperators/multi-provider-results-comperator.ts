@@ -96,7 +96,7 @@ export default class MultiProviderComperator {
                 }
             } catch (err) {
                 logger.debug('[MultiProviderComperator] See error below:')
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
 
@@ -111,9 +111,9 @@ export default class MultiProviderComperator {
     }
 
     private static isNameListAbsoluteSame(nameAList: Name[], nameBList: Name[]): boolean {
-        const cleanedStringListA = nameAList.flatMap((x) => StringHelper.cleanString(x.name))
-        const cleanedStringListB = nameBList.flatMap((x) => StringHelper.cleanString(x.name))
+        const cleanedStringListA = nameAList.flatMap(x => StringHelper.cleanString(x.name))
+        const cleanedStringListB = nameBList.flatMap(x => StringHelper.cleanString(x.name))
 
-        return !!cleanedStringListA.find((nameA) => cleanedStringListB.findIndex((nameB) => nameA === nameB) !== -1)
+        return !!cleanedStringListA.find(nameA => cleanedStringListB.findIndex(nameB => nameA === nameB) !== -1)
     }
 }

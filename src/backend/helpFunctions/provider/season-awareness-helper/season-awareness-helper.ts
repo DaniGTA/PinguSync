@@ -21,7 +21,7 @@ export default class SeasonAwarenessHelper {
                     result = true
                 }
             } catch (err) {
-                logger.debug(err)
+                logger.debug(err as string)
             }
         }
         return result
@@ -60,7 +60,7 @@ export default class SeasonAwarenessHelper {
                         collectedProviders.push(providerLocalData)
                     }
                 } catch (err) {
-                    logger.debug(err)
+                    logger.debug(err as string)
                 }
             }
         }

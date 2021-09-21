@@ -24,7 +24,7 @@ export default class IPCBackgroundController {
                 logger.info('worker send: ' + channel)
                 success = true
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
     }
@@ -40,12 +40,12 @@ export default class IPCBackgroundController {
                     await f(JSON.parse(data.data as string), data.trackingToken)
                 }
             } catch (err) {
-                logger.debug(err)
+                logger.debug(err as string)
             }
             try {
                 await f(data.data as T, data.trackingToken)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         })
     }

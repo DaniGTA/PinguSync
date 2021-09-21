@@ -95,7 +95,7 @@ export default class FrontendSeriesController {
             const firstCover = allCovers?.find(x => !x.failed)
             return firstCover?.url
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
         return
     }

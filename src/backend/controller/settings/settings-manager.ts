@@ -45,7 +45,7 @@ export default class SettingsManager {
     public addListSetting(newListSetting: ListSettings, providerName: string): void {
         const providerSettings = this.getProviderSetting(providerName)
         const listSetting = providerSettings.listSettings.findIndex(
-            (entry) => entry.listInfo.name === newListSetting.listInfo.name
+            entry => entry.listInfo.name === newListSetting.listInfo.name
         )
         if (listSetting !== -1) {
             providerSettings.listSettings[listSetting] = newListSetting
@@ -64,7 +64,7 @@ export default class SettingsManager {
                 const providerLists = await providerInstance.getAllLists()
                 this.updateListEntrys(providerLists, providerName)
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
             return this.getProviderSetting(providerName).listSettings
         }
@@ -97,7 +97,7 @@ export default class SettingsManager {
     private updateListEntrys(lists: ProviderUserList[], providerName: string): void {
         const currentListSettings = this.getProviderSetting(providerName).listSettings
         for (const entry of lists) {
-            const existingEntry = currentListSettings.find((x) => x.listInfo.name == entry.name)
+            const existingEntry = currentListSettings.find(x => x.listInfo.name == entry.name)
             if (!existingEntry) {
                 this.addListSetting(new ListSettings(entry), providerName)
             }
@@ -112,7 +112,7 @@ export default class SettingsManager {
                 this.loadedSetting = JSON.parse(readFileSync('settings.json', { encoding: 'utf8' })) as Settings
                 return this.loadedSetting
             } catch (err) {
-                logger.error(err)
+                logger.error(err as string)
             }
         }
         this.loadedSetting = new Settings()

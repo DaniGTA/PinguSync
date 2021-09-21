@@ -106,7 +106,7 @@ export default class Name {
                 }
             } catch (err) {
                 logger.debug('[getSeasonNumbersInNames] Failed extracting season from name: ' + nameObj.name)
-                logger.debug(err)
+                logger.debug(err as string)
                 continue
             }
         }

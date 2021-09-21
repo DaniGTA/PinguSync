@@ -101,7 +101,7 @@ export default class MainListAdder {
                     logger.info(`[MainListAdder] Adding Series to list. Progress: ${addCounter}/${list.length}`)
                 } catch (err) {
                     logger.error('[MainListAdder] [listWorker]: (error below)')
-                    logger.error(err)
+                    logger.error(err as string)
                 }
                 listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache)
             }
@@ -122,7 +122,7 @@ export default class MainListAdder {
 
             await MainListManager.updateSerieInList(series)
         } catch (err) {
-            logger.error(err)
+            logger.error(err as string)
         }
     }
 

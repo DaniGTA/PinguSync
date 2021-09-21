@@ -58,7 +58,7 @@ export default class TVMazeProvider extends InfoProvider {
             }
             return results
         } catch (err) {
-            logger.info(err)
+            logger.info(err as string)
         }
         throw new Error('Test')
     }
