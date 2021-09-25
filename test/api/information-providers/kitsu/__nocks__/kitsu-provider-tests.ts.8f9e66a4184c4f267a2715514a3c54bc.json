@@ -1,8 +1,66 @@
 [
     {
+        "scope": "https://api.themoviedb.org:443",
+        "method": "GET",
+        "path": "/3/tv/57041/season/3?api_key=b655dfd5dba228ff61cafdceff6048f6",
+        "body": "",
+        "status": 200,
+        "response": [
+            "f180c5634472d2ea01d0081d3ee7fd97aa7d45e91b9ed1fc2a884b80167396d6884694b4b335f5003c004d34bac13604c1730af28bd6a53f0ee4bf99590a8ace8f3c4fc6c53e5590ad4471648855906c784974effd5f055475cfe0ba7bb8c00c0dd0e41e8121f7cc90c733aeba87b8191aedceee596b43c94789a0cc44ce7796c88669e6e4ae3fb7b8328060882d2b3686ca7ffbd65fb3ad318a08c76186c9d2aaf685f89ab00e600428948a71ffaafeabf68b45b51fb5b6d7f67bd86c773b0da266abd37103376877fc9a5343a67eadbb5dfb51b3b4b33f375acf8d66cda91dcc9dd2b51f7ffcaf19a35fdbeed67eb84e4d6956d47efcf14f4e0d62ffeb148548bf88dd792ebfd568f53a4e4d60bec6731f5382b55404777dfa7c291309cc358c983eeb65347246e9c879be75256fc42b989bde9a5393375222c86b3f6a53b599cb185cbfff5a29d37032ca06183fbfe0130e1451a4b80432869fcb3f07e6287ed6400a107704fac20545f63198c129418a7acda9019133297ec97955ed47ade6d4c0b4a238a4e9b4d9ba5fb8fea4b51fb53f741e4132ee6dfb8dcb6031491ffcd54c0fcacd6c6bf5dacf46ead44eec897f69c5deda8f4ebdf1b20e1cedf66b3fdcff719098cc6dd4c1ab755f636f3969e82b82354624b7c712100c94cc48c81b48bd301c52263489c4e60c8c0a82bb45a9c116f7216bafae0f2bbe07507423ec6a606f408030644200f0b499b10bcbd0a05ccfa0c2f66c753bc4c6fb87f6c6ad62f2487d3fe86471e24ff5698fd7ad43b3d6fbcad660661fcb11798686dd489e6f3837d2c212736950490bdfddf4a52882efe080712f31ec4eeb3718e45b4e910627416de749537311d605eac0fba71a4ed46a82373bc3bb54f2612bc481a783f18d02909c7b28ea77637f3155af82edee44e06afbb2b1bb6ae9effde4eddcde9c76d949dea6c9bc561d5a1b7c87f36b50f4a401e19832012b260806644a220107a3482426d55afcd8ce849920ade9ffaa6dc60c025a4d2dd37b584a11492b747b93b94529c30a5ce0c16e256d1d8eb8d88e2c08aa05f26ca808906ba90d334c41f349c774f3842408a57fe7425459a2cb0577fd6b797bd793b97a53de0ae9de9cead0dd55fbb9e14ebc3de6bbd93cef69e7e3c244c9ff6f9aa18ae078b0035951be9125b48549054d5f80014f321d2147a67980c638b9c23dfb0a144118d18066241cf369578514c18b2b002194a21d66042348f1ac490f2df826709722ab07283432279a4b20d5a0768e02b1a7cd1133d436613fff9d5ba6776c8cf6f3f3038bcb61c4e6091736a55befcd9dead31baf5787ce0e8dbde6ebf3cf7a7c8a128b41fef303426346f7e1c8722612d0a0fd3da11421b761e15a8899404ecaedbe43b3f137d34947ec14d2bb2782be0a05f9ef6caac306c70287aff776ef142c8eab68de1d19b63924535dfcc9dc761dba350fb10dc29e55dbd890805eb8de43045b6b602ee060a388048ce8708ac27c89252656216018f62ce3d00e7a3321c34c0318c5fb119835a4e2dc2e6819864abb4898c389a4334c411f560b024a5cf612410599439a437029a6d545b8a008a3566b086c9811ce972564e9d13211d9c74734f81bbcf331e31c63ecc0c347832ea4d18056c1327dd9a90fdbeb14f3d3ec2d94ebcb7e95ba6ffdf1c5bab0c93caf0ebd5af345972cd23092e2ebf3cfa6b34ba63219cc64d5650a76982bde0f0d13226e1f812c9d6a49986c49fcc456fd3510de31b30f84406afd1465216e1d919013bd3c20a42c6399cca5625d5d494294426468d494539590ca12520a0fa792df0a2e328051ea22f5a146306cbb98ea75c02a64c2fa8394986e47f7a399f13d3bf67adbd6db6e9a4ee3f975f06b2dc6b36153d31e9051f9f68a62fc9026ae13a4a9270d87a4868401399f04c1507926659d270d29dc32082a212b8c81453a0ef0735a65902cee06f4a201c083917e15ab86bd0f9c5deee2a339d8d19175ed6be3daf65fdd643dedaaf3dc685f68b7f16ba4edd94abe623135b8f701c19036a23edb3be6f8c08c71b4900afc59224ce2d0d645e5a1344a3ec5425a06717fa8a9039934b27fbe6f53726e060b121cb0067c21d5d0962fc5c08c46e861a5285496f9a72ad8b28de6ce0fabfbf96167a829ae8a7b860f8d5e57f05bba1ffbc04db7c7fc76e1fbb3017547b39d8c352f94909683f8a7dfdbb61430178214ec14d352c4bff9128d6e784e641a98e8155e751e84c9fb92253091a3213858ca58983230bace7600b9b78964416e34608dbf718c9c036a4e5440d76d88143214f3c2a9b53474e6391878aa586f72f55f0a51e8e074789483ae98f5e6a740cfaa71104c5d6fe7d9f53feae0d53abd238a996086e478be91848d34b022033cd6c29429cefac45091307eabf75d5a38698a5a1318b2843dcf23455a6bf8d41f20dd19edf371347bbc7048ef3fc13045117ab297b25f9f7fe61c2652251bcb4f79a0385d82ea6658e22db05798f5a03037d5c01b924543fc9022b079a43b5f8614a4521bd2ba09b3363d1f4aabcc329131c66f2ab5a9c34ff153f4411ba92a7f68e21ca8cfac00bb8b214f0783ce2a508001b554152c6e94471eeedb6ee2e7de7dff186174de6daa736b381dd219afb30f5c2e6107ff85fb3060caa41156c0045cdd6349c298d71966a86123616440486904ffeeca865915577e09618dcf774e254cc968381502f55337f90048384b95593959dd0eaf80f87430539112730213adb26065cae8d2580dbdeafe65562cb8902313d006a9962e1f68c7751d31474741c6d841347975118f63c63f7f36bccc17e17b271c47aafb989cbbc5aad98a65ba9dbe6363fcc676ba0ce879c04a8cf9ddd6902347db5e21192703afc7ba29bbac83b4b162a3cfbb69bda9903329f909f457fcac95a8d36b0f0d01b17dcd9fb53a5cb5075c1ddef6376099f34ab68cd51756bd78d37558e3cd9490ca1bca2a969fc78af783cbc6aedf5727d59c34cdf8e09f4fed5b63da46970cbd08dcf64791263a430507ace0201f9fd986045b013b5b436ac311bddaf3c28a6504074238a98b18dd010706d62c74edade0d592e64d18a35daa04644b5df41ae25cc3da304f8c90296c2083f111b8b85dd01210adec4c04212795e9bcc0e14b4ea6e1ee39621a96eb9a7dd2509c780d079656b14c3a70b1da34c2bd293d45a08b55489ee838b51ed7e7cd2167da338c0acd58215e6de4bc88142c788c90b61a3af241adc79066b9792065b91e5549fe78b522c8d343f23e6f3ede3269cff7625875c2d9681ab73be1ce17db8dc60b1c6c9e9382570ca9a370c413acb4cd4fac803ad510f404ece6cf0e9ab080cbf68aab4ed33b16798a02c394394da373fcfffba1044b74e088e4c0b2b23620267ce3cb01645f1a51fba5477cfcc71b294ca4801d720cc90184ab45a588c315bcba399088087eb40dbb45c21078e93670886dc93155958adc60a0ad62b2fd3629671f8f46efd4ba4fba91d1d3cd9be98dbc3715a86da34b205f78b7fb79a0d72a57e960caa532753b25d3a4b24494dd480e7bf2a6985b1d2b541f2f991a64176214502d34771f420212a498e74d5f445c31cb8c1611ab0a12a8192b6436850aa5d99cd4989f7f6bb485306505141c7327cc37afebb0b97019d900bc616e542582029c746f8ed03ed8dc89caea948a695fbe9188e2f8eb59cc6aedfe687a260e818c288e8d44ad56927d7400fa6512621e2b2c370aa19e391d5b7e38abbe3effb626deabfb5e5e41fbb920da843b7ba18359fcfafcfbb7cd93900c46f53122e3154a0956c9dd617d6c006ad660b5d7af11514c42b31bd56188c2d59a4bac6d59a530a08759d1974dec97ff50fc2a486551ac67c7e678f7b29db5d234196170a1b2bf8fe6d3a44d77e2bdb186db3320b4a6c21145d90540d00e8e5f1fd0c702487c4490886b81243f22d59b45eb898a1ecd8685a1ebea6a63f3a08792ec8ac9c483e511accde82a28a5a5849fd0b3353265b9b38370fe60d44f15633dd91aed5cb79fe3eb7a33dd2e6ee3661a9eafcbb7c7039dd1f739717face1c16e9b06167b00f900c3ac53ce3020611c98caf095c769a53d918a625016b62a365302fc65f714466c711e36c708e8a2302c32e4e3ef63dda3b2279bc5fdd69fb6df46eb708e3ed2add47a14922467534178cf0ef432c73d57115ea91f254a404b4d85a9fd1a6ea8eb00b2bc841506c69174f45a33402233d020d080bc812ae8dd3f7425ae2fb1bea5ad906f7bddc747fed259f33376f3646eeb47e0356acde4cc94f019618c610a03796fa5ee9025a880c9543bc84d780f0ae0010ecb9713381a86cb879c38b7",
+            "321fe34c2a4d30b2f1974b1e72797f135c30f364321fa5bffb3892759811de2ad0b9cc484d2c7944bad0724dc2719ae1b60714baaf6067b77b52f3222fdbbd93db3cec185e5fd7bdd36d17c7890fe98de75e049edb19b5b625079d614fdaa05508d9fb3e1f48acf90476ad305ac14d4c1077e03d85a9941c86189321c510565684f3e6cc1f608bb9f8276d9864a4d4ba23a653e7054c36f993815dc4c79bb15dd26d67dea132d0ff013ff5aba17da53276cbd1d64da8f08e8a2164bd1900e235003b955a1e152eeafacf9acea5ca26824ade1386617893174e4461e4f3c5dbf4db944ca14e0626b83ae93543e4709b84ccf85e5e4806137c16faa7cd51bc9a85689f9c29c59b0ceb00bb79d8c0ed0cc95c43299ba515108390948828d4feee6916403bced67fd62ce0024e8109ea4c3a6510a082e0ae58236929941edca744ea98d7663c0c6f4c5cc011545753b1413d58a632b15228f590b78d4aaed560c64115bbbd173a3dbdcb436e4ea2d3b9cd5c77371a7fb0f55a7931d7db7bf67acf3a78b54eb291fcc248bbb0c986547317261c0df34c40b904768cbd2bca0a1dc8a26c115ca0cd3c2f158f9a2f11bc45cd994f18e3940bdb2ec1f7fd6e3adf08fdcd1acd228d816b6b96cb9d6281619d5a85a3b8429e4402d73205818c581d9c6e021f51ef1cecc78034581563eabc9c1e5f3d36bf3dc2b9dff4aee574b5de1deea3c36397fe73a335f1e60e1e97238e58e8172860776395b166773437741f7fcfa4305518118dae689d895516254ac2e81405f6d6d78d66aeb01638de414b9f33b9469e97645ea060e8590fb57fb7c7f5e0044234c14531851fb77c5988c5b49086c1472b5129fa88600ea4afab984fd7849deffd444f6ea75927f65fe7977240e166fe18a5bbf49f5d771fb49ec1b3d5e737b4c12dd1df4b221c643c9e03c57eb60a75ffae0ec2940e359e539f858a04124b474a70dbe54a1bcad5a598f636a4730f11dd9826c8d0ebf5dd3b94545d6808acdc4af1bc5696fa2a4ce330c6d2110ba6fe204b150335ad6039750764e77929741d4f634f6621c6d219db16b8c1725e57d461442143d322c644818b86091a3a6096e58495f44098a24a22ae8ec7fcac46729aa8fce1b2ba2ceb3a9cf41ec00a45d97a5e380c33364d7b00738b72f3b98704e515f0759d33381a95d59a5a356ea04039a994f6c0f3adc86632ac0cc1720c6564aa887d9d5689fd861609a21e0b4c81f28fd81320804033b211b867b95152a0c052dd1953ca3b1481098e14bf295975cefabac0f5437a02456cd3e9464383db3fdfc658850c3e64afff12bc3597c74e835f672f63364f578f56af7c8cdb9b787bacd17267a24c67838993c2a8c9c98e52c204bf02b413237ad55c189633ca79a9e3956acb0bc0ffa710131f8513b65a872822e45c43656ee4e3483e8dae5505b048f28e40fb2bdbdcc17e426051101422a434e5b411031b81e0ffdb0214425a1152f40d2ec287c50703955ec0c15537521759b95dd82028e67608c2dc6a2b69c5cd217f3fd61c374560c20afa3ad6d479d2403e8f4022a09b978fda8ac29b8379178600215598a474afb8a23f6b6a4f7b2ed8773aaa3e4063bc39b0c4a000c60a787d5df686def61c5d3b17dd99e0aaf07adb5de95b57e626f5dafba0f3ac754bce41d80c5037e9d718f267b6fce6171054999285bdddbb8d2258c8809f9530ae19bd33fe5b5832247f53cc1967a820273141c233701425a0a26f5570ba4178dda5ca05406faa2942441a58709a7b9d1bd36430a118515d43a640ee8a4c2c18d5020f52d493e3be87e6d374206051aa04f2e03042c0b39cff7046fcb740b0780546638a7e775c61d3a4dc23e3d8916a5582824ed213d05bbde14afb3d97a0659c6cca1699316abdc89bbc835f0aea694e048f25e976ddb768fb01b90e428723caf0737d1846817ad5e2b15b9602945590fd42ba15e7132158311a229b1572175a3aabd7a7dac4a454d6764a6a6f9156c2a8fa14d3085c403f1d8ceead522a8cdf27255bbf8c3ba766f765f56eb27c3e79b9d2abff3846b7f1dcf0ead0ddba4bcc02144b2fe4920382bb9d0285a5b98c6cf5fcac98614e5ede592abe9685d825662ab1a7126d4b45d50b47529821f0c40e562656700bbeec19000653f09a30958ae4790489c9037a425404db486f6d919ab9c10086ef1841968f64a72859466bd5f3f5f967209158d466a8a3abde184fab35974551d5311f19e4767f1840108a65a471f0598ae0b81ff8bce4ad6a96408290a985e192e4b467d27a094266d1705dae51b9d4aa7c8386095210c1cf34e44b9906402d90db84aa5deaebf36fb7b505469abdcebf9028cd9425a554fb201d6e6dfdebf3efd0d7a5e558188c9e026a6f591345949c2c6ba8f95ccb5c2d5f9fbf0b7c05bbef669396d78e5f7bcbd7edae23b2d6398a2fbe9877a34a788eebd7a1f7ed3d18acc2e771eb286cb2a6de1a9604d212e1261a2ca980c6fad58438b11a3c27320eeb10b02870262f843eded49376a5cde7cab89f1095176209a4ccd4e1a490fb05e5c5089504c31a70e254222c5d4521b19a0c61e1a4783454bd64689417009a3db32d04b06ae914f0e586811e252c74630313428a1443c93150bb25331d69afdaafc4f891eab350881994e835886b2abba9bf37596d07a361abe0355ffad13de357b6e4179d7bedd3ebfcb5e02b379809dda46ea70efe77e3c74327cb1df163b790c07450fd02c9890e2d56f2d5f44bb1131993d13f830e60b353f24afb11bad08a45f0210b38c38b32de66070b79f4a4ec410647ff3a0855426fed8a11225f62a186618497e161893c64460a0c580809f4bd33c44d0eae1d1f4db9ec480ac54ccffa4b317817774f8d271e0e6bc4c8ed1071046d958e232a8f8ae92205c2ce1772f7141365f5df3be305bbc8318c2a9345022311e3e027ca1af451490fbb4f8a124546b727a5241c0b7047234afc5197da410354b0553039db9dc662ebbda6ad571333bdedcdf441ad53573e26f39a3bdf6c8cb98dce804a570714c65446429fef589831e1e22d71c64f9df432f2856934b6b5b05a44d7463a2303c9c26872d8719730cca00d62873ec201234c51d998398d7b102e0208daa0efa1fd2908196c9044433af0bc03744fb5a69d3a274b483316126e1b02348413e4733d6c62e601ec26b1a58c3d8c4ca5460393e826a4aa7aa470da5831d84c8db993c161c3b01584ecb07910ff5ad21afc694a6f46e2337d48e6200b7d48bd8a3518531dfa0108fccf28e745c03a8684ef8148266426202cb0a6fb54bd100044d392a88db4690f8754db6dd26bd38433a3460b607e6d1a3d41c00f857b645b156dc5a1ccb158b83d3f3166c9a3309fcf22b653cb7c0cd99cd90b2febc5ad0fc631ad82c1341f4fec892fd6ab9e0e27b3ed3edcf577e9ba5a86c368d266a30e6ecded0cd1e45e470ab0981dc9e47f315d38b654c2fb3cbe87dcea1cd7e428553d5bce47d813fe70cba46ba760fe216a441ad3989ed9cd4508afc80dc80561a6fe340e83d28de8cc7e7dfe8ebf11840e1d5875d6f4e74b95a8084e3065bfbce328dc38e3c9695375c5f74826fab7ed076ff9c2ce664787686227ceb4344665d2a1e162a403c678436f50d3fba33ae1de1a6478b95872d3896f888ad6960a903c065f54ab98dd0e7811944c38dd30d3c2b154cc730cdf2b9b64b2fc8aa2909aa299a9dff0899c7983017d850a4c39a235d6a68c478a44be52d173b7474814f5c1cc3384fd093937b4ab15f6e1404652157b5c47b72d6fc956ebe04d186bba666cd8e01015d78e5b7b88bb65e75907afe6b989a234497ef958681ba127de73f0a30aa2cd6f8dd40d052e93b8adfd917ba01c5941ff17d41a1a16d4903e8be12e432a0d2c0eb1044c08386a24ac0e2c6a61410b3401b262614fc3d3f5059a0928c5519ae60114958425550a28f8f129cbc8a583158220415830d36d86382a1e841a409f9acf0b4e93108f504b3f564d9aee73244b516b596064118484d52c12089cd4584687f15f648bd876c1a43227249c7f71144c21a479a9c0b1e8e8f81f14d317db669833d8b21261118d21bd9722bb851e08ac2bf1ebc19ceb28148c5927f0514e9a70dcf01fc1f9fe09f1e5620a33c7a2025693d63cd2c9fc763bbe85fba3cc5a21c662f1829e8c4fea36ebd0ac35dd2063a0ade18cd7a627b14c8b43e6dc19a664e090b168d1927ea16248e67a825264f80973c81bd774a3feee92ac1196215a30c62453b67e47c3f7f7e4fa374882d64e2587c51836e14a2f50a8f0a4752d1e916252f95c1a77d1ffdf84537366e8baf9adb69860e8701cfb4c6338b42cab20112651e0fdf8ba741a660c1282e839bd108e2f2153a9bb486728956a03c6daabf1dadbe53ca2fc4b6cd61b34c02e86234ecf259415323f3c496a2f5cdd2facaf1101d7b38bc42224d30c532ebcbd305f248b62751a3a6ded503e17b0440af6449f44344e461631612bfd0d5817677f69b55e059b2fbbcea978eb1dfc22df9ec7fbfd4b1ea946b8bacdde1f937a8d3ab46a2d3fcd83010bd7690be80311e724c2ea49c354cae83996ea79634297c9be3b38211478cf16fbf0716f4b08ef969542211265420b34d1692410ca517b96407b4a08f118f734d9133d8f3179f12a00bbf76e6460052694f1352ca24aeae8fe716bf685507ffc3d084f418c1cf33c62bc3f72be8b1b677583758aa825614b2c18591402ad428ca90c524dd9442bec2953e21c3fae4c64dfcf6299a8668903224c8f70c4446acc6cb300039f33295d25b1042cb8b38f4a77a942f6a08a5a510cc0238e0f4d6f095022a37b821fd2c320fca10ea98381e9a98df329e3383067da05273483037c11b01b3638830715660e430857f44a41cf523c77640da5b3b0108a01e1eb2a58f9fe51b9b7b55f743dbccc47a96a1bf936797bbb1e8d8a5dbacf5e77e2ed31aff79c03825752150c51516333d22a31773f1dd8db0723dd3feb802e74b4517a07857279c114321b0104204e7bf317325b492d1bc3566a4a38fb59a0a4a00ec3143160f704d844d0a9ec6408d0b4494198ab5b416095b5af0968413b4a14ca8ba3800747770979b7e8658f4a9f0c19c140c28503d288c5143ad6b0985cc3f1de46b13d4247163c53d0911818e629284cedafcfff2f1811c0c179c5464f0061f580235e961414bd37c556fe310d4130ed7f087e3a54bd8bb81b0b011935e9624fdc62b308b9775c73093360de8cf39d54ca2360191b109aeaefbfa0f20e7cc6dc6e38c7737a6cbdf47bad53ae273307fd36bc6de79b9d1d5ccdd1413c8af366407342ab2f727e35fc875465d958702bcc5204fc626cee64629da065f15c004445873d346fe2510eb86a306fb7f39c7ce9f667830700f41c4cc0c2e605f0c1a96323432d29f649c72d92a42358aef86bf226e4744316ec3459132e22f97091c1b6ba0edbd85e5884c933f02581ab28b8f4ae7c29050346e2aac2ab362ae3eafadf1dfd3a8a4ad578a54235d88f00f56f134656800b0165d1b7b0070e05e8c1a28f8b847645b61e624349eb43014d2812e721a3097d366677a5c973dfb0f2401b88a93bc3741e4b56dbc80557f464a2191f01ef47c3a9b6dc6edf47842670681c7c3ba070d2b9342d28c18762d6a863eff690881c8ab948021569ae99b09c5dda5f8953888042504ce7f7fdf31ff64315d4eb4556e4d489cbe5f5a1e6621f4fddce21ced66ed9d1fa43d92e8266770bb66c6e5832102b771644355d490b64d814524c5cdf6308e05b21fded79314358f747fd2db088e509e32f830c8e392325fc0f16c721c61c41dec4201c016c14ba2ddc832e269cba84d1f6321620ac6f3e16074104b1a2dbb08d73b0f0063b633a19249c0a5422630f0a8433b14286e5a8381fc6e332778bf48dc74320efe639982517bec10cf978e07661d96c1628133371809d06402c0afd0fa38aadc022ea4c779b424804e68484b0d1dd7cc862e2253a7b509a7b150b0fdbb0ffd2ab7836df7af7ab186ff7830a87bd4e54bdb6e1e1ba76bed91bf3fce7f1fd7f826d0c6b123e4c502dcc0fa5885994d059f10d255110ec291c9e258278ecef4005408bcbac88885a15331ce6960bc9393072c233ef92c662ae98cca2cb49faac7066698627bd441d0ea84105d25c1e97e5de8504bd423abd10650c037129d86b178c2c34195043aa0273b194ac28e0e0c8743d04483f5d707e58312414e4280ed253880de3f6d0fb33bc1516280827120a2391f3878fa1863e15737a363f5497001e2e86d9d653d3a8ae21522b2356913a8c202ee97f1d09d323342d3a0a6063aad939ee236b22b41f051c4cae5e15ec75ae931d7d5c8f559e9e2ee9a20a1a87e9be478f6e3498f6c790ed7cd31f6b369215fd0fb6c9502be96e7904235c1d335138627054fcbfb05c5798a2e8eddff99437e821f359364f96d7b78fc3fc5635f3190ef1b7e1520c5e04adc66f35776a2433a4086a776745af6930ee4c854c76928fae8f83d18222cbc9d4841f994ef27925c8e0b09c085fa88600f18bb8179826bf9fa0289751e55205ed950d1b061b41e3aadb31962852da318a455800c1ca855439b6ea9629bb9183e4839ef7a5afcf3fdf988f1dbe1f7a82af45083549ec6f9cf0891f9c2e51a301c23c8784256642660b193613bde6595352c9af2d9e6c9bcc21304a0aaca2c2a5dc28a30211510343218e140ee4024a048afe5d0b55931120e8dc91cae8d47b2bd7461380761327a1d7500e091098a4e71e02f2f14151ce1d7d4d3b7fe7dc376ada9fefecbdd90c076f42f945858dcb8b22dd9fecf12268b9db561e282139a6811e70f380c3690405ff128da3eec10a510ddea5262309683b4c03937888e96b68e6715c8004f536c6e6c2e03578cc5d1d802767a16c98a481542aee07820505e5107103849a2f64c569f276688e7bbe7d83a127404e2698728c79020d98659c3324e09cfc85080ba7017b7af1411a6f48a3088b7721de5bed389ca0f7ebf36f7b99651ccad95cb05c1242189dfd9352b9192944c583902e6100725000d4693820007c5e2c9f94dfff87f7047dbc0954eb9e0fc9bbd1645718879f54dee45d10bd807b3413500492d77b4f78a678089b8cc57940b65c95e92c361bfd565465eabd8d373ab9e8d43ed67d3f4dd72fca777feecb8ba0e56d3b34233b2e44732a21863dd15a8d11d1e43a939142d818efdbaca2e76796996309e6121991388a2570220820fc0cfb716cd465622cc25a7c16e7c09c5598a3c3f9c75654504f1e481565ccc13a33fc02c25ceaf4e78acf0a03e9b61b02c4cae43a17d0057963a0b9233d860682e2b8b3a0b2e2914c151a92a9e4765dbe648a0dba3c6c39c020e0ee45851e81a7334c8345a13a4419a33a382e0c99b1ca389cd73aa26b2f5a3cc80c5370871c0498383085985de72b678130bc32cb15768e01114d57c834ee94a4af956adbcd6cb05a2d26d8bac79d879b48ecb8fe7911b5ac752d0525ab6e1f60c785b0d534b4933be22fc8fada5cbb21fa472d15a141cfeac24c6a72fb4d736403221cffca1892433fb0b9962a8fc7b4c4dc325cc1e4e998e089ceb4e667db8fa2fc57936dc7df4d38e2ccef68240c390ae68d927887a802bc6862d58c1d280fa8870db532ff80b591e8a6680776cd0cc25258822272d348a6ada7cd8793e534828ad8bae184f6e760123385f5b1beb3c59c451aef7362cc48851113f9bd0d8a7297643a322453da1c01dc585713917baeae3fa7c60cd055151217c5974313c8de3d69508a4d2c9873373a4a55301917dea40b8106b463a9be034ae0c1f855aa8cbf73db97db83cd5ede8677b59dbfad759271bf986f1489dd21fe363c36d71fbfb57db1ed350275c61f0277f956c04443dfbd2266dd04756665e9ce87489059e0bfbd0e4cad91fc74cad90271f4a6eb0528a2be4494ff635b24c3929e4cb1e7ec0d90cabd4c8446ebbd9d9890d321b229c6c66957d2e2810b7ab1e0841b870d41130438145c8d6bb8c855cc822dd2f925699eb302bb5438a1a8406aa205616ac98166184db33bd58c0959225c0b50f998cd07b804c8bac4ac0459525be60ee08e15c812e96534a571dfd427393d625d4dd3d3c9d9e88814062a10760ff95d02b51cc88156a4a7472999c66d9d05bf0d46bcab9877cc968ca2b51a2f6f51bcefdf3771d6ed87bd63b19829b6e171e65ef8567b3ba0d932410522ef153c3ea588eca67f94527ccd54e0c1a5ad0f5882f10dfe6564338b528e46a0bf00cb02a97aa391e6031cc39e6070a926251eb4d03893c62b9b65e01f3ba0c86d9849d65d19c21c0e8936e85cb23c4bffbc3677892a85c0ca66c0faa5aa0e2c00fa49c425936958846aa60e0766f1cb469df99a17a5350ee17ca3824d192fb63e060be0c540824d31bd02ca60148f2a19f7b56db48f1da65570b39d5cb194897e63a5fc5ca4fa6f75e814d925f7c05072fe3472fd9847d262875a31902282a1e935c304aca328c7f4c34f717a554a3219d674c68e989da5a0bd2ccc14426f072b91b25ca7accc637007b0eab262cf2b34dac23750138a2ab01c90af3613005f47362aa1de717d1c61de8111ced5a1144649ced3c5ab03848855a8b86129b399e7820722892e1dbaa5bae2b2fd97e2300ad69a598559860ba898f03d94a382ea81f5b2705af836020d4c3c149a44af716c250781c727788612d5d1ec837d91d306178f96e7a4e6e3363780a79d9742733c71fbebf3f7bd0613fdfe37aea2344f8ad387f62f4d6f9f0aef6107a756d193c3d73ef1a5b53febf0856f75b71f6cb61b8650c1ac0727b90498aed662041156dccc0bfc391afeec3b3c1ac719c01edad0160d1d8c93b133945921c02f30b54670dc18739a123938e4705d6270c33a3c25ec7383e319ad60e522081bab2c0bf7cbd93e72efd365f3b8e8edf751d24edb69ea5e13ef0dbbccd05878c547fe78f4896c2e16708a65aa2b76898700ed923689e60d97a75219b5ddd21d9528d807a2192ef8c7e573ac9b142d0796dd84e510d2bf44310590b125780cb49ee0e95f6650547a12dacb5a49a4951f51c4d6afef9aa5941546fe1c7bb0845cf258c0eda5eb37b5eb30c802344c08438076d0838acf7d2b0036da278cb52b7746a4868c10850774c2b0de598c7894337c83622c03c9da0299a8c3ca29a1b3e9bc66c65e307630a0e457d7086df816674be96c95654988fdaa33b4aa58a4b3aa6543c16efc225e0751b3d84e0ebbc77417cf1da2db692a5875f06b9df6072bb2b1e8cd7713a22942aaa199dc0e9725afa63dbdac449f6c8e3365b9010b4f5af278889a986173a4942b8636c1f13396a4a46db82667cd983b8c681a206731936ccd0914c24209ca08b769a443716a08ce4334b5e5d033a9df4ecf2e9a8eab7a16c72bf70402c834f12e2b6340437b7f743516382e11b2478d4d604f531379099c97276c68a44b0175c2cf5904e2832447cdccdab8c5b6308c47f18eb0b831990950d7cc6e4b465902ff9be27804f16ec9e2d0db793d58be7438dbbb61830d29338aa4746547df0b52d788a4be9b2052840377954c33d34571de791ff7e9d8ebcc57b7745a36173ebb2d057f3c7f5fb4973ed9c42596a19ac4dbd78661cadbec557e12560e6d3aad6715fce333218365295b0121069102173f25d061b2165d109b9d590faec87d25c6c4681e0c51059186b96a0ccb0404c14f28d0d6a1ae087de0fd0368bd70e4e6a2829cbd9e93902eda211c0ef078b9cc15068261c1273bb156ab08699e629879405b613a0c927d416d528cc9112b30cea2cbc60245290431faa8628024a27a387d235b734acf42ef95f216e0974060d5e043099344303938368702991ca687cd9952c298d92f01c9f3d1cdf4794521f2017c123555a6d33338b060c903cb909cd36bd1ea818641b8616c34eb6d8492ab4bba8a7c804c02f036c788b806e38cad6093e5b4d1dd9cec52f4a2c6fdc3a6b2ddf76e8743e9bdb6d1d43677beed8e79de81f338199debc7f923f9835b241fe0cbf5c6774dac5542627611a5333105565be41249b224af058c585bdaa41132d4701a5921802a7a5ebb39888119bb999b8a4be7ebf36fc48fc449457f6f5361c6336cdd627c74be3effa6066147aac8aa614807b71528cd540c7ad47444318e8d971c582ac5ff225d1aaf4f63d67b55c9f635efe487a81815dbfe759fce82fccd3fb5973f5cf020d06c94a8d6b6ed76afe93f0457d308a932fc14713e392c2f6cec8a6baa59f72d0ced61dd3b3df2d1abb416ee7f00"
+        ],
+        "rawHeaders": [
+            "Content-Type",
+            "application/json;charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Date",
+            "Wed, 22 Sep 2021 20:06:22 GMT",
+            "Server",
+            "openresty",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET, HEAD, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Expose-Headers",
+            "ETag, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After, Content-Length, Content-Range",
+            "Cache-Control",
+            "public, max-age=28800",
+            "X-Memc",
+            "HIT",
+            "X-Memc-Key",
+            "dc095eb4a072595959615d5cffdb65dc41e51723",
+            "X-Memc-Age",
+            "7726",
+            "X-Memc-Expires",
+            "9313",
+            "ETag",
+            "W/\"0a83df8ec07e53cc99240d853734dcd1\"",
+            "Content-Encoding",
+            "br",
+            "X-Edge-Origin-Shield-Skipped",
+            "0",
+            "Vary",
+            "Accept-Encoding",
+            "X-Cache",
+            "Hit from cloudfront",
+            "Via",
+            "1.1 40a470190ceea00b102d41459a4f2a54.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Pop",
+            "HAM50-C3",
+            "X-Amz-Cf-Id",
+            "GUL49NLxNeThkDUwcQKo1UBG_j567B_ghQ_ls5p-tuhfmnx2VYfkcg==",
+            "Age",
+            "4320"
+        ],
+        "responseIsBinary": false
+    },
+    {
         "scope": "https://kitsu.io:443",
         "method": "GET",
-        "path": "/api/edge/anime/11578?include=genres,episodes,streamingLinks",
+        "path": "/api/edge/anime/11578?include=genres,episodes",
         "body": "",
         "status": 200,
         "response": {
@@ -14,7 +72,7 @@
                 },
                 "attributes": {
                     "createdAt": "2015-12-02T22:44:17.327Z",
-                    "updatedAt": "2021-06-05T14:20:15.051Z",
+                    "updatedAt": "2021-09-22T21:18:21.701Z",
                     "slug": "mob-psycho-100",
                     "synopsis": "Kageyama Shigeo, a.k.a. \"Mob,\" is a boy who has trouble expressing himself, but who happens to be a powerful esper. Mob is determined to live a normal life and keeps his ESP suppressed, but when his emotions surge to a level of 100%, something terrible happens to him! As he's surrounded by false espers, evil spirits, and mysterious organizations, what will Mob think? What choices will he make?\n\n(Source: Crunchyroll)",
                     "description": "Kageyama Shigeo, a.k.a. \"Mob,\" is a boy who has trouble expressing himself, but who happens to be a powerful esper. Mob is determined to live a normal life and keeps his ESP suppressed, but when his emotions surge to a level of 100%, something terrible happens to him! As he's surrounded by false espers, evil spirits, and mysterious organizations, what will Mob think? What choices will he make?\n\n(Source: Crunchyroll)",
@@ -29,27 +87,27 @@
                         "Mob Psycho Hyaku",
                         "Mob Psycho One Hundred"
                     ],
-                    "averageRating": "82.21",
+                    "averageRating": "82.18",
                     "ratingFrequencies": {
-                        "2": "3147",
-                        "3": "51",
-                        "4": "151",
+                        "2": "3379",
+                        "3": "53",
+                        "4": "157",
                         "5": "36",
-                        "6": "141",
-                        "7": "46",
-                        "8": "3323",
-                        "9": "47",
-                        "10": "574",
-                        "11": "86",
-                        "12": "1222",
-                        "13": "208",
-                        "14": "9151",
-                        "15": "746",
-                        "16": "10481",
-                        "17": "1608",
-                        "18": "10873",
-                        "19": "914",
-                        "20": "27732"
+                        "6": "146",
+                        "7": "47",
+                        "8": "3598",
+                        "9": "49",
+                        "10": "607",
+                        "11": "92",
+                        "12": "1300",
+                        "13": "220",
+                        "14": "9803",
+                        "15": "792",
+                        "16": "11214",
+                        "17": "1748",
+                        "18": "11644",
+                        "19": "996",
+                        "20": "29580"
                     },
                     "userCount": 102489,
                     "favoritesCount": 1585,
@@ -57,23 +115,27 @@
                     "endDate": "2016-09-27",
                     "nextRelease": null,
                     "popularityRank": 47,
-                    "ratingRank": 53,
+                    "ratingRank": 64,
                     "ageRating": "PG",
                     "ageRatingGuide": "Teens 13 or older",
                     "subtype": "TV",
                     "status": "finished",
                     "tba": "",
                     "posterImage": {
-                        "tiny": "https://media.kitsu.io/anime/poster_images/11578/tiny.jpg?1597698554",
-                        "small": "https://media.kitsu.io/anime/poster_images/11578/small.jpg?1597698554",
-                        "medium": "https://media.kitsu.io/anime/poster_images/11578/medium.jpg?1597698554",
-                        "large": "https://media.kitsu.io/anime/poster_images/11578/large.jpg?1597698554",
-                        "original": "https://media.kitsu.io/anime/poster_images/11578/original.jpg?1597698554",
+                        "tiny": "https://media.kitsu.io/anime/poster_images/11578/tiny.jpg",
+                        "large": "https://media.kitsu.io/anime/poster_images/11578/large.jpg",
+                        "small": "https://media.kitsu.io/anime/poster_images/11578/small.jpg",
+                        "medium": "https://media.kitsu.io/anime/poster_images/11578/medium.jpg",
+                        "original": "https://media.kitsu.io/anime/poster_images/11578/original.jpg",
                         "meta": {
                             "dimensions": {
                                 "tiny": {
                                     "width": 110,
                                     "height": 156
+                                },
+                                "large": {
+                                    "width": 550,
+                                    "height": 780
                                 },
                                 "small": {
                                     "width": 284,
@@ -82,32 +144,28 @@
                                 "medium": {
                                     "width": 390,
                                     "height": 554
-                                },
-                                "large": {
-                                    "width": 550,
-                                    "height": 780
                                 }
                             }
                         }
                     },
                     "coverImage": {
-                        "tiny": "https://media.kitsu.io/anime/cover_images/11578/tiny.jpg?1597701261",
-                        "small": "https://media.kitsu.io/anime/cover_images/11578/small.jpg?1597701261",
-                        "large": "https://media.kitsu.io/anime/cover_images/11578/large.jpg?1597701261",
-                        "original": "https://media.kitsu.io/anime/cover_images/11578/original.jpg?1597701261",
+                        "tiny": "https://media.kitsu.io/anime/cover_images/11578/tiny.jpg",
+                        "large": "https://media.kitsu.io/anime/cover_images/11578/large.jpg",
+                        "small": "https://media.kitsu.io/anime/cover_images/11578/small.jpg",
+                        "original": "https://media.kitsu.io/anime/cover_images/11578/original.jpg",
                         "meta": {
                             "dimensions": {
                                 "tiny": {
                                     "width": 840,
                                     "height": 200
                                 },
-                                "small": {
-                                    "width": 1680,
-                                    "height": 400
-                                },
                                 "large": {
                                     "width": 3360,
                                     "height": 800
+                                },
+                                "small": {
+                                    "width": 1680,
+                                    "height": 400
                                 }
                             }
                         }
@@ -132,11 +190,11 @@
                             },
                             {
                                 "type": "genres",
-                                "id": "9"
+                                "id": "16"
                             },
                             {
                                 "type": "genres",
-                                "id": "16"
+                                "id": "9"
                             },
                             {
                                 "type": "genres",
@@ -264,17 +322,7 @@
                         "links": {
                             "self": "https://kitsu.io/api/edge/anime/11578/relationships/streaming-links",
                             "related": "https://kitsu.io/api/edge/anime/11578/streaming-links"
-                        },
-                        "data": [
-                            {
-                                "type": "streamingLinks",
-                                "id": "1920"
-                            },
-                            {
-                                "type": "streamingLinks",
-                                "id": "1921"
-                            }
-                        ]
+                        }
                     },
                     "animeProductions": {
                         "links": {
@@ -312,20 +360,6 @@
                     }
                 },
                 {
-                    "id": "9",
-                    "type": "genres",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/genres/9"
-                    },
-                    "attributes": {
-                        "createdAt": "2013-02-20T16:00:18.777Z",
-                        "updatedAt": "2013-02-20T16:00:18.777Z",
-                        "name": "Supernatural",
-                        "slug": "supernatural",
-                        "description": null
-                    }
-                },
-                {
                     "id": "16",
                     "type": "genres",
                     "links": {
@@ -337,6 +371,20 @@
                         "name": "Slice of Life",
                         "slug": "slice-of-life",
                         "description": ""
+                    }
+                },
+                {
+                    "id": "9",
+                    "type": "genres",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/genres/9"
+                    },
+                    "attributes": {
+                        "createdAt": "2013-02-20T16:00:18.777Z",
+                        "updatedAt": "2013-02-20T16:00:18.777Z",
+                        "name": "Supernatural",
+                        "slug": "supernatural",
+                        "description": null
                     }
                 },
                 {
@@ -361,7 +409,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.822Z",
-                        "updatedAt": "2019-01-02T21:46:48.901Z",
+                        "updatedAt": "2021-09-17T05:00:45.336Z",
                         "synopsis": "Psychics fight with supernatural phenomena that cannot be explained by science. Reigen Arataka that runs the Spirits and Such Consultation office is one of those psychics... well, a fake one. His only hope is a super dull middle-schooler named Kageyama Shigeo, a.k.a. Mob. 27% towards Mob's explosion.",
                         "description": "Psychics fight with supernatural phenomena that cannot be explained by science. Reigen Arataka that runs the Spirits and Such Consultation office is one of those psychics... well, a fake one. His only hope is a super dull middle-schooler named Kageyama Shigeo, a.k.a. Mob. 27% towards Mob's explosion.",
                         "titles": {
@@ -376,7 +424,7 @@
                         "airdate": "2016-07-12",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186890/original.jpg?1500746603",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186890/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -405,7 +453,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.835Z",
-                        "updatedAt": "2019-01-02T21:46:57.067Z",
+                        "updatedAt": "2021-09-17T05:00:45.457Z",
                         "synopsis": "The Telepathy Club is told that they are going to be shut down by the student council due to lack of members. It was then that one of the members, Inukawa, thought of possibly getting Mob to join. However, Mob gets a call from Reigen about taking care of an incident at Highso Girls' Academy...",
                         "description": "The Telepathy Club is told that they are going to be shut down by the student council due to lack of members. It was then that one of the members, Inukawa, thought of possibly getting Mob to join. However, Mob gets a call from Reigen about taking care of an incident at Highso Girls' Academy...",
                         "titles": {
@@ -420,7 +468,7 @@
                         "airdate": "2016-07-19",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186891/original.jpg?1500746854",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186891/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -449,7 +497,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.849Z",
-                        "updatedAt": "2019-01-02T21:47:03.366Z",
+                        "updatedAt": "2021-09-17T05:00:45.584Z",
                         "synopsis": "It's great that Mob joined the Body Improvement Club, but he suddenly faints as he's running along the riverside. His wish is to get stronger and to be able to get closer to his beloved Tsubomi-chan. One day, as Mob is feeling troubled, a woman with a strange mask approaches him... Progress toward Mob's explosion: 20%",
                         "description": "It's great that Mob joined the Body Improvement Club, but he suddenly faints as he's running along the riverside. His wish is to get stronger and to be able to get closer to his beloved Tsubomi-chan. One day, as Mob is feeling troubled, a woman with a strange mask approaches him... Progress toward Mob's explosion: 20%",
                         "titles": {
@@ -464,7 +512,7 @@
                         "airdate": "2016-07-26",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186892/original.jpg?1500769756",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186892/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -493,7 +541,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.857Z",
-                        "updatedAt": "2019-01-02T21:47:08.965Z",
+                        "updatedAt": "2021-09-17T05:00:45.707Z",
                         "synopsis": "After the incident with the religious organization (LOL), the evil spirit, Dimple, keeps following Mob around. Also, because of the incident, Mezato Ichi from the school paper starts following around Mob, as well. Then one day, another student joins the Body Improvement Club. Progress Towards Mob's Explosion: 45%",
                         "description": "After the incident with the religious organization (LOL), the evil spirit, Dimple, keeps following Mob around. Also, because of the incident, Mezato Ichi from the school paper starts following around Mob, as well. Then one day, another student joins the Body Improvement Club. Progress Towards Mob's Explosion: 45%",
                         "titles": {
@@ -508,7 +556,7 @@
                         "airdate": "2016-08-02",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186893/original.jpg?1500772111",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186893/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -537,7 +585,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.914Z",
-                        "updatedAt": "2019-01-02T21:47:14.020Z",
+                        "updatedAt": "2021-09-17T05:00:45.828Z",
                         "synopsis": "Mob is challenged to a one-on-one fight with Black Vinegar Middle School's shadow leader, Hanazawa Teruki, otherwise known as Teru. Mob doesn't use his powers but Teru goes all out on him, destroying everything around him. Teru continues to unleash his incredible power when Mob suddenly remembers a tragedy that happened between him and Ritsu...",
                         "description": "Mob is challenged to a one-on-one fight with Black Vinegar Middle School's shadow leader, Hanazawa Teruki, otherwise known as Teru. Mob doesn't use his powers but Teru goes all out on him, destroying everything around him. Teru continues to unleash his incredible power when Mob suddenly remembers a tragedy that happened between him and Ritsu...",
                         "titles": {
@@ -552,7 +600,7 @@
                         "airdate": "2016-08-09",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186894/original.jpg?1500772312",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186894/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -581,7 +629,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.922Z",
-                        "updatedAt": "2019-01-02T21:47:19.806Z",
+                        "updatedAt": "2021-09-17T05:00:46.060Z",
                         "synopsis": "Peaceful days return after Mob's fight with Teru. As usual, Reigen continues to trick people as a fake psychic, and the president of the Telepathy Club, Kurata Tome, drags Mob around to find other espers. Then one day, a mysterious man talks to Mob's younger brother, Ritsu...",
                         "description": "Peaceful days return after Mob's fight with Teru. As usual, Reigen continues to trick people as a fake psychic, and the president of the Telepathy Club, Kurata Tome, drags Mob around to find other espers. Then one day, a mysterious man talks to Mob's younger brother, Ritsu...",
                         "titles": {
@@ -596,7 +644,7 @@
                         "airdate": "2016-08-16",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186895/original.jpg?1500772485",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186895/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -625,7 +673,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.929Z",
-                        "updatedAt": "2019-01-02T21:47:25.752Z",
+                        "updatedAt": "2021-09-17T05:00:46.176Z",
                         "synopsis": "Salt Middle School undergoes deep cleaning lead by the student council president, Kamuro, and one thug after another gets targeted. Meanwhile, the story about Mob defeating the shadow leader at Black Vinegar Middle School starts to get embellished and takes on a life of it's own, and Mob gets to be known as \"White T Poison.\" All of the gang leaders from the other schools start to gather at Salt Middle School to confront White T Poison. Also, Ritsu awakens to his dormant psychic powers, and Dimple manages to convince Ritsu to pair with him to become stronger than his brother. Ritsu finally gets to experience those powers for himself, but...",
                         "description": "Salt Middle School undergoes deep cleaning lead by the student council president, Kamuro, and one thug after another gets targeted. Meanwhile, the story about Mob defeating the shadow leader at Black Vinegar Middle School starts to get embellished and takes on a life of it's own, and Mob gets to be known as \"White T Poison.\" All of the gang leaders from the other schools start to gather at Salt Middle School to confront White T Poison. Also, Ritsu awakens to his dormant psychic powers, and Dimple manages to convince Ritsu to pair with him to become stronger than his brother. Ritsu finally gets to experience those powers for himself, but...",
                         "titles": {
@@ -640,7 +688,7 @@
                         "airdate": "2016-08-23",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186896/original.jpg?1500775999",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186896/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -669,7 +717,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.937Z",
-                        "updatedAt": "2019-01-02T21:47:30.917Z",
+                        "updatedAt": "2021-09-17T05:00:46.292Z",
                         "synopsis": "After defeating all of the gang leaders from the surrounding schools, Ritsu feels omnipotent. And then, he's confronted by none other than his older brother, Mob. Mob knew that Ritsu had wanted psychic powers for a while, so he congratulates him. However Ritsu doesn't greet his brother with kindness. Meanwhile, a mysterious man watches the brothers from a distance. He easily manages to grab Ritsu, and tries to drag him off. Mob activates his powers in order to save his brother, but...",
                         "description": "After defeating all of the gang leaders from the surrounding schools, Ritsu feels omnipotent. And then, he's confronted by none other than his older brother, Mob. Mob knew that Ritsu had wanted psychic powers for a while, so he congratulates him. However Ritsu doesn't greet his brother with kindness. Meanwhile, a mysterious man watches the brothers from a distance. He easily manages to grab Ritsu, and tries to drag him off. Mob activates his powers in order to save his brother, but...",
                         "titles": {
@@ -684,7 +732,7 @@
                         "airdate": "2016-08-30",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186897/original.jpg?1500775382",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186897/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -713,7 +761,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.944Z",
-                        "updatedAt": "2019-01-02T21:47:38.931Z",
+                        "updatedAt": "2021-09-17T05:00:46.403Z",
                         "synopsis": "Ritsu and the others get abducted by a mysterious man named Koyama, and get taken to the secret organization Claw's 7th Division. Claw is an organization who is trying to lead the world to a better future by taking it over. One of Claw's assassins, Terada goes after Mob and Teru, but they overpower him and get him to tell them secrets about the organization. In order to save Ritsu, Mob heads to the 7th Division but encounters another member of Claw, and...",
                         "description": "Ritsu and the others get abducted by a mysterious man named Koyama, and get taken to the secret organization Claw's 7th Division. Claw is an organization who is trying to lead the world to a better future by taking it over. One of Claw's assassins, Terada goes after Mob and Teru, but they overpower him and get him to tell them secrets about the organization. In order to save Ritsu, Mob heads to the 7th Division but encounters another member of Claw, and...",
                         "titles": {
@@ -728,7 +776,7 @@
                         "airdate": "2016-09-06",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186898/original.png?1500775767",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186898/original.png",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -757,7 +805,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.952Z",
-                        "updatedAt": "2019-01-02T21:47:43.798Z",
+                        "updatedAt": "2021-09-17T05:00:46.514Z",
                         "synopsis": "Mob and Teru infiltrate the Claw's 7th Division to save Ritsu. Meanwhile, Ritsu tries to escape with the other esper kids and they run into the upper echelon and leader of the 7th Division. Teru and Dimple run into trouble after a strenuous battle, and the boss from Claw finally shows himself...",
                         "description": "Mob and Teru infiltrate the Claw's 7th Division to save Ritsu. Meanwhile, Ritsu tries to escape with the other esper kids and they run into the upper echelon and leader of the 7th Division. Teru and Dimple run into trouble after a strenuous battle, and the boss from Claw finally shows himself...",
                         "titles": {
@@ -772,7 +820,7 @@
                         "airdate": "2016-09-13",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186899/original.jpg?1500776093",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186899/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -801,7 +849,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:56.959Z",
-                        "updatedAt": "2019-01-02T21:47:48.504Z",
+                        "updatedAt": "2021-09-17T05:00:46.646Z",
                         "synopsis": "Mob, Ritsu, and Teru are trapped in a room where they can't use their powers. And then, someone rather unexpected shows up in front of them: Mob's master and self-proclaimed psychic, Reigen. Somehow, Reigen is mistakenly thought as the boss of Claw, and easily manages to get inside and successfully saves Mob and the others. However, there is no way that Ishiguro would let them get away with this. As they try to escape the 7th Division, the upper echelon stands in their way.",
                         "description": "Mob, Ritsu, and Teru are trapped in a room where they can't use their powers. And then, someone rather unexpected shows up in front of them: Mob's master and self-proclaimed psychic, Reigen. Somehow, Reigen is mistakenly thought as the boss of Claw, and easily manages to get inside and successfully saves Mob and the others. However, there is no way that Ishiguro would let them get away with this. As they try to escape the 7th Division, the upper echelon stands in their way.",
                         "titles": {
@@ -816,7 +864,7 @@
                         "airdate": "2016-09-20",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186900/original.png?1500776207",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186900/original.png",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -845,7 +893,7 @@
                     },
                     "attributes": {
                         "createdAt": "2016-06-29T19:12:57.015Z",
-                        "updatedAt": "2019-01-02T21:45:36.690Z",
+                        "updatedAt": "2021-09-17T05:00:46.767Z",
                         "synopsis": "Mob is finally pushed to his limit when he has to face Sakurai, Muraki, Matsuo and Ishiguro of the upper echelon. But then, he comes to a rather surprising decision...",
                         "description": "Mob is finally pushed to his limit when he has to face Sakurai, Muraki, Matsuo and Ishiguro of the upper echelon. But then, he comes to a rather surprising decision...",
                         "titles": {
@@ -860,7 +908,7 @@
                         "airdate": "2016-09-27",
                         "length": 24,
                         "thumbnail": {
-                            "original": "https://media.kitsu.io/episodes/thumbnails/186901/original.jpg?1500776275",
+                            "original": "https://media.kitsu.io/episodes/thumbnails/186901/original.jpg",
                             "meta": {
                                 "dimensions": {}
                             }
@@ -880,76 +928,12 @@
                             }
                         }
                     }
-                },
-                {
-                    "id": "1920",
-                    "type": "streamingLinks",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/streaming-links/1920"
-                    },
-                    "attributes": {
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "url": "http://www.crunchyroll.com/mob-psycho-100",
-                        "subs": [
-                            "en"
-                        ],
-                        "dubs": [
-                            "ja"
-                        ]
-                    },
-                    "relationships": {
-                        "streamer": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/streaming-links/1920/relationships/streamer",
-                                "related": "https://kitsu.io/api/edge/streaming-links/1920/streamer"
-                            }
-                        },
-                        "media": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/streaming-links/1920/relationships/media",
-                                "related": "https://kitsu.io/api/edge/streaming-links/1920/media"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "1921",
-                    "type": "streamingLinks",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/streaming-links/1921"
-                    },
-                    "attributes": {
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "url": "http://www.funimation.com/shows/186306",
-                        "subs": [
-                            "en"
-                        ],
-                        "dubs": [
-                            "ja"
-                        ]
-                    },
-                    "relationships": {
-                        "streamer": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/streaming-links/1921/relationships/streamer",
-                                "related": "https://kitsu.io/api/edge/streaming-links/1921/streamer"
-                            }
-                        },
-                        "media": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/streaming-links/1921/relationships/media",
-                                "related": "https://kitsu.io/api/edge/streaming-links/1921/media"
-                            }
-                        }
-                    }
                 }
             ]
         },
         "rawHeaders": [
             "Date",
-            "Sat, 05 Jun 2021 14:22:52 GMT",
+            "Wed, 22 Sep 2021 21:18:23 GMT",
             "Content-Type",
             "application/vnd.api+json",
             "Transfer-Encoding",
@@ -969,33 +953,31 @@
             "referrer-policy",
             "strict-origin-when-cross-origin",
             "etag",
-            "W/\"f70bce91c980e2a4cc32bd8b14b39f5f\"",
+            "W/\"82b36909634478266ae4498d1ebda0c2\"",
             "cache-control",
             "max-age=0, private, must-revalidate",
             "x-request-id",
-            "5eec7c2e-10d4-4004-9d45-b0fb05dc24ed",
+            "2d0e36fc-a0a0-42e6-ab4c-71be2504669a",
             "x-runtime",
-            "0.095386",
+            "0.027589",
             "vary",
             "Origin",
             "CF-Cache-Status",
             "DYNAMIC",
-            "cf-request-id",
-            "0a7e2735700000624daa81d000000001",
             "Expect-CT",
             "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
             "Report-To",
-            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v2?s=AZsfzyMOUdfzIV060F2eC8F5uzpMCOvIuYVeWZQoe3yDsFEP58Nj3L4%2FnGOvsJMxg2mKaDY4QRUgPe5Ox0PatL1Xm9%2BN92bLar3neoKJOSj%2FAxBJ%2FOA%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=zohbVIFqeS7IG0jvOXqkpGEzWZ6ff0ysED1Q0KREglofBmaJo1pZsAzq1dno0b06FOUaawD%2FmPYDVAJvPoxoagMcgCszZTHy1DqYudoHFKDUs5xLUESDzcBdsA%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
             "NEL",
-            "{\"report_to\":\"cf-nel\",\"max_age\":604800}",
+            "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
             "Strict-Transport-Security",
             "max-age=31536000; preload",
             "Server",
             "cloudflare",
             "CF-RAY",
-            "65aa0e357f3b624d-OTP",
+            "692e90c228e52c4e-FRA",
             "alt-svc",
-            "h3-27=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3=\":443\"; ma=86400"
+            "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-27=\":443\"; ma=86400"
         ],
         "responseIsBinary": false
     }

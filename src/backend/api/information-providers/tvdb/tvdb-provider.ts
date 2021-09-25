@@ -105,7 +105,7 @@ export default class TVDBProvider extends InfoProvider {
         }
     }
 
-    private async webRequest<T>(url: string, method: Method = 'GET', body = ''): Promise<T> {
+    private async webRequest<T>(url: string, method: Method = 'GET', body?: string): Promise<T> {
         this.informAWebRequest()
 
         try {

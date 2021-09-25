@@ -1,6 +1,10 @@
+import FailedRequestError from '@/backend/controller/objects/meta/failed-request-error'
 import ExternalInformationProvider from '../../../api/provider/external-information-provider'
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
-import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request'
+import {
+    FailedRequestErrorType,
+    isFailedRequestError,
+} from '../../../controller/objects/meta/failed-request-error-type'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import logger from '../../../logger/logger'
 import Timeout from '../../connection/timeout/timeout'
@@ -23,12 +27,12 @@ export default class DownloadProviderLocalDataWithId {
             return result
         } catch (err) {
             timeout.cancel()
-            if (isFailedRequestError(err as string)) {
+            if (err instanceof FailedRequestError) {
                 throw err
             }
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             logger.error(`${err} | ${provider.providerName}`)
-            throw FailedRequestError.ProviderNoResult
+            throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult, err as string)
         }
     }
 }

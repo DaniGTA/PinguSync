@@ -1,0 +1,65 @@
+[
+    {
+        "scope": "https://graphql.anilist.co:443",
+        "method": "POST",
+        "path": "/",
+        "body": {
+            "query": "\nquery ($query: String, $type: MediaType) {\n  Page {\n    media(search: $query, type: $type) {\n      id\n      title {\n        romaji\n        english\n        native\n      }\n      bannerImage\n      coverImage {\n        medium\n        large\n      }\n      format\n      type\n      averageScore\n      popularity\n      episodes\n      season\n      hashtag\n      isAdult\n      startDate {\n        year\n        month\n        day\n      }\n      endDate {\n        year\n        month\n        day\n      }\n      relations {\n        edges {\n          relationType\n        }\n        nodes{\n          id\n        }\n      }\n    }\n  }\n}",
+            "variables": {
+                "query": "Hataraku Saibou",
+                "type": "ANIME"
+            }
+        },
+        "status": 200,
+        "response": [
+            "83780a00e4673fb5af5ff3ee97342038ffcc68b749a31d77c70da21837a942b7ffffb117e8c71a6cc32fbe28f04ff4eea2281affa8f3e55d446359b4ed0ca86c7d7ca0a58dc3d2813ffcf8010784efe3404436e95d06d3acc52eeff005b9d002c22fd889a384f00bfe93c0d120fcfd05550e21c138f03c04bad2ad938f185427ea0a42b8145a0ca2315622aa833280e04feddf1884b0926d3b5a425b4f6a686680a017ba7a9510023714bb0537143b675f3f38052bb8f1728ab9f1712e6142f0bd67e9575dc0ce0ca5d6a731e40bbe18d999e8abb61af559a6f8a2a85ac917af166579cf175120475727f9a253057cd1c7e5eef3ab4f7d79aa449a35abf20f106621f8ecf838cf2005c6cd74de926e0ee28bffa350c817fdbbef87be3caf4afcb20c54efd80dfd7f1adbdb3b08b7f4f1162604851a3aa12184f41110e88f938410a2f8ea6e0308c4ab1cc45126991a24841e43f06d83bff64a7f404848e0528c409eaa51e57284905004a314a3ea2184e4e1ee6eb30704a5184b2d8e10c28fac3e05826a8c72d36a080bd18e12c167e5e7af85ce8e1fe88714038436263e824ef5ba84d043908b0f08fd0981ec73d796a08ce209c147f31fa8fa11c22f90f9518e653cfeadb434411e7c1dedd228bddac63021178f9c5cad37ff9274bbffd9acbcb97fd8dcbebbd6dd55fc6f7b7ebe5ded36bddcec77ae3f08fa448f23b2b6ef7a9e3f213c1738ae6bbf12e2bb943888e750eac001f69d5d50dff59ce9cfd4ba2ae7239dcdb6b86b4f9bcdb6101ff39fc77dd4dc6c5ee56dd26687ccc3bbefc6b8a71f7571d96dafd79b5424fdc39450ec252c70315b75f4577ff6e92a4e9b209b4480d0ae2df6d8d8ae8c6cb7c755a11258fbea32da47ab944da8e7e371e490ba84e28006c4113c55b5eaba5acbdb6875435d99b5daae372ef1d42cb4a81b8224825ec7fcbecf86cda3bfab9f1e047c37d2b8526fbddfba71f4d4888c7f98aa3614ba3aea79b6b39260909babda0267a19e4002b5bae65db4dfc42952c1d4f1dd38c0189de56c807d67bfade424b34ab42348b43b3c4b956a59379488d2f62ee61f37ddfea568d374d82901df8df497f664bad1bf9e6e3eaf44c63fc662dda864b7595d45b7666b2caeb388ba4eb0e9e0d0b4b0376d6bafc24ba8c66816c1daa727ecdc4da0a8dcda63876722f20fce3aae6b3fddd0ba119fd24a4a651a658ea647e8650dadb494d64a759deaad956a736d7423dc508c336e025ff8dc0458086e3c27f3b8713009b8f10ac1dcb961de6bf8ff705cd79ef759b36deeb7eb83ba5e36c477632cef311bf2b795d2ee093649ffb025168f2c263663ebde11bda568a160f71d7626a4299cfb9a5019cf9d8048c67254370e692a49df98ba7caa58665969cc582a63cdad3b359655a7ac9dcac45059c99b14da3a0a2bd25a0c0259a8e2d84130be79ee2b0ebe52a41cf2a189f0b9a138a38f5e04ff4d1eac4ebd56929ba270329ccfe11dec8c9033871b5f78841b8f1c08374cda39d8f945e1609feedb554307ef3942d0488121214a616d0ee1d22a669aa27086214142684c75eaa1d7faeef3ce5c7c1c7f5dbede9287e1bf36eb66844a79c70cea99d5368e146757ce7246c4a5340b86f340ba22e84e4a1f2a0dc491708d88a9148895ff4cd39f699a0c03"
+        ],
+        "rawHeaders": [
+            "Date",
+            "Sat, 25 Sep 2021 20:56:45 GMT",
+            "Content-Type",
+            "application/json",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Cache-Control",
+            "no-cache, private",
+            "X-RateLimit-Limit",
+            "90",
+            "X-RateLimit-Remaining",
+            "89",
+            "Set-Cookie",
+            "laravel_session=2peUqwl1ghVt4PqeG4bxdo9MVo2rtIpeQRL8zDH7; expires=Sun, 26-Sep-2021 08:56:45 GMT; Max-Age=43200; path=/; httponly",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "X-XSS-Protection",
+            "1; mode=block",
+            "X-Content-Type-Options",
+            "nosniff",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers",
+            "Authorization,Accept,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range",
+            "Access-Control-Expose-Headers",
+            "X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Content-Length, Content-Range",
+            "CF-Cache-Status",
+            "DYNAMIC",
+            "Expect-CT",
+            "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
+            "Report-To",
+            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=Y0Cy%2BdbfBEze3fJvxden3bckd4ngVLBxrh4iZfzyl7p1k2tmq45GZU01TGEygU5wmx3ID0cMaga%2FiAb%2BhfPLpkHYCCeQZEP%2Fis2JVWFkgSnBFWBbj55NsLRG0ImgRaeAVhdF2A%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+            "NEL",
+            "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "69472932cdac6977-FRA",
+            "Content-Encoding",
+            "br"
+        ],
+        "responseIsBinary": false
+    }
+]

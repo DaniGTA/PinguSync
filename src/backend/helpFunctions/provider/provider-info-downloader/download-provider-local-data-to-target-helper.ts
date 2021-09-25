@@ -1,9 +1,13 @@
+import FailedRequestError from '@/backend/controller/objects/meta/failed-request-error'
 import ExternalInformationProvider from '../../../api/provider/external-information-provider'
 import ExternalMappingProvider from '../../../api/provider/external-mapping-provider'
 import ExternalProvider from '../../../api/provider/external-provider'
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
 import FailedProviderRequest from '../../../controller/objects/meta/failed-provider-request'
-import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request'
+import {
+    FailedRequestErrorType,
+    isFailedRequestError,
+} from '../../../controller/objects/meta/failed-request-error-type'
 import Series from '../../../controller/objects/series'
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
@@ -57,7 +61,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
             }
             return result
         }
-        return new FailedProviderRequest(this.provider, FailedRequestError.ProviderNoResult)
+        return new FailedProviderRequest(this.provider, FailedRequestErrorType.ProviderNoResult)
     }
 
     private async getProviderResultByOtherProvider(): Promise<MultiProviderResult | undefined> {
@@ -134,8 +138,8 @@ export default class DownloadProviderLocalDataToTargetHelper {
             try {
                 requestResult = await this.downloadProviderLocalDataUntilTarget(this.series)
             } catch (err) {
-                if (isFailedRequestError(err as any)) {
-                    return new FailedProviderRequest(this.provider, err as FailedRequestError)
+                if (err instanceof FailedRequestError) {
+                    return new FailedProviderRequest(this.provider, err.errorType, err.errorMessage)
                 }
                 logger.error(err as string)
             }
@@ -157,7 +161,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
                 requestResult = await DownloadProviderLocalDataHelper.downloadProviderLocalData(series, this.provider)
                 currentResult = requestResult.mainProvider
             } catch (err) {
-                if (err !== FailedRequestError.ProviderNoResult) {
+                if (!(err instanceof FailedRequestError)) {
                     throw new Error(err as string)
                 }
             }
@@ -217,8 +221,8 @@ export default class DownloadProviderLocalDataToTargetHelper {
             } catch (err) {
                 logger.error('Error at ProviderHelper.requestProviderInfo (See error details below):')
                 logger.error(err as string)
-                if (isFailedRequestError(err as any)) {
-                    result.push(new FailedProviderRequest(idProvider, err as FailedRequestError))
+                if (err instanceof FailedProviderRequest) {
+                    result.push(new FailedProviderRequest(idProvider, err.errorType, err.errorMessage))
                 }
             }
         }

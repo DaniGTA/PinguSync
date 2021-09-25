@@ -10,6 +10,7 @@ import MainListManager from './main-list-manager'
 import MainListSearcher from './main-list-searcher'
 import AdderProviderCache from './object-adder/adder-provider-cache'
 import AdderProviderCacheManager from './object-adder/adder-provider-cache-manager'
+import ProviderSplitter from '@/backend/helpFunctions/provider/provider-splitter'
 export default class MainListAdder {
     /**
      * Stores all adding instances.
@@ -37,7 +38,7 @@ export default class MainListAdder {
         await this.listWorker(series)
 
         if (MainListAdder.instanceTracker.length === 1 && MainListAdder.instanceTracker[0] === trackId) {
-            await MainListManager.finishListFilling()
+            //await MainListManager.finishListFilling()
             this.requestSave()
         }
         this.removeTrackId(trackId)
@@ -87,6 +88,16 @@ export default class MainListAdder {
                     const entrys = await searcher.quickFindSameSeriesInMainList(series)
                     if (entrys.length === 0) {
                         logger.debug('[MainListAdder] Add non existing Series.')
+                        const splitted = await ProviderSplitter.splitSeriesSeasonIntoSeries(series)
+                        if (splitted.length != 0) {
+                            list.push(...splitted)
+                            logger.debug(
+                                '[MainListAdder] Skipping adding non existing Series. Reason: Splitted into seasons'
+                            )
+                            listHelper.removeEntrys(MainListAdder.currentlyAdding, ...providerCache)
+
+                            continue
+                        }
                         const filledSeries = await NewProviderHelper.getAllRelevantProviderInfosForSeries(series)
                         if (filledSeries.lastInfoUpdate === 0) {
                             logger.error('[ERROR] Series no last info update!')

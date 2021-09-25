@@ -15,7 +15,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:41:10.547Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "sankarea",
                         "synopsis": "Chihiro Furuya likes zombies. There’s something about the shambling corpses and blood that appeals to him on a visual level, and since childhood he longed to enter into a romantic situation with one. He gets his wish when he encounters Rea Sanka—the daughter of the school director—at the abandoned building he uses in an attempt to resurrect Baabu, the family cat, with a resurrection potion. Hoping to escape her awful home life, Rea consumes the potion and falls to her death, only to come back as a zombie?! Could this possibly be Chihiro's dream come true, or will it be a rude awakening?",
                         "description": "Chihiro Furuya likes zombies. There’s something about the shambling corpses and blood that appeals to him on a visual level, and since childhood he longed to enter into a romantic situation with one. He gets his wish when he encounters Rea Sanka—the daughter of the school director—at the abandoned building he uses in an attempt to resurrect Baabu, the family cat, with a resurrection potion. Hoping to escape her awful home life, Rea consumes the potion and falls to her death, only to come back as a zombie?! Could this possibly be Chihiro's dream come true, or will it be a rude awakening?",
@@ -28,27 +28,27 @@
                         },
                         "canonicalTitle": "Sankarea",
                         "abbreviatedTitles": [],
-                        "averageRating": "73.44",
+                        "averageRating": "73.33",
                         "ratingFrequencies": {
-                            "2": "78",
-                            "3": "1",
-                            "4": "129",
+                            "2": "86",
+                            "3": "2",
+                            "4": "133",
                             "5": "8",
-                            "6": "200",
+                            "6": "207",
                             "7": "7",
-                            "8": "796",
-                            "9": "12",
-                            "10": "1062",
+                            "8": "832",
+                            "9": "14",
+                            "10": "1097",
                             "11": "43",
-                            "12": "2540",
-                            "13": "120",
-                            "14": "5245",
-                            "15": "173",
-                            "16": "4465",
-                            "17": "93",
-                            "18": "1783",
-                            "19": "22",
-                            "20": "2247"
+                            "12": "2626",
+                            "13": "128",
+                            "14": "5436",
+                            "15": "184",
+                            "16": "4575",
+                            "17": "101",
+                            "18": "1824",
+                            "19": "24",
+                            "20": "2284"
                         },
                         "userCount": 36601,
                         "favoritesCount": 305,
@@ -56,23 +56,27 @@
                         "endDate": "2012-06-29",
                         "nextRelease": null,
                         "popularityRank": 245,
-                        "ratingRank": 2428,
+                        "ratingRank": 2532,
                         "ageRating": "R",
                         "ageRatingGuide": "Mild Nudity",
                         "subtype": "TV",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/6521/tiny.jpg?1597697795",
-                            "small": "https://media.kitsu.io/anime/poster_images/6521/small.jpg?1597697795",
-                            "medium": "https://media.kitsu.io/anime/poster_images/6521/medium.jpg?1597697795",
-                            "large": "https://media.kitsu.io/anime/poster_images/6521/large.jpg?1597697795",
-                            "original": "https://media.kitsu.io/anime/poster_images/6521/original.png?1597697795",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/6521/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/6521/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/6521/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/6521/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/6521/original.png",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -81,32 +85,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/6521/tiny.jpg?1597700898",
-                            "small": "https://media.kitsu.io/anime/cover_images/6521/small.jpg?1597700898",
-                            "large": "https://media.kitsu.io/anime/cover_images/6521/large.jpg?1597700898",
-                            "original": "https://media.kitsu.io/anime/cover_images/6521/original.png?1597700898",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/6521/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/6521/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/6521/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/6521/original.png",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -259,10 +259,10 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:46:47.726Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "sankarea-ova",
-                        "synopsis": "Two OVA episodes are bundled as DVDs with each of volumes 6 and 7 of the manga.\r\nThe first OVA is a prequel story written by the manga's author. Before the beginning of the main story, Rea and Chihiro have already met at a certain place: an outdoor hot-spring bath.\r\nThe second OVA takes place after the series (effectively episode 14). The Furuya family finds a mysterious young girl hiding under the household temple.",
-                        "description": "Two OVA episodes are bundled as DVDs with each of volumes 6 and 7 of the manga.\r\nThe first OVA is a prequel story written by the manga's author. Before the beginning of the main story, Rea and Chihiro have already met at a certain place: an outdoor hot-spring bath.\r\nThe second OVA takes place after the series (effectively episode 14). The Furuya family finds a mysterious young girl hiding under the household temple.",
+                        "synopsis": "Two OVA episodes are bundled as DVDs with each of volumes 6 and 7 of the manga.\nThe first OVA is a prequel story written by the manga's author. Before the beginning of the main story, Rea and Chihiro have already met at a certain place: an outdoor hot-spring bath.\nThe second OVA takes place after the series (effectively episode 14). The Furuya family finds a mysterious young girl hiding under the household temple.",
+                        "description": "Two OVA episodes are bundled as DVDs with each of volumes 6 and 7 of the manga.\nThe first OVA is a prequel story written by the manga's author. Before the beginning of the main story, Rea and Chihiro have already met at a certain place: an outdoor hot-spring bath.\nThe second OVA takes place after the series (effectively episode 14). The Furuya family finds a mysterious young girl hiding under the household temple.",
                         "coverImageTopOffset": 0,
                         "titles": {
                             "en_jp": "Sankarea OVA",
@@ -272,27 +272,27 @@
                         "abbreviatedTitles": [
                             "Sankarea Episodes 00 & 14"
                         ],
-                        "averageRating": "71.26",
+                        "averageRating": "71.22",
                         "ratingFrequencies": {
-                            "2": "22",
+                            "2": "23",
                             "3": "0",
-                            "4": "49",
+                            "4": "50",
                             "5": "1",
-                            "6": "47",
+                            "6": "52",
                             "7": "1",
-                            "8": "192",
+                            "8": "196",
                             "9": "1",
-                            "10": "361",
+                            "10": "379",
                             "11": "3",
-                            "12": "809",
-                            "13": "18",
-                            "14": "1609",
-                            "15": "19",
-                            "16": "1081",
-                            "17": "11",
-                            "18": "358",
+                            "12": "824",
+                            "13": "20",
+                            "14": "1663",
+                            "15": "18",
+                            "16": "1097",
+                            "17": "14",
+                            "18": "370",
                             "19": "4",
-                            "20": "412"
+                            "20": "424"
                         },
                         "userCount": 8449,
                         "favoritesCount": 24,
@@ -300,21 +300,25 @@
                         "endDate": "2012-11-09",
                         "nextRelease": null,
                         "popularityRank": 1367,
-                        "ratingRank": 3496,
+                        "ratingRank": 3588,
                         "ageRating": "R",
                         "ageRatingGuide": "Mild Nudity",
                         "subtype": "OVA",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/6873/tiny.jpg?1408459637",
-                            "small": "https://media.kitsu.io/anime/poster_images/6873/small.jpg?1408459637",
-                            "medium": "https://media.kitsu.io/anime/poster_images/6873/medium.jpg?1408459637",
-                            "large": "https://media.kitsu.io/anime/poster_images/6873/large.jpg?1408459637",
-                            "original": "https://media.kitsu.io/anime/poster_images/6873/original.jpg?1408459637",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/6873/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/6873/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/6873/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/6873/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/6873/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
+                                        "width": null,
+                                        "height": null
+                                    },
+                                    "large": {
                                         "width": null,
                                         "height": null
                                     },
@@ -323,10 +327,6 @@
                                         "height": null
                                     },
                                     "medium": {
-                                        "width": null,
-                                        "height": null
-                                    },
-                                    "large": {
                                         "width": null,
                                         "height": null
                                     }
@@ -466,7 +466,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:56:47.855Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "sankarea-wagahai-mo-zombie-de-aru",
                         "synopsis": "Extra episode included on BD/DVD vol. 6; effectively episode 13. \nDespite their decaying bodies, Rea’s zombie power comes in handy both at school and at home, and Babu gets interested in another cat—although this particular feline is one of the living.\n(Source: FUNimation)",
                         "description": "Extra episode included on BD/DVD vol. 6; effectively episode 13. \nDespite their decaying bodies, Rea’s zombie power comes in handy both at school and at home, and Babu gets interested in another cat—although this particular feline is one of the living.\n(Source: FUNimation)",
@@ -482,27 +482,27 @@
                             "Sankarea Special",
                             "Sankarea Episode 13"
                         ],
-                        "averageRating": "71.63",
+                        "averageRating": "71.49",
                         "ratingFrequencies": {
-                            "2": "9",
+                            "2": "10",
                             "3": "1",
-                            "4": "30",
+                            "4": "34",
                             "5": "0",
-                            "6": "31",
+                            "6": "34",
                             "7": "1",
-                            "8": "166",
+                            "8": "176",
                             "9": "5",
-                            "10": "292",
-                            "11": "5",
-                            "12": "659",
+                            "10": "306",
+                            "11": "6",
+                            "12": "681",
                             "13": "15",
-                            "14": "1364",
-                            "15": "18",
-                            "16": "993",
-                            "17": "12",
-                            "18": "315",
+                            "14": "1406",
+                            "15": "16",
+                            "16": "1017",
+                            "17": "14",
+                            "18": "325",
                             "19": "3",
-                            "20": "308"
+                            "20": "317"
                         },
                         "userCount": 6540,
                         "favoritesCount": 14,
@@ -510,23 +510,27 @@
                         "endDate": "2012-11-30",
                         "nextRelease": null,
                         "popularityRank": 1693,
-                        "ratingRank": 3296,
+                        "ratingRank": 3437,
                         "ageRating": "R",
                         "ageRatingGuide": "Mild Nudity",
                         "subtype": "special",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/7492/tiny.jpg?1597691415",
-                            "small": "https://media.kitsu.io/anime/poster_images/7492/small.jpg?1597691415",
-                            "medium": "https://media.kitsu.io/anime/poster_images/7492/medium.jpg?1597691415",
-                            "large": "https://media.kitsu.io/anime/poster_images/7492/large.jpg?1597691415",
-                            "original": "https://media.kitsu.io/anime/poster_images/7492/original.jpg?1597691415",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/7492/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/7492/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/7492/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/7492/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/7492/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -535,10 +539,6 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
@@ -992,7 +992,7 @@
         },
         "rawHeaders": [
             "Date",
-            "Sat, 05 Jun 2021 14:22:46 GMT",
+            "Wed, 22 Sep 2021 21:13:01 GMT",
             "Content-Type",
             "application/vnd.api+json",
             "Transfer-Encoding",
@@ -1012,33 +1012,31 @@
             "referrer-policy",
             "strict-origin-when-cross-origin",
             "etag",
-            "W/\"f950c9eb684b8fb8a40e82c8df9db048\"",
+            "W/\"f17273dfc74f852af34e69578ff91a43\"",
             "cache-control",
             "max-age=0, private, must-revalidate",
             "x-request-id",
-            "26c599d5-8852-44a7-9ad6-52fb112ba5ca",
+            "1bc9df59-f575-4009-8238-e3e198c1b3fa",
             "x-runtime",
-            "0.240272",
+            "0.562327",
             "vary",
             "Origin",
             "CF-Cache-Status",
             "DYNAMIC",
-            "cf-request-id",
-            "0a7e2720fa00001cc4723ba000000001",
             "Expect-CT",
             "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
             "Report-To",
-            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v2?s=uy0e2Mt4rtgvGbnWX%2Fv0seqDWs18a%2FR2lpG7Cjn8r4SZdnGVZRLs0bhoNSVC2eYIwr22AiV%2Fjn8i3VzHFQowk8OZjoQdxP7w8GlLZuDMbPm0vnA9x%2BQ%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=jYhvqnB84uvaFTuqQCd8CPlG4Gy%2FK3UfIlDIs1UMT6zQdyt4XUGHBC1xmBSZIfu9AFxjb3rU2JKlAK1KEr1oFHKs6kVTGgo3OW9%2FcsKpljt6vuz37Km5wtGcZA%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
             "NEL",
-            "{\"report_to\":\"cf-nel\",\"max_age\":604800}",
+            "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
             "Strict-Transport-Security",
             "max-age=31536000; preload",
             "Server",
             "cloudflare",
             "CF-RAY",
-            "65aa0e14cb7c1cc4-BUD",
+            "692e88e0ce574e6e-FRA",
             "alt-svc",
-            "h3-27=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3=\":443\"; ma=86400"
+            "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-27=\":443\"; ma=86400"
         ],
         "responseIsBinary": false
     }

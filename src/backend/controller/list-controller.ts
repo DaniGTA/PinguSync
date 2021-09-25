@@ -37,47 +37,6 @@ export default class ListController {
         MainListPackageManager.removeSeriesPackage(id, this.getMainList())
     }
 
-    public async removeWatchProgress(anime: Series, watchProgress: WatchProgress): Promise<void> {
-        for (const provider of anime.getListProvidersInfos()) {
-            try {
-                const providerInstance = provider.getProviderInstance()
-                if (await providerInstance.isUserLoggedIn()) {
-                    const newProvider = await providerInstance.removeEntry(anime, watchProgress)
-                    newProvider.lastUpdate = new Date(Date.now())
-                    const index = anime.getListProvidersInfos().findIndex(x => x.provider === provider.provider)
-                    anime.getListProvidersInfos()[index] = newProvider
-                }
-            } catch (err) {
-                logger.error('[ListController] [removeWatchProgress]: Failed remove watch progress')
-            }
-        }
-    }
-    public async updateWatchProgressTo(anime: Series, watchProgess: number): Promise<void> {
-        if (anime.getListProvidersInfos().length < ProviderList.getListProviderList().length / 2) {
-            try {
-                await NewProviderHelper.getAllRelevantProviderInfosForSeries(anime)
-            } catch (err) {
-                logger.error('[ListController] [updateWatchProgressTo]: (see error next line)')
-                logger.error('[ListController] [updateWatchProgressTo]: Update watch progress')
-            }
-        }
-        for (const provider of anime.getListProvidersInfos()) {
-            try {
-                const providerInstance = provider.getProviderInstance()
-                if (await providerInstance.isUserLoggedIn()) {
-                    const newProvider = await providerInstance.updateEntry(anime, new WatchProgress(watchProgess))
-                    newProvider.lastUpdate = new Date(Date.now())
-                    const index = anime.getListProvidersInfos().findIndex(x => x.provider === provider.provider)
-                    anime.getListProvidersInfos()[index] = newProvider
-                }
-            } catch (err) {
-                logger.error('[ListController] [updateWatchProgressTo]: (see error next line)')
-                logger.error(err as string)
-            }
-        }
-        await this.addSeriesToMainList(anime)
-    }
-
     public async addSeriesToMainList(...animes: Series[]): Promise<void> {
         logger.debug(`[ListController] [addSeriesToMainList] adding ${animes.length} animes to mainList`)
         await new MainListAdder().addSeries(...animes)

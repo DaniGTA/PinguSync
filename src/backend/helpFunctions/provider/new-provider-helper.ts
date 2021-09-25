@@ -3,7 +3,7 @@ import InfoProvider from '../../api/provider/info-provider'
 import ListProvider from '../../api/provider/list-provider'
 import MultiProviderResult from '../../api/provider/multi-provider-result'
 import FailedProviderRequest from '../../controller/objects/meta/failed-provider-request'
-import { FailedRequestError, isFailedRequestError } from '../../controller/objects/meta/failed-request'
+import { FailedRequestErrorType, isFailedRequestError } from '../../controller/objects/meta/failed-request-error-type'
 import Series from '../../controller/objects/series'
 import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
@@ -31,6 +31,18 @@ export default class NewProviderHelper {
                 }
             } catch (err) {
                 logger.debug(err as string)
+            }
+        }
+        return false
+    }
+
+    public static async canUpdateRelevantProvider(series: Series): Promise<boolean> {
+        const allRelevantProviders = await this.getAllRelevantProviders()
+        for (const relevantProvider of allRelevantProviders) {
+            for (const binding of series.episodeBindingPools) {
+                if (!binding.isBindingPoolHaveThisProvider(relevantProvider.providerName)) {
+                    return true
+                }
             }
         }
         return false
@@ -142,7 +154,7 @@ export default class NewProviderHelper {
                 }
             } catch (err) {
                 if (isFailedRequestError(err as any)) {
-                    results.push(new FailedProviderRequest(provider, err as FailedRequestError))
+                    results.push(new FailedProviderRequest(provider, err as FailedRequestErrorType))
                 }
                 logger.debug(err as string)
             }

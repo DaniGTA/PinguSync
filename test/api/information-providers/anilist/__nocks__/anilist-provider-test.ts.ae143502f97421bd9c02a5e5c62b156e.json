@@ -1,0 +1,66 @@
+[
+    {
+        "scope": "https://graphql.anilist.co:443",
+        "method": "POST",
+        "path": "/",
+        "body": {
+            "query": "\nquery ($id: Int!, $type: MediaType) {\n  Media(id: $id, type: $type) {\n    id\n    idMal\n    title {\n      romaji\n      english\n      native\n      userPreferred\n    }\n    startDate {\n      year\n      month\n      day\n    }\n    endDate {\n      year\n      month\n      day\n    }\n    coverImage {\n      large\n      medium\n    }\n    bannerImage\n    format\n    type\n    status\n    episodes\n    chapters\n    volumes\n    season\n    description\n    averageScore\n    meanScore\n    genres\n    synonyms\n    nextAiringEpisode {\n      airingAt\n      timeUntilAiring\n      episode\n    }\n    relations {\n      edges {\n        relationType\n      }\n      nodes{\n        id\n      }\n    }\n  }\n}",
+            "variables": {
+                "id": 704,
+                "type": "ANIME"
+            }
+        },
+        "status": 200,
+        "response": [
+            "03",
+            "480200c4ca9cf5fa4ef50129443a5c00761e137b12ebd69652929c45cfff35c1e1a20374415562a3cd0e7cd11a691bd09e0ff00fb0cdad29e823a89fca726cfa6be7b5e40d1947867ec39164e65e6332e851bbaf60b2232eae9788261602fd06ef4afe6fa071c0d6594d07fcca395b8602a9fdc3a06d55140a96a359093492aad7e65952f5daa9a44de73d4aaac998c74935eece3a50a882f8d32f1eba65f2dd5a218cbab5c971227f8817610fdd6db77b0aa5b331871e2864fc02ddab15c466a3d1c0f1d15ec90bfd4a092e5e011a798ccba09356d20afd265b5398109ba94b5a735348d26a1d48339bb4181c40352a256989841fc05599b466cfa376bf71f13a9b9cb07be1fc6ac4be505618d4ecb795b15ea8adb8b5027e1ca26593948345014c5aa376bf71d4bedfbff7478f6b97d70589c42315e6ce971ca17172bd0685f8b21468ac1def1d6dc17c378a5580c6f6def1dec5eed62614646982cb24407714d29c97517cf01e0c8a016bda24080767a171717abe77bc03850cd1c15a46d3b5d5652e1496ded805e51c2875a510d602b8bbaa32696ec84b654d948c9e4ccc69eda53a0eede38559492037272e0a225ec9d11ae90fc45e584da6e42cc5dbbfb04937b9583a3221378e56269818e8881f5d745f02e106e42e0b4e45d1563d81a9349ed342084e500b843b7977b9789217094da25f33ffe7d7ccff49ecd70b57f95434ad59530a1dcb53a063894fce3f7efb35f37fa0c02bf1bc908bd479811e76144a617b91e6e774151662bd04e8076c7a2e190a543096a702858bc2a4426e4e87665e7b544bf1c78ac8e002530574074802b20c336e8ccd68fb2f12acc254c1ca735c33ded8c5961151b361e807439c0dd06f906c310deead8bbef48ad1a7e75b67575b87a8a70ad605e8874da7b8d3efd7d3baae6b0303"
+        ],
+        "rawHeaders": [
+            "Date",
+            "Sat, 25 Sep 2021 20:13:28 GMT",
+            "Content-Type",
+            "application/json",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Cache-Control",
+            "no-cache, private",
+            "X-RateLimit-Limit",
+            "90",
+            "X-RateLimit-Remaining",
+            "88",
+            "Set-Cookie",
+            "laravel_session=igaIh6Mbh0RM4AgSSsEgKjlPJgnCGCd1ufajiyS8; expires=Sun, 26-Sep-2021 08:13:28 GMT; Max-Age=43200; path=/; httponly",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "X-XSS-Protection",
+            "1; mode=block",
+            "X-Content-Type-Options",
+            "nosniff",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers",
+            "Authorization,Accept,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range",
+            "Access-Control-Expose-Headers",
+            "X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Content-Length, Content-Range",
+            "CF-Cache-Status",
+            "DYNAMIC",
+            "Expect-CT",
+            "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
+            "Report-To",
+            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=4RPm1KYpwI%2BCStesz9sAbU46w4VyWA%2FaScs9mzQzi8o1oDSiz1iRXP0rjhD6wrdScjAIiv4qlqVsb0KM9fSG8WpmLHPKTYJvKavXS5F6TkmhzmifAlIYRy8oO958YSjPUgmvuA%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+            "NEL",
+            "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "6946e9cc3b306925-FRA",
+            "Content-Encoding",
+            "br"
+        ],
+        "responseIsBinary": false
+    }
+]

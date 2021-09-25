@@ -32,7 +32,11 @@ import { print } from 'graphql'
 import EpisodeHelper from '../../../helpFunctions/episode-helper/episode-helper'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
-export default class AniListProvider extends ListProvider {
+import OAuthListProvider from '../../provider/o-auth-list-provider'
+import oAuth from '../../provider/auth/o-auth'
+import OAuth from '../../provider/auth/o-auth'
+import { OAuthTokenType } from '../../provider/auth/o-auth-token-type'
+export default class AniListProvider extends OAuthListProvider {
     private static instance: AniListProvider
     public hasUniqueIdForSeasons = true
     public version = 1
@@ -78,7 +82,8 @@ export default class AniListProvider extends ListProvider {
         throw new Error('Method not implemented.')
     }
     public logoutUser(): void {
-        this.userData.setTokens('', '', 0)
+        this.userData.oAuth = undefined
+        this.userData.saveData()
     }
 
     public async markEpisodeAsUnwatched(episode: Episode[]): Promise<void> {
@@ -111,7 +116,7 @@ export default class AniListProvider extends ListProvider {
         }
     }
 
-    public async addOAuthCode(code: string): Promise<boolean> {
+    public async addOAuthCode(code: string): Promise<OAuth> {
         const options = new RequestBundle('https://anilist.co/api/v2/oauth/token', {
             headers: {
                 Accept: 'application/json',
@@ -127,22 +132,25 @@ export default class AniListProvider extends ListProvider {
             method: 'POST',
         })
 
-        const body = await this.webRequest<{ access_token: string; refresh_token: string; expires_in: number }>(options)
+        const body = await this.webRequest<{
+            access_token: string
+            refresh_token: string
+            expires_in: number
+        }>(options)
 
         if (body.access_token) {
-            this.userData.setTokens(body.access_token, body.refresh_token, body.expires_in)
-            this.userData.createdToken = new Date()
-            this.getUserInfo()
-            return true
+            return new OAuth(body.access_token, OAuthTokenType.BEARER, new Date())
         } else {
             throw new Error()
         }
     }
 
     public async getMoreSeriesInfoByName(seriesName: string): Promise<MultiProviderResult[]> {
-        const searchResults: SearchSeries = await this.webRequest(
-            this.getGraphQLOptions(searchSeriesGql, { query: seriesName, type: 'ANIME' })
-        )
+        const searchResults: SearchSeries = (
+            await this.webRequest<{ data: SearchSeries }>(
+                this.getGraphQLOptions(searchSeriesGql, { query: seriesName, type: 'ANIME' })
+            )
+        ).data
         const endResult: MultiProviderResult[] = []
         for (const result of searchResults.Page.media) {
             try {
@@ -154,11 +162,13 @@ export default class AniListProvider extends ListProvider {
         return endResult
     }
 
-    public async getFullInfoById(provider: InfoProviderLocalData): Promise<MultiProviderResult> {
+    public async getFullInfoById(provider: ProviderLocalData): Promise<MultiProviderResult> {
         if (provider.provider === this.providerName && provider.id) {
-            const fullInfo: GetSeriesByID = await this.webRequest(
-                this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' })
-            )
+            const fullInfo: GetSeriesByID = (
+                await this.webRequest<{ data: GetSeriesByID }>(
+                    this.getGraphQLOptions(getSeriesByIDGql, { id: provider.id, type: 'ANIME' })
+                )
+            ).data
 
             return new MultiProviderResult(aniListConverter.convertExtendedInfoToAnime(fullInfo))
         }
@@ -173,7 +183,7 @@ export default class AniListProvider extends ListProvider {
 
     // eslint-disable-next-line @typescript-eslint/require-await
     public async isUserLoggedIn(): Promise<boolean> {
-        return this.userData.accessToken !== ''
+        return this.userData.oAuth !== undefined
     }
 
     public logInUser(): Promise<boolean> {
@@ -213,7 +223,7 @@ export default class AniListProvider extends ListProvider {
     }
 
     public async getUrlToSingleEpisode(provider: ProviderLocalData, episode: Episode): Promise<string> {
-        return ''
+        return 'https://anilist.co/anime/' + provider.id
     }
 
     public convertListNameToWatchStatus(name: string): ListType {
@@ -296,7 +306,7 @@ export default class AniListProvider extends ListProvider {
         if (response.statusCode === 200) {
             try {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                return JSON.parse(response.body)?.data as T
+                return JSON.parse(response.body) as T
             } catch (err) {
                 return (response.body as unknown) as T
             }
@@ -306,6 +316,20 @@ export default class AniListProvider extends ListProvider {
         } else {
             throw new Error(`Wrong Status Code: ${response.statusCode}`)
         }
+    }
+
+    public setOAuthData(oAuth: oAuth): void {
+        this.userData.oAuth = oAuth
+        this.userData.saveData()
+    }
+    public getOAuthData(): oAuth {
+        if (this.userData.oAuth) {
+            return this.userData.oAuth
+        }
+        throw new Error('[AniList] no o auth data')
+    }
+    protected refreshAccessToken(): Promise<oAuth> {
+        throw new Error('[AniList] cant refresh token')
     }
 
     private getGraphQLOptions(query: string, variables?: any): RequestBundle {
@@ -319,11 +343,11 @@ export default class AniListProvider extends ListProvider {
             'Content-Type': 'application/json',
         }
 
-        if (this.userData.accessToken !== '' && typeof this.userData.accessToken !== 'undefined') {
+        if (this.userData.oAuth !== undefined) {
             if (typeof headers !== 'undefined') {
                 headers = {
                     Accept: 'application/json',
-                    Authorization: `Bearer ${this.userData.accessToken}`,
+                    Authorization: `Bearer ${this.userData.oAuth.accessToken}`,
                     'Content-Type': 'application/json',
                 }
             }

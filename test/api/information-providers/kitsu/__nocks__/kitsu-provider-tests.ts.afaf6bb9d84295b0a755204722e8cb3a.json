@@ -15,7 +15,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T16:24:49.365Z",
-                        "updatedAt": "2021-06-05T14:21:29.257Z",
+                        "updatedAt": "2021-09-22T21:15:02.529Z",
                         "slug": "naruto-shippuden",
                         "synopsis": "It has been two and a half years since Naruto Uzumaki left Konohagakure, the Hidden Leaf Village, for intense training following events which fueled his desire to be stronger. Now Akatsuki, the mysterious organization of elite rogue ninja, is closing in on their grand plan which may threaten the safety of the entire shinobi world.\n\nAlthough Naruto is older and sinister events loom on the horizon, he has changed little in personality—still rambunctious and childish—though he is now far more confident and possesses an even greater determination to protect his friends and home. Come whatever may, Naruto will carry on with the fight for what is important to him, even at the expense of his own body, in the continuation of the saga about the boy who wishes to become Hokage.\n\n(Source: MAL Rewrite)",
                         "description": "It has been two and a half years since Naruto Uzumaki left Konohagakure, the Hidden Leaf Village, for intense training following events which fueled his desire to be stronger. Now Akatsuki, the mysterious organization of elite rogue ninja, is closing in on their grand plan which may threaten the safety of the entire shinobi world.\n\nAlthough Naruto is older and sinister events loom on the horizon, he has changed little in personality—still rambunctious and childish—though he is now far more confident and possesses an even greater determination to protect his friends and home. Come whatever may, Naruto will carry on with the fight for what is important to him, even at the expense of his own body, in the continuation of the saga about the boy who wishes to become Hokage.\n\n(Source: MAL Rewrite)",
@@ -30,27 +30,27 @@
                         "abbreviatedTitles": [
                             "Naruto Hurricane Chronicles"
                         ],
-                        "averageRating": "83.04",
+                        "averageRating": "83.67",
                         "ratingFrequencies": {
-                            "2": "890",
-                            "3": "16",
-                            "4": "415",
-                            "5": "13",
-                            "6": "511",
-                            "7": "30",
-                            "8": "2100",
-                            "9": "48",
-                            "10": "1818",
-                            "11": "79",
-                            "12": "4046",
-                            "13": "262",
-                            "14": "10066",
-                            "15": "556",
-                            "16": "8075",
-                            "17": "756",
-                            "18": "6369",
-                            "19": "568",
-                            "20": "29030"
+                            "2": "1364",
+                            "3": "26",
+                            "4": "449",
+                            "5": "23",
+                            "6": "557",
+                            "7": "40",
+                            "8": "2693",
+                            "9": "54",
+                            "10": "1948",
+                            "11": "102",
+                            "12": "4316",
+                            "13": "297",
+                            "14": "12045",
+                            "15": "645",
+                            "16": "8749",
+                            "17": "900",
+                            "18": "7091",
+                            "19": "692",
+                            "20": "38216"
                         },
                         "userCount": 96476,
                         "favoritesCount": 3938,
@@ -58,23 +58,27 @@
                         "endDate": "2017-03-23",
                         "nextRelease": null,
                         "popularityRank": 53,
-                        "ratingRank": 25,
+                        "ratingRank": 20,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "TV",
                         "status": "finished",
                         "tba": "",
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/1555/tiny.jpg?1597696875",
-                            "small": "https://media.kitsu.io/anime/poster_images/1555/small.jpg?1597696875",
-                            "medium": "https://media.kitsu.io/anime/poster_images/1555/medium.jpg?1597696875",
-                            "large": "https://media.kitsu.io/anime/poster_images/1555/large.jpg?1597696875",
-                            "original": "https://media.kitsu.io/anime/poster_images/1555/original.jpg?1597696875",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/1555/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/1555/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/1555/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/1555/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/1555/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -83,32 +87,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/1555/tiny.jpg?1597702491",
-                            "small": "https://media.kitsu.io/anime/cover_images/1555/small.jpg?1597702491",
-                            "large": "https://media.kitsu.io/anime/cover_images/1555/large.jpg?1597702491",
-                            "original": "https://media.kitsu.io/anime/cover_images/1555/original.jpg?1597702491",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/1555/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/1555/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/1555/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/1555/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -261,7 +261,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T16:35:15.856Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "naruto-shippuden-movie-1",
                         "synopsis": "Demons that once almost destroyed the world, are revived by someone. To prevent the world from being destroyed, the demon has to be sealed and the only one who can do it is the shrine maiden Shion from the country of demons, who has two powers; one is sealing demons and the other is predicting the deaths of humans. This time Naruto's mission is to guard Shion, but she predicts Naruto's death. The only way to escape it, is to get away from Shion, which would leave her unguarded, then the demon, whose only goal is to kill Shion will do so, thus meaning the end of the world. Naruto decides to challenge this \"prediction of death,\" but fails to prove Shion's prediction wrong and supposedly dies in vain.\n(Source: Wikipedia)",
                         "description": "Demons that once almost destroyed the world, are revived by someone. To prevent the world from being destroyed, the demon has to be sealed and the only one who can do it is the shrine maiden Shion from the country of demons, who has two powers; one is sealing demons and the other is predicting the deaths of humans. This time Naruto's mission is to guard Shion, but she predicts Naruto's death. The only way to escape it, is to get away from Shion, which would leave her unguarded, then the demon, whose only goal is to kill Shion will do so, thus meaning the end of the world. Naruto decides to challenge this \"prediction of death,\" but fails to prove Shion's prediction wrong and supposedly dies in vain.\n(Source: Wikipedia)",
@@ -278,27 +278,27 @@
                             "Naruto Movie 4",
                             "Gekijouban Naruto Shippuuden"
                         ],
-                        "averageRating": "72.82",
+                        "averageRating": "72.93",
                         "ratingFrequencies": {
-                            "2": "65",
+                            "2": "66",
                             "3": "1",
-                            "4": "84",
+                            "4": "86",
                             "5": "2",
-                            "6": "135",
+                            "6": "137",
                             "7": "3",
-                            "8": "427",
-                            "9": "5",
-                            "10": "663",
+                            "8": "445",
+                            "9": "7",
+                            "10": "685",
                             "11": "21",
-                            "12": "1375",
-                            "13": "41",
-                            "14": "2612",
-                            "15": "57",
-                            "16": "1649",
-                            "17": "37",
-                            "18": "584",
-                            "19": "13",
-                            "20": "1583"
+                            "12": "1444",
+                            "13": "46",
+                            "14": "2767",
+                            "15": "60",
+                            "16": "1715",
+                            "17": "41",
+                            "18": "608",
+                            "19": "14",
+                            "20": "1686"
                         },
                         "userCount": 16397,
                         "favoritesCount": 54,
@@ -306,23 +306,27 @@
                         "endDate": "2007-08-04",
                         "nextRelease": null,
                         "popularityRank": 705,
-                        "ratingRank": 2719,
+                        "ratingRank": 2728,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/2245/tiny.jpg?1597697957",
-                            "small": "https://media.kitsu.io/anime/poster_images/2245/small.jpg?1597697957",
-                            "medium": "https://media.kitsu.io/anime/poster_images/2245/medium.jpg?1597697957",
-                            "large": "https://media.kitsu.io/anime/poster_images/2245/large.jpg?1597697957",
-                            "original": "https://media.kitsu.io/anime/poster_images/2245/original.jpg?1597697957",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/2245/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/2245/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/2245/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/2245/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/2245/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -331,32 +335,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/2245/tiny.jpg?1597703370",
-                            "small": "https://media.kitsu.io/anime/cover_images/2245/small.jpg?1597703370",
-                            "large": "https://media.kitsu.io/anime/cover_images/2245/large.jpg?1597703370",
-                            "original": "https://media.kitsu.io/anime/cover_images/2245/original.jpg?1597703370",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/2245/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/2245/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/2245/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/2245/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -497,7 +497,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T16:55:25.720Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "naruto-shippuden-movie-2-kizuna",
                         "synopsis": "A mysterious group of ninjas makes a surprise attack on the Konohagakure, which takes great damage. The nightmare of another Shinobi World War could become a reality. Sasuke, who left Konoha to kill his brother, Itachi, appears for the second time in front of Naruto at an unknown location to prevent it from coming to fruition.\n(Source: Wikipedia)",
                         "description": "A mysterious group of ninjas makes a surprise attack on the Konohagakure, which takes great damage. The nightmare of another Shinobi World War could become a reality. Sasuke, who left Konoha to kill his brother, Itachi, appears for the second time in front of Naruto at an unknown location to prevent it from coming to fruition.\n(Source: Wikipedia)",
@@ -516,25 +516,25 @@
                         ],
                         "averageRating": "71.92",
                         "ratingFrequencies": {
-                            "2": "58",
+                            "2": "59",
                             "3": "2",
-                            "4": "81",
+                            "4": "86",
                             "5": "2",
-                            "6": "127",
-                            "7": "3",
-                            "8": "329",
-                            "9": "5",
-                            "10": "634",
-                            "11": "17",
-                            "12": "1167",
-                            "13": "34",
-                            "14": "2110",
-                            "15": "49",
-                            "16": "1431",
-                            "17": "20",
-                            "18": "514",
-                            "19": "9",
-                            "20": "1121"
+                            "6": "132",
+                            "7": "2",
+                            "8": "347",
+                            "9": "4",
+                            "10": "673",
+                            "11": "20",
+                            "12": "1210",
+                            "13": "38",
+                            "14": "2201",
+                            "15": "55",
+                            "16": "1491",
+                            "17": "21",
+                            "18": "531",
+                            "19": "10",
+                            "20": "1179"
                         },
                         "userCount": 13918,
                         "favoritesCount": 34,
@@ -542,23 +542,27 @@
                         "endDate": "2008-08-02",
                         "nextRelease": null,
                         "popularityRank": 842,
-                        "ratingRank": 3133,
+                        "ratingRank": 3203,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/3606/tiny.jpg?1597698083",
-                            "small": "https://media.kitsu.io/anime/poster_images/3606/small.jpg?1597698083",
-                            "medium": "https://media.kitsu.io/anime/poster_images/3606/medium.jpg?1597698083",
-                            "large": "https://media.kitsu.io/anime/poster_images/3606/large.jpg?1597698083",
-                            "original": "https://media.kitsu.io/anime/poster_images/3606/original.jpg?1597698083",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/3606/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/3606/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/3606/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/3606/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/3606/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -567,32 +571,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/3606/tiny.jpg?1597700972",
-                            "small": "https://media.kitsu.io/anime/cover_images/3606/small.jpg?1597700972",
-                            "large": "https://media.kitsu.io/anime/cover_images/3606/large.jpg?1597700972",
-                            "original": "https://media.kitsu.io/anime/cover_images/3606/original.jpg?1597700972",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/3606/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/3606/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/3606/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/3606/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -733,7 +733,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:09:28.494Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "naruto-shippuden-movie-3-hi-no-ishi-wo-tsugu-mono",
                         "synopsis": "Ninjas with bloodline limits begin disappearing in all the countries and blame points toward the fire nation. By Tsunade's order, Kakashi is sacrificed to prevent an all out war. After inheriting charms left by Kakashi, Naruto fights through friends and foes to prevent his death while changing the minds of those who've inherited the will of fire.\n(Source: ANN)",
                         "description": "Ninjas with bloodline limits begin disappearing in all the countries and blame points toward the fire nation. By Tsunade's order, Kakashi is sacrificed to prevent an all out war. After inheriting charms left by Kakashi, Naruto fights through friends and foes to prevent his death while changing the minds of those who've inherited the will of fire.\n(Source: ANN)",
@@ -750,27 +750,27 @@
                             "Naruto Movie 6",
                             "Naruto Shippuuden 3: Inheritors of Will of Fire"
                         ],
-                        "averageRating": "72.83",
+                        "averageRating": "72.87",
                         "ratingFrequencies": {
                             "2": "37",
                             "3": "2",
-                            "4": "54",
+                            "4": "57",
                             "5": "0",
-                            "6": "81",
-                            "7": "2",
-                            "8": "268",
-                            "9": "5",
-                            "10": "494",
-                            "11": "12",
-                            "12": "964",
-                            "13": "25",
-                            "14": "1828",
-                            "15": "47",
-                            "16": "1250",
-                            "17": "29",
-                            "18": "417",
-                            "19": "12",
-                            "20": "1011"
+                            "6": "82",
+                            "7": "1",
+                            "8": "281",
+                            "9": "6",
+                            "10": "518",
+                            "11": "15",
+                            "12": "995",
+                            "13": "29",
+                            "14": "1902",
+                            "15": "50",
+                            "16": "1287",
+                            "17": "30",
+                            "18": "441",
+                            "19": "14",
+                            "20": "1060"
                         },
                         "userCount": 12453,
                         "favoritesCount": 20,
@@ -778,23 +778,27 @@
                         "endDate": "2009-08-01",
                         "nextRelease": null,
                         "popularityRank": 953,
-                        "ratingRank": 2716,
+                        "ratingRank": 2755,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": "",
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/4520/tiny.jpg?1597697930",
-                            "small": "https://media.kitsu.io/anime/poster_images/4520/small.jpg?1597697930",
-                            "medium": "https://media.kitsu.io/anime/poster_images/4520/medium.jpg?1597697930",
-                            "large": "https://media.kitsu.io/anime/poster_images/4520/large.jpg?1597697930",
-                            "original": "https://media.kitsu.io/anime/poster_images/4520/original.jpg?1597697930",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/4520/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/4520/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/4520/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/4520/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/4520/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -803,32 +807,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/4520/tiny.jpg?1597703301",
-                            "small": "https://media.kitsu.io/anime/cover_images/4520/small.jpg?1597703301",
-                            "large": "https://media.kitsu.io/anime/cover_images/4520/large.jpg?1597703301",
-                            "original": "https://media.kitsu.io/anime/cover_images/4520/original.jpg?1597703301",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/4520/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/4520/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/4520/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/4520/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -965,7 +965,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T16:53:35.614Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "naruto-shippuden-konoha-gakuen-special",
                         "synopsis": "Naruto school special.\nNaruto is a new cool student and when he meets Sasuke they start fighting.",
                         "description": "Naruto school special.\nNaruto is a new cool student and when he meets Sasuke they start fighting.",
@@ -981,51 +981,55 @@
                             "NARUTO Shippu Konoha Gakuen Den Special",
                             "Konoha High"
                         ],
-                        "averageRating": "68.36",
+                        "averageRating": "68.41",
                         "ratingFrequencies": {
-                            "2": "33",
+                            "2": "34",
                             "3": "0",
                             "4": "30",
                             "5": "0",
-                            "6": "58",
+                            "6": "62",
                             "7": "1",
-                            "8": "102",
+                            "8": "107",
                             "9": "2",
-                            "10": "278",
+                            "10": "298",
                             "11": "1",
-                            "12": "409",
+                            "12": "429",
                             "13": "7",
-                            "14": "653",
+                            "14": "706",
                             "15": "1",
-                            "16": "281",
+                            "16": "302",
                             "17": "1",
-                            "18": "122",
+                            "18": "127",
                             "19": "1",
-                            "20": "262"
+                            "20": "277"
                         },
                         "userCount": 4807,
                         "favoritesCount": 8,
                         "startDate": "2008-02-06",
                         "endDate": "2008-02-06",
                         "nextRelease": null,
-                        "popularityRank": 2092,
-                        "ratingRank": 5125,
+                        "popularityRank": 2091,
+                        "ratingRank": 5199,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "special",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/3484/tiny.jpg?1597698502",
-                            "small": "https://media.kitsu.io/anime/poster_images/3484/small.jpg?1597698502",
-                            "medium": "https://media.kitsu.io/anime/poster_images/3484/medium.jpg?1597698502",
-                            "large": "https://media.kitsu.io/anime/poster_images/3484/large.jpg?1597698502",
-                            "original": "https://media.kitsu.io/anime/poster_images/3484/original.jpg?1597698502",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/3484/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/3484/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/3484/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/3484/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/3484/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -1034,32 +1038,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/3484/tiny.jpg?1597701221",
-                            "small": "https://media.kitsu.io/anime/cover_images/3484/small.jpg?1597701221",
-                            "large": "https://media.kitsu.io/anime/cover_images/3484/large.jpg?1597701221",
-                            "original": "https://media.kitsu.io/anime/cover_images/3484/original.jpg?1597701221",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/3484/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/3484/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/3484/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/3484/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -1185,463 +1185,6 @@
                     }
                 },
                 {
-                    "id": "7975",
-                    "type": "anime",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/anime/7975"
-                    },
-                    "attributes": {
-                        "createdAt": "2013-08-30T01:46:32.855Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
-                        "slug": "naruto-shippuden-jump-super-anime-tour-2013-special",
-                        "synopsis": "A comedy-filled filler with a plot revolving around the two Uchiha Brothers, Mangekyo Sharingan, chickens, and fried eggs.",
-                        "description": "A comedy-filled filler with a plot revolving around the two Uchiha Brothers, Mangekyo Sharingan, chickens, and fried eggs.",
-                        "coverImageTopOffset": 100,
-                        "titles": {
-                            "en_jp": "Naruto Shippuuden: Sunny Side Battle",
-                            "ja_jp": "ナルト-NARUTO-疾風伝 サニー・サイド・バトル"
-                        },
-                        "canonicalTitle": "Naruto Shippuuden: Sunny Side Battle",
-                        "abbreviatedTitles": [
-                            "Naruto: Shippuuden - Jump Festa 2013 Special",
-                            "Naruto: Shippuuden - Jump Super Anime Tour 2013 Special"
-                        ],
-                        "averageRating": "71.66",
-                        "ratingFrequencies": {
-                            "2": "27",
-                            "3": "1",
-                            "4": "15",
-                            "5": "0",
-                            "6": "36",
-                            "7": "1",
-                            "8": "65",
-                            "9": "0",
-                            "10": "134",
-                            "11": "2",
-                            "12": "255",
-                            "13": "3",
-                            "14": "411",
-                            "15": "8",
-                            "16": "233",
-                            "17": "10",
-                            "18": "111",
-                            "19": "3",
-                            "20": "266"
-                        },
-                        "userCount": 3264,
-                        "favoritesCount": 3,
-                        "startDate": "2013-10-06",
-                        "endDate": "2013-10-06",
-                        "nextRelease": null,
-                        "popularityRank": 2666,
-                        "ratingRank": 3280,
-                        "ageRating": "PG",
-                        "ageRatingGuide": "Teens 13 or older",
-                        "subtype": "special",
-                        "status": "finished",
-                        "tba": null,
-                        "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/7975/tiny.jpg?1597698137",
-                            "small": "https://media.kitsu.io/anime/poster_images/7975/small.jpg?1597698137",
-                            "medium": "https://media.kitsu.io/anime/poster_images/7975/medium.jpg?1597698137",
-                            "large": "https://media.kitsu.io/anime/poster_images/7975/large.jpg?1597698137",
-                            "original": "https://media.kitsu.io/anime/poster_images/7975/original.jpg?1597698137",
-                            "meta": {
-                                "dimensions": {
-                                    "tiny": {
-                                        "width": 110,
-                                        "height": 156
-                                    },
-                                    "small": {
-                                        "width": 284,
-                                        "height": 402
-                                    },
-                                    "medium": {
-                                        "width": 390,
-                                        "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
-                                    }
-                                }
-                            }
-                        },
-                        "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/7975/tiny.jpg?1597701003",
-                            "small": "https://media.kitsu.io/anime/cover_images/7975/small.jpg?1597701003",
-                            "large": "https://media.kitsu.io/anime/cover_images/7975/large.jpg?1597701003",
-                            "original": "https://media.kitsu.io/anime/cover_images/7975/original.jpg?1597701003",
-                            "meta": {
-                                "dimensions": {
-                                    "tiny": {
-                                        "width": 840,
-                                        "height": 200
-                                    },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
-                                    "large": {
-                                        "width": 3360,
-                                        "height": 800
-                                    }
-                                }
-                            }
-                        },
-                        "episodeCount": 1,
-                        "episodeLength": 11,
-                        "totalLength": 11,
-                        "youtubeVideoId": null,
-                        "showType": "special",
-                        "nsfw": false
-                    },
-                    "relationships": {
-                        "genres": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/genres",
-                                "related": "https://kitsu.io/api/edge/anime/7975/genres"
-                            }
-                        },
-                        "categories": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/categories",
-                                "related": "https://kitsu.io/api/edge/anime/7975/categories"
-                            }
-                        },
-                        "castings": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/castings",
-                                "related": "https://kitsu.io/api/edge/anime/7975/castings"
-                            }
-                        },
-                        "installments": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/installments",
-                                "related": "https://kitsu.io/api/edge/anime/7975/installments"
-                            }
-                        },
-                        "mappings": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/mappings",
-                                "related": "https://kitsu.io/api/edge/anime/7975/mappings"
-                            },
-                            "data": [
-                                {
-                                    "type": "mappings",
-                                    "id": "258328"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "84942"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "3212"
-                                }
-                            ]
-                        },
-                        "reviews": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/reviews",
-                                "related": "https://kitsu.io/api/edge/anime/7975/reviews"
-                            }
-                        },
-                        "mediaRelationships": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/media-relationships",
-                                "related": "https://kitsu.io/api/edge/anime/7975/media-relationships"
-                            }
-                        },
-                        "characters": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/characters",
-                                "related": "https://kitsu.io/api/edge/anime/7975/characters"
-                            }
-                        },
-                        "staff": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/staff",
-                                "related": "https://kitsu.io/api/edge/anime/7975/staff"
-                            }
-                        },
-                        "productions": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/productions",
-                                "related": "https://kitsu.io/api/edge/anime/7975/productions"
-                            }
-                        },
-                        "quotes": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/quotes",
-                                "related": "https://kitsu.io/api/edge/anime/7975/quotes"
-                            }
-                        },
-                        "episodes": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/episodes",
-                                "related": "https://kitsu.io/api/edge/anime/7975/episodes"
-                            }
-                        },
-                        "streamingLinks": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/streaming-links",
-                                "related": "https://kitsu.io/api/edge/anime/7975/streaming-links"
-                            }
-                        },
-                        "animeProductions": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/anime-productions",
-                                "related": "https://kitsu.io/api/edge/anime/7975/anime-productions"
-                            }
-                        },
-                        "animeCharacters": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/anime-characters",
-                                "related": "https://kitsu.io/api/edge/anime/7975/anime-characters"
-                            }
-                        },
-                        "animeStaff": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/anime-staff",
-                                "related": "https://kitsu.io/api/edge/anime/7975/anime-staff"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "7543",
-                    "type": "anime",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/anime/7543"
-                    },
-                    "attributes": {
-                        "createdAt": "2013-02-20T17:57:39.629Z",
-                        "updatedAt": "2021-06-05T12:53:07.841Z",
-                        "slug": "the-last-naruto-the-movie",
-                        "synopsis": "It has been two years since the Fourth Shinobi World War, and the world is once again existing in harmony—that is, until another threat surfaces and once again puts the planet on the very brink of destruction.\nAmidst the impending catastrophe, Hinata Hyuuga’s sister, Hanabi, is suddenly abducted. Naruto Uzumaki, together with a team of skillful ninjas; Sakura, Sai, Shikamaru, and Hinata, set out to rescue Hanabi from the evil clutches of Toneri Ootsutsuki. While they get closer and closer to completing their mission, they are faced with several adversaries, who will not only test the relationship they have with one another, but also puts the fate of the planet in face of uncertainty. As the clock ticks, the team rushes to end the last battle, fighting for peace...and love.",
-                        "description": "It has been two years since the Fourth Shinobi World War, and the world is once again existing in harmony—that is, until another threat surfaces and once again puts the planet on the very brink of destruction.\nAmidst the impending catastrophe, Hinata Hyuuga’s sister, Hanabi, is suddenly abducted. Naruto Uzumaki, together with a team of skillful ninjas; Sakura, Sai, Shikamaru, and Hinata, set out to rescue Hanabi from the evil clutches of Toneri Ootsutsuki. While they get closer and closer to completing their mission, they are faced with several adversaries, who will not only test the relationship they have with one another, but also puts the fate of the planet in face of uncertainty. As the clock ticks, the team rushes to end the last battle, fighting for peace...and love.",
-                        "coverImageTopOffset": 100,
-                        "titles": {
-                            "en": "The Last: Naruto the Movie",
-                            "en_jp": "The Last: Naruto the Movie",
-                            "en_us": "The Last: Naruto the Movie",
-                            "ja_jp": "THE LAST NARUTO THE MOVIE"
-                        },
-                        "canonicalTitle": "The Last: Naruto the Movie",
-                        "abbreviatedTitles": [
-                            "Naruto Movie 10: Naruto the Movie: The Last,Naruto: Shippuuden Movie 7 - The Last",
-                            "Naruto Movie 10: Naruto the Movie: The Last",
-                            "Naruto: Shippuuden Movie 7 - The Last"
-                        ],
-                        "averageRating": "80.13",
-                        "ratingFrequencies": {
-                            "2": "130",
-                            "3": "3",
-                            "4": "110",
-                            "5": "7",
-                            "6": "128",
-                            "7": "11",
-                            "8": "486",
-                            "9": "21",
-                            "10": "541",
-                            "11": "40",
-                            "12": "1097",
-                            "13": "92",
-                            "14": "3353",
-                            "15": "179",
-                            "16": "2652",
-                            "17": "226",
-                            "18": "1671",
-                            "19": "112",
-                            "20": "5059"
-                        },
-                        "userCount": 24925,
-                        "favoritesCount": 184,
-                        "startDate": "2014-12-06",
-                        "endDate": "2014-12-06",
-                        "nextRelease": null,
-                        "popularityRank": 427,
-                        "ratingRank": 573,
-                        "ageRating": "PG",
-                        "ageRatingGuide": "Teens 13 or older",
-                        "subtype": "movie",
-                        "status": "finished",
-                        "tba": null,
-                        "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/7543/tiny.jpg?1597697683",
-                            "small": "https://media.kitsu.io/anime/poster_images/7543/small.jpg?1597697683",
-                            "medium": "https://media.kitsu.io/anime/poster_images/7543/medium.jpg?1597697683",
-                            "large": "https://media.kitsu.io/anime/poster_images/7543/large.jpg?1597697683",
-                            "original": "https://media.kitsu.io/anime/poster_images/7543/original.jpg?1597697683",
-                            "meta": {
-                                "dimensions": {
-                                    "tiny": {
-                                        "width": 110,
-                                        "height": 156
-                                    },
-                                    "small": {
-                                        "width": 284,
-                                        "height": 402
-                                    },
-                                    "medium": {
-                                        "width": 390,
-                                        "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
-                                    }
-                                }
-                            }
-                        },
-                        "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/7543/tiny.jpg?1597703788",
-                            "small": "https://media.kitsu.io/anime/cover_images/7543/small.jpg?1597703788",
-                            "large": "https://media.kitsu.io/anime/cover_images/7543/large.jpg?1597703788",
-                            "original": "https://media.kitsu.io/anime/cover_images/7543/original.jpg?1597703788",
-                            "meta": {
-                                "dimensions": {
-                                    "tiny": {
-                                        "width": 840,
-                                        "height": 200
-                                    },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
-                                    "large": {
-                                        "width": 3360,
-                                        "height": 800
-                                    }
-                                }
-                            }
-                        },
-                        "episodeCount": 1,
-                        "episodeLength": 112,
-                        "totalLength": 112,
-                        "youtubeVideoId": "tA3yE4_t6SY",
-                        "showType": "movie",
-                        "nsfw": false
-                    },
-                    "relationships": {
-                        "genres": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/genres",
-                                "related": "https://kitsu.io/api/edge/anime/7543/genres"
-                            }
-                        },
-                        "categories": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/categories",
-                                "related": "https://kitsu.io/api/edge/anime/7543/categories"
-                            }
-                        },
-                        "castings": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/castings",
-                                "related": "https://kitsu.io/api/edge/anime/7543/castings"
-                            }
-                        },
-                        "installments": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/installments",
-                                "related": "https://kitsu.io/api/edge/anime/7543/installments"
-                            }
-                        },
-                        "mappings": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/mappings",
-                                "related": "https://kitsu.io/api/edge/anime/7543/mappings"
-                            },
-                            "data": [
-                                {
-                                    "type": "mappings",
-                                    "id": "60888"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "258127"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "83832"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "5398"
-                                }
-                            ]
-                        },
-                        "reviews": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/reviews",
-                                "related": "https://kitsu.io/api/edge/anime/7543/reviews"
-                            }
-                        },
-                        "mediaRelationships": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/media-relationships",
-                                "related": "https://kitsu.io/api/edge/anime/7543/media-relationships"
-                            }
-                        },
-                        "characters": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/characters",
-                                "related": "https://kitsu.io/api/edge/anime/7543/characters"
-                            }
-                        },
-                        "staff": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/staff",
-                                "related": "https://kitsu.io/api/edge/anime/7543/staff"
-                            }
-                        },
-                        "productions": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/productions",
-                                "related": "https://kitsu.io/api/edge/anime/7543/productions"
-                            }
-                        },
-                        "quotes": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/quotes",
-                                "related": "https://kitsu.io/api/edge/anime/7543/quotes"
-                            }
-                        },
-                        "episodes": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/episodes",
-                                "related": "https://kitsu.io/api/edge/anime/7543/episodes"
-                            }
-                        },
-                        "streamingLinks": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/streaming-links",
-                                "related": "https://kitsu.io/api/edge/anime/7543/streaming-links"
-                            }
-                        },
-                        "animeProductions": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/anime-productions",
-                                "related": "https://kitsu.io/api/edge/anime/7543/anime-productions"
-                            }
-                        },
-                        "animeCharacters": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/anime-characters",
-                                "related": "https://kitsu.io/api/edge/anime/7543/anime-characters"
-                            }
-                        },
-                        "animeStaff": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/anime-staff",
-                                "related": "https://kitsu.io/api/edge/anime/7543/anime-staff"
-                            }
-                        }
-                    }
-                },
-                {
                     "id": "5266",
                     "type": "anime",
                     "links": {
@@ -1649,7 +1192,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:21:01.625Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "naruto-shippuden-movie-4-the-lost-tower",
                         "synopsis": "Assigned on a mission to capture Mukade, a missing-nin, Naruto Uzumaki sets out for the once glorious historic ruins of \"Ouran\", where he pursues and corners the rogue ninja. Mukade's goal is revealed to be a dormant leyline within the ruins; he unleashes the power of the leyline, causing a light to envelop Naruto, sending him into the past, 20 years before the series began. When Naruto awakens, he comes into contact with the Fourth Hokage, Minato Namikaze.\n(Source: Wikipedia) ",
                         "description": "Assigned on a mission to capture Mukade, a missing-nin, Naruto Uzumaki sets out for the once glorious historic ruins of \"Ouran\", where he pursues and corners the rogue ninja. Mukade's goal is revealed to be a dormant leyline within the ruins; he unleashes the power of the leyline, causing a light to envelop Naruto, sending him into the past, 20 years before the series began. When Naruto awakens, he comes into contact with the Fourth Hokage, Minato Namikaze.\n(Source: Wikipedia) ",
@@ -1663,27 +1206,27 @@
                             "Naruto Movie 7",
                             "Gekijouban Naruto Shippuuden: The Lost Tower"
                         ],
-                        "averageRating": "73.44",
+                        "averageRating": "73.49",
                         "ratingFrequencies": {
-                            "2": "37",
+                            "2": "38",
                             "3": "0",
-                            "4": "83",
+                            "4": "84",
                             "5": "3",
-                            "6": "123",
-                            "7": "7",
-                            "8": "327",
-                            "9": "7",
-                            "10": "459",
-                            "11": "17",
-                            "12": "1029",
-                            "13": "33",
-                            "14": "1867",
-                            "15": "57",
-                            "16": "1570",
-                            "17": "37",
-                            "18": "578",
-                            "19": "9",
-                            "20": "1202"
+                            "6": "129",
+                            "7": "6",
+                            "8": "338",
+                            "9": "9",
+                            "10": "484",
+                            "11": "20",
+                            "12": "1069",
+                            "13": "35",
+                            "14": "1956",
+                            "15": "65",
+                            "16": "1661",
+                            "17": "40",
+                            "18": "600",
+                            "19": "11",
+                            "20": "1259"
                         },
                         "userCount": 13374,
                         "favoritesCount": 35,
@@ -1691,23 +1234,27 @@
                         "endDate": "2010-07-31",
                         "nextRelease": null,
                         "popularityRank": 885,
-                        "ratingRank": 2426,
+                        "ratingRank": 2450,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/5266/tiny.jpg?1597697868",
-                            "small": "https://media.kitsu.io/anime/poster_images/5266/small.jpg?1597697868",
-                            "medium": "https://media.kitsu.io/anime/poster_images/5266/medium.jpg?1597697868",
-                            "large": "https://media.kitsu.io/anime/poster_images/5266/large.jpg?1597697868",
-                            "original": "https://media.kitsu.io/anime/poster_images/5266/original.jpg?1597697868",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/5266/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/5266/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/5266/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/5266/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/5266/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -1716,32 +1263,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/5266/tiny.jpg?1597703792",
-                            "small": "https://media.kitsu.io/anime/cover_images/5266/small.jpg?1597703792",
-                            "large": "https://media.kitsu.io/anime/cover_images/5266/large.jpg?1597703792",
-                            "original": "https://media.kitsu.io/anime/cover_images/5266/original.jpg?1597703792",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/5266/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/5266/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/5266/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/5266/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -1875,6 +1418,463 @@
                     }
                 },
                 {
+                    "id": "7975",
+                    "type": "anime",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/7975"
+                    },
+                    "attributes": {
+                        "createdAt": "2013-08-30T01:46:32.855Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
+                        "slug": "naruto-shippuden-jump-super-anime-tour-2013-special",
+                        "synopsis": "A comedy-filled filler with a plot revolving around the two Uchiha Brothers, Mangekyo Sharingan, chickens, and fried eggs.",
+                        "description": "A comedy-filled filler with a plot revolving around the two Uchiha Brothers, Mangekyo Sharingan, chickens, and fried eggs.",
+                        "coverImageTopOffset": 100,
+                        "titles": {
+                            "en_jp": "Naruto Shippuuden: Sunny Side Battle",
+                            "ja_jp": "ナルト-NARUTO-疾風伝 サニー・サイド・バトル"
+                        },
+                        "canonicalTitle": "Naruto Shippuuden: Sunny Side Battle",
+                        "abbreviatedTitles": [
+                            "Naruto: Shippuuden - Jump Festa 2013 Special",
+                            "Naruto: Shippuuden - Jump Super Anime Tour 2013 Special"
+                        ],
+                        "averageRating": "71.71",
+                        "ratingFrequencies": {
+                            "2": "28",
+                            "3": "1",
+                            "4": "16",
+                            "5": "0",
+                            "6": "38",
+                            "7": "0",
+                            "8": "69",
+                            "9": "0",
+                            "10": "150",
+                            "11": "3",
+                            "12": "285",
+                            "13": "4",
+                            "14": "441",
+                            "15": "11",
+                            "16": "251",
+                            "17": "12",
+                            "18": "118",
+                            "19": "3",
+                            "20": "293"
+                        },
+                        "userCount": 3264,
+                        "favoritesCount": 3,
+                        "startDate": "2013-10-06",
+                        "endDate": "2013-10-06",
+                        "nextRelease": null,
+                        "popularityRank": 2666,
+                        "ratingRank": 3325,
+                        "ageRating": "PG",
+                        "ageRatingGuide": "Teens 13 or older",
+                        "subtype": "special",
+                        "status": "finished",
+                        "tba": null,
+                        "posterImage": {
+                            "tiny": "https://media.kitsu.io/anime/poster_images/7975/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/7975/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/7975/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/7975/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/7975/original.jpg",
+                            "meta": {
+                                "dimensions": {
+                                    "tiny": {
+                                        "width": 110,
+                                        "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
+                                    },
+                                    "small": {
+                                        "width": 284,
+                                        "height": 402
+                                    },
+                                    "medium": {
+                                        "width": 390,
+                                        "height": 554
+                                    }
+                                }
+                            }
+                        },
+                        "coverImage": {
+                            "tiny": "https://media.kitsu.io/anime/cover_images/7975/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/7975/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/7975/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/7975/original.jpg",
+                            "meta": {
+                                "dimensions": {
+                                    "tiny": {
+                                        "width": 840,
+                                        "height": 200
+                                    },
+                                    "large": {
+                                        "width": 3360,
+                                        "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
+                                    }
+                                }
+                            }
+                        },
+                        "episodeCount": 1,
+                        "episodeLength": 11,
+                        "totalLength": 11,
+                        "youtubeVideoId": null,
+                        "showType": "special",
+                        "nsfw": false
+                    },
+                    "relationships": {
+                        "genres": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/genres",
+                                "related": "https://kitsu.io/api/edge/anime/7975/genres"
+                            }
+                        },
+                        "categories": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/categories",
+                                "related": "https://kitsu.io/api/edge/anime/7975/categories"
+                            }
+                        },
+                        "castings": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/castings",
+                                "related": "https://kitsu.io/api/edge/anime/7975/castings"
+                            }
+                        },
+                        "installments": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/installments",
+                                "related": "https://kitsu.io/api/edge/anime/7975/installments"
+                            }
+                        },
+                        "mappings": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/mappings",
+                                "related": "https://kitsu.io/api/edge/anime/7975/mappings"
+                            },
+                            "data": [
+                                {
+                                    "type": "mappings",
+                                    "id": "258328"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "84942"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "3212"
+                                }
+                            ]
+                        },
+                        "reviews": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/reviews",
+                                "related": "https://kitsu.io/api/edge/anime/7975/reviews"
+                            }
+                        },
+                        "mediaRelationships": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/media-relationships",
+                                "related": "https://kitsu.io/api/edge/anime/7975/media-relationships"
+                            }
+                        },
+                        "characters": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/characters",
+                                "related": "https://kitsu.io/api/edge/anime/7975/characters"
+                            }
+                        },
+                        "staff": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/staff",
+                                "related": "https://kitsu.io/api/edge/anime/7975/staff"
+                            }
+                        },
+                        "productions": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/productions",
+                                "related": "https://kitsu.io/api/edge/anime/7975/productions"
+                            }
+                        },
+                        "quotes": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/quotes",
+                                "related": "https://kitsu.io/api/edge/anime/7975/quotes"
+                            }
+                        },
+                        "episodes": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/episodes",
+                                "related": "https://kitsu.io/api/edge/anime/7975/episodes"
+                            }
+                        },
+                        "streamingLinks": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/streaming-links",
+                                "related": "https://kitsu.io/api/edge/anime/7975/streaming-links"
+                            }
+                        },
+                        "animeProductions": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/anime-productions",
+                                "related": "https://kitsu.io/api/edge/anime/7975/anime-productions"
+                            }
+                        },
+                        "animeCharacters": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/anime-characters",
+                                "related": "https://kitsu.io/api/edge/anime/7975/anime-characters"
+                            }
+                        },
+                        "animeStaff": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7975/relationships/anime-staff",
+                                "related": "https://kitsu.io/api/edge/anime/7975/anime-staff"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "7543",
+                    "type": "anime",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/7543"
+                    },
+                    "attributes": {
+                        "createdAt": "2013-02-20T17:57:39.629Z",
+                        "updatedAt": "2021-09-22T19:04:57.491Z",
+                        "slug": "the-last-naruto-the-movie",
+                        "synopsis": "It has been two years since the Fourth Shinobi World War, and the world is once again existing in harmony—that is, until another threat surfaces and once again puts the planet on the very brink of destruction.\nAmidst the impending catastrophe, Hinata Hyuuga’s sister, Hanabi, is suddenly abducted. Naruto Uzumaki, together with a team of skillful ninjas; Sakura, Sai, Shikamaru, and Hinata, set out to rescue Hanabi from the evil clutches of Toneri Ootsutsuki. While they get closer and closer to completing their mission, they are faced with several adversaries, who will not only test the relationship they have with one another, but also puts the fate of the planet in face of uncertainty. As the clock ticks, the team rushes to end the last battle, fighting for peace...and love.",
+                        "description": "It has been two years since the Fourth Shinobi World War, and the world is once again existing in harmony—that is, until another threat surfaces and once again puts the planet on the very brink of destruction.\nAmidst the impending catastrophe, Hinata Hyuuga’s sister, Hanabi, is suddenly abducted. Naruto Uzumaki, together with a team of skillful ninjas; Sakura, Sai, Shikamaru, and Hinata, set out to rescue Hanabi from the evil clutches of Toneri Ootsutsuki. While they get closer and closer to completing their mission, they are faced with several adversaries, who will not only test the relationship they have with one another, but also puts the fate of the planet in face of uncertainty. As the clock ticks, the team rushes to end the last battle, fighting for peace...and love.",
+                        "coverImageTopOffset": 100,
+                        "titles": {
+                            "en": "The Last: Naruto the Movie",
+                            "en_jp": "The Last: Naruto the Movie",
+                            "en_us": "The Last: Naruto the Movie",
+                            "ja_jp": "THE LAST NARUTO THE MOVIE"
+                        },
+                        "canonicalTitle": "The Last: Naruto the Movie",
+                        "abbreviatedTitles": [
+                            "Naruto Movie 10: Naruto the Movie: The Last,Naruto: Shippuuden Movie 7 - The Last",
+                            "Naruto Movie 10: Naruto the Movie: The Last",
+                            "Naruto: Shippuuden Movie 7 - The Last"
+                        ],
+                        "averageRating": "80.11",
+                        "ratingFrequencies": {
+                            "2": "141",
+                            "3": "3",
+                            "4": "113",
+                            "5": "8",
+                            "6": "139",
+                            "7": "12",
+                            "8": "512",
+                            "9": "21",
+                            "10": "583",
+                            "11": "42",
+                            "12": "1168",
+                            "13": "105",
+                            "14": "3636",
+                            "15": "207",
+                            "16": "2841",
+                            "17": "243",
+                            "18": "1801",
+                            "19": "125",
+                            "20": "5395"
+                        },
+                        "userCount": 24925,
+                        "favoritesCount": 184,
+                        "startDate": "2014-12-06",
+                        "endDate": "2014-12-06",
+                        "nextRelease": null,
+                        "popularityRank": 427,
+                        "ratingRank": 568,
+                        "ageRating": "PG",
+                        "ageRatingGuide": "Teens 13 or older",
+                        "subtype": "movie",
+                        "status": "finished",
+                        "tba": null,
+                        "posterImage": {
+                            "tiny": "https://media.kitsu.io/anime/poster_images/7543/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/7543/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/7543/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/7543/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/7543/original.jpg",
+                            "meta": {
+                                "dimensions": {
+                                    "tiny": {
+                                        "width": 110,
+                                        "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
+                                    },
+                                    "small": {
+                                        "width": 284,
+                                        "height": 402
+                                    },
+                                    "medium": {
+                                        "width": 390,
+                                        "height": 554
+                                    }
+                                }
+                            }
+                        },
+                        "coverImage": {
+                            "tiny": "https://media.kitsu.io/anime/cover_images/7543/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/7543/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/7543/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/7543/original.jpg",
+                            "meta": {
+                                "dimensions": {
+                                    "tiny": {
+                                        "width": 840,
+                                        "height": 200
+                                    },
+                                    "large": {
+                                        "width": 3360,
+                                        "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
+                                    }
+                                }
+                            }
+                        },
+                        "episodeCount": 1,
+                        "episodeLength": 112,
+                        "totalLength": 112,
+                        "youtubeVideoId": "tA3yE4_t6SY",
+                        "showType": "movie",
+                        "nsfw": false
+                    },
+                    "relationships": {
+                        "genres": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/genres",
+                                "related": "https://kitsu.io/api/edge/anime/7543/genres"
+                            }
+                        },
+                        "categories": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/categories",
+                                "related": "https://kitsu.io/api/edge/anime/7543/categories"
+                            }
+                        },
+                        "castings": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/castings",
+                                "related": "https://kitsu.io/api/edge/anime/7543/castings"
+                            }
+                        },
+                        "installments": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/installments",
+                                "related": "https://kitsu.io/api/edge/anime/7543/installments"
+                            }
+                        },
+                        "mappings": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/mappings",
+                                "related": "https://kitsu.io/api/edge/anime/7543/mappings"
+                            },
+                            "data": [
+                                {
+                                    "type": "mappings",
+                                    "id": "60888"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "258127"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "83832"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "5398"
+                                }
+                            ]
+                        },
+                        "reviews": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/reviews",
+                                "related": "https://kitsu.io/api/edge/anime/7543/reviews"
+                            }
+                        },
+                        "mediaRelationships": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/media-relationships",
+                                "related": "https://kitsu.io/api/edge/anime/7543/media-relationships"
+                            }
+                        },
+                        "characters": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/characters",
+                                "related": "https://kitsu.io/api/edge/anime/7543/characters"
+                            }
+                        },
+                        "staff": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/staff",
+                                "related": "https://kitsu.io/api/edge/anime/7543/staff"
+                            }
+                        },
+                        "productions": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/productions",
+                                "related": "https://kitsu.io/api/edge/anime/7543/productions"
+                            }
+                        },
+                        "quotes": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/quotes",
+                                "related": "https://kitsu.io/api/edge/anime/7543/quotes"
+                            }
+                        },
+                        "episodes": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/episodes",
+                                "related": "https://kitsu.io/api/edge/anime/7543/episodes"
+                            }
+                        },
+                        "streamingLinks": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/streaming-links",
+                                "related": "https://kitsu.io/api/edge/anime/7543/streaming-links"
+                            }
+                        },
+                        "animeProductions": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/anime-productions",
+                                "related": "https://kitsu.io/api/edge/anime/7543/anime-productions"
+                            }
+                        },
+                        "animeCharacters": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/anime-characters",
+                                "related": "https://kitsu.io/api/edge/anime/7543/anime-characters"
+                            }
+                        },
+                        "animeStaff": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/7543/relationships/anime-staff",
+                                "related": "https://kitsu.io/api/edge/anime/7543/anime-staff"
+                            }
+                        }
+                    }
+                },
+                {
                     "id": "7008",
                     "type": "anime",
                     "links": {
@@ -1882,7 +1882,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:48:52.898Z",
-                        "updatedAt": "2021-06-05T13:26:03.422Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "naruto-shippuden-movie-6-road-to-ninja",
                         "synopsis": "Ten years ago, a gigantic demon beast known as the Nine-Tailed Demon Fox was released from its jinchuuriki by an unknown shinobi wearing a mask. The village of Konohagakure was close to destruction by the attack of the Nine-Tails, but the village was saved by its leader. Minato Namikaze and his wife Kushina Uzumaki—who was the jinchuuriki at the time of the attack—sealed away the demon inside their new born son: Naruto Uzumaki. However, this act of saving the village cost them their lives and they left the future of the ninja world to Naruto.\nWith the demon fox sealed away, things continued as normal. However, the peace of the village would not last long, for Pain, Konan, Itachi Uchiha, Kisame Hoshigaki, Sasori, Deidara, Hidan and Kakuzu—members of a dreaded shinobi group called the Akatsuki—attacked Konohagakure. Naruto narrowly manages to launch a counter-attack but why have these shinobi appeared when all of them were meant to have died? The mystery remains, but the shinobi are praised by heir families for completing such a dangerous mission. However, one of them who has never known the faces of his parents, Naruto, cannot help but feel lonely. At that exact time, suddenly, the masked man makes his appearance in Konoha. Naruto and his allies are both attacked by the man's mysterious new doujutsu.\n(Source: Naruto Wikia)",
                         "description": "Ten years ago, a gigantic demon beast known as the Nine-Tailed Demon Fox was released from its jinchuuriki by an unknown shinobi wearing a mask. The village of Konohagakure was close to destruction by the attack of the Nine-Tails, but the village was saved by its leader. Minato Namikaze and his wife Kushina Uzumaki—who was the jinchuuriki at the time of the attack—sealed away the demon inside their new born son: Naruto Uzumaki. However, this act of saving the village cost them their lives and they left the future of the ninja world to Naruto.\nWith the demon fox sealed away, things continued as normal. However, the peace of the village would not last long, for Pain, Konan, Itachi Uchiha, Kisame Hoshigaki, Sasori, Deidara, Hidan and Kakuzu—members of a dreaded shinobi group called the Akatsuki—attacked Konohagakure. Naruto narrowly manages to launch a counter-attack but why have these shinobi appeared when all of them were meant to have died? The mystery remains, but the shinobi are praised by heir families for completing such a dangerous mission. However, one of them who has never known the faces of his parents, Naruto, cannot help but feel lonely. At that exact time, suddenly, the masked man makes his appearance in Konoha. Naruto and his allies are both attacked by the man's mysterious new doujutsu.\n(Source: Naruto Wikia)",
@@ -1897,27 +1897,27 @@
                         "abbreviatedTitles": [
                             "Naruto Movie 9"
                         ],
-                        "averageRating": "77.69",
+                        "averageRating": "77.82",
                         "ratingFrequencies": {
-                            "2": "56",
+                            "2": "59",
                             "3": "0",
-                            "4": "76",
-                            "5": "4",
-                            "6": "103",
-                            "7": "3",
-                            "8": "275",
+                            "4": "77",
+                            "5": "5",
+                            "6": "107",
+                            "7": "2",
+                            "8": "286",
                             "9": "5",
-                            "10": "448",
-                            "11": "21",
-                            "12": "976",
-                            "13": "43",
-                            "14": "2288",
-                            "15": "97",
-                            "16": "1982",
-                            "17": "75",
-                            "18": "982",
-                            "19": "24",
-                            "20": "2409"
+                            "10": "472",
+                            "11": "20",
+                            "12": "1016",
+                            "13": "48",
+                            "14": "2425",
+                            "15": "103",
+                            "16": "2086",
+                            "17": "85",
+                            "18": "1016",
+                            "19": "28",
+                            "20": "2583"
                         },
                         "userCount": 16513,
                         "favoritesCount": 77,
@@ -1925,23 +1925,27 @@
                         "endDate": "2012-07-28",
                         "nextRelease": null,
                         "popularityRank": 697,
-                        "ratingRank": 1024,
+                        "ratingRank": 999,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/7008/tiny.jpg?1597697198",
-                            "small": "https://media.kitsu.io/anime/poster_images/7008/small.jpg?1597697198",
-                            "medium": "https://media.kitsu.io/anime/poster_images/7008/medium.jpg?1597697198",
-                            "large": "https://media.kitsu.io/anime/poster_images/7008/large.jpg?1597697198",
-                            "original": "https://media.kitsu.io/anime/poster_images/7008/original.jpg?1597697198",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/7008/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/7008/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/7008/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/7008/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/7008/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -1950,32 +1954,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/7008/tiny.jpg?1597702713",
-                            "small": "https://media.kitsu.io/anime/cover_images/7008/small.jpg?1597702713",
-                            "large": "https://media.kitsu.io/anime/cover_images/7008/large.jpg?1597702713",
-                            "original": "https://media.kitsu.io/anime/cover_images/7008/original.jpg?1597702713",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/7008/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/7008/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/7008/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/7008/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -2112,7 +2112,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:36:57.503Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "naruto-shippuden-movie-5-blood-prison",
                         "synopsis": "After being captured for attempting to assassinate the leader of Kumogakure, the Raikage, and killing Jounin from Kirigakure and Iwagakure, Naruto is imprisoned in Houzukijou, a criminal containment facility also known as the Blood Prison. \nThe master of the castle, Mui, uses the ultimate imprisonment jutsu to steal power from the prisoners. In this place, something is aiming for Naruto's life. The battle to prove his innocence and uncover the truth has begun for Naruto and his friends.\n(Source: AnimeAvenue)",
                         "description": "After being captured for attempting to assassinate the leader of Kumogakure, the Raikage, and killing Jounin from Kirigakure and Iwagakure, Naruto is imprisoned in Houzukijou, a criminal containment facility also known as the Blood Prison. \nThe master of the castle, Mui, uses the ultimate imprisonment jutsu to steal power from the prisoners. In this place, something is aiming for Naruto's life. The battle to prove his innocence and uncover the truth has begun for Naruto and his friends.\n(Source: AnimeAvenue)",
@@ -2126,27 +2126,27 @@
                             "Naruto Movie 8",
                             "Gekijouban Naruto: Blood Prison"
                         ],
-                        "averageRating": "74.3",
+                        "averageRating": "74.28",
                         "ratingFrequencies": {
-                            "2": "48",
+                            "2": "47",
                             "3": "1",
-                            "4": "64",
+                            "4": "65",
                             "5": "2",
-                            "6": "69",
-                            "7": "2",
-                            "8": "290",
-                            "9": "4",
-                            "10": "427",
-                            "11": "15",
-                            "12": "972",
-                            "13": "42",
-                            "14": "1768",
-                            "15": "54",
-                            "16": "1379",
-                            "17": "38",
-                            "18": "605",
-                            "19": "11",
-                            "20": "1252"
+                            "6": "72",
+                            "7": "1",
+                            "8": "303",
+                            "9": "5",
+                            "10": "444",
+                            "11": "18",
+                            "12": "1018",
+                            "13": "47",
+                            "14": "1862",
+                            "15": "62",
+                            "16": "1431",
+                            "17": "39",
+                            "18": "625",
+                            "19": "12",
+                            "20": "1301"
                         },
                         "userCount": 13070,
                         "favoritesCount": 37,
@@ -2154,23 +2154,27 @@
                         "endDate": "2011-07-30",
                         "nextRelease": null,
                         "popularityRank": 903,
-                        "ratingRank": 2105,
+                        "ratingRank": 2134,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/6256/tiny.jpg?1597697771",
-                            "small": "https://media.kitsu.io/anime/poster_images/6256/small.jpg?1597697771",
-                            "medium": "https://media.kitsu.io/anime/poster_images/6256/medium.jpg?1597697771",
-                            "large": "https://media.kitsu.io/anime/poster_images/6256/large.jpg?1597697771",
-                            "original": "https://media.kitsu.io/anime/poster_images/6256/original.jpg?1597697771",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/6256/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/6256/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/6256/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/6256/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/6256/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -2179,32 +2183,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/6256/tiny.jpg?1597703192",
-                            "small": "https://media.kitsu.io/anime/cover_images/6256/small.jpg?1597703192",
-                            "large": "https://media.kitsu.io/anime/cover_images/6256/large.jpg?1597703192",
-                            "original": "https://media.kitsu.io/anime/cover_images/6256/original.jpg?1597703192",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/6256/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/6256/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/6256/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/6256/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -2861,6 +2861,111 @@
                     }
                 },
                 {
+                    "id": "59603",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/59603"
+                    },
+                    "attributes": {
+                        "createdAt": null,
+                        "updatedAt": null,
+                        "externalSite": "anidb",
+                        "externalId": "7483"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/59603/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/59603/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "255331",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/255331"
+                    },
+                    "attributes": {
+                        "createdAt": "2020-05-02T15:47:41.316Z",
+                        "updatedAt": "2020-05-02T15:47:41.316Z",
+                        "externalSite": "anilist/anime",
+                        "externalId": "8246"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/255331/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/255331/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "79245",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/79245"
+                    },
+                    "attributes": {
+                        "createdAt": "2018-01-24T04:00:13.078Z",
+                        "updatedAt": "2018-01-24T04:00:13.078Z",
+                        "externalSite": "aozora",
+                        "externalId": "d2CvgeE1U5"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/79245/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/79245/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "67025",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/67025"
+                    },
+                    "attributes": {
+                        "createdAt": "2017-11-23T09:53:47.691Z",
+                        "updatedAt": "2017-11-23T09:53:47.691Z",
+                        "externalSite": "hulu",
+                        "externalId": "50017234"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/67025/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/67025/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "2798",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/2798"
+                    },
+                    "attributes": {
+                        "createdAt": null,
+                        "updatedAt": null,
+                        "externalSite": "myanimelist/anime",
+                        "externalId": "8246"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/2798/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/2798/item"
+                            }
+                        }
+                    }
+                },
+                {
                     "id": "258328",
                     "type": "mappings",
                     "links": {
@@ -3003,111 +3108,6 @@
                             "links": {
                                 "self": "https://kitsu.io/api/edge/mappings/5398/relationships/item",
                                 "related": "https://kitsu.io/api/edge/mappings/5398/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "59603",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/59603"
-                    },
-                    "attributes": {
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "externalSite": "anidb",
-                        "externalId": "7483"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/59603/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/59603/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "255331",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/255331"
-                    },
-                    "attributes": {
-                        "createdAt": "2020-05-02T15:47:41.316Z",
-                        "updatedAt": "2020-05-02T15:47:41.316Z",
-                        "externalSite": "anilist/anime",
-                        "externalId": "8246"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/255331/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/255331/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "79245",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/79245"
-                    },
-                    "attributes": {
-                        "createdAt": "2018-01-24T04:00:13.078Z",
-                        "updatedAt": "2018-01-24T04:00:13.078Z",
-                        "externalSite": "aozora",
-                        "externalId": "d2CvgeE1U5"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/79245/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/79245/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "67025",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/67025"
-                    },
-                    "attributes": {
-                        "createdAt": "2017-11-23T09:53:47.691Z",
-                        "updatedAt": "2017-11-23T09:53:47.691Z",
-                        "externalSite": "hulu",
-                        "externalId": "50017234"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/67025/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/67025/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "2798",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/2798"
-                    },
-                    "attributes": {
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "externalSite": "myanimelist/anime",
-                        "externalId": "8246"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/2798/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/2798/item"
                             }
                         }
                     }
@@ -3282,17 +3282,17 @@
                 }
             ],
             "meta": {
-                "count": 465
+                "count": 466
             },
             "links": {
                 "first": "https://kitsu.io/api/edge/anime?filter%5Btext%5D=Naruto%3A+Shippuuden&include=mappings&page%5Blimit%5D=10&page%5Boffset%5D=0",
                 "next": "https://kitsu.io/api/edge/anime?filter%5Btext%5D=Naruto%3A+Shippuuden&include=mappings&page%5Blimit%5D=10&page%5Boffset%5D=10",
-                "last": "https://kitsu.io/api/edge/anime?filter%5Btext%5D=Naruto%3A+Shippuuden&include=mappings&page%5Blimit%5D=10&page%5Boffset%5D=455"
+                "last": "https://kitsu.io/api/edge/anime?filter%5Btext%5D=Naruto%3A+Shippuuden&include=mappings&page%5Blimit%5D=10&page%5Boffset%5D=456"
             }
         },
         "rawHeaders": [
             "Date",
-            "Sat, 05 Jun 2021 14:22:51 GMT",
+            "Wed, 22 Sep 2021 21:18:22 GMT",
             "Content-Type",
             "application/vnd.api+json",
             "Transfer-Encoding",
@@ -3312,33 +3312,31 @@
             "referrer-policy",
             "strict-origin-when-cross-origin",
             "etag",
-            "W/\"f4f4f16fc4583c41f8213a01c885d113\"",
+            "W/\"0fcc41d5b24834856baacbcf1afb1300\"",
             "cache-control",
             "max-age=0, private, must-revalidate",
             "x-request-id",
-            "e120fbc2-95ef-47c7-9ed9-483777e01246",
+            "d45eea69-3888-4325-8f8c-3d6b9ffd99ad",
             "x-runtime",
-            "0.591863",
+            "0.714195",
             "vary",
             "Origin",
             "CF-Cache-Status",
             "DYNAMIC",
-            "cf-request-id",
-            "0a7e27310c0000ad30a90dc000000001",
             "Expect-CT",
             "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
             "Report-To",
-            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v2?s=pxc36ICqw1a6oztwCdG4Lf5Wbp5IZ4xbKk1vlZ55ApqXaYIyrcfUDhXXAb7JjWZdmVPxUyvIh8AwKh4pEy6DCbLhLkwW3XqYy6e9gZ4V74vaZPQc7G8%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=p8WKB7BxDupq3uVuB%2FlW5%2Fo308k0MFulRJEKQXrHbcKm0kYjv%2FT1FaGCRedcp0Ja1iuUBHRvh7Hq6RyZ5ZednV%2FQ%2Foro1k1xyWw9yZH8KeL1HhmUgzksycq64Q%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
             "NEL",
-            "{\"report_to\":\"cf-nel\",\"max_age\":604800}",
+            "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
             "Strict-Transport-Security",
             "max-age=31536000; preload",
             "Server",
             "cloudflare",
             "CF-RAY",
-            "65aa0e2e7f8dad30-OTP",
+            "692e90bbcbe14e74-FRA",
             "alt-svc",
-            "h3-27=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3=\":443\"; ma=86400"
+            "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-27=\":443\"; ma=86400"
         ],
         "responseIsBinary": false
     }

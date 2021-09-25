@@ -13,6 +13,24 @@ import sortHelper from './sort-helper'
 import EpisodeHelper from './episode-helper/episode-helper'
 
 class ListHelper {
+    public mapGetKey<K, V>(map: Map<K, V>, comperator: (key: K, value: V) => boolean): K | undefined {
+        for (const mapEntry of map) {
+            if (comperator(mapEntry[0], mapEntry[1])) {
+                return mapEntry[0]
+            }
+        }
+        return undefined
+    }
+
+    public mapHasKey<K, V>(map: Map<K, V>, comperator: (key: K, value: V) => boolean): boolean {
+        for (const mapEntry of map) {
+            if (comperator(mapEntry[0], mapEntry[1])) {
+                return true
+            }
+        }
+        return false
+    }
+
     public findAllIndexes<T>(arr: T[], filter: (item: T) => boolean): number[] {
         const indexes = []
         let i

@@ -1,16 +1,18 @@
-import ExternalProvider from '../../../api/provider/external-provider';
-import { FailedRequestError } from './failed-request';
+import ExternalProvider from '../../../api/provider/external-provider'
+import { FailedRequestErrorType } from './failed-request-error-type'
 
 export default class FailedProviderRequest {
-    public providerName: string;
-    public providerVersion: number;
-    public error: FailedRequestError;
-    public timestamp: number;
+    public providerName: string
+    public providerVersion: number
+    public errorType: FailedRequestErrorType
+    public errorMessage: string
+    public timestamp: number
 
-    constructor(provider: ExternalProvider, error: FailedRequestError) {
-        this.providerName = provider.providerName;
-        this.providerVersion = provider.version;
-        this.error = error;
-        this.timestamp = new Date().getTime();
+    constructor(provider: ExternalProvider, errorType: FailedRequestErrorType, errorMessage = '') {
+        this.providerName = provider.providerName
+        this.providerVersion = provider.version
+        this.errorType = errorType
+        this.errorMessage = errorMessage
+        this.timestamp = new Date().getTime()
     }
 }

@@ -1,5 +1,165 @@
 [
     {
+        "scope": "https://api.themoviedb.org:443",
+        "method": "GET",
+        "path": "/3/search/multi?api_key=b655dfd5dba228ff61cafdceff6048f6&query=gintama&include_adult=true",
+        "body": "",
+        "status": 200,
+        "response": [
+            "d140cd00207f35adf7747dc621214c4396a34248bbfbff540b5ad022b486066990a3348e299cee66e369fdffe63e2d1458c8fa35fa9f5a20b76e4f8dba6f6672ce649385cf9305a64ccaac8040114852ed57bec0b2954951a92f64955c6164b73193ef1ea021637936da7bbd5738608f0865240a1dba70a1fcf0bd02112d819c52e80d14c81b285e55280b6f4373bf1d55d255b26defdbfdadb1f152d6999dc761baaa0a111605caab1bea2ef2e591222a96880c51d545cbb444a4bd220ad415caba62e8a6260ad098373bdd3842594043a9200a94b16f603d41280b7bfc4b56e7e051425968d138c5112ec38625ad260b28fc747089e318580c73ae68240928f545a823497053299485c1ea2c409805eaf9d6339fc69cc45e1651a8b5919c72c089036fa2dd833820199590acbf19c4f15bece16d1650c767d06459027572c4e3b22b482e294823c2778313490890e478e2028d4bd161990057f25f1847a15a2709a250faef0e34cd85b22221d3b8abe3294988924adc3267c16178e737f249724c96b59ddbf497a3e12dbb6b9c2fe50d9728a12ce8cb9b2fc9564931045140e6a0b94fa04a788a17fe0b3d2e897f0c36a1dd8eac1b9e6d11cab6a4fe989fd6da250865edfde27b592915d33a4efddaa6e59c0e236bd06e36d2e1edd96badaa2bbb118fee77836902fb74d938a8569235469b2b9bbadd8a64d3d06f0e66ca1abab96e7a144421c6d1bc0dde62507fc0492e941f0addb1f00a33f2c55dc48b4f7ee8c56fae6c76974e0c3806926010f81180434a620e279ad89dc647ec1297971a71406218fc04d891ccc521cc5990337109ae6387bd137181e3284b3005e9eec9e1c492004cc029c027e0b04ceeaa2e994a2ad16aadace3fda66eadeebcb093cf5703f36c37b3649d360d4d976049a8c8966f574653f82909c6c3bc39def196dc1875b3c1ed29bf8d437b99b5d70d0f53144ebf6b565315dbd2dfd2903626a8de554c958b46b6a4a9e66d90b1431a36d93eda767bfdd39cd893c36d9f36b7ada91d48718699835942daca88e8120cc9dc59039134080ef8583dd2339aeeb6deaddbaede99b492f4aaf2b0c19b50f9538c0941d1741b9997bf013cf9eda79ffde5f3cf7ef73178fcf78f3dfee7a79efce153c5f5e34f7ffff71797ef17975f16d74f53fdb8958f53701c6cb0ef71a0ba9f76f6abe23e06d39e07857c4612f7dd000d97c1d94cbe48c24e31a40c1c1f330edb1c30546b6aa62ce350d3678804331ce014ebcebbb3808a10b31384f448f4bac46c120d5dcec3ba9965af041ff345d7c41e718bcf0d65590a3e8d24001e5d0ca85dfff285d7d8b0849db31cbf1b56183ef9e062bdcd183c9fe9718c803b1315e1ec030f64b1436a2dd9502785fa9c7f9b252e89c1a50903c75531e5e055347309da6429ccaf646315f53c7351b9675bc09d25dab99608e7b09d2668489de26c07b95e360eae4b967d1364e8d408f5557b325266ee6a62cc54af5fc5986d779ad3b2d41d9235e3663621e2c1c7502841954093256417f0ad8c0cadc3ba9b5f53f613f6f7836ecdab5af5ca181f560f061e5e07dbaad919f9cd4186f8c8a5678230554591d57633f376039a9d61a52f24c04f2787c54e98b9e46bc38114706e137e40371cd38880c71915e1341ed17d1c9db9e36f73c66b8970ece141e2e70835c8b75e03c28230b4f73dbe5b4061c612ecf854a2168141aef61a7ce9bd0ddb2e99b2b6443151b63a263eae5f40401d1c8227bd6da01af9e4ba84348bf38228b8abb66768dc22dbc6500e93a61bc8cc6e3ed818d3b84d5750069a27ab7a49929cfd5686c1f6654aba825ed9e79f0135e8f5dcd1b9a6e6d1689ed7b368df3686165fd38efda44c847c853460b2aff1f4abbf7ffef33f3dfbf3479efee0dbcf7ef731561b34725de8b22d672c526ddccc423ff2545231735d6b3a3e7a853744aa53c6c657bed16c3742173bc198ce95308479829d6d51562a9e432528d2b9dc7493433d08521fa76fe410ece643644a4ba77da99b627a26ae6a278fc01401a05da9e3f008f4ec8f0488088eef306d54fafd0d8cea75edd68d4b50cd5218bb72161188988e2fc531c4825d8167fc401d73c1024028d7088b04a3978f5d76e24eb764e240b624fc46be4c047ad4d1ccff3a40594412e70308a259c076159d20b01678046c985c75485d32215e1a145682e25ac878678fa4c019c4e2b428d3cd14503822b1b9088739224d6ca9482a45c13098c5580a05d6b74d5e23594bb66414600d753a5777161b65e3997218f85e5b33e7bdead8cbd47986bc6c5a49b1065cba12321542dbbea6062441a8ce961dbd736cf7db9573afd9ec0f0fc1cad9f3a9be8e1a93fc6d22fd22429139ba7da608690aba65736b9d91889614463ac426a4fa4f356b0c3a25fdafa361ee86a4e99a9f99aaccbbfabec71fdcd5f8fc2e3a9b73b9b743ca890691c33a6cdcaf5fb909c273a3be69d4e3aef660b35cee55af395ae1070f5a4dbac16d3ab232acf55b71a06139f76da9b25ef3427b1528507a6c6cdc3984d8bfe3c21c66e9e1bff37eb2e49e",
+            "a5093d9ef3e5bfbf587afcf7af16975f15d7eb939f7cecc94fbf515c7ef9fb77505c7e505cef8beb974a263a8cdd3f74b245961854e1b548c84a8aac449c265e9b8eb8396892a9fa599977141a4c07198dfbc3953e592d7676cd9e5bc1acdad6a98bd5c69a66ca4f675e0b4e76a02d2789d16d2dc6cdf5d25e1aceb2da6db6225577823419a330b2d31fabdf4e3d95024f3ffbbde2f2bb67dfff7371fd5471f95e71bd90e45d5cbe545cbe535caec5f55324d0209c5716955c8ff204285185f3077477b3cfbc2cb60bdaec92a8ec27893ec757143fb2841d335c6c8392070597ace87a9069f983c6261bd7c3e6745d9b91b3e3cf7dd5ccebd3c558b7920c79bac94f074a19a659483854120203ec1298b376c5aa090b481c5c86b0fe15c5107c16f26af5ad10f89d960d1dfb1f032518d094675b0c95c491eac19f29eebf57dc7fb8b88f4bf7f5f2df9ff17c460634c5ffffd037389c6eb30d1545638908d010118e94d394f30acfafaf976725c7fd535054ccb228aed62709248685b74ea9e27b27d0cb12bcc530671176a76bd313832d0c266cc09090ffb5217d9c2fa1c639b1c463271700abe19976f2d76231d32ea46f5c016311e639758c9262f6c375dcfbdb263c28469cea8a67d501f380ba48843817ee09424ab6aa2d24c8e5638e70fd8a1302b9714292c5953536f08439a4d0498c54ec42145dc476117c1709da744f215173c6837d1b0e7b42d20d2098af4527154941b0319eb000c496d2d8a9cf49cf2c2917b93be46c2b431a07f3e018f4c8d82ed9366d3f27fa323f0c17483fad4dbb8176b5a5b2bd6de6f1c29fe85cdddd0af8303f82a03ac94663347043bded1cd3457f5d4bb3755e51fa8e31cd332317ef84aaeb61796d5545b61ab078a6309f0e0d08e75555621a6ddb4993cb2de0e57fbe5bdcffb0b8ff53ebfc8fe2fabfe2fedfdf4cbfff78c62fdec28f8bebef9efdede72ffff35d11dca3c6c2cabb70815928eb3a07857101ee365c98873ea17a28c9b4548a7effc33bdbebc7c6d259b7878bf16ddf1b982bacf602a58544ce2ba2b06147de6c8e317927f63363ab8c42e8fd"
+        ],
+        "rawHeaders": [
+            "Content-Type",
+            "application/json;charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Date",
+            "Wed, 22 Sep 2021 21:18:18 GMT",
+            "Server",
+            "openresty",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET, HEAD, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Expose-Headers",
+            "ETag, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After, Content-Length, Content-Range",
+            "Cache-Control",
+            "public, max-age=600",
+            "Content-Encoding",
+            "br",
+            "X-Edge-Origin-Shield-Skipped",
+            "0",
+            "Vary",
+            "Accept-Encoding",
+            "X-Cache",
+            "Miss from cloudfront",
+            "Via",
+            "1.1 37a8538fed1be46ab7adb41198e40182.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Pop",
+            "HAM50-C3",
+            "X-Amz-Cf-Id",
+            "sBp7qZeIcipHu31iDgIIvpehYw_2cLBDKtsd52zTQJZwBVoJR_Z1eQ=="
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.themoviedb.org:443",
+        "method": "GET",
+        "path": "/3/tv/57041?api_key=b655dfd5dba228ff61cafdceff6048f6",
+        "body": "",
+        "status": 200,
+        "response": [
+            "c110700020573aab289deabb7b94bd43c2cc4892796b4b351678651889bdf23f871fe514c49f6577df7eedae1d2a2192226fe77fac41844669fc9df98b99a53b5f4c924693249a21244bd622a5cd43dcc04ec6a8f3d6da9fe0a155bf52b788df82052fba51d9ef9dc3c07b240b6336ecf78a79fa3c0f76ed9d39cb870605e8f8baa71aacd73705aa35ea66a574a97a80f54af99b02258cba22ca5cde5ac1025ff56c60dec01c14308e8fe460bdfe04910f16c1ba6a2a20058d3a6879da01f40d1a29a4037e513ebc4adbb5c9e86e3bea03294cbda113df03bffeea01ac6be8eb7851a31fa16f507c9c845fde14900945b256ebe5c528df5b548d22bed671d38b9b97e445c8e81ebc9c236cb88b9975a06bd68152569aaa634e3a22e96ac462911ca312e46e557d142e02de5ed6ca29969209d2a0183e608bb8b6883f7b2ab07e82afd867d4b4a39cb2750323945326e0a2456f5c059985e02b41dc96baa6816fa0fd297aa3842a90871a32161901ca6074a30ad75627c0c24dfc32fd9db521b0f02f05970fa4d60a0a18abbe6248d2f62e6919f4e5def516ad7540320e300d056ef139b6d9ef5c07b6a866e9b9fee009ddf38ea99d2e76e7a2e278e4554ef44de46b6e568305e3a5ceb17a9d6e1c72744b0e16d3cc375110e5b908b4b44a5fd7956fef758a9babe25ab036c16f5275eef0f5afdfbffefda70ade184924240a328142820f12b7289039fa2b8a3747b2127ee0ff7d49399251ad445f9e8fc2a0f4c54d32a50a85905f17fb5ae0a35cdccb4c44c8ff6b7324d00ad4907043ef01f2846ceadc3d4eca9bc8a2a2f69ad6a64e5f1eca8b2013ec5feebb3dddcbcba16bec3eceb751bddecdf4a7d92fb37d110842ede6f23d113272e8e3185199aafe524f8ee6466453a7340f7c903c1893137bb558cef427d8eef9a09bb93d727aba0b2dde7a5f616a1ebbfd9ae6922f28baea07ddcaef2ba5aef7ea4ab1d8cc653618197285eadc870cc629a7f749022f12b7dc9f34c2fc4b7a4a9cb50caa8db69c6f5b642397693515c791ded241e76ba538682d2a6eeab86be2e63ad8c5cb1ca2bb4264c1413259ce4e533efd48f7ebf621498f3e174ff560aab30c0012a1036a8a8a73e4d814e5e0f124fa64b21c0d76b52d435ba679decac56e12e3390034c280583a22e4a618077a78ef3b934bd423327dcf237def79a5333336cf7b170016619aa042668a7350b7d9e27d31998debf6480d97f17d1b678b6a5615ed0588f98e08b1b7105c9744f62d7d8b1cdccefefc48775761ac3e0819f2f328dc6c71b049ec25006ac1b4417016c2c4ea98857ad24b80b6243965249a0dcaa2351fec5b755c4cabb6d7dde1747560c956888016a11a340ad53933e8aefeff8f3f0ed4d65e5b9c9687e31cdb4b36c5bd52cfb1dd997e047b007497ee2280994868fe06d3f42d35571c5458ebd6c9bebb4a6e07660f726ed6f5632dfb4b870268580a3648af37196118ff136a20e71625a89579c8c1d33e75ca099f3ec7d1a1ba1fcdee7c7b2a3855fd560f00b3cc10a241e314a6669a9cd646b7e6f0094e5cde182eed270a2f229179280e91e4b5419b11ec6dcd4ed61a86ad7ab79fc9a23388dbc7416f5f7460635c8d4de87610c91f95600d6bc6511bcaa97b00452ceadab10d61f5382976dbec7190db7c771c91d038c9b16768ea63bdde7010134c8637220d2452d01d2956555dc3ad91350727bbd8ec57eff7ab53869ba3edf42ff372130eb5eee0087584a61bb724f135906ededff013b4e6ae719393d6200f12dc3979ec6acccc5f640649a83a68600ef3954214650e16f4a41ff8a04021ce73f093cccb0917c8369cbe2c4a8a8f6892f43c8c266935f12f"
+        ],
+        "rawHeaders": [
+            "Content-Type",
+            "application/json;charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Date",
+            "Wed, 22 Sep 2021 20:06:18 GMT",
+            "Server",
+            "openresty",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET, HEAD, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Expose-Headers",
+            "ETag, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After, Content-Length, Content-Range",
+            "Cache-Control",
+            "public, max-age=28800",
+            "X-Memc",
+            "MISS, STORE",
+            "X-Memc-Key",
+            "e03b01ad25c5ad36bd2527309d1270a50df5a17a",
+            "X-Memc-Age",
+            "0",
+            "X-Memc-Expires",
+            "3600",
+            "Last-Modified",
+            "2021-08-12 08:45:42 UTC",
+            "Content-Encoding",
+            "br",
+            "X-Edge-Origin-Shield-Skipped",
+            "0",
+            "Vary",
+            "Accept-Encoding",
+            "X-Cache",
+            "Hit from cloudfront",
+            "Via",
+            "1.1 a432ddebfd10465526f121270421362b.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Pop",
+            "HAM50-C3",
+            "X-Amz-Cf-Id",
+            "elpyKFLPVRj7vfqAIdl9ONuOTycBCBatpUtIXUfZezZWRVBigpTvhw==",
+            "Age",
+            "4320"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.themoviedb.org:443",
+        "method": "GET",
+        "path": "/3/tv/57041/season/0?api_key=b655dfd5dba228ff61cafdceff6048f6",
+        "body": "",
+        "status": 200,
+        "response": [
+            "d1a88f0020fffb9b7d5fbff764c53add08da3f2a3e4a7da5e702a1e451488784ca93abfd7e3f22d66884cc50e21783261a4543db7b828abd432d69728fae493455889a394487b8a227afc22c683b7fae6fe4a832d2232e77c30085eb7b544ae1781e4b58e23a0ee91054cdb1dfc1a4470cadec130d9f04251d32315332a4f7cf3746d7e3b093498f7588d2e420bd7ffeeb1011bb1c575170357f84d1d92874a8c3830ea9b1eae341f3b6ba4054ab4ac24ab78dc15d33e8415f35b6009dc3b65056c25056ba261da2afb2996e9e0b51177a0c9c618a373170c546e9d680002b6b61dc0d1b10eb0e60b06a1b54066cad4454616d7507c02da6ea13e81a267a9852aadf0c68508081834dad7c4292375f688b8d86055ad336d881b850b5694b092b2cd1b427d57324df14d385593d9c5859679d5fe8715e451968e455e226f853120908cec85736a3ee8da0141c2f40eb7759c8b1945dd221ea10ad747d94762ed223a443548a1588027536cec3f9a85db7253df2b7198faf8bf3a871467b3a7d4c8aebb8dfac76673b8f967bfbf0e990d58bdc8eba99467ab44bff4c9fbeda78a4477f74f44183b9e6394f5488c6e7c398277c97deb38da5b1087edd0dcc0f23fde8d72c03db2900372c256cc51fac614b40f8bdd6168cfe03f69211abb0012b07307d34ac5cc44bb11ae4dd8721b1b02bd778a752e5e8fc81f67cce60b66d6310ff4f95b3f2bdd4e7fe62b85dad97b8bb27c976c3f4397acb6940c69eb8f5b58628c208215c646b0c269577b5308734c028ec7402b004bb49c10a01cd190c8159cd2bd500c2c57531fcbeedc5a91e0571a14f6d0d9131688c72fa23035193c24eb2f716469f7838947e545c3ec5ec456c97a7e788d361497c7d01cc61de130d9ea823a413f08d78e330d2234ea524c458a245f83d32f8fc417a119629eba6cf8b3471b8c742ee3287092a33ca292223e4d8d124a3e8eb46e2b00f39ad8f46591b127276c7f15cb74342cd2cf531d7cd31fc14233d12a556d538d03a70d84a57bac4af2dc4ed49591cd6e2a993aaf17ce462f752ba89b20fd273bbc217c2422bccb172b889dd869b497dafb2e22176ab6d6e4c193ce266d8fa0b02943900811b4dbe605a28870a1ebafa18ad1966a940e1059cf1804c701f7351d8f4385408760b19a2f2ee20b8894e6d5a2890aae4e3bc2b305d3c8f641fa791182dd7b747f3f5eda3f2d683c35c06fe9d554bead7024fd8c8f17d29c7178aabb0e0408451b936ca4b7e28098bf6a42af5d01b1c0b07915e9d2e531a92ddf63e71acb907d7417e9f058f867d68392c1b333c91f3340ef7a5fdd742f25519e6883ca76196a1432963599efb2e2751fce5c3386781ef3fa6440f2c5412d0eb094b4dc133613ebaf23830240b1c79af83afcb91938af4257adbcd223d6bb6e5e114d1ab9e19d4b0d075a65b0047a7c8b294a5896d3ef7b3340c5b12d8d0b2e19cf93e7d79c9b8356dd5c2a05089b2e05838c502daf5bd90647b7fe91f5697dacdb6747a10e52dda4dc7cfd6899a90167b65dab27d68dbd112c2551053655992334ce8324d9c73e194e07d5b668f5daaec8dcbc079b340745d3720f966adf9983cf68f78f996bfa4431b252fcb8dfa3a5ddee98d8fdb4a951a5e1b55a2413591e384f553fb11251c262ec2c09d6046ac2a64f04c18ebd127608ce43ab914d35bfed99f5dbc4cb2712682a165876031f8a07ead50461f543a7153b7d23e702e2da2afc3c438a7e1d939ae63682b15ecdbb2496d4058260c385df9546d482e06bbe7fb308ae76e889b924e478faffc8b379e0f6b4a5398aa5adf70d1f41205cf6416265224367dc261a197b240b0853a5c75f295ca2c3897d214c7e4eae52079aff27bb5fbd0fb38b16bbfe58db77c732e297ac31fa9b3ba1b12c174fdfe6f055b650bdd5a58eaab84a196065eb485b8d2a54ca36957048971f754c3117124637b2a6c05a698aa0121d57565251ed307ec931c12e410aca16d00addc1f5c67d068e306a7384ab52dd487031d871a50309ecf3d83560067683f409936aaffbb42fb01fc71841e6064f591641960fc49ed7b3960f34d48dfef9bd84ef75fe63733a69607d9b51e186b0db7a87bd9a31a4657d934ad00802ee386188c2cea64f209eeaf9a30f6669b60a6d4d6842fceead90e2237f42f370161bdff8c9baa4d356ec60ea62bd90d84c3d537c158d98cc25d3e934bbcaae575edbdbd6c22b6aedf3eaf4b3cccfcc8bf6327c2f907"
+        ],
+        "rawHeaders": [
+            "Content-Type",
+            "application/json;charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "close",
+            "Date",
+            "Wed, 22 Sep 2021 20:06:19 GMT",
+            "Server",
+            "openresty",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET, HEAD, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Expose-Headers",
+            "ETag, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After, Content-Length, Content-Range",
+            "Cache-Control",
+            "public, max-age=28800",
+            "X-Memc",
+            "HIT",
+            "X-Memc-Key",
+            "eb0c54eb47a80be08500743552d454129de35806",
+            "X-Memc-Age",
+            "10916",
+            "X-Memc-Expires",
+            "5336",
+            "ETag",
+            "W/\"fd5f87a6342fe35f5194d1e6f8bf0165\"",
+            "Content-Encoding",
+            "br",
+            "X-Edge-Origin-Shield-Skipped",
+            "0",
+            "Vary",
+            "Accept-Encoding",
+            "X-Cache",
+            "Hit from cloudfront",
+            "Via",
+            "1.1 85e4c30db6ed9459bdead04635e1ab69.cloudfront.net (CloudFront)",
+            "X-Amz-Cf-Pop",
+            "HAM50-C3",
+            "X-Amz-Cf-Id",
+            "BIavEPqGaRUzB5vewZzWSZlzRUqo4XpzdQ15xHOcZftsAgleZvLDjw==",
+            "Age",
+            "4320"
+        ],
+        "responseIsBinary": false
+    },
+    {
         "scope": "https://kitsu.io:443",
         "method": "GET",
         "path": "/api/edge/anime?filter%5Btext%5D=Seitokai%20Yakuindomo%EF%BC%8A&include=mappings",
@@ -15,7 +175,7 @@
                     },
                     "attributes": {
                         "createdAt": "2017-01-22T00:08:51.564Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T20:21:39.359Z",
                         "slug": "seitokai-yakuindomo-movie",
                         "synopsis": "Ousai Academy was originally an all-girls high school. Due to the declining birth rates in recent years, it was converted into a co-ed school. The first year male students would find themselves surrounded by girls and unfortunately, Tsuda Takatoshi is one of them. What's worse, he gets scolded on his first day by the student council president Shino Amakusa, which did not give a good first impression of him. Tsuda also meets the other student council members while getting scolded, and in the end, he gets late for class. As an apology for ruining his morning, Shino lets him join the student council for various of \"reasons\" and he accepts it, or rather, he's forced to accept. Thus begins his days as Tsuda soon realizes that he's the only normal student in Ousai Academy...",
                         "description": "Ousai Academy was originally an all-girls high school. Due to the declining birth rates in recent years, it was converted into a co-ed school. The first year male students would find themselves surrounded by girls and unfortunately, Tsuda Takatoshi is one of them. What's worse, he gets scolded on his first day by the student council president Shino Amakusa, which did not give a good first impression of him. Tsuda also meets the other student council members while getting scolded, and in the end, he gets late for class. As an apology for ruining his morning, Shino lets him join the student council for various of \"reasons\" and he accepts it, or rather, he's forced to accept. Thus begins his days as Tsuda soon realizes that he's the only normal student in Ousai Academy...",
@@ -27,49 +187,53 @@
                         },
                         "canonicalTitle": "Gekijouban Seitokai Yakuindomo",
                         "abbreviatedTitles": [],
-                        "averageRating": "77.59",
+                        "averageRating": "77.5",
                         "ratingFrequencies": {
-                            "2": "18",
+                            "2": "20",
                             "3": "0",
-                            "4": "4",
+                            "4": "5",
                             "5": "0",
                             "6": "5",
                             "7": "2",
-                            "8": "28",
+                            "8": "29",
                             "9": "2",
-                            "10": "46",
-                            "11": "4",
-                            "12": "90",
-                            "13": "12",
-                            "14": "297",
-                            "15": "26",
-                            "16": "297",
-                            "17": "23",
-                            "18": "109",
-                            "19": "11",
-                            "20": "257"
+                            "10": "55",
+                            "11": "3",
+                            "12": "98",
+                            "13": "11",
+                            "14": "316",
+                            "15": "29",
+                            "16": "317",
+                            "17": "25",
+                            "18": "121",
+                            "19": "12",
+                            "20": "274"
                         },
                         "userCount": 3436,
                         "favoritesCount": 8,
                         "startDate": "2017-07-21",
                         "endDate": "2017-07-21",
                         "nextRelease": null,
-                        "popularityRank": 2574,
-                        "ratingRank": 1051,
+                        "popularityRank": 2575,
+                        "ratingRank": 1069,
                         "ageRating": "R",
                         "ageRatingGuide": "17+ (violence & profanity)",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/12959/tiny.jpg?1503005521",
-                            "small": "https://media.kitsu.io/anime/poster_images/12959/small.jpg?1503005521",
-                            "medium": "https://media.kitsu.io/anime/poster_images/12959/medium.jpg?1503005521",
-                            "large": "https://media.kitsu.io/anime/poster_images/12959/large.jpg?1503005521",
-                            "original": "https://media.kitsu.io/anime/poster_images/12959/original.jpg?1503005521",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/12959/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/12959/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/12959/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/12959/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/12959/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
+                                        "width": null,
+                                        "height": null
+                                    },
+                                    "large": {
                                         "width": null,
                                         "height": null
                                     },
@@ -78,10 +242,6 @@
                                         "height": null
                                     },
                                     "medium": {
-                                        "width": null,
-                                        "height": null
-                                    },
-                                    "large": {
                                         "width": null,
                                         "height": null
                                     }
@@ -221,7 +381,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:23:41.761Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "seitokai-yakuindomo",
                         "synopsis": "On his first day of high school at the formerly all-girl's Ousai Private Academy, Takatoshi Tsuda is called out for his untidy uniform by the student council president Shino Amakusa. In apology for delaying Takatoshi for his first class—and stating that the group needs a male point of view to accommodate the arrival of boys at the school—Shino offers him the position of vice president of the student council. Though unwilling, Takatoshi finds himself appointed as the newest member of the student council having yet to even step foot inside the school building.\nTakatoshi soon realizes that the other student council members who are more than a little strange: President Shino, who is studious and serious in appearance, but actually a huge pervert, fascinated with the erotic and constantly making lewd jokes; the secretary Aria Shichijou, who may seem like a typical sheltered rich girl, but is just as risque as the president, if not more so; and finally, the treasurer Suzu Hagimura, who may act fairly normal, but has the body of an elementary school student and is extremely self-conscious of it. Surrounded by these colorful characters, the new vice president must now work through a nonstop assault of sexual humor and insanity.\n[Written by MAL Rewrite]",
                         "description": "On his first day of high school at the formerly all-girl's Ousai Private Academy, Takatoshi Tsuda is called out for his untidy uniform by the student council president Shino Amakusa. In apology for delaying Takatoshi for his first class—and stating that the group needs a male point of view to accommodate the arrival of boys at the school—Shino offers him the position of vice president of the student council. Though unwilling, Takatoshi finds himself appointed as the newest member of the student council having yet to even step foot inside the school building.\nTakatoshi soon realizes that the other student council members who are more than a little strange: President Shino, who is studious and serious in appearance, but actually a huge pervert, fascinated with the erotic and constantly making lewd jokes; the secretary Aria Shichijou, who may seem like a typical sheltered rich girl, but is just as risque as the president, if not more so; and finally, the treasurer Suzu Hagimura, who may act fairly normal, but has the body of an elementary school student and is extremely self-conscious of it. Surrounded by these colorful characters, the new vice president must now work through a nonstop assault of sexual humor and insanity.\n[Written by MAL Rewrite]",
@@ -234,27 +394,27 @@
                         "abbreviatedTitles": [
                             "SYD"
                         ],
-                        "averageRating": "75.69",
+                        "averageRating": "75.63",
                         "ratingFrequencies": {
-                            "2": "77",
+                            "2": "81",
                             "3": "1",
-                            "4": "80",
+                            "4": "84",
                             "5": "4",
-                            "6": "120",
-                            "7": "14",
-                            "8": "415",
-                            "9": "6",
-                            "10": "809",
-                            "11": "27",
-                            "12": "1707",
-                            "13": "45",
-                            "14": "3736",
-                            "15": "73",
-                            "16": "4207",
-                            "17": "77",
-                            "18": "1834",
-                            "19": "21",
-                            "20": "2128"
+                            "6": "123",
+                            "7": "15",
+                            "8": "424",
+                            "9": "5",
+                            "10": "838",
+                            "11": "26",
+                            "12": "1757",
+                            "13": "49",
+                            "14": "3844",
+                            "15": "80",
+                            "16": "4305",
+                            "17": "84",
+                            "18": "1879",
+                            "19": "23",
+                            "20": "2165"
                         },
                         "userCount": 31317,
                         "favoritesCount": 339,
@@ -262,23 +422,27 @@
                         "endDate": "2010-09-26",
                         "nextRelease": null,
                         "popularityRank": 317,
-                        "ratingRank": 1584,
+                        "ratingRank": 1613,
                         "ageRating": "R",
                         "ageRatingGuide": "Sexual language and Imagery",
                         "subtype": "TV",
                         "status": "finished",
                         "tba": "",
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/5434/tiny.jpg?1597697514",
-                            "small": "https://media.kitsu.io/anime/poster_images/5434/small.jpg?1597697514",
-                            "medium": "https://media.kitsu.io/anime/poster_images/5434/medium.jpg?1597697514",
-                            "large": "https://media.kitsu.io/anime/poster_images/5434/large.jpg?1597697514",
-                            "original": "https://media.kitsu.io/anime/poster_images/5434/original.jpg?1597697514",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/5434/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/5434/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/5434/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/5434/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/5434/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -287,32 +451,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/5434/tiny.jpg?1597703070",
-                            "small": "https://media.kitsu.io/anime/cover_images/5434/small.jpg?1597703070",
-                            "large": "https://media.kitsu.io/anime/cover_images/5434/large.jpg?1597703070",
-                            "original": "https://media.kitsu.io/anime/cover_images/5434/original.jpg?1597703070",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/5434/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/5434/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/5434/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/5434/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -465,7 +625,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-10-11T00:57:35.106Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "seitokai-yakuindomo-2nd-season",
                         "synopsis": "Formerly an all-girl school, Ousai Academy has recently gone co-ed. Enter student council vice president Takatoshi Tsuda, one of Ousai's first male students. He's adapting rather well now that he's in his second year, but there's still a lot to get used to. For example, what do girls talk about when there aren't any guys around? In Seitokai Yakuindomo*, pretty much exactly what you'd expect: sex!\nAlthough charged with upholding morality among the student body, the Ousai Student Council is notoriously perverted, especially president Shino Amakusa. As they carry out their duties to the school, Tsuda, Shino, and their fellow council members must balance curiosity with decency and sex jokes with studying. It takes a perv to know one, after all!",
                         "description": "Formerly an all-girl school, Ousai Academy has recently gone co-ed. Enter student council vice president Takatoshi Tsuda, one of Ousai's first male students. He's adapting rather well now that he's in his second year, but there's still a lot to get used to. For example, what do girls talk about when there aren't any guys around? In Seitokai Yakuindomo*, pretty much exactly what you'd expect: sex!\nAlthough charged with upholding morality among the student body, the Ousai Student Council is notoriously perverted, especially president Shino Amakusa. As they carry out their duties to the school, Tsuda, Shino, and their fellow council members must balance curiosity with decency and sex jokes with studying. It takes a perv to know one, after all!",
@@ -479,27 +639,27 @@
                             "Seitokai Yakuindomo 2",
                             "SYD*"
                         ],
-                        "averageRating": "77.65",
+                        "averageRating": "77.54",
                         "ratingFrequencies": {
-                            "2": "37",
+                            "2": "40",
                             "3": "3",
-                            "4": "29",
+                            "4": "30",
                             "5": "1",
-                            "6": "48",
+                            "6": "50",
                             "7": "2",
-                            "8": "159",
+                            "8": "176",
                             "9": "5",
-                            "10": "292",
-                            "11": "26",
-                            "12": "734",
+                            "10": "301",
+                            "11": "27",
+                            "12": "759",
                             "13": "34",
-                            "14": "1929",
-                            "15": "54",
-                            "16": "2243",
-                            "17": "68",
-                            "18": "1132",
-                            "19": "15",
-                            "20": "1295"
+                            "14": "1996",
+                            "15": "60",
+                            "16": "2295",
+                            "17": "75",
+                            "18": "1160",
+                            "19": "17",
+                            "20": "1324"
                         },
                         "userCount": 16009,
                         "favoritesCount": 117,
@@ -507,23 +667,27 @@
                         "endDate": "2014-03-30",
                         "nextRelease": null,
                         "popularityRank": 736,
-                        "ratingRank": 1034,
+                        "ratingRank": 1052,
                         "ageRating": "R",
                         "ageRatingGuide": "17+ (violence & profanity)",
                         "subtype": "TV",
                         "status": "finished",
                         "tba": "",
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/8061/tiny.jpg?1597697277",
-                            "small": "https://media.kitsu.io/anime/poster_images/8061/small.jpg?1597697277",
-                            "medium": "https://media.kitsu.io/anime/poster_images/8061/medium.jpg?1597697277",
-                            "large": "https://media.kitsu.io/anime/poster_images/8061/large.jpg?1597697277",
-                            "original": "https://media.kitsu.io/anime/poster_images/8061/original.jpg?1597697277",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/8061/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/8061/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/8061/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/8061/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/8061/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -532,32 +696,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/8061/tiny.jpg?1597702811",
-                            "small": "https://media.kitsu.io/anime/cover_images/8061/small.jpg?1597702811",
-                            "large": "https://media.kitsu.io/anime/cover_images/8061/large.jpg?1597702811",
-                            "original": "https://media.kitsu.io/anime/cover_images/8061/original.jpg?1597702811",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/8061/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/8061/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/8061/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/8061/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -710,7 +870,7 @@
                     },
                     "attributes": {
                         "createdAt": "2014-08-30T23:06:26.420Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "seitokai-yakuindomo-2nd-season-ova",
                         "synopsis": "OVAs of Seitokai Yakuindomo* which were either bundled with the limited editions of the manga volumes or as standalone OVAs.",
                         "description": "OVAs of Seitokai Yakuindomo* which were either bundled with the limited editions of the manga volumes or as standalone OVAs.",
@@ -727,27 +887,27 @@
                             "SYD* OVA",
                             "SYD 2 OVA"
                         ],
-                        "averageRating": "79.09",
+                        "averageRating": "78.9",
                         "ratingFrequencies": {
-                            "2": "45",
+                            "2": "47",
                             "3": "1",
-                            "4": "3",
+                            "4": "4",
                             "5": "0",
-                            "6": "5",
+                            "6": "6",
                             "7": "0",
-                            "8": "64",
+                            "8": "75",
                             "9": "5",
-                            "10": "67",
+                            "10": "73",
                             "11": "7",
-                            "12": "179",
-                            "13": "19",
-                            "14": "530",
-                            "15": "25",
-                            "16": "636",
-                            "17": "38",
-                            "18": "295",
-                            "19": "18",
-                            "20": "607"
+                            "12": "187",
+                            "13": "18",
+                            "14": "547",
+                            "15": "27",
+                            "16": "652",
+                            "17": "39",
+                            "18": "308",
+                            "19": "20",
+                            "20": "627"
                         },
                         "userCount": 6457,
                         "favoritesCount": 13,
@@ -755,23 +915,27 @@
                         "endDate": "2020-09-17",
                         "nextRelease": null,
                         "popularityRank": 1711,
-                        "ratingRank": 738,
+                        "ratingRank": 775,
                         "ageRating": "R",
                         "ageRatingGuide": "Violence, Profanity",
                         "subtype": "OVA",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/8708/tiny.jpg?1597697111",
-                            "small": "https://media.kitsu.io/anime/poster_images/8708/small.jpg?1597697111",
-                            "medium": "https://media.kitsu.io/anime/poster_images/8708/medium.jpg?1597697111",
-                            "large": "https://media.kitsu.io/anime/poster_images/8708/large.jpg?1597697111",
-                            "original": "https://media.kitsu.io/anime/poster_images/8708/original.jpg?1597697111",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/8708/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/8708/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/8708/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/8708/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/8708/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -780,32 +944,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/8708/tiny.jpg?1597702709",
-                            "small": "https://media.kitsu.io/anime/cover_images/8708/small.jpg?1597702709",
-                            "large": "https://media.kitsu.io/anime/cover_images/8708/large.jpg?1597702709",
-                            "original": "https://media.kitsu.io/anime/cover_images/8708/original.jpg?1597702709",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/8708/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/8708/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/8708/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/8708/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -950,7 +1110,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:33:31.731Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "seitokai-yakuindomo-ova",
                         "synopsis": "It is the start of Takatoshi Tsuda's second year as the put-upon vice president of the student council and his sister Kotomi is entering school as a first year. New friends and double entendres are made.\n(Source: ANN)",
                         "description": "It is the start of Takatoshi Tsuda's second year as the put-upon vice president of the student council and his sister Kotomi is entering school as a first year. New friends and double entendres are made.\n(Source: ANN)",
@@ -967,27 +1127,27 @@
                             "SYD OVA",
                             "SYD OAD"
                         ],
-                        "averageRating": "77.9",
+                        "averageRating": "77.8",
                         "ratingFrequencies": {
-                            "2": "44",
+                            "2": "46",
                             "3": "0",
                             "4": "14",
                             "5": "2",
-                            "6": "26",
+                            "6": "28",
                             "7": "3",
-                            "8": "83",
+                            "8": "92",
                             "9": "1",
-                            "10": "210",
-                            "11": "5",
-                            "12": "546",
+                            "10": "218",
+                            "11": "6",
+                            "12": "563",
                             "13": "19",
-                            "14": "1277",
-                            "15": "31",
-                            "16": "1708",
-                            "17": "36",
-                            "18": "747",
-                            "19": "13",
-                            "20": "949"
+                            "14": "1333",
+                            "15": "36",
+                            "16": "1733",
+                            "17": "38",
+                            "18": "767",
+                            "19": "15",
+                            "20": "976"
                         },
                         "userCount": 10862,
                         "favoritesCount": 39,
@@ -995,23 +1155,27 @@
                         "endDate": "2013-10-17",
                         "nextRelease": null,
                         "popularityRank": 1087,
-                        "ratingRank": 977,
+                        "ratingRank": 1004,
                         "ageRating": "R",
                         "ageRatingGuide": "17+ (violence & profanity)",
                         "subtype": "OVA",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/6046/tiny.jpg?1597697234",
-                            "small": "https://media.kitsu.io/anime/poster_images/6046/small.jpg?1597697234",
-                            "medium": "https://media.kitsu.io/anime/poster_images/6046/medium.jpg?1597697234",
-                            "large": "https://media.kitsu.io/anime/poster_images/6046/large.jpg?1597697234",
-                            "original": "https://media.kitsu.io/anime/poster_images/6046/original.png?1597697234",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/6046/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/6046/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/6046/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/6046/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/6046/original.png",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -1020,32 +1184,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/6046/tiny.jpg?1597702872",
-                            "small": "https://media.kitsu.io/anime/cover_images/6046/small.jpg?1597702872",
-                            "large": "https://media.kitsu.io/anime/cover_images/6046/large.jpg?1597702872",
-                            "original": "https://media.kitsu.io/anime/cover_images/6046/original.jpg?1597702872",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/6046/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/6046/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/6046/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/6046/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -1190,7 +1350,7 @@
                     },
                     "attributes": {
                         "createdAt": "2021-05-03T08:47:12.327Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "seitokai-yakuindomo-movie-2",
                         "synopsis": "The cast is back and ready to quip! In this companion film that follows season 2 of the zany, irreverent Seitokai Yakuindomo anime series, the student council must again grapple with a mix of double-entendres and doubly potent teen hormones.\n\n(Source: HIDIVE)",
                         "description": "The cast is back and ready to quip! In this companion film that follows season 2 of the zany, irreverent Seitokai Yakuindomo anime series, the student council must again grapple with a mix of double-entendres and doubly potent teen hormones.\n\n(Source: HIDIVE)",
@@ -1202,38 +1362,47 @@
                         },
                         "canonicalTitle": "Seitokai Yakuindomo Movie 2",
                         "abbreviatedTitles": [],
-                        "averageRating": null,
+                        "averageRating": "77.5",
                         "ratingFrequencies": {
-                            "10": "1",
+                            "5": "0",
+                            "8": "1",
+                            "10": "5",
                             "12": "2",
-                            "14": "5",
-                            "16": "5",
-                            "18": "1",
-                            "20": "1"
+                            "13": "1",
+                            "14": "17",
+                            "15": "3",
+                            "16": "16",
+                            "18": "7",
+                            "19": "2",
+                            "20": "10"
                         },
                         "userCount": 0,
                         "favoritesCount": 0,
                         "startDate": "2021-01-01",
                         "endDate": "2021-01-01",
                         "nextRelease": null,
-                        "popularityRank": 17575,
-                        "ratingRank": null,
+                        "popularityRank": 18043,
+                        "ratingRank": 1066,
                         "ageRating": "R",
                         "ageRatingGuide": "violence & profanity",
                         "subtype": "movie",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/44497/tiny.jpg?1620031629",
-                            "small": "https://media.kitsu.io/anime/poster_images/44497/small.jpg?1620031629",
-                            "medium": "https://media.kitsu.io/anime/poster_images/44497/medium.jpg?1620031629",
-                            "large": "https://media.kitsu.io/anime/poster_images/44497/large.jpg?1620031629",
-                            "original": "https://media.kitsu.io/anime/poster_images/44497/original.jpg?1620031629",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/44497/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/44497/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/44497/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/44497/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/44497/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -1242,10 +1411,6 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
@@ -1372,6 +1537,253 @@
                     }
                 },
                 {
+                    "id": "4332",
+                    "type": "anime",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/anime/4332"
+                    },
+                    "attributes": {
+                        "createdAt": "2013-02-20T17:06:36.182Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
+                        "slug": "seitokai-no-ichizon",
+                        "synopsis": "The student council of Hekiyou Gakuen is chosen by popular vote, so of course all the members are cute girls. All except Ken Sugisaki, that is. Ken managed to get a spot by being the top scoring student in his year, which granted him an automatic seat. It wasn’t an easy feat, as Ken is not exactly book-smart, but he studied hard and improved his score just to become a part of the exclusive student council.\nHowever, for such a highly regarded council, the members don’t really do much. Ken spends most of his time trying to turn the girls into his harem, while the girls ignore him in favor of more important things, like running festivals, attempting to boost their popularity, and slowly driving Ken mad in the best way possible.\nGet ready for fourth wall breaking, loads of references and parodies, and even a couple of cameos in Seitokai no Ichizon!",
+                        "description": "The student council of Hekiyou Gakuen is chosen by popular vote, so of course all the members are cute girls. All except Ken Sugisaki, that is. Ken managed to get a spot by being the top scoring student in his year, which granted him an automatic seat. It wasn’t an easy feat, as Ken is not exactly book-smart, but he studied hard and improved his score just to become a part of the exclusive student council.\nHowever, for such a highly regarded council, the members don’t really do much. Ken spends most of his time trying to turn the girls into his harem, while the girls ignore him in favor of more important things, like running festivals, attempting to boost their popularity, and slowly driving Ken mad in the best way possible.\nGet ready for fourth wall breaking, loads of references and parodies, and even a couple of cameos in Seitokai no Ichizon!",
+                        "coverImageTopOffset": 40,
+                        "titles": {
+                            "en": "Student Council's Discretion",
+                            "en_jp": "Seitokai no Ichizon",
+                            "en_us": "Student Council's Discretion",
+                            "ja_jp": "生徒会の一存"
+                        },
+                        "canonicalTitle": "Seitokai no Ichizon",
+                        "abbreviatedTitles": [
+                            "Seitokai no Ichizon: Hekiyou Gakuen Seitokai Gijiroku",
+                            "It's Student Council's Judgment"
+                        ],
+                        "averageRating": "73.0",
+                        "ratingFrequencies": {
+                            "2": "41",
+                            "3": "2",
+                            "4": "56",
+                            "5": "0",
+                            "6": "66",
+                            "7": "6",
+                            "8": "263",
+                            "9": "2",
+                            "10": "439",
+                            "11": "8",
+                            "12": "1048",
+                            "13": "18",
+                            "14": "1712",
+                            "15": "19",
+                            "16": "1790",
+                            "17": "22",
+                            "18": "656",
+                            "19": "1",
+                            "20": "735"
+                        },
+                        "userCount": 14787,
+                        "favoritesCount": 61,
+                        "startDate": "2009-10-03",
+                        "endDate": "2009-12-19",
+                        "nextRelease": null,
+                        "popularityRank": 790,
+                        "ratingRank": 2683,
+                        "ageRating": "PG",
+                        "ageRatingGuide": "Teens 13 or older",
+                        "subtype": "TV",
+                        "status": "finished",
+                        "tba": null,
+                        "posterImage": {
+                            "tiny": "https://media.kitsu.io/anime/poster_images/4332/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/4332/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/4332/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/4332/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/4332/original.jpg",
+                            "meta": {
+                                "dimensions": {
+                                    "tiny": {
+                                        "width": 110,
+                                        "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
+                                    },
+                                    "small": {
+                                        "width": 284,
+                                        "height": 402
+                                    },
+                                    "medium": {
+                                        "width": 390,
+                                        "height": 554
+                                    }
+                                }
+                            }
+                        },
+                        "coverImage": {
+                            "tiny": "https://media.kitsu.io/anime/cover_images/4332/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/4332/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/4332/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/4332/original.png",
+                            "meta": {
+                                "dimensions": {
+                                    "tiny": {
+                                        "width": 840,
+                                        "height": 200
+                                    },
+                                    "large": {
+                                        "width": 3360,
+                                        "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
+                                    }
+                                }
+                            }
+                        },
+                        "episodeCount": 12,
+                        "episodeLength": 24,
+                        "totalLength": 288,
+                        "youtubeVideoId": "vtPPerNTnek",
+                        "showType": "TV",
+                        "nsfw": false
+                    },
+                    "relationships": {
+                        "genres": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/genres",
+                                "related": "https://kitsu.io/api/edge/anime/4332/genres"
+                            }
+                        },
+                        "categories": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/categories",
+                                "related": "https://kitsu.io/api/edge/anime/4332/categories"
+                            }
+                        },
+                        "castings": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/castings",
+                                "related": "https://kitsu.io/api/edge/anime/4332/castings"
+                            }
+                        },
+                        "installments": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/installments",
+                                "related": "https://kitsu.io/api/edge/anime/4332/installments"
+                            }
+                        },
+                        "mappings": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/mappings",
+                                "related": "https://kitsu.io/api/edge/anime/4332/mappings"
+                            },
+                            "data": [
+                                {
+                                    "type": "mappings",
+                                    "id": "59131"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "255425"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "77343"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "66924"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "4991"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "64875"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "13844"
+                                },
+                                {
+                                    "type": "mappings",
+                                    "id": "77344"
+                                }
+                            ]
+                        },
+                        "reviews": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/reviews",
+                                "related": "https://kitsu.io/api/edge/anime/4332/reviews"
+                            }
+                        },
+                        "mediaRelationships": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/media-relationships",
+                                "related": "https://kitsu.io/api/edge/anime/4332/media-relationships"
+                            }
+                        },
+                        "characters": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/characters",
+                                "related": "https://kitsu.io/api/edge/anime/4332/characters"
+                            }
+                        },
+                        "staff": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/staff",
+                                "related": "https://kitsu.io/api/edge/anime/4332/staff"
+                            }
+                        },
+                        "productions": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/productions",
+                                "related": "https://kitsu.io/api/edge/anime/4332/productions"
+                            }
+                        },
+                        "quotes": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/quotes",
+                                "related": "https://kitsu.io/api/edge/anime/4332/quotes"
+                            }
+                        },
+                        "episodes": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/episodes",
+                                "related": "https://kitsu.io/api/edge/anime/4332/episodes"
+                            }
+                        },
+                        "streamingLinks": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/streaming-links",
+                                "related": "https://kitsu.io/api/edge/anime/4332/streaming-links"
+                            }
+                        },
+                        "animeProductions": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/anime-productions",
+                                "related": "https://kitsu.io/api/edge/anime/4332/anime-productions"
+                            }
+                        },
+                        "animeCharacters": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/anime-characters",
+                                "related": "https://kitsu.io/api/edge/anime/4332/anime-characters"
+                            }
+                        },
+                        "animeStaff": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/anime-staff",
+                                "related": "https://kitsu.io/api/edge/anime/4332/anime-staff"
+                            }
+                        }
+                    }
+                },
+                {
                     "id": "418",
                     "type": "anime",
                     "links": {
@@ -1379,7 +1791,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T16:06:51.045Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "gokujou-seitokai",
                         "synopsis": "Randou Rino is a young girl with a head full of air and a talking puppet on her hand. She is accepted into the illustrious Gokujou all-girl's school, and is summarily, almost curiously, accepted as part of the even more illustrious Gokujou Student Council, who has more power and business ventures than most large businesses. Now a part of the student council, she befriends the talented members of the Gokujou Student Council, leaving one to wonder how a girl with seemingly no talents or redeeming qualities would get chosen for such a group. \n(Source: ANN)",
                         "description": "Randou Rino is a young girl with a head full of air and a talking puppet on her hand. She is accepted into the illustrious Gokujou all-girl's school, and is summarily, almost curiously, accepted as part of the even more illustrious Gokujou Student Council, who has more power and business ventures than most large businesses. Now a part of the student council, she befriends the talented members of the Gokujou Student Council, leaving one to wonder how a girl with seemingly no talents or redeeming qualities would get chosen for such a group. \n(Source: ANN)",
@@ -1393,7 +1805,7 @@
                         "abbreviatedTitles": [
                             "Gokujo Seitokai"
                         ],
-                        "averageRating": "69.2",
+                        "averageRating": "69.25",
                         "ratingFrequencies": {
                             "2": "13",
                             "3": "0",
@@ -1401,17 +1813,17 @@
                             "5": "0",
                             "6": "8",
                             "7": "1",
-                            "8": "28",
+                            "8": "29",
                             "9": "2",
-                            "10": "57",
+                            "10": "58",
                             "11": "0",
-                            "12": "94",
+                            "12": "97",
                             "13": "1",
-                            "14": "184",
+                            "14": "189",
                             "15": "4",
-                            "16": "113",
+                            "16": "118",
                             "17": "2",
-                            "18": "36",
+                            "18": "38",
                             "19": "1",
                             "20": "41"
                         },
@@ -1420,24 +1832,28 @@
                         "startDate": "2005-04-07",
                         "endDate": "2005-09-29",
                         "nextRelease": null,
-                        "popularityRank": 3885,
-                        "ratingRank": 4640,
+                        "popularityRank": 3886,
+                        "ratingRank": 4690,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "TV",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/418/tiny.jpg?1597692251",
-                            "small": "https://media.kitsu.io/anime/poster_images/418/small.jpg?1597692251",
-                            "medium": "https://media.kitsu.io/anime/poster_images/418/medium.jpg?1597692251",
-                            "large": "https://media.kitsu.io/anime/poster_images/418/large.jpg?1597692251",
-                            "original": "https://media.kitsu.io/anime/poster_images/418/original.jpg?1597692251",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/418/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/418/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/418/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/418/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/418/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -1446,10 +1862,6 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
@@ -1596,253 +2008,6 @@
                     }
                 },
                 {
-                    "id": "4332",
-                    "type": "anime",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/anime/4332"
-                    },
-                    "attributes": {
-                        "createdAt": "2013-02-20T17:06:36.182Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
-                        "slug": "seitokai-no-ichizon",
-                        "synopsis": "The student council of Hekiyou Gakuen is chosen by popular vote, so of course all the members are cute girls. All except Ken Sugisaki, that is. Ken managed to get a spot by being the top scoring student in his year, which granted him an automatic seat. It wasn’t an easy feat, as Ken is not exactly book-smart, but he studied hard and improved his score just to become a part of the exclusive student council.\nHowever, for such a highly regarded council, the members don’t really do much. Ken spends most of his time trying to turn the girls into his harem, while the girls ignore him in favor of more important things, like running festivals, attempting to boost their popularity, and slowly driving Ken mad in the best way possible.\nGet ready for fourth wall breaking, loads of references and parodies, and even a couple of cameos in Seitokai no Ichizon!",
-                        "description": "The student council of Hekiyou Gakuen is chosen by popular vote, so of course all the members are cute girls. All except Ken Sugisaki, that is. Ken managed to get a spot by being the top scoring student in his year, which granted him an automatic seat. It wasn’t an easy feat, as Ken is not exactly book-smart, but he studied hard and improved his score just to become a part of the exclusive student council.\nHowever, for such a highly regarded council, the members don’t really do much. Ken spends most of his time trying to turn the girls into his harem, while the girls ignore him in favor of more important things, like running festivals, attempting to boost their popularity, and slowly driving Ken mad in the best way possible.\nGet ready for fourth wall breaking, loads of references and parodies, and even a couple of cameos in Seitokai no Ichizon!",
-                        "coverImageTopOffset": 40,
-                        "titles": {
-                            "en": "Student Council's Discretion",
-                            "en_jp": "Seitokai no Ichizon",
-                            "en_us": "Student Council's Discretion",
-                            "ja_jp": "生徒会の一存"
-                        },
-                        "canonicalTitle": "Seitokai no Ichizon",
-                        "abbreviatedTitles": [
-                            "Seitokai no Ichizon: Hekiyou Gakuen Seitokai Gijiroku",
-                            "It's Student Council's Judgment"
-                        ],
-                        "averageRating": "72.99",
-                        "ratingFrequencies": {
-                            "2": "40",
-                            "3": "2",
-                            "4": "54",
-                            "5": "0",
-                            "6": "62",
-                            "7": "6",
-                            "8": "260",
-                            "9": "2",
-                            "10": "429",
-                            "11": "8",
-                            "12": "1026",
-                            "13": "16",
-                            "14": "1681",
-                            "15": "19",
-                            "16": "1759",
-                            "17": "20",
-                            "18": "636",
-                            "19": "1",
-                            "20": "718"
-                        },
-                        "userCount": 14787,
-                        "favoritesCount": 61,
-                        "startDate": "2009-10-03",
-                        "endDate": "2009-12-19",
-                        "nextRelease": null,
-                        "popularityRank": 790,
-                        "ratingRank": 2652,
-                        "ageRating": "PG",
-                        "ageRatingGuide": "Teens 13 or older",
-                        "subtype": "TV",
-                        "status": "finished",
-                        "tba": null,
-                        "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/4332/tiny.jpg?1597697891",
-                            "small": "https://media.kitsu.io/anime/poster_images/4332/small.jpg?1597697891",
-                            "medium": "https://media.kitsu.io/anime/poster_images/4332/medium.jpg?1597697891",
-                            "large": "https://media.kitsu.io/anime/poster_images/4332/large.jpg?1597697891",
-                            "original": "https://media.kitsu.io/anime/poster_images/4332/original.jpg?1597697891",
-                            "meta": {
-                                "dimensions": {
-                                    "tiny": {
-                                        "width": 110,
-                                        "height": 156
-                                    },
-                                    "small": {
-                                        "width": 284,
-                                        "height": 402
-                                    },
-                                    "medium": {
-                                        "width": 390,
-                                        "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
-                                    }
-                                }
-                            }
-                        },
-                        "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/4332/tiny.jpg?1597703242",
-                            "small": "https://media.kitsu.io/anime/cover_images/4332/small.jpg?1597703242",
-                            "large": "https://media.kitsu.io/anime/cover_images/4332/large.jpg?1597703242",
-                            "original": "https://media.kitsu.io/anime/cover_images/4332/original.png?1597703242",
-                            "meta": {
-                                "dimensions": {
-                                    "tiny": {
-                                        "width": 840,
-                                        "height": 200
-                                    },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
-                                    "large": {
-                                        "width": 3360,
-                                        "height": 800
-                                    }
-                                }
-                            }
-                        },
-                        "episodeCount": 12,
-                        "episodeLength": 24,
-                        "totalLength": 288,
-                        "youtubeVideoId": "vtPPerNTnek",
-                        "showType": "TV",
-                        "nsfw": false
-                    },
-                    "relationships": {
-                        "genres": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/genres",
-                                "related": "https://kitsu.io/api/edge/anime/4332/genres"
-                            }
-                        },
-                        "categories": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/categories",
-                                "related": "https://kitsu.io/api/edge/anime/4332/categories"
-                            }
-                        },
-                        "castings": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/castings",
-                                "related": "https://kitsu.io/api/edge/anime/4332/castings"
-                            }
-                        },
-                        "installments": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/installments",
-                                "related": "https://kitsu.io/api/edge/anime/4332/installments"
-                            }
-                        },
-                        "mappings": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/mappings",
-                                "related": "https://kitsu.io/api/edge/anime/4332/mappings"
-                            },
-                            "data": [
-                                {
-                                    "type": "mappings",
-                                    "id": "59131"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "255425"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "77343"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "66924"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "4991"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "64875"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "13844"
-                                },
-                                {
-                                    "type": "mappings",
-                                    "id": "77344"
-                                }
-                            ]
-                        },
-                        "reviews": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/reviews",
-                                "related": "https://kitsu.io/api/edge/anime/4332/reviews"
-                            }
-                        },
-                        "mediaRelationships": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/media-relationships",
-                                "related": "https://kitsu.io/api/edge/anime/4332/media-relationships"
-                            }
-                        },
-                        "characters": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/characters",
-                                "related": "https://kitsu.io/api/edge/anime/4332/characters"
-                            }
-                        },
-                        "staff": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/staff",
-                                "related": "https://kitsu.io/api/edge/anime/4332/staff"
-                            }
-                        },
-                        "productions": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/productions",
-                                "related": "https://kitsu.io/api/edge/anime/4332/productions"
-                            }
-                        },
-                        "quotes": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/quotes",
-                                "related": "https://kitsu.io/api/edge/anime/4332/quotes"
-                            }
-                        },
-                        "episodes": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/episodes",
-                                "related": "https://kitsu.io/api/edge/anime/4332/episodes"
-                            }
-                        },
-                        "streamingLinks": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/streaming-links",
-                                "related": "https://kitsu.io/api/edge/anime/4332/streaming-links"
-                            }
-                        },
-                        "animeProductions": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/anime-productions",
-                                "related": "https://kitsu.io/api/edge/anime/4332/anime-productions"
-                            }
-                        },
-                        "animeCharacters": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/anime-characters",
-                                "related": "https://kitsu.io/api/edge/anime/4332/anime-characters"
-                            }
-                        },
-                        "animeStaff": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/anime/4332/relationships/anime-staff",
-                                "related": "https://kitsu.io/api/edge/anime/4332/anime-staff"
-                            }
-                        }
-                    }
-                },
-                {
                     "id": "6193",
                     "type": "anime",
                     "links": {
@@ -1850,7 +2015,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:35:57.516Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "seitokai-no-ichizon-lv-2",
                         "synopsis": "Sugisaki Ken, through diligence and academic excellence, had successfully entered the paradise that is the Hekiyou Private Academy's Student Council. There, he boldly embarks on his plan to create his personal harem with the 4 girls who are the other council members, namely: The incredibly youthful president Sakurano Kurimu; The cool and kindly yet super-sadistic secretary Akaba Chizuru; Tomboyish and hot-blooded vice-president Shiina Minatsu; and The ephemerally beautiful yet complicated treasurer Shiina Mafuyu. While every day since then has been non-stop fun, Graduation Day now looms near. Could this spell the end of their carefree days?\n(Source: translated and adapted from official site by Cranston)",
                         "description": "Sugisaki Ken, through diligence and academic excellence, had successfully entered the paradise that is the Hekiyou Private Academy's Student Council. There, he boldly embarks on his plan to create his personal harem with the 4 girls who are the other council members, namely: The incredibly youthful president Sakurano Kurimu; The cool and kindly yet super-sadistic secretary Akaba Chizuru; Tomboyish and hot-blooded vice-president Shiina Minatsu; and The ephemerally beautiful yet complicated treasurer Shiina Mafuyu. While every day since then has been non-stop fun, Graduation Day now looms near. Could this spell the end of their carefree days?\n(Source: translated and adapted from official site by Cranston)",
@@ -1863,27 +2028,27 @@
                         },
                         "canonicalTitle": "Seitokai no Ichizon Lv.2",
                         "abbreviatedTitles": [],
-                        "averageRating": "73.27",
+                        "averageRating": "73.28",
                         "ratingFrequencies": {
                             "2": "14",
                             "3": "0",
-                            "4": "27",
+                            "4": "28",
                             "5": "1",
                             "6": "27",
                             "7": "0",
-                            "8": "85",
+                            "8": "86",
                             "9": "1",
-                            "10": "208",
+                            "10": "213",
                             "11": "5",
-                            "12": "516",
-                            "13": "8",
-                            "14": "869",
-                            "15": "14",
-                            "16": "827",
+                            "12": "527",
+                            "13": "9",
+                            "14": "881",
+                            "15": "15",
+                            "16": "846",
                             "17": "15",
-                            "18": "268",
+                            "18": "272",
                             "19": "2",
-                            "20": "354"
+                            "20": "362"
                         },
                         "userCount": 6558,
                         "favoritesCount": 30,
@@ -1891,23 +2056,27 @@
                         "endDate": "2012-12-15",
                         "nextRelease": null,
                         "popularityRank": 1688,
-                        "ratingRank": 2513,
+                        "ratingRank": 2552,
                         "ageRating": "PG",
                         "ageRatingGuide": "Teens 13 or older",
                         "subtype": "ONA",
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/6193/tiny.jpg?1597697837",
-                            "small": "https://media.kitsu.io/anime/poster_images/6193/small.jpg?1597697837",
-                            "medium": "https://media.kitsu.io/anime/poster_images/6193/medium.jpg?1597697837",
-                            "large": "https://media.kitsu.io/anime/poster_images/6193/large.jpg?1597697837",
-                            "original": "https://media.kitsu.io/anime/poster_images/6193/original.jpg?1597697837",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/6193/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/6193/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/6193/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/6193/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/6193/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -1916,32 +2085,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/6193/tiny.jpg?1597703277",
-                            "small": "https://media.kitsu.io/anime/cover_images/6193/small.jpg?1597703277",
-                            "large": "https://media.kitsu.io/anime/cover_images/6193/large.jpg?1597703277",
-                            "original": "https://media.kitsu.io/anime/cover_images/6193/original.jpg?1597703277",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/6193/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/6193/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/6193/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/6193/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -2082,7 +2247,7 @@
                     },
                     "attributes": {
                         "createdAt": "2013-02-20T17:54:25.039Z",
-                        "updatedAt": "2021-06-05T12:00:06.361Z",
+                        "updatedAt": "2021-09-22T18:00:10.969Z",
                         "slug": "seitokai-no-ichizon-lv-2-watasu-seitokai",
                         "synopsis": "An OVA bundled with the eighth volume of the Seitokai Series Spinoff novel. \nThe story itself takes place on Valentine's Day where you could see how the second season's heroines handle the awkward situation of giving a gift to the main character, Sugisaki Ken.",
                         "description": "An OVA bundled with the eighth volume of the Seitokai Series Spinoff novel. \nThe story itself takes place on Valentine's Day where you could see how the second season's heroines handle the awkward situation of giving a gift to the main character, Sugisaki Ken.",
@@ -2095,7 +2260,7 @@
                         "abbreviatedTitles": [
                             "Seitokai no Ichizon Lv.2 OVA"
                         ],
-                        "averageRating": "72.66",
+                        "averageRating": "72.78",
                         "ratingFrequencies": {
                             "2": "3",
                             "3": "0",
@@ -2105,17 +2270,17 @@
                             "7": "0",
                             "8": "15",
                             "9": "0",
-                            "10": "68",
+                            "10": "72",
                             "11": "3",
                             "12": "144",
                             "13": "3",
-                            "14": "321",
+                            "14": "333",
                             "15": "1",
-                            "16": "186",
+                            "16": "191",
                             "17": "3",
-                            "18": "69",
+                            "18": "71",
                             "19": "2",
-                            "20": "91"
+                            "20": "97"
                         },
                         "userCount": 1939,
                         "favoritesCount": 3,
@@ -2130,16 +2295,20 @@
                         "status": "finished",
                         "tba": null,
                         "posterImage": {
-                            "tiny": "https://media.kitsu.io/anime/poster_images/7349/tiny.jpg?1597697939",
-                            "small": "https://media.kitsu.io/anime/poster_images/7349/small.jpg?1597697939",
-                            "medium": "https://media.kitsu.io/anime/poster_images/7349/medium.jpg?1597697939",
-                            "large": "https://media.kitsu.io/anime/poster_images/7349/large.jpg?1597697939",
-                            "original": "https://media.kitsu.io/anime/poster_images/7349/original.jpg?1597697939",
+                            "tiny": "https://media.kitsu.io/anime/poster_images/7349/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/poster_images/7349/large.jpg",
+                            "small": "https://media.kitsu.io/anime/poster_images/7349/small.jpg",
+                            "medium": "https://media.kitsu.io/anime/poster_images/7349/medium.jpg",
+                            "original": "https://media.kitsu.io/anime/poster_images/7349/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 110,
                                         "height": 156
+                                    },
+                                    "large": {
+                                        "width": 550,
+                                        "height": 780
                                     },
                                     "small": {
                                         "width": 284,
@@ -2148,32 +2317,28 @@
                                     "medium": {
                                         "width": 390,
                                         "height": 554
-                                    },
-                                    "large": {
-                                        "width": 550,
-                                        "height": 780
                                     }
                                 }
                             }
                         },
                         "coverImage": {
-                            "tiny": "https://media.kitsu.io/anime/cover_images/7349/tiny.jpg?1597703401",
-                            "small": "https://media.kitsu.io/anime/cover_images/7349/small.jpg?1597703401",
-                            "large": "https://media.kitsu.io/anime/cover_images/7349/large.jpg?1597703401",
-                            "original": "https://media.kitsu.io/anime/cover_images/7349/original.jpg?1597703401",
+                            "tiny": "https://media.kitsu.io/anime/cover_images/7349/tiny.jpg",
+                            "large": "https://media.kitsu.io/anime/cover_images/7349/large.jpg",
+                            "small": "https://media.kitsu.io/anime/cover_images/7349/small.jpg",
+                            "original": "https://media.kitsu.io/anime/cover_images/7349/original.jpg",
                             "meta": {
                                 "dimensions": {
                                     "tiny": {
                                         "width": 840,
                                         "height": 200
                                     },
-                                    "small": {
-                                        "width": 1680,
-                                        "height": 400
-                                    },
                                     "large": {
                                         "width": 3360,
                                         "height": 800
+                                    },
+                                    "small": {
+                                        "width": 1680,
+                                        "height": 400
                                     }
                                 }
                             }
@@ -3040,174 +3205,6 @@
                     }
                 },
                 {
-                    "id": "56894",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/56894"
-                    },
-                    "attributes": {
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "externalSite": "anidb",
-                        "externalId": "2964"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/56894/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/56894/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "262961",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/262961"
-                    },
-                    "attributes": {
-                        "createdAt": "2020-05-07T08:34:05.320Z",
-                        "updatedAt": "2020-05-07T08:34:05.320Z",
-                        "externalSite": "anilist/anime",
-                        "externalId": "456"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/262961/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/262961/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "69475",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/69475"
-                    },
-                    "attributes": {
-                        "createdAt": "2018-01-24T03:56:12.354Z",
-                        "updatedAt": "2018-01-24T03:56:12.354Z",
-                        "externalSite": "aozora",
-                        "externalId": "K7dsKCIsHM"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/69475/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/69475/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "67494",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/67494"
-                    },
-                    "attributes": {
-                        "createdAt": "2017-11-23T10:08:30.546Z",
-                        "updatedAt": "2017-11-23T10:08:30.546Z",
-                        "externalSite": "hulu",
-                        "externalId": "50002008"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/67494/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/67494/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "2235",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/2235"
-                    },
-                    "attributes": {
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "externalSite": "myanimelist/anime",
-                        "externalId": "456"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/2235/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/2235/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "66171",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/66171"
-                    },
-                    "attributes": {
-                        "createdAt": "2017-09-09T07:06:22.554Z",
-                        "updatedAt": "2017-09-09T07:06:22.554Z",
-                        "externalSite": "thetvdb",
-                        "externalId": "83536/1"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/66171/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/66171/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "13032",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/13032"
-                    },
-                    "attributes": {
-                        "createdAt": null,
-                        "updatedAt": null,
-                        "externalSite": "thetvdb/series",
-                        "externalId": "83536"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/13032/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/13032/item"
-                            }
-                        }
-                    }
-                },
-                {
-                    "id": "69476",
-                    "type": "mappings",
-                    "links": {
-                        "self": "https://kitsu.io/api/edge/mappings/69476"
-                    },
-                    "attributes": {
-                        "createdAt": "2018-01-24T03:56:12.368Z",
-                        "updatedAt": "2018-01-24T03:56:12.368Z",
-                        "externalSite": "trakt",
-                        "externalId": "8872"
-                    },
-                    "relationships": {
-                        "item": {
-                            "links": {
-                                "self": "https://kitsu.io/api/edge/mappings/69476/relationships/item",
-                                "related": "https://kitsu.io/api/edge/mappings/69476/item"
-                            }
-                        }
-                    }
-                },
-                {
                     "id": "59131",
                     "type": "mappings",
                     "links": {
@@ -3371,6 +3368,174 @@
                             "links": {
                                 "self": "https://kitsu.io/api/edge/mappings/77344/relationships/item",
                                 "related": "https://kitsu.io/api/edge/mappings/77344/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "56894",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/56894"
+                    },
+                    "attributes": {
+                        "createdAt": null,
+                        "updatedAt": null,
+                        "externalSite": "anidb",
+                        "externalId": "2964"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/56894/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/56894/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "262961",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/262961"
+                    },
+                    "attributes": {
+                        "createdAt": "2020-05-07T08:34:05.320Z",
+                        "updatedAt": "2020-05-07T08:34:05.320Z",
+                        "externalSite": "anilist/anime",
+                        "externalId": "456"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/262961/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/262961/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "69475",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/69475"
+                    },
+                    "attributes": {
+                        "createdAt": "2018-01-24T03:56:12.354Z",
+                        "updatedAt": "2018-01-24T03:56:12.354Z",
+                        "externalSite": "aozora",
+                        "externalId": "K7dsKCIsHM"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/69475/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/69475/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "67494",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/67494"
+                    },
+                    "attributes": {
+                        "createdAt": "2017-11-23T10:08:30.546Z",
+                        "updatedAt": "2017-11-23T10:08:30.546Z",
+                        "externalSite": "hulu",
+                        "externalId": "50002008"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/67494/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/67494/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "2235",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/2235"
+                    },
+                    "attributes": {
+                        "createdAt": null,
+                        "updatedAt": null,
+                        "externalSite": "myanimelist/anime",
+                        "externalId": "456"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/2235/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/2235/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "66171",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/66171"
+                    },
+                    "attributes": {
+                        "createdAt": "2017-09-09T07:06:22.554Z",
+                        "updatedAt": "2017-09-09T07:06:22.554Z",
+                        "externalSite": "thetvdb",
+                        "externalId": "83536/1"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/66171/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/66171/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "13032",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/13032"
+                    },
+                    "attributes": {
+                        "createdAt": null,
+                        "updatedAt": null,
+                        "externalSite": "thetvdb/series",
+                        "externalId": "83536"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/13032/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/13032/item"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": "69476",
+                    "type": "mappings",
+                    "links": {
+                        "self": "https://kitsu.io/api/edge/mappings/69476"
+                    },
+                    "attributes": {
+                        "createdAt": "2018-01-24T03:56:12.368Z",
+                        "updatedAt": "2018-01-24T03:56:12.368Z",
+                        "externalSite": "trakt",
+                        "externalId": "8872"
+                    },
+                    "relationships": {
+                        "item": {
+                            "links": {
+                                "self": "https://kitsu.io/api/edge/mappings/69476/relationships/item",
+                                "related": "https://kitsu.io/api/edge/mappings/69476/item"
                             }
                         }
                     }
@@ -3576,7 +3741,7 @@
         },
         "rawHeaders": [
             "Date",
-            "Sat, 05 Jun 2021 14:22:48 GMT",
+            "Wed, 22 Sep 2021 21:18:19 GMT",
             "Content-Type",
             "application/vnd.api+json",
             "Transfer-Encoding",
@@ -3596,33 +3761,31 @@
             "referrer-policy",
             "strict-origin-when-cross-origin",
             "etag",
-            "W/\"89db9a411f3d68e6553b4d25bc4d1d05\"",
+            "W/\"2017f28033a446e944bad183623f2fd8\"",
             "cache-control",
             "max-age=0, private, must-revalidate",
             "x-request-id",
-            "1d9508da-a49a-46a1-a9d7-e25cef0bfa27",
+            "74d8db70-a942-4e4b-931b-1ceb5a14cb16",
             "x-runtime",
-            "0.631476",
+            "0.916256",
             "vary",
             "Origin",
             "CF-Cache-Status",
             "DYNAMIC",
-            "cf-request-id",
-            "0a7e27238700006261b5927000000001",
             "Expect-CT",
             "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
             "Report-To",
-            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v2?s=eZ%2BaODy1yuC1xndhVmhZFkRYAgvnIMhcWGfWcCW874DC5099vDWUqEO3k31gOCGp03K5rivp4EoZlgQ3jCjR7I7bCS6p83iotwpS9ufMt%2F79NV2wmVA%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+            "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=us3biexuhjAe63H1TJrLUJay2oq21LpnPerXRByNHTqGS686Rf7BeczFONWOJRjh4JQawJ%2F9QVood%2FQ7okFjKbvmeerPnD7knvkMW%2BXIm70HGNRVBLwkygMjUA%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
             "NEL",
-            "{\"report_to\":\"cf-nel\",\"max_age\":604800}",
+            "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
             "Strict-Transport-Security",
             "max-age=31536000; preload",
             "Server",
             "cloudflare",
             "CF-RAY",
-            "65aa0e18dfbd6261-OTP",
+            "692e90a74c341456-FRA",
             "alt-svc",
-            "h3-27=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3=\":443\"; ma=86400"
+            "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-27=\":443\"; ma=86400"
         ],
         "responseIsBinary": false
     }

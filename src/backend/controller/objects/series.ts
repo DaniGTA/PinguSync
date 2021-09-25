@@ -166,6 +166,20 @@ export default class Series extends SeriesProviderExtension {
         this.episodeBindingPoolGeneratedAt = Date.now()
     }
 
+    /**
+     * Get all Episode mappings of the current series and season
+     * @param allEpisodes all episodes
+     */
+    public async getEpisodeMapping(allEpisodes = false): Promise<EpisodeBindingPool[]> {
+        if (allEpisodes) {
+            return this.episodeBindingPools
+        }
+        const seriesSeason = await this.getSeason()
+        return this.episodeBindingPools.filter(x =>
+            SeasonComperator.isSameSeason(x.getBindingPoolSeason(), seriesSeason)
+        )
+    }
+
     public addEpisodeMapping(...episodeMappings: EpisodeMapping[]): void {
         const existingBindingPool = this.findExistingBindingPoolByEpisodeMapping(...episodeMappings)
         if (existingBindingPool.length === 1) {

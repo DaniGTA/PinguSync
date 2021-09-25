@@ -1,4 +1,4 @@
-import { FailedRequestError } from '../../../controller/objects/meta/failed-request'
+import { FailedRequestErrorType } from '../../../controller/objects/meta/failed-request-error-type'
 import logger from '../../../logger/logger'
 import DownloadSettings from '../../provider/provider-info-downloader/download-settings'
 
@@ -26,14 +26,14 @@ export default class Timeout {
                 if (this.timeoutCanceled) {
                     resolve({} as T)
                 } else {
-                    reject(FailedRequestError.Timeout)
+                    reject(FailedRequestErrorType.Timeout)
                 }
             } else {
                 this.onTimeout(() => {
                     if (this.timeoutCanceled) {
                         resolve({} as T)
                     } else {
-                        reject(FailedRequestError.Timeout)
+                        reject(FailedRequestErrorType.Timeout)
                     }
                 })
             }

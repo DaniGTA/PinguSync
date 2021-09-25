@@ -1,4 +1,6 @@
+import { season } from 'node-myanimelist/typings/methods/jikan'
 import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator'
+import Season from '../season'
 import Episode from './episode'
 import EpisodeMapping from './episode-mapping'
 
@@ -26,7 +28,7 @@ export default class EpisodeBindingPool {
      */
     public addEpisodeMappingToBindings(...episodeMappings: EpisodeMapping[]): void {
         for (const episodeMapping of episodeMappings) {
-            if (this.isBindingpoolHaveThisProvider(episodeMapping.provider)) {
+            if (this.isBindingPoolHaveThisProvider(episodeMapping.provider)) {
                 continue
             }
             let found = false
@@ -50,7 +52,7 @@ export default class EpisodeBindingPool {
         return false
     }
 
-    public isBindingpoolHaveThisProvider(provider: string): boolean {
+    public isBindingPoolHaveThisProvider(provider: string): boolean {
         return this.bindedEpisodeMappings.findIndex(x => x.provider === provider) !== -1
     }
 
@@ -61,5 +63,14 @@ export default class EpisodeBindingPool {
             }
         }
         return false
+    }
+
+    public getBindingPoolSeason(): Season | undefined {
+        for (const mapping of this.bindedEpisodeMappings) {
+            if (mapping.season) {
+                return mapping.season
+            }
+        }
+        return undefined
     }
 }

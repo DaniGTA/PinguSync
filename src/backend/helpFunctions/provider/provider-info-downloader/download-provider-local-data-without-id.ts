@@ -1,7 +1,11 @@
+import FailedRequestError from '@/backend/controller/objects/meta/failed-request-error'
 import ExternalInformationProvider from '../../../api/provider/external-information-provider'
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
 import MainListManager from '../../../controller/main-list-manager/main-list-manager'
-import { FailedRequestError, isFailedRequestError } from '../../../controller/objects/meta/failed-request'
+import {
+    FailedRequestErrorType,
+    isFailedRequestError,
+} from '../../../controller/objects/meta/failed-request-error-type'
 import Name from '../../../controller/objects/meta/name'
 import Season from '../../../controller/objects/meta/season'
 import Series from '../../../controller/objects/series'
@@ -50,7 +54,7 @@ export default class DownloadProviderLocalDataWithoutId {
             if (result) {
                 return result
             } else {
-                throw FailedRequestError.ProviderNoResult
+                throw FailedRequestErrorType.ProviderNoResult
             }
         } else {
             throw new Error(
@@ -92,7 +96,10 @@ export default class DownloadProviderLocalDataWithoutId {
                     } catch (err) {
                         logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo')
                         logger.error(err as string)
-                        if (isFailedRequestError(err as string) && err !== FailedRequestError.ProviderNoResult) {
+                        if (
+                            err instanceof FailedRequestError &&
+                            err.errorType !== FailedRequestErrorType.ProviderNoResult
+                        ) {
                             throw err
                         }
                     }
@@ -109,7 +116,7 @@ export default class DownloadProviderLocalDataWithoutId {
             }
             logger.warn(`[${this.requestId}][${this.provider.providerName}] ByName ${name.name} Request failed. ❌`)
         }
-        throw FailedRequestError.ProviderNoResult
+        throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult)
     }
 
     private async getProviderSeriesInfoByRelation(): Promise<MultiProviderResult | undefined> {
@@ -235,14 +242,14 @@ export default class DownloadProviderLocalDataWithoutId {
                 `[${this.provider.providerName}] Season number problem. On name: ${name.name} SeasonNumbers: ${season.seasonNumbers.length}`
             )
         }
-        throw FailedRequestError.ProviderNoResult
+        throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult)
     }
 
     private async getMoreSeriesInfoByNameResults(name: Name, season: Season): Promise<undefined | MultiProviderResult> {
         let searchResult: MultiProviderResult[] = []
         const seasonNumber = season.getSingleSeasonNumberAsNumber()
         if (!(await this.provider.isProviderAvailable())) {
-            throw FailedRequestError.ProviderNotAvailble
+            throw new FailedRequestError(FailedRequestErrorType.ProviderNotAvailble)
         }
         if (this.provider.requireInternetAccessGetMoreSeriesInfoByName) {
             await this.provider.waitUntilItCanPerfomNextRequest()
@@ -260,7 +267,7 @@ export default class DownloadProviderLocalDataWithoutId {
             if (isFailedRequestError(err as string)) {
                 throw err
             }
-            throw FailedRequestError.ProviderNoResult
+            throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult, err as string)
         }
         return this.processResultsOfGetMoreSeriesInfoByName(searchResult)
     }

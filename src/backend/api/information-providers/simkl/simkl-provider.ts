@@ -99,19 +99,19 @@ export default class SimklProvider extends OAuthListProvider {
         try {
             endResults.push(...(await this.animeTextSearch(seriesName)))
         } catch (err) {
-            logger.debug(err as string)
+            logger.error(err as string)
         }
         await this.waitUntilItCanPerfomNextRequest()
         try {
             endResults.push(...(await this.tvTextSearch(seriesName)))
         } catch (err) {
-            logger.debug(err as string)
+            logger.error(err as string)
         }
         await this.waitUntilItCanPerfomNextRequest()
         try {
             endResults.push(...(await this.movieTextSearch(seriesName)))
         } catch (err) {
-            logger.debug(err as string)
+            logger.error(err as string)
         }
 
         return endResults

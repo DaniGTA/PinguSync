@@ -20,11 +20,4 @@ export class AniListUserData extends UserData {
         this.userName = viewer.name
         this.saveData()
     }
-
-    public setTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
-        this.accessToken = accessToken
-        this.refreshToken = refreshToken
-        this.expiresIn = expiresIn
-        this.saveData()
-    }
 }

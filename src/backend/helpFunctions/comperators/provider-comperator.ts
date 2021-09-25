@@ -1,3 +1,4 @@
+import MainListManager from '@/backend/controller/main-list-manager/main-list-manager'
 import MultiProviderResult from '../../api/provider/multi-provider-result'
 import LocalDataBind from '../../controller/objects/extension/provider-extension/binding/local-data-bind'
 import { MediaType } from '../../controller/objects/meta/media-type'
@@ -11,6 +12,7 @@ import ProviderList from '../../controller/provider-controller/provider-manager/
 import logger from '../../logger/logger'
 import ProviderLocalDataWithSeasonInfo from '../provider/provider-info-downloader/provider-data-with-season-info'
 import seasonHelper from '../season-helper/season-helper'
+import { SeasonSearchMode } from '../season-helper/season-search-mode'
 import ComperatorResult, { AbsoluteResult } from './comperator-results.ts/comperator-result'
 import MediaTypeComperator from './media-type-comperator'
 import SeasonComperator from './season-comperator'
@@ -163,9 +165,10 @@ export default class ProviderComperator {
     }
     public async getCompareResult(): Promise<ComperatorResult> {
         const comperatorResults: ComperatorResult[] = []
+        const seriesList = MainListManager.getMainList()
 
-        this.aSeriesSeason = await this.aSeries.getSeason()
-        this.bSeriesSeason = await this.bSeries.getSeason()
+        this.aSeriesSeason = await this.aSeries.getSeason(SeasonSearchMode.ALL, seriesList)
+        this.bSeriesSeason = await this.bSeries.getSeason(SeasonSearchMode.ALL, seriesList)
 
         const allAProviderLocalDatas = this.aSeries.getAllProviderLocalDatas()
         const allBProviderLocalDatas = this.bSeries.getAllProviderLocalDatas()

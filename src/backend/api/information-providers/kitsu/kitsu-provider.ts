@@ -52,9 +52,11 @@ export default class KitsuProvider extends OAuthListProvider {
     constructor() {
         super()
         this.api = this.getKitsuInstance()
-        this.getAccessToken().then(token => {
-            this.api.headers['Authorization'] = 'Bearer ' + token
-        })
+        this.getAccessToken()
+            .then(token => {
+                this.api.headers['Authorization'] = 'Bearer ' + token
+            })
+            .catch(x => logger.debug(x))
         if (KitsuProvider.instance) {
             this.userData = KitsuProvider.instance.userData
         } else {
@@ -184,11 +186,13 @@ export default class KitsuProvider extends OAuthListProvider {
     private async search(s: string): Promise<ISearchResult> {
         this.informAWebRequest()
         return (await this.api.get('anime', {
-            filter: {
-                text: s,
+            params: {
+                filter: {
+                    text: s,
+                },
+                include: 'mappings',
             },
-            include: 'mappings',
-        } as any)) as ISearchResult
+        })) as ISearchResult
     }
 
     protected addOAuthCode(code: string): Promise<OAuth> {
@@ -202,7 +206,7 @@ export default class KitsuProvider extends OAuthListProvider {
     }
 
     public getOAuthData(): OAuth {
-        if (this.userData.oAuth) {
+        if (this.userData?.oAuth) {
             return this.userData.oAuth
         }
         throw new Error('[Kitsu] no o auth data')

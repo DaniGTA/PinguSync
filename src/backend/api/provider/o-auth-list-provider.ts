@@ -1,3 +1,4 @@
+import logger from '@/backend/logger/logger'
 import OAuth from './auth/o-auth'
 import ListProvider from './list-provider'
 
@@ -38,8 +39,12 @@ export default abstract class OAuthListProvider extends ListProvider {
      * @returns
      */
     public async getAccessToken() {
-        if (this.isAccessTokenExpired()) {
-            await this.refreshOAuthToken()
+        try {
+            if (this.isAccessTokenExpired()) {
+                await this.refreshOAuthToken()
+            }
+        } catch (err) {
+            logger.debug(err)
         }
         return this.getOAuthData().accessToken
     }
@@ -50,7 +55,7 @@ export default abstract class OAuthListProvider extends ListProvider {
      */
     public isAccessTokenExpired(): boolean {
         const currentOAuthData = this.getOAuthData()
-        if (currentOAuthData.accessToken) {
+        if (currentOAuthData && currentOAuthData.accessToken) {
             if (currentOAuthData.expire) {
                 return new Date(currentOAuthData.expire).getTime() >= Date.now()
             } else {

@@ -45,10 +45,10 @@ export default class AniDBProvider extends InfoProvider {
     }
 
     public async getMoreSeriesInfoByName(searchTitle: string, season?: number): Promise<MultiProviderResult[]> {
+        await this.loadAniDBNameManagerData()
         const nameDBList = AniDBHelper.anidbNameManager.data
         if (nameDBList) {
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            await this.loadAniDBNameManagerData()
             return this.getSameTitle(searchTitle, nameDBList, season)
         }
         throw new Error('nothing found')
@@ -236,7 +236,7 @@ export default class AniDBProvider extends InfoProvider {
             if (response.body === '<error code="500">banned</error>') {
                 this.bannedTimestamp = new Date().getTime()
                 this.isBanned = true
-                console.warn('Changed AniDB API Available status to false')
+                logger.warn('Changed AniDB API Available status to false')
                 throw new Error('[AniDB] [API_ERROR]: 500 = BANNED')
             }
             const json = xml2json(response.body as string, { compact: true, spaces: 0 })
