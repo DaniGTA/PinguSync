@@ -44,11 +44,13 @@ describe('Cells at Work | Testrun', () => {
         const traktName = ProviderNameManager.getProviderName(TraktProvider)
         const resultSeries = MainListSearcher.findAllSeriesByProvider(108631, anilistName)
         expect(resultSeries.length).toBe(1)
-        for (const pool of await resultSeries[0].getEpisodeMapping()) {
+        const mappingPool = await resultSeries[0].getEpisodeMapping()
+        expect(mappingPool.length).not.toBe(0)
+        for (const pool of mappingPool) {
             expect(pool.isBindingPoolHaveThisProvider(anilistName)).toBeTruthy()
             expect(pool.isBindingPoolHaveThisProvider(traktName)).toBeTruthy()
         }
-    }, 10000)
+    }, 130000)
 
     test('should process the anime Cells at Work right (Trakt source)', async () => {
         const series = new Series()
@@ -62,6 +64,7 @@ describe('Cells at Work | Testrun', () => {
         const resultSeries = MainListSearcher.findAllSeriesByProvider(130155, traktName)
         expect(resultSeries.length).toBe(3)
         const mapping = await resultSeries[0].getEpisodeMapping()
+        expect(mapping.length).not.toBe(0)
         for (const pool of mapping) {
             expect(pool.isBindingPoolHaveThisProvider(anilistName)).toBeTruthy()
             expect(pool.isBindingPoolHaveThisProvider(traktName)).toBeTruthy()
