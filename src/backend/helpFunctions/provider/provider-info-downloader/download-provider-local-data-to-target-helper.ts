@@ -4,10 +4,7 @@ import ExternalMappingProvider from '../../../api/provider/external-mapping-prov
 import ExternalProvider from '../../../api/provider/external-provider'
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
 import FailedProviderRequest from '../../../controller/objects/meta/failed-provider-request'
-import {
-    FailedRequestErrorType,
-    isFailedRequestError,
-} from '../../../controller/objects/meta/failed-request-error-type'
+import { FailedRequestErrorType } from '../../../controller/objects/meta/failed-request-error-type'
 import Series from '../../../controller/objects/series'
 import { ProviderInfoStatus } from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
@@ -32,19 +29,27 @@ export default class DownloadProviderLocalDataToTargetHelper {
         let firstSeason: Series | undefined
 
         if (this.isCurrentProviderIdInSeriesPresent()) {
-            result.push(...(await this.getLocalDataIdFromOtherProviders()))
-        }
-        if (!this.provider.hasUniqueIdForSeasons) {
-            firstSeason = await this.getFistSeasonSeriesFromSeries()
-        }
-        const requestResult = await this.downloadUntilTargetLogic(firstSeason)
-        if (requestResult) {
-            result.push(requestResult)
-        }
-        if (result.filter(x => x instanceof MultiProviderResult).length === 0) {
-            const resultByOtherProvider = await this.getProviderResultByOtherProvider()
-            if (resultByOtherProvider) {
-                result.push(resultByOtherProvider)
+            const tempResult = await this.downloadUntilTargetLogic()
+            if (tempResult) {
+                result.push(tempResult)
+            }
+        } else {
+            if (!this.provider.hasUniqueIdForSeasons) {
+                firstSeason = await this.getFistSeasonSeriesFromSeries()
+            }
+            const requestResult = await this.downloadUntilTargetLogic(firstSeason)
+            if (requestResult) {
+                result.push(requestResult)
+            }
+            if (result.filter(x => x instanceof MultiProviderResult).length === 0) {
+                const resultByOtherProvider = await this.getProviderResultByOtherProvider()
+                if (resultByOtherProvider) {
+                    result.push(resultByOtherProvider)
+                }
+            }
+            if (result.filter(x => x instanceof MultiProviderResult).length === 0) {
+                const resultByOtherProviders = await this.getLocalDataIdFromOtherProviders()
+                result.push(...resultByOtherProviders)
             }
         }
         return this.createUpgradeToTargetResult(result)
@@ -124,7 +129,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
     }
 
     private async downloadUntilTargetLogic(
-        firstSeason: Series | undefined
+        firstSeason?: Series
     ): Promise<MultiProviderResult | null | undefined | FailedProviderRequest> {
         let requestResult
         if (firstSeason && !this.provider.hasUniqueIdForSeasons) {
@@ -191,7 +196,7 @@ export default class DownloadProviderLocalDataToTargetHelper {
         const currentLocalData = this.series
             .getAllProviderLocalDatasWithSeasonInfo()
             .find(entry => entry.providerLocalData.provider === this.provider.providerName)
-        return !currentLocalData
+        return !!currentLocalData
     }
 
     private async getFistSeasonSeriesFromSeries(): Promise<Series | undefined> {

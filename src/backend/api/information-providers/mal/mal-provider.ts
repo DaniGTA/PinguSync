@@ -26,6 +26,8 @@ export default class MalProvider extends ListProvider {
     public potentialSubProviders: Array<new () => ExternalInformationProvider> = []
     public hasOAuthLogin = true
     public hasUniqueIdForSeasons = true
+    public hasEpisodeTitleOnFullInfo = true
+
     public userData: MalUserData
     public requestRateLimitInMs = 6000
     public pkce = pkceChallenge()

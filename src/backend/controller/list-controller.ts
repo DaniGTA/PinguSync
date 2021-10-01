@@ -7,7 +7,6 @@ import MainListAdder from './main-list-manager/main-list-adder'
 import MainListManager from './main-list-manager/main-list-manager'
 import MainListPackageManager from './main-list-manager/main-list-package-manager'
 import MainListEntryUpdater from './main-list-manager/main-list-updater'
-import WatchProgress from './objects/meta/watch-progress'
 import Series from './objects/series'
 import ProviderList from './provider-controller/provider-manager/provider-list'
 
@@ -30,7 +29,6 @@ export default class ListController {
                 return entry
             }
         }
-        return
     }
 
     public removeSeriesPackageFromMainList(id: string): void {

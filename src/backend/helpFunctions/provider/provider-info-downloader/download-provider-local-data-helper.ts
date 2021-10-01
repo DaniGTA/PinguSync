@@ -1,10 +1,7 @@
 import FailedRequestError from '@/backend/controller/objects/meta/failed-request-error'
 import ExternalInformationProvider from '../../../api/provider/external-information-provider'
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
-import {
-    FailedRequestErrorType,
-    isFailedRequestError,
-} from '../../../controller/objects/meta/failed-request-error-type'
+import { FailedRequestErrorType } from '../../../controller/objects/meta/failed-request-error-type'
 import Series from '../../../controller/objects/series'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import ProviderNameManager from '../../../controller/provider-controller/provider-manager/provider-name-manager'

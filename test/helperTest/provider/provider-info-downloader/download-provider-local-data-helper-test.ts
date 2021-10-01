@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/require-await */
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result'
-import { FailedRequestError } from '../../../../src/backend/controller/objects/meta/failed-request'
+import { FailedRequestErrorType } from '../../../../src/backend/controller/objects/meta/failed-request-error-type'
 import Name from '../../../../src/backend/controller/objects/meta/name'
 import Series from '../../../../src/backend/controller/objects/series'
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager'
@@ -14,7 +14,7 @@ import ProviderLocalDataWithSeasonInfo from '../../../../src/backend/helpFunctio
 import TestInfoProvider from '../../../controller/objects/testClass/testInfoProvider'
 import TestListProvider from '../../../controller/objects/testClass/testListProvider'
 import TestListProvider2 from '../../../controller/objects/testClass/testListProvider2'
-
+import FailedRequestError from '../../../../src/backend/controller/objects/meta/failed-request-error'
 // tslint:disable: no-string-literal
 describe('Provider local data downloader tests (download-provider-local-data-helper.ts)', () => {
     beforeEach(() => {
@@ -61,7 +61,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         ])
         await expect(
             async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-        ).rejects.toBe(FailedRequestError.ProviderNoResult)
+        ).rejects.toBe(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
     })
 
     test('should say that provider is not avaible (no id)', async () => {
@@ -77,7 +77,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         provider.isProviderAvailable = async (): Promise<boolean> => false
         await expect(
             async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-        ).rejects.toBe(FailedRequestError.ProviderNotAvailble)
+        ).rejects.toBe(FailedRequestErrorType.ProviderNotAvailble)
     })
 
     describe('timeout', () => {
@@ -102,7 +102,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
                     })
                 await expect(
                     downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-                ).rejects.toEqual(FailedRequestError.Timeout)
+                ).rejects.toEqual(new FailedRequestError(FailedRequestErrorType.Timeout))
             },
             DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100
         )
@@ -125,7 +125,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         )
         await expect(
             async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-        ).rejects.toBe(FailedRequestError.ProviderNoResult)
+        ).rejects.toBe(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
     })
 
     test('should say that provider is not avaible (with id)', async () => {
@@ -140,7 +140,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         const provider = new TestInfoProvider()
         jest.spyOn(provider, 'isProviderAvailable').mockImplementation(async (): Promise<boolean> => false)
         await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(
-            FailedRequestError.ProviderNotAvailble
+            new FailedRequestError(FailedRequestErrorType.ProviderNotAvailble)
         )
     })
 
@@ -164,7 +164,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
                     }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 50)
                 })
             await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(
-                FailedRequestError.Timeout
+                new FailedRequestError(FailedRequestErrorType.Timeout)
             )
         },
         DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100

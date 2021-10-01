@@ -30,6 +30,7 @@ try {
 
     logger = winston.createLogger({
         format: combine(
+            winston.format.splat(),
             errors({ stack: true }), // <-- use errors format
             colorize(),
             timestamp(),

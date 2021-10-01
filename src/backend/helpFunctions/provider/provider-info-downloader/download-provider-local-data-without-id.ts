@@ -2,10 +2,7 @@ import FailedRequestError from '@/backend/controller/objects/meta/failed-request
 import ExternalInformationProvider from '../../../api/provider/external-information-provider'
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
 import MainListManager from '../../../controller/main-list-manager/main-list-manager'
-import {
-    FailedRequestErrorType,
-    isFailedRequestError,
-} from '../../../controller/objects/meta/failed-request-error-type'
+import { FailedRequestErrorType } from '../../../controller/objects/meta/failed-request-error-type'
 import Name from '../../../controller/objects/meta/name'
 import Season from '../../../controller/objects/meta/season'
 import Series from '../../../controller/objects/series'
@@ -95,12 +92,14 @@ export default class DownloadProviderLocalDataWithoutId {
                         }
                     } catch (err) {
                         logger.error('Error at ProviderInfoDownloadHelper.getProviderSeriesInfo')
-                        logger.error(err as string)
-                        if (
-                            err instanceof FailedRequestError &&
-                            err.errorType !== FailedRequestErrorType.ProviderNoResult
-                        ) {
-                            throw err
+                        if (err instanceof FailedRequestError) {
+                            if (err.errorType !== FailedRequestErrorType.ProviderNoResult) {
+                                logger.error(err.getErrorMessage())
+                                throw err
+                            }
+                            logger.error(err.getErrorMessage())
+                        } else {
+                            logger.error(err as string)
                         }
                     }
                     logger.warn(
@@ -264,7 +263,7 @@ export default class DownloadProviderLocalDataWithoutId {
             timeout.cancel()
         } catch (err) {
             timeout.cancel()
-            if (isFailedRequestError(err as string)) {
+            if (err instanceof FailedRequestError) {
                 throw err
             }
             throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult, err as string)

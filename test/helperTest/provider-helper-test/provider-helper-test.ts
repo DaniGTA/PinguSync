@@ -11,7 +11,7 @@ import ListController from '../../../src/backend/controller/list-controller'
 import MainListAdder from '../../../src/backend/controller/main-list-manager/main-list-adder'
 import MainListManager from '../../../src/backend/controller/main-list-manager/main-list-manager'
 import FailedProviderRequest from '../../../src/backend/controller/objects/meta/failed-provider-request'
-import { FailedRequestError } from '../../../src/backend/controller/objects/meta/failed-request'
+import { FailedRequestErrorType } from '../../../src/backend/controller/objects/meta/failed-request-error-type'
 import Season from '../../../src/backend/controller/objects/meta/season'
 import Series from '../../../src/backend/controller/objects/series'
 import ProviderDataListManager from '../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager'
@@ -84,7 +84,7 @@ describe('Provider Helper Test', () => {
             series.addFailedRequest(
                 new FailedProviderRequest(
                     ProviderList.getProviderInstanceByClass(TestInfoProvider1),
-                    FailedRequestError.ProviderNotAvailble
+                    FailedRequestErrorType.ProviderNotAvailble
                 )
             )
             const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1)

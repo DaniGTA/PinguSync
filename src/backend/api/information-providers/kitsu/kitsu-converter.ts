@@ -23,7 +23,7 @@ import MalProvider from '../mal/mal-provider'
 import TraktProvider from '../trakt/trakt-provider'
 import TVDBProvider from '../tvdb/tvdb-provider'
 import KitsuProvider from './kitsu-provider'
-import { IKitsuEpisode, IKitsuEpisodeTitle, IKitsuMappings, IMedia } from './objects/searchResult'
+import { IKitsuEpisode, IKitsuMappings, IMedia } from './objects/searchResult'
 
 export default new (class KitsuConverter {
     public async convertMediaToAnime(
@@ -93,8 +93,7 @@ export default new (class KitsuConverter {
             providers = await this.convertKitsuMappingsToProvider(media.mappings)
         }
 
-        const mpr = new MultiProviderResult(providerInfos, ...providers)
-        return mpr
+        return new MultiProviderResult(providerInfos, ...providers)
     }
 
     public async convertKitsuMappingsToProvider(

@@ -3,7 +3,6 @@ import InfoProvider from '../../api/provider/info-provider'
 import ListProvider from '../../api/provider/list-provider'
 import MultiProviderResult from '../../api/provider/multi-provider-result'
 import FailedProviderRequest from '../../controller/objects/meta/failed-provider-request'
-import { FailedRequestErrorType, isFailedRequestError } from '../../controller/objects/meta/failed-request-error-type'
 import Series from '../../controller/objects/series'
 import { ProviderInfoStatus } from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-info-status'
 import ProviderLocalData from '../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
@@ -106,7 +105,72 @@ export default class NewProviderHelper {
             series = this.addRequestResultToSeries(series, missingProviderResults2)
         }
 
+        const providersForEpisodeMapping = await this.getAllProvidersThatAreNeededForEpisodeMapping(series)
+        const providersForEpisodeMappingResult = await this.getAllRequestResultsFromListOfProviders(
+            series,
+            providersForEpisodeMapping,
+            ProviderInfoStatus.FULL_INFO
+        )
+        series = this.addRequestResultToSeries(series, providersForEpisodeMappingResult)
+
         return series
+    }
+
+    /**
+     * Some times Provider that should provider episode titles dont gives episode titles.
+     */
+    private static async getAllProvidersThatAreNeededForEpisodeMapping(
+        series: Series
+    ): Promise<ExternalInformationProvider[]> {
+        const allRelevantProviders = await this.getAllRelevantProviders()
+        if (!(await this.didAllProvidersContainUniqueSeasonIds(allRelevantProviders))) {
+            const uniqueIdProviders = allRelevantProviders.filter(x => x.hasUniqueIdForSeasons)
+            const didUniqueIdHasEpisodeTitles = this.hasLocalDataOfGivenProvidersEpisodeTitles(
+                uniqueIdProviders,
+                series
+            )
+            const commonProviders = allRelevantProviders.filter(x => !x.hasUniqueIdForSeasons)
+            const didCommonIdHasEpisodeTitles = this.hasLocalDataOfGivenProvidersEpisodeTitles(commonProviders, series)
+
+            if (didCommonIdHasEpisodeTitles && commonProviders.length !== 0) {
+                if (didUniqueIdHasEpisodeTitles && uniqueIdProviders.length !== 0) {
+                    return []
+                } else {
+                    return ProviderList.getAllExternalInformationProvider().filter(
+                        x => x.hasUniqueIdForSeasons && x.hasEpisodeTitleOnFullInfo
+                    )
+                }
+            } else if (didUniqueIdHasEpisodeTitles && uniqueIdProviders.length !== 0) {
+                return ProviderList.getAllExternalInformationProvider().filter(
+                    x => !x.hasUniqueIdForSeasons && x.hasEpisodeTitleOnFullInfo
+                )
+            }
+        }
+        return []
+    }
+
+    private static hasLocalDataOfGivenProvidersEpisodeTitles(
+        providers: ExternalInformationProvider[],
+        series: Series
+    ): boolean {
+        for (const provider of providers) {
+            if (provider.hasEpisodeTitleOnFullInfo) {
+                const localData = series.getOneProviderLocalDataByExternalProvider(provider)
+                if (localData !== undefined && localData.hasDetailedEpisodeTitles()) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private static async didAllProvidersContainUniqueSeasonIds(providers: ExternalInformationProvider[]) {
+        for (const provider of providers) {
+            if (!provider.hasUniqueIdForSeasons) {
+                return false
+            }
+        }
+        return true
     }
 
     public static async requestAllMappingProvider(series: Series): Promise<ProviderLocalDataWithSeasonInfo[]> {
@@ -153,8 +217,8 @@ export default class NewProviderHelper {
                     results.push(result)
                 }
             } catch (err) {
-                if (isFailedRequestError(err as any)) {
-                    results.push(new FailedProviderRequest(provider, err as FailedRequestErrorType))
+                if (err instanceof FailedProviderRequest) {
+                    results.push(err)
                 }
                 logger.debug(err as string)
             }

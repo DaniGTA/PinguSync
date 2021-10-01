@@ -70,6 +70,8 @@ export default class SimklProvider extends OAuthListProvider {
     public hasOAuthLogin = true
     public hasDefaultLogin = false
     public hasUniqueIdForSeasons = true
+    public hasEpisodeTitleOnFullInfo = true
+
     public requestRateLimitInMs = 1500
     private redirectUri = 'http://localhost:3000/callback'
     private apiUrl = 'https://api.simkl.com/'

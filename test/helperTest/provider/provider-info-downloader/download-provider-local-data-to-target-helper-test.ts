@@ -3,7 +3,7 @@
 import AniListProvider from '../../../../src/backend/api/information-providers/anilist/anilist-provider'
 import MultiProviderResult from '../../../../src/backend/api/provider/multi-provider-result'
 import FailedProviderRequest from '../../../../src/backend/controller/objects/meta/failed-provider-request'
-import { FailedRequestError } from '../../../../src/backend/controller/objects/meta/failed-request'
+import { FailedRequestErrorType } from '../../../../src/backend/controller/objects/meta/failed-request-error-type'
 import Name from '../../../../src/backend/controller/objects/meta/name'
 import Series from '../../../../src/backend/controller/objects/series'
 import ProviderDataListManager from '../../../../src/backend/controller/provider-controller/provider-data-list-manager/provider-data-list-manager'
@@ -82,7 +82,33 @@ describe('Download provider local data to target info status helper test (downlo
 
             const result = await instance.upgradeToTarget()
 
-            expect((result as FailedProviderRequest).error).toEqual(FailedRequestError.ProviderNoResult)
+            expect((result as FailedProviderRequest).errorType).toEqual(FailedRequestErrorType.ProviderNoResult)
+        })
+    })
+
+    describe('Testing function: isCurrentProviderIdInSeriesPresent()', () => {
+        test('id is present in series', () => {
+            const externalProvider = new TestListProvider()
+            const series = new Series()
+            series.addListProvider(new ListProviderLocalData(1, TestListProvider))
+            const instance = new DownloadProviderLocalDataToTargetHelper(
+                series,
+                externalProvider,
+                ProviderInfoStatus.FULL_INFO
+            )
+
+            expect(instance['isCurrentProviderIdInSeriesPresent']()).toBeTruthy()
+        })
+
+        test('id is not present in series', () => {
+            const externalProvider = new TestListProvider()
+
+            const instance = new DownloadProviderLocalDataToTargetHelper(
+                new Series(),
+                externalProvider,
+                ProviderInfoStatus.FULL_INFO
+            )
+            expect(instance['isCurrentProviderIdInSeriesPresent']()).toBeFalsy()
         })
     })
 

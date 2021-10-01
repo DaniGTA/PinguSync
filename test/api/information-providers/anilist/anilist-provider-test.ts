@@ -22,6 +22,6 @@ describe('Provider: AniList | Online Test runs', () => {
         const a = new AniListProvider()
         const result = await a.getMoreSeriesInfoByName('Hataraku Saibou')
 
-        expect(result[0].mainProvider.providerLocalData.id).toBe(0)
+        expect(result[0].mainProvider.providerLocalData.id).toBe(100977)
     })
 })

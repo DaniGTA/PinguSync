@@ -64,9 +64,9 @@ export default abstract class ProviderLocalData {
     // Series metadata stuff
     // ----------------------
 
-    public score?: number | undefined
-    public episodes?: number | undefined
-    public publicScore?: number | undefined
+    public score?: number
+    public episodes?: number
+    public publicScore?: number
     public covers: Cover[] = []
     public banners: Banner[] = []
     public mediaType: MediaType = MediaType.UNKOWN
@@ -203,7 +203,7 @@ export default abstract class ProviderLocalData {
     public addSeriesName(...names: Name[]): void {
         for (const name of names) {
             if (name?.name && name.name !== 'null') {
-                if (this.names.findIndex((x) => x.name === name.name && x.lang === name.lang) === -1) {
+                if (this.names.findIndex(x => x.name === name.name && x.lang === name.lang) === -1) {
                     this.names.push(name)
                 }
             }
@@ -217,7 +217,7 @@ export default abstract class ProviderLocalData {
     public addOverview(...newOverviews: Overview[]): boolean {
         this.overviews = [...this.overviews]
         for (const newOverview of newOverviews) {
-            if (this.overviews.findIndex((x) => x === newOverview) === -1) {
+            if (this.overviews.findIndex(x => x === newOverview) === -1) {
                 this.overviews.push(newOverview)
                 return true
             }
@@ -262,7 +262,7 @@ export default abstract class ProviderLocalData {
     }
 
     public getDetailEpisodeInfosByMapping(episdoeMapping: EpisodeMapping): Episode | undefined {
-        return this.detailEpisodeInfo.find((x) => x.id === episdoeMapping.id)
+        return this.detailEpisodeInfo.find(x => x.id === episdoeMapping.id)
     }
 
     public getAllRegularEpisodes(season?: Season): Episode[] {
@@ -277,15 +277,28 @@ export default abstract class ProviderLocalData {
     }
 
     /**
-     *
+     * Get all detailed episdoes of current season
      */
     public getAllDetailedEpisodes(season?: Season): Episode[] {
         let array = this.detailEpisodeInfo
         if (season !== undefined && season.isSeasonNumberPresent()) {
             array = array.filter(
-                (x) => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season)
+                x => SeasonComperator.isSameSeasonNumber(x.season, season) || SeasonHelper.isSeasonUndefined(x.season)
             )
         }
         return array
+    }
+
+    /**
+     * Looks if any episode has a title
+     * @returns true if one episode has a title
+     */
+    public hasDetailedEpisodeTitles(): boolean {
+        for (const detailEpisode of this.detailEpisodeInfo) {
+            if (detailEpisode.title.length !== 0) {
+                return true
+            }
+        }
+        return false
     }
 }

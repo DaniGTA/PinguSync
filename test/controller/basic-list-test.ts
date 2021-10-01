@@ -216,7 +216,7 @@ describe('Basic List | Testrun', () => {
         // tslint:disable-next-line: no-string-literal
         expect(MainListManager['mainList'].length).toEqual(2)
         expect(await seriesHelper.isSameSeries(series1, series2)).toEqual(false)
-    }, 8000)
+    }, 22000)
 
     test('should not merge different animes', async () => {
         if (!ListController.instance) {
@@ -315,7 +315,9 @@ describe('Basic List | Testrun', () => {
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID
         series3.addListProvider(s3provider1)
 
-        await ListController.instance.addSeriesToMainList(series1, series2, series3)
+        await MainListManager.addSerieToMainList(series1)
+        await MainListManager.addSerieToMainList(series2)
+        await MainListManager.addSerieToMainList(series3)
 
         // tslint:disable-next-line: no-string-literal
         await MainListManager['finishListFilling']()
@@ -350,7 +352,7 @@ describe('Basic List | Testrun', () => {
             logger.warn(`${iterator.episodeNumber} S: ${iterator?.season?.getSingleSeasonNumberAsNumber() ?? ''}`)
         }
         expect(provider?.getDetailEpisodeInfos().length).toEqual(337)
-    }, 60000)
+    }, 80000)
 
     test('should update anilist series (20605)', async () => {
         if (!ListController.instance) {
@@ -745,92 +747,5 @@ describe('Basic List | Testrun', () => {
         }
     })
 
-    test('should get series and should map episodes right from Trakt (Series: Gakusen Toshi Asterisk S1)', async () => {
-        const provider = new ListProviderLocalData(97794, TraktProvider)
-
-        const series = new Series()
-        series.addProviderDatasWithSeasonInfos(new ProviderLocalDataWithSeasonInfo(provider, new Season(1)))
-        const adderInstance = new MainListAdder()
-
-        // Test
-
-        await adderInstance.addSeries(series)
-
-        // Result checking
-        const mainList = MainListManager.getMainList()
-        expect(mainList.length).toBe(1)
-
-        const resultSeries = mainList[0]
-
-        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo()
-
-        const aniListName = ProviderNameManager.getProviderName(AniListProvider)
-        const aniListBinding = bindings.find(x => x.providerLocalData.provider === aniListName)
-        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName)
-        expect(aniListBinding?.providerLocalData.id).toEqual(21131)
-
-        const traktName = ProviderNameManager.getProviderName(TraktProvider)
-        const traktBinding = bindings.find(x => x.providerLocalData.provider === traktName)
-        expect(traktBinding?.providerLocalData.provider).toBe(traktName)
-        expect(traktBinding?.providerLocalData.id).toBe(97794)
-        expect(traktBinding?.seasonTarget?.seasonNumbers[0]).toBe(1)
-
-        const epMappings = resultSeries.episodeBindingPools
-        expect(epMappings.length).toBe(12)
-        for (const epMapping of epMappings) {
-            const anistListMapping = epMapping.bindedEpisodeMappings.find(
-                x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
-            )
-            const traktListMapping = epMapping.bindedEpisodeMappings.find(
-                x => x.provider === ProviderNameManager.getProviderName(TraktProvider)
-            )
-
-            expect(anistListMapping).not.toBeUndefined()
-            expect(traktListMapping).not.toBeUndefined()
-            for (const ep of epMapping.bindedEpisodeMappings) {
-                for (const ep2 of epMapping.bindedEpisodeMappings) {
-                    expect(ep.episodeNumber).toEqual(ep2.episodeNumber)
-                }
-            }
-        }
-    }, 60000)
-
-    test('should get series and should map episodes right from AniList (Series: Gakusen Toshi Asterisk S2)', async () => {
-        const provider = new ListProviderLocalData(21390, AniListProvider)
-
-        const series = new Series()
-        series.addProviderDatas(provider)
-        const adderInstance = new MainListAdder()
-
-        // Test
-
-        await adderInstance.addSeries(series)
-
-        // Result checking
-        const mainList = MainListManager.getMainList()
-
-        const resultSeries = mainList[0]
-
-        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo()
-
-        expect((await resultSeries.getSeason()).seasonNumbers[0]).toEqual(2)
-
-        const aniListName = ProviderNameManager.getProviderName(AniListProvider)
-        const aniListBinding = bindings.find(x => x.providerLocalData.provider === aniListName)
-        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName)
-        expect(aniListBinding?.providerLocalData.id).toBe(21390)
-
-        const traktName = ProviderNameManager.getProviderName(TraktProvider)
-        const traktBinding = bindings.find(x => x.providerLocalData.provider === traktName)
-        expect(traktBinding?.providerLocalData.provider).toBe(ProviderNameManager.getProviderName(TraktProvider))
-        expect(traktBinding?.providerLocalData.id).toBe(97794)
-
-        const epMappings = resultSeries.episodeBindingPools
-        expect(epMappings.length).toBe(12)
-        for (const epMapping of epMappings) {
-            const stra = epMapping.bindedEpisodeMappings.find(x => x.provider === aniListName)
-            expect(stra).not.toEqual(undefined)
-        }
-    }, 60000)
     test.todo('Trakt id: 65266 (All season seperate)')
 })

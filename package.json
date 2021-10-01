@@ -46,6 +46,7 @@
     "vue3-lazyload": "^0.2.2-beta",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.0.0",
+    "winston": "^3.3.3",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
