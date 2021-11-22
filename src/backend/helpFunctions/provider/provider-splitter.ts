@@ -13,13 +13,16 @@ export default class ProviderSplitter {
         const upgradedinfos = await ProviderHelper.requestUpgradeAllCurrentinfos(series)
         series.addProviderDatasWithSeasonInfos(...upgradedinfos)
 
-        const allProviderThatCanBeSplitted = series
-            .getAllProviderLocalDatasWithSeasonInfo()
-            .filter(
-                x =>
+        const allProviderThatCanBeSplitted = series.getAllProviderLocalDatasWithSeasonInfo().filter(x => {
+            try {
+                return (
                     !ProviderList.getProviderInstanceByLocalData(x).hasUniqueIdForSeasons &&
                     !x.seasonTarget?.isSeasonNumberPresent()
-            )
+                )
+            } catch (err) {
+                return false
+            }
+        })
         const seriesSeason: Map<Season, ProviderLocalData[]> = this.extractSeaonsFromProviders(
             allProviderThatCanBeSplitted
         )

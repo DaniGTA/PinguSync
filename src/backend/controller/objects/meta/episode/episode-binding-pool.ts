@@ -1,4 +1,4 @@
-import { season } from 'node-myanimelist/typings/methods/jikan'
+import StringHelper from '@/backend/helpFunctions/string-helper'
 import EpisodeComperator from '../../../../helpFunctions/comperators/episode-comperator'
 import Season from '../season'
 import Episode from './episode'
@@ -6,6 +6,7 @@ import EpisodeMapping from './episode-mapping'
 
 export default class EpisodeBindingPool {
     public readonly bindedEpisodeMappings: EpisodeMapping[] = []
+    public readonly id: string = ''
     public isWatched: boolean | undefined
     // tslint:disable-next-line: variable-name
     private readonly __className: string
@@ -13,6 +14,7 @@ export default class EpisodeBindingPool {
     constructor(...episodes: EpisodeMapping[]) {
         this.__className = this.constructor.name
         this.addEpisodeMappingToBindings(...episodes)
+        this.id = StringHelper.randomString(20)
     }
 
     public loadPrototypes(): void {

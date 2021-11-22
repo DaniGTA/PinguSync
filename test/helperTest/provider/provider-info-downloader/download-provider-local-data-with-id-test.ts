@@ -35,17 +35,17 @@ describe('Download provider local data with provider id', () => {
 
     test('should catch failed download (error with error msg)', async () => {
         const provider = new TestListProvider()
-
+        const failedErrorMsg = 'Failed download'
         const resultListProvider = new ListProviderLocalData(1, TestListProvider)
         resultListProvider.addSeriesName(new Name('a', ''))
 
         jest.spyOn(provider, 'getFullInfoById').mockImplementation(async () => {
-            throw new Error('Failed download')
+            throw new Error(failedErrorMsg)
         })
         await expect(
             async () =>
                 await DownloadProviderLocalDataWithId.download(provider, new ListProviderLocalData(1, TestListProvider))
-        ).rejects.toBe(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
+        ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.ProviderNoResult, failedErrorMsg))
     })
 
     test('should catch failed download (error with error id)', async () => {
@@ -54,11 +54,11 @@ describe('Download provider local data with provider id', () => {
         const resultListProvider = new ListProviderLocalData(1, TestListProvider)
         resultListProvider.addSeriesName(new Name('a', ''))
         jest.spyOn(provider, 'getFullInfoById').mockImplementation(async () => {
-            throw FailedRequestErrorType.ProviderNotAvailble
+            throw FailedRequestErrorType.ProviderNotAvailable
         })
         await expect(
             async () =>
                 await DownloadProviderLocalDataWithId.download(provider, new ListProviderLocalData(1, TestListProvider))
-        ).rejects.toBe(new FailedRequestError(FailedRequestErrorType.ProviderNotAvailble))
+        ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.ProviderNotAvailable))
     })
 })

@@ -26,7 +26,7 @@ import { SimklUserData } from './simkl-user-data'
 import Episode from '../../../controller/objects/meta/episode/episode'
 import ProviderLocalData from '../../../controller/provider-controller/provider-manager/local-data/interfaces/provider-local-data'
 import RequestBundle from '../../../controller/web-request-manager/request-bundle'
-import { Method } from 'got/dist/source'
+import { Method, Response } from 'got/dist/source'
 import OAuthListProvider from '../../provider/o-auth-list-provider'
 import OAuth from '../../provider/auth/o-auth'
 import { OAuthTokenType } from '../../provider/auth/o-auth-token-type'
@@ -252,7 +252,19 @@ export default class SimklProvider extends OAuthListProvider {
                 throw new Error(`[Simkl] status code: ${response.statusCode}`)
             }
         } catch (err) {
-            throw new Error(err as string)
+            const response = err as Response<string>
+            if (response.statusCode === 412) {
+                const e: SimklErrorResponse = JSON.parse(response.body) as SimklErrorResponse
+                if (e.message === 'Total Requests Limit Exceeded') {
+                    const date = new Date()
+                    date.setHours(date.getHours() + 24)
+                    this.timeout = date.getTime()
+                }
+                throw new Error('[Simkl] Reached request limit')
+            } else {
+                logger.error('[Simkl] status code:', response.statusCode)
+                throw new Error(`[Simkl] status code: ${response.statusCode}`)
+            }
         }
     }
 }

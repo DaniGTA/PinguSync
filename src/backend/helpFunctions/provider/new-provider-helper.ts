@@ -38,7 +38,7 @@ export default class NewProviderHelper {
     public static async canUpdateRelevantProvider(series: Series): Promise<boolean> {
         const allRelevantProviders = await this.getAllRelevantProviders()
         for (const relevantProvider of allRelevantProviders) {
-            for (const binding of series.episodeBindingPools) {
+            for (const binding of series.getEpisodeBindingPools()) {
                 if (!binding.isBindingPoolHaveThisProvider(relevantProvider.providerName)) {
                     return true
                 }

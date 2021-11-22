@@ -2,7 +2,10 @@ import FailedRequestError from '@/backend/controller/objects/meta/failed-request
 import ExternalInformationProvider from '../../../api/provider/external-information-provider'
 import MultiProviderResult from '../../../api/provider/multi-provider-result'
 import MainListManager from '../../../controller/main-list-manager/main-list-manager'
-import { FailedRequestErrorType } from '../../../controller/objects/meta/failed-request-error-type'
+import {
+    FailedRequestErrorType,
+    isFailedRequestError,
+} from '../../../controller/objects/meta/failed-request-error-type'
 import Name from '../../../controller/objects/meta/name'
 import Season from '../../../controller/objects/meta/season'
 import Series from '../../../controller/objects/series'
@@ -51,7 +54,7 @@ export default class DownloadProviderLocalDataWithoutId {
             if (result) {
                 return result
             } else {
-                throw FailedRequestErrorType.ProviderNoResult
+                throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult)
             }
         } else {
             throw new Error(
@@ -248,7 +251,7 @@ export default class DownloadProviderLocalDataWithoutId {
         let searchResult: MultiProviderResult[] = []
         const seasonNumber = season.getSingleSeasonNumberAsNumber()
         if (!(await this.provider.isProviderAvailable())) {
-            throw new FailedRequestError(FailedRequestErrorType.ProviderNotAvailble)
+            throw new FailedRequestError(FailedRequestErrorType.ProviderNotAvailable)
         }
         if (this.provider.requireInternetAccessGetMoreSeriesInfoByName) {
             await this.provider.waitUntilItCanPerfomNextRequest()
@@ -265,6 +268,9 @@ export default class DownloadProviderLocalDataWithoutId {
             timeout.cancel()
             if (err instanceof FailedRequestError) {
                 throw err
+            }
+            if (isFailedRequestError(err as string)) {
+                throw new FailedRequestError(err as FailedRequestErrorType)
             }
             throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult, err as string)
         }

@@ -16,7 +16,7 @@ export default class EpisodeMappingHelper {
     /**
      * static getEpisodeMappings
      */
-    public static async getEpisodeMappings(series: Series): Promise<EpisodeBindingPool[]> {
+    public static async getEpisodeMappings(series: Series): Promise<readonly EpisodeBindingPool[]> {
         const asyncSeason = series.getSeason()
         const allProviders = series.getAllProviderLocalDatasWithSeasonInfo()
         const allEpisodeBindingPools = this.getAllEpisodeBindingsThatAreRelevant(allProviders)
@@ -41,7 +41,7 @@ export default class EpisodeMappingHelper {
                 )
             }
         }
-        return series.episodeBindingPools
+        return series.getEpisodeBindingPools()
     }
 
     private static async getEpisodeMapping(
@@ -53,7 +53,10 @@ export default class EpisodeMappingHelper {
     ): Promise<EpisodeBindingPool[]> {
         const episodeMappingResult: EpisodeBindingPool[] = []
         try {
-            const ratingInstance = new EpisodeRatedEqualityHelper(series.episodeBindingPools, allEpisodeBindingPools)
+            const ratingInstance = new EpisodeRatedEqualityHelper(
+                series.getEpisodeBindingPools(),
+                allEpisodeBindingPools
+            )
             const packageA = new ProviderAndSeriesPackage(providerA, series)
             const packageB = new ProviderAndSeriesPackage(providerB, series)
             const ratings = ratingInstance.getRatedEqualityFromTwoProviders(packageA, packageB, await season)
@@ -61,7 +64,9 @@ export default class EpisodeMappingHelper {
                 ratings
             )
             for (const bestRating of bestRatings) {
-                if (!this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(series.episodeBindingPools, bestRating)) {
+                if (
+                    !this.isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(series.getEpisodeBindingPools(), bestRating)
+                ) {
                     episodeMappingResult.push(new EpisodeBindingPool(...bestRating.getEpisodeMappings()))
                 }
             }
@@ -111,7 +116,7 @@ export default class EpisodeMappingHelper {
     }
 
     private static isAnyOfEpisodeRatedEqualityContainerAlreadyBinded(
-        episodeBindingPools: EpisodeBindingPool[],
+        episodeBindingPools: readonly EpisodeBindingPool[],
         episodeRatedEqualityContainer: EpisodeRatedEqualityContainer
     ): boolean {
         const episodeBinds = episodeRatedEqualityContainer.episodeBinds
@@ -182,7 +187,7 @@ export default class EpisodeMappingHelper {
             const providerId = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.id
             const providerName = providersWithNoUniqueIdAndDetailedEpisodes.providerLocalData.provider
             const allSeriesWithProvider = MainListSearcher.findAllSeriesByProvider(providerId, providerName)
-            finalEpisodeBindingPool.push(...allSeriesWithProvider.flatMap(x => x.episodeBindingPools))
+            finalEpisodeBindingPool.push(...allSeriesWithProvider.flatMap(x => x.getEpisodeBindingPools()))
         }
         return finalEpisodeBindingPool
     }

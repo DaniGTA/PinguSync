@@ -13,6 +13,14 @@ import SettingsManager from '../src/backend/controller/settings/settings-manager
 import MainListSaver from '../src/backend/controller/main-list-manager/main-list-saver'
 import AnimeOfflineDatabaseProviderData from '../src/backend/api/mapping-providers/anime-offline-database/anime-offline-database-provider-data'
 import logger from '../src/backend/logger/logger'
+import EpisodeBindingManager from '../src/backend/controller/episode-binding-controller/episode-binding-manager'
+import EpisodeBindingLoader from '../src/backend/controller/episode-binding-controller/episode-binding-loader'
+
+global.beforeEach((): void => {
+    MainListManager['mainList'] = []
+    ProviderDataListManager['providerDataList'] = []
+    EpisodeBindingManager['episodeBindingPoolDataList'] = []
+})
 
 // tslint:disable: no-string-literal
 MainListManager['listLoaded'] = true
@@ -20,6 +28,11 @@ MainListManager['mainList'] = []
 MainListPath.getPath = (): string => './mainlist-test-cache (can be deleted).data'
 // tslint:disable-next-line: no-empty
 MainListSaver.saveMainList = jest.fn()
+
+EpisodeBindingManager['listLoaded'] = true
+EpisodeBindingManager['episodeBindingPoolDataList'] = []
+EpisodeBindingLoader['loadData'] = (): [] => []
+EpisodeBindingLoader['saveData'] = jest.fn()
 
 ProviderDataListManager['listLoaded'] = true
 // tslint:disable-next-line: no-empty

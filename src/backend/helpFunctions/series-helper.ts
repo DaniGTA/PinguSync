@@ -106,7 +106,8 @@ export default class SeriesHelper {
             const getSeason = newAnime.getSeason(SeasonSearchMode.ALL, undefined, allowAddNewEntry)
             newAnime.getMediaType()
             await getSeason
-            newAnime.episodeBindingPools = await EpisodeMappingHelper.getEpisodeMappings(newAnime)
+            const episodeBindingPool = await EpisodeMappingHelper.getEpisodeMappings(newAnime)
+            newAnime.addEpisodeBindingPools(...episodeBindingPool)
         } else if (mergeType === MergeTypes.UPDATE) {
             newAnime.addEpisodeBindingPools(...this.mergeEpisodeBindingPool(seriesA, seriesB))
         }
@@ -126,11 +127,11 @@ export default class SeriesHelper {
         return newAnime
     }
 
-    private static mergeEpisodeBindingPool(seriesA: Series, seriesB: Series): EpisodeBindingPool[] {
+    private static mergeEpisodeBindingPool(seriesA: Series, seriesB: Series): readonly EpisodeBindingPool[] {
         if (seriesA.episodeBindingPoolGeneratedAt > seriesB.episodeBindingPoolGeneratedAt) {
-            return seriesA.episodeBindingPools
+            return seriesA.getEpisodeBindingPools()
         } else {
-            return seriesB.episodeBindingPools
+            return seriesB.getEpisodeBindingPools()
         }
     }
 }

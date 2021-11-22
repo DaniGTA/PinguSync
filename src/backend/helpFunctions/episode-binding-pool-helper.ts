@@ -10,7 +10,7 @@ export default class EpisodeBindingPoolHelper {
      * @param episode the target episode
      */
     public static getAllBindedEpisodesOfEpisode(
-        episodeBindingPools: EpisodeBindingPool[],
+        episodeBindingPools: readonly EpisodeBindingPool[],
         episode: Episode
     ): EpisodeMapping[] {
         const result = this.getEpisodeBindingPoolThatContainsTheEpisode(episodeBindingPools, episode)
@@ -22,14 +22,14 @@ export default class EpisodeBindingPoolHelper {
     }
 
     public static getEpisodeBindingPoolThatContainsTheEpisode(
-        episodeBindingPools: EpisodeBindingPool[],
+        episodeBindingPools: readonly EpisodeBindingPool[],
         episode: Episode
     ): EpisodeBindingPool | undefined {
         return episodeBindingPools.find(x => x.bindingPoolHasEpisode(episode))
     }
 
     public static isEpisodeAlreadyBinded(
-        episodeBindingPools: EpisodeBindingPool[],
+        episodeBindingPools: readonly EpisodeBindingPool[],
         episode: Episode,
         providerName: string
     ): boolean {

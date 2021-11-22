@@ -32,6 +32,9 @@ import { SeasonError } from './transfer/season-error'
 import { ListType } from '../settings/models/provider/list-types'
 import SeriesHelper from '../../helpFunctions/series-helper'
 import EpisodeMappingHelper from '../../helpFunctions/episode-mapping-helper/episode-mapping-helper'
+import EpisodeBindingSearcher from '../episode-binding-controller/episode-binding-searcher'
+import EpisodeBindingManager from '../episode-binding-controller/episode-binding-manager'
+import EpisodeBindingPoolReference from './meta/episode/episode-binding-pool-reference'
 
 export default class Series extends SeriesProviderExtension {
     public static version = 1
@@ -41,8 +44,8 @@ export default class Series extends SeriesProviderExtension {
     public id = ''
     public lastUpdate: number = Date.now()
     public lastInfoUpdate = 0
-    public episodeBindingPools: EpisodeBindingPool[] = []
     public episodeBindingPoolGeneratedAt = 0
+    private episodeBindingPoolReferences: EpisodeBindingPoolReference[] = []
     private cachedSeason?: Season
     private cachedMediaType?: MediaType
     private seasonDetectionType = ''
@@ -55,11 +58,42 @@ export default class Series extends SeriesProviderExtension {
         this.cachedSeason = new Season()
     }
 
-    public loadPrototypes(): void {
-        for (let index = 0; index < this.episodeBindingPools.length; index++) {
-            Object.setPrototypeOf(this.episodeBindingPools[index], EpisodeBindingPool.prototype)
-            this.episodeBindingPools[index].loadPrototypes()
+    public removeEpisodeBindingPools(episodeBindingPools: EpisodeBindingPool[]) {
+        for (const episodeBindingPool of episodeBindingPools) {
+            this.removeEpisodeBindingPool(episodeBindingPool)
         }
+    }
+
+    public removeEpisodeBindingPool(episodeBindingPool: EpisodeBindingPool) {
+        this.removeEpisodeBindingPoolReference(episodeBindingPool.id)
+    }
+
+    public removeEpisodeBindingPoolReferences(episodeBindingPoolReference: EpisodeBindingPoolReference[]) {
+        for (const episodeBindingPool of episodeBindingPoolReference) {
+            this.removeEpisodeBindingPoolReference(episodeBindingPool.id)
+        }
+    }
+
+    public removeEpisodeBindingPoolReference(id: string): void {
+        this.episodeBindingPoolReferences = this.episodeBindingPoolReferences.filter(
+            bindingPoolReference => bindingPoolReference.id !== id
+        )
+        EpisodeBindingManager.removeById(id)
+    }
+
+    public getEpisodeBindingPools(): readonly EpisodeBindingPool[] {
+        return this.episodeBindingPoolReferences.flatMap(bindingPoolReference => {
+            try {
+                return EpisodeBindingSearcher.getByEpisodeBindingPoolReference(bindingPoolReference)
+            } catch (error) {
+                logger.error(error)
+                this.removeEpisodeBindingPoolReference(bindingPoolReference.id)
+                return []
+            }
+        })
+    }
+
+    public loadPrototypes(): void {
         for (let index = 0; index < this.listProviderInfos.length; index++) {
             Object.setPrototypeOf(this.listProviderInfos[index], ListLocalDataBind.prototype)
             this.listProviderInfos[index].loadPrototypes()
@@ -162,7 +196,7 @@ export default class Series extends SeriesProviderExtension {
     }
 
     public async generateEpisodeMapping(): Promise<void> {
-        this.episodeBindingPools = await EpisodeMappingHelper.getEpisodeMappings(this)
+        this.addEpisodeBindingPools(...(await EpisodeMappingHelper.getEpisodeMappings(this)))
         this.episodeBindingPoolGeneratedAt = Date.now()
     }
 
@@ -170,12 +204,12 @@ export default class Series extends SeriesProviderExtension {
      * Get all Episode mappings of the current series and season
      * @param allEpisodes all episodes
      */
-    public async getEpisodeMapping(allEpisodes = false): Promise<EpisodeBindingPool[]> {
+    public async getEpisodeMapping(allEpisodes = false): Promise<readonly EpisodeBindingPool[]> {
         if (allEpisodes) {
-            return this.episodeBindingPools
+            return this.getEpisodeBindingPools()
         }
         const seriesSeason = await this.getSeason()
-        return this.episodeBindingPools.filter(x =>
+        return this.getEpisodeBindingPools().filter(x =>
             SeasonComperator.isSameSeason(x.getBindingPoolSeason(), seriesSeason)
         )
     }
@@ -185,28 +219,37 @@ export default class Series extends SeriesProviderExtension {
         if (existingBindingPool.length === 1) {
             existingBindingPool[0].addEpisodeMappingToBindings(...episodeMappings)
         } else if (existingBindingPool.length !== 0) {
-            this.episodeBindingPools = listHelper.removeEntrys(this.episodeBindingPools, ...existingBindingPool)
+            this.removeEpisodeBindingPools(existingBindingPool)
             const newBindingPool = new EpisodeBindingPool(
                 ...[...existingBindingPool.flatMap(x => x.bindedEpisodeMappings), ...episodeMappings]
             )
-            this.episodeBindingPools.push(newBindingPool)
+            this.addEpisodeBindingPools(newBindingPool)
             logger.debug(`[Series] (${this.id}) Merging episode bindings`)
         } else {
             const newBindingPool = new EpisodeBindingPool(...episodeMappings)
-            this.episodeBindingPools.push(newBindingPool)
+            this.addEpisodeBindingPools(newBindingPool)
         }
     }
 
     public addEpisodeBindingPools(...bindingPools: EpisodeBindingPool[]): void {
         for (const bindingPool of bindingPools) {
-            this.addEpisodeMapping(...bindingPool.bindedEpisodeMappings)
+            this.addEpisodeBindingPoolReference(EpisodeBindingManager.add(bindingPool))
         }
         this.episodeBindingPoolGeneratedAt = Date.now()
     }
 
+    private addEpisodeBindingPoolReference(bindingPoolReferences: EpisodeBindingPoolReference): void {
+        const index = this.episodeBindingPoolReferences.findIndex(x => x.id === bindingPoolReferences.id)
+        if (index === -1) {
+            this.episodeBindingPoolReferences.push(bindingPoolReferences)
+        } else {
+            this.episodeBindingPoolReferences[index] = bindingPoolReferences
+        }
+    }
+
     public findExistingBindingPoolByEpisodeMapping(...episodeMappings: EpisodeMapping[]): EpisodeBindingPool[] {
         const existingBindingPools = []
-        for (const bindingPool of this.episodeBindingPools) {
+        for (const bindingPool of this.getEpisodeBindingPools()) {
             for (const episodeMapping of episodeMappings) {
                 if (bindingPool.bindingPoolHasEpisodeMapping(episodeMapping)) {
                     existingBindingPools.push(bindingPool)
@@ -395,7 +438,7 @@ export default class Series extends SeriesProviderExtension {
      * @param seriesB
      */
     public async merge(seriesB: Series, allowAddNewEntry = true, mergeType = MergeTypes.UPGRADE): Promise<Series> {
-        return await SeriesHelper.merge(this, seriesB, allowAddNewEntry, mergeType)
+        return SeriesHelper.merge(this, seriesB, allowAddNewEntry, mergeType)
     }
 
     /**

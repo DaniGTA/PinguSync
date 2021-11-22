@@ -228,7 +228,9 @@ describe('Series Helper', () => {
 
     it('should merge correct episodePool', () => {
         const seriesA = new Series()
-        seriesA.episodeBindingPools = [new EpisodeBindingPool()]
+        seriesA.addEpisodeBindingPools(
+            new EpisodeBindingPool(new EpisodeMapping(new Episode(1), new ListProviderLocalData(1)))
+        )
         const seriesB = new Series()
         seriesB.addEpisodeBindingPools(
             new EpisodeBindingPool(new EpisodeMapping(new Episode(1), new ListProviderLocalData(1)))

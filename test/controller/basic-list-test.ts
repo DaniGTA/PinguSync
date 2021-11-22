@@ -10,7 +10,6 @@ import ImdbProvider from '../../src/backend/api/information-providers/imdb/imdb-
 import TmdbProvider from '../../src/backend/api/information-providers/tmdb/tmdb-provider'
 import MultiProviderResult from '../../src/backend/api/provider/multi-provider-result'
 import ListController from '../../src/backend/controller/list-controller'
-import MainListAdder from '../../src/backend/controller/main-list-manager/main-list-adder'
 import MainListManager from '../../src/backend/controller/main-list-manager/main-list-manager'
 import MainListSearcher from '../../src/backend/controller/main-list-manager/main-list-searcher'
 import { EpisodeType } from '../../src/backend/controller/objects/meta/episode/episode-type'
@@ -130,26 +129,29 @@ describe('Basic List | Testrun', () => {
             for (const anilistResultEntry of anilistResult.getDetailEpisodeInfos()) {
                 expect(
                     EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                        series.episodeBindingPools,
+                        series.getEpisodeBindingPools(),
                         anilistResultEntry
                     )[0].episodeNumber
                 ).toBe(anilistResultEntry.episodeNumber)
             }
             for (const anilistResult2Entry of anilistResult2.getDetailEpisodeInfos()) {
                 const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                    updatedSeries2.episodeBindingPools,
+                    updatedSeries2.getEpisodeBindingPools(),
                     anilistResult2Entry
                 )
                 expect(result[0].episodeNumber).toBe(anilistResult2Entry.episodeNumber)
             }
             for (const trakt of traktResult2.getDetailEpisodeInfos()) {
                 if (trakt.type === EpisodeType.SPECIAL) {
-                    const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(series2.episodeBindingPools, trakt)
+                    const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
+                        series2.getEpisodeBindingPools(),
+                        trakt
+                    )
                     expect(r.length).toBe(0)
                 } else {
                     if (trakt?.season?.getSingleSeasonNumberAsNumber() === 2) {
                         const r = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                            series2.episodeBindingPools,
+                            series2.getEpisodeBindingPools(),
                             trakt
                         )
                         expect(r.length).not.toBe(0)
@@ -232,16 +234,14 @@ describe('Basic List | Testrun', () => {
         const s2provider1 = new ListProviderLocalData(21776, AniListProvider)
         s2provider1.infoStatus = ProviderInfoStatus.ONLY_ID
         series2.addListProvider(s2provider1)
-        await ListController.instance.addSeriesToMainList(series1, series2)
-
+        await MainListManager.addSerieToMainList(series1)
+        await MainListManager.addSerieToMainList(series2)
         const series3 = new Series()
         const s3provider1 = new ListProviderLocalData(117492, TraktProvider)
         s3provider1.infoStatus = ProviderInfoStatus.ONLY_ID
         series3.addListProvider(s3provider1)
 
-        await ListController.instance.addSeriesToMainList(series3)
-        // tslint:disable-next-line: no-string-literal
-        await MainListManager['finishListFilling']()
+        await MainListManager.addSerieToMainList(series3)
         // tslint:disable-next-line: no-string-literal
         expect(MainListManager['mainList'].length).toEqual(3)
         expect(await seriesHelper.isSameSeries(series1, series3)).toEqual(false)
@@ -542,7 +542,7 @@ describe('Basic List | Testrun', () => {
         for (const episode of provider?.getDetailEpisodeInfos() ?? []) {
             if (episode.season?.getSingleSeasonNumberAsNumber() === 1) {
                 const s1Result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                    series1.episodeBindingPools,
+                    series1.getEpisodeBindingPools(),
                     episode
                 )
                 const relevantResult = s1Result.find(
@@ -551,7 +551,7 @@ describe('Basic List | Testrun', () => {
                 expect(relevantResult).not.toBeUndefined()
             } else if (episode.season?.getSingleSeasonNumberAsNumber() === 2) {
                 const s2BindedEpisodeResult = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                    series2.episodeBindingPools,
+                    series2.getEpisodeBindingPools(),
                     episode
                 )
                 const relevantResult = s2BindedEpisodeResult.find(
@@ -559,7 +559,7 @@ describe('Basic List | Testrun', () => {
                 )
                 expect(relevantResult).not.toBeUndefined()
             } else if (episode.season?.getSingleSeasonNumberAsNumber() === 3) {
-                const allEpisodeBindingsPool = MainListManager.getMainList().flatMap(x => x.episodeBindingPools)
+                const allEpisodeBindingsPool = MainListManager.getMainList().flatMap(x => x.getEpisodeBindingPools())
                 const len = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(allEpisodeBindingsPool, episode)
                 const s = len.find(x => x.provider === ProviderNameManager.getProviderName(AniListProvider))
                 if ((episode.episodeNumber as number) < 12) {
@@ -572,7 +572,7 @@ describe('Basic List | Testrun', () => {
                 expect(len.length).toBeGreaterThanOrEqual(2)
             } else if (episode.season?.getSingleSeasonNumberAsNumber() === 4) {
                 const result = EpisodeBindingPoolHelper.getAllBindedEpisodesOfEpisode(
-                    series4.episodeBindingPools,
+                    series4.getEpisodeBindingPools(),
                     episode
                 )
                 const relevantResult = result.find(
@@ -585,167 +585,6 @@ describe('Basic List | Testrun', () => {
         const season = series2.getProviderSeasonTarget(provider?.provider ?? '')
         expect(season?.getSingleSeasonNumberAsNumber()).toEqual(2)
     }, 60000)
-
-    test('should get series and should map episodes right (Series: Clannad) (Has different max episode number on S1)', async () => {
-        const provider = new ListProviderLocalData(2167, AniListProvider)
-        provider.addSeriesName(new Name('Clannad', 'en', NameType.OFFICIAL))
-
-        const series = new Series()
-        series.addProviderDatas(provider)
-        const adderInstance = new MainListAdder()
-
-        // Test
-
-        await adderInstance.addSeries(series)
-
-        // Result checking
-        const mainList = MainListManager.getMainList()
-        expect(mainList.length).toBe(1)
-
-        const resultSeries = mainList[0]
-
-        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo()
-
-        const aniListName = ProviderNameManager.getProviderName(AniListProvider)
-        const aniListBinding = bindings.find(x => x.providerLocalData.provider === aniListName)
-        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName)
-        expect(aniListBinding?.providerLocalData.id).toBe(2167)
-
-        const traktName = ProviderNameManager.getProviderName(TraktProvider)
-        const traktBinding = bindings.find(x => x.providerLocalData.provider === traktName)
-        expect(traktBinding?.providerLocalData.provider).toBe(traktName)
-        expect(traktBinding?.providerLocalData.id).toEqual(24724)
-    })
-
-    test('should get series and should map episodes right (Series: Nanbaka)', async () => {
-        const provider = new ListProviderLocalData(110252, TraktProvider)
-
-        const series = new Series()
-        series.addProviderDatas(provider)
-        const adderInstance = new MainListAdder()
-
-        // Test
-
-        await adderInstance.addSeries(series)
-
-        // Result checking
-        const mainList = MainListManager.getMainList()
-        expect(mainList.length).toBe(1)
-
-        const resultSeries = mainList[0]
-
-        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo()
-
-        const aniListName = ProviderNameManager.getProviderName(AniListProvider)
-        const aniListBinding = bindings.find(x => x.providerLocalData.provider === aniListName)
-        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName)
-        expect(aniListBinding?.providerLocalData.id).toBe(21051)
-
-        const traktName = ProviderNameManager.getProviderName(TraktProvider)
-        const traktBinding = bindings.find(x => x.providerLocalData.provider === traktName)
-        expect(traktBinding?.providerLocalData.provider).toBe(traktName)
-        expect(traktBinding?.providerLocalData.id).toBe(110252)
-
-        const epMappings = resultSeries.episodeBindingPools
-        for (const epMapping of epMappings) {
-            const relevantResult = epMapping.bindedEpisodeMappings.find(
-                x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
-            )
-            expect(relevantResult).not.toBeUndefined()
-            for (const ep of epMapping.bindedEpisodeMappings) {
-                for (const ep2 of epMapping.bindedEpisodeMappings) {
-                    expect(ep.episodeNumber).toEqual(ep2.episodeNumber)
-                }
-            }
-        }
-    })
-
-    test('should get series and should map episodes right (Series: When they Cry)', async () => {
-        const provider = new ListProviderLocalData(61179, TraktProvider)
-
-        const series = new Series()
-        series.addProviderDatas(provider)
-        const adderInstance = new MainListAdder()
-
-        // Test
-
-        await adderInstance.addSeries(series)
-
-        // Result checking
-        const mainList = MainListManager.getMainList()
-        expect(mainList.length).toBe(1)
-
-        const resultSeries = mainList[0]
-
-        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo()
-
-        const aniListName = ProviderNameManager.getProviderName(AniListProvider)
-        const aniListBinding = bindings.find(x => x.providerLocalData.provider === aniListName)
-        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName)
-        expect(aniListBinding?.providerLocalData.id).toEqual(934)
-
-        const traktName = ProviderNameManager.getProviderName(TraktProvider)
-        const traktBinding = bindings.find(x => x.providerLocalData.provider === traktName)
-        expect(traktBinding?.providerLocalData.provider).toBe(traktName)
-        expect(traktBinding?.providerLocalData.id).toBe(61179)
-
-        const epMappings = resultSeries.episodeBindingPools
-        for (const epMapping of epMappings) {
-            const relevantResult = epMapping.bindedEpisodeMappings.find(
-                x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
-            )
-            expect(relevantResult).not.toBe(undefined)
-            for (const ep of epMapping.bindedEpisodeMappings) {
-                for (const ep2 of epMapping.bindedEpisodeMappings) {
-                    expect(ep.episodeNumber).toEqual(ep2.episodeNumber)
-                }
-            }
-        }
-    })
-
-    test('should get series and should map episodes right (Series: The Melancholy of Haruhi Suzumiya)', async () => {
-        const provider = new ListProviderLocalData(60988, TraktProvider)
-
-        const series = new Series()
-        series.addProviderDatas(provider)
-        const adderInstance = new MainListAdder()
-
-        // Test
-
-        await adderInstance.addSeries(series)
-
-        // Result checking
-        const mainList = MainListManager.getMainList()
-        expect(mainList.length).toBe(1)
-
-        const resultSeries = mainList[0]
-
-        const bindings = resultSeries.getListProvidersLocalDataInfosWithSeasonInfo()
-
-        const aniListName = ProviderNameManager.getProviderName(AniListProvider)
-        const aniListBinding = bindings.find(x => x.providerLocalData.provider === aniListName)
-        expect(aniListBinding?.providerLocalData.provider).toBe(aniListName)
-        expect(aniListBinding?.providerLocalData.id).toBe(849)
-
-        const traktName = ProviderNameManager.getProviderName(TraktProvider)
-        const traktBinding = bindings.find(x => x.providerLocalData.provider === traktName)
-        expect(traktBinding?.providerLocalData.provider).toBe(traktName)
-        expect(traktBinding?.providerLocalData.id).toBe(60988)
-
-        const epMappings = resultSeries.episodeBindingPools
-        expect(epMappings.length).toBe(14)
-        for (const epMapping of epMappings) {
-            const relevantResult = epMapping.bindedEpisodeMappings.find(
-                x => x.provider === ProviderNameManager.getProviderName(AniListProvider)
-            )
-            expect(relevantResult).not.toBe(undefined)
-            for (const ep of epMapping.bindedEpisodeMappings) {
-                for (const ep2 of epMapping.bindedEpisodeMappings) {
-                    expect(ep.episodeNumber).toEqual(ep2.episodeNumber)
-                }
-            }
-        }
-    })
 
     test.todo('Trakt id: 65266 (All season seperate)')
 })

@@ -84,7 +84,7 @@ describe('Provider Helper Test', () => {
             series.addFailedRequest(
                 new FailedProviderRequest(
                     ProviderList.getProviderInstanceByClass(TestInfoProvider1),
-                    FailedRequestErrorType.ProviderNotAvailble
+                    FailedRequestErrorType.ProviderNotAvailable
                 )
             )
             const providerLocalData = new InfoProviderLocalData(1, TestInfoProvider1)
@@ -174,5 +174,5 @@ describe('Provider Helper Test', () => {
         expect(anidbProvider?.id).toBe(13244)
         expect(series.getProviderSeasonTarget(anidbProvider?.provider ?? '')?.getSingleSeasonNumberAsNumber()).toBe(3)
         expect(series.getProviderSeasonTarget(anidbProvider?.provider ?? '')?.seasonPart).toBe(1)
-    }, 20000)
+    }, 40000)
 })

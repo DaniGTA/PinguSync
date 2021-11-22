@@ -90,7 +90,7 @@ export default class EpisodeHelper {
     }
 
     public static getMaxEpisodeNrFromEpisodeBindingArray(
-        episodeBingings: EpisodeBindingPool[],
+        episodeBingings: readonly EpisodeBindingPool[],
         providerName: string
     ): number | undefined {
         let episodeNumber: number | undefined

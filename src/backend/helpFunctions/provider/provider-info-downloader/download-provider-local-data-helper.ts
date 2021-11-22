@@ -38,7 +38,7 @@ export default class DownloadProviderLocalDataHelper {
                 throw new Error(`[${provider.providerName}] Unkown error: ${err}`)
             }
         }
-        throw new FailedRequestError(FailedRequestErrorType.ProviderNotAvailble)
+        throw new FailedRequestError(FailedRequestErrorType.ProviderNotAvailable)
     }
 
     private static getProviderLocalForIdRequest(

@@ -36,7 +36,7 @@ describe('Download provider local data without provider id', () => {
 
             await expect(
                 instance['downloadProviderSeriesInfoBySeriesName']([new Name('a', 'b'), new Name('c', 'b')])
-            ).rejects.toEqual(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
+            ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
 
             expect(spyedRequest).toHaveBeenCalledTimes(2)
             spyedRequest.mockRestore()
@@ -44,7 +44,7 @@ describe('Download provider local data without provider id', () => {
 
         test('should throw no result on no result', async () => {
             const instance = new DownloadProviderLocalDataWithoutId(new Series(), new TestListProvider())
-            await expect(instance['downloadProviderSeriesInfoBySeriesName']([])).rejects.toEqual(
+            await expect(instance['downloadProviderSeriesInfoBySeriesName']([])).rejects.toMatchObject(
                 new FailedRequestError(FailedRequestErrorType.ProviderNoResult)
             )
         })
@@ -58,7 +58,7 @@ describe('Download provider local data without provider id', () => {
 
         const dpldwi = new DownloadProviderLocalDataWithoutId(series, provider)
 
-        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toEqual(
+        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toMatchObject(
             new FailedRequestError(FailedRequestErrorType.ProviderNoResult)
         )
     })
@@ -73,7 +73,7 @@ describe('Download provider local data without provider id', () => {
 
         const dpldwi = new DownloadProviderLocalDataWithoutId(series, provider)
 
-        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toEqual(
+        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toMatchObject(
             new FailedRequestError(FailedRequestErrorType.ProviderNoResult)
         )
     })
@@ -88,7 +88,7 @@ describe('Download provider local data without provider id', () => {
 
         const dpldwi = new DownloadProviderLocalDataWithoutId(series, provider)
 
-        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toEqual(
+        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toMatchObject(
             new FailedRequestError(FailedRequestErrorType.ProviderNoResult)
         )
     })
@@ -97,13 +97,13 @@ describe('Download provider local data without provider id', () => {
         const provider = new TestListProvider()
         const spyedFunction = jest.spyOn(provider, 'getMoreSeriesInfoByName')
         spyedFunction.mockImplementation(async () => {
-            throw FailedRequestErrorType.ProviderNotAvailble
+            throw FailedRequestErrorType.ProviderNotAvailable
         })
         const series = new Series()
 
         const dpldwi = new DownloadProviderLocalDataWithoutId(series, provider)
-        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toEqual(
-            new FailedRequestError(FailedRequestErrorType.ProviderNotAvailble)
+        await expect(dpldwi['downloadProviderSeriesInfoBySeriesName'](getListOfName())).rejects.toMatchObject(
+            new FailedRequestError(FailedRequestErrorType.ProviderNotAvailable)
         )
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(provider.getMoreSeriesInfoByName).toHaveBeenCalledTimes(1)

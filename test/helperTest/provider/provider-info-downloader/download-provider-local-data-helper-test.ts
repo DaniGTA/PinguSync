@@ -61,7 +61,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         ])
         await expect(
             async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-        ).rejects.toBe(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
+        ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
     })
 
     test('should say that provider is not avaible (no id)', async () => {
@@ -77,7 +77,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         provider.isProviderAvailable = async (): Promise<boolean> => false
         await expect(
             async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-        ).rejects.toBe(FailedRequestErrorType.ProviderNotAvailble)
+        ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.ProviderNotAvailable))
     })
 
     describe('timeout', () => {
@@ -102,7 +102,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
                     })
                 await expect(
                     downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-                ).rejects.toEqual(new FailedRequestError(FailedRequestErrorType.Timeout))
+                ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.Timeout))
             },
             DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100
         )
@@ -125,7 +125,7 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         )
         await expect(
             async () => await downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
-        ).rejects.toBe(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
+        ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.ProviderNoResult))
     })
 
     test('should say that provider is not avaible (with id)', async () => {
@@ -139,8 +139,8 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
         series.addListProvider(listProvider)
         const provider = new TestInfoProvider()
         jest.spyOn(provider, 'isProviderAvailable').mockImplementation(async (): Promise<boolean> => false)
-        await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(
-            new FailedRequestError(FailedRequestErrorType.ProviderNotAvailble)
+        await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toMatchObject(
+            new FailedRequestError(FailedRequestErrorType.ProviderNotAvailable)
         )
     })
 
@@ -163,9 +163,9 @@ describe('Provider local data downloader tests (download-provider-local-data-hel
                         resolve(undefined as any)
                     }, DownloadSettings.REQUEST_TIMEOUT_IN_MS + 50)
                 })
-            await expect(downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)).rejects.toEqual(
-                new FailedRequestError(FailedRequestErrorType.Timeout)
-            )
+            await expect(
+                downloadProviderLocalDataHelper.downloadProviderLocalData(series, provider)
+            ).rejects.toMatchObject(new FailedRequestError(FailedRequestErrorType.Timeout))
         },
         DownloadSettings.REQUEST_TIMEOUT_IN_MS + 100
     )

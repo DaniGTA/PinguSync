@@ -1,6 +1,6 @@
 export enum FailedRequestErrorType {
     UnkownError = 'UnkownError',
-    ProviderNotAvailble = 'ProviderNotAvailable',
+    ProviderNotAvailable = 'ProviderNotAvailable',
     Timeout = 'Timeout',
     ProviderNoResult = 'ProviderNoResult',
     ProviderApiNotExist = 'ProviderApiNotExist',

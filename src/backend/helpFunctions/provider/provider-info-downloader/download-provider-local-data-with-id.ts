@@ -30,9 +30,12 @@ export default class DownloadProviderLocalDataWithId {
             if (err instanceof FailedRequestError) {
                 throw err
             }
+            if (isFailedRequestError(err as string)) {
+                throw new FailedRequestError(err as FailedRequestErrorType)
+            }
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             logger.error(`${err} | ${provider.providerName}`)
-            throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult, err as string)
+            throw new FailedRequestError(FailedRequestErrorType.ProviderNoResult, (err as Error).message)
         }
     }
 }
