@@ -44,7 +44,7 @@
     "nedb": "^1.8.0",
     "net": "^1.0.2",
     "node-myanimelist": "^2.0.0",
-    "quasar": "^1.11.3",
+    "quasar": "^2.8.3",
     "resolve": "^1.16.1",
     "rewire": "^4.0.1",
     "scramjet": "^4.29.1",
